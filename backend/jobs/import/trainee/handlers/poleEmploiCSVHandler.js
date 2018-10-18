@@ -1,0 +1,146 @@
+const _ = require('lodash');
+const { buildToken, buildEmail } = require('../utils');
+
+module.exports = (db, logger, configuration) => {
+
+    const { findCodeRegionByPostalCode } = require('../../../../components/regions')(db);
+
+    const buildCodeFinanceur = data => {
+        if (data !== 'NULL') {
+            if (data.indexOf(';') !== -1) {
+                return data.split(';');
+            } else if (!isNaN(parseInt(data, 10))) {
+                return [data];
+            }
+        }
+        return [];
+    };
+
+    const buildFormationTitle = data => {
+        if (data.startsWith('"') && data.endsWith('"')) {
+            return data.substring(1, data.length - 1);
+        }
+        return data;
+    };
+
+    return {
+        name: 'Pôle Emploi',
+        csvOptions: {
+            delimiter: '|',
+            columns: [
+                'c_nomcorrespondance',
+                'c_prenomcorrespondance',
+                'c_adresseemail',
+                'c_telephone1',
+                'c_telephone2',
+                'c_validitemail_id',
+                'dn_individu_national',
+                'dn_session_id',
+                'dc_aes_recue',
+                'dc_referencement',
+                'c_individulocal',
+                'dc_formation_id',
+                'dc_origine_session_id',
+                'dc_lblformation',
+                'dd_datedebutsession',
+                'dd_datefinsession',
+                'dc_organisme_id',
+                'dc_cp_lieuformation',
+                'dc_ville_lieuformation',
+                'dc_formacode_ppal_id',
+                'dn_certifinfo_1_id',
+                'dc_lblcertifinfo',
+                'dc_siret',
+                'dc_lblorganisme',
+                'dc_raisonsociale',
+                'departement',
+                'dc_niveauformation_entree_id',
+                'dc_niveauformation_sortie_id',
+                'dn_dureehebdo',
+                'dn_dureemaxi',
+                'dn_dureeentreprise',
+                'dc_dureeindicative',
+                'dn_nombreheurescentre',
+                'dc_numeroicsession',
+                'dc_numeroicaction',
+                'kn_session_id',
+                'liste_financeur',
+            ],
+        },
+        shouldBeImported: data => {
+            return data.trainee.emailValid && configuration.app.active_regions.includes(data.codeRegion);
+        },
+        buildTrainee: async (record, campaign) => {
+            try {
+                if (_.isEmpty(record)) {
+                    return Promise.reject(new Error(`Données CSV invalides ${record}`));
+                }
+
+                let codeRegion = await findCodeRegionByPostalCode(record['dc_cp_lieuformation']);
+                let token = buildToken(record['c_adresseemail']);
+                let { email, mailDomain } = buildEmail(record['c_adresseemail']);
+
+                return {
+                    _id: campaign + '/' + token,
+                    campaign: campaign,
+                    importDate: new Date(),
+                    unsubscribe: false,
+                    mailSent: false,
+                    token: token,
+                    codeRegion: codeRegion,
+                    trainee: {
+                        name: record['c_nomcorrespondance'],
+                        firstName: record['c_prenomcorrespondance'],
+                        mailDomain: mailDomain,
+                        email: email,
+                        phoneNumbers: [record['c_telephone1'], record['c_telephone2']],
+                        emailValid: record['c_validitemail_id'] === 'V',
+                        dnIndividuNational: record['dn_individu_national'],
+                        idLocal: record['c_individulocal']
+                    },
+                    training: {
+                        idFormation: record['dc_formation_id'],
+                        origineSession: record['dc_origine_session_id'],
+                        title: buildFormationTitle(record['dc_lblformation']),
+                        startDate: new Date(record['dd_datedebutsession']),
+                        scheduledEndDate: new Date(record['dd_datefinsession']),
+                        organisation: {
+                            id: record['dc_organisme_id'],
+                            siret: record['dc_siret'],
+                            label: record['dc_lblorganisme'],
+                            name: record['dc_raisonsociale']
+                        },
+                        place: {
+                            departement: record['departement'],
+                            postalCode: record['dc_cp_lieuformation'],
+                            city: record['dc_ville_lieuformation']
+                        },
+                        certifInfo: {
+                            id: record['dn_certifinfo_1_id'],
+                            label: record['dc_lblcertifinfo']
+                        },
+                        idSession: record['dn_session_id'],
+                        formacode: record['dc_formacode_ppal_id'],
+                        aesRecu: record['dc_aes_recue'],
+                        referencement: record['dc_referencement'],
+                        infoCarif: {
+                            numeroSession: record['dc_numeroicsession'],
+                            numeroAction: record['dc_numeroicaction']
+                        },
+                        codeFinanceur: buildCodeFinanceur(record['liste_financeur']),
+                        niveauEntree: parseInt(record['dc_niveauformation_entree_id'], 10) || null,
+                        niveauSortie: parseInt(record['dc_niveauformation_sortie_id'], 10) || null,
+                        dureeHebdo: parseInt(record['dn_dureehebdo'], 10) || null,
+                        dureeMaxi: parseInt(record['dn_dureemaxi'], 10) || null,
+                        dureeEntreprise: parseInt(record['dn_dureeentreprise'], 10) || null,
+                        dureeIndicative: record['dc_dureeindicative'],
+                        nombreHeuresCentre: parseInt(record['dn_nombreheurescentre'], 10) || null,
+                    }
+                };
+
+            } catch (e) {
+                return Promise.reject(e);
+            }
+        },
+    };
+};

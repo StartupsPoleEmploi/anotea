@@ -1,0 +1,58 @@
+{
+  "app": {
+    "env": "ANOTEA_APP_ENV",
+    "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME"
+  },
+  "mongodb": {
+    "uri": "ANOTEA_MONGODB_URI"
+  },
+  "redis": {
+    "host": "ANOTEA_REDIS_HOST",
+    "port": "ANOTEA_REDIS_PORT"
+  },
+  "security": {
+    "secret": "ANOTEA_SECURITY_SECRET"
+  },
+  "auth": {
+    "backoffice": {
+      "secret": "ANOTEA_AUTH_BACKOFFICE_SECRET"
+    },
+    "esd": {
+      "secret": "ANOTEA_AUTH_ESD_SECRET"
+    },
+    "kairos": {
+      "secret": "ANOTEA_AUTH_KAIROS_SECRET"
+    }
+  },
+  "log": {
+    "console": {
+      "json": {
+        "__name": "ANOTEA_LOG_CONSOLE_JSON",
+        "__format": "json"
+      }
+    },
+    "file": {
+      "enabled": {
+        "__name": "ANOTEA_LOG_FILE_ENABLED",
+        "__format": "json"
+      }
+    },
+    "sentry": {
+      "enabled": {
+        "__name": "ANOTEA_LOG_SENTRY_ENABLED",
+        "__format": "json"
+      },
+      "DSN": "ANOTEA_LOG_SENTRY_DSN"
+    }
+  },
+  "smtp": {
+    "host": "ANOTEA_SMTP_HOST",
+    "port": "ANOTEA_SMTP_PORT"
+  },
+  "exports": {
+    "path": "ANOTEA_EXPORT_PATH"
+  },
+  "front": {
+    "googleSiteVerification": "ANOTEA_FRONT_GOOGLE_SITE_VERIFICATION"
+  }
+}

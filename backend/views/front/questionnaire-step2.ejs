@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+    <link rel="stylesheet" type="text/css" href="/css/front/noteo.css" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/img/favicon_noteo.ico" />
+</head>
+
+<body>
+    <div class="divPrin">
+        <header href="/">
+            <br>
+            <img src="/img/logo_Anotea_Vertical_baseline.png" alt="" class="logoAnotea">
+            <div class="serviceProQuestionnaire">
+                <p>Service propulsé par</p>
+                <img src="/img/poleemploi.png" alt="" class="logoPE" />
+                <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
+            </div>
+        </header>
+        <div class="formulaire">
+            <form action="/questionnaire/<%= trainee.token%>/step2" method="POST" autocomplete="off">
+                <br>
+                <p class="titre">Commentez votre formation</p>
+                <br>
+                <br>
+                <div class="group">
+                    <input type="text" name="titreCommentaire" maxlength="50" class="champ2">
+                    <i class="material-icons" id="icon2">insert_comment</i>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label class="lb2" id="lb4">Titre de votre commentaire</label>
+                </div>
+                <div class="group">
+                    <p style="color:#808080; font-size: 18px;">Votre commentaire</p>
+
+                    <textarea id="tag" type="text" name="commentaire" rows="6" maxlength="200" class="champ"></textarea>
+                    <p class="nombreCharactere"></p>
+                </div>
+                <div class="group" id="divPseudo">
+                    <input type="text" name="pseudo" class="champ1" maxlength="50" id="inputPseudo">
+                    <i class="material-icons" id="icon1">account_circle</i>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label class="lb2" id="lb3">Votre pseudo</label>
+                    <i class="material-icons" id="iconCheck">check</i>
+                    <i class="material-icons" id="iconClose">close</i>
+                    <p class="manqueLePseudo"></p>
+                </div>
+                <div>
+                    <p class="azerty">
+                        <input id="box1" type="checkbox" name="accord" />
+                        <label for="box1" id="autorisation">J'autorise les futur(e)s stagiaires à me questionner sur <br>cette formation.</label>
+                    </p>
+                    <p class="azerty">
+                        <input id="box1" type="checkbox" name="accordEntreprise" />
+                        <label for="box1" id="autorisationEntreprise">J'autorise une entreprise à me contacter.</label>
+                    </p>
+                </div>
+                <br>
+                <input type="submit" value="Envoyer" class="suivant2" title="Envoyer">
+                <br>
+                <br>
+                <br>
+            </form>
+        </div>
+        <br>
+        <footer>
+            <hr>
+            <br>
+            <p class='facu'>Commentaire facultatif mais cependant très important pour estimer la qualité de la formation.</p>
+        </footer>
+    </div>
+    <script type="text/javascript" src="/script/jquery.js"></script>
+    <script type="text/javascript" src="/script/indexForm.js"></script>
+    <%- include('../../views/analyticsTrackers.ejs'); %>
+    <script>
+    ga('send', {
+      hitType: 'event',
+      eventCategory: 'form',
+      eventAction: 'step2',
+      eventLabel: 'Etape 2'
+    });
+    </script>
+</body>
+
+</html>

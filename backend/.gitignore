@@ -1,0 +1,15 @@
+node_modules
+console.log
+access.log
+npm-debug.log
+logs
+*.log
+data/notes.csv
+data/trainee
+data/avis.json
+data/intercarif_current.xml
+data/intercarif_current.xml.gz
+data/intercarif
+test-results.xml
+heapdump-*
+.data

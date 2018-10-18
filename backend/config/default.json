@@ -1,0 +1,84 @@
+{
+  "app": {
+    "env": "dev",
+    "name": "Anotea",
+    "public_hostname": "http://127.0.0.1:3000",
+    "port": 8080,
+    "mailer": {
+      "limit": 500
+    },
+    "active_regions": [
+      "11",
+      "17"
+    ]
+  },
+  "log": {
+    "console": {
+      "json": false
+    },
+    "file": {
+      "enabled": true,
+      "info": "logs/anotea.log",
+      "error": "logs/anotea.error.log",
+      "maxSize": "20M",
+      "keep": 10,
+      "compress": true
+    },
+    "sentry": {
+      "enabled": false,
+      "DSN": "https://token@sentry.io/projet"
+    }
+  },
+  "mongodb": {
+    "uri": "mongodb://127.0.0.1:27017/anotea?w=1"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379
+  },
+  "security": {
+    "secret": "1234"
+  },
+  "auth": {
+    "backoffice": {
+      "type": "jwt",
+      "secret": "1234",
+      "expiration_in_seconds": 86400
+    },
+    "esd": {
+      "type": "hmac",
+      "secret": "1234",
+      "expiration_in_seconds": 300
+    },
+    "kairos": {
+      "type": "jwt",
+      "secret": "1234",
+      "expiration_in_seconds": 300
+    }
+  },
+  "analytics": {
+    "ga": "UA-92533869-2",
+    "hotjar": "504758",
+    "sessionDuration": 3600000
+  },
+  "smtp": {
+    "host": "localhost",
+    "port": "1025",
+    "secure": false,
+    "hostname": "localhost",
+    "greetingTimeout": 300000,
+    "from": "anotea@pole-emploi.fr",
+    "maxRelaunch": 1,
+    "relaunchDelay": 7,
+    "mailDev": "anotea.pe@gmail.com"
+  },
+  "api": {
+    "pagination": 20
+  },
+  "exports": {
+    "path": ".data/exports"
+  },
+  "front": {
+    "googleSiteVerification": "12345"
+  }
+}

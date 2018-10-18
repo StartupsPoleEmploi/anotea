@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+    <link rel="stylesheet" type="text/css" href="/css/front/noteo.css" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/img/favicon_noteo.ico" />
+
+</head>
+
+<body>
+    <div>
+        <header>
+            <br>
+            <img src="/img/logo_Anotea_Vertical_baseline.png" alt="" class="logoAnotea">
+            <div class="serviceProQuestionnaire">
+            <p>Service propulsé par</p>
+                <img src="/img/poleemploi.png" alt="" class="logoPE" />
+                <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
+            </div>
+        </header>
+        <section class="divPage3">
+            <h1>Merci d'avoir particip&eacute;</h1>
+            <blockquote>
+                <p class="txtPage3">Vos notes et commentaires seront publi&eacute;s sur les futures formations similaires &agrave; votre session de formation, sur nos sites partenaires ci-dessous.</p>
+            </blockquote>
+            <blockquote>
+                <h2 class="txtH2">Retrouvons-nous sur</h2>
+                <div class="imgLien">
+                    <a class="textimage" href="https://labonneformation.pole-emploi.fr/" title="Visiter labonneformation.fr"
+                        target="_blank"><img src="/img/labonneformation.png" alt=""> </a>
+                        <%if (carifLinkEnabled) { %>
+                            <a class="textimage" href="<%= carifURL %>" target="_blank"><img src="/img/regions/logo-questionnaire/carif-<%=trainee.codeRegion%>.png" alt=""> </a>
+                        <% } %>
+                </div>
+            </blockquote>
+        </section>
+        <footer>
+        </footer>
+    </div>
+    <%- include('../analyticsTrackers'); %>
+    <script>
+    ga('send', {
+      hitType: 'event',
+      eventCategory: 'form',
+      eventAction: 'step3',
+      eventLabel: 'Etape 3'
+    });
+    </script>
+</body>
+
+</html>

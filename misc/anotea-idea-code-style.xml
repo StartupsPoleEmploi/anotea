@@ -1,0 +1,15 @@
+<code_scheme name="anotea" version="173">
+    <HTMLCodeStyleSettings>
+        <option name="HTML_SPACE_INSIDE_EMPTY_TAG" value="true"/>
+        <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value=""/>
+    </HTMLCodeStyleSettings>
+    <JSCodeStyleSettings>
+        <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false"/>
+        <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true"/>
+        <option name="SPACES_WITHIN_IMPORTS" value="true"/>
+        <option name="INDENT_CHAINED_CALLS" value="false"/>
+    </JSCodeStyleSettings>
+    <codeStyleSettings language="HTML">
+        <option name="RIGHT_MARGIN" value="160"/>
+    </codeStyleSettings>
+</code_scheme>

@@ -1,0 +1,8 @@
+*.iml
+.idea/
+*.log
+*.out
+*.pid
+.DS_Store
+docker-compose.local.yml
+.data

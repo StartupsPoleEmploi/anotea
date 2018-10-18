@@ -1,0 +1,82 @@
+{
+  "name": "anotea",
+  "version": "1.0.0",
+  "description": "Anotea : l'advisor de la formation ! Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "mocha --recursive --exit --timeout 1000 test/unit",
+    "test:integration": "mocha --recursive --exit --timeout 5000 test/integration",
+    "test:all": "npm run test:unit && npm run test:integration",
+    "start": "npm run start:default",
+    "start:default": "node app.js",
+    "start:watch": "nodemon --inspect --ignore test/ app.js",
+    "lint": "eslint components jobs routes scripts test",
+    "smtp:start": "docker rm fakesmtp; docker run -d --name fakesmtp -p 1025:25 -v $(pwd)/.data/fakesmtp:/var/mail digiplant/fake-smtp",
+    "smtp:stop": "docker stop fakesmtp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.beta.pole-emploi.fr:labonneformation/anotea.git"
+  },
+  "author": "Loïc Guillois <loic@fitlab.fr>",
+  "contributors": [
+    "Loïc Guillois <loic@fitlab.fr>",
+    "Benoît Guérout <bguerout@yonoma.com>",
+    "Nabil Choukri <nabil.choukri@pole-emploi.fr>"
+  ],
+  "homepage": "https://anotea.pole-emploi.fr",
+  "license": "ISC",
+  "dependencies": {
+    "JSONStream": "1.3.3",
+    "bcryptjs": "2.4.3",
+    "body-parser": "1.18.2",
+    "boom": "7.2.0",
+    "commander": "2.15.1",
+    "config": "1.30.0",
+    "connect-flash": "0.1.1",
+    "connect-redis": "3.3.3",
+    "cookie-parser": "1.4.3",
+    "csv-parse": "1.3.3",
+    "ejs": "2.5.9",
+    "express": "4.16.3",
+    "express-rate-limit": "2.11.0",
+    "express-session": "1.15.6",
+    "joi": "13.4.0",
+    "jsonwebtoken": "8.2.1",
+    "lodash": "4.17.10",
+    "md5-file": "3.2.3",
+    "mobile-detect": "1.4.1",
+    "moment": "2.22.1",
+    "mongodb": "3.1.1",
+    "node-uuid": "1.4.8",
+    "nodemailer": "3.1.8",
+    "redis": "2.8.0",
+    "stream-transform": "0.1.2",
+    "string": "3.3.3",
+    "supertest": "3.1.0",
+    "swagger-ui-express": "3.0.9",
+    "through2-parallel": "0.1.3",
+    "underscore": "1.9.0",
+    "underscore.string": "3.3.4",
+    "uuid": "3.2.1",
+    "winston": "2.4.2",
+    "winston-logrotate": "1.3.0",
+    "winston-raven-sentry": "1.0.1",
+    "yamljs": "0.3.0"
+  },
+  "engines": {
+    "node": ">= 8.9.4"
+  },
+  "devDependencies": {
+    "csv-write-stream": "2.0.0",
+    "eslint": "5.6.0",
+    "linebyline": "1.3.0",
+    "md5": "2.2.1",
+    "nodemon": "1.17.5",
+    "rxjs": "5.5.11",
+    "superagent": "3.8.3",
+    "superagent-throttle": "0.2.5",
+    "xml2js": "0.4.19"
+  }
+}
