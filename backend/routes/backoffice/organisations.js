@@ -119,7 +119,8 @@ module.exports = function (db, authService, logger, configuration) {
             res.send({ error: 404 });
             return;
         }
-        const advices = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray().map(advice => {
+        const results = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
+        const advices = results.map(advice => {
             if (advice.pseudoMasked) {
                 advice.pseudo = '';
             }
@@ -213,7 +214,8 @@ module.exports = function (db, authService, logger, configuration) {
             res.send({ error: 404 });
             return;
         }
-        const advices = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray().map(advice => {
+        const results = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
+        const advices = results.map(advice => {
             if (advice.pseudoMasked) {
                 advice.pseudo = '';
             }
