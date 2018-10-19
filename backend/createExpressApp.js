@@ -93,8 +93,9 @@ module.exports = (logger, configuration) => {
             });
 
             app.use('/api/', new RateLimit({
-                windowMs: 15 * 60 * 1000, // 15 minutes
-                max: 500, // limit each IP to 100 requests per windowMs
+                keyGenerator: req => req.headers['x-forwarded-for'] || req.ip,
+                windowMs: 1 * 60 * 1000, // 1 minute
+                max: 120, // 2 requests per seconds
                 delayMs: 0, // disabled
                 handler: function(req, res) {
                     if (this.headers) {

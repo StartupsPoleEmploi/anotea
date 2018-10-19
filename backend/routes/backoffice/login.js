@@ -8,7 +8,7 @@ module.exports = function(db, authService, logger, configuration) {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
-    const getRemoteAddress = req => req.headers['X-FORWARDED-FOR'] || req.connection.remoteAddress;
+    const getRemoteAddress = req => req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     const logEvent = (req, profile) => {
         db.collection('events').save({
