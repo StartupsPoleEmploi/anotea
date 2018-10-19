@@ -11,7 +11,7 @@ module.exports = function(db, authService, logger, configuration) {
     const pagination = configuration.api.pagination;
 
     const getRemoteAddress = req => {
-        return req.headers['X-FORWARDED-FOR'] || req.connection.remoteAddress;
+        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     };
 
     router.get('/backoffice/status', checkAuth, (req, res) => {
