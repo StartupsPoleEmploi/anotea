@@ -108,7 +108,7 @@ module.exports = function(db, authService, logger, configuration) {
 
             const financer = await db.collection('financer').findOne({ courriel: identifier });
             if (financer !== null && await checkPassword(password, financer.password)) {
-                await rehashPassword('moderator', financer, password);
+                await rehashPassword('financer', financer, password);
                 return await handleFinancer(req, res, financer);
             }
 
