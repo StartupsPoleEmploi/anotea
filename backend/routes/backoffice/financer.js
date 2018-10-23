@@ -180,7 +180,7 @@ module.exports = function(db, authService, logger, configuration) {
                 advice.comment.title = '';
             }
             return advice;
-        }).toArray();
+        });
 
         res.send({
             advices: dataExposer.unescapeComments(advices),
