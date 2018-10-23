@@ -8,6 +8,10 @@ export const getOrganisations = (idregion, codeFinanceur) => {
     return _get(`/backoffice/financeur/region/${idregion}/organisations${query}`);
 };
 
+export const getRegion = (idregion) => {
+    return _get(`/backoffice/financeur/region/${idregion}`)
+};
+
 export const getOrganisationAdvicesToExportToExcel = (idregion, codeFinanceur, siren, postalCode, trainingId, filter) => {
     let query = '';
     if (codeFinanceur) {

@@ -12,6 +12,7 @@ import AccountActivation                    from './components/backoffice/organi
 import { ForgottenPassword }                from './components/login/forgottenPassword';
 import { setToken, removeToken }            from './utils/token';
 import { subscribeToHttpEvent }             from './utils/http-client';
+import { getRegion }                        from './lib/financerService';
 
 addLocaleData([...fr]);
 
@@ -101,6 +102,12 @@ class App extends Component {
             codeFinanceur: codeFinanceur,
             raisonSociale: raisonSociale
         });
+
+        getRegion(this.state.codeRegion).then(region => {
+            this.setState({
+                region: region[0].region
+            });
+        })
     };
 
     handleError = () => {
@@ -125,8 +132,9 @@ class App extends Component {
                             loggedIn={this.state.loggedIn}
                             profile={this.state.profile}
                             raisonSociale={this.state.raisonSociale}
+                            codeFinanceur={this.state.codeFinanceur}
                             codeRegion={this.state.codeRegion}
-                            codeFinanceur={this.state.codeFinanceur}/>
+                            region={this.state.region}/>
 
                     {this.state.action === 'creation' &&
                     <AccountActivation handleForgottenPassword={this.handleForgottenPassword} token={this.state.token}
