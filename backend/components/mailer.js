@@ -123,6 +123,23 @@ module.exports = function(db, logger, configuration) {
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
         getOrganisationPasswordForgottenLink: getOrganisationPasswordForgottenLink,
+        sendVosAvisNonLusMail: async (mailOptions, organisation, successCallback, errorCallback) => {
+            mailOptions.subject = 'Des nouveaux avis ont été déposés';
+
+            const link = getOrganisationPasswordLink(organisation);
+            const trackingLink = getTrackingLink(organisation);
+            getCarif(organisation.codeRegion, carif => {
+                mailOptions.from = getFrom(carif);
+                const params = {
+                    link: link,
+                    trackingLink: trackingLink,
+                    hostname: configuration.app.public_hostname,
+                    organisation: organisation,
+                    contact: getContact(carif)
+                };
+                sendMail('organisation_avis', params, mailOptions, successCallback, errorCallback);
+            }, errorCallback);
+        },
         sendOrganisationAccountLink: async (mailOptions, organisation, successCallback, errorCallback) => {
             mailOptions.subject = 'Pôle Emploi vous donne accès aux avis de vos stagiaires';
 
