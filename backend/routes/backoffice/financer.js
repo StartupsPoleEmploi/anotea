@@ -9,16 +9,20 @@ module.exports = function(db, authService, logger, configuration) {
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
     const POLE_EMPLOI = '4';
 
-    router.get('/backoffice/financeur/region/:idregion', (req, res) => {
-        let filter = { "region_num": `${req.params.idregion}` };
+    router.get('/backoffice/financeur/region/:idregion', async (req, res) => {
 
-        db.collection('regions')
+        let filter = { "region_num": `${req.params.idregion}` };
+        const region = await db.collection('regions')
             .aggregate([
                 { $match: filter},
                 { $group: {_id: "$region_num", region: {$first: "$region"}}}])
-            .toArray( function(err, regions) {
-                res.status(200).send(regions)
-            })
+            .toArray();
+
+        if (region !== null) {
+            res.status(200).send(region[0]);
+        } else {
+            res.send({ error: 404 });
+        }
     });
 
     //Liste des organismes financés par le financeur connecté et qui appartiennent à la même region qu'à celui là

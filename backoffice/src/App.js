@@ -105,7 +105,7 @@ class App extends Component {
 
         getRegion(this.state.codeRegion).then(region => {
             this.setState({
-                region: region[0].region
+                region: region.region
             });
         })
     };
