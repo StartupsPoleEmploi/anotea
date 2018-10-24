@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { IntlProvider } from 'react-intl';
-import queryString from 'query-string';
-import fr from 'react-intl/locale-data/fr';
-import { addLocaleData } from 'react-intl';
-import jwtDecode from 'jwt-decode';
+import { IntlProvider }     from 'react-intl';
+import queryString          from 'query-string';
+import fr                   from 'react-intl/locale-data/fr';
+import { addLocaleData }    from 'react-intl';
+import jwtDecode            from 'jwt-decode';
+
 import './App.css';
-import { LoginForm, LoginWithAccessToken } from './components/login';
-import { Header, Main } from './components/backoffice';
-import AccountActivation from './components/backoffice/organisation/AccountActivation';
-import { ForgottenPassword } from './components/login/forgottenPassword';
-import { setToken, removeToken } from './utils/token';
-import { subscribeToHttpEvent } from './utils/http-client';
+import { LoginForm, LoginWithAccessToken }  from './components/login';
+import { Header, Main }                     from './components/backoffice';
+import AccountActivation                    from './components/backoffice/organisation/AccountActivation';
+import { ForgottenPassword }                from './components/login/forgottenPassword';
+import { setToken, removeToken }            from './utils/token';
+import { subscribeToHttpEvent }             from './utils/http-client';
+import { getRegion }                        from './lib/financerService';
 
 addLocaleData([...fr]);
 
@@ -21,7 +23,7 @@ class App extends Component {
         profile: null,
         action: null,
         forgottenPassword: false
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -100,6 +102,12 @@ class App extends Component {
             codeFinanceur: codeFinanceur,
             raisonSociale: raisonSociale
         });
+
+        getRegion(this.state.codeRegion).then(region => {
+            this.setState({
+                region: region.region
+            });
+        })
     };
 
     handleError = () => {
@@ -120,8 +128,13 @@ class App extends Component {
         return (
             <IntlProvider locale="fr">
                 <div className="App">
-                    <Header handleLogout={this.handleLogout} loggedIn={this.state.loggedIn} profile={this.state.profile}
-                        raisonSociale={this.state.raisonSociale} />
+                    <Header handleLogout={this.handleLogout}
+                            loggedIn={this.state.loggedIn}
+                            profile={this.state.profile}
+                            raisonSociale={this.state.raisonSociale}
+                            codeFinanceur={this.state.codeFinanceur}
+                            codeRegion={this.state.codeRegion}
+                            region={this.state.region}/>
 
                     {this.state.action === 'creation' &&
                     <AccountActivation handleForgottenPassword={this.handleForgottenPassword} token={this.state.token}
