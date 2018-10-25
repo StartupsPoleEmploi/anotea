@@ -1,5 +1,11 @@
 Bonjour,
 
+<%= organisation.raisonSociale %>
+
+SIRET: <%= organisation.SIRET %>
+
+Votre identifiant est <%= organisation.SIRET %>
+
 Information importante :
 Il existe un compte Anotéa pour chaque SIRET présent dans la base de l’Inter Carif ou la base Kairos de Pôle Emploi.
 Vous ne trouverez dans le compte lié à ce message que les avis déposés sur des sessions enregistrées sous ce même SIRET.

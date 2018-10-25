@@ -3,18 +3,11 @@ const getContactEmail = require('../../../components/getContactEmail');
 module.exports = (db, logger, configuration, mailer) => {
 
     let organismes = db.collection('testOrga');
-    const MINIMUM_COMMENT_COUNT = 1;
+    const MINIMUM_COMMENT_COUNT = 5;
 
-    const findOrganismes = async region => {
+    const findOrganismes = async () => {
         logger.info('Searching organismes with at least 5 non read comments...');
         return await organismes.aggregate([
-            // {
-            //     $match: {
-            //         passwordHash: null,
-            //         mailSentDate: null,
-            //         sources: { $ne: null },
-            //     }
-            // },
             {
                 $lookup: {
                     from: 'comment',
@@ -23,16 +16,14 @@ module.exports = (db, logger, configuration, mailer) => {
                     },
                     pipeline: [
                         {
-                            $project: {
-                                'training.organisation.siret': 1,
-                            }
-                        },
-                        {
                             $match: {
-                                $expr: { $eq: ['$training.organisation.siret', '$$siret'] },
-                                // 'read': { $ne: true },
-                                // 'published': { $eq: true },
-                                // 'reported': { $ne: true }
+                                $expr: {
+                                    $and: [
+                                        { $ne: ['$read', true] },
+                                        { $eq: ['$published', true] },
+                                        { $eq: ['$training.organisation.siret', '$$siret'] },
+                                    ]
+                                },
                             }
                         },
                         {
@@ -44,11 +35,10 @@ module.exports = (db, logger, configuration, mailer) => {
 
             },
             {
-                $unwind:
-                    {
+                $unwind: {
                         path: '$results',
                         preserveNullAndEmptyArrays: true
-                    }
+                }
             },
             {
                 $replaceRoot: {

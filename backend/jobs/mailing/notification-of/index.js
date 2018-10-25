@@ -23,7 +23,7 @@ const main = async () => {
     };
 
     try {
-        logger.info('Sending emails to organismes...');
+        logger.info(`Sending emails to organismes...`);
 
         let results = await mailerOrganismeWithCommentNonRead.sendEmails();
 
