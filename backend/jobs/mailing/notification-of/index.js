@@ -5,7 +5,7 @@ const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-const mailerOrganismeWithCommentNonRead = require('./mailerOrganismeWithCommentNonRead');
+const createMailerOrganismeWithCommentNonRead = require('./mailerOrganismeWithCommentNonRead');
 
 const main = async () => {
 
@@ -14,7 +14,7 @@ const main = async () => {
     let db = client.db();
     let logger = getLogger('anotea-job-email-campaign-with-at-least-five-not-read-comments', configuration);
     let mailer = require('../../../components/mailer.js')(db, logger, configuration);
-    let mailerOrganismeWithCommentNonRead = mailerOrganismeWithCommentNonRead(db, logger, configuration, mailer);
+    let mailerOrganismeWithCommentNonRead = createMailerOrganismeWithCommentNonRead(db, logger, configuration, mailer);
 
     const abort = message => {
         logger.error(message, () => {
@@ -25,7 +25,7 @@ const main = async () => {
     try {
         logger.info('Sending emails to organismes...');
 
-        let results = await mailerOrganismeWithCommentNonRead.sendEmails;
+        let results = await mailerOrganismeWithCommentNonRead.sendEmails();
 
         await client.close();
 

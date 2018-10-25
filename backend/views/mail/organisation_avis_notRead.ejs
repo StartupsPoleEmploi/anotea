@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>Pôle Emploi - vous avez des nouveaux avis</title>
+    <meta name="viewport" content="width=device-width">
+    <style>
+        body {
+            font-size:1.3em;
+        }
+        body td {
+            padding:2em;
+            width: 33%;
+        }
+        table {
+            width: 760px;
+        }
+        .star {
+            width: 30px;
+            margin: 5px;
+        }
+        @media only screen and (max-width: 596px) {
+            body {
+                width:100%;
+                font-size:1em;
+            }
+            body td {
+                padding:.5em;
+                width: 33%;
+            }
+            table {
+                width: 40%;
+            }
+        }
+    </style>
+</head>
+<body style="background-color:#ebebeb;font-size:1.3em">
+    <div style="display:none">
+        <p>Bonjour,</p>
+
+        <p style="text-align:center">
+
+        <p><strong>Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur LaBonneFormation.pole-emploi.fr.</strong></p>
+
+        <p>Consultez-les et apportez des éléments de réponse permettant d'éclairer le choix de vos futurs stagiaires.</p>
+
+        </p>
+
+        <p style="text-align:center"><small>Je me connecte à mon Espace Anotéa : <a href="https://anotea.pole-emploi.fr/admin/">https://anotea.pole-emploi.fr/admin/</a></small></p>
+
+        <p style="text-align:center"><small>En cas de besoin contactez : [<a href="mailto:<%= contact %>"><%= contact %></a>]</small></p>
+    </div>
+    <img src="<%= trackingLink %>" />
+</body>
+</html>

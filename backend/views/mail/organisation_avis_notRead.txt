@@ -1,0 +1,12 @@
+Bonjour,
+
+Information importante :
+Il existe un compte Anotéa pour chaque SIRET présent dans la base de l’Inter Carif ou la base Kairos de Pôle Emploi.
+Vous ne trouverez dans le compte lié à ce message que les avis déposés sur des sessions enregistrées sous ce même SIRET.
+Une évolution future de l’application permettra d’agréger les différents SIRET pour un même organisme.
+
+Cordialement,
+L’Equipe Anotéa
+
+Plus d’infos sur Anotea: https://anotea.pole-emploi.fr/
+Votre contact : [<%= contact %>]

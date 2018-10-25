@@ -124,7 +124,7 @@ module.exports = function(db, logger, configuration) {
         getFormLink: getFormLink,
         getOrganisationPasswordForgottenLink: getOrganisationPasswordForgottenLink,
         sendVosAvisNonLusMail: async (mailOptions, organisation, successCallback, errorCallback) => {
-            mailOptions.subject = 'Des nouveaux avis ont été déposés';
+            mailOptions.subject = 'Pôle Emploi - Vous avez des nouveaux avis stagiaires';
 
             const link = getOrganisationPasswordLink(organisation);
             const trackingLink = getTrackingLink(organisation);
@@ -137,7 +137,7 @@ module.exports = function(db, logger, configuration) {
                     organisation: organisation,
                     contact: getContact(carif)
                 };
-                sendMail('organisation_avis', params, mailOptions, successCallback, errorCallback);
+                sendMail('organisation_avis_notRead', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);
         },
         sendOrganisationAccountLink: async (mailOptions, organisation, successCallback, errorCallback) => {

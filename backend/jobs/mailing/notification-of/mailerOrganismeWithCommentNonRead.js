@@ -2,20 +2,19 @@ const getContactEmail = require('../../../components/getContactEmail');
 
 module.exports = (db, logger, configuration, mailer) => {
 
-    let organismes = db.collection('organismes');
+    let organismes = db.collection('testOrga');
+    const MINIMUM_COMMENT_COUNT = 1;
 
-    const findOrganismes = async () => {
-
-        logger.debug('Searching organismes with at 5 non read comments...');
+    const findOrganismes = async region => {
+        logger.info('Searching organismes with at least 5 non read comments...');
         return await organismes.aggregate([
-            {
-                $match: {
-                    passwordHash: null,
-                    mailSentDate: null,
-                    sources: { $ne: null },
-                    creationDate: { $exists: true }
-                }
-            },
+            // {
+            //     $match: {
+            //         passwordHash: null,
+            //         mailSentDate: null,
+            //         sources: { $ne: null },
+            //     }
+            // },
             {
                 $lookup: {
                     from: 'comment',
@@ -31,13 +30,13 @@ module.exports = (db, logger, configuration, mailer) => {
                         {
                             $match: {
                                 $expr: { $eq: ['$training.organisation.siret', '$$siret'] },
-                                'read': { $ne: true },
-                                'published': { $eq: true },
-                                'reported': { $ne: true }
+                                // 'read': { $ne: true },
+                                // 'published': { $eq: true },
+                                // 'reported': { $ne: true }
                             }
                         },
                         {
-                            $count: 'nbNonReadComments'
+                            $count: 'nbComments'
                         }
                     ],
                     as: 'results'
@@ -63,7 +62,7 @@ module.exports = (db, logger, configuration, mailer) => {
             {
                 $match: {
                     nbComments: {
-                        $gte: 5
+                        $gte: MINIMUM_COMMENT_COUNT
                     },
                 }
             }
@@ -92,18 +91,12 @@ module.exports = (db, logger, configuration, mailer) => {
 
     const handleSendError = (organisme, error) => {
         logger.error('Unable to send email: ', error);
-        return organismes.update({ '_id': organisme._id }, {
-            $set: {
-                mailError: 'smtpError',
-                mailErrorDetail: error
-            }
-        });
     };
 
     return {
         sendEmails: async () => {
             let total = 0;
-            let cursor = await findOrganismes;
+            let cursor = await findOrganismes();
             while (await cursor.hasNext()) {
                 let results = await cursor.next();
                 try {
