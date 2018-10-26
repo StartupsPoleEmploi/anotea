@@ -2,7 +2,7 @@ const getContactEmail = require('../../../components/getContactEmail');
 
 module.exports = (db, logger, configuration, mailer) => {
 
-    let organismes = db.collection('testOrga');
+    let organismes = db.collection('organismes');
     const MINIMUM_COMMENT_COUNT = 5;
 
     const findOrganismes = async () => {
@@ -65,15 +65,7 @@ module.exports = (db, logger, configuration, mailer) => {
 
         return new Promise((resolve, reject) => {
             mailer.sendVosAvisNonLusMail({ to: getContactEmail(organisme) }, organisme, async () => {
-                await organismes.update({ '_id': organisme._id }, {
-                    $set: {
-                        mailSentDate: new Date()
-                    },
-                    $unset: {
-                        mailError: '',
-                        mailErrorDetail: ''
-                    },
-                });
+                logger.info('Sending email to', organisme.courriel);
                 resolve();
             }, err => reject(err));
         });
