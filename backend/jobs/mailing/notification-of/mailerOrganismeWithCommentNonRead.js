@@ -9,6 +9,11 @@ module.exports = (db, logger, configuration, mailer) => {
         logger.info('Searching organismes with at least 5 non read comments...');
         return await organismes.aggregate([
             {
+                $match: {
+                    passwordHash: { $ne: null },
+                }
+            },
+            {
                 $lookup: {
                     from: 'comment',
                     let: {
@@ -32,12 +37,11 @@ module.exports = (db, logger, configuration, mailer) => {
                     ],
                     as: 'results'
                 }
-
             },
             {
                 $unwind: {
-                        path: '$results',
-                        preserveNullAndEmptyArrays: true
+                    path: '$results',
+                    preserveNullAndEmptyArrays: true,
                 }
             },
             {
