@@ -1,18 +1,12 @@
 Bonjour,
 
-<%= organisation.raisonSociale %>
+Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur LaBonneFormation.pole-emploi.fr.
 
-SIRET: <%= organisation.SIRET %>
-
-Votre identifiant est <%= organisation.SIRET %>
-
-Information importante :
-Il existe un compte Anotéa pour chaque SIRET présent dans la base de l’Inter Carif ou la base Kairos de Pôle Emploi.
-Vous ne trouverez dans le compte lié à ce message que les avis déposés sur des sessions enregistrées sous ce même SIRET.
-Une évolution future de l’application permettra d’agréger les différents SIRET pour un même organisme.
+Consultez-les et apportez des éléments de réponse permettant d’éclairer le choix de vos futurs stagiaires.
 
 Cordialement,
 L’Equipe Anotéa
 
 Plus d’infos sur Anotea: https://anotea.pole-emploi.fr/
-Votre contact : [<%= contact %>]
+Je me connecte à mon Espace Anotéa : https://anotea.pole-emploi.fr/admin/
+En cas de besoin contactez : [<%= contact %>]

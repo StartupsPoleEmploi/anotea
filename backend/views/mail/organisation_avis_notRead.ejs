@@ -1,53 +1,83 @@
 <html>
-<head>
-    <title>Pôle Emploi - vous avez des nouveaux avis</title>
-    <meta name="viewport" content="width=device-width">
-    <style>
-        body {
-            font-size:1.3em;
-        }
-        body td {
-            padding:2em;
-            width: 33%;
-        }
-        table {
-            width: 760px;
-        }
-        .star {
-            width: 30px;
-            margin: 5px;
-        }
-        @media only screen and (max-width: 596px) {
-            body {
-                width:100%;
-                font-size:1em;
-            }
-            body td {
-                padding:.5em;
-                width: 33%;
-            }
-            table {
-                width: 40%;
-            }
-        }
-    </style>
-</head>
-<body style="background-color:#ebebeb;font-size:1.3em">
-    <div style="display:none">
-        <p>Bonjour,</p>
+    <head>
+        <title>Pôle Emploi - vous avez des nouveaux avis stagiaires</title>
+            <meta name="viewport" content="width=device-width">
+            <style>
+                body {
+                    font-size:1em;
+                }
 
-        <p style="text-align:center">
+                body td {
+                    padding:2em;
+                    width: 33%;
+                }
 
-        <p><strong>Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur LaBonneFormation.pole-emploi.fr.</strong></p>
+                .banner {
+                    height: 193px;
+                }
 
-        <p>Consultez-les et apportez des éléments de réponse permettant d'éclairer le choix de vos futurs stagiaires.</p>
+                .icons-mobile {
+                    display: none;
+                }
 
-        </p>
+                .icons td {
+                    padding: 0px 0px 5px 20px;
+                }
 
-        <p style="text-align:center"><small>Je me connecte à mon Espace Anotéa : <a href="https://anotea.pole-emploi.fr/admin/">https://anotea.pole-emploi.fr/admin/</a></small></p>
-
-        <p style="text-align:center"><small>En cas de besoin contactez : [<a href="mailto:<%= contact %>"><%= contact %></a>]</small></p>
-    </div>
-    <img src="<%= trackingLink %>" />
-</body>
+                .labels td {
+                    padding: 0px 0px 20px 20px;
+                }
+                @media only screen and (max-width: 596px) {
+                    body {
+                        width:100%;
+                        font-size:1em;
+                    }
+                    body td {
+                        padding:.5em;
+                        width: 33%;
+                    }
+                    .labels, .icons {
+                        display: none;
+                    }
+                    .icons-mobile {
+                        display: inherit;
+                        background: white;
+                        width: 760px;
+                        padding: 20px 0px 50px 0px;
+                    }
+                }
+            </style>
+    </head>
+    <body style="background-color:#ebebeb;font-size:1.3em">
+        <center>
+            <table height="100%" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
+                <tr>
+                    <td  style="padding:2em" align="left" valign="middle"><img src="<%= hostname %>/img/email/logo_Anotea_Vertical_baseline.png" alt=""/></td>
+                    <td  style="padding:2em" colspan="2" align="right" valign="middle">
+                        Propulsé par &nbsp;
+                        <img src="<%= hostname %>/img/regions/logo-email/logo_<%= organisation.codeRegion %>.png" alt="" style="vertical-align: middle;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td  style="padding:2em" colspan="2" align="left" valign="middle">
+                        Bonjour,
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding:0em 2em">
+                        <p><strong> Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur LaBonneFormation.pole-emploi.fr.</strong></p>
+                        <p>Consultez-les et apportez des éléments de réponse permettant d'éclairer le choix de vos futurs stagiaires.</p>
+                    </td>
+                </tr>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:center">
+                        <p><strong>Je me connecte à mon espace Anotea : </strong><small><a href="https://anotea.pole-emploi.fr/">https://anotea.pole-emploi.fr/admin/</a></small></p>
+                        <p><strong>En cas de besoin contactez : </strong><small><a href="mailto:<%= contact %>"><%= contact %></a></small></p>
+                    </td>
+                </tr>
+            </table>
+        </center>
+        <img src="<%= trackingLink %>" />
+    </body>
 </html>
