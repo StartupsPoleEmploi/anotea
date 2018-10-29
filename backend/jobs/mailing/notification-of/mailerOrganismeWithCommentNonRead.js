@@ -29,6 +29,7 @@ module.exports = (db, logger, configuration, mailer) => {
                                         { $eq: ['$training.organisation.siret', '$$siret'] },
                                     ]
                                 },
+                                'comment': {$ne: null}
                             }
                         },
                         {
