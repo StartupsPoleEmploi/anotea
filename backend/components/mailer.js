@@ -71,7 +71,7 @@ module.exports = function(db, logger, configuration) {
             {
                 $match: {
                     'training.organisation.siret': siret,
-                    'comment': {$ne: null},
+                    'comment': { $ne: null },
                     'read': true,
                     'published': true
                 }
