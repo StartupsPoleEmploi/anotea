@@ -79,7 +79,7 @@ module.exports = function(db, logger, configuration) {
             {
                 $group: {
                     _id: '$training.organisation.siret',
-                    comment: { $first: { $ifNull: [ "$comment.text", "unsep" ] } }
+                    comment: { $first: '$comment.text' }
                 }
             },
             ]);
