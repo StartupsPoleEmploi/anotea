@@ -29,7 +29,7 @@ module.exports = function(db, logger, configuration) {
     };
 
     const getUnsubscribeLink = trainee => {
-        return `${getConsultationLink(trainee)}/unsubscribe`;
+        return `${configuration.app.public_hostname}/mail/${trainee.token}/unsubscribe`;
     };
 
     const getFormLink = trainee => {

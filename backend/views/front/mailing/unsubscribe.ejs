@@ -1,41 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
-        <link rel="stylesheet" type="text/css" href="/css/front/advisor-questionnaire.css" media="all">
-        <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
-    </head>
-    <body>
-        <div>
-            <header>
-                <a href="/" title="#"></a>
-                <ul>
-                    <li>Service
-                        <br />propuls&eacute; par</li>
-                    <li><a class="poleemploi textimage" href="http://www.pole-emploi.fr/accueil/" title="Visiter le site pole-emploi.fr" target="_blank">P&ocirc;le emploi</a></li>
-                    <li><a class="iledefrance textimage" href="https://www.iledefrance.fr/" title="Visiter le site iledefrance.fr" target="_blank">Conseil r&eacute;gional d'&Icirc;le-de-France</a></li>
-                </ul>
-            </header>
+<html>
+	<head>
+		<title>Votre avis nous intéresse</title>
+		<meta name="viewport" content="width=device-width">
+		<style>
+			body {
+				font-size:1em;
+			}
+			body td {
+				padding:2em;
+				width: 33%;
+			}
+			.star {
+				width: 60px;
+				margin: 5px;
+			}
 
-            <section>
-                <h2>
-                    Vous avez été désinscrit avec succès. Vous ne recevrez plus de courriers électroniques de notre part.
-                </h2>
+			.avis-button {
+				text-decoration: none;
+				background-color: #FDB429;
+				line-height: 2em;
+				border-radius: 9px;
+				padding: 0.6em;
+				color: white;
+				display: block;
+				margin: auto;
+				font-size: 30px;
+				width:90%;
+			}
 
-            </section>
+			.banner {
+				height: 193px;
+			}
 
-            <footer>
-                <blockquote>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at porttitor sem. Aliquam erat volutpat. Donec placerat nisl magna, et faucibus arcu condimentum sed. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at porttitor sem. Aliquam erat volutpat. Donec placerat nisl magna, et faucibus arcu condimentum sed.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at porttitor sem. Aliquam erat volutpat. Donec placerat nisl magna, et faucibus arcu condimentum sed. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at porttitor sem. Aliquam erat volutpat. Donec placerat nisl magna, et faucibus arcu condimentum sed.</p>
-                </blockquote>
-            </footer>
-        </div>
-        <script type="text/javascript" src="/script/jquery.js"></script>
-        <script type="text/javascript" src="/script/index.js"></script>
-        <%- include('../../analyticsTrackers'); %>
-    </body>
+			.icons-mobile {
+				display: none;
+			}
+			
+			.icons td {
+				padding: 0px 0px 5px 20px;
+			}
+
+			.labels td {
+				padding: 0px 0px 20px 20px;
+			}
+			@media only screen and (max-width: 596px) {
+				body {
+					width:100%;
+					font-size:1em;
+				}
+				body td {
+					padding:.5em;
+					width: 33%;
+				}
+				.labels, .icons {
+					display: none;
+				}
+				.icons-mobile {
+					display: inherit;
+					background: white;
+    				width: 760px;
+    				padding: 20px 0px 50px 0px;
+				}
+			}
+		</style>
+	</head>
+	<body style="background-color:#ebebeb;">
+		<center>
+			<table width="760px" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
+				<tr>
+					<td colspan="3" class="banner" style="height: 193px;padding:10px;background-image: url('/img/email/banner.png')">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="1"  align="left" valign="middle"><img src="/img/email/logo_Anotea_Vertical_baseline.png" alt=""/></td>
+					<td colspan="2" align="right" valign="middle">
+						Propulsé par &nbsp;
+						<img src="/img/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" style="vertical-align: middle;" /> 
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" style="padding:0em 2em; padding: 40px">
+                        Vous avez été désinscrit avec succès. Vous ne recevrez plus de courriers électroniques de notre part.
+					</td>
+				</tr>
+			</table>
+			<table  width="760px" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
+				<tr>
+					<td colspan="3" align="center" style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
+						<p>Pôle emploi traite vos données à caractère personnel (données professionnelles, données de contact) pour les besoins de la réalisation d’une enquête de satisfaction. Cette enquête est facultative. Pôle emploi a obtenu vos données soit directement si vous êtes demandeurs d’emploi, soit par le biais de votre Conseil Régional si vous y avez consenti.</p>
+						<p>Vos données seront conservées pendant la durée de l’enquête, pour les stagiaires n’ayant pas consenti à être contacté, ou jusqu’à la révocation du consentement et au maximum 3 ans pour les stagiaires ayant consentis à être contactés.</p>
+						<p>Conformément aux articles 12 à 23 du règlement général (UE) sur la protection des données n°2016/679 du 27 avril 2016 et à la loi Informatique et libertés n°78-17 du 6 janvier 1978 modifiée, vous bénéficiez notamment d’un droit d’accès, de rectification, d’effacement et le droit de porter une réclamation devant la Commission nationale de l’informatique et des libertés pour les données vous concernant. Pour exercer vos droits, vous pouvez vous adresser à votre agence ou au délégué à la protection des données de Pôle emploi (1 avenue du Docteur Gley, 75987 Paris cedex 20 ; <a href="mailto:courriers-cnil@pole-emploi.fr">courriers-cnil@pole-emploi.fr</a>).</p>
+					</td>
+				</tr>
+			</table>
+		</center>
+		<%- include('../../analyticsTrackers'); %>
+		    <script>
+		    ga('send', {
+		      hitType: 'event',
+		      eventCategory: 'mail',
+		      eventAction: 'webview',
+		      eventLabel: 'Email en version Web'
+		    });
+		    </script>
+	</body>
 </html>
