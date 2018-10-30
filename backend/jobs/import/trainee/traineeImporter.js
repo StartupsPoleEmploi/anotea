@@ -89,6 +89,10 @@ module.exports = (db, logger, configuration, source) => {
         return promise;
     };
 
+    const isEmptyLine = input => {
+        return input === ';;;;;;;;;;;;;;;;';
+    };
+
     const doImport = (campaign, file, handler, hash, resolve, reject) => {
         let results = {
             total: 0,
@@ -160,13 +164,9 @@ module.exports = (db, logger, configuration, source) => {
             }
             logger.info(`Trainee import ${handler.name}/${campaign}`);
 
-            if (await db.collection('importTrainee').findOne({ hash })) {
-                return Promise.reject(new Error(`CSV file ${file} already imported`));
-            }
-
             let lines = [];
 
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
                 if (dryRun === true) {
                     let line = 0;
                     let error = false;
@@ -174,7 +174,7 @@ module.exports = (db, logger, configuration, source) => {
                     let checks = [];
                     stream.on('line', async input => {
                         try {
-                            if (!error) {
+                            if (!error && !isEmptyLine(input)) {
                                 if (line++ === 0) {
                                     checks.push(checkIfHeaderIsValid(input, handler, stream, file));
                                 } else {
@@ -186,12 +186,14 @@ module.exports = (db, logger, configuration, source) => {
                             error = true;
                         }
                     }).on('close', () => {
-                        Promise.all(checks).catch(function(err) {
+                        Promise.all(checks).catch(() => {
                             reject(`${file} is not valid.`);
                         }).then(() => {
                             resolve(`${file} is valid.`);
                         });
                     });
+                } else if (await db.collection('importTrainee').findOne({ hash })) {
+                    reject(new Error(`CSV file ${file} already imported`));
                 } else {
                     doImport(campaign, file, handler, hash, resolve, reject);
                 }
