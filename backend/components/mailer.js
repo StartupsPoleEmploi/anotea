@@ -66,6 +66,25 @@ module.exports = function(db, logger, configuration) {
         successCallback(carif);
     };
 
+    const getOrganisationNotReadComment = async (siret) => {
+        return await db.collection('comment').aggregate([
+            {
+                $match: {
+                    'training.organisation.siret': siret,
+                    'comment': { $ne: null },
+                    'read': true,
+                    'published': true
+                }
+            },
+            {
+                $group: {
+                    _id: '$training.organisation.siret',
+                    comment: { $first: '$comment.text' }
+                }
+            },
+            ]);
+    };
+
     const buildContent = (template, extension, params) => {
         return new Promise((resolve, reject) => {
             ejs.renderFile(`views/mail/${template}.${extension}`, params, (err, str) => {
@@ -123,6 +142,33 @@ module.exports = function(db, logger, configuration) {
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
         getOrganisationPasswordForgottenLink: getOrganisationPasswordForgottenLink,
+        sendVosAvisNonLusMail: async (mailOptions, organisation, successCallback, errorCallback) => {
+            mailOptions.subject = 'Pôle Emploi - Vous avez des nouveaux avis stagiaires';
+
+            const trackingLink = getTrackingLink(organisation);
+            let comments = await getOrganisationNotReadComment(organisation.meta.siretAsString);
+
+            while (await comments.hasNext()) {
+                let results = await comments.next();
+                try {
+                    comment = results.comment;
+                } catch (e) {
+                    logger.error(e);
+                }
+            }
+
+            getCarif(organisation.codeRegion, carif => {
+                mailOptions.from = getFrom(carif);
+                const params = {
+                    comment: comment,
+                    trackingLink: trackingLink,
+                    hostname: configuration.app.public_hostname,
+                    organisation: organisation,
+                    contact: getContact(carif)
+                };
+                sendMail('organisation_avis_notRead', params, mailOptions, successCallback, errorCallback);
+            }, errorCallback);
+        },
         sendOrganisationAccountLink: async (mailOptions, organisation, successCallback, errorCallback) => {
             mailOptions.subject = 'Pôle Emploi vous donne accès aux avis de vos stagiaires';
 
