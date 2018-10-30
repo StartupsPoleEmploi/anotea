@@ -82,7 +82,7 @@ module.exports = (db, logger, configuration) => {
                 logger.error(err);
                 res.status(500).render('errors/error');
             } else {
-                res.render('front/mailing/unsubscribe.ejs', { trainee: trainee });
+                res.render('front/mailing/unsubscribe.ejs');
             }
         });
     });
