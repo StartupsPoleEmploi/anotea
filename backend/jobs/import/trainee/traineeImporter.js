@@ -5,6 +5,7 @@ const md5File = require('md5-file/promise');
 const moment = require('moment');
 const readline = require('readline');
 const _ = require('underscore');
+const colors = require('colors/safe');
 const validate = require('./traineeValidator');
 const { handleBackPressure } = require('../../utils');
 const createMailer = require('../../../components/mailer');
@@ -31,8 +32,9 @@ module.exports = (db, logger, configuration, source) => {
     };
 
     const checkIfHeaderIsValid = async (input, handler) => {
-        if (!_.isEqual(input.split(handler.csvOptions.delimiter), handler.csvOptions.columns)) {
-            logger.error(BAD_FORMAT_MESSAGE);
+        const cols = input.split(handler.csvOptions.delimiter);
+        if (!_.isEqual(cols, handler.csvOptions.columns)) {
+            logger.error(`${BAD_FORMAT_MESSAGE}. Differences : ${colors.green(`+${_.difference(cols, handler.csvOptions.columns)}`)} ${colors.red(`-${_.difference(handler.csvOptions.columns, cols)}`)}`);
             return false;
         } else {
             return true;
@@ -50,7 +52,7 @@ module.exports = (db, logger, configuration, source) => {
         }
     };
 
-    const checkValidation = (input, handler, campaign, file) => {
+    const checkValidation = (input, handler, campaign) => {
         const parser = parse(handler.csvOptions);
         parser.write(input);
         parser.end();
@@ -178,7 +180,7 @@ module.exports = (db, logger, configuration, source) => {
                                 if (error) {
                                     sendErrorMail(file, 'de la présence de doublons', () => finish(error, resolve, reject));
                                 }
-                                error = error || !checkValidation(input, handler, campaign, file);
+                                error = error || !checkValidation(input, handler, campaign);
                                 if (error) {
                                     sendErrorMail(file, 'du format non conforme', () => finish(error, resolve, reject));
                                 }
