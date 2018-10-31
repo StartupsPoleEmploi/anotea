@@ -553,6 +553,59 @@ body {
     height: 43px;
 }
 
+.actionToModerate {
+    margin-top: 60px !important;
+    margin-bottom: 60px !important;
+}
+
+.stagiaires {
+    font-size: 14px !important;
+    line-height: 18px !important;
+    letter-spacing: normal !important;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    color: rgb(72, 72, 72) !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    position: relative !important;
+    text-align: center !important;
+    width: auto !important;
+    border-radius: 4px !important;
+    text-decoration: none !important;
+    background: #ffffff !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: #f0ad4e !important;
+    /*border-image: initial !important;*/
+}
+
+.of {
+    font-size: 14px !important;
+    line-height: 18px !important;
+    letter-spacing: normal !important;
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    color: rgb(72, 72, 72) !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    position: relative !important;
+    text-align: center !important;
+    width: auto !important;
+    border-radius: 4px !important;
+    text-decoration: none !important;
+    background: #ffffff !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: #f0ad4e !important;
+    /*border-image: initial !important;*/
+}
+
 .moderationPanel .toolbar > div, .organisationPanel .toolbar > div {
     display: inline-block;
 }

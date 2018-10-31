@@ -15,8 +15,27 @@ export const loadAdvices = (filter, order, codeRegion, page) => {
     return _get(`/backoffice/advices/${codeRegion}/${query}`);
 };
 
+export const loadOfResponses = (filter, order, codeRegion, page) => {
+    let query = '';
+    if (filter) {
+        query = `?filter=${filter}&order=${order}`;
+    }
+    if (page != null) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}page=${page}`;
+    }
+    return _get(`/backoffice/organisations/responses/${codeRegion}/${query}`);
+};
+
 export const loadInventory = codeRegion => {
     return _get(`/backoffice/advices/${codeRegion}/inventory`);
+};
+
+export const loadOfInventory = codeRegion => {
+    return _get(`/backoffice/organisations/responses/${codeRegion}/inventory`);
 };
 
 export const maskPseudo = id => {

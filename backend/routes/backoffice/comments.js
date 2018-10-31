@@ -125,6 +125,55 @@ module.exports = function(db, authService, logger, configuration) {
         });
     });
 
+    //ORGANISATION ANSWERS...
+    router.get('/backoffice/organisations/responses/:codeRegion/', checkAuth, async (req, res) => {
+        const projection = { token: 0 };
+        let filter = { 'answer': { $ne: null }, 'codeRegion': `${req.params.codeRegion}` };
+
+        if (req.query.filter) {
+            if (req.query.filter === 'reported') {
+                filter = { ...filter, 'answer.reported': true };
+            } else if (req.query.filter === 'rejected') {
+                filter = { ...filter, 'answer.rejected': true };
+            } else if (req.query.filter === 'published') {
+                filter = { ...filter, 'answer.published': true };
+            } else if (req.query.filter === 'toModerate') {
+                filter = { ...filter, 'answer.moderated': { $ne: true } };
+            }
+        }
+
+        let order = { date: 1 };
+        if (req.query.order) {
+            if (req.query.order === 'moderation') {
+                order = { date: 1 };
+            }
+        }
+        let skip = 0;
+        let page = 1;
+        if (req.query.page) {
+            try {
+                page = parseInt(req.query.page);
+                if (page - 1) {
+                    skip = (page - 1) * pagination;
+                }
+            } catch (e) {
+
+            }
+        }
+        const count = await db.collection('comment').countDocuments(filter);
+        if (count < skip) {
+            res.send({ error: 404 });
+            return;
+        }
+        const advices = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
+
+        res.send({
+            advices: dataExposer.unescapeComments(advices),
+            page: page,
+            pageCount: Math.ceil(count / pagination)
+        });
+    });
+
     const saveEvent = function(id, type, source) {
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
     };
@@ -433,6 +482,20 @@ module.exports = function(db, authService, logger, configuration) {
         inventory.toModerate = await collection.countDocuments({ ...filter, moderated: { $ne: true } });
         inventory.rejected = await collection.countDocuments({ ...filter, rejected: true });
         inventory.published = await collection.countDocuments({ ...filter, published: true });
+        inventory.all = await collection.countDocuments(filter);
+
+        res.status(200).send(inventory);
+    });
+
+    router.get('/backoffice/organisations/responses/:codeRegion/inventory', checkAuth, async (req, res) => {
+        let inventory = {};
+        const filter = { 'answer': { $ne: null }, 'codeRegion': `${req.params.codeRegion}` };
+        const collection = await db.collection('comment');
+
+        inventory.reported = await collection.countDocuments({ ...filter, 'answer.reported': true });
+        inventory.toModerate = await collection.countDocuments({ ...filter, 'answer.moderated': { $ne: true } });
+        inventory.rejected = await collection.countDocuments({ ...filter, 'answer.rejected': true });
+        inventory.published = await collection.countDocuments({ ...filter, 'answer.published': true });
         inventory.all = await collection.countDocuments(filter);
 
         res.status(200).send(inventory);
