@@ -22,7 +22,7 @@ module.exports = (db, logger, configuration, source) => {
 
     const mailer = createMailer(db, logger, configuration);
 
-    const sendErrorMail = async (file, reason, callback) => {
+    const sendErrorMail = (file, reason, callback) => {
         return mailer.sendMalformedImport({
             filename: path.basename(file),
             date: moment().format('DD/MM/YYYY'),
@@ -31,7 +31,7 @@ module.exports = (db, logger, configuration, source) => {
         }, callback, callback);
     };
 
-    const checkIfHeaderIsValid = async (input, handler) => {
+    const checkIfHeaderIsValid = (input, handler) => {
         const cols = input.split(handler.csvOptions.delimiter);
         if (!_.isEqual(cols, handler.csvOptions.columns)) {
             logger.error(`${BAD_FORMAT_MESSAGE}. Differences : ${colors.green(`+${_.difference(cols, handler.csvOptions.columns)}`)} ${colors.red(`-${_.difference(handler.csvOptions.columns, cols)}`)}`);
