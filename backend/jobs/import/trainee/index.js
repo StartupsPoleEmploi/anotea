@@ -33,7 +33,9 @@ const main = async () => {
     };
     let dryRun = false;
     cli.description('launch trainee import')
-    .option('-d, --dry-run', 'Execute this script in dry mode', () => dryRun = true, false)
+    .option('-d, --dry-run', 'Execute this script in dry mode', () => {
+        dryRun = true;
+    }, false)
     .option('-s, --source [name]', 'Source to import (PE or IDF)')
     .option('-f, --file [file]', 'The CSV file to import')
     .parse(process.argv);
@@ -53,11 +55,14 @@ const main = async () => {
 
     try {
         logger.info(`Importing source ${cli.source} from file ${cli.file}...`);
+        if (dryRun) {
+            logger.info('Dry run');
+        }
         let results = await importer.importTrainee(cli.file, builder, dryRun);
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
-        logger.info(`Completed in ${duration}): ${JSON.stringify(results, null, 2)}`);
+        logger.info(`Completed in ${duration}: ${JSON.stringify(results, null, 2)}`);
 
     } catch (e) {
         abort(e);
