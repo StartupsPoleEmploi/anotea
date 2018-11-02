@@ -302,7 +302,8 @@ export default class ModerationPanel extends React.Component {
                                             <CommentOwnerInfo advice={advice}
                                                               handleMaskPseudo={this.handleMaskPseudo}
                                                               handleUnmaskPseudo={this.handleUnmaskPseudo}
-                                                              moderationTarget={this.state.moderationTarget}/>
+                                                              moderationTarget={this.state.moderationTarget}
+                                                              tab={this.state.tab}/>
 
                                             <h4 className="title">
                                                 {advice.titleMasked !== true && <span>{advice.comment.title}</span>}
@@ -323,7 +324,8 @@ export default class ModerationPanel extends React.Component {
                                                               handleCancel={this.handleCancel}
                                                               handleUpdate={this.handleUpdate}
                                                               handleChange={this.handleChange}
-                                                              tab={this.state.tab}/>
+                                                              tab={this.state.tab}
+                                                              moderationTarget={this.state.moderationTarget}/>
                                         </div>
 
                                         <div className="col-md-3">
@@ -347,41 +349,50 @@ export default class ModerationPanel extends React.Component {
                                             <div className="col-md-6">
 
                                                 <CommentOwnerInfo advice={advice}
+                                                                  moderationTarget={this.state.moderationTarget}
+                                                                  tab={this.state.tab}/>
+
+                                                <AcionsModeration advice={advice}
+                                                                  handleReject={this.handleReject}
+                                                                  handleEdit={this.handleEdit}
+                                                                  handlePublish={this.handlePublish}
+                                                                  currentEdit={this.state.currentEdit}
+                                                                  tab={this.state.tab}
                                                                   moderationTarget={this.state.moderationTarget}/>
 
-                                                {(this.state.currentEdit === null || this.state.currentEdit.id !== advice._id) &&
-                                                <div>
-                                                    <p>{advice.answer.text}</p>
-                                                    <div className="actions">
-                                                        {!advice.answer.rejected &&
-                                                        <div className="dropdown">
-                                                            <button
-                                                                className="btn btn-default dropdown-toggle btn-danger btn-xs"
-                                                                type="button"
-                                                                onClick={this.handleReject.bind(this, advice._id, 'injure')}>
-                                                                <i className="glyphicon glyphicon-ban-circle"/> Rejeter
-                                                            </button>
-                                                        </div>
-                                                        }
+                                                {/*{(this.state.currentEdit === null || this.state.currentEdit.id !== advice._id) &&*/}
+                                                {/*<div>*/}
+                                                    {/*<p>{advice.answer.text}</p>*/}
+                                                    {/*<div className="actions">*/}
+                                                        {/*{!advice.answer.rejected &&*/}
+                                                        {/*<div className="dropdown">*/}
+                                                            {/*<button*/}
+                                                                {/*className="btn btn-default dropdown-toggle btn-danger btn-xs"*/}
+                                                                {/*type="button"*/}
+                                                                {/*onClick={this.handleReject.bind(this, advice._id, 'injure')}>*/}
+                                                                {/*<i className="glyphicon glyphicon-ban-circle"/> Rejeter*/}
+                                                            {/*</button>*/}
+                                                        {/*</div>*/}
+                                                        {/*}*/}
 
-                                                        {(!advice.answer.published || this.state.tab === 'reported') &&
-                                                        <div className="dropdown">
-                                                            <button
-                                                                className="btn btn-default dropdown-toggle btn-success btn-xs"
-                                                                type="button"
-                                                                onClick={this.handlePublish.bind(this, advice._id, 'négatif')}>
-                                                                <i className="glyphicon glyphicon-ok-circle"/> Publier
-                                                            </button>
-                                                        </div>
-                                                        }
+                                                        {/*{(!advice.answer.published || this.state.tab === 'reported') &&*/}
+                                                        {/*<div className="dropdown">*/}
+                                                            {/*<button*/}
+                                                                {/*className="btn btn-default dropdown-toggle btn-success btn-xs"*/}
+                                                                {/*type="button"*/}
+                                                                {/*onClick={this.handlePublish.bind(this, advice._id, 'négatif')}>*/}
+                                                                {/*<i className="glyphicon glyphicon-ok-circle"/> Publier*/}
+                                                            {/*</button>*/}
+                                                        {/*</div>*/}
+                                                        {/*}*/}
 
-                                                        <button className="btn btn-primary btn-xs"
-                                                                onClick={this.handleEdit.bind(this, advice._id)}>
-                                                            <i className="glyphicon glyphicon-edit"/> Modifier
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                }
+                                                        {/*<button className="btn btn-primary btn-xs"*/}
+                                                                {/*onClick={this.handleEdit.bind(this, advice._id)}>*/}
+                                                                {/*<i className="glyphicon glyphicon-edit"/> Modifier*/}
+                                                        {/*</button>*/}
+                                                    {/*</div>*/}
+                                                {/*</div>*/}
+                                                {/*}*/}
 
                                                 {this.state.currentEdit && this.state.currentEdit.id === advice._id &&
                                                 <div>
@@ -395,14 +406,14 @@ export default class ModerationPanel extends React.Component {
                                                                     className="btn btn-default dropdown-toggle btn-success btn-xs"
                                                                     type="button"
                                                                     onClick={this.handleUpdate.bind(this, advice._id, 'négatif')}>
-                                                                <i className="glyphicon glyphicon-ok-circle"/> Valider
+                                                                    <i className="glyphicon glyphicon-ok-circle"/> Valider
                                                                 et Publier
                                                             </button>
                                                         </div>
 
                                                         <button className="btn btn-danger btn-xs"
                                                                 onClick={this.handleCancel.bind(this, advice._id)}><i
-                                                            className="glyphicon glyphicon-ban-circle"/> Annuler
+                                                                className="glyphicon glyphicon-ban-circle"/> Annuler
                                                         </button>
                                                     </div>
                                                 </div>

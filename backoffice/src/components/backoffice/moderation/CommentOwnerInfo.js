@@ -33,7 +33,7 @@ export default class CommentOwnerInfo extends React.Component {
                         day="numeric"
                         month="long"
                         year="numeric"/>
-                    {((this.state.tab === 'all' && props.advice.published) || props.advice.published) &&
+                    {((props.tab === 'all' && props.advice.published) || props.advice.published) &&
                     <span
                         className="badge published">Publié ({props.advice.qualification}) le <FormattedDate
                         value={new Date(props.advice.lastModerationAction)}
@@ -41,7 +41,7 @@ export default class CommentOwnerInfo extends React.Component {
                         month="numeric"
                         year="numeric"/></span>
                     }
-                    {((this.state.tab === 'all' && props.advice.rejected) || props.advice.rejected) &&
+                    {((props.tab === 'all' && props.advice.rejected) || props.advice.rejected) &&
                     <span
                         className="badge rejected">Rejeté ({props.advice.rejectReason}) le
                         <FormattedDate
@@ -51,10 +51,10 @@ export default class CommentOwnerInfo extends React.Component {
                         year="numeric"/>
                     </span>
                     }
-                    {(this.state.tab === 'all' && props.advice.moderated !== true) &&
+                    {(props.tab === 'all' && props.advice.moderated !== true) &&
                     <span className="badge toModerate">&Agrave; modérer</span>
                     }
-                    {(this.state.tab === 'all' && props.advice.reported) &&
+                    {(props.tab === 'all' && props.advice.reported) &&
                     <span className="badge reported">Signalé</span>
                     }
                 </h3>
@@ -74,7 +74,7 @@ export default class CommentOwnerInfo extends React.Component {
                             day="numeric"
                             month="long"
                             year="numeric"/>
-                        {((this.state.tab === 'all' && props.advice.answer.published) || props.advice.answer.published) &&
+                        {((props.tab === 'all' && props.advice.answer.published) || props.advice.answer.published) &&
                         <span
                             className="badge published">Publié ({props.advice.qualification}) le
                             <FormattedDate
@@ -84,7 +84,7 @@ export default class CommentOwnerInfo extends React.Component {
                             year="numeric"/>
                         </span>
                         }
-                        {((this.state.tab === 'all' && props.advice.answer.rejected) || props.advice.answer.rejected) &&
+                        {((props.tab === 'all' && props.advice.answer.rejected) || props.advice.answer.rejected) &&
                         <span
                             className="badge rejected">Rejeté ({props.advice.rejectReason}) le <FormattedDate
                             value={new Date(props.advice.lastModerationAction)}
@@ -93,10 +93,10 @@ export default class CommentOwnerInfo extends React.Component {
                             year="numeric"/>
                         </span>
                         }
-                        {(this.state.tab === 'all' && props.advice.answer.moderated !== true) &&
+                        {(props.tab === 'all' && props.advice.answer.moderated !== true) &&
                         <span className="badge toModerate">&Agrave; modérer</span>
                         }
-                        {(this.state.tab === 'all' && props.advice.answer.reported) &&
+                        {(props.tab === 'all' && props.advice.answer.reported) &&
                         <span className="badge reported">Signalé</span>
                         }
                     </h3>
