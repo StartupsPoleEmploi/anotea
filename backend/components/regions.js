@@ -29,4 +29,15 @@ module.exports = db => ({
             return region.region_num;
         }
     },
+    findDepartementsForRegion: async code => {
+        let regions = await db.collection('regions')
+        .find({ region_num: code })
+        .toArray();
+
+        let list = regions.map(region => {
+            return `${parseInt(region.dept_num, 10)}`;
+        });
+
+        return list;
+    },
 });

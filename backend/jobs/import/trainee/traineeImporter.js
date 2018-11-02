@@ -22,6 +22,8 @@ module.exports = (db, logger, configuration, source) => {
 
     const mailer = createMailer(db, logger, configuration);
 
+    const { findDepartementsForRegion } = require('../../../components/regions')(db);
+
     const sendErrorMail = (file, reason, callback) => {
         return mailer.sendMalformedImport({
             filename: path.basename(file),
@@ -52,37 +54,44 @@ module.exports = (db, logger, configuration, source) => {
         }
     };
 
-    const checkValidation = (input, handler, campaign) => {
-        const parser = parse(handler.csvOptions);
-        parser.write(input);
-        parser.end();
-        parser.on('readable', async () => {
-            let record = parser.read();
-            let trainee;
-            try {
-                trainee = await handler.buildTrainee(record, campaign);
-                if (handler.shouldBeImported(trainee)) {
+    const checkValidation = (input, handler, campaign, deptList) => {
+        let promise = new Promise((resolve, reject) => {
+            const parser = parse(handler.csvOptions);
+            parser.write(input);
+            parser.end();
+            parser.on('readable', async () => {
+                let record = parser.read();
+                if (deptList.includes(record.departement)) {
+                    let trainee;
                     try {
-                        await validate(trainee);
-                        return true;
+                        trainee = await handler.buildTrainee(record, campaign);
+                        if (handler.shouldBeImported(trainee)) {
+                            try {
+                                await validate(trainee);
+                                resolve();
+                            } catch (e) {
+                                logger.error(BAD_FORMAT_MESSAGE);
+                                reject();
+                            }
+                        } else {
+                            resolve();
+                        }
                     } catch (e) {
-                        logger.error(BAD_FORMAT_MESSAGE);
-                        return false;
+                        reject();
                     }
                 } else {
-                    return true;
+                    resolve();
                 }
-            } catch (e) {
-                return false;
-            }
+            });
         });
+        return promise;
     };
 
     const isEmptyLine = input => {
         return input === ';;;;;;;;;;;;;;;;';
     };
 
-    const doImport = (campaign, file, handler, hash, resolve, reject) => {
+    const doImport = (campaign, file, handler, hash, codeRegion, codeFinancer, startDate, resolve, reject) => {
         let results = {
             total: 0,
             imported: 0,
@@ -96,7 +105,11 @@ module.exports = (db, logger, configuration, source) => {
             try {
                 let trainee = await handler.buildTrainee(data, campaign);
 
-                if (!handler.shouldBeImported(trainee)) {
+                let filterCodeRegion = codeRegion !== null && codeRegion !== trainee.codeRegion;
+                let filterCodeFinancer = codeFinancer !== null && trainee.training.codeFinanceur.includes(codeFinancer);
+                let filterDate = startDate !== null && trainee.training.scheduledEndDate >= startDate;
+
+                if (filterCodeRegion || filterCodeFinancer || filterDate || !handler.shouldBeImported(trainee)) {
                     return { status: 'ignored', trainee };
                 } else {
                     await validate(trainee);
@@ -136,8 +149,10 @@ module.exports = (db, logger, configuration, source) => {
     };
 
     return {
-        importTrainee: async (file, handler, dryRun) => {
+        importTrainee: async (file, handler, dryRun, codeRegion, codeFinancer, startDate) => {
             let campaign = getCampaignName(file);
+
+            let deptList = codeRegion !== undefined ? await findDepartementsForRegion(codeRegion) : null;
 
             let hash;
             try {
@@ -171,18 +186,19 @@ module.exports = (db, logger, configuration, source) => {
                     stream.on('line', async input => {
                         if (!error && !isEmptyLine(input)) {
                             if (line++ === 0) {
-                                error = checkIfHeaderIsValid(input, handler);
+                                error = !checkIfHeaderIsValid(input, handler);
                                 if (error) {
                                     sendErrorMail(file, 'du format non conforme', () => finish(error, resolve, reject));
                                 }
                             } else {
+                                error = error || await !checkValidation(input, handler, campaign, deptList);
+                                if (error) {
+                                    sendErrorMail(file, 'du format non conforme', () => finish(error, resolve, reject));
+                                }
+
                                 error = error || checkIfDuplicates(input, lines);
                                 if (error) {
                                     sendErrorMail(file, 'de la présence de doublons', () => finish(error, resolve, reject));
-                                }
-                                error = error || !checkValidation(input, handler, campaign);
-                                if (error) {
-                                    sendErrorMail(file, 'du format non conforme', () => finish(error, resolve, reject));
                                 }
                             }
                         }
@@ -192,7 +208,7 @@ module.exports = (db, logger, configuration, source) => {
                 } else if (await db.collection('importTrainee').findOne({ hash })) {
                     reject(new Error(`CSV file ${file} already imported`));
                 } else {
-                    doImport(campaign, file, handler, hash, resolve, reject);
+                    doImport(campaign, file, handler, hash, codeRegion, codeFinancer, startDate, resolve, reject);
                 }
             });
         }

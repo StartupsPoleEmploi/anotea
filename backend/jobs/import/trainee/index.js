@@ -38,6 +38,9 @@ const main = async () => {
     }, false)
     .option('-s, --source [name]', 'Source to import (PE or IDF)')
     .option('-f, --file [file]', 'The CSV file to import')
+    .option('-r, --region [codeRegion]', 'Code region to filter')
+    .option('-c, --financer [codeFinanceur]', 'Financer code to filter')
+    .option('-d, --since [startDate]', 'Import only trainee with a scheduled end date since start date')
     .parse(process.argv);
 
     let allowedSources = Object.keys(sources);
@@ -58,7 +61,35 @@ const main = async () => {
         if (dryRun) {
             logger.info('Dry run');
         }
-        let results = await importer.importTrainee(cli.file, builder, dryRun);
+        let codeRegion = null;
+        if (cli.region) {
+            if (!isNaN(cli.region)) {
+                codeRegion = cli.region;
+                logger.info(`Filtering on region number '${codeRegion}'`);
+            } else {
+                abort('Region number is invalid');
+            }
+        }
+        let codeFinancer = null;
+        if (cli.financer) {
+            if (!isNaN(cli.financer)) {
+                codeFinancer = cli.financer;
+                logger.info(`Filtering on financer code '${codeFinancer}'`);
+            } else {
+                abort('Financer code is invalid');
+            }
+        }
+
+        let startDate = null;
+        if (cli.since) {
+            startDate = moment(cli.since, 'DD/MM/YYYY');
+            if (startDate.isValid()) {
+                logger.info(`Filtering on scheduled end date since '${startDate}'`);
+            } else {
+                abort('startDate is invalid, please use format \'DD/MM/YYYY\'');
+            }
+        }
+        let results = await importer.importTrainee(cli.file, builder, dryRun, codeRegion, codeFinancer, startDate);
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
