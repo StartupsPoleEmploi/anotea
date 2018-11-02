@@ -76,7 +76,13 @@ module.exports = (db, logger, configuration) => {
                     return Promise.reject(new Error(`Données CSV invalides ${record}`));
                 }
 
-                let codeRegion = await findCodeRegionByPostalCode(record['dc_cp_lieuformation']);
+                let codeRegion;
+                try {
+                    codeRegion = await findCodeRegionByPostalCode(record['dc_cp_lieuformation']);
+                } catch (e) {
+                    logger.error(e);
+                    return Promise.reject();
+                }
                 let token = buildToken(record['c_adresseemail']);
                 let { email, mailDomain } = buildEmail(record['c_adresseemail']);
 
