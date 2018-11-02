@@ -71,7 +71,7 @@ module.exports = function(db, authService, logger, configuration) {
 
     const checkPassword = async (password, hash) => {
         let legacyHash = getSHA256PasswordHashSync(password, configuration);
-        return await verifyPassword(password, hash) || await verifyPassword(legacyHash, hash);
+        return await verifyPassword(password, hash) || legacyHash === hash;
     };
 
     const rehashPassword = async (type, account, password, propertyName = 'password') => {
