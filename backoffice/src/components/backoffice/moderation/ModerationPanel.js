@@ -5,7 +5,7 @@ import Toolbar              from '../common/Toolbar';
 import AdviceRates          from '../common/adviceRates';
 import TrainingInfo         from './TrainingInfo';
 import CommentOwnerInfo     from './CommentOwnerInfo';
-import AcionsModeration     from './AcionsModeration';
+import ActionsModeration     from './ActionsModeration';
 import {
     loadAdvices,
     loadInventory,
@@ -316,16 +316,16 @@ export default class ModerationPanel extends React.Component {
                                                     onClick={this.handleUnmaskTitle.bind(this, advice._id)}>masqué</small>}
                                             </h4>
 
-                                            <AcionsModeration advice={advice}
-                                                              handleReject={this.handleReject}
-                                                              handleEdit={this.handleEdit}
-                                                              handlePublish={this.handlePublish}
-                                                              currentEdit={this.state.currentEdit}
-                                                              handleCancel={this.handleCancel}
-                                                              handleUpdate={this.handleUpdate}
-                                                              handleChange={this.handleChange}
-                                                              tab={this.state.tab}
-                                                              moderationTarget={this.state.moderationTarget}/>
+                                            <ActionsModeration advice={advice}
+                                                               handleReject={this.handleReject}
+                                                               handleEdit={this.handleEdit}
+                                                               handlePublish={this.handlePublish}
+                                                               currentEdit={this.state.currentEdit}
+                                                               handleCancel={this.handleCancel}
+                                                               handleUpdate={this.handleUpdate}
+                                                               handleChange={this.handleChange}
+                                                               tab={this.state.tab}
+                                                               moderationTarget={this.state.moderationTarget}/>
                                         </div>
 
                                         <div className="col-md-3">
@@ -333,7 +333,6 @@ export default class ModerationPanel extends React.Component {
                                         </div>
 
                                         <TrainingInfo training={advice.training}/>
-
                                     </div>
                                 </div>
                                 )}
@@ -352,72 +351,16 @@ export default class ModerationPanel extends React.Component {
                                                                   moderationTarget={this.state.moderationTarget}
                                                                   tab={this.state.tab}/>
 
-                                                <AcionsModeration advice={advice}
-                                                                  handleReject={this.handleReject}
-                                                                  handleEdit={this.handleEdit}
-                                                                  handlePublish={this.handlePublish}
-                                                                  currentEdit={this.state.currentEdit}
-                                                                  tab={this.state.tab}
-                                                                  moderationTarget={this.state.moderationTarget}/>
-
-                                                {/*{(this.state.currentEdit === null || this.state.currentEdit.id !== advice._id) &&*/}
-                                                {/*<div>*/}
-                                                    {/*<p>{advice.answer.text}</p>*/}
-                                                    {/*<div className="actions">*/}
-                                                        {/*{!advice.answer.rejected &&*/}
-                                                        {/*<div className="dropdown">*/}
-                                                            {/*<button*/}
-                                                                {/*className="btn btn-default dropdown-toggle btn-danger btn-xs"*/}
-                                                                {/*type="button"*/}
-                                                                {/*onClick={this.handleReject.bind(this, advice._id, 'injure')}>*/}
-                                                                {/*<i className="glyphicon glyphicon-ban-circle"/> Rejeter*/}
-                                                            {/*</button>*/}
-                                                        {/*</div>*/}
-                                                        {/*}*/}
-
-                                                        {/*{(!advice.answer.published || this.state.tab === 'reported') &&*/}
-                                                        {/*<div className="dropdown">*/}
-                                                            {/*<button*/}
-                                                                {/*className="btn btn-default dropdown-toggle btn-success btn-xs"*/}
-                                                                {/*type="button"*/}
-                                                                {/*onClick={this.handlePublish.bind(this, advice._id, 'négatif')}>*/}
-                                                                {/*<i className="glyphicon glyphicon-ok-circle"/> Publier*/}
-                                                            {/*</button>*/}
-                                                        {/*</div>*/}
-                                                        {/*}*/}
-
-                                                        {/*<button className="btn btn-primary btn-xs"*/}
-                                                                {/*onClick={this.handleEdit.bind(this, advice._id)}>*/}
-                                                                {/*<i className="glyphicon glyphicon-edit"/> Modifier*/}
-                                                        {/*</button>*/}
-                                                    {/*</div>*/}
-                                                {/*</div>*/}
-                                                {/*}*/}
-
-                                                {this.state.currentEdit && this.state.currentEdit.id === advice._id &&
-                                                <div>
-                                                    <textarea type="text"
-                                                          className="form-control"
-                                                          onChange={this.handleChange.bind(this, advice._id)}
-                                                          value={advice.comment.text}/>
-                                                    <div className="actions">
-                                                        <div className="dropdown">
-                                                            <button {...this.state.currentEdit.newValue === undefined ? {disabled: 'disabled'} : {}}
-                                                                    className="btn btn-default dropdown-toggle btn-success btn-xs"
-                                                                    type="button"
-                                                                    onClick={this.handleUpdate.bind(this, advice._id, 'négatif')}>
-                                                                    <i className="glyphicon glyphicon-ok-circle"/> Valider
-                                                                et Publier
-                                                            </button>
-                                                        </div>
-
-                                                        <button className="btn btn-danger btn-xs"
-                                                                onClick={this.handleCancel.bind(this, advice._id)}><i
-                                                                className="glyphicon glyphicon-ban-circle"/> Annuler
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                }
+                                                <ActionsModeration advice={advice}
+                                                                   handleReject={this.handleReject}
+                                                                   handleEdit={this.handleEdit}
+                                                                   handlePublish={this.handlePublish}
+                                                                   currentEdit={this.state.currentEdit}
+                                                                   handleCancel={this.handleCancel}
+                                                                   handleUpdate={this.handleUpdate}
+                                                                   handleChange={this.handleChange}
+                                                                   tab={this.state.tab}
+                                                                   moderationTarget={this.state.moderationTarget}/>
                                             </div>
 
                                             <TrainingInfo training={advice.training}/>

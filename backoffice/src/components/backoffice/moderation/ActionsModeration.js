@@ -1,6 +1,14 @@
 import React from 'react';
 
-export default class AcionsModeration extends React.Component {
+const QUALIFICATION =[
+    {qualif: 'négatif', text: 'Négatif'},
+    {qualif: 'positif', text: 'Positif ou neutre'},
+    {qualif: 'pe', text: 'PE'},
+    {qualif: 'of', text: 'OF'},
+    {qualif: 'cr', text: 'CR'},
+];
+
+export default class ActionsModeration extends React.Component {
 
     state = {};
 
@@ -9,7 +17,8 @@ export default class AcionsModeration extends React.Component {
     }
 
     render() {
-        const {props} = this;
+        const { props } = this;
+
         return (
             <div>
                 {(props.currentEdit === null || props.currentEdit.id !== props.advice._id) &&
@@ -55,21 +64,12 @@ export default class AcionsModeration extends React.Component {
                                         <ul className="dropdown-menu"
                                             aria-labelledby="dropdownMenu1">
                                             <li className="dropdown-header">Qualification</li>
-                                            <li><a
-                                                onClick={props.handlePublish.bind(this, props.advice._id, 'négatif')}
-                                                role="button">Négatif</a></li>
-                                            <li><a
-                                                onClick={props.handlePublish.bind(this, props.advice._id, 'positif')}
-                                                role="button">Positif ou neutre</a></li>
-                                            <li><a
-                                                onClick={props.handlePublish.bind(this, props.advice._id, 'pe')}
-                                                role="button">PE</a></li>
-                                            <li><a
-                                                onClick={props.handlePublish.bind(this, props.advice._id, 'of')}
-                                                role="button">OF</a></li>
-                                            <li><a
-                                                onClick={props.handlePublish.bind(this, props.advice._id, 'cr')}
-                                                role="button">CR</a></li>
+                                            {QUALIFICATION.map((qualif, index) =>
+                                                <li key={index}><a
+                                                    onClick={props.handlePublish.bind(this, props.advice._id, qualif.qualif)}
+                                                    role="button">{qualif.text}</a>
+                                                </li>
+                                            )}
                                         </ul>
                                     </div>}
 
@@ -94,7 +94,7 @@ export default class AcionsModeration extends React.Component {
                                     </div>
                                     }
 
-                                    {(!props.advice.answer.published || props.state.tab === 'reported') &&
+                                    {(!props.advice.answer.published || props.tab === 'reported') &&
                                     <div className="dropdown">
                                         <button
                                             className="btn btn-default dropdown-toggle btn-success btn-xs"
@@ -117,10 +117,17 @@ export default class AcionsModeration extends React.Component {
 
                 {props.currentEdit && props.currentEdit.id === props.advice._id &&
                 <div>
-                    <textarea   type="text"
-                                className="form-control"
-                                onChange={props.handleChange.bind(this, props.advice._id)}
-                                value={props.advice.comment.text}/>
+                    {props.moderationTarget === 'stagiaires' ?
+                        <textarea type="text"
+                                  className="form-control"
+                                  onChange={props.handleChange.bind(this, props.advice._id)}
+                                  value={props.advice.comment.text}/>
+                        :
+                        <textarea type="text"
+                                  className="form-control"
+                                  onChange={props.handleChange.bind(this, props.advice._id)}
+                                  value={props.advice.answer.text}/>
+                    }
                     <div className="actions">
                         <div className="dropdown">
                             <button {...props.currentEdit.newValue === undefined ? {disabled: 'disabled'} : {}}
@@ -130,28 +137,22 @@ export default class AcionsModeration extends React.Component {
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="true">
-                                    <i className="glyphicon glyphicon-ok-circle"/> Valider
-                                et Publier
+                                <i className="glyphicon glyphicon-ok-circle"/> Valider et Publier
                             </button>
-                            <ul className="dropdown-menu"
-                                aria-labelledby="dropdownMenu1">
-                                <li className="dropdown-header">Qualification</li>
-                                <li><a
-                                    onClick={props.handleUpdate.bind(this, props.advice._id, 'négatif')}
-                                    role="button">Négatif</a></li>
-                                <li><a
-                                    onClick={props.handleUpdate.bind(this, props.advice._id, 'positif')}
-                                    role="button">Positif ou neutre</a></li>
-                                <li><a
-                                    onClick={props.handleUpdate.bind(this, props.advice._id, 'pe')}
-                                    role="button">PE</a></li>
-                                <li><a
-                                    onClick={props.handleUpdate.bind(this, props.advice._id, 'of')}
-                                    role="button">OF</a></li>
-                                <li><a
-                                    onClick={props.handleUpdate.bind(this, props.advice._id, 'cr')}
-                                    role="button">CR</a></li>
-                            </ul>
+                            {props.moderationTarget === 'stagiaires' ?
+                                <ul className="dropdown-menu"
+                                    aria-labelledby="dropdownMenu1">
+                                    <li className="dropdown-header">Qualification</li>
+                                    {QUALIFICATION.map((qualif, index) =>
+                                        <li key={index}><a
+                                            onClick={props.handleUpdate.bind(this, props.advice._id, qualif.qualif)}
+                                            role="button">{qualif.text}</a>
+                                        </li>
+                                    )}
+                                </ul>
+                                :
+                                null
+                            }
                         </div>
                         <button className="btn btn-danger btn-xs"
                                 onClick={props.handleCancel.bind(this, props.advice._id)}><i

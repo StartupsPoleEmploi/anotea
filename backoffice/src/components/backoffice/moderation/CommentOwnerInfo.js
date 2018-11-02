@@ -76,21 +76,26 @@ export default class CommentOwnerInfo extends React.Component {
                             year="numeric"/>
                         {((props.tab === 'all' && props.advice.answer.published) || props.advice.answer.published) &&
                         <span
-                            className="badge published">Publié ({props.advice.qualification}) le
-                            <FormattedDate
-                            value={new Date(props.advice.lastModerationAction)}
-                            day="numeric"
-                            month="numeric"
-                            year="numeric"/>
+                            className="badge published">Publié
+                            /*GAREDE EN COMMENTAIRE POUR L'INSTANT*/
+                            {/*le*/}
+                            {/*<FormattedDate*/}
+                            {/*value={new Date(props.advice.lastModerationAction)}*/}
+                            {/*day="numeric"*/}
+                            {/*month="numeric"*/}
+                            {/*year="numeric"/>*/}
                         </span>
                         }
                         {((props.tab === 'all' && props.advice.answer.rejected) || props.advice.answer.rejected) &&
                         <span
-                            className="badge rejected">Rejeté ({props.advice.rejectReason}) le <FormattedDate
-                            value={new Date(props.advice.lastModerationAction)}
-                            day="numeric"
-                            month="numeric"
-                            year="numeric"/>
+                            className="badge rejected">Rejeté
+                            /*GAREDE EN COMMENTAIRE POUR L'INSTANT*/
+                            {/*/!*le */}
+                            {/*<FormattedDate*!/*/}
+                            {/*value={new Date(props.advice.lastModerationAction)}*/}
+                            {/*day="numeric"*/}
+                            {/*month="numeric"*/}
+                            {/*year="numeric"/>*/}
                         </span>
                         }
                         {(props.tab === 'all' && props.advice.answer.moderated !== true) &&
