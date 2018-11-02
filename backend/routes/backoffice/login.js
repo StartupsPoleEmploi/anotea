@@ -90,7 +90,7 @@ module.exports = function(db, authService, logger, configuration) {
 
     router.post('/backoffice/login', async (req, res) => {
 
-        let identifier = req.body.username;
+        let identifier = req.body.username.toLowerCase();
         let password = req.body.password;
 
         try {
