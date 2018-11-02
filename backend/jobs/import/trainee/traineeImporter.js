@@ -5,6 +5,7 @@ const md5File = require('md5-file/promise');
 const moment = require('moment');
 const readline = require('readline');
 const _ = require('underscore');
+const colors = require('colors/safe');
 const validate = require('./traineeValidator');
 const { handleBackPressure } = require('../../utils');
 const createMailer = require('../../../components/mailer');
@@ -21,65 +22,62 @@ module.exports = (db, logger, configuration, source) => {
 
     const mailer = createMailer(db, logger, configuration);
 
-    const sendErrorMail = (file, reason, successCallback) => {
-        mailer.sendMalformedImport({
+    const { findDepartementsForRegion } = require('../../../components/regions')(db);
+
+    const sendErrorMail = (file, reason, callback) => {
+        return mailer.sendMalformedImport({
             filename: path.basename(file),
             date: moment().format('DD/MM/YYYY'),
             reason: reason,
             source: source
-        }, successCallback);
+        }, callback, callback);
     };
 
-    const checkIfHeaderIsValid = async (input, handler, stream, file) => {
-        let promise = new Promise((resolve, reject) => {
-            if (!_.isEqual(input.split(handler.csvOptions.delimiter), handler.csvOptions.columns)) {
-                sendErrorMail(file, 'du format non conforme', () => {
-                    logger.error(BAD_FORMAT_MESSAGE);
-                    stream.close();
-                    reject();
-                });
-            } else {
-                resolve();
-            }
-        });
-        return promise;
+    const checkIfHeaderIsValid = (input, handler) => {
+        const cols = input.split(handler.csvOptions.delimiter);
+        if (!_.isEqual(cols, handler.csvOptions.columns)) {
+            logger.error(`${BAD_FORMAT_MESSAGE}. Differences : ${colors.green(`+${_.difference(cols, handler.csvOptions.columns)}`)} ${colors.red(`-${_.difference(handler.csvOptions.columns, cols)}`)}`);
+            return false;
+        } else {
+            return true;
+        }
     };
 
-    const checkIfDuplicates = async (input, stream, lines, file) => {
-        let promise = new Promise((resolve, reject) => {
-            const duplicates = lines.filter(line => _.isEqual(line, input));
-            if (duplicates.length > 0) {
-                sendErrorMail(file, 'de la présence de doublons', () => {
-                    logger.error(DUPLICATE_MESSAGE);
-                    stream.close();
-                    reject();
-                });
-            } else {
-                lines.push(input);
-                resolve();
-            }
-        });
-        return promise;
+    const checkIfDuplicates = (input, lines) => {
+        const duplicates = lines.filter(line => _.isEqual(line, input));
+        if (duplicates.length > 0) {
+            logger.error(DUPLICATE_MESSAGE);
+            return true;
+        } else {
+            lines.push(input);
+            return false;
+        }
     };
 
-    const checkValidation = async (input, handler, campaign, file) => {
+    const checkValidation = (input, handler, campaign, deptList) => {
         let promise = new Promise((resolve, reject) => {
             const parser = parse(handler.csvOptions);
             parser.write(input);
             parser.end();
             parser.on('readable', async () => {
                 let record = parser.read();
-                let trainee = await handler.buildTrainee(record, campaign);
-
-                if (handler.shouldBeImported(trainee)) {
+                if (deptList.includes(record.departement)) {
+                    let trainee;
                     try {
-                        await validate(trainee);
-                        resolve();
+                        trainee = await handler.buildTrainee(record, campaign);
+                        if (handler.shouldBeImported(trainee)) {
+                            try {
+                                await validate(trainee);
+                                resolve();
+                            } catch (e) {
+                                logger.error(BAD_FORMAT_MESSAGE);
+                                reject();
+                            }
+                        } else {
+                            resolve();
+                        }
                     } catch (e) {
-                        sendErrorMail(file, 'du format non conforme', () => {
-                            logger.error(BAD_FORMAT_MESSAGE);
-                            reject();
-                        });
+                        reject();
                     }
                 } else {
                     resolve();
@@ -93,7 +91,7 @@ module.exports = (db, logger, configuration, source) => {
         return input === ';;;;;;;;;;;;;;;;';
     };
 
-    const doImport = (campaign, file, handler, hash, resolve, reject) => {
+    const doImport = (campaign, file, handler, hash, codeRegion, codeFinancer, startDate, resolve, reject) => {
         let results = {
             total: 0,
             imported: 0,
@@ -107,7 +105,11 @@ module.exports = (db, logger, configuration, source) => {
             try {
                 let trainee = await handler.buildTrainee(data, campaign);
 
-                if (!handler.shouldBeImported(trainee)) {
+                let filterCodeRegion = codeRegion !== null && codeRegion !== trainee.codeRegion;
+                let filterCodeFinancer = codeFinancer !== null && trainee.training.codeFinanceur.includes(codeFinancer);
+                let filterDate = startDate !== null && trainee.training.scheduledEndDate >= startDate;
+
+                if (filterCodeRegion || filterCodeFinancer || filterDate || !handler.shouldBeImported(trainee)) {
                     return { status: 'ignored', trainee };
                 } else {
                     await validate(trainee);
@@ -147,16 +149,18 @@ module.exports = (db, logger, configuration, source) => {
     };
 
     return {
-        importTrainee: async (file, handler, dryRun) => {
+        importTrainee: async (file, handler, dryRun, codeRegion, codeFinancer, startDate) => {
             let campaign = getCampaignName(file);
+
+            let deptList = codeRegion !== undefined ? await findDepartementsForRegion(codeRegion) : null;
 
             let hash;
             try {
                 hash = await md5File(file);
             } catch (e) {
                 let promise = new Promise((resolve, reject) => {
+                    logger.error(`CSV file ${file} not found`);
                     sendErrorMail(file, 'de l\'absence du fichier sur le serveur FTP', () => {
-                        logger.error(`CSV file ${file} not found`);
                         reject(`${file} is not valid.`);
                     });
                 });
@@ -166,36 +170,45 @@ module.exports = (db, logger, configuration, source) => {
 
             let lines = [];
 
+            const finish = (error, reject, resolve) => {
+                if (error) {
+                    reject(`${file} is not valid.`);
+                } else {
+                    resolve(`${file} is valid.`);
+                }
+            };
+
             return new Promise(async (resolve, reject) => {
                 if (dryRun === true) {
                     let line = 0;
                     let error = false;
                     let stream = readline.createInterface({ input: fs.createReadStream(file) });
-                    let checks = [];
                     stream.on('line', async input => {
-                        try {
-                            if (!error && !isEmptyLine(input)) {
-                                if (line++ === 0) {
-                                    checks.push(checkIfHeaderIsValid(input, handler, stream, file));
-                                } else {
-                                    checks.push(checkIfDuplicates(input, stream, lines, file));
-                                    checks.push(checkValidation(input, handler, campaign, file));
+                        if (!error && !isEmptyLine(input)) {
+                            if (line++ === 0) {
+                                error = !checkIfHeaderIsValid(input, handler);
+                                if (error) {
+                                    sendErrorMail(file, 'du format non conforme', () => finish(error, resolve, reject));
+                                }
+                            } else {
+                                error = error || await !checkValidation(input, handler, campaign, deptList);
+                                if (error) {
+                                    sendErrorMail(file, 'du format non conforme', () => finish(error, resolve, reject));
+                                }
+
+                                error = error || checkIfDuplicates(input, lines);
+                                if (error) {
+                                    sendErrorMail(file, 'de la présence de doublons', () => finish(error, resolve, reject));
                                 }
                             }
-                        } catch (e) {
-                            error = true;
                         }
                     }).on('close', () => {
-                        Promise.all(checks).catch(() => {
-                            reject(`${file} is not valid.`);
-                        }).then(() => {
-                            resolve(`${file} is valid.`);
-                        });
+                        finish(error, resolve, reject);
                     });
                 } else if (await db.collection('importTrainee').findOne({ hash })) {
                     reject(new Error(`CSV file ${file} already imported`));
                 } else {
-                    doImport(campaign, file, handler, hash, resolve, reject);
+                    doImport(campaign, file, handler, hash, codeRegion, codeFinancer, startDate, resolve, reject);
                 }
             });
         }
