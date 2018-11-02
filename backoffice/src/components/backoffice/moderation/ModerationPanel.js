@@ -242,7 +242,6 @@ export default class ModerationPanel extends React.Component {
     };
 
     render() {
-        console.log(this.state.advices);
         return (
             <div className="moderationPanel mainPanel">
                 <h1>Panneau de modération</h1>
