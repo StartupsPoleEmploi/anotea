@@ -70,13 +70,3 @@ backend:
     - ANOTEA_CUSTOM_VARIABLE=25
 ...
 ```
-
-## Architecture
-
-![Architecture applicative](doc/architecture.png)
-
-
-
-
-
-
