@@ -109,6 +109,7 @@ module.exports = (db, logger, configuration, source) => {
 
                 let filterIncludeCodeFinancer = includeCodeFinancer && !trainee.training.codeFinanceur.includes(includeCodeFinancer);
                 let filterExcludeCodeFinancer = excludeCodeFinancer && trainee.training.codeFinanceur.includes(excludeCodeFinancer) && trainee.training.codeFinanceur.length === 1;
+                console.log(startDate)
                 let filterDate = startDate && trainee.training.scheduledEndDate <= startDate;
 
                 if (filterCodeRegion || filterExcludeCodeFinancer || filterIncludeCodeFinancer || filterDate || !handler.shouldBeImported(trainee)) {
@@ -151,7 +152,7 @@ module.exports = (db, logger, configuration, source) => {
     };
 
     return {
-        importTrainee: async (file, handler, dryRun, codeRegion, codeFinancer, startDate) => {
+        importTrainee: async (file, handler, dryRun, codeRegion, includeCodeFinancer, excludeCodeFinancer, startDate) => {
             let campaign = getCampaignName(file);
 
             let deptList = codeRegion !== undefined ? await findDepartementsForRegion(codeRegion) : null;
@@ -210,7 +211,7 @@ module.exports = (db, logger, configuration, source) => {
                 } else if (await db.collection('importTrainee').findOne({ hash })) {
                     reject(new Error(`CSV file ${file} already imported`));
                 } else {
-                    doImport(campaign, file, handler, hash, codeRegion, codeFinancer, startDate, resolve, reject);
+                    doImport(campaign, file, handler, hash, codeRegion, includeCodeFinancer, excludeCodeFinancer, startDate, resolve, reject);
                 }
             });
         }
