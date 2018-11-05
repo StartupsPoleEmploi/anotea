@@ -105,9 +105,9 @@ module.exports = (db, logger, configuration, source) => {
             try {
                 let trainee = await handler.buildTrainee(data, campaign);
 
-                let filterCodeRegion = codeRegion !== null && codeRegion !== trainee.codeRegion;
-                let filterCodeFinancer = codeFinancer !== null && trainee.training.codeFinanceur.includes(codeFinancer);
-                let filterDate = startDate !== null && trainee.training.scheduledEndDate >= startDate;
+                let filterCodeRegion = codeRegion && codeRegion !== trainee.codeRegion;
+                let filterCodeFinancer = codeFinancer && !trainee.training.codeFinanceur.includes(codeFinancer);
+                let filterDate = startDate && trainee.training.scheduledEndDate <= startDate;
 
                 if (filterCodeRegion || filterCodeFinancer || filterDate || !handler.shouldBeImported(trainee)) {
                     return { status: 'ignored', trainee };
