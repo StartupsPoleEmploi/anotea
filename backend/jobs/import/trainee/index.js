@@ -39,7 +39,8 @@ const main = async () => {
     .option('-s, --source [name]', 'Source to import (PE or IDF)')
     .option('-f, --file [file]', 'The CSV file to import')
     .option('-r, --region [codeRegion]', 'Code region to filter')
-    .option('-c, --financer [codeFinanceur]', 'Financer code to filter')
+    .option('-i, --includeFinancer [codeFinanceur]', 'Financer code to filter')
+    .option('-x, --excludeFinancer [codeFinanceur]', 'Financer code to exclude')
     .option('-d, --since [startDate]', 'Import only trainee with a scheduled end date since start date')
     .parse(process.argv);
 
@@ -70,11 +71,22 @@ const main = async () => {
                 abort('Region number is invalid');
             }
         }
-        let codeFinancer = null;
-        if (cli.financer) {
-            if (!isNaN(cli.financer)) {
-                codeFinancer = cli.financer;
-                logger.info(`Filtering on financer code '${codeFinancer}'`);
+
+        let includeCodeFinancer = null;
+        if (cli.includeFinancer) {
+            if (!isNaN(cli.includeFinancer)) {
+                includeCodeFinancer = cli.includeFinancer;
+                logger.info(`Filtering on financer code '${includeCodeFinancer}'`);
+            } else {
+                abort('Financer code is invalid');
+            }
+        }
+
+        let excludeCodeFinancer = null;
+        if (cli.excludeFinancer) {
+            if (!isNaN(cli.excludeFinancer)) {
+                excludeCodeFinancer = cli.excludeFinancer;
+                logger.info(`Excluding financer code '${excludeCodeFinancer}'`);
             } else {
                 abort('Financer code is invalid');
             }
@@ -89,7 +101,7 @@ const main = async () => {
                 abort('startDate is invalid, please use format \'DD/MM/YYYY\'');
             }
         }
-        let results = await importer.importTrainee(cli.file, builder, dryRun, codeRegion, codeFinancer, startDate);
+        let results = await importer.importTrainee(cli.file, builder, dryRun, codeRegion, includeCodeFinancer, excludeCodeFinancer, startDate);
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
