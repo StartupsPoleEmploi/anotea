@@ -62,7 +62,6 @@ module.exports = function(db, logger, configuration) {
             errorCallback(`CARIF for region code '${codeRegion}' unknown`);
             return;
         }
-
         successCallback(carif);
     };
 
@@ -213,6 +212,7 @@ module.exports = function(db, logger, configuration) {
                     trackingLink: trackingLink,
                     hostname: configuration.app.public_hostname,
                     moment: moment,
+                    carifNameHidden: carif.carifNameHidden,
                     carifName: carif.name,
                     carifEmail: mailOptions.from
                 };
