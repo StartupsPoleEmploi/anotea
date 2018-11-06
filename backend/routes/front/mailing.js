@@ -26,6 +26,7 @@ module.exports = (db, logger, configuration) => {
             res.status(404).render('errors/404');
         } else {
             params.carifName = carif.name;
+            params.carifNameHidden = carif.carifNameHidden;
             params.carifEmail = carif.courriel ? carif.courriel : 'anotea@pole-emploi.fr';
             res.render('front/mailing/votre_avis.ejs', params);
         }
