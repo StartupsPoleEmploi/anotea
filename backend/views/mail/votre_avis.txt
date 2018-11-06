@@ -9,7 +9,7 @@ Je donne mon avis :
 <%= formLink %>
 
 Notez et commentez la formation que vous venez de suivre
-Vos avis seront publiés sur La Bonne Formation et Défi Métier
+Vos avis seront publiés sur La Bonne Formation<% if (carifNameHidden) { %> et <%= carifName %><% } %>
 Vous pourrez répondre aux questions des futur-e-s stagiaires
 
 Vous recevez cet email parce que vous vous êtes inscrit à une session de formation.
