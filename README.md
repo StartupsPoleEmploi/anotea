@@ -40,7 +40,7 @@ docker-compose up --build
 
 Cette commande va construire et démarrer plusieurs containers :
 
-- Un container reverse_proxy nginx qui est le point d'entrée de l'application pour tous les appels sur http
+- Un container nginx, un reverse proxy qui est le point d'entrée de l'application pour tous les appels sur http
 - Un container backend contenant l'API et les batchs
 - Un container backoffice avec un nginx pour servir les ressources web statiques
 - Un container Mongodb et un Redis  
