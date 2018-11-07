@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+
+  mongodb:
+    image: mongo:4.0.1-xenial
+    container_name: anotea_mongodb
+    volumes:
+    - ./.data/mongodb/db:/data/db
+    - ./.data/mongodb/config:/data/configdb
+
+  redis:
+    image: redis:4.0.9
+    container_name: anotea_redis
+
+  smtp:
+    image: digiplant/fake-smtp
+    container_name: anotea_smtp
+    volumes:
+    - ./.data/fakesmtp:/var/mail
