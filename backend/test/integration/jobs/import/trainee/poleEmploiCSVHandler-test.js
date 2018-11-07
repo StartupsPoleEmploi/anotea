@@ -109,7 +109,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let status = await db.collection('importTrainee').findOne();
         assert.deepEqual(_.omit(status, ['_id', 'date']), {
             campaign: 'stagiaires-pe',
-            hash: '7378bf8cf388b87d34458b2d7907f4f4',
+            hash: '10a191649d9daad6b1c9438b2874a9ca',
         });
     });
 
