@@ -5,7 +5,7 @@ const generateSessions = require('../../../../../jobs/import/intercarif/steps/ge
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
-    it('should create sessions with comments', async () => {
+    it('should generate sessions with comments', async () => {
 
         let db = await getTestDatabase();
         let date = new Date();
