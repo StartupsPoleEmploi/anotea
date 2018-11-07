@@ -173,7 +173,7 @@ module.exports = (db, logger, configuration, source) => {
 
             let lines = [];
 
-            const finish = (error, reject, resolve) => {
+            const finish = (error, resolve, reject) => {
                 if (error) {
                     reject(`${file} is not valid.`);
                 } else {
