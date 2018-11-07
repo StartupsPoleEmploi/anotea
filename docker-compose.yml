@@ -1,11 +1,11 @@
 version: '3.3'
 services:
 
-  reverse_proxy:
-    image: anotea_reverse_proxy
-    container_name: anotea_reverse_proxy
+  nginx:
+    image: anotea_nginx
+    container_name: anotea_nginx
     build:
-      context: ./misc/reverse-proxy
+      context: ./misc/nginx
     ports:
     - 80:80
     depends_on:
