@@ -80,6 +80,27 @@ responses:
     schema:
       $ref: "#/definitions/Session"
 
+  ActionsResponse:
+    description: La liste des actions reconciliées
+    schema:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: "#/definitions/Action"
+        meta:
+          type: object
+          description: Informations complémentaires
+          properties:
+            pagination:
+              $ref: "#/definitions/Pagination"
+
+  ActionByIdResponse:
+    description: Une action avec ses avis reconciliées et son score
+    schema:
+      $ref: "#/definitions/Action"
+
   OrganismesFormateursResponse:
     description: La liste des organismes formateurs
     schema:
@@ -278,6 +299,8 @@ definitions:
         description: Le numéro de la session
       avis:
         $ref: "#/definitions/Avis"
+      score:
+        $ref: "#/definitions/Score"
       meta:
         type: object
         description: Informations complémentaires
@@ -311,8 +334,51 @@ definitions:
               type:
                 type: string
                 description: Le type de catalague auxquel appartient la session
+
+  Action:
+    type: object
+    properties:
+      id:
+        type: string
+        description: L'identifiant unique de l'action
+      numero:
+        type: string
+        description: Le numéro de l'action
+      avis:
+        $ref: "#/definitions/Avis"
       score:
         $ref: "#/definitions/Score"
+      meta:
+        type: object
+        description: Informations complémentaires
+        properties:
+          reconciliation:
+            type: object
+            description: Données relatives à la reconciliation
+            properties:
+              certifinfos:
+                type: array
+                items:
+                  type: string
+              formacodes:
+                type: array
+                items:
+                  type: string
+              lieu_de_formation:
+                type: string
+              organisme_formateur:
+                type: string
+          source:
+            type: object
+            description: Données relatives au catalogue utilisé comme source
+            properties:
+              numero_formation:
+                type: string
+              numero_action:
+                type: string
+              type:
+                type: string
+                description: Le type de catalague auxquel appartient l'action
 
   OrganismeFormateur:
     type: object
@@ -513,6 +579,90 @@ paths:
       responses:
         200:
           $ref: "#/responses/SessionByIdResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/responses/UnauthorizedErrorResponse"
+        404:
+          $ref: "#/responses/NotFoundErrorResponse"
+
+  /v1/actions:
+    get:
+      description: >
+        Permet d'obtenir la liste de toutes les actions contenues dans l'intercarif avec pour chacune d'elles, les avis réconciliés et le score.
+        La réconcialition permet de rattacher des avis déposés sur des formations similaires.
+        Une formation est considérée comme similaire si elle possède un organisme formateur (SIRET), un lieu de formation (code postal) et
+        au moins un FORMACODE ou CERTIFINFOs identiquent à ceux de la formation dispensée durant la session.
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: id
+        description: >
+          Permet de limiter la recherche à un ou plusieurs identifiants d'actions
+          L'identifiant d'une session à la forme suivante `numero_formation|numero_action`
+          (ex. `id=14_AF_0000011111|14_SE_0000102222`)
+        type: string
+        required: false
+      - in: query
+        name: numero
+        description: Permet de limiter la recherche à un ou plusieurs numéros d'actions
+        type: string
+        required: false
+      - in: query
+        name: region
+        description: Permet de limiter la recherche en filtrant 'action en fonctiond de leur région
+        type: string
+        required: false
+      - in: query
+        name: nb_avis
+        description: Permet de limiter la recherche renvoyant uniquement les actions ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
+        type: string
+        required: false
+      - in: query
+        name: fields
+        description: Permet de projeter l'action en selectionnant les champs renvoyés (ex. `fields=score,-avis`)
+        type: number
+        required: false
+      - in: query
+        name: page
+        description: Le numéro de la page
+        type: number
+        required: false
+      - in: query
+        name: items_par_page
+        description: Le nombre d'avis par page
+        type: number
+        required: false
+      security:
+      - Authorization: []
+      responses:
+        200:
+          $ref: "#/responses/ActionsResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/responses/UnauthorizedErrorResponse"
+
+  /v1/ations/:id:
+    get:
+      description: >
+        Permet d'obtenir une action à partir de son identifiant
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: >
+          L'identifiant d'une action à la forme suivante `numero_formation|numero_action`
+           (ex. `id=14_AF_0000011111|14_SE_0000102222`)
+        type: string
+        required: true
+      security:
+      - Authorization: []
+      responses:
+        200:
+          $ref: "#/responses/ActionByIdResponse"
         400:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
