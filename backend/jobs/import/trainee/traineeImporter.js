@@ -108,7 +108,7 @@ module.exports = (db, logger, configuration, source) => {
                 let filterCodeRegion = codeRegion && codeRegion !== trainee.codeRegion;
 
                 let filterIncludeCodeFinancer = includeCodeFinancer && !trainee.training.codeFinanceur.includes(includeCodeFinancer);
-                let filterExcludeCodeFinancer = excludeCodeFinancer && trainee.training.codeFinanceur.includes(excludeCodeFinancer) && trainee.training.codeFinanceur.length === 1;
+                let filterExcludeCodeFinancer = excludeCodeFinancer && trainee.training.codeFinanceur.includes(excludeCodeFinancer);
 
                 let filterDate = startDate && trainee.training.scheduledEndDate <= startDate;
 
