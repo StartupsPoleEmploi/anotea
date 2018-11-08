@@ -8,6 +8,8 @@ services:
       context: ./misc/nginx
     ports:
     - 80:80
+    volumes:
+    - ./.data/nginx:/var/log/nginx:rw
     depends_on:
     - backend
     - backoffice
