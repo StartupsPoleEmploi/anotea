@@ -5,7 +5,7 @@ import SideMenu from './SideMenu';
 import ModerationPanel from './ModerationPanel';
 import OrganisationPanel from './OrganisationPanel';
 
-export default class Main extends React.Component {
+export default class ModerationMain extends React.Component {
 
     state = {
         currentPage: 'moderation'
