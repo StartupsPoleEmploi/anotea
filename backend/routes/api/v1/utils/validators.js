@@ -17,7 +17,7 @@ module.exports = {
     paginationValidator: () => {
         return {
             page: Joi.number().min(0).default(0),
-            items_par_page: Joi.number().min(0).max(1000).default(50),
+            items_par_page: Joi.number().min(0).max(2000).default(50),
         };
     },
 };

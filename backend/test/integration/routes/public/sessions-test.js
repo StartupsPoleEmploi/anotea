@@ -285,6 +285,35 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
+    it('should fail when items_per_page is too big', async () => {
+
+        let app = await startServer();
+
+        let response = await request(app).get(`/api/v1/sessions?page=0&items_par_page=5000`);
+
+        assert.equal(response.statusCode, 400);
+        assert.deepEqual(response.body, {
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Erreur de validation',
+            details: [
+                {
+                    message: '"items_par_page" must be less than or equal to 2000',
+                    path: [
+                        'items_par_page'
+                    ],
+                    type: 'number.max',
+                    context: {
+                        limit: 2000,
+                        value: 5000,
+                        key: 'items_par_page',
+                        label: 'items_par_page'
+                    }
+                }
+            ]
+        });
+    });
+
     it('can search though all sessions with projection', async () => {
 
         let app = await startServer();
