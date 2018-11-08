@@ -117,6 +117,7 @@ module.exports = (logger, configuration) => {
             app.use('/api', require('./routes/api/v1/ping')(authService));
             app.use('/api', require('./routes/api/v1/avis')(db));
             app.use('/api', require('./routes/api/v1/sessions')(db));
+            app.use('/api', require('./routes/api/v1/actions')(db));
             app.use('/api', require('./routes/api/v1/organismes-formateurs')(db));
             app.use('/api', require('./routes/api/v1/stats')(db, authService, configuration));
             app.use('/api', require('./routes/backoffice/kairos')(db, authService, configuration));
