@@ -1,0 +1,22 @@
+.sideMenu {
+    height: 100%;
+    background-color: #F0F0F0;
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.sideMenu ul {
+    padding: 0;
+}
+
+.sideMenu ul li {
+    list-style: none;
+}
+
+.sideMenu a {
+    cursor: pointer;
+}
+
+.sideMenu a.active {
+    font-weight: bold;
+}

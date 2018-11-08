@@ -1,12 +1,22 @@
 import React from 'react';
 
-import ModerationPanel from './moderation/ModerationPanel';
+import PropTypes from 'prop-types';
+
+import ModerationMain from './moderation/ModerationMain';
 import OrganisationPanel from './organisation/OrganisationPanel';
 import FinancerPanel from './financer/FinancerPanel';
 
 export class Main extends React.Component {
 
     state = {}
+
+    propTypes = {
+        id: PropTypes.string.isRequired,
+        codeRegion: PropTypes.string.isRequired,
+        profile: PropTypes.string.isRequired,
+        codeFinanceur: PropTypes.string.isRequired,
+        raisonSociale: PropTypes.string.isRequired
+    }
 
     constructor(props) {
         super(props);
@@ -23,7 +33,7 @@ export class Main extends React.Component {
         return (
             <div className="main">
                 {this.state.profile === 'moderateur' &&
-                <ModerationPanel
+                <ModerationMain
                     id={this.state.id}
                     codeRegion={this.state.codeRegion} />
                 }
