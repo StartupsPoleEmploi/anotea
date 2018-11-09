@@ -51,3 +51,7 @@ export const loadInventory = (id, trainingId, postalCode) => {
 export const getOrganisationStates = id => {
     return _get(`/backoffice/organisation/${id}/states`);
 };
+
+export const updateEditedEmail = (id, email) => {
+    return _post(`/backoffice/organisation/${id}/editedEmail`, { email: email });
+};

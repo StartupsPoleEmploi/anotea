@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 
 import './sideMenu.css';
 
-export default class OrganisationDetail extends React.PureComponent {
+import { updateEditedEmail } from '../../../lib/organisationService';
 
+export default class OrganisationDetail extends React.PureComponent {
+    //13000285000019
     state = {
         mode: 'view',
         emailEdited: ''
@@ -12,10 +14,6 @@ export default class OrganisationDetail extends React.PureComponent {
 
     propTypes = {
         organisation: PropTypes.object.isRequired,
-    }
-
-    componentWillReceiveProps = async nextProps => {
-        console.log(nextProps)
     }
 
     getEmail = () => {
@@ -31,7 +29,7 @@ export default class OrganisationDetail extends React.PureComponent {
     }
 
     changeMode = mode => {
-        this.setState({mode : mode});
+        this.setState({ mode: mode });
     }
 
     cancel = () => {
@@ -40,9 +38,12 @@ export default class OrganisationDetail extends React.PureComponent {
     }
 
     update = () => {
-        // TODO : save
-        this.setState({ emailEdited: '' });
+        updateEditedEmail(this.props.organisation._id, this.state.emailEdited);
         this.changeMode('view');
+    }
+
+    handleEmailChange = event => {
+        this.setState({ emailEdited: event.target.value });
     }
 
     render() {
@@ -67,7 +68,7 @@ export default class OrganisationDetail extends React.PureComponent {
                             }
                             {this.state.mode === 'edit' &&
                                 <div>
-                                    <input type="text" /> <button className="btn btn-primary" onClick={this.update}>Mettre à jour</button> <button className="btn" onClick={this.cancel}>Annuler</button>
+                                    <input type="text" value={this.state.editedEmail} onChange={this.handleEmailChange} /> <button className="btn btn-primary" onClick={this.update}>Mettre à jour</button> <button className="btn" onClick={this.cancel}>Annuler</button>
                                 </div>
                             }
                         </div>
