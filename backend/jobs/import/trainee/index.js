@@ -7,6 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
 const createImporter = require('./traineeImporter');
+const validateCSVFile = require('./validateCSVFile');
 
 const sources = {
     'PE': 'poleEmploi',
@@ -41,7 +42,9 @@ const main = async () => {
     .option('-r, --region [codeRegion]', 'Code region to filter')
     .option('-i, --includeFinancer [codeFinanceur]', 'Financer code to filter')
     .option('-x, --excludeFinancer [codeFinanceur]', 'Financer code to exclude')
-    .option('-d, --since [startDate]', 'Import only trainee with a scheduled end date since start date')
+    .option('-d, --since [startDate]', 'Import only trainee with a scheduled end date since start date', value => {
+        return moment(value, 'DD/MM/YYYY');
+    })
     .parse(process.argv);
 
     let allowedSources = Object.keys(sources);
@@ -53,59 +56,49 @@ const main = async () => {
         return abort('CSV File is required');
     }
 
+    if (cli.region && isNaN(cli.region)) {
+        return abort('Region is invalid');
+    }
+
+    if (cli.includeFinancer && isNaN(cli.includeFinancer)) {
+        return abort('Financer code is invalid');
+    }
+
+    if (cli.excludeFinancer && isNaN(cli.excludeFinancer)) {
+        return abort('Financer code is invalid');
+    }
+
+    if (cli.since && !cli.since.isValid()) {
+        return abort('startDate is invalid, please use format \'DD/MM/YYYY\'');
+    }
+
     let importer = createImporter(db, logger, configuration, cli.source);
-    let createBuilder = require(`./handlers/${sources[cli.source]}CSVHandler`);
-    let builder = createBuilder(db, logger, configuration);
+    let createHandler = require(`./handlers/${sources[cli.source]}CSVHandler`);
+    let handler = createHandler(db, logger, configuration);
 
     try {
         logger.info(`Importing source ${cli.source} from file ${cli.file}...`);
         if (dryRun) {
             logger.info('Dry run');
         }
-        let codeRegion = null;
-        if (cli.region) {
-            if (!isNaN(cli.region)) {
-                codeRegion = cli.region;
-                logger.info(`Filtering on region number '${codeRegion}'`);
-            } else {
-                abort('Region number is invalid');
-            }
-        }
 
-        let includeCodeFinancer = null;
-        if (cli.includeFinancer) {
-            if (!isNaN(cli.includeFinancer)) {
-                includeCodeFinancer = cli.includeFinancer;
-                logger.info(`Filtering on financer code '${includeCodeFinancer}'`);
-            } else {
-                abort('Financer code is invalid');
-            }
-        }
+        if (dryRun === true) {
+            let results = await validateCSVFile(cli.file, handler);
+        } else {
+            let filters = {
+                codeRegion: cli.region,
+                includeCodeFinancer: cli.includeFinancer,
+                excludeCodeFinancer: cli.excludeFinancer,
+                startDate: cli.since
+            };
+            logger.info(`Filtering with `, filters);
 
-        let excludeCodeFinancer = null;
-        if (cli.excludeFinancer) {
-            if (!isNaN(cli.excludeFinancer)) {
-                excludeCodeFinancer = cli.excludeFinancer;
-                logger.info(`Excluding financer code '${excludeCodeFinancer}'`);
-            } else {
-                abort('Financer code is invalid');
-            }
-        }
+            let results = await importer.importTrainee(cli.file, handler, filters);
 
-        let startDate = null;
-        if (cli.since) {
-            startDate = moment(cli.since, 'DD/MM/YYYY');
-            if (startDate.isValid()) {
-                logger.info(`Filtering on scheduled end date since '${startDate}'`);
-            } else {
-                abort('startDate is invalid, please use format \'DD/MM/YYYY\'');
-            }
+            let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
+            logger.info(`Completed in ${duration}: ${JSON.stringify(results, null, 2)}`);
         }
-        let results = await importer.importTrainee(cli.file, builder, dryRun, codeRegion, includeCodeFinancer, excludeCodeFinancer, startDate);
         await client.close();
-
-        let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
-        logger.info(`Completed in ${duration}: ${JSON.stringify(results, null, 2)}`);
 
     } catch (e) {
         abort(e);
