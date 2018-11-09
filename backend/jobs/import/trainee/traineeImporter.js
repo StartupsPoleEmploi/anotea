@@ -56,6 +56,7 @@ module.exports = (db, logger, configuration, source) => {
 
     const checkValidation = (input, handler, campaign, deptList) => {
         let promise = new Promise((resolve, reject) => {
+            resolve();
             const parser = parse(handler.csvOptions);
             parser.write(input);
             parser.end();
@@ -74,13 +75,15 @@ module.exports = (db, logger, configuration, source) => {
                                 reject();
                             }
                         } else {
-                            resolve();
+                            reject();
                         }
+                        resolve();
                     } catch (e) {
                         reject();
                     }
-                } else {
                     resolve();
+                } else {
+                    reject();
                 }
             });
         });
@@ -112,7 +115,8 @@ module.exports = (db, logger, configuration, source) => {
 
                 let filterDate = startDate && trainee.training.scheduledEndDate <= startDate;
 
-                if (filterCodeRegion || filterExcludeCodeFinancer || filterIncludeCodeFinancer || filterDate || !handler.shouldBeImported(trainee)) {
+                const shouldBeImported = await handler.shouldBeImported(trainee);
+                if (filterCodeRegion || filterExcludeCodeFinancer || filterIncludeCodeFinancer || filterDate || !shouldBeImported) {
                     return { status: 'ignored', trainee };
                 } else {
                     await validate(trainee);

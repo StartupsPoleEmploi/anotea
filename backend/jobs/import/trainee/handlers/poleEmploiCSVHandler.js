@@ -68,8 +68,8 @@ module.exports = (db, logger, configuration) => {
             ],
         },
         shouldBeImported: async data => {
-            const found = await db.collection('trainee').count({ 'trainee.email': data.trainee.email, 'training.infoCarif.numeroSession': data.training.infoCarif.numeroSession });
-            return !found && data.trainee.emailValid && configuration.app.active_regions.includes(data.codeRegion);
+            const count = await db.collection('trainee').count({ 'trainee.email': data.trainee.email, 'training.infoCarif.numeroSession': data.training.infoCarif.numeroSession });
+            return (count === 0) && data.trainee.emailValid && configuration.app.active_regions.includes(data.codeRegion);
         },
         buildTrainee: async (record, campaign) => {
             try {
