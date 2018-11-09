@@ -419,5 +419,24 @@ module.exports = function (db, authService, logger, configuration) {
         }
     });
 
+    router.post('/backoffice/organisation/:id/editedEmail', tryAndCatch(async (req, res) => {
+        const email = req.body.email;
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            throw Boom.notFound('Not found');
+        }
+
+        let organisme = await db.collection('organismes').findOne({ _id: id });
+        if (organisme) {
+            if (!organisme.passwordHash) {
+                await db.collection('organismes').update({ _id: id }, { $set: { editedEmail: email } });
+                res.status(201).send('OK');
+            }
+        } else {
+            throw Boom.notFound('Not found');
+        }
+    }));
+
     return router;
 };
