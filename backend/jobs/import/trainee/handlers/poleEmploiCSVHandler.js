@@ -67,8 +67,9 @@ module.exports = (db, logger, configuration) => {
                 'liste_financeur',
             ],
         },
-        shouldBeImported: data => {
-            return data.trainee.emailValid && configuration.app.active_regions.includes(data.codeRegion);
+        shouldBeImported: async data => {
+            const found = await db.collection('trainee').count({ 'trainee.email': data.trainee.email, 'training.infoCarif.numeroSession': data.training.infoCarif.numeroSession });
+            return !found && data.trainee.emailValid && configuration.app.active_regions.includes(data.codeRegion);
         },
         buildTrainee: async (record, campaign) => {
             try {
