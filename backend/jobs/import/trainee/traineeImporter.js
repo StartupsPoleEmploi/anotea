@@ -56,7 +56,6 @@ module.exports = (db, logger, configuration, source) => {
 
     const checkValidation = (input, handler, campaign, deptList) => {
         let promise = new Promise((resolve, reject) => {
-            resolve();
             const parser = parse(handler.csvOptions);
             parser.write(input);
             parser.end();
