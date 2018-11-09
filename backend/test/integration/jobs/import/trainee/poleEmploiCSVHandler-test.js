@@ -201,4 +201,20 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.equal(count, 0);
     });
 
+    it('should ignore trainee already imported', async () => {
+        let db = await getTestDatabase();
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
+        let csvFileWithDuplicates = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-doublons.csv');
+        let importer = traineeImporter(db, logger, configuration);
+        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        await importer.importTrainee(csvFile, handler);
+        let results = await importer.importTrainee(csvFileWithDuplicates, handler);
+        assert.deepEqual(results, {
+            invalid: 2,
+            ignored: 1,
+            imported: 0,
+            total: 3,
+        });
+    });
+
 }));
