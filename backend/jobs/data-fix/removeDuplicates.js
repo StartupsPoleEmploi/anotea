@@ -9,7 +9,7 @@ const getLogger = require('../../components/logger');
 const doRemoveDulicates = (db, logger, configuration, abort) => {
 
     let stream = db.collection('trainee').aggregate([
-        { $match: { 'training.infoCarif.numeroSession': { $ne: 'NULL' }, 'campaign': 'STAGIAIRES_AES_TT_REGIONS_FULL_2018-10-12' } },
+        { $match: { 'training.infoCarif.numeroSession': { $ne: 'NULL' } } },
         { $group: { _id: { email: '$trainee.email', formation: '$training.infoCarif.numeroSession' }, count: { $sum: 1 }, token: { $first: '$token' } } },
         { $match: { count: { $gte: 2 } } }
     ]);
@@ -76,7 +76,6 @@ const main = async () => {
         });
     };
 
-    console.log("ici")
     doRemoveDulicates(db, logger, configuration, abort);
 };
 
