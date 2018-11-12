@@ -20,6 +20,10 @@ const main = async () => {
             sessionsReconciliees.countDocuments({
                 'region': inseeCode,
                 'score.nb_avis': { $gte: 1 }
+            }),
+            sessionsReconciliees.countDocuments({
+                'region': inseeCode,
+                'score.nb_avis': { $gte: 3 }
             })
         ]).then(results => {
             let nbSessionsAvecAvis = results[1];
@@ -29,7 +33,8 @@ const main = async () => {
                 inseeCode,
                 nbSessionsAvecAvis,
                 nombreDeSessionsActives,
-                pourcentageDeSessionsAvecAuMoinsUnAvis: Math.ceil((nbSessionsAvecAvis * 100) / nombreDeSessionsActives)
+                pourcentageDeSessionsAvecAuMoinsUnAvis: Math.ceil((nbSessionsAvecAvis * 100) / nombreDeSessionsActives),
+                pourcentageDeSessionsAvecAuMoinsTroisAvis: Math.ceil((results[2] * 100) / nombreDeSessionsActives)
             };
         });
     };
