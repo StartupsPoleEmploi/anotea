@@ -431,7 +431,7 @@ module.exports = function (db, authService, logger, configuration) {
         if (organisme) {
             if (!organisme.passwordHash) {
                 await db.collection('organismes').update({ _id: id }, { $set: { editedEmail: email } });
-                res.status(201).send('OK');
+                res.status(201).send({ 'status': 'OK' });
             }
         } else {
             throw Boom.notFound('Not found');
