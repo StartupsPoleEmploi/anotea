@@ -13,6 +13,11 @@ module.exports = (db, logger) => {
         let region = data['Nouvelle région'];
         let email = data['mail RGC'];
 
+        let [codeRegion, nbAvis] = await Promise.all([
+            await findCodeRegionByName(region),
+            db.collection('comment').countDocuments({ 'training.organisation.siret': data['SIRET'] })
+        ]);
+
         return {
             _id: siret,
             SIRET: siret,
@@ -21,9 +26,10 @@ module.exports = (db, logger) => {
             token: uuid.v4(),
             creationDate: new Date(),
             sources: ['kairos'],
-            codeRegion: await findCodeRegionByName(region),
+            codeRegion,
             meta: {
                 siretAsString: data['SIRET'],
+                nbAvis,
                 kairosData: {
                     libelle: data['LIBELLE'],
                     region: region,
@@ -88,9 +94,9 @@ module.exports = (db, logger) => {
                                 },
                                 $set: {
                                     ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
-                                    'meta.kairosData': newAccount.meta.kairosData,
                                     'updateDate': new Date(),
                                     'codeRegion': newAccount.codeRegion,
+                                    'meta': newAccount.meta,
                                 }
                             });
 
