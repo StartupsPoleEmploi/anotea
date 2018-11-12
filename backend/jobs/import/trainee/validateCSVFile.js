@@ -3,7 +3,6 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const readline = require('readline');
 const _ = require('underscore');
-const colors = require('colors/safe');
 const validate = require('./traineeValidator');
 
 const getCampaignName = file => {
@@ -11,93 +10,93 @@ const getCampaignName = file => {
     return filename.substring(0, filename.length - 4);
 };
 
-module.exports = (db, logger) => {
+const ValidationErrorTypes = Object.freeze({
+    BAD_HEADER: Symbol('BAD_HEADER'),
+    BAD_DATA: Symbol('BAD_DATA'),
+    DUPLICATED: Symbol('DUPLICATED'),
+});
 
-    const BAD_FORMAT_MESSAGE = 'File is not valid due to bad format';
+const isEmptyLine = input => input === ';;;;;;;;;;;;;;;;';
 
-    const { findDepartementsForRegion } = require('../../../components/regions')(db);
+const isHeaderValid = (rawLine, csvOptions) => {
+    const headers = rawLine.split(csvOptions.delimiter);
+    return _.isEqual(headers, csvOptions.columns);
+};
 
-    const isHeaderValid = (input, handler) => {
-        const headers = input.split(handler.csvOptions.delimiter);
-        if (!_.isEqual(headers, handler.csvOptions.columns)) {
-            logger.error(`${BAD_FORMAT_MESSAGE}. Differences : ${colors.green(`+${_.difference(headers, handler.csvOptions.columns)}`)} ${colors.red(`-${_.difference(handler.csvOptions.columns, headers)}`)}`);
-            return false;
-        } else {
-            return true;
-        }
-    };
+const checkIfDuplicated = (lines, rawLine) => {
+    return lines.filter(line => _.isEqual(line, rawLine)).length > 0;
+};
 
-    const checkIfDuplicates = (input, lines) => {
-        if (lines.filter(line => _.isEqual(line, input)).length > 0) {
-            logger.error('File is not valid due to duplicates found');
-            return Promise.reject(false);
-        }
-    };
-
-    const isRowValid = (input, handler, campaign, departements) => {
-        return new Promise((resolve, reject) => {
-            const parser = parse(handler.csvOptions);
-            parser.write(input);
-            parser.end();
-            parser.on('readable', async () => {
-                let record = parser.read();
-                if (departements.includes(record.departement)) {
-                    let trainee;
-                    try {
-                        trainee = await handler.buildTrainee(record, campaign);
-                        if (handler.shouldBeImported(trainee)) {
-                            try {
-                                await validate(trainee);
-                                resolve();
-                            } catch (e) {
-                                logger.error(BAD_FORMAT_MESSAGE);
-                                reject();
-                            }
-                        } else {
-                            reject();
-                        }
-                        resolve();
-                    } catch (e) {
-                        reject();
-                    }
-                    resolve();
-                } else {
-                    reject();
-                }
-            });
-        });
-    };
-
-    const isEmptyLine = input => input === ';;;;;;;;;;;;;;;;';
-
-    return async (file, handler, filters) => {
+const isRowValid = (file, handler, rawLine) => {
+    return new Promise((resolve, reject) => {
 
         let campaign = getCampaignName(file);
-        let lines = [];
-        let line = 0;
-        let errorFound = false;
-        let departements = filters.codeRegion ? await findDepartementsForRegion(filters.codeRegion) : null;
 
-        return new Promise((resolve, reject) => {
-            readline.createInterface({ input: fs.createReadStream(file) })
-            .on('line', async input => {
+        parse(rawLine, handler.csvOptions, async (err, data) => {
 
-                lines.push(input);
+            if (err) {
+                return resolve(false);
+            }
 
-                if (!errorFound && !isEmptyLine(input)) {
-                    if (line++ === 0 && !isHeaderValid(input, handler)) {
-                        return reject('du format non conforme');
-                    }
-
-                    if (await isRowValid(input, handler, campaign, departements)) {
-                        return reject('du format non conforme');
-                    }
-
-                    if (await checkIfDuplicates(input, lines)) {
-                        return reject('de la présence de doublons');
-                    }
+            try {
+                let trainee = await handler.buildTrainee(data[0], campaign);
+                if (await handler.shouldBeImported(trainee)) {
+                    return validate(trainee)
+                    .then(() => resolve(true))
+                    .catch(() => resolve(false));
+                } else {
+                    return resolve(true);
                 }
-            }).on('close', () => resolve());
+            } catch (e) {
+                return reject(e);
+            }
         });
-    };
+    });
+};
+
+module.exports = async (file, handler) => {
+    return new Promise((resolve, reject) => {
+        let error = null;
+        let lines = [];
+        let counter = 0;
+
+        let rl = readline.createInterface({ input: fs.createReadStream(file) });
+        rl.on('line', async line => {
+            if (error || isEmptyLine(line)) {
+                return;
+            }
+
+            if (counter++ === 0 && !isHeaderValid(line, handler.csvOptions)) {
+                error = {
+                    type: ValidationErrorTypes.BAD_HEADER,
+                    message: 'du format non conforme',
+                    line: line
+                };
+            } else {
+                try {
+                    if (!(await isRowValid(file, handler, line))) {
+                        error = {
+                            type: ValidationErrorTypes.BAD_DATA,
+                            message: 'du format non conforme',
+                            line: line
+                        };
+                    }
+
+                    if (checkIfDuplicated(lines, line)) {
+                        error = {
+                            type: ValidationErrorTypes.DUPLICATED,
+                            message: 'de la présence de doublons',
+                            line: line
+                        };
+                    }
+                } catch (e) {
+                    reject(e);
+                }
+            }
+
+            if (error) {
+                rl.close();
+            }
+        }).on('close', () => resolve(error));
+    });
 };
