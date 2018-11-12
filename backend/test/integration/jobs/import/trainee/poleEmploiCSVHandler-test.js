@@ -183,16 +183,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.equal(count, 0);
     });
 
-    it('should ignore trainee with region not yet handled', async () => {
+    it('should ignore trainee with not active region', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-auvergne.csv');
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-inactive-region.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
         await insertIntoDatabase('regions', {
-            region: 'Auvergne-Rhône-Alpes',
-            dept_num: '45',
-            region_num: '2',
+            region: 'Occitanie',
+            dept_num: '66',
+            region_num: '16'
         });
 
         await importer.importTrainee(csvFile, handler);

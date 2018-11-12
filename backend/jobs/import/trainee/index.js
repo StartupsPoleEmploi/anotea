@@ -10,7 +10,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
 const createImporter = require('./traineeImporter');
-const validateCSVFile = require('./validateCSVFile');
+const validateCsvFile = require('./validateCsvFile');
 const createMailer = require('../../../components/mailer');
 
 const sources = {
@@ -103,7 +103,7 @@ const main = async () => {
 
         if (dryRun === true) {
             logger.info(`Validating file ${cli.file} in dry-run mode...`);
-            let validationError = await validateCSVFile(cli.file, handler);
+            let validationError = await validateCsvFile(cli.file, handler);
             if (validationError) {
                 handleValidationError(validationError, handler.csvOptions);
             }
