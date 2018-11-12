@@ -59,3 +59,7 @@ export const updateEditedEmail = (id, email) => {
 export const deleteEditedEmail = (id, email) => {
     return _get(`/backoffice/organisation/${id}/editedEmail/delete`, { email: email });
 };
+
+export const resendEmailAccount = id => {
+    return _post(`/backoffice/organisation/${id}/resendEmailAccount`);
+};

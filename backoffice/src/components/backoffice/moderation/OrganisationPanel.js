@@ -34,7 +34,7 @@ export default class OrganisationPanel extends React.PureComponent {
                 <h1>Gestion des organismes</h1>
                 <input type="text" placeholder="SIRET" value={this.state.siret} onChange={this.updateSIRET} /> <button className="btn btn-primary" onClick={this.doSearch}>Chercher</button>
 
-                <OrganisationDetail organisation={this.state.organisation} />
+                <OrganisationDetail organisation={this.state.organisation} refresh={this.doSearch} />
             </div>
         );
     }

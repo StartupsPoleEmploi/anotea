@@ -3,12 +3,15 @@ const Boom = require('boom');
 const tryAndCatch = require('../tryAndCatch');
 const { hashPassword, isPasswordStrongEnough } = require('../../components/password');
 
-module.exports = function (db, authService, logger, configuration) {
+module.exports = (db, authService, logger, configuration) => {
 
     const dataExposer = require('../../components/dataExposer')();
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
+
+    const mailer = require('../../components/mailer.js')(db, logger, configuration);
+    const getContactEmail = require('../../components/getContactEmail');
 
     router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 
@@ -451,6 +454,35 @@ module.exports = function (db, authService, logger, configuration) {
                 await db.collection('organismes').update({ _id: id }, { $unset: { editedEmail: '' } });
                 res.status(200).send({ 'status': 'OK' });
             }
+        } else {
+            throw Boom.notFound('Not found');
+        }
+    }));
+
+    router.post('/backoffice/organisation/:id/resendEmailAccount', tryAndCatch(async (req, res) => {
+        const id = parseInt(req.params.id);
+
+        const organismes = db.collection('organismes');
+
+        if (isNaN(id)) {
+            throw Boom.notFound('Not found');
+        }
+
+        let organisme = await organismes.findOne({ _id: id });
+        if (organisme) {
+            mailer.sendOrganisationAccountLink({ to: getContactEmail(organisme) }, organisme, async () => {
+                await organismes.update({ '_id': organisme._id }, {
+                    $set: {
+                        mailSentDate: new Date(),
+                        resent: true
+                    },
+                    $unset: {
+                        mailError: '',
+                        mailErrorDetail: ''
+                    },
+                });
+                res.status(200).send({ 'status': 'OK' });
+            });
         } else {
             throw Boom.notFound('Not found');
         }

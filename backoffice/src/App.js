@@ -14,6 +14,8 @@ import { setToken, removeToken }            from './utils/token';
 import { subscribeToHttpEvent }             from './utils/http-client';
 import { getRegion }                        from './lib/financerService';
 
+import './utils/moment-fr';
+
 addLocaleData([...fr]);
 
 class App extends Component {
