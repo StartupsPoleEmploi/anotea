@@ -10,3 +10,7 @@
 .email.not-current .icon {
     display: none;
 }
+
+.email.not-current.anoteaEmail .view {
+    display: none;
+}

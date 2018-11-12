@@ -55,3 +55,7 @@ export const getOrganisationStates = id => {
 export const updateEditedEmail = (id, email) => {
     return _post(`/backoffice/organisation/${id}/editedEmail`, { email: email });
 };
+
+export const deleteEditedEmail = (id, email) => {
+    return _get(`/backoffice/organisation/${id}/editedEmail/delete`, { email: email });
+};

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './email.css';
 
-import { updateEditedEmail } from '../../../lib/organisationService';
+import { updateEditedEmail, deleteEditedEmail } from '../../../lib/organisationService';
 
 export default class Email extends React.Component {
 
@@ -17,28 +17,46 @@ export default class Email extends React.Component {
         current: PropTypes.any.isRequired,
         active: PropTypes.any.isRequired,
         label: PropTypes.string.isRequired,
-        organisationId: PropTypes.number.isRequired
+        organisationId: PropTypes.number.isRequired,
+        deleteEditedEmail: PropTypes.func,
+        updateEditedEmail: PropTypes.func,
+        changeMode: PropTypes.func.isRequired,
+        mode: PropTypes.string,
+        editButton: PropTypes.bool.isRequired
     }
 
     constructor(props) {
         super(props);
         this.state.active = props.current === this.props.active;
         this.state.current = props.current;
+        if (props.mode) {
+            this.state.mode = props.mode;
+        }
+        this.changeMode = props.changeMode;
     }
 
-    changeMode = mode => {
-        this.setState({ mode: mode });
+    componentWillReceiveProps(nextProps) {
+        this.setState({ active: nextProps.current === nextProps.active, current: nextProps.current });
+        if (nextProps.mode ) {
+            this.setState({ mode: nextProps.mode });
+        }
     }
 
     cancel = () => {
         this.setState({ emailEdited: '' });
-        this.changeMode('view');
+        this.props.changeMode('view');
     }
 
     update = () => {
         updateEditedEmail(this.props.organisationId, this.state.emailEdited).then(() => {
-            this.changeMode('view');
-            this.setState({ current: this.state.emailEdited });
+            this.props.changeMode('view');
+            this.props.updateEditedEmail(this.state.emailEdited);
+        });
+    }
+
+    delete = () => {
+        deleteEditedEmail(this.props.organisationId).then(() => {
+            this.props.deleteEditedEmail();
         });
     }
 
@@ -48,19 +66,23 @@ export default class Email extends React.Component {
 
     render() {
         return (
-            <div className={`email ${this.state.active ? 'active' : 'not-current'}`}>
+            <div className={`email ${this.state.active ? 'active' : 'not-current'} ${this.props.deleteEditedEmail ? 'anoteaEmail' : ''}`}>
                 {this.state.mode === 'view' &&
-                    <div>
-                        <i className="icon glyphicon glyphicon-ok" /> <span>{this.props.label}</span> <a href="mailto:this.props.current">{this.state.current}</a>
+                    <div className="view">
+                        <i className="icon glyphicon glyphicon-ok" /> <span>{this.props.label}</span> <a href={`mailto:${this.props.current}`}>{this.state.current}</a>
 
-                        {this.state.active &&
+                        {this.state.active && this.props.editButton &&
                             <button className="btn btn-primary" onClick={this.changeMode.bind(this, 'edit')}>Modifier</button>
+                        }
+
+                        {this.props.deleteEditedEmail &&
+                            <button className="btn btn-danger" onClick={this.delete}>Supprimer</button>
                         }
                     </div>
                 }
 
                 {this.state.mode === 'edit' &&
-                    <div>
+                    <div className="edit">
                         Anotea : <input type="text" value={this.state.editedEmail} onChange={this.handleEmailChange} /> <button className="btn btn-primary" onClick={this.update}>Mettre à jour</button> <button className="btn" onClick={this.cancel}>Annuler</button>
                     </div>
                 }

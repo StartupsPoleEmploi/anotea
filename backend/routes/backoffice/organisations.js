@@ -438,5 +438,23 @@ module.exports = function (db, authService, logger, configuration) {
         }
     }));
 
+    router.get('/backoffice/organisation/:id/editedEmail/delete', tryAndCatch(async (req, res) => {
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            throw Boom.notFound('Not found');
+        }
+
+        let organisme = await db.collection('organismes').findOne({ _id: id });
+        if (organisme) {
+            if (!organisme.passwordHash) {
+                await db.collection('organismes').update({ _id: id }, { $unset: { editedEmail: '' } });
+                res.status(200).send({ 'status': 'OK' });
+            }
+        } else {
+            throw Boom.notFound('Not found');
+        }
+    }));
+
     return router;
 };
