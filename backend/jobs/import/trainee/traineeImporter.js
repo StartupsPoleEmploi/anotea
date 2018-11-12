@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const parse = require('csv-parse');
 const md5File = require('md5-file/promise');
-const validate = require('./traineeValidator');
+const validateTrainee = require('./validateTrainee');
 const { handleBackPressure } = require('../../utils');
 
 const getCampaignName = file => {
@@ -54,7 +54,7 @@ module.exports = (db, logger) => {
                             if (await shouldBeIgnored(trainee, filters)) {
                                 return { status: 'ignored', trainee };
                             } else {
-                                await validate(trainee);
+                                await validateTrainee(trainee);
                                 await db.collection('trainee').save(trainee);
                                 return { status: 'imported', trainee };
                             }

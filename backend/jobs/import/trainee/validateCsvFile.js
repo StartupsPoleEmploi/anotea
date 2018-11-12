@@ -3,7 +3,7 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const readline = require('readline');
 const _ = require('underscore');
-const validate = require('./traineeValidator');
+const validateTrainee = require('./validateTrainee');
 
 const getCampaignName = file => {
     const filename = path.basename(file);
@@ -41,7 +41,7 @@ const isRowValid = (file, handler, rawLine) => {
             try {
                 let trainee = await handler.buildTrainee(data[0], campaign);
                 if (await handler.shouldBeImported(trainee)) {
-                    return validate(trainee)
+                    return validateTrainee(trainee)
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
                 } else {
