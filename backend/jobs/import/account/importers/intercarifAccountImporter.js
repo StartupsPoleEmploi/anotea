@@ -1,7 +1,9 @@
+const uuid = require('node-uuid');
+const regions = require('../../../../components/regions');
+
 module.exports = (db, logger) => {
 
-    const uuid = require('node-uuid');
-    const { findCodeRegionByPostalCode } = require('../../../../components/regions')(db);
+    let { findCodeRegionByPostalCode } = regions(db);
 
     const buildAccount = async (type, organisme) => {
         let codePostal = type === 'formateur' ? organisme.lieux_de_formation[0].adresse.code_postal :

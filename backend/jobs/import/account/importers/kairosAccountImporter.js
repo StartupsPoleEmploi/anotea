@@ -3,10 +3,11 @@ const parse = require('csv-parse');
 const uuid = require('node-uuid');
 const moment = require('moment');
 const { handleBackPressure } = require('../../../utils');
+const regions = require('../../../../components/regions');
 
 module.exports = (db, logger) => {
 
-    const { findCodeRegionByName } = require('../../../../components/regions')(db);
+    const { findCodeRegionByName } = regions(db);
 
     const buildAccount = async data => {
         const siret = parseInt(data['SIRET'], 10);
@@ -14,7 +15,7 @@ module.exports = (db, logger) => {
         let email = data['mail RGC'];
 
         let [codeRegion, nbAvis] = await Promise.all([
-            await findCodeRegionByName(region),
+            findCodeRegionByName(region),
             db.collection('comment').countDocuments({ 'training.organisation.siret': data['SIRET'] })
         ]);
 

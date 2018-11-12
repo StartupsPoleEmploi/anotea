@@ -3,6 +3,7 @@
 
 const mongo = require('mongodb');
 const configuration = require('config');
+const regions = require('../../components/regions');
 
 const getMongoClient = () => mongo.connect(configuration.mongodb.uri, { useNewUrlParser: true });
 
@@ -12,41 +13,59 @@ process.on('uncaughtException', r => console.error(r));
 const main = async () => {
 
     let client = await getMongoClient();
-    let sessionsReconciliees = client.db().collection('sessionsReconciliees');
+    let db = client.db();
+    let { findRegionByCodeRegion } = regions(db);
 
-    const computeStats = (name, inseeCode) => {
-        return Promise.all([
-            sessionsReconciliees.countDocuments({ region: inseeCode }),
-            sessionsReconciliees.countDocuments({
-                'region': inseeCode,
-                'score.nb_avis': { $gte: 1 }
-            }),
-            sessionsReconciliees.countDocuments({
-                'region': inseeCode,
-                'score.nb_avis': { $gte: 3 }
-            })
-        ]).then(results => {
-            let nbSessionsAvecAvis = results[1];
-            let nombreDeSessionsActives = results[0];
-            return {
-                region: name,
-                inseeCode,
-                nbSessionsAvecAvis,
-                nombreDeSessionsActives,
-                pourcentageDeSessionsAvecAuMoinsUnAvis: Math.ceil((nbSessionsAvecAvis * 100) / nombreDeSessionsActives),
-                pourcentageDeSessionsAvecAuMoinsTroisAvis: Math.ceil((results[2] * 100) / nombreDeSessionsActives)
-            };
-        });
+    const computeSessionStats = async (name, codeINSEE) => {
+
+        let sessionsReconciliees = db.collection('sessionsReconciliees');
+
+        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis] = await Promise.all([
+            sessionsReconciliees.countDocuments({ region: codeINSEE }),
+            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 1 } }),
+            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 3 } })
+        ]);
+
+        return {
+            region: name,
+            nbSessions,
+            nbSessionsAvecAuMoinsUnAvis,
+            pourcentageDeSessionsAvecAuMoinsUnAvis: Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions),
+            pourcentageDeSessionsAvecAuMoinsTroisAvis: Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbSessions)
+        };
     };
 
-    Promise.all([
-        computeStats('Pays de la Loire', '52'),
-        computeStats('Île-de-France', '11'),
-        computeStats('Auvergne-Rhône-Alpes', '84'),
-    ]).then(res => {
-        res.forEach(stats => console.log(JSON.stringify(stats, null, 2)));
-        client.close();
-    });
+    const computeOrganismesStats = async (name, codeRegion) => {
+
+        let organismes = db.collection('organismes');
+
+        let [nbOrganimes, nbOrganismesAvecAvis] = await Promise.all([
+            organismes.countDocuments({ 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'meta.nbAvis': { $gte: 1 }, 'codeRegion': codeRegion }),
+        ]);
+
+        return {
+            region: name,
+            nbOrganimes,
+            nbOrganismesAvecAvis,
+            pourcentageOrganismesAvecAuMoinsUnAvis: Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes),
+        };
+    };
+
+    let activeRegions = configuration.app.active_regions;
+    let sessions = await Promise.all(activeRegions.map(codeRegion => {
+        let { name, codeINSEE } = findRegionByCodeRegion(codeRegion);
+        return computeSessionStats(name, codeINSEE);
+    }));
+
+    let organismes = await Promise.all(activeRegions.map(codeRegion => {
+        let { name } = findRegionByCodeRegion(codeRegion);
+        return computeOrganismesStats(name, codeRegion);
+    }));
+
+    console.log(JSON.stringify({ sessions, organismes }, null, 2));
+
+    await client.close();
 };
 
 main();
