@@ -55,8 +55,8 @@ const main = async () => {
     .option('-s, --source [name]', 'Source to import (PE or IDF)')
     .option('-f, --file [file]', 'The CSV file to import')
     .option('-r, --region [codeRegion]', 'Code region to filter')
-    .option('-i, --includeFinancer [codeFinanceur]', 'Financer code to filter')
-    .option('-x, --excludeFinancer [codeFinanceur]', 'Financer code to exclude')
+    .option('-i, --includeCodeFinanceur [codeFinanceur]', 'Financer code to filter')
+    .option('-x, --excludeCodeFinancer [codeFinanceur]', 'Financer code to exclude')
     .option('-s, --since [startDate]', 'Import only trainee with a scheduled end date since start date',
         value => moment(value, 'DD/MM/YYYY'))
     .option('-d, --dry-run', 'Execute this script in dry mode', () => {
@@ -77,11 +77,11 @@ const main = async () => {
         return abort('Region is invalid');
     }
 
-    if (cli.includeFinancer && isNaN(cli.includeFinancer)) {
+    if (cli.includeCodeFinanceur && isNaN(cli.includeCodeFinanceur)) {
         return abort('Financer code is invalid');
     }
 
-    if (cli.excludeFinancer && isNaN(cli.excludeFinancer)) {
+    if (cli.excludeCodeFinancer && isNaN(cli.excludeCodeFinancer)) {
         return abort('Financer code is invalid');
     }
 
@@ -94,9 +94,9 @@ const main = async () => {
     let handler = createHandler(db, logger, configuration);
     let filters = {
         codeRegion: cli.region,
-        includeCodeFinancer: cli.includeFinancer,
-        excludeCodeFinancer: cli.excludeFinancer,
-        startDate: cli.since
+        startDate: cli.since,
+        includeCodeFinancer: cli.includeCodeFinanceur,
+        excludeCodeFinancer: cli.excludeCodeFinancer,
     };
 
     try {

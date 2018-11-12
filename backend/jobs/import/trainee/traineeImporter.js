@@ -24,8 +24,7 @@ module.exports = (db, logger) => {
                 let notSameCodeFinancer = filters.includeCodeFinancer &&
                     !trainee.training.codeFinanceur.includes(filters.includeCodeFinancer);
                 let codeFinancerExcluded = filters.excludeCodeFinancer &&
-                    trainee.training.codeFinanceur.includes(filters.excludeCodeFinancer) &&
-                    trainee.training.codeFinanceur.length === 1;
+                    trainee.training.codeFinanceur.includes(filters.excludeCodeFinancer);
 
                 return notSameRegion || beforeSessionDate || codeFinancerExcluded || notSameCodeFinancer ||
                     !(await handler.shouldBeImported(trainee));
