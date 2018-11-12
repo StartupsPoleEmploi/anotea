@@ -219,7 +219,8 @@ module.exports = function(db, logger, configuration) {
                 sendMail('votre_avis', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);
 
-        }, sendMalformedImport: async (params, successCallback, errorCallback) => {
+        },
+        sendMalformedImport: async (params, successCallback, errorCallback) => {
             let mailOptions = {};
             mailOptions.to = params.source === 'IDF' ? configuration.smtp.idf_error_to : configuration.smtp.pe_error_to;
             mailOptions.subject = 'Imports stagiaires IDF : une erreur est survenue';

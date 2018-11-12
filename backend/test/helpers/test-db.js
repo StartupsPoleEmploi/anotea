@@ -32,7 +32,7 @@ module.exports = {
 
                 return Promise.all([
                     client.db(dbName).dropDatabase(),
-                    client.db().collection('comment').remove({ test: true })
+                    client.db().collection('comment').deleteMany({ test: true })
                 ]);
             });
 
@@ -47,7 +47,7 @@ module.exports = {
                 getTestDatabase,
                 insertIntoDatabase: async (collection, data) => {
                     let client = await _mongoClientHolder;
-                    return client.db(dbName).collection(collection).insert(data);
+                    return client.db(dbName).collection(collection).insertOne(data);
                 },
                 importIntercarif: async file => {
                     let intercarifFile = path.join(__dirname, 'data', 'intercarif-data-test.xml');
