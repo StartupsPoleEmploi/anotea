@@ -33,19 +33,19 @@ const main = async () => {
     };
 
     const handleValidationError = (validationError, csvOptions) => {
-        let { line, type, message } = validationError;
+        let { line, type } = validationError;
 
-        if (validationError.type === 'BAD_HEADER') {
-            logger.error(`File is not valid due to '${validationError.type}'. Differences : ` +
+        if (validationError.type.name === 'BAD_HEADER') {
+            logger.error(`File is not valid due to '${validationError.type.name}'. Differences : ` +
                 `${colors.red(`${_.difference(csvOptions.columns, line.split(csvOptions.delimiter))}`)}`);
         } else {
-            logger.error(`File is not valid due to '${type.toString()}'.\n${line}`);
+            logger.error(`File is not valid due to '${type.name}'.\n${line}`);
         }
 
         return mailer.sendMalformedImport({
             filename: path.basename(cli.file),
             date: moment().format('DD/MM/YYYY'),
-            reason: message,
+            reason: type.message,
             source: cli.source
         }, () => ({}), e => abort(e));
     };

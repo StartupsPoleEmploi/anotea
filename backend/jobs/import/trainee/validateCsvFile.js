@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const md5 = require('md5');
 const parse = require('csv-parse');
 const readline = require('readline');
 const _ = require('underscore');
@@ -11,9 +12,9 @@ const getCampaignName = file => {
 };
 
 const ValidationErrorTypes = Object.freeze({
-    BAD_HEADER: Symbol('BAD_HEADER'),
-    BAD_DATA: Symbol('BAD_DATA'),
-    DUPLICATED: Symbol('DUPLICATED'),
+    BAD_HEADER: { name: 'BAD_HEADER', message: 'du format non conforme' },
+    BAD_DATA: { name: 'BAD_DATA', message: 'du format non conforme' },
+    DUPLICATED: { name: 'DUPLICATED', message: 'de la présence de doublons' },
 });
 
 const isEmptyLine = input => input === ';;;;;;;;;;;;;;;;';
@@ -23,11 +24,11 @@ const isHeaderValid = (rawLine, csvOptions) => {
     return _.isEqual(headers, csvOptions.columns);
 };
 
-const checkIfDuplicated = (lines, rawLine) => {
+const isLineDuplicated = (lines, rawLine) => {
     return lines.filter(line => _.isEqual(line, rawLine)).length > 0;
 };
 
-const isRowValid = (file, handler, rawLine) => {
+const isLineValid = (file, handler, rawLine) => {
     return new Promise((resolve, reject) => {
 
         let campaign = getCampaignName(file);
@@ -57,8 +58,8 @@ const isRowValid = (file, handler, rawLine) => {
 module.exports = async (file, handler) => {
     return new Promise((resolve, reject) => {
         let error = null;
+        let promises = [];
         let lines = [];
-        let counter = 0;
 
         let rl = readline.createInterface({ input: fs.createReadStream(file) });
         rl.on('line', async line => {
@@ -66,26 +67,27 @@ module.exports = async (file, handler) => {
                 return;
             }
 
-            if (counter++ === 0 && !isHeaderValid(line, handler.csvOptions)) {
-                error = {
-                    type: ValidationErrorTypes.BAD_HEADER,
-                    message: 'du format non conforme',
-                    line: line
-                };
+            if (lines.length === 0) {
+                if (!isHeaderValid(line, handler.csvOptions)) {
+                    error = {
+                        type: ValidationErrorTypes.BAD_HEADER,
+                        line: line
+                    };
+                }
             } else {
                 try {
-                    if (!(await isRowValid(file, handler, line))) {
+                    let validPromise = isLineValid(file, handler, line);
+                    promises.push(validPromise);
+                    if (!await validPromise) {
                         error = {
                             type: ValidationErrorTypes.BAD_DATA,
-                            message: 'du format non conforme',
                             line: line
                         };
                     }
 
-                    if (checkIfDuplicated(lines, line)) {
+                    if (isLineDuplicated(lines, md5(line))) {
                         error = {
                             type: ValidationErrorTypes.DUPLICATED,
-                            message: 'de la présence de doublons',
                             line: line
                         };
                     }
@@ -94,9 +96,13 @@ module.exports = async (file, handler) => {
                 }
             }
 
+            lines.push(md5(line));
             if (error) {
                 rl.close();
             }
-        }).on('close', () => resolve(error));
+        }).on('close', async () => {
+            await Promise.all(promises);
+            return resolve(error);
+        });
     });
 };

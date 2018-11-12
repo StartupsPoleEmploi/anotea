@@ -55,7 +55,7 @@ module.exports = (db, logger) => {
                                 return { status: 'ignored', trainee };
                             } else {
                                 await validateTrainee(trainee);
-                                await db.collection('trainee').save(trainee);
+                                await db.collection('trainee').insertOne(trainee);
                                 return { status: 'imported', trainee };
                             }
                         } catch (e) {
@@ -76,7 +76,7 @@ module.exports = (db, logger) => {
                     })
                     .on('finish', async () => {
                         try {
-                            await db.collection('importTrainee').save({
+                            await db.collection('importTrainee').insertOne({
                                 hash,
                                 campaign,
                                 date: new Date(),
