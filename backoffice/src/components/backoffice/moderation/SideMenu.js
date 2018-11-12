@@ -5,12 +5,12 @@ import './sideMenu.css';
 
 export default class SideMenu extends React.PureComponent {
 
-    propTypes = {
-        onChangePage: PropTypes.func.isRequired
-    }
-
     state = {
         currentPage: 'moderation'
+    }
+
+    static propTypes = {
+        onChangePage: PropTypes.func.isRequired
     }
 
     changePage = page => {
@@ -23,10 +23,10 @@ export default class SideMenu extends React.PureComponent {
             <div className="sideMenu">
                 <ul>
                     <li>
-                        <a className={this.state.currentPage === 'moderation' ? 'active' : ''} onClick={this.changePage.bind(this, 'moderation')}>Modération des avis</a>
+                        <button className={this.state.currentPage === 'moderation' ? 'active' : ''} onClick={this.changePage.bind(this, 'moderation')}>Modération des avis</button>
                     </li>
                     <li>
-                        <a className={this.state.currentPage === 'organisme' ? 'active' : ''} onClick={this.changePage.bind(this, 'organisme')}>Gestion des organismes</a>
+                        <button className={this.state.currentPage === 'organisme' ? 'active' : ''} onClick={this.changePage.bind(this, 'organisme')}>Gestion des organismes</button>
                     </li>
                 </ul>
             </div>

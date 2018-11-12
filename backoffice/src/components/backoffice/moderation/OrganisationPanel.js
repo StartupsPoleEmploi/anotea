@@ -5,14 +5,14 @@ import { getOrganisationInfo } from '../../../lib/organisationService';
 
 import OrganisationDetail from './OrganisationDetail';
 
-export default class SideMenu extends React.PureComponent {
+export default class OrganisationPanel extends React.PureComponent {
 
     state = {
         siret: '',
         organisation: undefined
     }
 
-    propTypes = {
+    static propTypes = {
         codeRegion: PropTypes.string.isRequired,
     }
 

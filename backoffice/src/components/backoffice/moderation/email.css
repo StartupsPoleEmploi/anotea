@@ -1,0 +1,12 @@
+.email.current {
+    font-weight: bold;
+}
+
+.email.not-current {
+    font-style: italic;
+    color: #888;
+}
+
+.email.not-current .icon {
+    display: none;
+}
