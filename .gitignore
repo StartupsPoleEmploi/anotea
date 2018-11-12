@@ -6,3 +6,4 @@
 .DS_Store
 docker-compose.local.yml
 .data
+.env/

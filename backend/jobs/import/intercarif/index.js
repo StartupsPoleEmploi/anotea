@@ -15,6 +15,7 @@ const importIntercarif = require('./steps/importIntercarif');
 const generateOrganismesResponsables = require('./steps/generateOrganismesResponsables');
 const generateOrganismesFormateurs = require('./steps/generateOrganismesFormateurs');
 const generateSessions = require('./steps/generateSessions');
+const generateActions = require('./steps/generateActions');
 
 let unpack = false;
 cli.description('Import intercarif and generate all related collections')
@@ -31,7 +32,7 @@ const main = async () => {
     let logger = getLogger('anotea-job-intercarif-import', configuration);
     let client = await getMongoClient(configuration.mongodb.uri);
     let db = client.db();
-    let steps = cli.steps ? cli.steps.split(',') : ['intercarif', 'organismes', 'sessions'];
+    let steps = cli.steps ? cli.steps.split(',') : ['intercarif', 'organismes', 'reconcile'];
 
     const abort = message => {
         logger.error(message, () => {
@@ -65,9 +66,10 @@ const main = async () => {
             await generateOrganismesFormateurs(db);
         }
 
-        if (steps.includes('sessions')) {
-            logger.info('Reconciling sessions and comments...');
+        if (steps.includes('reconcile')) {
+            logger.info('Reconciling sessions/actions with comments...');
             await generateSessions(db);
+            await generateActions(db);
         }
 
         await client.close();

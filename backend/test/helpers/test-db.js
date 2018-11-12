@@ -1,24 +1,27 @@
 const path = require('path');
 const mongo = require('mongodb');
 const { randomize } = require('./data/dataset');
+const configuration = require('config');
 const logger = require('./test-logger');
 const importIntercarif = require('../../jobs/import/intercarif/steps/importIntercarif');
 
 let _mongoClientHolder = null;
 
-let connect = async () => {
-    _mongoClientHolder = mongo.connect(`mongodb://127.0.0.1:27017/anotea?w=1`, { useNewUrlParser: true });
-};
-
-let disconnect = async () => {
-    let client = await _mongoClientHolder;
-    return client.close();
-};
-
 module.exports = {
     withMongoDB: tests => {
 
-        const dbName = randomize('anotea_test');
+        let dbName = randomize('anotea_test');
+        let uri = configuration.mongodb.uri.split('anotea').join(dbName);
+
+        let connect = async () => {
+            _mongoClientHolder = mongo.connect(configuration.mongodb.uri, { useNewUrlParser: true });
+        };
+
+        let disconnect = async () => {
+            let client = await _mongoClientHolder;
+            return client.close();
+        };
+
 
         return () => {
             before(() => connect());
@@ -40,6 +43,7 @@ module.exports = {
 
             return tests({
                 dbName,
+                uri,
                 getTestDatabase,
                 insertIntoDatabase: async (collection, data) => {
                     let client = await _mongoClientHolder;
