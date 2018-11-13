@@ -430,7 +430,7 @@ module.exports = (db, authService, logger, configuration) => {
         }
     });
 
-    router.post('/backoffice/organisation/:id/editedEmail', tryAndCatch(async (req, res) => {
+    router.post('/backoffice/organisation/:id/editedEmail', checkAuth, async (req, res) => {
         const email = req.body.email;
         const id = parseInt(req.params.id);
 
@@ -453,7 +453,7 @@ module.exports = (db, authService, logger, configuration) => {
         } else {
             throw Boom.notFound('Not found');
         }
-    }));
+    });
 
     router.get('/backoffice/organisation/:id/editedEmail/delete', checkAuth, async (req, res) => {
         const id = parseInt(req.params.id);
