@@ -430,12 +430,12 @@ module.exports = (db, authService, logger, configuration) => {
         }
     });
 
-    router.post('/backoffice/organisation/:id/editedEmail', checkAuth, async (req, res) => {
+    router.post('/backoffice/organisation/:id/editedEmail', checkAuth, tryAndCatch(async (req, res) => {
         const email = req.body.email;
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            throw Boom.notFound('Not found');
+            throw Boom.badRequest('Bad request');
         }
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
@@ -453,13 +453,13 @@ module.exports = (db, authService, logger, configuration) => {
         } else {
             throw Boom.notFound('Not found');
         }
-    });
+    }));
 
-    router.get('/backoffice/organisation/:id/editedEmail/delete', checkAuth, async (req, res) => {
+    router.get('/backoffice/organisation/:id/editedEmail/delete', checkAuth, tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
-            throw Boom.notFound('Not found');
+            throw Boom.badRequest('Bad request');
         }
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
@@ -477,15 +477,15 @@ module.exports = (db, authService, logger, configuration) => {
         } else {
             throw Boom.notFound('Not found');
         }
-    });
+    }));
 
-    router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, async (req, res) => {
+    router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         const organismes = db.collection('organismes');
 
         if (isNaN(id)) {
-            throw Boom.notFound('Not found');
+            throw Boom.badRequest('Bad request');
         }
 
         let organisme = await organismes.findOne({ _id: id });
@@ -512,7 +512,7 @@ module.exports = (db, authService, logger, configuration) => {
         } else {
             throw Boom.notFound('Not found');
         }
-    });
+    }));
 
     return router;
 };
