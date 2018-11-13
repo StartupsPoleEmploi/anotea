@@ -45,7 +45,8 @@ class App extends Component {
                 codeRegion: sessionStorage.userCodeRegion,
                 codeFinanceur: sessionStorage.userCodeFinanceur,
                 raisonSociale: sessionStorage.userRaisonSociale,
-                action: null
+                action: null,
+                features: sessionStorage.features
             };
         }
         const qs = queryString.parse(window.location.search);
