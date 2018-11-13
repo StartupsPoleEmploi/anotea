@@ -21,14 +21,20 @@ export default class SideMenu extends React.PureComponent {
     render() {
         return (
             <div className="sideMenu">
-                <ul>
-                    <li>
-                        <button className={this.state.currentPage === 'moderation' ? 'active' : ''} onClick={this.changePage.bind(this, 'moderation')}>Modération des avis</button>
-                    </li>
-                    <li>
-                        <button className={this.state.currentPage === 'organisme' ? 'active' : ''} onClick={this.changePage.bind(this, 'organisme')}>Gestion des organismes</button>
-                    </li>
-                </ul>
+                <div className="dropdown">
+                    <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        Menu
+                        <span className="caret"></span>
+                    </button>
+                    <ul className="dropdown-menu">
+                        <li>
+                            <button className={this.state.currentPage === 'moderation' ? 'active' : ''} onClick={this.changePage.bind(this, 'moderation')}>Modération des avis</button>
+                        </li>
+                        <li>
+                            <button className={this.state.currentPage === 'organisme' ? 'active' : ''} onClick={this.changePage.bind(this, 'organisme')}>Gestion des organismes</button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         );
     }

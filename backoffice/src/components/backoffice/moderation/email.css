@@ -1,7 +1,3 @@
-.email.current {
-    font-weight: bold;
-}
-
 .email.not-current {
     font-style: italic;
     color: #888;
@@ -13,4 +9,12 @@
 
 .email.not-current.anoteaEmail .view {
     display: none;
+}
+
+.email.active {
+    font-weight: bold;
+}
+
+.email .btn {
+    margin: 10px;
 }

@@ -27,6 +27,8 @@ export default class OrganisationDetail extends React.PureComponent {
         email: null,
         editedEmail: null,
         anoteaEmailmode: 'view',
+        resendDisabled: false,
+        lastResend: null
     }
 
     static propTypes = {
@@ -71,6 +73,10 @@ export default class OrganisationDetail extends React.PureComponent {
     resend = () => {
         resendEmailAccount(this.state.organisation._id).then(() => {
             this.props.refresh();
+            this.setState({ resendDisabled: true, lastResend: new Date() });
+            setTimeout(() => {
+                this.setState({ resendDisabled: false });
+            }, 60000);
         });
     }
 
@@ -89,12 +95,9 @@ export default class OrganisationDetail extends React.PureComponent {
 
                         <OrganisationInfo organisation={this.state.organisation} />
 
-                        Actions :
-                        <ul>
-                            <li><button onClick={this.resend}>Renvoyer le lien de connexion</button></li>
-                        </ul>
+                        <button id="btnResend" className="btn btn-info" disabled={this.state.resendDisabled} onClick={this.resend}><i className="glyphicon glyphicon-send"/> Renvoyer le lien de connexion</button>
 
-                        <strong>Modifier l'adresse d'un Organisme de Formation</strong>
+                        <h5>Modifier l'adresse d'un Organisme de Formation</h5>
                         <div>
                             { (this.state.editedEmail || this.state.anoteaEmailmode) &&
                                 <Email label="Anotea" current={this.state.editedEmail} active={this.state.email} organisationId={this.state.organisation._id} deleteEditedEmail={this.deleteEditedEmail} updateEditedEmail={this.updateEditedEmail} mode={this.state.anoteaEmailmode} changeMode={this.changeMode} editButton={true} />
