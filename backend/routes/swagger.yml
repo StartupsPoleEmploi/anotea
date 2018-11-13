@@ -506,8 +506,8 @@ paths:
     get:
       description: >
         Permet d'obtenir la liste de toutes les sessions contenues dans l'intercarif avec pour chacune d'elles, les avis réconciliés et le score.
-        La réconcialition permet de rattacher des avis déposés sur des formations similaires.
-        Une formation est considérée comme similaire si elle possède un organisme formateur (SIRET), un lieu de formation (code postal) et
+        La réconcialition permet de rattacher des avis déposés sur des sessions similaires.
+        Une session est considérée comme similaire si elle possède un organisme formateur (SIRET), un lieu de formation (code postal) et
         au moins un FORMACODE ou CERTIFINFOs identiquent à ceux de la formation dispensée durant la session.
       produces:
       - application/json
@@ -590,8 +590,8 @@ paths:
     get:
       description: >
         Permet d'obtenir la liste de toutes les actions contenues dans l'intercarif avec pour chacune d'elles, les avis réconciliés et le score.
-        La réconcialition permet de rattacher des avis déposés sur des formations similaires.
-        Une formation est considérée comme similaire si elle possède un organisme formateur (SIRET), un lieu de formation (code postal) et
+        La réconcialition permet de rattacher des avis déposés sur des actions similaires.
+        Une action est considérée comme similaire si elle possède un organisme formateur (SIRET), un lieu de formation (code postal) et
         au moins un FORMACODE ou CERTIFINFOs identiquent à ceux de la formation dispensée durant la session.
       produces:
       - application/json
