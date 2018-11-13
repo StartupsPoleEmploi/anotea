@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './sideMenu.css';
+import './organisationDetail.css';
 
 import Email from './Email';
 
@@ -38,23 +38,28 @@ export default class OrganisationDetail extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        if (props.organisation) {
+        if (props.organisation !== undefined) {
             this.state.organisation = props.organisation;
-            this.state.editedEmail = props.organisation.editedEmail;
-            this.state.email = this.getEmail();
+            if (props.organisation !== null) {
+                this.state.editedEmail = props.organisation.editedEmail;
+                this.state.email = this.getEmail();
+            }
         }
     }
 
     componentWillReceiveProps(nextProps) {
         this.props = nextProps;
-        if (nextProps.organisation) {
-            this.setState({
-                editedEmail: nextProps.organisation.editedEmail,
-                organisation: nextProps.organisation
-            },
-            () => this.setState({
-                email: this.getEmail()
-            }));
+        if (nextProps.organisation !== undefined) {
+            this.setState({ organisation: nextProps.organisation });
+            if (nextProps.organisation !== null) {
+                this.setState({
+                    editedEmail: nextProps.organisation.editedEmail,
+                    organisation: nextProps.organisation
+                },
+                () => this.setState({
+                    email: this.getEmail()
+                }));
+            }
         }
     }
 
@@ -84,8 +89,8 @@ export default class OrganisationDetail extends React.PureComponent {
         return (
             <div className="organisationDetail">
                 {this.state.organisation === null &&
-                    <div >
-                        <span className="alert alert-danger">Organisme introuvable</span>
+                    <div className="not-found">
+                        <span className="alert-not-found alert alert-danger">Organisme introuvable</span>
                     </div>
                 }
                 {this.state.organisation &&
