@@ -44,7 +44,7 @@
     "eslint": "5.6.0",
     "eslint-plugin-react": "7.11.1"
   },
-  "proxy": "http://anotea.local:8080/",
+  "proxy": "http://localhost:8080/",
   "browserslist": [
     ">0.2%",
     "not dead",
