@@ -1,11 +1,18 @@
+const uuid = require('node-uuid');
+const regions = require('../../../../components/regions');
+
 module.exports = (db, logger) => {
 
-    const uuid = require('node-uuid');
-    const { findCodeRegionByPostalCode } = require('../../../../components/regions')(db);
+    let { findCodeRegionByPostalCode } = regions(db);
 
-    const buildAccount = async (organisme, type) => {
+    const buildAccount = async (type, organisme) => {
         let codePostal = type === 'formateur' ? organisme.lieux_de_formation[0].adresse.code_postal :
             organisme.adresse.code_postal;
+
+        let [codeRegion, nbAvis] = await Promise.all([
+            findCodeRegionByPostalCode(codePostal),
+            db.collection('comment').countDocuments({ 'training.organisation.siret': organisme.siret })
+        ]);
 
         return {
             _id: parseInt(organisme.siret, 10),
@@ -15,9 +22,10 @@ module.exports = (db, logger) => {
             token: uuid.v4(),
             creationDate: new Date(),
             sources: ['intercarif'],
-            codeRegion: await findCodeRegionByPostalCode(codePostal),
+            codeRegion,
             meta: {
                 siretAsString: organisme.siret,
+                nbAvis
             }
         };
     };
@@ -33,7 +41,7 @@ module.exports = (db, logger) => {
         while (await cursor.hasNext()) {
             const doc = await cursor.next();
             try {
-                let newAccount = await buildAccount(doc, type);
+                let newAccount = await buildAccount(type, doc);
                 let previous = await collection.findOne({ _id: newAccount._id });
                 stats[source].total++;
 
@@ -52,6 +60,7 @@ module.exports = (db, logger) => {
                             ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
                             'updateDate': new Date(),
                             'codeRegion': newAccount.codeRegion,
+                            'meta': newAccount.meta,
                         },
                     });
                     logger.debug(`Account ${newAccount.SIRET} updated`);

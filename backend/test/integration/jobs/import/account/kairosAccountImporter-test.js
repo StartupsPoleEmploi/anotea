@@ -2,7 +2,7 @@ const path = require('path');
 const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
-const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
+const { newOrganismeAccount, newComment } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
 const kairosOrganismesImporter = require('../../../../../jobs/import/account/importers/kairosAccountImporter');
 
@@ -55,6 +55,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             codeRegion: '7',
             meta: {
                 siretAsString: '11111111111111',
+                nbAvis: 0,
                 kairosData: {
                     libelle: 'Pole Emploi Alsace',
                     region: 'Grand Est',
@@ -88,6 +89,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             mailSentDate: new Date('2017-11-10T17:41:03.308Z'),
             meta: {
                 siretAsString: '22222222222222',
+                nbAvis: 0,
             },
         }));
 
@@ -114,6 +116,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             codeRegion: '1',
             meta: {
                 siretAsString: '22222222222222',
+                nbAvis: 0,
                 kairosData: {
                     libelle: 'Pole Emploi Formation Aquitaine',
                     region: 'Nouvelle Aquitaine',
@@ -150,5 +153,28 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
 
         assert.deepEqual(doc.courriel, 'contact+kairos@formation.fr');
+    });
+
+    it('should compute nbAvis', async () => {
+
+        let db = await getTestDatabase();
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
+        let importer = kairosOrganismesImporter(db, logger);
+
+        await Promise.all([
+            insertRegions(),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: `22222222222222`,
+                    },
+                }
+            }))
+        ]);
+
+        await importer.importAccounts(csvFile);
+
+        let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
+        assert.deepEqual(doc.meta.nbAvis, 1);
     });
 }));

@@ -1,26 +1,27 @@
 const express = require('express');
 const moment = require('moment');
+const regions = require('../components/regions');
+const tryAndCatch = require('./tryAndCatch');
 
-module.exports = db => {
+module.exports = (db, configuration) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const dataExposer = require('../../../components/dataExposer')();
+    const dataExposer = require('../components/dataExposer')();
 
-    router.get('/v1/stats.:format', async (req, res) => {
-
+    const computeCommentStats = async codeRegion => {
         let match = { $match: {} };
         let matchUnwind = { $match: {} };
 
-        if (req.query.codeRegion !== undefined) {
+        if (codeRegion !== undefined) {
             match = {
                 '$match': {
-                    'codeRegion': req.query.codeRegion
+                    'codeRegion': codeRegion
                 }
             };
 
             matchUnwind = {
                 '$match': {
-                    'comments.codeRegion': req.query.codeRegion
+                    'comments.codeRegion': codeRegion
                 }
             };
         }
@@ -83,8 +84,75 @@ module.exports = db => {
             }
         ]).toArray();
 
-        const data = docs.map(dataExposer.buildCommentsStats);
-        if (req.params.format === 'json') {
+        return docs.map(dataExposer.buildCommentsStats);
+    };
+
+    const computeSessionStats = async (name, codeINSEE) => {
+
+        let sessionsReconciliees = db.collection('sessionsReconciliees');
+
+        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis] = await Promise.all([
+            sessionsReconciliees.countDocuments({ region: codeINSEE }),
+            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 1 } }),
+            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 3 } })
+        ]);
+
+        return {
+            region: name,
+            nbSessions,
+            nbSessionsAvecAuMoinsUnAvis,
+            pourcentageDeSessionsAvecAuMoinsUnAvis: Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions),
+            pourcentageDeSessionsAvecAuMoinsTroisAvis: Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbSessions)
+        };
+    };
+
+    const computeOrganismesStats = async (name, codeRegion) => {
+
+        let organismes = db.collection('organismes');
+
+        let [nbOrganimes, nbOrganismesAvecAvis] = await Promise.all([
+            organismes.countDocuments({ 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'meta.nbAvis': { $gte: 1 }, 'codeRegion': codeRegion }),
+        ]);
+
+        return {
+            region: name,
+            nbOrganimes,
+            nbOrganismesAvecAvis,
+            pourcentageOrganismesAvecAuMoinsUnAvis: Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes),
+        };
+    };
+
+    router.get('/stats/sessions.:format', tryAndCatch(async (req, res) => {
+
+        let { findRegionByCodeRegion } = regions(db);
+
+        let activeRegions = configuration.app.active_regions;
+        let sessions = await Promise.all(activeRegions.map(codeRegion => {
+            let { name, codeINSEE } = findRegionByCodeRegion(codeRegion);
+            return computeSessionStats(name, codeINSEE);
+        }));
+
+        res.json(sessions);
+    }));
+
+    router.get('/stats/organismes.:format', tryAndCatch(async (req, res) => {
+
+        let { findRegionByCodeRegion } = regions(db);
+
+        let activeRegions = configuration.app.active_regions;
+        let organismes = await Promise.all(activeRegions.map(codeRegion => {
+            let { name } = findRegionByCodeRegion(codeRegion);
+            return computeOrganismesStats(name, codeRegion);
+        }));
+
+        res.json(organismes);
+    }));
+
+    router.get('/stats/mailing.:format', async (req, res) => {
+
+        let data = await computeCommentStats(req.query.codeRegion);
+        if (req.params.format === 'json' || !req.params.format) {
             res.send(data);
         } else if (req.params.format === 'csv') {
             res.setHeader('Content-disposition', 'attachment; filename=stats.csv');
