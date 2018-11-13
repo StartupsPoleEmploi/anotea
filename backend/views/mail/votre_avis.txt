@@ -20,4 +20,4 @@ Si vous ne souhaitez plus participer à l'enquête :
 Si vous souhaitez consulter ce mail sur votre navigateur web :
 <%= consultationLink %>
 
-<%- include('../../legal/mentions.txt'); %>
+<%- include('../legal/mentions.txt'); %>
