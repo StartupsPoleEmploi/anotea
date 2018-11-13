@@ -10,9 +10,9 @@ const AuthService = require('../../../components/auth-service');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
 
-    const insertRegion = async () => {
+    const insertDepartements = async () => {
 
-        await insertIntoDatabase('regions', {
+        await insertIntoDatabase('departements', {
             region: 'Ile De France',
             dept_num: '75',
             region_num: '11',
@@ -20,7 +20,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         });
 
         let db = await getTestDatabase();
-        return db.collection('regions').ensureIndex({ region: 'text' });
+        return db.collection('departements').ensureIndex({ region: 'text' });
     };
 
     const insertOrganisme = async siret => {
@@ -52,7 +52,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let siret = randomSIRET();
         let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
 
-        await Promise.all([insertRegion(), insertOrganisme(siret)]);
+        await Promise.all([insertDepartements(), insertOrganisme(siret)]);
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
@@ -77,7 +77,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let siret = randomSIRET();
         let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
         let db = await getTestDatabase();
-        await insertRegion();
+        await insertDepartements();
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
@@ -110,7 +110,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let siret = randomSIRET();
         let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
 
-        await Promise.all([insertRegion(), insertOrganisme(siret)]);
+        await Promise.all([insertDepartements(), insertOrganisme(siret)]);
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
@@ -143,7 +143,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let siret = randomSIRET();
         let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
 
-        await Promise.all([insertRegion(), insertOrganisme(siret)]);
+        await Promise.all([insertDepartements(), insertOrganisme(siret)]);
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')

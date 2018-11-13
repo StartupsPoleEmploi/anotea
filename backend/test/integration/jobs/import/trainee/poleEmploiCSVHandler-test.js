@@ -11,14 +11,14 @@ const poleEmploiCSVHandler = require('../../../../../jobs/import/trainee/handler
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    const insertRegions = () => {
+    const insertDepartements = () => {
         return Promise.all([
-            insertIntoDatabase('regions', {
+            insertIntoDatabase('departements', {
                 region: 'Auvergne-Rhône-Alpes',
                 dept_num: '45',
                 region_num: '2',
             }),
-            insertIntoDatabase('regions', {
+            insertIntoDatabase('departements', {
                 region: 'Ile De France',
                 dept_num: '91',
                 region_num: '11',
@@ -33,7 +33,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         await importer.importTrainee(csvFile, handler);
 
@@ -111,7 +111,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         await importer.importTrainee(csvFile, handler);
 
@@ -129,7 +129,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         let results = await importer.importTrainee(csvFile, handler);
 
@@ -147,7 +147,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         await importer.importTrainee(csvFile, handler);
 
@@ -185,7 +185,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-email.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         await importer.importTrainee(csvFile, handler);
 
@@ -199,7 +199,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-inactive-region.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertIntoDatabase('regions', {
+        await insertIntoDatabase('departements', {
             region: 'Occitanie',
             dept_num: '66',
             region_num: '16'
@@ -217,7 +217,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFileWithDuplicates = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-doublons.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         await importer.importTrainee(csvFile, handler);
         let results = await importer.importTrainee(csvFileWithDuplicates, handler);
@@ -235,7 +235,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         let results = await importer.importTrainee(csvFile, handler, {
             codeRegion: '2'
@@ -256,7 +256,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         let results = await importer.importTrainee(csvFile, handler, {
             startDate: moment('01/09/2018', 'DD/MM/YYYY'),
@@ -277,7 +277,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         let results = await importer.importTrainee(csvFile, handler, {
             includeCodeFinancer: '13',
@@ -298,7 +298,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertRegions();
+        await insertDepartements();
 
         let results = await importer.importTrainee(csvFile, handler, {
             excludeCodeFinancer: '13',

@@ -8,19 +8,19 @@ const kairosOrganismesImporter = require('../../../../../jobs/import/account/imp
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    const insertRegions = () => {
+    const insertDepartements = () => {
         return Promise.all([
-            insertIntoDatabase('regions', {
+            insertIntoDatabase('departements', {
                 region: 'Grand Est',
                 dept_num: '57',
                 region_num: '7'
             }),
-            insertIntoDatabase('regions', {
+            insertIntoDatabase('departements', {
                 region: 'Aquitaine',
                 dept_num: '33',
                 region_num: '1'
             }),
-            insertIntoDatabase('regions', {
+            insertIntoDatabase('departements', {
                 region: 'Hauts-de-France',
                 dept_num: '59',
                 region_num: '10'
@@ -33,7 +33,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
         let importer = kairosOrganismesImporter(db, logger);
-        await insertRegions();
+        await insertDepartements();
 
         await importer.importAccounts(csvFile);
 
@@ -76,7 +76,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
         let importer = kairosOrganismesImporter(db, logger);
-        await insertRegions();
+        await insertDepartements();
         await insertIntoDatabase('organismes', newOrganismeAccount({
             _id: 22222222222222,
             SIRET: 22222222222222,
@@ -137,7 +137,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
         let importer = kairosOrganismesImporter(db, logger);
-        await insertRegions();
+        await insertDepartements();
         await insertIntoDatabase('organismes', {
             _id: 22222222222222,
             SIRET: 22222222222222,
@@ -162,7 +162,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let importer = kairosOrganismesImporter(db, logger);
 
         await Promise.all([
-            insertRegions(),
+            insertDepartements(),
             insertIntoDatabase('comment', newComment({
                 training: {
                     organisation: {

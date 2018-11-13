@@ -57,7 +57,7 @@ module.exports = (db, logger) => {
                 invalid: 0,
             };
 
-            await db.collection('regions').createIndex({ region: 'text' });
+            await db.collection('departements').createIndex({ region: 'text' });
 
             return new Promise((resolve, reject) => {
                 fs.createReadStream(file)

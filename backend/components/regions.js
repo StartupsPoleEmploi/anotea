@@ -21,21 +21,21 @@ let regions = [
 
 module.exports = db => ({
     findCodeRegionByPostalCode: async postalCode => {
-        let departement = postalCode.substr(0, 2) !== '97' ? postalCode.substr(0, 2) : postalCode.substr(0, 3);
+        let code = postalCode.substr(0, 2) !== '97' ? postalCode.substr(0, 2) : postalCode.substr(0, 3);
 
-        let region = await db.collection('regions')
-        .findOne({
-            dept_num: `${parseInt(departement, 10)}`,
+        let departement = await db.collection('departements').findOne({
+            dept_num: `${parseInt(code, 10)}`,
         });
-        if (region === null) {
+
+        if (!departement) {
             return Promise.reject(new Error(`Code region inconnu pour le departement ${departement}`));
         } else {
-            return region.region_num;
+            return departement.region_num;
         }
     },
     findCodeRegionByName: async name => {
 
-        let results = await db.collection('regions')
+        let results = await db.collection('departements')
         .find({ $text: { $search: name } }, { score: { $meta: 'textScore' } })
         .project({ score: { $meta: 'textScore' } })
         .sort({ score: { $meta: 'textScore' } })

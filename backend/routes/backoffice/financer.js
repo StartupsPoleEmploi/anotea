@@ -12,7 +12,7 @@ module.exports = function(db, authService, logger, configuration) {
     router.get('/backoffice/financeur/region/:idregion', async (req, res) => {
 
         let filter = { 'region_num': `${req.params.idregion}` };
-        const region = await db.collection('regions')
+        const region = await db.collection('departements')
             .aggregate([
                 { $match: filter },
                 { $group: { _id: '$region_num', region: { $first: '$region' } } }])
