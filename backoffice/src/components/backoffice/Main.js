@@ -15,7 +15,8 @@ export class Main extends React.Component {
         codeRegion: PropTypes.string.isRequired,
         profile: PropTypes.string.isRequired,
         codeFinanceur: PropTypes.string.isRequired,
-        raisonSociale: PropTypes.string.isRequired
+        raisonSociale: PropTypes.string.isRequired,
+        features: PropTypes.array.isRequired
     }
 
     constructor(props) {
@@ -25,7 +26,8 @@ export class Main extends React.Component {
             id: props.id,
             codeRegion: props.codeRegion,
             codeFinanceur: props.codeFinanceur,
-            raisonSociale: props.raisonSociale
+            raisonSociale: props.raisonSociale,
+            features: props.features
         };
     }
 
@@ -35,19 +37,22 @@ export class Main extends React.Component {
                 {this.state.profile === 'moderateur' &&
                 <ModerationMain
                     id={this.state.id}
-                    codeRegion={this.state.codeRegion} />
+                    codeRegion={this.state.codeRegion}
+                    features={this.state.features} />
                 }
                 {this.state.profile === 'organisme' &&
                 <OrganisationPanel
                     id={this.state.id}
-                    raisonSociale={this.state.raisonSociale} />
+                    raisonSociale={this.state.raisonSociale}
+                    features={this.state.features} />
                 }
                 {this.state.profile === 'financer' &&
                 <FinancerPanel
                     profile={this.state.profile}
                     id={this.state.id}
                     codeRegion={this.state.codeRegion}
-                    codeFinanceur={this.state.codeFinanceur} />
+                    codeFinanceur={this.state.codeFinanceur}
+                    features={this.state.features} />
                 }
             </div>
         );

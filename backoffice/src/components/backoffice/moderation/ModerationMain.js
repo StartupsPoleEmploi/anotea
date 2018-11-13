@@ -14,6 +14,7 @@ export default class ModerationMain extends React.Component {
     propTypes = {
         id: PropTypes.string.isRequired,
         codeRegion: PropTypes.string.isRequired,
+        features: PropTypes.array.isRequired
     }
 
     handleChangePage = page => {
@@ -23,7 +24,7 @@ export default class ModerationMain extends React.Component {
     render() {
         return (
             <div className="mainPanel">
-                <SideMenu onChangePage={this.handleChangePage} />
+                <SideMenu onChangePage={this.handleChangePage} features={this.props.features} />
 
                 {this.state.currentPage === 'moderation' &&
                 <ModerationPanel

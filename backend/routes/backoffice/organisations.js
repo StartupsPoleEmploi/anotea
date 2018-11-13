@@ -13,6 +13,14 @@ module.exports = (db, authService, logger, configuration) => {
     const mailer = require('../../components/mailer.js')(db, logger, configuration);
     const getContactEmail = require('../../components/getContactEmail');
 
+    const getRemoteAddress = req => {
+        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    };
+
+    const saveEvent = function(id, type, source) {
+        db.collection('events').save({ organisationId: id, date: new Date(), type: type, source: source });
+    };
+
     router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 
         let organisme = await db.collection('organismes').findOne({ token: req.query.token });
@@ -434,6 +442,12 @@ module.exports = (db, authService, logger, configuration) => {
         if (organisme) {
             if (!organisme.passwordHash) {
                 await db.collection('organismes').update({ _id: id }, { $set: { editedEmail: email } });
+                saveEvent(id, 'editEmail', {
+                    app: 'moderation',
+                    profile: 'moderateur',
+                    user: 'admin',
+                    ip: getRemoteAddress(req)
+                });
                 res.status(201).send({ 'status': 'OK' });
             }
         } else {
@@ -441,7 +455,7 @@ module.exports = (db, authService, logger, configuration) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/editedEmail/delete', tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisation/:id/editedEmail/delete', checkAuth, async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
@@ -452,14 +466,20 @@ module.exports = (db, authService, logger, configuration) => {
         if (organisme) {
             if (!organisme.passwordHash) {
                 await db.collection('organismes').update({ _id: id }, { $unset: { editedEmail: '' } });
+                saveEvent(id, 'deleteEmail', {
+                    app: 'moderation',
+                    profile: 'moderateur',
+                    user: 'admin',
+                    ip: getRemoteAddress(req)
+                });
                 res.status(200).send({ 'status': 'OK' });
             }
         } else {
             throw Boom.notFound('Not found');
         }
-    }));
+    });
 
-    router.post('/backoffice/organisation/:id/resendEmailAccount', tryAndCatch(async (req, res) => {
+    router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, async (req, res) => {
         const id = parseInt(req.params.id);
 
         const organismes = db.collection('organismes');
@@ -481,12 +501,18 @@ module.exports = (db, authService, logger, configuration) => {
                         mailErrorDetail: ''
                     },
                 });
+                saveEvent(id, 'resendEmailAccount', {
+                    app: 'moderation',
+                    profile: 'moderateur',
+                    user: 'admin',
+                    ip: getRemoteAddress(req)
+                });
                 res.status(200).send({ 'status': 'OK' });
             });
         } else {
             throw Boom.notFound('Not found');
         }
-    }));
+    });
 
     return router;
 };

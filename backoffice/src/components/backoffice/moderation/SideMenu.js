@@ -10,7 +10,8 @@ export default class SideMenu extends React.PureComponent {
     }
 
     static propTypes = {
-        onChangePage: PropTypes.func.isRequired
+        onChangePage: PropTypes.func.isRequired,
+        features: PropTypes.array.isRequired
     }
 
     changePage = page => {
@@ -30,9 +31,11 @@ export default class SideMenu extends React.PureComponent {
                         <li>
                             <button className={this.state.currentPage === 'moderation' ? 'active' : ''} onClick={this.changePage.bind(this, 'moderation')}>Modération des avis</button>
                         </li>
-                        <li>
-                            <button className={this.state.currentPage === 'organisme' ? 'active' : ''} onClick={this.changePage.bind(this, 'organisme')}>Gestion des organismes</button>
-                        </li>
+                        { this.props.features.includes('EDIT_ORGANISATIONS') &&
+                            <li>
+                                <button className={this.state.currentPage === 'organisme' ? 'active' : ''} onClick={this.changePage.bind(this, 'organisme')}>Gestion des organismes</button>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -1,10 +1,17 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import { login } from '../../lib/loginService';
 
 export class LoginForm extends React.Component {
 
     state = {}
+
+    static propTypes = {
+        handleLoggedIn: PropTypes.func.isRequired,
+        handleForgottenPassword: PropTypes.func.isRequired
+    }
 
     constructor(props) {
         super(props);
@@ -38,8 +45,7 @@ export class LoginForm extends React.Component {
             this.setState({ errorLogin: false, loggedIn: true });
             this.handleLoggedIn(result);
         })
-        .catch(err => {
-            console.error(err);
+        .catch(() => {
             this.setState({ errorLogin: true });
         });
     }
