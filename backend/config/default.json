@@ -55,6 +55,11 @@
       "type": "jwt",
       "secret": "1234",
       "expiration_in_seconds": 300
+    },
+    "maformation": {
+      "type": "hmac",
+      "secret": "1234",
+      "expiration_in_seconds": 300
     }
   },
   "analytics": {

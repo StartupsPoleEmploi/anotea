@@ -8,12 +8,13 @@ const convertToExposableOrganismeFomateur = require('./dto/convertToExposableOrg
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
 const tryAndCatch = require('../../tryAndCatch');
 
-module.exports = db => {
+module.exports = (db, authService) => {
 
     let router = express.Router();// eslint-disable-line new-cap
     let collection = db.collection('organismes_formateurs');
+    let checkAuth = authService.createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
-    router.get('/v1/organismes-formateurs', tryAndCatch(async (req, res) => {
+    router.get('/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
             ...paginationValidator(),
@@ -56,7 +57,7 @@ module.exports = db => {
         });
     }));
 
-    router.get('/v1/organismes-formateurs/:id', tryAndCatch(async (req, res) => {
+    router.get('/v1/organismes-formateurs/:id', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.params, {
             id: Joi.string().required(),

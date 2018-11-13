@@ -8,12 +8,13 @@ const convertToExposableSession = require('./dto/convertToExposableSession');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
 const tryAndCatch = require('../../tryAndCatch');
 
-module.exports = db => {
+module.exports = (db, authService) => {
 
     let router = express.Router();// eslint-disable-line new-cap
     let collection = db.collection('actionsReconciliees');
+    let checkAuth = authService.createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
-    router.get('/v1/actions', tryAndCatch(async (req, res) => {
+    router.get('/v1/actions', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
             ...paginationValidator(),
@@ -49,7 +50,7 @@ module.exports = db => {
         });
     }));
 
-    router.get('/v1/actions/:id', tryAndCatch(async (req, res) => {
+    router.get('/v1/actions/:id', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.params, {
             id: Joi.string().required(),
