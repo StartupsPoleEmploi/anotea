@@ -28,7 +28,7 @@ module.exports = db => ({
         });
 
         if (!departement) {
-            return Promise.reject(new Error(`Code region inconnu pour le departement ${departement}`));
+            return Promise.reject(new Error(`Code region inconnu pour le departement ${code}`));
         } else {
             return departement.region_num;
         }
