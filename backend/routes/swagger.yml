@@ -515,29 +515,33 @@ paths:
       - in: query
         name: id
         description: >
-          Permet de limiter la recherche à un ou plusieurs identifiants de sessions
-          L'identifiant d'une session à la forme suivante `numero_formation|numero_action|numero_session`
+          Permet de filtrer la recherche avec un ou plusieurs identifiants de sessions
+          Les identifiants des sessions sont de la forme suivante `numero_formation|numero_action|numero_session`
           (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
         type: string
         required: false
       - in: query
         name: numero
-        description: Permet de limiter la recherche à un ou plusieurs numéros de sessions
+        description: Permet de filtrer la recherche avec un ou plusieurs numéros de sessions
         type: string
         required: false
       - in: query
         name: region
-        description: Permet de limiter la recherche en filtrant le session en fonctiond de leur région
+        description: Permet de filtrer la recherche pour une région donnée
         type: string
         required: false
       - in: query
         name: nb_avis
-        description: Permet de limiter la recherche renvoyant uniquement les sessions ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
+        description: Permet de filtrer la recherche en renvoyant uniquement les sessions ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
         type: string
         required: false
       - in: query
         name: fields
-        description: Permet de projeter la session en selectionnant les champs renvoyés (ex. `fields=score,-avis`)
+        description: >
+          Permet de limiter les champs renvoyés.
+          Exemple:
+          `fields=score` renvoie uniquement le champ score
+          `fields=-avis` renvoie tous sauf le champ avis
         type: number
         required: false
       - in: query
@@ -570,7 +574,7 @@ paths:
       - in: path
         name: id
         description: >
-          L'identifiant d'une session à la forme suivante `numero_formation|numero_action|numero_session`
+          L'identifiant d'une session est de la forme suivante `numero_formation|numero_action|numero_session`
            (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
         type: string
         required: true
@@ -599,29 +603,33 @@ paths:
       - in: query
         name: id
         description: >
-          Permet de limiter la recherche à un ou plusieurs identifiants d'actions
-          L'identifiant d'une session à la forme suivante `numero_formation|numero_action`
+          Permet de filtrer la recherche avec un ou plusieurs identifiants d'actions
+          Les identifiants des actions sont de la forme suivante `numero_formation|numero_action`
           (ex. `id=14_AF_0000011111|14_SE_0000102222`)
         type: string
         required: false
       - in: query
         name: numero
-        description: Permet de limiter la recherche à un ou plusieurs numéros d'actions
+        description: Permet de filtrer la recherche avec un ou plusieurs numéros d'actions
         type: string
         required: false
       - in: query
         name: region
-        description: Permet de limiter la recherche en filtrant 'action en fonctiond de leur région
+        description: Permet de filtrer la recherche pour une région donnée
         type: string
         required: false
       - in: query
         name: nb_avis
-        description: Permet de limiter la recherche renvoyant uniquement les actions ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
+        description: Permet de filtrer la recherche en renvoyant uniquement les actions ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
         type: string
         required: false
       - in: query
         name: fields
-        description: Permet de projeter l'action en selectionnant les champs renvoyés (ex. `fields=score,-avis`)
+        description: >
+          Permet de limiter les champs renvoyés.
+          Exemple:
+          `fields=score` renvoie uniquement le champ score
+          `fields=-avis` renvoie tous sauf le champ avis
         type: number
         required: false
       - in: query
@@ -680,34 +688,38 @@ paths:
       parameters:
       - in: query
         name: id
-        description: Permet de limiter la recherche à un ou plusieurs identifiants d'organismes
+        description: Permet de filtrer la recherche avec un ou plusieurs identifiants d'organismes
         type: string
         required: false
       - in: query
         name: numero
-        description: Permet de limiter la recherche à un ou plusieurs numéros d'organismes
+        description: Permet de filtrer la recherche avec un ou plusieurs numéros d'organismes
         type: string
         required: false
       - in: query
         name: siret
-        description: Permet de limiter la recherche à un ou SIRETs d'organismes
+        description: Permet de filtrer la recherche à un ou SIRETs d'organismes
         type: string
         required: false
       - in: query
         name: lieu_de_formation
         description: >
-          Permet de limiter la recherche en filtrant les organismes ayant des formations dans des lieux de formation spécifiques
+          Permet de filtrer la recherche en filtrant les organismes ayant des formations dans des lieux de formation spécifiques
           Un lieu de formation peut être identifié par son code postal ou par sa région
         type: string
         required: false
       - in: query
         name: nb_avis
-        description: Permet de limiter la recherche renvoyant uniquement les organismes ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
+        description: Permet de filtrer la recherche en renvoyant uniquement les organismes ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
         type: string
         required: false
       - in: query
         name: fields
-        description: Permet de projeter l'organisme en selectionnant les champs renvoyés (ex. `fields=-lieux_de_formation,-organisme_responsable`)
+        description: >
+          Permet de limiter les champs renvoyés.
+          Exemple:
+          `fields=organisme_responsable` renvoie uniquement le champ organisme_responsable
+          `fields=-lieux_de_formation` renvoie tous sauf le champ lieux_de_formation
         type: number
         required: false
       - in: query

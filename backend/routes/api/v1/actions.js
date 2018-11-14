@@ -4,16 +4,17 @@ const Joi = require('joi');
 const _ = require('lodash');
 const { paginationValidator, arrayOfValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const convertToExposableSession = require('./dto/convertToExposableSession');
+const convertToExposableAction = require('./dto/convertToExposableAction');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
 const tryAndCatch = require('../../tryAndCatch');
 
-module.exports = db => {
+module.exports = (db, authService) => {
 
     let router = express.Router();// eslint-disable-line new-cap
     let collection = db.collection('actionsReconciliees');
+    let checkAuth = authService.createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
-    router.get('/v1/actions', tryAndCatch(async (req, res) => {
+    router.get('/v1/actions', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
             ...paginationValidator(),
@@ -42,14 +43,14 @@ module.exports = db => {
         let [total, actions] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            actions: actions.map(action => convertToExposableSession(action)) || [],
+            actions: actions.map(action => convertToExposableAction(action)) || [],
             meta: {
                 pagination: convertToExposablePagination(pagination, total)
             },
         });
     }));
 
-    router.get('/v1/actions/:id', tryAndCatch(async (req, res) => {
+    router.get('/v1/actions/:id', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.params, {
             id: Joi.string().required(),
@@ -61,7 +62,7 @@ module.exports = db => {
             throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
         }
 
-        res.json(convertToExposableSession(session));
+        res.json(convertToExposableAction(session));
 
     }));
 

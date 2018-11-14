@@ -21,8 +21,10 @@ const main = async () => {
     .update(password)
     .digest('hex');
 
-    console.log(`bcrypt: ${await hashPassword(password)}`);
-    console.log(`sha256: ${sha256}`);
+    console.log(JSON.stringify({
+        bcrypt: await hashPassword(password),
+        bcrypt_legacy_sha256: await hashPassword(sha256),
+    }, null, 2));
 };
 
 main();

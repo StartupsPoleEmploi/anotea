@@ -12,7 +12,6 @@ module.exports = async db => {
                 newRoot: {
                     _id: { $concat: ['$session.meta.source.numero_formation', '|', '$_id'] },
                     numero: '$_id',
-                    numero_formation: '$session.meta.source.numero_formation',
                     region: '$session.region',
                     avis: '$session.avis',
                     score: '$session.score',

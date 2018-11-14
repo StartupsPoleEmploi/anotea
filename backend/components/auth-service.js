@@ -11,24 +11,28 @@ class AuthService {
         this.configuration = configuration;
     }
 
-    createHMACAuthMiddleware(type) {
+    createHMACAuthMiddleware(types, options) {
         let scheme = 'ANOTEA-HMAC-SHA256 ';
-        let apiSignatureExpirationInSeconds = this.configuration.auth[type].expiration_in_seconds;
 
         return (req, res, next) => {
             try {
+                if (options.allowNonAuthenticatedRequests && !req.headers.authorization) {
+                    return next();
+                }
+
                 let credentials = req.headers.authorization.substring(scheme.length);
                 let [apiKey, timestamp, digest] = credentials.split(':');
 
+                if (!types.includes(apiKey)) {
+                    throw Boom.unauthorized('Clé d\'api inconnue');
+                }
+
+                let apiSignatureExpirationInSeconds = this.configuration.auth[apiKey].expiration_in_seconds;
                 if (new Date().getTime() - timestamp > apiSignatureExpirationInSeconds * 1000) {
                     throw Boom.unauthorized(`Le header Authorization est expiré (durée de vie ${apiSignatureExpirationInSeconds}s)`);
                 }
 
-                if (apiKey !== 'esd') {
-                    throw Boom.unauthorized('Clé d\'api inconnue');
-                }
-
-                let serverSideDigest = this.buildHmacDigest(this.configuration.auth[type].secret, {
+                let serverSideDigest = this.buildHmacDigest(this.configuration.auth[apiKey].secret, {
                     timestamp,
                     method: req.method,
                     path: req.originalUrl,
