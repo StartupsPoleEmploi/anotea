@@ -110,7 +110,7 @@ const main = async () => {
         } else {
             logger.info(`Importing source ${cli.source} from file ${cli.file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
 
-            let results = await importer.importTrainee(cli.file, handler);
+            let results = await importer.importTrainee(cli.file, handler, filters);
 
             let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
             logger.info(`Completed in ${duration}: ${JSON.stringify(results, null, 2)}`);
