@@ -38,6 +38,7 @@ module.exports = (db, logger) => {
                     prenomRGC: data['Prénom RGC'],
                     emailRGC: email,
                     telephoneRGC: data['Téléphone RGC'],
+                    assedic: data['ASSEDIC'],
                     convention: data['convention'],
                     dateDebut: moment(data['date début'], 'DD/MM/YYYY').toDate(),
                     dateFin: moment(data['date fin'], 'DD/MM/YYYY').toDate(),
@@ -73,6 +74,7 @@ module.exports = (db, logger) => {
                         'Prénom RGC',
                         'mail RGC',
                         'Téléphone RGC',
+                        'ASSEDIC',
                         'convention',
                         'date début',
                         'date fin',
@@ -84,11 +86,11 @@ module.exports = (db, logger) => {
 
                         let previous = await collection.findOne({ SIRET: newAccount.SIRET });
                         if (!previous) {
-                            await collection.insert(newAccount);
+                            await collection.insertOne(newAccount);
                             return { status: 'created', account: newAccount };
 
                         } else {
-                            await collection.update({ SIRET: newAccount.SIRET }, {
+                            await collection.updateOne({ SIRET: newAccount.SIRET }, {
                                 $addToSet: {
                                     courrielsSecondaires: newAccount.meta.kairosData.emailRGC,
                                     sources: 'kairos'
