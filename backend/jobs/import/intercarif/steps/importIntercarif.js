@@ -6,11 +6,11 @@ module.exports = async (db, logger, file) => {
     let total = 0;
     let collection = db.collection('intercarif');
 
-    await collection.remove({});
+    await collection.deleteMany({});
 
     await new Promise((resolve, reject) => {
         getFormationsFromCSV(file)
-        .flatMap(async document => collection.insert(document))
+        .flatMap(async document => collection.insertOne(document))
         .subscribe(
             () => {
                 let timeElapsed = moment().diff(start, 'seconds');

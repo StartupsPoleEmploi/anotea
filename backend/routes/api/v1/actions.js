@@ -1,27 +1,26 @@
 const express = require('express');
+const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const Boom = require('boom');
 const { paginationValidator, arrayOfValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const convertToExposableOrganismeFomateur = require('./dto/convertToExposableOrganismeFomateur');
+const convertToExposableAction = require('./dto/convertToExposableAction');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
 const tryAndCatch = require('../../tryAndCatch');
 
 module.exports = (db, authService) => {
 
     let router = express.Router();// eslint-disable-line new-cap
-    let collection = db.collection('organismes_formateurs');
+    let collection = db.collection('actionsReconciliees');
     let checkAuth = authService.createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
-    router.get('/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/v1/actions', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
             ...paginationValidator(),
             id: arrayOfValidator(Joi.string()),
             numero: arrayOfValidator(Joi.string()),
-            siret: arrayOfValidator(Joi.string()),
-            lieu_de_formation: arrayOfValidator(Joi.string()),
+            region: arrayOfValidator(Joi.string()),
             nb_avis: Joi.number(),
             fields: arrayOfValidator(Joi.string().required()).default([]),
         }, { abortEarly: false });
@@ -32,14 +31,8 @@ module.exports = (db, authService) => {
         let query = {
             ...(parameters.id ? { '_id': { $in: parameters.id } } : {}),
             ...(parameters.numero ? { 'numero': { $in: parameters.numero } } : {}),
-            ...(parameters.siret ? { 'siret': { $in: parameters.siret } } : {}),
+            ...(parameters.region ? { 'region': { $in: parameters.region } } : {}),
             ...(parameters.nb_avis ? { 'score.nb_avis': { $gte: parameters.nb_avis } } : {}),
-            ...(parameters.lieu_de_formation ? {
-                $or: [
-                    { 'lieux_de_formation.adresse.code_postal': { $in: parameters.lieu_de_formation } },
-                    { 'lieux_de_formation.adresse.region': { $in: parameters.lieu_de_formation } }
-                ]
-            } : {}),
         };
 
         let cursor = await collection.find(query)
@@ -47,29 +40,30 @@ module.exports = (db, authService) => {
         .limit(limit)
         .skip(skip);
 
-        let [total, organismes] = await Promise.all([cursor.count(), cursor.toArray()]);
+        let [total, actions] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            organismes_formateurs: organismes.map(of => convertToExposableOrganismeFomateur(of)) || [],
+            actions: actions.map(action => convertToExposableAction(action)) || [],
             meta: {
                 pagination: convertToExposablePagination(pagination, total)
             },
         });
     }));
 
-    router.get('/v1/organismes-formateurs/:id', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/v1/actions/:id', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.params, {
             id: Joi.string().required(),
         }, { abortEarly: false });
 
-        let organisme = await collection.findOne({ _id: parameters.id });
+        let session = await collection.findOne({ _id: parameters.id });
 
-        if (!organisme) {
-            throw Boom.notFound('Identifiant inconnu');
+        if (!session) {
+            throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
         }
 
-        res.json(convertToExposableOrganismeFomateur(organisme));
+        res.json(convertToExposableAction(session));
+
     }));
 
     return router;

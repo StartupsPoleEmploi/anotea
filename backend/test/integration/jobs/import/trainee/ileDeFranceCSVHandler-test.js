@@ -2,6 +2,7 @@ const path = require('path');
 const _ = require('lodash');
 const assert = require('assert');
 const configuration = require('config');
+const md5File = require('md5-file/promise');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const logger = require('../../../../helpers/test-logger');
 const traineeImporter = require('../../../../../jobs/import/trainee/traineeImporter');
@@ -92,13 +93,14 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-idf.csv');
         let importer = traineeImporter(db, logger, configuration);
         let handler = ileDeFranceCSVHandler(db, logger, configuration);
+        let hash = await md5File(csvFile);
 
         await importer.importTrainee(csvFile, handler);
 
         let status = await db.collection('importTrainee').findOne();
         assert.deepEqual(_.omit(status, ['_id', 'date']), {
             campaign: 'stagiaires-idf',
-            hash: '2c12f115c721ef5c54660603e68d45b9',
+            hash: hash,
         });
     });
 

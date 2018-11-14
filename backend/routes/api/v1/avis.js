@@ -50,11 +50,12 @@ const buildAvisQuery = filters => {
     };
 };
 
-module.exports = db => {
+module.exports = (db, authService) => {
 
     let router = express.Router();// eslint-disable-line new-cap
+    let checkAuth = authService.createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
-    router.get('/v1/avis', tryAndCatch(async (req, res) => {
+    router.get('/v1/avis', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
             ...paginationValidator(),
@@ -87,7 +88,7 @@ module.exports = db => {
         });
     }));
 
-    router.get('/v1/avis/:id', tryAndCatch(async (req, res) => {
+    router.get('/v1/avis/:id', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.params, {
             id: Joi.string().required(),

@@ -9,7 +9,8 @@
     },
     "active_regions": [
       "11",
-      "17"
+      "17",
+      "2"
     ]
   },
   "log": {
@@ -52,6 +53,11 @@
     },
     "kairos": {
       "type": "jwt",
+      "secret": "1234",
+      "expiration_in_seconds": 300
+    },
+    "maformation": {
+      "type": "hmac",
       "secret": "1234",
       "expiration_in_seconds": 300
     }

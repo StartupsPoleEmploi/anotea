@@ -12,7 +12,7 @@
     "start:default": "node app.js",
     "start:watch": "nodemon --inspect --ignore test/ app.js",
     "lint": "eslint components jobs routes scripts test",
-    "smtp:start": "docker rm fakesmtp; docker run -d --name fakesmtp -p 1025:25 -v $(pwd)/.data/fakesmtp:/var/mail digiplant/fake-smtp",
+    "smtp:start": "docker rm fakesmtp; docker run -d --name fakesmtp -p 1025:25 -v $(pwd)/../.data/fakesmtp:/var/mail digiplant/fake-smtp",
     "smtp:stop": "docker stop fakesmtp"
   },
   "repository": {
@@ -49,7 +49,7 @@
     "md5-file": "3.2.3",
     "mobile-detect": "1.4.1",
     "moment": "2.22.1",
-    "mongodb": "3.1.1",
+    "mongodb": "3.1.9",
     "node-uuid": "1.4.8",
     "nodemailer": "3.1.8",
     "redis": "2.8.0",

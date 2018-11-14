@@ -87,7 +87,7 @@ module.exports = function(db, logger, configuration, devMode, callback) {
         });
     };
 
-    db.collection('regions').find({ region_num: { $in: configuration.app.active_regions } }).toArray(async (err, regions) => {
+    db.collection('departements').find({ region_num: { $in: configuration.app.active_regions } }).toArray(async (err, regions) => {
         if (err) {
             logger.error(err);
         } else if (regions.length > 0) {

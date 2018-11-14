@@ -13,7 +13,7 @@ module.exports = {
                 startServer: () => {
                     return createExpressApp(logger, Object.assign({}, configuration, {
                         mongodb: {
-                            uri: `mongodb://127.0.0.1:27017/${mongoContext.dbName}?authSource=admin&w=1`
+                            uri: mongoContext.uri
                         },
                     }));
                 },

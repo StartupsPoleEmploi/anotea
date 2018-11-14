@@ -1,22 +1,26 @@
 version: '3.3'
 services:
 
-  reverse_proxy:
-    image: anotea_reverse_proxy
-    container_name: anotea_reverse_proxy
+  nginx:
+    image: anotea_nginx
+    container_name: anotea_nginx
     build:
-      context: ./misc/reverse-proxy
+      context: ./misc/nginx
     ports:
-      - 80:80
+    - 80:80
+    volumes:
+    - ./.data/nginx:/var/log/nginx:rw
     depends_on:
-      - backend
-      - backoffice
+    - backend
+    - backoffice
 
   backoffice:
     image: anotea_backoffice
     container_name: anotea_backoffice
     build:
       context: backoffice
+    depends_on:
+    - backend
 
   backend:
     image: anotea_backend
@@ -24,28 +28,12 @@ services:
     build:
       context: backend
     environment:
-       - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
-       - ANOTEA_REDIS_HOST=redis
-       - ANOTEA_REDIS_PORT=6379
-       - ANOTEA_SMTP_HOST=smtp
-       - ANOTEA_SMTP_PORT=25
+    - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
+    - ANOTEA_REDIS_HOST=redis
+    - ANOTEA_REDIS_PORT=6379
+    - ANOTEA_SMTP_HOST=smtp
+    - ANOTEA_SMTP_PORT=25
     depends_on:
-      - mongodb
-      - redis
-
-  mongodb:
-    image: mongo:4.0.1-xenial
-    container_name: anotea_mongodb
-    volumes:
-      - ./.data/mongodb/db:/data/db
-      - ./.data/mongodb/config:/data/configdb
-
-  redis:
-    image: redis:4.0.9
-    container_name: anotea_redis
-
-  smtp:
-    image: digiplant/fake-smtp
-    container_name: anotea_smtp
-    volumes:
-      - ./.data/fakesmtp:/var/mail
+    - mongodb
+    - redis
+    - smtp

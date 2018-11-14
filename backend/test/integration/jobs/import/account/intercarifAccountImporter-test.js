@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
-const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
+const { newOrganismeAccount, newComment } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
 const intercarifOrganismesImporter = require('../../../../../jobs/import/account/importers/intercarifAccountImporter');
 
@@ -9,7 +9,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     const prepareDatabase = () => {
         return Promise.all([
-            insertIntoDatabase('regions', {
+            insertIntoDatabase('departements', {
                 region: 'Ile De France',
                 dept_num: '75',
                 region_num: '11',
@@ -90,7 +90,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             sources: ['intercarif'],
             codeRegion: '11',
             meta: {
-                siretAsString: '11111111111111'
+                siretAsString: '11111111111111',
+                nbAvis: 0,
             }
         });
     });
@@ -111,6 +112,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             mailSentDate: new Date('2018-09-12T15:21:28.083Z'),
             meta: {
                 siretAsString: '11111111111111',
+                nbAvis: 0,
             },
         }));
 
@@ -129,7 +131,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             mailSentDate: new Date('2018-09-12T15:21:28.083Z'),
             token: 'token',
             meta: {
-                siretAsString: '11111111111111'
+                siretAsString: '11111111111111',
+                nbAvis: 0,
             },
 
             //UPDATED
@@ -159,7 +162,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             sources: ['intercarif'],
             codeRegion: '11',
             meta: {
-                siretAsString: '22222222222222'
+                siretAsString: '22222222222222',
+                nbAvis: 0,
             }
         });
     });
@@ -197,14 +201,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             token: 'token',
             creationDate: new Date('2016-11-10T17:41:03.308Z'),
             mailSentDate: new Date('2018-09-12T15:21:28.083Z'),
-            meta: {
-                siretAsString: '22222222222222'
-            },
             //UPDATED
             courriel: 'OLD@formateur.com',
             courrielsSecondaires: ['organisme@formateur.com'],
             sources: ['intercarif'],
             codeRegion: '11',
+            meta: {
+                siretAsString: '22222222222222',
+                nbAvis: 0,
+            },
         });
     });
 
@@ -225,6 +230,27 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
         assert.deepEqual(doc.courriel, 'organisme@formateur.com');
+    });
+
+    it('should compute nbAvis', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            prepareDatabase(),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: `22222222222222`,
+                    },
+                }
+            }))
+        ]);
+
+        let importer = intercarifOrganismesImporter(db, logger);
+        await importer.importAccounts();
+
+        let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
+        assert.deepEqual(doc.meta.nbAvis, 1);
     });
 
 }));

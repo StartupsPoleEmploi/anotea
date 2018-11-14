@@ -67,8 +67,12 @@ module.exports = (db, logger, configuration) => {
                 'liste_financeur',
             ],
         },
-        shouldBeImported: data => {
-            return data.trainee.emailValid && configuration.app.active_regions.includes(data.codeRegion);
+        shouldBeImported: async data => {
+            const count = await db.collection('trainee').countDocuments({
+                'trainee.email': data.trainee.email,
+                'training.infoCarif.numeroSession': data.training.infoCarif.numeroSession
+            });
+            return count === 0 && data.trainee.emailValid && configuration.app.active_regions.includes(data.codeRegion);
         },
         buildTrainee: async (record, campaign) => {
             try {
@@ -76,13 +80,7 @@ module.exports = (db, logger, configuration) => {
                     return Promise.reject(new Error(`Données CSV invalides ${record}`));
                 }
 
-                let codeRegion;
-                try {
-                    codeRegion = await findCodeRegionByPostalCode(record['dc_cp_lieuformation']);
-                } catch (e) {
-                    logger.error(e);
-                    return Promise.reject();
-                }
+                let codeRegion = await findCodeRegionByPostalCode(record['dc_cp_lieuformation']);
                 let token = buildToken(record['c_adresseemail']);
                 let { email, mailDomain } = buildEmail(record['c_adresseemail']);
 

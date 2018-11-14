@@ -27,7 +27,7 @@ module.exports = () => {
                 'Id Session DOKELIO',
             ]
         },
-        shouldBeImported: trainee => trainee.trainee.emailValid && trainee.training.infoCarif.numeroSession === null,
+        shouldBeImported: async trainee => trainee.trainee.emailValid && trainee.training.infoCarif.numeroSession === null,
         buildTrainee: (record, campaign) => {
             try {
                 if (_.isEmpty(record)) {

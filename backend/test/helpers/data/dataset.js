@@ -138,10 +138,11 @@ module.exports = {
         }, custom, { test: true });
     },
     newComment: newComment,
-    newSession: (custom, avis = [newComment()]) => {
+    newSession: custom => {
         return _.merge({
-            _id: '07_20143|07_169114|169114',
-            avis: avis,
+            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
+            numero: 'SE_XXXXXX',
+            avis: !custom.avis ? [newComment()] : null,
             score: {
                 nb_avis: 1,
                 notes: {
@@ -166,9 +167,45 @@ module.exports = {
                 },
                 source: {
                     type: 'intercarif',
-                    numero_formation: '07_20143',
-                    numero_action: '07_169114',
-                    numero_session: '169114',
+                    numero_formation: 'F_XX_XX',
+                    numero_action: 'AC_XX_XXXXXX',
+                    numero_session: 'SE_XXXXXX',
+                }
+            }
+        }, custom, { test: true });
+    },
+    newAction: custom => {
+        return _.merge({
+            _id: 'F_XX_XX|AC_XX_XXXXXX',
+            numero: 'AC_XX_XXXXXX',
+            region: '11',
+            avis: !custom.avis ? [newComment()] : null,
+            score: {
+                nb_avis: 1,
+                notes: {
+                    accueil: 4,
+                    contenu_formation: 4,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 4,
+                    accompagnement: 4,
+                    global: 4
+                }
+            },
+            meta: {
+                reconciliation: {
+                    organisme_formateur: '11111111111111',
+                    lieu_de_formation: '49000',
+                    certifinfos: [
+                        '55518'
+                    ],
+                    formacodes: [
+                        '31801'
+                    ]
+                },
+                source: {
+                    type: 'intercarif',
+                    numero_formation: 'F_XX_XX',
+                    numero_action: 'AC_XX_XXXXXX',
                 }
             }
         }, custom, { test: true });
