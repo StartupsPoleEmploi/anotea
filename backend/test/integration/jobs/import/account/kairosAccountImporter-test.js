@@ -63,6 +63,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     prenomRGC: 'Henri',
                     emailRGC: 'contact@formation.fr',
                     telephoneRGC: '',
+                    assedic: '17',
                     convention: '0126XXX-1/1',
                     dateDebut: new Date('2017-09-04T22:00:00.000Z'),
                     dateFin: new Date('2020-09-04T22:00:00.000Z'),
@@ -124,6 +125,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     prenomRGC: 'Mauricette',
                     emailRGC: 'contact+kairos@formation.fr',
                     telephoneRGC: '0123456789',
+                    assedic: '17',
                     convention: '01184XX-1',
                     dateDebut: new Date('2016-04-24T22:00:00.000Z'),
                     dateFin: new Date('2019-04-23T22:00:00.000Z')

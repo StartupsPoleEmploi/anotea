@@ -30,7 +30,6 @@ module.exports = (db, logger) => {
         };
     };
 
-
     const createAccountsFromOrganismes = async (source, type, stats) => {
         let collection = db.collection('organismes');
         let cursor = db.collection(source).find({
@@ -47,11 +46,11 @@ module.exports = (db, logger) => {
 
                 if (!previous) {
                     stats[source].created++;
-                    await collection.insert(newAccount);
+                    await collection.insertOne(newAccount);
                     logger.debug(`New account ${newAccount.SIRET} created`);
                 } else {
                     stats[source].updated++;
-                    await collection.update({ _id: previous._id }, {
+                    await collection.updateOne({ _id: previous._id }, {
                         $addToSet: {
                             courrielsSecondaires: newAccount.courriel,
                             sources: 'intercarif'
