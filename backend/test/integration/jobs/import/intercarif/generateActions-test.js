@@ -70,7 +70,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.deepEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
-            numero_formation: 'F_XX_XX',
             region: '11',
             avis: [comment],
             score: {

@@ -4,7 +4,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 const { paginationValidator, arrayOfValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const convertToExposableSession = require('./dto/convertToExposableSession');
+const convertToExposableAction = require('./dto/convertToExposableAction');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
 const tryAndCatch = require('../../tryAndCatch');
 
@@ -43,7 +43,7 @@ module.exports = (db, authService) => {
         let [total, actions] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            actions: actions.map(action => convertToExposableSession(action)) || [],
+            actions: actions.map(action => convertToExposableAction(action)) || [],
             meta: {
                 pagination: convertToExposablePagination(pagination, total)
             },
@@ -62,7 +62,7 @@ module.exports = (db, authService) => {
             throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
         }
 
-        res.json(convertToExposableSession(session));
+        res.json(convertToExposableAction(session));
 
     }));
 
