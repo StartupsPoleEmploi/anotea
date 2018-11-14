@@ -1,0 +1,39 @@
+.sideMenu {
+    height: 100%;
+    display: inline-block;
+    padding: 20px 0px;
+}
+
+.sideMenu ul {
+    padding: 0;
+}
+
+.sideMenu ul li {
+    list-style: none;
+}
+
+.sideMenu a {
+    cursor: pointer;
+}
+
+.sideMenu a.active {
+    font-weight: bold;
+}
+
+.sideMenu .dropdown {
+    background-color: #DEDEDE;
+    border-radius: 5px;
+}
+
+.sideMenu .dropdown-toggle .caret {
+    margin-left: 5px;
+}
+
+.sideMenu button {
+    border: none;
+    background: none;
+    width: 200px;
+    display: block;
+    text-align: left;
+    padding: 10px;
+}

@@ -1,12 +1,23 @@
 import React from 'react';
 
-import ModerationPanel from './moderation/ModerationPanel';
+import PropTypes from 'prop-types';
+
+import ModerationMain from './moderation/ModerationMain';
 import OrganisationPanel from './organisation/OrganisationPanel';
 import FinancerPanel from './financer/FinancerPanel';
 
 export class Main extends React.Component {
 
     state = {}
+
+    propTypes = {
+        id: PropTypes.string.isRequired,
+        codeRegion: PropTypes.string.isRequired,
+        profile: PropTypes.string.isRequired,
+        codeFinanceur: PropTypes.string.isRequired,
+        raisonSociale: PropTypes.string.isRequired,
+        features: PropTypes.array.isRequired
+    }
 
     constructor(props) {
         super(props);
@@ -15,7 +26,8 @@ export class Main extends React.Component {
             id: props.id,
             codeRegion: props.codeRegion,
             codeFinanceur: props.codeFinanceur,
-            raisonSociale: props.raisonSociale
+            raisonSociale: props.raisonSociale,
+            features: props.features
         };
     }
 
@@ -23,21 +35,24 @@ export class Main extends React.Component {
         return (
             <div className="main">
                 {this.state.profile === 'moderateur' &&
-                <ModerationPanel
+                <ModerationMain
                     id={this.state.id}
-                    codeRegion={this.state.codeRegion} />
+                    codeRegion={this.state.codeRegion}
+                    features={this.state.features} />
                 }
                 {this.state.profile === 'organisme' &&
                 <OrganisationPanel
                     id={this.state.id}
-                    raisonSociale={this.state.raisonSociale} />
+                    raisonSociale={this.state.raisonSociale}
+                    features={this.state.features} />
                 }
                 {this.state.profile === 'financer' &&
                 <FinancerPanel
                     profile={this.state.profile}
                     id={this.state.id}
                     codeRegion={this.state.codeRegion}
-                    codeFinanceur={this.state.codeFinanceur} />
+                    codeFinanceur={this.state.codeFinanceur}
+                    features={this.state.features} />
                 }
             </div>
         );

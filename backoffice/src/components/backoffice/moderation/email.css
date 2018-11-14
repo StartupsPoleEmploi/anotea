@@ -1,0 +1,20 @@
+.email.not-current {
+    font-style: italic;
+    color: #888;
+}
+
+.email.not-current .icon {
+    display: none;
+}
+
+.email.not-current.anoteaEmail .view {
+    display: none;
+}
+
+.email.active {
+    font-weight: bold;
+}
+
+.email .btn {
+    margin: 10px;
+}
