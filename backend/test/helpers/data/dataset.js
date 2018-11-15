@@ -99,6 +99,63 @@ let newComment = (custom, date = new Date()) => {
 module.exports = {
     randomize,
     randomSIRET,
+    newTrainee: custom => {
+        return _.merge({
+            _id: `${randomize('test-campaign')}`,
+            campaign: 'test-campaign',
+            importDate: new Date(),
+            trainee: {
+                name: 'Dupont',
+                firstName: 'Henri',
+                mailDomain: 'free.fr',
+                email: 'henri@email.fr',
+                phoneNumbers: [
+                    '0123456789',
+                    'NULL'
+                ],
+                emailValid: true,
+                dnIndividuNational: '1111111111'
+            },
+            training: {
+                idFormation: '14_AF_0000011111',
+                title: 'Développeur',
+                startDate: new Date(),
+                scheduledEndDate: new Date(),
+                organisation: {
+                    id: '14_OF_XXXXXXXXXX',
+                    siret: '11111111111111',
+                    label: 'Pole Emploi Formation',
+                    name: 'INSTITUT DE FORMATION'
+                },
+                place: {
+                    postalCode: '75011',
+                    city: 'Paris'
+                },
+                certifInfo: {
+                    id: '78997',
+                    label: 'Développeur'
+                },
+                idSession: '2422722',
+                formacode: '46242',
+                aesRecu: 'AES',
+                referencement: '41C561691111',
+                idSessionAudeFormation: '2422722',
+                infoCarif: {
+                    numeroAction: '14_SE_0000092458',
+                    numeroSession: 'SE_0000050645'
+                },
+                codeFinanceur: '10'
+            },
+            unsubscribe: false,
+            mailSent: true,
+            token: randomize('token'),
+            mailSentDate: new Date(),
+            tracking: {
+                firstRead: new Date()
+            },
+            codeRegion: '11'
+        }, custom);
+    },
     newModerateurAccount: custom => {
         return _.merge({
             courriel: 'admin@pole-emploi.fr',

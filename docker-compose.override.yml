@@ -8,10 +8,6 @@ services:
     - ./.data/mongodb/db:/data/db
     - ./.data/mongodb/config:/data/configdb
 
-  redis:
-    image: redis:4.0.9
-    container_name: anotea_redis
-
   smtp:
     image: digiplant/fake-smtp
     container_name: anotea_smtp

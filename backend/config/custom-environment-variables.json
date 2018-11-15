@@ -6,10 +6,6 @@
   "mongodb": {
     "uri": "ANOTEA_MONGODB_URI"
   },
-  "redis": {
-    "host": "ANOTEA_REDIS_HOST",
-    "port": "ANOTEA_REDIS_PORT"
-  },
   "security": {
     "secret": "ANOTEA_SECURITY_SECRET"
   },

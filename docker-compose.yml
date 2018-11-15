@@ -29,11 +29,8 @@ services:
       context: backend
     environment:
     - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
-    - ANOTEA_REDIS_HOST=redis
-    - ANOTEA_REDIS_PORT=6379
     - ANOTEA_SMTP_HOST=smtp
     - ANOTEA_SMTP_PORT=25
     depends_on:
     - mongodb
-    - redis
     - smtp
