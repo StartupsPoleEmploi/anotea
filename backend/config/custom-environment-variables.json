@@ -22,6 +22,9 @@
     },
     "kairos": {
       "secret": "ANOTEA_AUTH_KAIROS_SECRET"
+    },
+    "maformation": {
+      "secret": "ANOTEA_AUTH_MAFORMATION_SECRET"
     }
   },
   "log": {
