@@ -14,7 +14,7 @@ Le projet est composé de deux projets :
 
 ## Démarrer l'application 
 
-L'application nécessite MongoDB 4, Redis 4, Node.js 8
+L'application nécessite MongoDB 4, Node.js 8
 
 Pour démarrer le backend, il faut executer les commandes :
 
@@ -43,7 +43,7 @@ Cette commande va construire et démarrer plusieurs containers :
 - Un container nginx, un reverse proxy qui est le point d'entrée de l'application pour tous les appels sur http
 - Un container backend contenant l'API et les batchs
 - Un container backoffice avec un nginx pour servir les ressources web statiques
-- Un container Mongodb et un Redis  
+- Un container Mongodb  
 
 L'application est accessible à l'url `http://localhost`
 
