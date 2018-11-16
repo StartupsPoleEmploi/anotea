@@ -44,6 +44,7 @@ export class Main extends React.Component {
                 <OrganisationPanel
                     id={this.state.id}
                     raisonSociale={this.state.raisonSociale}
+                    codeRegion={this.state.codeRegion}
                     features={this.state.features} />
                 }
                 {this.state.profile === 'financer' &&
