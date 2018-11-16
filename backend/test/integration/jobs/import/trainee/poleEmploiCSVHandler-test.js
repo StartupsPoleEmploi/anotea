@@ -260,7 +260,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await insertDepartements();
 
         let results = await importer.importTrainee(csvFile, handler, {
-            startDate: moment('01/09/2018', 'DD/MM/YYYY').toDate(),
+            startDate: moment('2018-09-01 00Z').toDate(),
         });
 
         let doc = await db.collection('trainee').findOne();
