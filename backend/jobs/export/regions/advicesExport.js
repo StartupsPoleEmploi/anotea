@@ -32,6 +32,7 @@ module.exports = function(db, logger, configuration, devMode, callback) {
             'training.infoRegion': { $ne: null }
         }, { token: 0 }).stream();
         let count = 0;
+        let regions = configuration.app.active_regions.map(e => e.code_region);
 
         stream.on('data', function(advice) {
             count++;
@@ -80,14 +81,14 @@ module.exports = function(db, logger, configuration, devMode, callback) {
         });
 
         stream.on('end', function() {
-            completed(count, configuration.app.active_regions.length);
+            completed(count, regions.length);
             if (callback) {
                 callback();
             }
         });
     };
 
-    db.collection('departements').find({ region_num: { $in: configuration.app.active_regions } }).toArray(async (err, regions) => {
+    db.collection('departements').find({ region_num: { $in: regions } }).toArray(async (err, regions) => {
         if (err) {
             logger.error(err);
         } else if (regions.length > 0) {

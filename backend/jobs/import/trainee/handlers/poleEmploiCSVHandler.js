@@ -67,12 +67,24 @@ module.exports = (db, logger, configuration) => {
                 'liste_financeur',
             ],
         },
-        shouldBeImported: async data => {
+        shouldBeImported: async trainee => {
+            let activeRegion = configuration.app.active_regions.find(ar => ar.code_region === trainee.codeRegion);
+
             const count = await db.collection('trainee').countDocuments({
-                'trainee.email': data.trainee.email,
-                'training.infoCarif.numeroSession': data.training.infoCarif.numeroSession
+                'trainee.email': trainee.trainee.email,
+                'training.infoCarif.numeroSession': trainee.training.infoCarif.numeroSession
             });
-            return count === 0 && data.trainee.emailValid && configuration.app.active_regions.includes(data.codeRegion);
+
+            let filters = [];
+            let codeFinanceurs = _.get(activeRegion, 'filters.code_financeurs', []);
+            codeFinanceurs.forEach(code => {
+                filters.push(trainee => {
+                    let includes = trainee.training.codeFinanceur.includes(code.replace('-', ''));
+                    return code.startsWith('-') ? !includes : includes;
+                });
+            });
+
+            return count === 0 && trainee.trainee.emailValid && activeRegion && _.every(filters, filter => filter(trainee));
         },
         buildTrainee: async (record, campaign) => {
             try {

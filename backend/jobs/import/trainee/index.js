@@ -55,8 +55,6 @@ const main = async () => {
     .option('-s, --source [name]', 'Source to import (PE or IDF)')
     .option('-f, --file [file]', 'The CSV file to import')
     .option('-r, --region [codeRegion]', 'Code region to filter')
-    .option('-i, --includeCodeFinanceur [codeFinanceur]', 'Financer code to filter')
-    .option('-x, --excludeCodeFinancer [codeFinanceur]', 'Financer code to exclude')
     .option('-s, --since [startDate]', 'Import only trainee with a scheduled end date since start date',
         value => moment(value, 'DD/MM/YYYY'))
     .option('-d, --dry-run', 'Execute this script in dry mode', () => {
@@ -77,14 +75,6 @@ const main = async () => {
         return abort('Region is invalid');
     }
 
-    if (cli.includeCodeFinanceur && isNaN(cli.includeCodeFinanceur)) {
-        return abort('Financer code is invalid');
-    }
-
-    if (cli.excludeCodeFinancer && isNaN(cli.excludeCodeFinancer)) {
-        return abort('Financer code is invalid');
-    }
-
     if (cli.since && !cli.since.isValid()) {
         return abort('startDate is invalid, please use format \'DD/MM/YYYY\'');
     }
@@ -95,8 +85,6 @@ const main = async () => {
     let filters = {
         codeRegion: cli.region,
         startDate: cli.since,
-        includeCodeFinancer: cli.includeCodeFinanceur,
-        excludeCodeFinancer: cli.excludeCodeFinancer,
     };
 
     try {
