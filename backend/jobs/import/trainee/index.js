@@ -55,8 +55,7 @@ const main = async () => {
     .option('-s, --source [name]', 'Source to import (PE or IDF)')
     .option('-f, --file [file]', 'The CSV file to import')
     .option('-r, --region [codeRegion]', 'Code region to filter')
-    .option('-s, --since [startDate]', 'Import only trainee with a scheduled end date since start date',
-        value => moment(value, 'DD/MM/YYYY'))
+    .option('-s, --since [startDate]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
     .option('-d, --dry-run', 'Execute this script in dry mode', () => {
         dryRun = true;
     }, false)
@@ -76,7 +75,7 @@ const main = async () => {
     }
 
     if (cli.since && !cli.since.isValid()) {
-        return abort('startDate is invalid, please use format \'DD/MM/YYYY\'');
+        return abort('startDate is invalid, please use format \'YYYY-MM-DD\'');
     }
 
     let importer = createImporter(db, logger);
@@ -84,7 +83,7 @@ const main = async () => {
     let handler = createHandler(db, logger, configuration);
     let filters = {
         codeRegion: cli.region,
-        startDate: cli.since,
+        startDate: cli.since.toDate(),
     };
 
     try {
@@ -97,7 +96,6 @@ const main = async () => {
             }
         } else {
             logger.info(`Importing source ${cli.source} from file ${cli.file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
-
             let results = await importer.importTrainee(cli.file, handler, filters);
 
             let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
