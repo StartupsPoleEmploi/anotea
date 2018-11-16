@@ -80,6 +80,10 @@ class App extends Component {
         });
         delete sessionStorage.userId;
         delete sessionStorage.userProfile;
+        delete sessionStorage.userCodeRegion;
+        delete sessionStorage.userCodeFinanceur;
+        delete sessionStorage.userRaisonSociale;
+        delete sessionStorage.features;
         removeToken();
         //Reload page to flush all react states
         window.location = '/admin';

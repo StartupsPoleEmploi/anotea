@@ -28,7 +28,8 @@ export default class OrganisationDetail extends React.PureComponent {
         editedEmail: null,
         anoteaEmailmode: 'view',
         resendDisabled: false,
-        lastResend: null
+        lastResend: null,
+        successShown: false
     }
 
     static propTypes = {
@@ -68,7 +69,10 @@ export default class OrganisationDetail extends React.PureComponent {
     }
 
     updateEditedEmail = email => {
-        this.setState({ editedEmail: email }, () => this.setState({ email: this.getEmail() }));
+        this.setState({ editedEmail: email, successShown: true }, () => this.setState({ email: this.getEmail() }));
+        setTimeout(() => {
+            this.setState({ successShown: false });
+        }, 3000);
     }
 
     changeMode = mode => {
@@ -103,12 +107,23 @@ export default class OrganisationDetail extends React.PureComponent {
                         <button id="btnResend" className="btn btn-info" disabled={this.state.resendDisabled} onClick={this.resend}><i className="glyphicon glyphicon-send"/> Renvoyer le lien de connexion</button>
 
                         <h5>Modifier l'adresse d'un Organisme de Formation</h5>
+                        
+                        <div className={`updateSuccess ${this.state.successShown ? 'visible' : 'hidden'} alert alert-success`}>
+                            Adresse email mise à jour avec succès.
+                        </div>
+
                         <div>
                             { (this.state.editedEmail || this.state.anoteaEmailmode) &&
                                 <Email label="Anotea" current={this.state.editedEmail} active={this.state.email} organisationId={this.state.organisation._id} deleteEditedEmail={this.deleteEditedEmail} updateEditedEmail={this.updateEditedEmail} mode={this.state.anoteaEmailmode} changeMode={this.changeMode} editButton={true} />
                             }
+                            { (this.state.organisation.meta.kairosData && this.state.editedEmail) &&
+                                <strong>Adresses inactives:</strong>
+                            }
                             { this.state.organisation.meta.kairosData &&
                                 <Email label="Kairos" current={this.state.organisation.meta.kairosData.emailRGC} active={this.state.email} organisationId={this.state.organisation._id} changeMode={this.changeMode} editButton={this.state.anoteaEmailmode === 'view'} />
+                            }
+                            { (this.state.organisation.meta.kairosData && !this.state.editedEmail || !this.state.organisation.meta.kairosData && this.state.editedEmail) &&
+                                <strong>Adresses inactives:</strong>
                             }
                             <Email label="Intercarif" current={this.state.organisation.courriel} active={this.state.email} organisationId={this.state.organisation._id} changeMode={this.changeMode} editButton={this.state.anoteaEmailmode === 'view'} />
                         </div>
