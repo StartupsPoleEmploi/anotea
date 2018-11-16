@@ -132,7 +132,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             profile: 'organisme',
             raisonSociale: 'Pole Emploi Formation',
-            sub: siret
+            sub: siret,
+            codeRegion: '11',
         });
     });
 
