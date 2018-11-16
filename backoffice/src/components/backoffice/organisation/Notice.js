@@ -9,18 +9,12 @@ export default class SideMenu extends React.PureComponent {
         shown: true
     }
 
-    constructor(props) {
-        super(props);
-        this.state.shown = sessionStorage.hiddenNotice ? false : true;
-    }
-
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
     }
 
     hide = () => {
         this.setState({shown: false });
-        sessionStorage.hiddenNotice = true;
     }
 
     render() {
