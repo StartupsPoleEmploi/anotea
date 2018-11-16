@@ -8,9 +8,20 @@
       "limit": 500
     },
     "active_regions": [
-      "11",
-      "17",
-      "2"
+      {
+        "code_region": "11"
+      },
+      {
+        "code_region": "17"
+      },
+      {
+        "code_region": "2",
+        "filters": {
+          "code_financeurs": [
+            "-2"
+          ]
+        }
+      }
     ]
   },
   "log": {

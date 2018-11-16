@@ -18,16 +18,11 @@ module.exports = (db, logger) => {
             let campaign = getCampaignName(file);
             let hash = await md5File(file);
 
-            const shouldBeIgnored = async (trainee, filters) => {
-                let notSameRegion = filters.codeRegion && filters.codeRegion !== trainee.codeRegion;
-                let beforeSessionDate = filters.startDate && trainee.training.scheduledEndDate <= filters.startDate;
-                let notSameCodeFinancer = filters.includeCodeFinancer &&
-                    !trainee.training.codeFinanceur.includes(filters.includeCodeFinancer);
-                let codeFinancerExcluded = filters.excludeCodeFinancer &&
-                    trainee.training.codeFinanceur.includes(filters.excludeCodeFinancer);
+            const shouldBeImported = async (trainee) => {
+                let sameRegion = !filters.codeRegion || filters.codeRegion === trainee.codeRegion;
+                let isAfter = !filters.startDate || trainee.training.scheduledEndDate > filters.startDate;
 
-                return notSameRegion || beforeSessionDate || codeFinancerExcluded || notSameCodeFinancer ||
-                    !(await handler.shouldBeImported(trainee));
+                return sameRegion && isAfter && await handler.shouldBeImported(trainee);
             };
 
             return new Promise(async (resolve, reject) => {
@@ -51,12 +46,12 @@ module.exports = (db, logger) => {
                         try {
                             let trainee = await handler.buildTrainee(data, campaign);
 
-                            if (await shouldBeIgnored(trainee, filters)) {
-                                return { status: 'ignored', trainee };
-                            } else {
+                            if (await shouldBeImported(trainee)) {
                                 await validateTrainee(trainee);
                                 await db.collection('trainee').insertOne(trainee);
                                 return { status: 'imported', trainee };
+                            } else {
+                                return { status: 'ignored', trainee };
                             }
                         } catch (e) {
                             return { status: 'invalid', trainee: data, error: e };

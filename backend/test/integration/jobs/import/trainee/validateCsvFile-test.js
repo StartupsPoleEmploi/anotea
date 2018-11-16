@@ -13,7 +13,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         return Promise.all([
             insertIntoDatabase('departements', {
                 region: 'Auvergne-Rhône-Alpes',
-                dept_num: '45',
+                dept_num: '69',
                 region_num: '2',
             }),
             insertIntoDatabase('departements', {
