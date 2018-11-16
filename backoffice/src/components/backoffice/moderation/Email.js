@@ -67,12 +67,13 @@ export default class Email extends React.Component {
     render() {
         return (
             <div className={`email ${this.state.active ? 'active' : 'not-current'} ${this.props.deleteEditedEmail ? 'anoteaEmail' : ''}`}>
+
                 {this.state.mode === 'view' &&
                     <div className="view">
                         <i className="icon glyphicon glyphicon-ok" /> <span>{this.props.label}</span> <a href={`mailto:${this.props.current}`}>{this.state.current}</a>
 
                         {this.state.active && this.props.editButton &&
-                            <button className="btn btn-primary" onClick={this.changeMode.bind(this, 'edit')}><i className="glyphicon glyphicon-pencil" /> Modifier</button>
+                            <button className="btn btn-primary" onClick={this.changeMode.bind(this, 'edit')}><i className="glyphicon glyphicon-pencil" /> Modifier l'adresse Anotéa</button>
                         }
 
                         {this.props.deleteEditedEmail &&
