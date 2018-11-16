@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import SideMenu from './SideMenu';
+import Notice from './Notice';
 import ModerationPanel from './ModerationPanel';
 import OrganisationPanel from './OrganisationPanel';
 
@@ -25,6 +26,8 @@ export default class ModerationMain extends React.Component {
         return (
             <div className="mainPanel">
                 <SideMenu onChangePage={this.handleChangePage} features={this.props.features} />
+
+                <Notice codeRegion={this.props.codeRegion} />
 
                 {this.state.currentPage === 'moderation' &&
                 <ModerationPanel
