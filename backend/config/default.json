@@ -21,6 +21,14 @@
             "-2"
           ]
         }
+      },
+      {
+        "code_region": "18",
+        "filters": {
+          "code_financeurs": [
+            "-2"
+          ]
+        }
       }
     ]
   },
