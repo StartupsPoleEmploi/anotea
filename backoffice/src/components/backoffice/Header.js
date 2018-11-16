@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Logout } from './Logout';
 
+import './header.css';
+
 export const Header = props => {
 
     const tab = [
@@ -33,6 +35,7 @@ export const Header = props => {
                 props.profile === 'financer' ? <h1>Espace Financeur {getLabel(props.codeFinanceur)} {props.region}</h1> :
                     <h1>Espace Anotea</h1>
             }
+            { props.profile === 'moderateur' && <a className="helpLink pull-right" href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide</a>}
             { props.loggedIn && <Logout handleLogout={props.handleLogout} /> }
         </div>
     );
