@@ -127,9 +127,8 @@ module.exports = (db, configuration) => {
 
         let { findRegionByCodeRegion } = regions(db);
 
-        let activeRegions = configuration.app.active_regions;
-        let sessions = await Promise.all(activeRegions.map(codeRegion => {
-            let { name, codeINSEE } = findRegionByCodeRegion(codeRegion);
+        let sessions = await Promise.all(configuration.app.active_regions.map(ar => {
+            let { name, codeINSEE } = findRegionByCodeRegion(ar.code_region);
             return computeSessionStats(name, codeINSEE);
         }));
 
@@ -140,10 +139,9 @@ module.exports = (db, configuration) => {
 
         let { findRegionByCodeRegion } = regions(db);
 
-        let activeRegions = configuration.app.active_regions;
-        let organismes = await Promise.all(activeRegions.map(codeRegion => {
-            let { name } = findRegionByCodeRegion(codeRegion);
-            return computeOrganismesStats(name, codeRegion);
+        let organismes = await Promise.all(configuration.app.active_regions.map(ar => {
+            let { name } = findRegionByCodeRegion(ar.code_region);
+            return computeOrganismesStats(name, ar.code_region);
         }));
 
         res.json(organismes);

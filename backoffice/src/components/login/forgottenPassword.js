@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import { askNewPassword, updatePassword, checkIfPasswordTokenExists } from '../../lib/forgottenPasswordService';
 import { isPasswordStrongEnough, checkConfirm, passwordIsOK } from '../../utils/validation';
 
@@ -8,6 +10,13 @@ export class ForgottenPassword extends React.Component {
     state = {
         error: false,
         asked: false
+    }
+
+    static propTypes = {
+        onSuccess: PropTypes.func.isRequired,
+        onError: PropTypes.func.isRequired,
+        passwordLost: PropTypes.bool.isRequired,
+        token: PropTypes.string.isRequired
     }
 
     constructor(props) {

@@ -65,23 +65,13 @@ module.exports = function(db, logger, configuration) {
         successCallback(carif);
     };
 
-    const getOrganisationNotReadComment = async (siret) => {
-        return await db.collection('comment').aggregate([
-            {
-                $match: {
-                    'training.organisation.siret': siret,
-                    'comment': { $ne: null },
-                    'read': true,
-                    'published': true
-                }
-            },
-            {
-                $group: {
-                    _id: '$training.organisation.siret',
-                    comment: { $first: '$comment.text' }
-                }
-            },
-            ]);
+    const getOrganisationNotReadComment = async siret => {
+        return await db.collection('comment').findOne({
+            'training.organisation.siret': siret,
+            'comment': { $ne: null },
+            'read': { $ne: true },
+            'published': true
+        });
     };
 
     const buildContent = (template, extension, params) => {
@@ -141,25 +131,17 @@ module.exports = function(db, logger, configuration) {
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
         getOrganisationPasswordForgottenLink: getOrganisationPasswordForgottenLink,
-        sendVosAvisNonLusMail: async (mailOptions, organisation, successCallback, errorCallback) => {
-            mailOptions.subject = 'Pôle Emploi - Vous avez des nouveaux avis stagiaires';
+        sendVosAvisNonLusMail: async (mailOptions, organisation, count, successCallback, errorCallback) => {
 
             const trackingLink = getTrackingLink(organisation);
-            let comments = await getOrganisationNotReadComment(organisation.meta.siretAsString);
+            let comment = await getOrganisationNotReadComment(organisation.meta.siretAsString);
 
-            while (await comments.hasNext()) {
-                let results = await comments.next();
-                try {
-                    comment = results.comment;
-                } catch (e) {
-                    logger.error(e);
-                }
-            }
+            mailOptions.subject = `Pôle Emploi - Vous avez ${count} nouveaux avis stagiaires`;
 
             getCarif(organisation.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
                 const params = {
-                    comment: comment,
+                    comment: comment.comment.text,
                     trackingLink: trackingLink,
                     hostname: configuration.app.public_hostname,
                     organisation: organisation,

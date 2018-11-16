@@ -50,7 +50,7 @@ module.exports = (db, logger, configuration, mailer) => {
                     newRoot: {
                         _id: '$_id',
                         organisme: '$$ROOT',
-                        nbComments: '$results.nbComments',
+                        nbComments: '$results.nbComments'
                     }
                 }
             },
@@ -65,11 +65,11 @@ module.exports = (db, logger, configuration, mailer) => {
 
     };
 
-    const sendEmail = organisme => {
+    const sendEmail = (organisme, count) => {
         logger.debug('Sending email to', organisme);
 
         return new Promise((resolve, reject) => {
-            mailer.sendVosAvisNonLusMail({ to: getContactEmail(organisme) }, organisme, async () => {
+            mailer.sendVosAvisNonLusMail({ to: getContactEmail(organisme) }, organisme, count, async () => {
                 logger.info('Sending email to', organisme.courriel);
                 resolve();
             }, err => reject(err));
@@ -84,10 +84,11 @@ module.exports = (db, logger, configuration, mailer) => {
         sendEmails: async () => {
             let total = 0;
             let cursor = await findOrganismes();
+            
             while (await cursor.hasNext()) {
                 let results = await cursor.next();
                 try {
-                    await sendEmail(results.organisme);
+                    await sendEmail(results.organisme, results.nbComments);
                     total++;
                 } catch (e) {
                     await handleSendError(results.organisme, e);

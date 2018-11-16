@@ -9,6 +9,8 @@ import EntitySearchForm from './entitySearchForm';
 import Graphes from './Graphes';
 // import NotesFilter          from './notesFilter'
 
+import Notice from './Notice';
+
 import {
     getOrganisationInfo,
     loadAllInventory,
@@ -279,6 +281,8 @@ export default class OrganisationPanel extends React.Component {
 
         return (
             <div className="organisationPanel mainPanel">
+
+                <Notice codeRegion={this.props.codeRegion} />
 
                 {/*{false && <SessionStats id={this.state.organisationId} />}*/}
                 <Graphes organisationId={this.state.organisationId} />

@@ -8,9 +8,28 @@
       "limit": 500
     },
     "active_regions": [
-      "11",
-      "17",
-      "2"
+      {
+        "code_region": "11"
+      },
+      {
+        "code_region": "17"
+      },
+      {
+        "code_region": "2",
+        "filters": {
+          "code_financeurs": [
+            "-2"
+          ]
+        }
+      },
+      {
+        "code_region": "18",
+        "filters": {
+          "code_financeurs": [
+            "-2"
+          ]
+        }
+      }
     ]
   },
   "log": {
@@ -32,10 +51,6 @@
   },
   "mongodb": {
     "uri": "mongodb://127.0.0.1:27017/anotea?w=1"
-  },
-  "redis": {
-    "host": "localhost",
-    "port": 6379
   },
   "security": {
     "secret": "1234"

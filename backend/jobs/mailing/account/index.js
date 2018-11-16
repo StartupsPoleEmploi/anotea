@@ -41,7 +41,8 @@ const main = async () => {
             results = await newOrganismeMailer.sendEmailBySiret(cli.siret);
         } else {
 
-            if (!configuration.app.active_regions.includes(cli.region)) {
+            let regions = configuration.app.active_regions.map(e => e.code_region);
+            if (!regions.includes(cli.region)) {
                 return abort('Region is not active');
             }
 

@@ -14,6 +14,8 @@ import { setToken, removeToken }            from './utils/token';
 import { subscribeToHttpEvent }             from './utils/http-client';
 import { getRegion }                        from './lib/financerService';
 
+import './utils/moment-fr';
+
 addLocaleData([...fr]);
 
 class App extends Component {
@@ -43,7 +45,8 @@ class App extends Component {
                 codeRegion: sessionStorage.userCodeRegion,
                 codeFinanceur: sessionStorage.userCodeFinanceur,
                 raisonSociale: sessionStorage.userRaisonSociale,
-                action: null
+                action: null,
+                features: sessionStorage.features
             };
         }
         const qs = queryString.parse(window.location.search);
@@ -77,6 +80,10 @@ class App extends Component {
         });
         delete sessionStorage.userId;
         delete sessionStorage.userProfile;
+        delete sessionStorage.userCodeRegion;
+        delete sessionStorage.userCodeFinanceur;
+        delete sessionStorage.userRaisonSociale;
+        delete sessionStorage.features;
         removeToken();
         //Reload page to flush all react states
         window.location = '/admin';
@@ -84,13 +91,14 @@ class App extends Component {
 
     handleLoggedIn = result => {
 
-        let { profile, id, codeRegion, codeFinanceur, raisonSociale } = jwtDecode(result.access_token);
+        let { profile, id, codeRegion, codeFinanceur, raisonSociale, features } = jwtDecode(result.access_token);
 
         sessionStorage.userId = id;
         sessionStorage.userProfile = profile;
         sessionStorage.userCodeRegion = codeRegion;
         sessionStorage.userCodeFinanceur = codeFinanceur;
         sessionStorage.userRaisonSociale = raisonSociale;
+        sessionStorage.features = features;
         setToken(result.access_token);
 
         this.setState({
@@ -100,14 +108,15 @@ class App extends Component {
             id,
             codeRegion: codeRegion,
             codeFinanceur: codeFinanceur,
-            raisonSociale: raisonSociale
+            raisonSociale: raisonSociale,
+            features: features
         });
 
         getRegion(this.state.codeRegion).then(region => {
             this.setState({
                 region: region.region
             });
-        })
+        });
     };
 
     handleError = () => {
@@ -149,7 +158,7 @@ class App extends Component {
                         handleLoggedIn={this.handleLoggedIn} />}
                     {showDashboard &&
                     <Main profile={this.state.profile} id={this.state.id} codeRegion={this.state.codeRegion}
-                        codeFinanceur={this.state.codeFinanceur} />}
+                        codeFinanceur={this.state.codeFinanceur} features={this.state.features} />}
 
                 </div>
             </IntlProvider>

@@ -25,6 +25,7 @@ module.exports = function(db, authService, logger, configuration) {
             profile: 'moderateur',
             id: moderator._id,
             codeRegion: moderator.codeRegion,
+            features: moderator.features
         });
         return res.status(200).send(token);
     };
@@ -35,6 +36,7 @@ module.exports = function(db, authService, logger, configuration) {
             sub: organisme.meta.siretAsString,
             profile: 'organisme',
             id: organisme._id,
+            codeRegion: organisme.codeRegion,
             raisonSociale: organisme.raisonSociale,
         });
         return res.status(200).send(token);

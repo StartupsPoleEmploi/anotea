@@ -3,12 +3,23 @@ const Boom = require('boom');
 const tryAndCatch = require('../tryAndCatch');
 const { hashPassword, isPasswordStrongEnough } = require('../../components/password');
 
-module.exports = function (db, authService, logger, configuration) {
+module.exports = (db, authService, logger, configuration) => {
 
     const dataExposer = require('../../components/dataExposer')();
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
+
+    const mailer = require('../../components/mailer.js')(db, logger, configuration);
+    const getContactEmail = require('../../components/getContactEmail');
+
+    const getRemoteAddress = req => {
+        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    };
+
+    const saveEvent = function(id, type, source) {
+        db.collection('events').save({ organisationId: id, date: new Date(), type: type, source: source });
+    };
 
     router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 
@@ -418,6 +429,90 @@ module.exports = function (db, authService, logger, configuration) {
             res.status(404).send({ 'error': 'Not found' });
         }
     });
+
+    router.post('/backoffice/organisation/:id/editedEmail', checkAuth, tryAndCatch(async (req, res) => {
+        const email = req.body.email;
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            throw Boom.badRequest('Bad request');
+        }
+
+        let organisme = await db.collection('organismes').findOne({ _id: id });
+        if (organisme) {
+            if (!organisme.passwordHash) {
+                await db.collection('organismes').update({ _id: id }, { $set: { editedEmail: email } });
+                saveEvent(id, 'editEmail', {
+                    app: 'moderation',
+                    profile: 'moderateur',
+                    user: 'admin',
+                    ip: getRemoteAddress(req)
+                });
+                res.status(201).send({ 'status': 'OK' });
+            }
+        } else {
+            throw Boom.notFound('Not found');
+        }
+    }));
+
+    router.get('/backoffice/organisation/:id/editedEmail/delete', checkAuth, tryAndCatch(async (req, res) => {
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            throw Boom.badRequest('Bad request');
+        }
+
+        let organisme = await db.collection('organismes').findOne({ _id: id });
+        if (organisme) {
+            if (!organisme.passwordHash) {
+                await db.collection('organismes').update({ _id: id }, { $unset: { editedEmail: '' } });
+                saveEvent(id, 'deleteEmail', {
+                    app: 'moderation',
+                    profile: 'moderateur',
+                    user: 'admin',
+                    ip: getRemoteAddress(req)
+                });
+                res.status(200).send({ 'status': 'OK' });
+            }
+        } else {
+            throw Boom.notFound('Not found');
+        }
+    }));
+
+    router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, tryAndCatch(async (req, res) => {
+        const id = parseInt(req.params.id);
+
+        const organismes = db.collection('organismes');
+
+        if (isNaN(id)) {
+            throw Boom.badRequest('Bad request');
+        }
+
+        let organisme = await organismes.findOne({ _id: id });
+        if (organisme) {
+            mailer.sendOrganisationAccountLink({ to: getContactEmail(organisme) }, organisme, async () => {
+                await organismes.update({ '_id': organisme._id }, {
+                    $set: {
+                        mailSentDate: new Date(),
+                        resent: true
+                    },
+                    $unset: {
+                        mailError: '',
+                        mailErrorDetail: ''
+                    },
+                });
+                saveEvent(id, 'resendEmailAccount', {
+                    app: 'moderation',
+                    profile: 'moderateur',
+                    user: 'admin',
+                    ip: getRemoteAddress(req)
+                });
+                res.status(200).send({ 'status': 'OK' });
+            });
+        } else {
+            throw Boom.notFound('Not found');
+        }
+    }));
 
     return router;
 };

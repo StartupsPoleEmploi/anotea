@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const mongo = require('mongodb');
-const flash = require('connect-flash');
 const RateLimit = require('express-rate-limit');
 const Boom = require('boom');
 const AuthService = require('./components/auth-service');
@@ -49,18 +48,6 @@ module.exports = (logger, configuration) => {
 
             // inject Google Analytics and Hotjar tracking id into views
             app.locals.analytics = configuration.analytics;
-
-            const RedisStore = require('connect-redis')(session);
-
-            app.use(session({
-                store: new RedisStore(configuration.redis),
-                secret: configuration.security.secret,
-                name: 'sessionId',
-                saveUninitialized: true,
-                resave: true
-            }));
-
-            app.use(flash());
 
             app.set('view engine', 'ejs');
             app.set('views', './views');
