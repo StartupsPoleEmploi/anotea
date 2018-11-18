@@ -11,9 +11,7 @@ module.exports = function(db, logger, configuration) {
         'training.organisation.siret': { $ne: '' },
         'training.scheduledEndDate': { $lte: new Date() }
     }).limit(configuration.app.mailer.limit);
-    if (configuration.app.env === 'dev' || process.env.ANOTEA_MAIL_BCC) {
-        cursor.limit(1);
-    }
+
     cursor.count(function(err, count) {
         logger.info('Mailer campaign - launch');
         let stream = cursor.stream();

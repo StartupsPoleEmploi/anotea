@@ -61,7 +61,7 @@ module.exports = (db, logger, configuration, mailer) => {
                     },
                 }
             }
-        ]).limit(configuration.app.env === 'dev' ? 1 : configuration.app.mailer.limit);
+        ]).limit(configuration.app.mailer.limit);
 
     };
 
