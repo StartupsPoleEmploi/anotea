@@ -96,9 +96,6 @@
   "api": {
     "pagination": 20
   },
-  "exports": {
-    "path": ".data/exports"
-  },
   "front": {
     "googleSiteVerification": "12345"
   }
