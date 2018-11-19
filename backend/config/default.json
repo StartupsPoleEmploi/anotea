@@ -28,6 +28,10 @@
           "code_financeurs": [
             "-2"
           ]
+        },
+        "jobs": {
+          "resend": true,
+          "retry": true
         }
       }
     ]
