@@ -18,7 +18,7 @@ const doUnescapeHTMLAndStripTags = (db, logger, abort) => {
     });
 };
 
-cli.description('Remove escaped HTML content and strip tags from comment (user input)');
+cli.description('Remove escaped HTML content and strip tags from advice comment (user input)');
 
 const main = async () => {
     let client = await getMongoClient(configuration.mongodb.uri);
