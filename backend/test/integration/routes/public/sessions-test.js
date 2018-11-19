@@ -130,7 +130,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                         organisme_financeurs: [],
                         organisme_formateur: {
                             raison_sociale: 'INSTITUT DE FORMATION',
-                            siret: '82422814200108'
+                            siret: '82422814200108',
+                            numero: '14_OF_XXXXXXXXXX',
                         },
                         session: {
                             numero: 'SE_0000109418',

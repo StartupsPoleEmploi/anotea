@@ -275,6 +275,8 @@ definitions:
                     type: string
                   siret:
                     type: string
+                  numero:
+                    type: string
               session:
                 type: object
                 properties:
