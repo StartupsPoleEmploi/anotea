@@ -9,10 +9,18 @@
     },
     "active_regions": [
       {
-        "code_region": "11"
+        "code_region": "11",
+        "jobs": {
+          "resend": false,
+          "retry": false
+        }
       },
       {
-        "code_region": "17"
+        "code_region": "17",
+        "jobs": {
+          "resend": false,
+          "retry": false
+        }
       },
       {
         "code_region": "2",
@@ -20,6 +28,10 @@
           "code_financeurs": [
             "-2"
           ]
+        },
+        "jobs": {
+          "resend": false,
+          "retry": false
         }
       },
       {

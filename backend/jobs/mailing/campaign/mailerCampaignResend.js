@@ -29,30 +29,23 @@ module.exports = function(db, logger, configuration) {
             const stream = cursor.stream();
 
             stream.on('data', trainee => {
-                let options;
-                try {
-                    options = {
-                        to: trainee.trainee.email
-                    };
-                } catch (e) {
-                    logger.error('Trainee in a dirty state (_id : ' + trainee._id + ') : email not present in MongoDB document');
-                    db.collection('trainee').update({ '_id': trainee._id }, {
-                        $set: {
-                            'mailSent': true,
-                            'mailError': 'dirtyState'
-                        }
-                    });
-                    return;
-                }
+                let options = {
+                    to: trainee.trainee.email
+                };
                 stream.pause();
-                mailer.sendVotreAvisMail(options, trainee, () => {
+                mailer.sendVotreAvisMail(options, trainee, async () => {
                     stream.resume();
                     try {
-                        db.collection('trainee').update({ '_id': trainee._id }, {
+                        await db.collection('trainee').update({ '_id': trainee._id }, {
                             $set: {
                                 'mailSent': true,
-                                'mailSentDate': new Date()
-                            }, $unset: { 'mailError': '', 'mailErrorDetail': '' }
+                                'mailSentDate': new Date(),
+                            }, $unset: {
+                                'mailError': '',
+                                'mailErrorDetail': ''
+                            }, $inc: {
+                                'mailRetry': 1
+                            }
                         });
                     } catch (e) {
                         logger.error(e);
@@ -66,9 +59,8 @@ module.exports = function(db, logger, configuration) {
                             'mailErrorDetail': err
                         }
                     });
+                    logger.error(err);
                 });
-                db.collection('trainee').update({ '_id': trainee._id }, { $inc: { 'mailRetry': 1 } });
-
             });
 
             // TODO: use promise array to be sure that every emails are sent !
