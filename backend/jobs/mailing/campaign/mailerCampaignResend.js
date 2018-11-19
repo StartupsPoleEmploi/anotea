@@ -14,10 +14,6 @@ module.exports = function(db, logger, configuration) {
         $or: [{ mailRetry: { $eq: null } }, { mailRetry: { $lt: parseInt(configuration.smtp.maxRelaunch) } }]
     }).limit(configuration.app.mailer.limit);
 
-    if (configuration.app.env === 'dev') {
-        cursor.limit(1);
-    }
-
     cursor.count(function(err, count) {
         logger.info('Mailer campaign resend (emails not open) - launch');
         const stream = cursor.stream();

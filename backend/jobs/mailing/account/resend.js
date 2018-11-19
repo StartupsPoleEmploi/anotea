@@ -15,7 +15,7 @@ module.exports = (db, logger, configuration, mailer) => {
                                         resend: {  $ne: true }
                                     })
                                     .sort({ mailSentDate: -1 })
-                                    .limit(configuration.app.env === 'dev' ? 1 : configuration.app.mailer.limit);
+                                    .limit(configuration.app.mailer.limit);
     };
 
     const sendEmail = organisme => {
