@@ -118,7 +118,7 @@ module.exports = function(db, authService, logger, configuration) {
         });
 
         res.send({
-            advices: dataExposer.unescapeComments(advices),
+            advices: advices,
             page: page,
             pageCount: Math.ceil(count / pagination)
         });
@@ -187,7 +187,7 @@ module.exports = function(db, authService, logger, configuration) {
         });
 
         res.send({
-            advices: dataExposer.unescapeComments(advices),
+            advices: advices,
             page: page,
             pageCount: Math.ceil(count / pagination)
         });
@@ -266,7 +266,7 @@ module.exports = function(db, authService, logger, configuration) {
         });
 
         res.send({
-            advices: dataExposer.unescapeComments(advices),
+            advices: advices,
             page: page,
             pageCount: Math.ceil(count / pagination)
 

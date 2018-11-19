@@ -2,19 +2,6 @@ const s = require('string');
 
 module.exports = function() {
 
-    const unescapeComments = function(advices) {
-        return advices.map(advice => {
-            if (advice.comment) {
-                if (advice.comment.pseudo) {
-                    advice.comment.pseudo = s(advice.comment.pseudo).unescapeHTML().s;
-                }
-                advice.comment.title = s(advice.comment.title).unescapeHTML().s;
-                advice.comment.text = s(advice.comment.text).unescapeHTML().s;
-            }
-            return advice;
-        });
-    };
-
     const buildAdviceLBF = function(comment) {
         let adviceObj = { id: comment._id };
         adviceObj.date = comment.date;
@@ -111,7 +98,6 @@ module.exports = function() {
         buildAdviceLBF: buildAdviceLBF,
         buildProjectedAdviceLBF: buildProjectedAdviceLBF,
         buildAdvice: buildAdvice,
-        buildCommentsStats: buildCommentsStats,
-        unescapeComments: unescapeComments
+        buildCommentsStats: buildCommentsStats
     };
 };

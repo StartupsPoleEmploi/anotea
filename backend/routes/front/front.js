@@ -148,9 +148,9 @@ module.exports = (db, logger, configuration, badwords) => {
             res.redirect('/questionnaire/' + req.params.token);
         } else if (comment !== null && comment.step === 2) {
             // update
-            let pseudo = req.body.pseudo;
-            let commentTxt = s(req.body.commentaire).escapeHTML().s;
-            let commentTitle = s(req.body.titreCommentaire).escapeHTML().s;
+            let pseudo = s(req.body.pseudo).stripTags().s;
+            let commentTxt = s(req.body.commentaire).stripTags().s;
+            let commentTitle = s(req.body.titreCommentaire).stripTags().s;
 
             if (s(pseudo.replace(/ /g, '')).isAlphaNumeric()) {
                 comment.pseudo = pseudo;
