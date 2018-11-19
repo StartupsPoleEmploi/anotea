@@ -4,17 +4,27 @@
 const cli = require('commander');
 const configuration = require('config');
 const getMongoClient = require('../../components/mongodb');
-const getLogger = require('../../components/logger');
 const s = require('string');
 
-const doUnescapeHTMLAndStripTags = (db, logger, abort) => {
+const fixData = data => s(data).unescapeHTML().replaceAll('\\', '').stripTags().s;
 
-    let stream = db.collection('comment').find({ comment: { $ne: null } });
+const doUnescapeHTMLAndStripTags = (db, callback) => {
+
+    const comment = db.collection('comment');
+
+    let stream = comment.find({ comment: { $ne: null } });
     stream.on('data', advice => {
-        advice.comment.pseudo = s(advice.comment.pseudo).stripTags();
-        advice.comment.pseudo = s(advice.comment.title).unescapeHTML().stripTags();
-        advice.comment.pseudo = s(advice.comment.text).unescapeHTML().stripTags();
-        db.collection('comment').save(advice);
+        if (advice.comment.pseudo) {
+            advice.comment.pseudo = fixData(advice.comment.pseudo);
+        }
+        advice.comment.title = fixData(advice.comment.title);
+        advice.comment.text = fixData(advice.comment.text);
+
+        comment.save(advice);
+    });
+
+    stream.on('end', () => {
+        callback();
     });
 };
 
@@ -22,16 +32,13 @@ cli.description('Remove escaped HTML content and strip tags from advice comment 
 
 const main = async () => {
     let client = await getMongoClient(configuration.mongodb.uri);
-    let logger = getLogger('anotea-unescapeHTML-and-StripTags', configuration);
     let db = client.db();
 
-    const abort = message => {
-        logger.error(message, () => {
-            client.close(() => process.exit(1));
-        });
-    };
-
-    doUnescapeHTMLAndStripTags(db, logger, abort);
+    doUnescapeHTMLAndStripTags(db, () => {
+        client.close();
+    });
 };
 
 main();
+
+module.exports = { fixData };
