@@ -1,16 +1,28 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import { Stars } from './Stars';
 
 export default class AdviceRates extends React.Component {
 
     state = {};
 
+    static propTypes = {
+        rates: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
         this.state = {
             rates: props.rates,
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.rates) {
+            this.setState({ rates: nextProps.rates });
+        }
     }
 
     render() {
