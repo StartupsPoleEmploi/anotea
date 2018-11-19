@@ -5,8 +5,9 @@ const cli = require('commander');
 const configuration = require('config');
 const getMongoClient = require('../../components/mongodb');
 const s = require('string');
+const { sanitize } = require('../../components/userInput.js');
 
-const fixData = data => s(data).unescapeHTML().replaceAll('\\', '').stripTags().s;
+const fixData = data => sanitize(s(data).unescapeHTML().replaceAll('\\', ''));
 
 const doUnescapeHTMLAndStripTags = (db, callback) => {
 

@@ -3,6 +3,7 @@ const moment = require('moment');
 const Joi = require('joi');
 const s = require('string');
 const { getDeviceType } = require('../../components/analytics');
+const { sanitize } = require('../../components/userInput');
 
 module.exports = (db, logger, configuration, badwords) => {
 
@@ -148,9 +149,9 @@ module.exports = (db, logger, configuration, badwords) => {
             res.redirect('/questionnaire/' + req.params.token);
         } else if (comment !== null && comment.step === 2) {
             // update
-            let pseudo = s(req.body.pseudo).stripTags().s;
-            let commentTxt = s(req.body.commentaire).stripTags().s;
-            let commentTitle = s(req.body.titreCommentaire).stripTags().s;
+            let pseudo = sanitize(req.body.pseudo);
+            let commentTxt = sanitize(req.body.commentaire);
+            let commentTitle = sanitize(req.body.titreCommentaire);
 
             if (s(pseudo.replace(/ /g, '')).isAlphaNumeric()) {
                 comment.pseudo = pseudo;
