@@ -4,59 +4,59 @@ module.exports = function(db, logger, configuration) {
 
     const launchTime = new Date().getTime();
 
+    const activeRegions = configuration.app.active_regions.filter(region => region.jobs && region.jobs.resend).map(region => region.code_region);
+
     const cursor = db.collection('trainee').find({
         mailSent: true,
         unsubscribe: false,
         mailError: { $ne: null },
+        codeRegion: { $in: activeRegions },
         $or: [{ mailRetry: { $eq: null } }, { mailRetry: { $lt: parseInt(configuration.smtp.maxRelaunch) } }]
     }).limit(configuration.app.mailer.limit);
 
-    cursor.count(function(err, count) {
-        logger.info('Mailer campaign retry (emails not sent due to smtp error) - launch');
-        const stream = cursor.stream();
+    logger.info('Mailer campaign retry (emails not sent due to smtp error) - launch');
 
-        stream.on('data', function(trainee) {
-            try {
-                var options = {
+    cursor.count((err, count) => {
+        if (!err) {
+            const stream = cursor.stream();
+
+            stream.on('data', function(trainee) {
+                let options = {
                     to: trainee.trainee.email
                 };
-            } catch (e) {
-                logger.error('Trainee in a dirty state (_id : ' + trainee._id + ') : email not present in MongoDB document');
-                db.collection('trainee').update({ '_id': trainee._id }, {
-                    $set: {
-                        'mailSent': true,
-                        'mailError': 'dirtyState'
+                mailer.sendVotreAvisMail(options, trainee, function() {
+                    try {
+                        db.collection('trainee').update({ '_id': trainee._id }, {
+                            $set: {
+                                'mailSent': true,
+                                'mailSentDate': new Date()
+                            }, $unset: {
+                                'mailError': '',
+                                'mailErrorDetail': ''
+                            }, $inc: {
+                                'mailRetry': 1
+                            }
+                        });
+                    } catch (e) {
+                        logger.error(e);
                     }
-                });
-                return;
-            }
-            mailer.sendVotreAvisMail(options, trainee, function() {
-                try {
+                }, err => {
                     db.collection('trainee').update({ '_id': trainee._id }, {
                         $set: {
                             'mailSent': true,
-                            'mailSentDate': new Date()
-                        }, $unset: { 'mailError': '', 'mailErrorDetail': '' }
+                            'mailError': 'smtpError',
+                            'mailErrorDetail': err
+                        }
                     });
-                } catch (e) {
-                    logger.error(e);
-                }
-            }, function(err) {
-                db.collection('trainee').update({ '_id': trainee._id }, {
-                    $set: {
-                        'mailSent': true,
-                        'mailError': 'smtpError',
-                        'mailErrorDetail': err
-                    }
+                    logger.error(err);
                 });
             });
-            db.collection('trainee').update({ '_id': trainee._id }, { $inc: { 'mailRetry': 1 } });
-        });
 
-        // TODO: use promise array to be sure that every emails are sent !
-        stream.on('end', function() {
-            let endTime = new Date().getTime();
-            logger.info('Mailer campaign retry (emails not sent due to smtp error) - completed (' + count + ' emails, ' + (endTime - launchTime) + 'ms)');
-        });
+            // TODO: use promise array to be sure that every emails are sent !
+            stream.on('end', () => {
+                let endTime = new Date().getTime();
+                logger.info('Mailer campaign retry (emails not sent due to smtp error) - completed (' + count + ' emails, ' + (endTime - launchTime) + 'ms)');
+            });
+        }
     });
 };

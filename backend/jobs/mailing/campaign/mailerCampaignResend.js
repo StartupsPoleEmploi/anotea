@@ -6,63 +6,66 @@ module.exports = function(db, logger, configuration) {
     const lastWeek = new Date();
     lastWeek.setDate(lastWeek.getDate() - configuration.smtp.relaunchDelay);
 
+    const activeRegions = configuration.app.active_regions.filter(region => region.jobs && region.jobs.resend).map(region => region.code_region);
+
     let cursor = db.collection('trainee').find({
         mailSent: true,
         unsubscribe: false,
         tracking: { $eq: null },
+        codeRegion: { $in: activeRegions },
         mailSentDate: { $lte: lastWeek.toString() },
         $or: [{ mailRetry: { $eq: null } }, { mailRetry: { $lt: parseInt(configuration.smtp.maxRelaunch) } }]
     }).limit(configuration.app.mailer.limit);
 
-    cursor.count(function(err, count) {
-        logger.info('Mailer campaign resend (emails not open) - launch');
-        const stream = cursor.stream();
+    logger.info('Mailer campaign resend (emails not open) - launch');
 
-        stream.on('data', function(trainee) {
-            try {
-                var options = {
+    cursor.count((err, count) => {
+        if (!err) {
+
+            const stream = cursor.stream();
+
+            stream.on('data', trainee => {
+                let options = {
                     to: trainee.trainee.email
                 };
-            } catch (e) {
-                logger.error('Trainee in a dirty state (_id : ' + trainee._id + ') : email not present in MongoDB document');
-                db.collection('trainee').update({ '_id': trainee._id }, {
-                    $set: {
-                        'mailSent': true,
-                        'mailError': 'dirtyState'
+                stream.pause();
+                mailer.sendVotreAvisMail(options, trainee, async () => {
+                    stream.resume();
+                    try {
+                        await db.collection('trainee').update({ '_id': trainee._id }, {
+                            $set: {
+                                'mailSent': true,
+                                'mailSentDate': new Date(),
+                            }, $unset: {
+                                'mailError': '',
+                                'mailErrorDetail': ''
+                            }, $inc: {
+                                'mailRetry': 1
+                            }
+                        });
+                    } catch (e) {
+                        logger.error(e);
                     }
-                });
-                return;
-            }
-            stream.pause();
-            mailer.sendVotreAvisMail(options, trainee, function() {
-                stream.resume();
-                try {
+                }, err => {
+                    stream.resume();
                     db.collection('trainee').update({ '_id': trainee._id }, {
                         $set: {
                             'mailSent': true,
-                            'mailSentDate': new Date()
-                        }, $unset: { 'mailError': '', 'mailErrorDetail': '' }
+                            'mailError': 'smtpError',
+                            'mailErrorDetail': err
+                        }
                     });
-                } catch (e) {
-                    logger.error(e);
-                }
-            }, function(err) {
-                stream.resume();
-                db.collection('trainee').update({ '_id': trainee._id }, {
-                    $set: {
-                        'mailSent': true,
-                        'mailError': 'smtpError',
-                        'mailErrorDetail': err
-                    }
+                    logger.error(err);
                 });
             });
-            db.collection('trainee').update({ '_id': trainee._id }, { $inc: { 'mailRetry': 1 } });
-        });
 
-        // TODO: use promise array to be sure that every emails are sent !
-        stream.on('end', function() {
-            const endTime = new Date().getTime();
-            logger.info('Mailer campaign resend (emails not open) - completed (' + count + ' emails, ' + (endTime - launchTime) + 'ms)');
-        });
+            // TODO: use promise array to be sure that every emails are sent !
+            stream.on('end', () => {
+                const endTime = new Date().getTime();
+                logger.info('Mailer campaign resend (emails not open) - completed (' + count + ' emails, ' + (endTime - launchTime) + 'ms)');
+            });
+        } else {
+            logger.error(err);
+        }
     });
 };
