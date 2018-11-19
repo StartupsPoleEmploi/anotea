@@ -48,9 +48,6 @@
     "host": "ANOTEA_SMTP_HOST",
     "port": "ANOTEA_SMTP_PORT"
   },
-  "exports": {
-    "path": "ANOTEA_EXPORT_PATH"
-  },
   "front": {
     "googleSiteVerification": "ANOTEA_FRONT_GOOGLE_SITE_VERIFICATION"
   }

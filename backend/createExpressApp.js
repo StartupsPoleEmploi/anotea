@@ -59,11 +59,6 @@ module.exports = (logger, configuration) => {
                 }
             }
 
-            //require('./jobs/export/incomingAdvicesExport.js')(db, logger, configuration, devMode);
-            //require('./jobs/export/fullAdvicesExportLBF.js')(db, logger, configuration, devMode);
-            //require('./jobs/export/fullAdvicesExport.js')(db, logger, configuration, devMode);
-            //require('./jobs/export/dailyExportRegion.js')(db, logger, configuration, devMode);
-
             // Allowing CORS
             app.use(function(req, res, next) {
                 res.removeHeader('X-Powered-By');
