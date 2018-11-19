@@ -5,11 +5,11 @@ services:
     image: mongo:4.0.1-xenial
     container_name: anotea_mongodb
     volumes:
-    - ./.data/mongodb/db:/data/db
-    - ./.data/mongodb/config:/data/configdb
+      - ./.data/mongodb/db:/data/db
+      - ./.data/mongodb/config:/data/configdb
 
   smtp:
     image: digiplant/fake-smtp
     container_name: anotea_smtp
     volumes:
-    - ./.data/fakesmtp:/var/mail
+      - ./.data/fakesmtp:/var/mail
