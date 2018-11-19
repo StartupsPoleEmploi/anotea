@@ -1,7 +1,10 @@
 {
   "app": {
     "env": "ANOTEA_APP_ENV",
-    "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME"
+    "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME",
+    "mailer": {
+      "limit": "ANOTEA_APP_MAILER_LIMIT"
+    }
   },
   "mongodb": {
     "uri": "ANOTEA_MONGODB_URI"
@@ -47,9 +50,6 @@
   "smtp": {
     "host": "ANOTEA_SMTP_HOST",
     "port": "ANOTEA_SMTP_PORT"
-  },
-  "exports": {
-    "path": "ANOTEA_EXPORT_PATH"
   },
   "front": {
     "googleSiteVerification": "ANOTEA_FRONT_GOOGLE_SITE_VERIFICATION"
