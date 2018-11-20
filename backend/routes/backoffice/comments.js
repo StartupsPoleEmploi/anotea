@@ -20,7 +20,6 @@ module.exports = function(db, authService, logger, configuration) {
 
     router.get('/backoffice/advices.json', checkAuth, async (req, res) => {
         let advices = await db.collection('comment').find({ step: { $gte: 2 } }, { token: 0 }).limit(10).toArray();
-        advices = dataExposer.unescapeComments(advices);
         res.send(advices);
     });
 
@@ -47,9 +46,9 @@ module.exports = function(db, authService, logger, configuration) {
                 (comment.rates !== undefined ? comment.rates.moyen_materiel : '') + ';' +
                 (comment.rates !== undefined ? comment.rates.accompagnement : '') + ';' +
                 (comment.rates !== undefined ? comment.rates.global : '') + ';' +
-                (comment.comment !== undefined ? s(comment.comment.pseudo).unescapeHTML().replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
-                (comment.comment !== undefined ? s(comment.comment.title).unescapeHTML().replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
-                (comment.comment !== undefined ? s(comment.comment.text).unescapeHTML().replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
+                (comment.comment !== undefined ? s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
+                (comment.comment !== undefined ? s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
+                (comment.comment !== undefined ? s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
                 comment.campaign + ';' +
                 comment.step + ';' +
                 comment.date + ';' +
@@ -119,7 +118,7 @@ module.exports = function(db, authService, logger, configuration) {
         const advices = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
 
         res.send({
-            advices: dataExposer.unescapeComments(advices),
+            advices: advices,
             page: page,
             pageCount: Math.ceil(count / pagination)
         });
