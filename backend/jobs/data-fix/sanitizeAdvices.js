@@ -7,10 +7,8 @@ const getMongoClient = require('../../components/mongodb');
 const moment = require('moment');
 
 const getLogger = require('../../components/logger');
-const s = require('string');
-const { sanitize } = require('../../components/userInput.js');
 
-const fixData = data => sanitize(s(data).unescapeHTML().replaceAll('\\', ''));
+const fixData = require('./fixData');
 
 const doUnescapeHTMLAndStripTags = async db => {
     let promises = [];
@@ -51,5 +49,3 @@ const main = async () => {
 };
 
 main();
-
-module.exports = { fixData };

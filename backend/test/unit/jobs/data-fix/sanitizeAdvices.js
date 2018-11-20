@@ -1,7 +1,7 @@
 const assert = require('assert');
-const { fixData } = require('../../../../jobs/data-fix/unescapeHTMLAndStripTags.js');
+const { fixData } = require('../../../../jobs/data-fix/fixData.js');
 
-describe('Unescape HTML and stripTags', function() {
+describe('Sanitize advices', function() {
 
     it('should unescape HTML entities', () => {
         assert.equal(fixData('Formateur très à l&apos;écoute'), 'Formateur très à l\'écoute');
