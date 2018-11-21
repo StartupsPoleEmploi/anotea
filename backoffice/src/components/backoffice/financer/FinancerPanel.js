@@ -351,6 +351,8 @@ export default class FinancerPanel extends React.Component {
         exportToExcel(comments);
     };
 
+    getActiveStatus = current => this.state.tab === current ? 'active' : '';
+
     render() {
         const { currentOrganisation, currentEntity, organisations, entities } = this.state.training;
         const { currentFinancer, financers, inventory, tab } = this.state;
@@ -384,17 +386,17 @@ export default class FinancerPanel extends React.Component {
                 <h2>Liste des notes et avis</h2>
 
                 <ul className="nav nav-tabs">
-                    <li role="presentation" {...tab === 'reported' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
-                            className="badge rejected">{inventory.reported}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`} onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
+                            className="badge rejected">{inventory.reported}</span></button>
                     </li>
-                    <li role="presentation" {...tab === 'commented' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
-                            className="badge published">{inventory.commented}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('commented')}`} onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
+                            className="badge published">{inventory.commented}</span></button>
                     </li>
-                    <li role="presentation" {...tab === 'all' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
-                            className="badge">{inventory.all}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
+                            className="badge">{inventory.all}</span></button>
                     </li>
                 </ul>
 
