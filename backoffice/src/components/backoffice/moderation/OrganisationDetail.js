@@ -104,7 +104,9 @@ export default class OrganisationDetail extends React.PureComponent {
 
                         <OrganisationInfo organisation={this.state.organisation} />
 
-                        <button id="btnResend" className="btn btn-info" disabled={this.state.resendDisabled} onClick={this.resend}><i className="glyphicon glyphicon-send"/> Renvoyer le lien de connexion</button>
+                        <button id="btnResend" className="btn btn-info" disabled={this.state.resendDisabled} onClick={this.resend}>
+                            <span className="oi oi-location"></span> Renvoyer le lien de connexion
+                        </button>
 
                         <h5>Modifier l'adresse d'un Organisme de Formation</h5>
                         
