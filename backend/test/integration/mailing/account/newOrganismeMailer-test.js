@@ -7,17 +7,14 @@ const newOrganismeMailer = require('../../../../jobs/mailing/account/newOrganism
 
 let fakeMailer = spy => {
     return {
-        sendOrganisationAccountLink: (options, organisme, callback) => {
-            callback()
-            .then(() => {
-                spy.push(options);
-            });
+        sendOrganisationAccountLink: async (options, organisme, callback) => {
+            await callback();
+            spy.push(options);
         }
     };
 };
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
-
 
     it('should send email to a single organisme', async () => {
 
