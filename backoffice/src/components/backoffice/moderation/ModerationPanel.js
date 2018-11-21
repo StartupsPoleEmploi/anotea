@@ -286,7 +286,7 @@ export default class ModerationPanel extends React.Component {
                                         <p>{advice.comment.text}</p>
                                         <div className="actions">
                                             {!advice.rejected && <div className="dropdown">
-                                                <button className="btn btn-default dropdown-toggle btn-danger btn-xs"
+                                                <button className="btn btn-default dropdown-toggle btn-danger btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
                                                     <span className="oi oi-circle-x"></span> Rejeter
@@ -305,7 +305,7 @@ export default class ModerationPanel extends React.Component {
 
                                             {(!advice.published || this.state.tab === 'reported') &&
                                             <div className="dropdown">
-                                                <button className="btn btn-default dropdown-toggle btn-success btn-xs"
+                                                <button className="btn btn-default dropdown-toggle btn-success btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
                                                     <span className="oi oi-circle-check"></span> Publier
@@ -326,7 +326,7 @@ export default class ModerationPanel extends React.Component {
                                                 </div>
                                             </div>}
 
-                                            <button className="btn btn-primary btn-xs"
+                                            <button className="btn btn-primary btn-sm"
                                                 onClick={this.handleEdit.bind(this, advice._id)}>
                                                 <span className="oi oi-pencil"></span> Modifier
                                             </button>
@@ -341,7 +341,7 @@ export default class ModerationPanel extends React.Component {
                                         <div className="actions">
                                             <div className="dropdown">
                                                 <button {...this.state.currentEdit.newValue === undefined ? { disabled: 'disabled' } : {}}
-                                                    className="btn btn-default dropdown-toggle btn-success btn-xs"
+                                                    className="btn btn-default dropdown-toggle btn-success btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
                                                     <span className="oi oi-circle-check"></span> Valider et Publier
@@ -361,7 +361,7 @@ export default class ModerationPanel extends React.Component {
                                                 </ul>
                                             </div>
 
-                                            <button className="btn btn-danger btn-xs" onClick={this.handleCancel.bind(this, advice._id)}>
+                                            <button className="btn btn-danger btn-sm" onClick={this.handleCancel.bind(this, advice._id)}>
                                                 <span className="oi oi-circle-x"></span> Annuler
                                             </button>
                                         </div>

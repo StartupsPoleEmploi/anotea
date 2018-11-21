@@ -43,7 +43,7 @@ export default class Toolbar extends React.PureComponent {
             <div className="toolbar">
                 {profile === 'financer' &&
                 <div className="pull-left">
-                    <button className="btn btn-success btn-xs"
+                    <button className="btn btn-success btn-sm"
                         onClick={this.onclick}>
                         <i className="glyphicon glyphicon glyphicon-download-alt" /> Exporter vers Excel
                     </button>
@@ -54,7 +54,7 @@ export default class Toolbar extends React.PureComponent {
                     >
 
                         <div className="pull-right">
-                            <button className="btn btn-success btn-xs"
+                            <button className="btn btn-success btn-sm"
                                 onClick={this.closeModal}>
                                 Fermer <i className="glyphicon glyphicon glyphicon-remove" />
                             </button>

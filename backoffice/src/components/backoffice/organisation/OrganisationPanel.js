@@ -376,17 +376,17 @@ export default class OrganisationPanel extends React.Component {
                                                             pour écrire votre réponse.</p>
 
                                                         <div className="actions">
-                                                            <button className="btn btn-success btn-xs"
+                                                            <button className="btn btn-success btn-sm"
                                                                 onClick={this.handleDoReply.bind(this, advice._id)}>
                                                                 <i className="glyphicon glyphicon-comment"></i> Valider
                                                                 la réponse
                                                             </button>
                                                             {advice.answered &&
-                                                            <button className="btn btn-danger btn-xs"
+                                                            <button className="btn btn-danger btn-sm"
                                                                 onClick={this.handleRemoveReply.bind(this, advice._id)}>
                                                                 <i className="glyphicon glyphicon-remove"></i> &Ocirc;ter
                                                                 la réponse</button>}
-                                                            <button className="btn btn-warning btn-xs"
+                                                            <button className="btn btn-warning btn-sm"
                                                                 onClick={this.handleCancelReply.bind(this, advice._id)}>
                                                                 <i className="glyphicon glyphicon-comment"></i> Annuler
                                                             </button>
@@ -402,29 +402,29 @@ export default class OrganisationPanel extends React.Component {
                                                     {!(this.state.reply.shown === true && this.state.reply.id === advice._id) &&
                                                     <div className="actions">
                                                         {(advice.read !== true && this.state.tab !== 'reported') &&
-                                                        <button className="btn btn-info btn-xs"
+                                                        <button className="btn btn-info btn-sm"
                                                             onClick={this.handleMarkAsRead.bind(this, advice._id)}>
                                                             <i className="glyphicon glyphicon-ok"></i> Marquer comme lu
                                                         </button>}
                                                         {(advice.read === true && this.state.tab !== 'reported') &&
-                                                        <button className="btn btn-info btn-xs"
+                                                        <button className="btn btn-info btn-sm"
                                                             onClick={this.handleMarkAsNotRead.bind(this, advice._id)}>
                                                             <i className="glyphicon glyphicon-ko"></i> Marquer comme non
                                                             lu</button>}
                                                         {this.state.tab !== 'reported' &&
-                                                        <button className="btn btn-success btn-xs"
+                                                        <button className="btn btn-success btn-sm"
                                                             onClick={this.handleReply.bind(this, advice._id)}
                                                             title="votre réponse à avis sera publiée sur les sites partenaires et accessible aux futurs stagiaires potentiels">
                                                             <i className="glyphicon glyphicon-comment"></i> {advice.answered ? 'Modifier la réponse' : 'Répondre'}
                                                         </button>}
                                                         {(this.state.tab !== 'reported' && advice.reported !== true) &&
-                                                        <button className="btn btn-danger btn-xs"
+                                                        <button className="btn btn-danger btn-sm"
                                                             onClick={this.handleReport.bind(this, advice._id)}
                                                             title="signaler un avis permet d'alerter le modérateur sur son non-respect potentiel de la charte de modération">
                                                             <i className="glyphicon glyphicon-alert"></i> Signaler
                                                         </button>}
                                                         {advice.reported === true &&
-                                                        <button className="btn btn-danger btn-xs"
+                                                        <button className="btn btn-danger btn-sm"
                                                             onClick={this.handleUnreport.bind(this, advice._id)}><i
                                                                 className="glyphicon glyphicon-alert"></i> Marquer comme non
                                                             signalé</button>}
