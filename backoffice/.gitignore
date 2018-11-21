@@ -23,3 +23,5 @@ yarn-error.log*
 #IntelliJ Idea
 .idea/
 *.iml
+
+src/index.css

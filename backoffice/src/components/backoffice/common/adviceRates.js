@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { Stars } from './Stars';
+import Stars from './Stars';
 
 export default class AdviceRates extends React.Component {
 

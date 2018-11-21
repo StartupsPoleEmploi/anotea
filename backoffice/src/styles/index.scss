@@ -1,3 +1,13 @@
+@import 'custom_bootstrap';
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
 .App-logo {
     background-color: white;
     border-radius: 20px;
@@ -9,7 +19,6 @@
     height: 130px;
     padding: 20px;
     color: white;
-    /*position: relative;*/
 }
 
 div.logout {
@@ -20,7 +29,6 @@ div.logout {
 
 .label.h5 {
     position: absolute;
-    /*right: 10px;*/
     top: 30px;
 }
 
@@ -34,6 +42,11 @@ div.logout {
 
 .App-intro {
     font-size: large;
+}
+
+.badge {
+    color: white;
+    border-radius: 10px;
 }
 
 .badge.published {

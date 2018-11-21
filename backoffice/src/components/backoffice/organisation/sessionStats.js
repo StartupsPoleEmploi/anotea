@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Stars } from '../common/Stars';
+import Stars from '../common/Stars';
 
 export default class SessionStats extends React.Component {
 
@@ -51,7 +51,7 @@ export default class SessionStats extends React.Component {
                             <div className="col-md-6">
                                 <div className="title">
                                     <strong>Avis global</strong>
-                                    <Stars value={this.data.globalRatesAverage} />
+                                    <Stars value={Math.round(this.data.globalRatesAverage)} />
                                     <strong>{this.data.globalRatesAverage}/5</strong>
                                 </div>
                                 <ul>
@@ -72,30 +72,30 @@ export default class SessionStats extends React.Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">Accueil</div>
-                                    <div className="col-md-4"><Stars value={this.data.ratesAverage.accueil} /></div>
+                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.accueil)} /></div>
                                     <div className="col-md-3">{this.data.ratesAverage.accueil}/5</div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">Contenu</div>
-                                    <div className="col-md-4"><Stars value={this.data.ratesAverage.contenu_formation} />
+                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.contenu_formation)} />
                                     </div>
                                     <div className="col-md-3">{this.data.ratesAverage.contenu_formation}/5</div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">&Eacute;quipe formateurs</div>
-                                    <div className="col-md-4"><Stars value={this.data.ratesAverage.equipe_formateurs} />
+                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.equipe_formateurs)} />
                                     </div>
                                     <div className="col-md-3">{this.data.ratesAverage.equipe_formateurs}/5</div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">Moyens</div>
-                                    <div className="col-md-4"><Stars value={this.data.ratesAverage.moyen_materiel} />
+                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.moyen_materiel)} />
                                     </div>
                                     <div className="col-md-3">{this.data.ratesAverage.moyen_materiel}/5</div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">Accompagnement</div>
-                                    <div className="col-md-4"><Stars value={this.data.ratesAverage.accompagnement} />
+                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.accompagnement)} />
                                     </div>
                                     <div className="col-md-3">{this.data.ratesAverage.accompagnement}/5</div>
                                 </div>

@@ -5,7 +5,6 @@ import fr                   from 'react-intl/locale-data/fr';
 import { addLocaleData }    from 'react-intl';
 import jwtDecode            from 'jwt-decode';
 
-import './App.css';
 import { LoginForm, LoginWithAccessToken }  from './components/login';
 import { Header, Main }                     from './components/backoffice';
 import AccountActivation                    from './components/backoffice/organisation/AccountActivation';

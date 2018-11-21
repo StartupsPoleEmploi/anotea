@@ -191,6 +191,8 @@ export default class ModerationPanel extends React.Component {
         });
     };
 
+    getActiveStatus = current => this.state.tab === current ? 'active' : '';
+
     render() {
         return (
             <div className="moderationPanel">
@@ -199,25 +201,25 @@ export default class ModerationPanel extends React.Component {
                 <h2>Liste des avis</h2>
 
                 <ul className="nav nav-tabs">
-                    <li role="presentation" {...this.state.tab === 'reported' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'reported')}>Signalés <span
-                            className="badge reported">{this.state.inventory.reported}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('reported')}`} onClick={this.switchTab.bind(this, 'reported')}>Signalés <span
+                            className="badge reported">{this.state.inventory.reported}</span></button>
                     </li>
-                    <li role="presentation" {...this.state.tab === 'toModerate' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'toModerate')}>&Agrave; modérer <span
-                            className="badge toModerate">{this.state.inventory.toModerate}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('toModerate')}`} onClick={this.switchTab.bind(this, 'toModerate')}>&Agrave; modérer <span
+                            className="badge toModerate">{this.state.inventory.toModerate}</span></button>
                     </li>
-                    <li role="presentation" {...this.state.tab === 'rejected' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'rejected')}>Rejetés <span
-                            className="badge rejected">{this.state.inventory.rejected}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`} onClick={this.switchTab.bind(this, 'rejected')}>Rejetés <span
+                            className="badge rejected">{this.state.inventory.rejected}</span></button>
                     </li>
-                    <li role="presentation" {...this.state.tab === 'published' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'published')}>Publiés <span
-                            className="badge published">{this.state.inventory.published}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('published')}`} onClick={this.switchTab.bind(this, 'published')}>Publiés <span
+                            className="badge published">{this.state.inventory.published}</span></button>
                     </li>
-                    <li role="presentation" {...this.state.tab === 'all' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'all')}>Tous les avis <span
-                            className="badge">{this.state.inventory.all}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Tous les avis <span
+                            className="badge badge-secondary">{this.state.inventory.all}</span></button>
                     </li>
                 </ul>
 
@@ -230,7 +232,7 @@ export default class ModerationPanel extends React.Component {
                             <div className="row">
                                 <div className="col-md-6">
                                     <h3>
-                                        <i className="avatar glyphicon glyphicon-user"></i>
+                                        <span className="oi oi-person"></span>
 
                                         <div className="pseudo">
                                             <span>
@@ -287,7 +289,7 @@ export default class ModerationPanel extends React.Component {
                                                 <button className="btn btn-default dropdown-toggle btn-danger btn-xs"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <i className="glyphicon glyphicon-ban-circle"></i> Rejeter
+                                                    <span className="oi oi-circle-x"></span> Rejeter
                                                 </button>
                                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                                                     <li className="dropdown-header">Motif de rejet</li>
@@ -306,28 +308,27 @@ export default class ModerationPanel extends React.Component {
                                                 <button className="btn btn-default dropdown-toggle btn-success btn-xs"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <i className="glyphicon glyphicon-ok-circle"></i> Publier
+                                                    <span className="oi oi-circle-check"></span> Publier
                                                 </button>
-                                                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                                    <li className="dropdown-header">Qualification</li>
-                                                    <li><a
-                                                        onClick={this.handlePublish.bind(this, advice._id, 'négatif')}
-                                                        role="button">Négatif</a></li>
-                                                    <li><a
+                                                <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                    <h6 className="dropdown-header">Qualification</h6>
+                                                    <a className="dropdown-item" onClick={this.handlePublish.bind(this, advice._id, 'négatif')}
+                                                        role="button">Négatif</a>
+                                                    <a className="dropdown-item"
                                                         onClick={this.handlePublish.bind(this, advice._id, 'positif')}
-                                                        role="button">Positif ou neutre</a></li>
-                                                    <li><a onClick={this.handlePublish.bind(this, advice._id, 'pe')}
-                                                        role="button">PE</a></li>
-                                                    <li><a onClick={this.handlePublish.bind(this, advice._id, 'of')}
-                                                        role="button">OF</a></li>
-                                                    <li><a onClick={this.handlePublish.bind(this, advice._id, 'cr')}
-                                                        role="button">CR</a></li>
-                                                </ul>
+                                                        role="button">Positif ou neutre</a>
+                                                    <a className="dropdown-item" onClick={this.handlePublish.bind(this, advice._id, 'pe')}
+                                                        role="button">PE</a>
+                                                    <a className="dropdown-item" onClick={this.handlePublish.bind(this, advice._id, 'of')}
+                                                        role="button">OF</a>
+                                                    <a className="dropdown-item" onClick={this.handlePublish.bind(this, advice._id, 'cr')}
+                                                        role="button">CR</a>
+                                                </div>
                                             </div>}
 
                                             <button className="btn btn-primary btn-xs"
                                                 onClick={this.handleEdit.bind(this, advice._id)}>
-                                                <i className="glyphicon glyphicon-edit"></i> Modifier
+                                                <span className="oi oi-pencil"></span> Modifier
                                             </button>
                                         </div>
                                     </div>
@@ -343,7 +344,7 @@ export default class ModerationPanel extends React.Component {
                                                     className="btn btn-default dropdown-toggle btn-success btn-xs"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <i className="glyphicon glyphicon-ok-circle"></i> Valider et Publier
+                                                    <span className="oi oi-circle-check"></span> Valider et Publier
                                                 </button>
                                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                                                     <li className="dropdown-header">Qualification</li>
@@ -360,9 +361,8 @@ export default class ModerationPanel extends React.Component {
                                                 </ul>
                                             </div>
 
-                                            <button className="btn btn-danger btn-xs"
-                                                onClick={this.handleCancel.bind(this, advice._id)}><i
-                                                    className="glyphicon glyphicon-ban-circle"></i> Annuler
+                                            <button className="btn btn-danger btn-xs" onClick={this.handleCancel.bind(this, advice._id)}>
+                                                <span className="oi oi-circle-x"></span> Annuler
                                             </button>
                                         </div>
                                     </div>

@@ -1,22 +1,33 @@
 import React from 'react';
 
-export const Stars = props => {
+import PropTypes from 'prop-types';
 
-    const max = 5;
+const MAX_STARS = 5;
 
-    let rate = Math.round(props.value);
+export default class Stars extends React.PureComponent {
 
-    let starArray = null;
-    if (props.value != null) {
-        starArray = new Array(max).fill('glyphicon glyphicon-star', 0, rate).fill('glyphicon glyphicon-star-empty', rate, max);
+    state = {
+        starArray: []
     }
 
-    return (
-        <div className="Stars">
-            {starArray && starArray.map((star, index) =>
-                <i key={index} className={star}></i>
-            )}
-            {starArray === null && <span className="invalid">Note invalide</span>}
-        </div>
-    );
-};
+    static propTypes = {
+        value: PropTypes.number.isRequired
+    }
+
+    constructor(props) {
+        super(props);
+        if (props.value !== null) {
+            this.state.starArray = new Array(MAX_STARS).fill('oi oi-star', 0, props.value);
+        }
+    }
+
+    render() {
+        return (
+            <div className="Stars">
+                {this.state.starArray.map((star, index) =>
+                    <span key={index} className={star}></span>
+                )}
+            </div>
+        );
+    }
+}
