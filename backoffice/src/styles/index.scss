@@ -8,6 +8,10 @@ body {
     font-family: sans-serif;
 }
 
+.hidden {
+    display: none;
+}
+
 .App-logo {
     background-color: white;
     border-radius: 20px;
@@ -486,8 +490,6 @@ body {
 .SessionStats .rates .title .Stars {
     margin: 0px 10px;
 }
-
-
 
 .SessionStats .rates ul {
     list-style: none;
