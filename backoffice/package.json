@@ -5,7 +5,7 @@
   "author": "Loïc Guillois <loic@fitlab.fr>",
   "repository": {
     "type": "git",
-    "url": "git@git.beta.pole-emploi.fr:labonneformation/anotea.git"
+    "url": "git@github.com:StartupsPoleEmploi/anotea.git"
   },
   "contributors": [
     "Loïc Guillois <loic@fitlab.fr>",
