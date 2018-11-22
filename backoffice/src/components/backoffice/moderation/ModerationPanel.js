@@ -291,16 +291,15 @@ export default class ModerationPanel extends React.Component {
                                                     aria-haspopup="true" aria-expanded="true">
                                                     <span className="oi oi-circle-x"></span> Rejeter
                                                 </button>
-                                                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                                    <li className="dropdown-header">Motif de rejet</li>
-                                                    <li><a onClick={this.handleReject.bind(this, advice._id, 'injure')}
-                                                        role="button">Injure</a></li>
-                                                    <li><a onClick={this.handleReject.bind(this, advice._id, 'alerte')}
-                                                        role="button">Alerte</a></li>
-                                                    <li><a
-                                                        onClick={this.handleReject.bind(this, advice._id, 'non concerné')}
-                                                        role="button">Non concerné</a></li>
-                                                </ul>
+                                                <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                    <h6 className="dropdown-header">Motif de rejet</h6>
+                                                    <a className="dropdown-item" onClick={this.handleReject.bind(this, advice._id, 'injure')}
+                                                        role="button">Injure</a>
+                                                    <a className="dropdown-item" onClick={this.handleReject.bind(this, advice._id, 'alerte')}
+                                                        role="button">Alerte</a>
+                                                    <a className="dropdown-item" onClick={this.handleReject.bind(this, advice._id, 'non concerné')}
+                                                        role="button">Non concerné</a>
+                                                </div>
                                             </div>}
 
                                             {(!advice.published || this.state.tab === 'reported') &&
@@ -346,19 +345,19 @@ export default class ModerationPanel extends React.Component {
                                                     aria-haspopup="true" aria-expanded="true">
                                                     <span className="oi oi-circle-check"></span> Valider et Publier
                                                 </button>
-                                                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                                    <li className="dropdown-header">Qualification</li>
-                                                    <li><a onClick={this.handleUpdate.bind(this, advice._id, 'négatif')}
-                                                        role="button">Négatif</a></li>
-                                                    <li><a onClick={this.handleUpdate.bind(this, advice._id, 'positif')}
-                                                        role="button">Positif ou neutre</a></li>
-                                                    <li><a onClick={this.handleUpdate.bind(this, advice._id, 'pe')}
-                                                        role="button">PE</a></li>
-                                                    <li><a onClick={this.handleUpdate.bind(this, advice._id, 'of')}
-                                                        role="button">OF</a></li>
-                                                    <li><a onClick={this.handleUpdate.bind(this, advice._id, 'cr')}
-                                                        role="button">CR</a></li>
-                                                </ul>
+                                                <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                    <h6 className="dropdown-header">Qualification</h6>
+                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'négatif')}
+                                                        role="button">Négatif</a>
+                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'positif')}
+                                                        role="button">Positif ou neutre</a>
+                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'pe')}
+                                                        role="button">PE</a>
+                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'of')}
+                                                        role="button">OF</a>
+                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'cr')}
+                                                        role="button">CR</a>
+                                                </div>
                                             </div>
 
                                             <button className="btn btn-danger btn-sm" onClick={this.handleCancel.bind(this, advice._id)}>
