@@ -468,31 +468,41 @@ export default class OrganisationPanel extends React.Component {
                             {currentEntity && this.state.pagination.count > 1 &&
                             <ReactPaginate previousLabel={'<'}
                                 nextLabel={'>'}
-                                breakLabel={<a href="">...</a>}
-                                breakClassName={'break-me'}
                                 pageCount={this.state.pagination.count}
                                 forcePage={this.state.pagination.current - 1}
                                 marginPagesDisplayed={2}
                                 pageRangeDisplayed={5}
                                 onPageChange={this.handlePageClick}
-                                containerClassName={'pagination'}
-                                subContainerClassName={'pages pagination'}
+                                breakClassName="page-item"
+                                breakLabel={<a className="page-link">...</a>}
+                                pageClassName="page-item"
+                                previousClassName="page-item"
+                                nextClassName="page-item"
+                                pageLinkClassName="page-link"
+                                previousLinkClassName="page-link"
+                                nextLinkClassName="page-link"
                                 activeClassName={'active'}
+                                containerClassName={'pagination'}
                                 disableInitialCallback={true} />
                             }
                             {!currentEntity && this.state.pagination.count > 1 &&
                             <ReactPaginate previousLabel={'<'}
                                 nextLabel={'>'}
-                                breakLabel={<a href="">...</a>}
-                                breakClassName={'break-me'}
                                 pageCount={this.state.pagination.count}
                                 forcePage={this.state.pagination.current - 1}
                                 marginPagesDisplayed={2}
                                 pageRangeDisplayed={5}
                                 onPageChange={this.handlePageClickWhenSelectingPlace}
-                                containerClassName={'pagination'}
-                                subContainerClassName={'pages pagination'}
+                                breakClassName="page-item"
+                                breakLabel={<a className="page-link">...</a>}
+                                pageClassName="page-item"
+                                previousClassName="page-item"
+                                nextClassName="page-item"
+                                pageLinkClassName="page-link"
+                                previousLinkClassName="page-link"
+                                nextLinkClassName="page-link"
                                 activeClassName={'active'}
+                                containerClassName={'pagination'}
                                 disableInitialCallback={true} />
                             }
                         </div>
