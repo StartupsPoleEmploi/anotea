@@ -1,8 +1,6 @@
 const path = require('path');
-const moment = require('moment');
 const _ = require('lodash');
 const assert = require('assert');
-const md5File = require('md5-file/promise');
 const configuration = require('config');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const logger = require('../../../../helpers/test-logger');
@@ -42,8 +40,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let results = await db.collection('trainee').find({ 'trainee.name': 'MARTIN' }).toArray();
         assert.ok(results[0]._id);
         assert.ok(results[0].importDate);
+        assert.ok(results[0].campaignDate);
         assert.ok(results[0].token);
-        assert.deepEqual(_.omit(results[0], ['_id', 'importDate', 'token']), {
+        assert.deepEqual(_.omit(results[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-pe',
             trainee: {
                 name: 'MARTIN',
@@ -105,60 +104,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         });
     });
 
-    it('should store import status', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartements();
-
-        await importer.importTrainee(csvFile, handler);
-
-        let hash = await md5File(csvFile);
-        let status = await db.collection('importTrainee').findOne();
-        assert.deepEqual(_.omit(status, ['_id', 'date']), {
-            campaign: 'stagiaires-pe',
-            hash,
-        });
-    });
-
-    it('should compute stats after a CSV has been imported', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartements();
-
-        let results = await importer.importTrainee(csvFile, handler);
-
-        assert.deepEqual(results, {
-            invalid: 0,
-            ignored: 0,
-            imported: 4,
-            total: 4,
-        });
-    });
-
-    it('cannot import same CSV twice', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartements();
-
-        await importer.importTrainee(csvFile, handler);
-
-        try {
-            await importer.importTrainee(csvFile, handler);
-            assert.fail('Should have fail');
-        } catch (e) {
-            assert.ok(e.message.indexOf('already imported') !== -1);
-        }
-    });
-
     it('should fail to import trainee when codeRegion can not be found', async () => {
 
         let db = await getTestDatabase();
@@ -177,20 +122,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 total: 4,
             });
         }
-    });
-
-    it('should fail to import trainee with invalid email', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-email.csv');
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartements();
-
-        await importer.importTrainee(csvFile, handler);
-
-        let count = await db.collection('trainee').countDocuments();
-        assert.equal(count, 0);
     });
 
     it('should ignore trainee with not active region', async () => {
@@ -227,111 +158,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             ignored: 1,
             imported: 0,
             total: 1,
-        });
-    });
-
-    it('can filter trainee by region', async () => {
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartements();
-
-        let results = await importer.importTrainee(csvFile, handler, {
-            codeRegion: '2'
-        });
-
-        let doc = await db.collection('trainee').findOne();
-        assert.ok(doc.trainee);
-        assert.deepEqual(doc.trainee.email, 'email_4@pe.com');
-        assert.deepEqual(results, {
-            invalid: 0,
-            ignored: 3,
-            imported: 1,
-            total: 4,
-        });
-    });
-
-    it('can filter trainee by session date', async () => {
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartements();
-
-        let results = await importer.importTrainee(csvFile, handler, {
-            startDate: moment('2018-09-01 00Z').toDate(),
-        });
-
-        let doc = await db.collection('trainee').findOne();
-        assert.ok(doc.trainee);
-        assert.deepEqual(doc.trainee.email, 'email_4@pe.com');
-        assert.deepEqual(results, {
-            invalid: 0,
-            ignored: 3,
-            imported: 1,
-            total: 4,
-        });
-    });
-
-    it('should filter trainee by code financeur (inclusion)', async () => {
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-filtered.csv');
-        let importer = traineeImporter(db, logger);
-        await insertDepartements();
-        let handler = poleEmploiCSVHandler(db, logger, _.merge(configuration, {
-            app: {
-                active_regions: [
-                    {
-                        code_region: '2',
-                        filters: {
-                            code_financeurs: ['4']
-                        }
-                    }
-                ]
-            }
-        }));
-
-        let results = await importer.importTrainee(csvFile, handler);
-
-        let doc = await db.collection('trainee').findOne({ 'trainee.email': 'email@pe.com' });
-        assert.ok(doc.trainee);
-        assert.deepEqual(doc.trainee.email, 'email@pe.com');
-        assert.deepEqual(results, {
-            invalid: 0,
-            ignored: 1,
-            imported: 2,
-            total: 3,
-        });
-    });
-
-    it('should filter trainee by code financeur (exclusion)', async () => {
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-filtered.csv');
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, Object.assign({}, configuration, {
-            app: {
-                active_regions: [
-                    {
-                        code_region: '2',
-                        filters: {
-                            code_financeurs: ['-4']
-                        }
-                    }
-                ]
-            }
-        }));
-        await insertDepartements();
-
-        let results = await importer.importTrainee(csvFile, handler);
-
-        let doc = await db.collection('trainee').findOne();
-        assert.deepEqual(doc.trainee.email, 'email_4@pe.fr');
-        assert.deepEqual(results, {
-            invalid: 0,
-            ignored: 2,
-            imported: 1,
-            total: 3,
         });
     });
 
