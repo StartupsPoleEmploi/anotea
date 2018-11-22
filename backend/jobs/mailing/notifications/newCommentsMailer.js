@@ -1,10 +1,19 @@
+const moment = require('moment');
 const getContactEmail = require('../../../components/getContactEmail');
 
 module.exports = (db, logger, configuration, mailer) => {
 
     const findOrganismes = async () => {
         logger.info('Searching organismes with at least 5 non read comments...');
-        return await db.collection('organismes').find({ 'meta.nbAvis': { $gte: 5 } }).limit(configuration.app.mailer.limit);
+        return await db.collection('organismes')
+        .find({
+            'meta.nbAvis': { $gte: 5 },
+            '$or': [
+                { 'newCommentsNotificationEmailSentDate': { $lte: moment().subtract('15', 'days').toDate() } },
+                { 'newCommentsNotificationEmailSentDate': null },
+            ]
+        })
+        .limit(configuration.app.mailer.limit);
     };
 
     const getFirstUnreadComment = async organisme => {
@@ -13,6 +22,14 @@ module.exports = (db, logger, configuration, mailer) => {
             'comment': { $ne: null },
             'read': { $ne: true },
             'published': true
+        });
+    };
+
+    const markEmailAsSent = async organisme => {
+        return await db.collection('organismes').updateOne({ _id: organisme._id }, {
+            $set: {
+                newCommentsNotificationEmailSentDate: new Date(),
+            }
         });
     };
 
@@ -36,6 +53,7 @@ module.exports = (db, logger, configuration, mailer) => {
                 try {
                     logger.info(`Sending email to ${organisme.courriel}`);
                     await sendEmail(organisme);
+                    await markEmailAsSent(organisme);
                     total++;
                 } catch (e) {
                     logger.error('Unable to send email: ', e);
