@@ -5,11 +5,13 @@ module.exports = (db, logger, configuration, mailer) => {
 
     const findOrganismes = async () => {
         logger.info('Searching organismes with at least 5 non read comments...');
+        let delay = configuration.smtp.organisme.newCommentsNotificationRelaunchDelay;
+
         return await db.collection('organismes')
         .find({
             'meta.nbAvis': { $gte: 5 },
             '$or': [
-                { 'newCommentsNotificationEmailSentDate': { $lte: moment().subtract('15', 'days').toDate() } },
+                { 'newCommentsNotificationEmailSentDate': { $lte: moment().subtract(delay, 'days').toDate() } },
                 { 'newCommentsNotificationEmailSentDate': null },
             ]
         })

@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const { newComment, newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const newOrganismeMailer = require('../../../../../jobs/mailing/organismes/account/newOrganismeMailer');
+const newAccountMailer = require('../../../../../jobs/mailing/organismes/account/newAccountMailer');
 
 let fakeMailer = spy => {
     return {
@@ -16,7 +16,7 @@ let fakeMailer = spy => {
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    it('should send email to a single organisme', async () => {
+    it('should send email by siret', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -34,14 +34,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
+                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 mailSentDate: null,
             })),
         ]);
 
-        let mailer = newOrganismeMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await mailer.sendEmailBySiret('31705038300064');
+        let { sendEmailBySiret } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await sendEmailBySiret('31705038300064');
 
         assert.deepEqual(results, { mailSent: 1 });
         assert.deepEqual(spy, [{
@@ -49,7 +50,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         }]);
     });
 
-    it('should send email to organismes with at least one comment', async () => {
+    it('should send emails by region', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -67,6 +68,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
+                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 passwordHash: null,
@@ -77,6 +79,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _id: 11111111111111,
                 SIRET: 11111111111111,
                 meta: {
+                    nbAvis: 0,
                     siretAsString: '11111111111111',
                 },
                 passwordHash: null,
@@ -85,8 +88,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let mailer = newOrganismeMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await mailer.sendEmailsByRegion('11');
+        let { sendEmailsByRegion } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await sendEmailsByRegion('11');
 
         assert.deepEqual(results, { mailSent: 1 });
         assert.deepEqual(spy, [{
@@ -112,14 +115,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
+                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 mailSentDate: new Date(),
             })),
         ]);
 
-        let mailer = newOrganismeMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await mailer.sendEmailsByRegion('11');
+        let { sendEmailsByRegion } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await sendEmailsByRegion('11');
 
         assert.deepEqual(results, { mailSent: 0 });
         assert.deepEqual(spy, []);
@@ -143,14 +147,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
+                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 codeRegion: '17',
             })),
         ]);
 
-        let mailer = newOrganismeMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await mailer.sendEmailsByRegion('11');
+        let { sendEmailsByRegion } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await sendEmailsByRegion('11');
 
         assert.deepEqual(results, { mailSent: 0 });
         assert.deepEqual(spy, []);
