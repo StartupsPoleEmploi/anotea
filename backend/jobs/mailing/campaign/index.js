@@ -23,6 +23,7 @@ const main = async () => {
     const logger = getLogger('anotea-job-email-campaign', configuration);
 
     cli.description('send email campaign')
+    .option('-c, --campaign [campaign]', 'Limit emailing to the campaign name')
     .option('-s, --resend', 'Resend an email to trainee that did\'nt submit an advice')
     .option('-t, --retry', 'Resend every email with an SMTP error')
     .parse(process.argv);
@@ -32,7 +33,7 @@ const main = async () => {
     } else if (cli.retry) {
         require('./mailerCampaignRetry.js')(db, logger, configuration);
     } else {
-        require('./mailerCampaign')(db, logger, configuration);
+        require('./mailerCampaign')(db, logger, configuration, { campaign: cli.campaign });
     }
 };
 
