@@ -5,7 +5,6 @@ module.exports = (db, logger, configuration, mailer) => {
     let organismes = db.collection('organismes');
 
     const findOrganismesByRegion = async region => {
-
         logger.debug('Searching organismes with at least one comment...');
         return await db.collection('organismes')
         .find({

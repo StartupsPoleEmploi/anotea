@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const { newComment, newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const newOrganismeMailer = require('../../../../../jobs/mailing/organismes/account/newOrganismeMailer');
+const newAccountMailer = require('../../../../../jobs/mailing/organismes/account/newAccountMailer');
 
 let fakeMailer = spy => {
     return {
@@ -41,8 +41,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let mailer = newOrganismeMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await mailer.sendEmailBySiret('31705038300064');
+        let { sendEmailBySiret } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await sendEmailBySiret('31705038300064');
 
         assert.deepEqual(results, { mailSent: 1 });
         assert.deepEqual(spy, [{
@@ -88,8 +88,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let mailer = newOrganismeMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await mailer.sendEmailsByRegion('11');
+        let { sendEmailsByRegion } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await sendEmailsByRegion('11');
 
         assert.deepEqual(results, { mailSent: 1 });
         assert.deepEqual(spy, [{
@@ -122,8 +122,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let mailer = newOrganismeMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await mailer.sendEmailsByRegion('11');
+        let { sendEmailsByRegion } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await sendEmailsByRegion('11');
 
         assert.deepEqual(results, { mailSent: 0 });
         assert.deepEqual(spy, []);
@@ -154,8 +154,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let mailer = newOrganismeMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await mailer.sendEmailsByRegion('11');
+        let { sendEmailsByRegion } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await sendEmailsByRegion('11');
 
         assert.deepEqual(results, { mailSent: 0 });
         assert.deepEqual(spy, []);

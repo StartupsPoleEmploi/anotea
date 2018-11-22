@@ -1,21 +1,26 @@
+const moment = require('moment');
 const getContactEmail = require('../../../../components/getContactEmail');
 
 module.exports = (db, logger, configuration, mailer) => {
 
     let organismes = db.collection('organismes');
 
-    const findOrganismes = async => {
-        const lastWeek = new Date();
-        lastWeek.setDate(lastWeek.getDate() - configuration.smtp.relaunchDelay);
+    const findOrganismes = async () => {
+        logger.debug('Searching organismes with at least one comment that didn\'t create an account yet...');
+        let delay = configuration.smtp.organisme.newAccountRelaunchDelay;
 
-        logger.debug('Searching organismes with at least one comment that didn\'t create an account...');
-        return await organismes.find({  mailSentDate: {  $ne: null }, 
-                                        mailSentDate: { $lte: lastWeek.toString() },
-                                        passwordHash: null,
-                                        resend: {  $ne: true }
-                                    })
-                                    .sort({ mailSentDate: -1 })
-                                    .limit(configuration.app.mailer.limit);
+        return await db.collection('organismes')
+        .find({
+            'meta.nbAvis': { $gte: 1 },
+            '$and': [
+                { mailSentDate: { $ne: null } },
+                { mailSentDate: { $lte: moment().subtract(delay, 'days').toDate() } },
+            ],
+            'passwordHash': null,
+            'resend': { $ne: true }
+        })
+        .sort({ mailSentDate: -1 })
+        .limit(configuration.app.mailer.limit);
     };
 
     const sendEmail = organisme => {
@@ -49,16 +54,16 @@ module.exports = (db, logger, configuration, mailer) => {
     };
 
     return {
-        sendEmails: async region => {
+        resendEmails: async () => {
             let total = 0;
             let cursor = await findOrganismes();
             while (await cursor.hasNext()) {
-                let results = await cursor.next();
+                let organisme = await cursor.next();
                 try {
-                    await sendEmail(results.organisme);
+                    await sendEmail(organisme);
                     total++;
                 } catch (e) {
-                    await handleSendError(results.organisme, e);
+                    await handleSendError(organisme, e);
                 }
             }
             return {
