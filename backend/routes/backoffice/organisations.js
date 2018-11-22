@@ -440,16 +440,14 @@ module.exports = (db, authService, logger, configuration) => {
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
         if (organisme) {
-            if (!organisme.passwordHash) {
-                await db.collection('organismes').update({ _id: id }, { $set: { editedEmail: email } });
-                saveEvent(id, 'editEmail', {
-                    app: 'moderation',
-                    profile: 'moderateur',
-                    user: 'admin',
-                    ip: getRemoteAddress(req)
-                });
-                res.status(201).send({ 'status': 'OK' });
-            }
+            await db.collection('organismes').update({ _id: id }, { $set: { editedEmail: email } });
+            saveEvent(id, 'editEmail', {
+                app: 'moderation',
+                profile: 'moderateur',
+                user: 'admin',
+                ip: getRemoteAddress(req)
+            });
+            res.status(201).send({ 'status': 'OK' });
         } else {
             throw Boom.notFound('Not found');
         }
@@ -464,16 +462,14 @@ module.exports = (db, authService, logger, configuration) => {
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
         if (organisme) {
-            if (!organisme.passwordHash) {
-                await db.collection('organismes').update({ _id: id }, { $unset: { editedEmail: '' } });
-                saveEvent(id, 'deleteEmail', {
-                    app: 'moderation',
-                    profile: 'moderateur',
-                    user: 'admin',
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'status': 'OK' });
-            }
+            await db.collection('organismes').update({ _id: id }, { $unset: { editedEmail: '' } });
+            saveEvent(id, 'deleteEmail', {
+                app: 'moderation',
+                profile: 'moderateur',
+                user: 'admin',
+                ip: getRemoteAddress(req)
+            });
+            res.status(200).send({ 'status': 'OK' });
         } else {
             throw Boom.notFound('Not found');
         }
