@@ -9,7 +9,7 @@ module.exports = function(db, logger, configuration) {
         logger.info('Organisation edited email import - launch');
 
         const mailer = require('../../../components/mailer.js')(db, logger, configuration);
-        const newOrganismeMailer = require('../../mailing/account/newOrganismeMailer')(db, logger, configuration, mailer);
+        const newOrganismeMailer = require('../../mailing/organismes/account/newOrganismeMailer')(db, logger, configuration, mailer);
 
         const launchTime = new Date().getTime();
         let parser = parse({ delimiter: ',', quote: '"' });

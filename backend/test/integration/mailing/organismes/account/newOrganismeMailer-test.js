@@ -1,9 +1,9 @@
 const configuration = require('config');
 const assert = require('assert');
-const { withMongoDB } = require('../../../helpers/test-db');
-const { newComment, newOrganismeAccount } = require('../../../helpers/data/dataset');
-const logger = require('../../../helpers/test-logger');
-const newOrganismeMailer = require('../../../../jobs/mailing/account/newOrganismeMailer');
+const { withMongoDB } = require('../../../../helpers/test-db');
+const { newComment, newOrganismeAccount } = require('../../../../helpers/data/dataset');
+const logger = require('../../../../helpers/test-logger');
+const newOrganismeMailer = require('../../../../../jobs/mailing/organismes/account/newOrganismeMailer');
 
 let fakeMailer = spy => {
     return {

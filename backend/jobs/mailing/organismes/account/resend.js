@@ -1,4 +1,4 @@
-const getContactEmail = require('../../../components/getContactEmail');
+const getContactEmail = require('../../../../components/getContactEmail');
 
 module.exports = (db, logger, configuration, mailer) => {
 
