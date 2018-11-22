@@ -276,6 +276,8 @@ export default class OrganisationPanel extends React.Component {
         });
     };
 
+    getActiveStatus = current => this.state.tab === current ? 'active' : '';
+
     render() {
         const { currentEntity, entities } = this.state.training;
 
@@ -310,25 +312,25 @@ export default class OrganisationPanel extends React.Component {
 
                     <div className="avis">
                         <ul className="nav nav-tabs">
-                            <li role="presentation" {...this.state.tab === 'unread' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'unread')}>Nouveaux <span
-                                    className="badge reported">{this.state.inventory.unread}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('unread')}`} onClick={this.switchTab.bind(this, 'unread')}>Nouveaux <span
+                                    className="badge reported">{this.state.inventory.unread}</span></button>
                             </li>
-                            <li role="presentation" {...this.state.tab === 'reported' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'reported')}>Signalés <span
-                                    className="badge rejected">{this.state.inventory.reported}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('reported')}`}onClick={this.switchTab.bind(this, 'reported')}>Signalés <span
+                                    className="badge rejected">{this.state.inventory.reported}</span></button>
                             </li>
-                            <li role="presentation" {...this.state.tab === 'answered' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'answered')}>Répondus <span
-                                    className="badge published">{this.state.inventory.answered}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('answered')}`} onClick={this.switchTab.bind(this, 'answered')}>Répondus <span
+                                    className="badge published">{this.state.inventory.answered}</span></button>
                             </li>
-                            <li role="presentation" {...this.state.tab === 'read' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'read')}>Lus <span
-                                    className="badge toModerate">{this.state.inventory.read}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('read')}`} onClick={this.switchTab.bind(this, 'read')}>Lus <span
+                                    className="badge toModerate">{this.state.inventory.read}</span></button>
                             </li>
-                            <li role="presentation" {...this.state.tab === 'all' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et
-                                    avis <span className="badge">{this.state.inventory.all}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et
+                                    avis <span className="badge">{this.state.inventory.all}</span></button>
                             </li>
                         </ul>
 
