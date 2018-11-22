@@ -25,7 +25,7 @@ export default class Stars extends React.PureComponent {
         return (
             <div className="Stars">
                 {this.state.starArray.map((star, index) =>
-                    <img key={index} src={`/images/${star}.png`} style={{ width: '25px', opacity: star === 'star_empty' ? '0.6' : '1' }} />
+                    <img key={index} src={`${process.env.PUBLIC_URL}/images/${star}.png`} style={{ width: '25px', opacity: star === 'star_empty' ? '0.6' : '1' }} />
                 )}
             </div>
         );
