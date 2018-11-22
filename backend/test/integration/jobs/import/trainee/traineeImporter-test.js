@@ -45,6 +45,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             campaign: 'stagiaires-pe',
             file: csvFile,
             hash,
+            filters: {},
             stats: {
                 ignored: 0,
                 imported: 4,
@@ -72,6 +73,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             campaignDate: new Date('2018-11-20T00:00:00.000Z'),
             file: csvFile,
             hash,
+            filters: {},
             stats: {
                 ignored: 0,
                 imported: 1,
