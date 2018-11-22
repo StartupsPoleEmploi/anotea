@@ -4,8 +4,8 @@
 const moment = require('moment');
 const cli = require('commander');
 const configuration = require('config');
-const getMongoClient = require('../../../components/mongodb');
-const getLogger = require('../../../components/logger');
+const getMongoClient = require('../../../../components/mongodb');
+const getLogger = require('../../../../components/logger');
 const createNewOrganismeMailer = require('./newOrganismeMailer');
 
 const main = async () => {
@@ -14,7 +14,7 @@ const main = async () => {
     let client = await getMongoClient(configuration.mongodb.uri);
     let db = client.db();
     let logger = getLogger('anotea-job-mailing-account', configuration);
-    let mailer = require('../../../components/mailer.js')(db, logger, configuration);
+    let mailer = require('../../../../components/mailer.js')(db, logger, configuration);
     let newOrganismeMailer = createNewOrganismeMailer(db, logger, configuration, mailer);
 
     const abort = message => {
