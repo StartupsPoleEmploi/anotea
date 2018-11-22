@@ -29,6 +29,7 @@ module.exports = () => {
         },
         shouldBeImported: async trainee => trainee.trainee.emailValid && trainee.training.infoCarif.numeroSession === null,
         buildTrainee: (record, campaign) => {
+
             try {
                 if (_.isEmpty(record)) {
                     return Promise.reject(new Error('Invalid record length'));
@@ -38,7 +39,8 @@ module.exports = () => {
 
                 let obj = {
                     _id: campaign + '/' + token,
-                    campaign: campaign,
+                    campaign: campaign.name,
+                    campaignDate: campaign.date,
                     importDate: new Date(),
                     sourceIDF: true,
                     unsubscribe: false,

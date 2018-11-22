@@ -40,8 +40,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let results = await db.collection('trainee').find({ 'trainee.name': 'MARTIN' }).toArray();
         assert.ok(results[0]._id);
         assert.ok(results[0].importDate);
+        assert.ok(results[0].campaignDate);
         assert.ok(results[0].token);
-        assert.deepEqual(_.omit(results[0], ['_id', 'importDate', 'token']), {
+        assert.deepEqual(_.omit(results[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-pe',
             trainee: {
                 name: 'MARTIN',

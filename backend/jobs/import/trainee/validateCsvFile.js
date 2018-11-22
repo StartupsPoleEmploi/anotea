@@ -1,15 +1,10 @@
-const path = require('path');
 const fs = require('fs');
 const md5 = require('md5');
 const parse = require('csv-parse');
 const readline = require('readline');
 const _ = require('underscore');
 const validateTrainee = require('./validateTrainee');
-
-const getCampaignName = file => {
-    const filename = path.basename(file);
-    return filename.substring(0, filename.length - 4);
-};
+const { getCampaignDate, getCampaignName } = require('./utils');
 
 const ValidationErrorTypes = Object.freeze({
     BAD_HEADER: { name: 'BAD_HEADER', message: 'du format non conforme' },
@@ -31,7 +26,10 @@ const isLineDuplicated = (lines, rawLine) => {
 const isLineValid = (file, handler, rawLine) => {
     return new Promise((resolve, reject) => {
 
-        let campaign = getCampaignName(file);
+        let campaign = {
+            name: getCampaignName(file),
+            date: getCampaignDate(file),
+        };
 
         parse(rawLine, handler.csvOptions, async (err, data) => {
 

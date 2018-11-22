@@ -24,8 +24,9 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         let docs = await db.collection('trainee').find({ 'trainee.email': 'email1@pe.fr' }).toArray();
         assert.ok(docs[0]._id);
         assert.ok(docs[0].importDate);
+        assert.ok(docs[0].campaignDate);
         assert.ok(docs[0].token);
-        assert.deepEqual(_.omit(docs[0], ['_id', 'importDate', 'token']), {
+        assert.deepEqual(_.omit(docs[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-idf',
             sourceIDF: true,
             trainee: {

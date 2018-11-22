@@ -1,31 +1,20 @@
-const path = require('path');
 const fs = require('fs');
-const moment = require('moment');
 const parse = require('csv-parse');
 const md5File = require('md5-file/promise');
 const validateTrainee = require('./validateTrainee');
 const { handleBackPressure } = require('../../utils');
-
-const getCampaignName = file => {
-    const filename = path.basename(file);
-    return filename.substring(0, filename.length - 4);
-};
-
-const getCampaignDate = file => {
-    const name = getCampaignName(file);
-    let array = name.split('_');
-    let dateAsString = array[array.length - 1];
-    let date = new Date(dateAsString);
-    return moment(date).isValid() ? date : new Date();
-};
+const { getCampaignDate, getCampaignName } = require('./utils');
 
 module.exports = (db, logger) => {
 
     return {
         importTrainee: async (file, handler, filters = {}) => {
 
-            let campaign = getCampaignName(file);
             let hash = await md5File(file);
+            let campaign = {
+                name: getCampaignName(file),
+                date: getCampaignDate(file),
+            };
 
             const shouldBeImported = async trainee => {
                 let sameRegion = !filters.codeRegion || filters.codeRegion === trainee.codeRegion;
@@ -40,7 +29,7 @@ module.exports = (db, logger) => {
                     reject(new Error(`CSV file ${file} already imported`));
                 } else {
 
-                    logger.info(`Trainee import ${handler.name}/${campaign}...`);
+                    logger.info(`Trainee import ${handler.name}/${campaign.name}...`);
 
                     let stats = {
                         total: 0,
@@ -82,8 +71,8 @@ module.exports = (db, logger) => {
                         try {
                             await db.collection('importTrainee').insertOne({
                                 hash,
-                                campaign,
-                                campaignDate: getCampaignDate(file),
+                                campaign: campaign.name,
+                                campaignDate: campaign.date,
                                 file,
                                 stats: stats,
                                 date: new Date(),
