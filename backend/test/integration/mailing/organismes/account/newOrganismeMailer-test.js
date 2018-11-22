@@ -16,7 +16,7 @@ let fakeMailer = spy => {
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    it('should send email to a single organisme', async () => {
+    it('should send email by siret', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -34,6 +34,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
+                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 mailSentDate: null,
@@ -49,7 +50,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         }]);
     });
 
-    it('should send email to organismes with at least one comment', async () => {
+    it('should send emails by region', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -67,6 +68,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
+                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 passwordHash: null,
@@ -77,6 +79,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _id: 11111111111111,
                 SIRET: 11111111111111,
                 meta: {
+                    nbAvis: 0,
                     siretAsString: '11111111111111',
                 },
                 passwordHash: null,
@@ -112,6 +115,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
+                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 mailSentDate: new Date(),
@@ -143,6 +147,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
+                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 codeRegion: '17',

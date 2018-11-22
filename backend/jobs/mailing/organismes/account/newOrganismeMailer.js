@@ -4,68 +4,18 @@ module.exports = (db, logger, configuration, mailer) => {
 
     let organismes = db.collection('organismes');
 
-    const findOrganismes = async region => {
+    const findOrganismesByRegion = async region => {
 
         logger.debug('Searching organismes with at least one comment...');
-        return await organismes.aggregate([
-            {
-                $match: {
-                    passwordHash: null,
-                    mailSentDate: null,
-                    sources: { $ne: null },
-                    codeRegion: region,
-                }
-            },
-            {
-                $lookup: {
-                    from: 'comment',
-                    let: {
-                        siret: '$meta.siretAsString'
-                    },
-                    pipeline: [
-                        {
-                            $project: {
-                                'training.organisation.siret': 1,
-                            }
-                        },
-                        {
-                            $match: {
-                                $expr: { $eq: ['$training.organisation.siret', '$$siret'] }
-                            }
-                        },
-                        {
-                            $count: 'nbComments'
-                        }
-                    ],
-                    as: 'results'
-                }
-
-            },
-            {
-                $unwind:
-                    {
-                        path: '$results',
-                        preserveNullAndEmptyArrays: true
-                    }
-            },
-            {
-                $replaceRoot: {
-                    newRoot: {
-                        _id: '$_id',
-                        organisme: '$$ROOT',
-                        nbComments: '$results.nbComments',
-                    }
-                }
-            },
-            {
-                $match: {
-                    nbComments: {
-                        $gte: 1
-                    },
-                }
-            }
-        ]).limit(configuration.app.mailer.limit);
-
+        return await db.collection('organismes')
+        .find({
+            'passwordHash': null,
+            'mailSentDate': null,
+            'sources': { $ne: null },
+            'codeRegion': region,
+            'meta.nbAvis': { $gte: 1 },
+        })
+        .limit(configuration.app.mailer.limit);
     };
 
     const sendEmail = organisme => {
@@ -100,14 +50,14 @@ module.exports = (db, logger, configuration, mailer) => {
     return {
         sendEmailsByRegion: async region => {
             let total = 0;
-            let cursor = await findOrganismes(region);
+            let cursor = await findOrganismesByRegion(region);
             while (await cursor.hasNext()) {
-                let results = await cursor.next();
+                let organisme = await cursor.next();
                 try {
-                    await sendEmail(results.organisme);
+                    await sendEmail(organisme);
                     total++;
                 } catch (e) {
-                    await handleSendError(results.organisme, e);
+                    await handleSendError(organisme, e);
                 }
             }
             return {
