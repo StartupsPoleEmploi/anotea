@@ -43,8 +43,8 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                 idFormation: null,
                 origineSession: null,
                 title: 'ANOTEA FORMATION',
-                startDate: new Date('2017-03-14T23:00:00.000Z'),
-                scheduledEndDate: new Date('2018-08-30T22:00:00.000Z'),
+                startDate: new Date('2017-03-15T00:00:00.000Z'),
+                scheduledEndDate: new Date('2018-08-31T00:00:00.000Z'),
                 organisation: {
                     id: null,
                     siret: '77568497000673',

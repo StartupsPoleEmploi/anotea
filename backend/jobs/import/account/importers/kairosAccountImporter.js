@@ -1,9 +1,11 @@
 const fs = require('fs');
 const parse = require('csv-parse');
 const uuid = require('node-uuid');
-const moment = require('moment-timezone');
+const moment = require('moment');
 const { handleBackPressure } = require('../../../utils');
 const regions = require('../../../../components/regions');
+
+const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
 
 module.exports = (db, logger) => {
 
@@ -40,8 +42,8 @@ module.exports = (db, logger) => {
                     telephoneRGC: data['Téléphone RGC'],
                     assedic: data['ASSEDIC'],
                     convention: data['convention'],
-                    dateDebut: moment.tz(data['date début'], 'DD/MM/YYYY', 'Europe/Paris').toDate(),
-                    dateFin: moment.tz(data['date fin'], 'DD/MM/YYYY', 'Europe/Paris').toDate(),
+                    dateDebut: parseDate(data['date début']),
+                    dateFin: parseDate(data['date fin']),
                 },
             }
         };

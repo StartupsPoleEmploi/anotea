@@ -1,6 +1,8 @@
 const _ = require('lodash');
+const moment = require('moment');
 const { buildToken, buildEmail } = require('../utils');
-const moment = require('moment-timezone');
+
+const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
 
 module.exports = () => {
     return {
@@ -61,8 +63,8 @@ module.exports = () => {
                         idFormation: null,
                         origineSession: null,
                         title: record['Libellé Action'],
-                        startDate: moment.tz(record['Date Entree'], 'DD/MM/YYYY', 'Europe/Paris').toDate(),
-                        scheduledEndDate: moment.tz(record['Date Sortie'], 'DD/MM/YYYY', 'Europe/Paris').toDate(),
+                        startDate: parseDate(record['Date Entree']),
+                        scheduledEndDate: parseDate(record['Date Sortie']),
                         organisation: {
                             id: null,
                             siret: record['SIRET'],

@@ -61,8 +61,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 idFormation: '14_AF_0000044465',
                 origineSession: 'C',
                 title: 'Titre professionnel',
-                startDate: new Date('2018-05-21T22:00:00.000Z'),
-                scheduledEndDate: new Date('2018-08-23T22:00:00.000Z'),
+                startDate: new Date('2018-05-22T00:00:00.000Z'),
+                scheduledEndDate: new Date('2018-08-24T00:00:00.000Z'),
                 organisation: {
                     id: '14000000000000008098',
                     siret: '82436343601230',
