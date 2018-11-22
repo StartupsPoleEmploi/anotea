@@ -87,38 +87,4 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         });
     });
 
-    it('should store import status', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-idf.csv');
-        let importer = traineeImporter(db, logger, configuration);
-        let handler = ileDeFranceCSVHandler(db, logger, configuration);
-        let hash = await md5File(csvFile);
-
-        await importer.importTrainee(csvFile, handler);
-
-        let status = await db.collection('importTrainee').findOne();
-        assert.deepEqual(_.omit(status, ['_id', 'date']), {
-            campaign: 'stagiaires-idf',
-            hash: hash,
-        });
-    });
-
-    it('cannot import same CSV twice', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-idf.csv');
-        let importer = traineeImporter(db, logger, configuration);
-        let handler = ileDeFranceCSVHandler(db, logger, configuration);
-
-        await importer.importTrainee(csvFile, handler);
-
-        try {
-            await importer.importTrainee(csvFile, handler);
-            assert.fail('Should have fail');
-        } catch (e) {
-            assert.ok(e.message.indexOf('already imported') !== -1);
-        }
-
-    });
 }));

@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const moment = require('moment');
 const parse = require('csv-parse');
 const md5File = require('md5-file/promise');
 const validateTrainee = require('./validateTrainee');
@@ -10,6 +11,14 @@ const getCampaignName = file => {
     return filename.substring(0, filename.length - 4);
 };
 
+const getCampaignDate = file => {
+    const name = getCampaignName(file);
+    let array = name.split('_');
+    let dateAsString = array[array.length - 1];
+    let date = new Date(dateAsString);
+    return moment(date).isValid() ? date : new Date();
+};
+
 module.exports = (db, logger) => {
 
     return {
@@ -18,7 +27,7 @@ module.exports = (db, logger) => {
             let campaign = getCampaignName(file);
             let hash = await md5File(file);
 
-            const shouldBeImported = async (trainee) => {
+            const shouldBeImported = async trainee => {
                 let sameRegion = !filters.codeRegion || filters.codeRegion === trainee.codeRegion;
                 let isAfter = !filters.startDate || trainee.training.scheduledEndDate > filters.startDate;
 
@@ -33,7 +42,7 @@ module.exports = (db, logger) => {
 
                     logger.info(`Trainee import ${handler.name}/${campaign}...`);
 
-                    let results = {
+                    let stats = {
                         total: 0,
                         imported: 0,
                         ignored: 0,
@@ -58,8 +67,8 @@ module.exports = (db, logger) => {
                         }
                     }))
                     .on('data', ({ trainee, status, error }) => {
-                        results.total++;
-                        results[status]++;
+                        stats.total++;
+                        stats[status]++;
 
                         if (status === 'ignored') {
                             logger.debug('Trainee ignored', trainee, {});
@@ -74,10 +83,13 @@ module.exports = (db, logger) => {
                             await db.collection('importTrainee').insertOne({
                                 hash,
                                 campaign,
+                                campaignDate: getCampaignDate(file),
+                                file,
+                                stats: stats,
                                 date: new Date(),
                             });
 
-                            return results.invalid === 0 ? resolve(results) : reject(results);
+                            return stats.invalid === 0 ? resolve(stats) : reject(stats);
 
                         } catch (e) {
                             reject(e);
