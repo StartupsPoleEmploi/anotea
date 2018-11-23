@@ -13,7 +13,7 @@ import { setToken, removeToken } from './utils/token';
 import { subscribeToHttpEvent } from './utils/http-client';
 import { getRegion } from './lib/financerService';
 import './utils/moment-fr';
-import styles from './styles/index.scss';
+import './styles/index.scss';
 
 
 addLocaleData([...fr]);
