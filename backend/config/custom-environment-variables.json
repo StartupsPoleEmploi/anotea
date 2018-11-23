@@ -1,6 +1,5 @@
 {
   "app": {
-    "env": "ANOTEA_APP_ENV",
     "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME",
     "mailer": {
       "limit": "ANOTEA_APP_MAILER_LIMIT"
