@@ -98,10 +98,7 @@ module.exports = function(db, logger, configuration) {
             if (!textOnly) {
                 mailOptions.html = values[1];
             }
-            // in DEV mode we send the email to a configured email
-            if (configuration.smtp.mailDev) {
-                mailOptions.to = configuration.smtp.mailDev;
-            }
+
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     logger.error(`An error occurs while sending mail : ${error}̀`);

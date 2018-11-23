@@ -104,7 +104,6 @@
     "hostname": "localhost",
     "greetingTimeout": 300000,
     "from": "anotea@pole-emploi.fr",
-    "mailDev": "anotea.pe@gmail.com",
     "maxRelaunch": 1,
     "relaunchDelay": 7,
     "organisme": {
