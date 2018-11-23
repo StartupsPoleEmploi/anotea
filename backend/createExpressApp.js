@@ -31,7 +31,6 @@ module.exports = (logger, configuration) => {
             let badwords = require('./components/badwords')(logger, configuration);
             let authService = new AuthService(logger, configuration);
             let app = express();
-            let devMode = app.get('env') === 'development';
 
             app.use(cookieParser(configuration.security.secret));
             app.use(express.static(path.join(__dirname, '/public')));
@@ -51,13 +50,6 @@ module.exports = (logger, configuration) => {
 
             app.set('view engine', 'ejs');
             app.set('views', './views');
-
-            if (devMode) {
-                if (!configuration.smtp.mailDev) {
-                    logger.error('SMTP configuration invalid : mailDev required when server not running in production');
-                    process.exit(-1);
-                }
-            }
 
             // Allowing CORS
             app.use(function(req, res, next) {
