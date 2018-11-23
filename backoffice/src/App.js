@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import { IntlProvider }     from 'react-intl';
-import queryString          from 'query-string';
-import fr                   from 'react-intl/locale-data/fr';
-import { addLocaleData }    from 'react-intl';
-import jwtDecode            from 'jwt-decode';
+import { IntlProvider } from 'react-intl';
+import queryString from 'query-string';
+import fr from 'react-intl/locale-data/fr';
+import { addLocaleData } from 'react-intl';
+import jwtDecode from 'jwt-decode';
 
-import { LoginForm, LoginWithAccessToken }  from './components/login';
-import { Header, Main }                     from './components/backoffice';
-import AccountActivation                    from './components/backoffice/organisation/AccountActivation';
-import { ForgottenPassword }                from './components/login/forgottenPassword';
-import { setToken, removeToken }            from './utils/token';
-import { subscribeToHttpEvent }             from './utils/http-client';
-import { getRegion }                        from './lib/financerService';
-
+import { LoginForm, LoginWithAccessToken } from './components/login';
+import { Header, Main } from './components/backoffice';
+import AccountActivation from './components/backoffice/organisation/AccountActivation';
+import { ForgottenPassword } from './components/login/forgottenPassword';
+import { setToken, removeToken } from './utils/token';
+import { subscribeToHttpEvent } from './utils/http-client';
+import { getRegion } from './lib/financerService';
 import './utils/moment-fr';
+import styles from './styles/index.scss';
+
 
 addLocaleData([...fr]);
 
@@ -142,22 +143,22 @@ class App extends Component {
                             raisonSociale={this.state.raisonSociale}
                             codeFinanceur={this.state.codeFinanceur}
                             codeRegion={this.state.codeRegion}
-                            region={this.state.region}/>
+                            region={this.state.region} />
 
                     {this.state.action === 'creation' &&
                     <AccountActivation handleForgottenPassword={this.handleForgottenPassword} token={this.state.token}
-                        onError={this.handleError} onSuccess={this.handleLogout} />}
+                                       onError={this.handleError} onSuccess={this.handleLogout} />}
                     {this.state.forgottenPassword &&
                     <ForgottenPassword passwordLost={this.state.action === 'passwordLost'} token={this.state.token}
-                        onError={this.handleError} onSuccess={this.handleLogout} />}
+                                       onError={this.handleError} onSuccess={this.handleLogout} />}
                     {showLoginWithAccessToken &&
                     <LoginWithAccessToken access_token={this.state.access_token} handleLoggedIn={this.handleLoggedIn}
-                        handleLogout={this.handleLogout} />}
+                                          handleLogout={this.handleLogout} />}
                     {showLoginForm && <LoginForm handleForgottenPassword={this.handleForgottenPassword}
-                        handleLoggedIn={this.handleLoggedIn} />}
+                                                 handleLoggedIn={this.handleLoggedIn} />}
                     {showDashboard &&
                     <Main profile={this.state.profile} id={this.state.id} codeRegion={this.state.codeRegion}
-                        codeFinanceur={this.state.codeFinanceur} features={this.state.features} />}
+                          codeFinanceur={this.state.codeFinanceur} features={this.state.features} />}
 
                 </div>
             </IntlProvider>
