@@ -74,6 +74,7 @@ module.exports = (db, logger) => {
                                 campaign: campaign.name,
                                 campaignDate: campaign.date,
                                 file,
+                                filters,
                                 stats: stats,
                                 date: new Date(),
                             });
