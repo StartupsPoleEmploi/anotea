@@ -2,6 +2,8 @@ import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import Modal from 'react-modal';
 
+import Stars from '../common/Stars';
+
 import {
     getOrganisationStates
 } from '../../../lib/organisationService';
@@ -297,37 +299,27 @@ export default class Graphes extends React.Component {
                             <div className="col-md-2">
                                 <div>
                                     <span className="star five">&nbsp;&nbsp;&nbsp;</span>
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
+                                    <Stars value={5} style={{ display: 'inline' }} />
                                     <p>Très satisfait</p>
                                 </div>
                                 <div>
                                     <span className="star four">&nbsp;&nbsp;&nbsp;</span>
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
+                                    <Stars value={4} style={{ display: 'inline' }} />
                                     <p>Satisfait</p>
                                 </div>
                                 <div>
                                     <span className="star three">&nbsp;&nbsp;&nbsp;</span>
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
+                                    <Stars value={3} style={{ display: 'inline' }} />
                                     <p>Moyennement satisfait</p>
                                 </div>
                                 <div>
                                     <span className="star two">&nbsp;&nbsp;&nbsp;</span>
-                                    <i className="glyphicon glyphicon-star" />
-                                    <i className="glyphicon glyphicon-star" />
+                                    <Stars value={2} style={{ display: 'inline' }} />
                                     <p>Pas satisfait</p>
                                 </div>
                                 <div>
                                     <span className="star one">&nbsp;&nbsp;&nbsp;</span>
-                                    <i className="glyphicon glyphicon-star" />
+                                    <Stars value={1} style={{ display: 'inline' }} />
                                     <p>Pas du tout satisfait</p>
                                 </div>
                             </div>

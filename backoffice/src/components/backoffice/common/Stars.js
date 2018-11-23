@@ -11,7 +11,8 @@ export default class Stars extends React.PureComponent {
     }
 
     static propTypes = {
-        value: PropTypes.number.isRequired
+        value: PropTypes.number.isRequired,
+        style: PropTypes.any
     }
 
     constructor(props) {
@@ -23,7 +24,7 @@ export default class Stars extends React.PureComponent {
 
     render() {
         return (
-            <div className="Stars">
+            <div className="Stars" style={this.props.style}>
                 {this.state.starArray.map((star, index) =>
                     <img key={index} src={`${process.env.PUBLIC_URL}/images/${star}.png`} style={{ width: '25px', opacity: star === 'star_empty' ? '0.6' : '1' }} />
                 )}
