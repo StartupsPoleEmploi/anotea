@@ -233,6 +233,7 @@ export default class ModerationPanel extends React.Component {
                                         <i className="avatar glyphicon glyphicon-user"></i>
 
                                         <div className="pseudo">
+                                            {advice.pseudo &&
                                             <span>
                                                 {advice.pseudoMasked !== true && <span>{advice.pseudo}</span>}
                                                 {advice.pseudoMasked === true && <em>{advice.pseudo}</em>}
@@ -240,9 +241,10 @@ export default class ModerationPanel extends React.Component {
                                                     onClick={this.handleMaskPseudo.bind(this, advice._id)}>affiché</small>}
                                                 {advice.pseudoMasked === true && <small
                                                     onClick={this.handleUnmaskPseudo.bind(this, advice._id)}>masqué</small>}
-                                            </span>
+                                            </span>}
+                                            {!advice.pseudo && <em>anonyme</em>}
                                         </div>
-                                        -&nbsp;
+                                        &nbsp;-&nbsp;
                                         <FormattedDate
                                             value={new Date(advice.date)}
                                             day="numeric"
@@ -271,14 +273,17 @@ export default class ModerationPanel extends React.Component {
                                         <span className="badge reported">Signalé</span>
                                         }
                                     </h3>
-                                    <h4 className="title">
-                                        {advice.titleMasked !== true && <span>{advice.comment.title}</span>}
-                                        {advice.titleMasked === true && <em>{advice.comment.title}</em>}
-                                        {advice.titleMasked !== true &&
-                                        <small onClick={this.handleMaskTitle.bind(this, advice._id)}>affiché</small>}
-                                        {advice.titleMasked === true &&
-                                        <small onClick={this.handleUnmaskTitle.bind(this, advice._id)}>masqué</small>}
-                                    </h4>
+
+                                    {advice.comment.title &&
+                                        <h4 className="title">
+                                            {advice.titleMasked !== true && <span>{advice.comment.title}</span>}
+                                            {advice.titleMasked === true && <em>{advice.comment.title}</em>}
+                                            {advice.titleMasked !== true &&
+                                                <small onClick={this.handleMaskTitle.bind(this, advice._id)}>affiché</small>}
+                                            {advice.titleMasked === true &&
+                                                <small onClick={this.handleUnmaskTitle.bind(this, advice._id)}>masqué</small>}
+                                        </h4>
+                                    }
                                     {(this.state.currentEdit === null || this.state.currentEdit.id !== advice._id) &&
                                     <div>
                                         <p>{advice.comment.text}</p>
