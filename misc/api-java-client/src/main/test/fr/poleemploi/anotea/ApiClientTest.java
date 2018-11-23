@@ -1,19 +1,19 @@
 package fr.poleemploi.anotea;
 
+import fr.poleemploi.anotea.model.AuthUrl;
+import fr.poleemploi.anotea.model.Organisme;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.ws.rs.core.Response;
 
 class ApiClientTest {
 
     @Test
-    void shouldFailWhenNoAuthenticated() {
+    void shouldGetAuhtUrlForAnOrganisme() {
         ApiClient apiClient = new ApiClient();
         Organisme organisme = new Organisme("11111111111", "Anotea Formation", "anotea.pe@gmail.com", "Grand Est");
 
-        Response response = apiClient.generateAuthUrl(organisme);
+        AuthUrl authUrl = apiClient.generateAuthUrl(organisme);
 
-        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertTrue(authUrl.getUrl().contains("admin?action=loginWithAccessToken&access_token=ey"));
     }
 }

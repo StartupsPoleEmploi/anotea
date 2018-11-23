@@ -1,16 +1,11 @@
-package fr.poleemploi.anotea;
+package fr.poleemploi.anotea.model;
 
 public class Organisme {
-
 
     private String siret;
     private String raisonSociale;
     private String courriel;
     private String region;
-
-    private Organisme() {
-        //for json mapper tool
-    }
 
     public Organisme(String siret, String raisonSociale, String courriel, String region) {
         this.siret = siret;
