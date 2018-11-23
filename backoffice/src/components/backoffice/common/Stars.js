@@ -1,6 +1,6 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
+import starImage from './star.png';
 
 const MAX_STARS = 5;
 
@@ -26,7 +26,7 @@ export default class Stars extends React.PureComponent {
         return (
             <div className="Stars" style={this.props.style}>
                 {this.state.starArray.map((star, index) =>
-                    <img key={index} src={`${process.env.PUBLIC_URL}/images/${star}.png`} style={{ width: '25px', opacity: star === 'star_empty' ? '0.6' : '1' }} />
+                    <img key={index} src={starImage} style={{ width: '25px', opacity: star === 'star_empty' ? '0.6' : '1' }} />
                 )}
             </div>
         );

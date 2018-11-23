@@ -1,8 +1,7 @@
 import React from 'react';
-
 import Logout from './Logout';
-
 import './header.css';
+import logoImage from './logo.png';
 
 export const Header = props => {
 
@@ -30,7 +29,7 @@ export const Header = props => {
 
     return(
         <div className="App-header">
-            <img src={`${process.env.PUBLIC_URL}/images/logo.png`} className="App-logo" alt="logo" />
+            <img src={logoImage} className="App-logo" alt="logo" />
             { props.profile === 'organisme' ? <h5 className="label h5">{props.raisonSociale}</h5> :
                 props.profile === 'financer' ? <h1>Espace Financeur {getLabel(props.codeFinanceur)} {props.region}</h1> :
                     <h1>Espace Anotea</h1>

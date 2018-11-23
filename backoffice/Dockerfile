@@ -9,7 +9,6 @@ RUN cd /tmp && npm ci && mkdir -p /opt/anotea/backoffice && mv /tmp/node_modules
 COPY ./ /opt/anotea/backoffice
 
 WORKDIR /opt/anotea/backoffice
-RUN npm run build-css
 RUN npm run build
 
 FROM nginx:latest
