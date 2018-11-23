@@ -10,6 +10,7 @@ module.exports = function(db, logger, configuration, filters) {
         'unsubscribe': false,
         'training.organisation.siret': { $ne: '' },
         'training.scheduledEndDate': { $lte: new Date() },
+        ...(filters.codeRegion ? { 'codeRegion': filters.codeRegion } : {}),
         ...(filters.campaign ? { 'campaign': filters.campaign } : {}),
     }).limit(configuration.app.mailer.limit);
 

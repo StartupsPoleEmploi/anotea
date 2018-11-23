@@ -24,16 +24,30 @@ const main = async () => {
 
     cli.description('send email campaign')
     .option('-c, --campaign [campaign]', 'Limit emailing to the campaign name')
+    .option('-r, --region [region]', 'Limit emailing to the region')
     .option('-s, --resend', 'Resend an email to trainee that did\'nt submit an advice')
     .option('-t, --retry', 'Resend every email with an SMTP error')
     .parse(process.argv);
 
+    const abort = message => {
+        logger.error(message, () => {
+            client.close(() => process.exit(1));
+        });
+    };
+
+    let regions = configuration.app.active_regions.map(e => e.code_region);
+    if (cli.region && !regions.includes(cli.region)) {
+        return abort('Region is not active');
+    }
+
+    let filters = { campaign: cli.campaign, codeRegion: cli.region };
+
     if (cli.resend) {
-        require('./mailerCampaignResend.js')(db, logger, configuration);
+        require('./resendCampaignMailer.js')(db, logger, configuration, filters);
     } else if (cli.retry) {
-        require('./mailerCampaignRetry.js')(db, logger, configuration);
+        require('./retryCampaignMailer.js')(db, logger, configuration);
     } else {
-        require('./mailerCampaign')(db, logger, configuration, { campaign: cli.campaign });
+        require('./campaignMailer')(db, logger, configuration, filters);
     }
 };
 
