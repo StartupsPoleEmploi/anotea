@@ -47,10 +47,9 @@ module.exports = (db, authService, logger, configuration) => {
             sendEmailAsync(organisme, passwordToken);
 
             return res.json({ 'message': 'mail sent' });
+        } else {
+            return res.json({ 'error': 'unknown account' });
         }
-
-        throw Boom.badRequest('Identifiant invalide');
-
     }));
 
     router.get('/backoffice/checkIfPasswordTokenExists', async (req, res) => {
