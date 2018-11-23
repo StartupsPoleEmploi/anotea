@@ -396,7 +396,7 @@ export default class FinancerPanel extends React.Component {
                     </li>
                     <li className="nav-item">
                         <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
-                            className="badge">{inventory.all}</span></button>
+                            className="badge badge-secondary">{inventory.all}</span></button>
                     </li>
                 </ul>
 

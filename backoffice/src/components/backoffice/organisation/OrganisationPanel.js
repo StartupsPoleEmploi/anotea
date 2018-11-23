@@ -330,7 +330,7 @@ export default class OrganisationPanel extends React.Component {
                             </li>
                             <li className="nav-item">
                                 <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et
-                                    avis <span className="badge">{this.state.inventory.all}</span></button>
+                                    avis <span className="badge badge-secondary">{this.state.inventory.all}</span></button>
                             </li>
                         </ul>
 
