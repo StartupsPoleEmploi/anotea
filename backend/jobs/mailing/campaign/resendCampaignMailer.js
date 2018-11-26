@@ -8,13 +8,17 @@ module.exports = function(db, logger, configuration, filters) {
     let { relaunchDelay, maxRelaunch } = configuration.smtp.stagiaires;
     const lastWeek = moment().subtract(relaunchDelay, 'days').toDate();
 
+    const activeRegions = configuration.app.active_regions
+    .filter(region => region.jobs.resend === true)
+    .map(region => region.code_region);
+
     let cursor = db.collection('trainee').find({
         mailSent: true,
         unsubscribe: false,
         tracking: { $eq: null },
         mailSentDate: { $lte: lastWeek },
-        ...(filters.codeRegion ? { 'codeRegion': filters.codeRegion } : {}),
-        ...(filters.campaign ? { 'campaign': filters.campaign } : {}),
+        ...(filters.codeRegion ? { codeRegion: filters.codeRegion } : { codeRegion: { $in: activeRegions } }),
+        ...(filters.campaign ? { campaign: filters.campaign } : {}),
         $or: [{ mailRetry: { $eq: null } }, { mailRetry: { $lt: parseInt(maxRelaunch) } }]
     }).limit(configuration.app.mailer.limit);
 
