@@ -1,19 +1,21 @@
+const moment = require('moment');
+
 module.exports = function(db, logger, configuration, filters) {
 
     const mailer = require('../../../components/mailer.js')(db, logger, configuration);
 
     const launchTime = new Date().getTime();
-    const lastWeek = new Date();
-    lastWeek.setDate(lastWeek.getDate() - configuration.smtp.relaunchDelay);
+    let { relaunchDelay, maxRelaunch } = configuration.smtp.stagiaires;
+    const lastWeek = moment().subtract(relaunchDelay, 'days').toDate();
 
     let cursor = db.collection('trainee').find({
         mailSent: true,
         unsubscribe: false,
         tracking: { $eq: null },
-        mailSentDate: { $lte: lastWeek.toString() },
+        mailSentDate: { $lte: lastWeek },
         ...(filters.codeRegion ? { 'codeRegion': filters.codeRegion } : {}),
         ...(filters.campaign ? { 'campaign': filters.campaign } : {}),
-        $or: [{ mailRetry: { $eq: null } }, { mailRetry: { $lt: parseInt(configuration.smtp.maxRelaunch) } }]
+        $or: [{ mailRetry: { $eq: null } }, { mailRetry: { $lt: parseInt(maxRelaunch) } }]
     }).limit(configuration.app.mailer.limit);
 
     logger.info('Mailer campaign resend (emails not open) - launch');
@@ -31,7 +33,7 @@ module.exports = function(db, logger, configuration, filters) {
                 mailer.sendVotreAvisMail(options, trainee, async () => {
                     stream.resume();
                     try {
-                        await db.collection('trainee').update({ '_id': trainee._id }, {
+                        await db.collection('trainee').updateOne({ '_id': trainee._id }, {
                             $set: {
                                 'mailSent': true,
                                 'mailSentDate': new Date(),
@@ -47,7 +49,7 @@ module.exports = function(db, logger, configuration, filters) {
                     }
                 }, err => {
                     stream.resume();
-                    db.collection('trainee').update({ '_id': trainee._id }, {
+                    db.collection('trainee').updateOne({ '_id': trainee._id }, {
                         $set: {
                             'mailSent': true,
                             'mailError': 'smtpError',
