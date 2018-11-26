@@ -348,7 +348,7 @@ export default class FinancerPanel extends React.Component {
 
     exportOrganisationAdvicesToExcel = async () => {
         const comments = await getOrganisationAdvicesToExportToExcel(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.training.currentEntity._id, this.state.trainingId, this.state.tab);
-        exportToExcel(comments);
+        exportToExcel(comments, this.props.codeFinanceur);
     };
 
     render() {
