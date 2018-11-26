@@ -1,4 +1,4 @@
-module.exports = function(db, logger, configuration) {
+module.exports = function(db, logger, configuration, filters) {
 
     let mailer = require('../../../components/mailer.js')(db, logger, configuration);
     let titleize = require('underscore.string/titleize');
@@ -9,30 +9,19 @@ module.exports = function(db, logger, configuration) {
         'mailSent': false,
         'unsubscribe': false,
         'training.organisation.siret': { $ne: '' },
-        'training.scheduledEndDate': { $lte: new Date() }
+        'training.scheduledEndDate': { $lte: new Date() },
+        ...(filters.codeRegion ? { 'codeRegion': filters.codeRegion } : {}),
+        ...(filters.campaign ? { 'campaign': filters.campaign } : {}),
     }).limit(configuration.app.mailer.limit);
-    if (configuration.app.env === 'dev' || process.env.ANOTEA_MAIL_BCC) {
-        cursor.limit(1);
-    }
+
     cursor.count(function(err, count) {
         logger.info('Mailer campaign - launch');
         let stream = cursor.stream();
 
         stream.on('data', function(trainee) {
-            try {
-                var options = {
-                    to: trainee.trainee.email
-                };
-            } catch (e) {
-                logger.error('Trainee in a dirty state (_id : ' + trainee._id + ') : email not present in MongoDB document');
-                db.collection('trainee').update({ '_id': trainee._id }, {
-                    $set: {
-                        'mailSent': true,
-                        'mailError': 'dirtyState'
-                    }
-                });
-                return;
-            }
+            let options = {
+                to: trainee.trainee.email
+            };
             trainee.trainee.firstName = titleize(trainee.trainee.firstName);
             trainee.trainee.name = titleize(trainee.trainee.name);
             mailer.sendVotreAvisMail(options, trainee, function() {

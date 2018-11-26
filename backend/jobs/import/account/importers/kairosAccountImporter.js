@@ -5,6 +5,8 @@ const moment = require('moment');
 const { handleBackPressure } = require('../../../utils');
 const regions = require('../../../../components/regions');
 
+const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
+
 module.exports = (db, logger) => {
 
     const { findCodeRegionByName } = regions(db);
@@ -40,8 +42,8 @@ module.exports = (db, logger) => {
                     telephoneRGC: data['Téléphone RGC'],
                     assedic: data['ASSEDIC'],
                     convention: data['convention'],
-                    dateDebut: moment(data['date début'], 'DD/MM/YYYY').toDate(),
-                    dateFin: moment(data['date fin'], 'DD/MM/YYYY').toDate(),
+                    dateDebut: parseDate(data['date début']),
+                    dateFin: parseDate(data['date fin']),
                 },
             }
         };

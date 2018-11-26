@@ -4,9 +4,10 @@
 const moment = require('moment');
 const cli = require('commander');
 const configuration = require('config');
-const getMongoClient = require('../../../components/mongodb');
-const getLogger = require('../../../components/logger');
-const createNewOrganismeMailer = require('./newOrganismeMailer');
+const getMongoClient = require('../../../../components/mongodb');
+const getLogger = require('../../../../components/logger');
+const newAccountMailer = require('./newAccountMailer');
+const resendAccountMailer = require('./resendAccountMailer');
 
 const main = async () => {
 
@@ -14,8 +15,9 @@ const main = async () => {
     let client = await getMongoClient(configuration.mongodb.uri);
     let db = client.db();
     let logger = getLogger('anotea-job-mailing-account', configuration);
-    let mailer = require('../../../components/mailer.js')(db, logger, configuration);
-    let newOrganismeMailer = createNewOrganismeMailer(db, logger, configuration, mailer);
+    let mailer = require('../../../../components/mailer.js')(db, logger, configuration);
+    let { sendEmailsByRegion, sendEmailBySiret } = newAccountMailer(db, logger, configuration, mailer);
+    let { resendEmails } = resendAccountMailer(db, logger, configuration, mailer);
 
     const abort = message => {
         logger.error(message, () => {
@@ -33,25 +35,23 @@ const main = async () => {
         return abort('Invalid arguments');
     }
 
+    let regions = configuration.app.active_regions.map(e => e.code_region);
+    if (cli.region && !regions.includes(cli.region)) {
+        return abort('Region is not active');
+    }
+
     try {
         logger.info('Sending emails to new organismes...');
 
         let results;
         if (cli.siret) {
-            results = await newOrganismeMailer.sendEmailBySiret(cli.siret);
+            results = await sendEmailBySiret(cli.siret);
+        } else if (cli.resend) {
+            results = await resendEmails();
         } else {
-
-            let regions = configuration.app.active_regions.map(e => e.code_region);
-            if (!regions.includes(cli.region)) {
-                return abort('Region is not active');
-            }
-
-            if (cli.resend) {
-                results = await resend.sendEmails();
-            } else {
-                results = await newOrganismeMailer.sendEmailsByRegion(cli.region);
-            }
+            results = await sendEmailsByRegion(cli.region);
         }
+
 
         await client.close();
 

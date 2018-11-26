@@ -57,7 +57,8 @@ describe(__filename, () => {
                     organisme_financeurs: [],
                     organisme_formateur: {
                         raison_sociale: 'INSTITUT DE FORMATION',
-                        siret: '11111111111111'
+                        siret: '11111111111111',
+                        numero: '14_OF_XXXXXXXXXX',
                     },
                     session: {
                         numero: '2422722',

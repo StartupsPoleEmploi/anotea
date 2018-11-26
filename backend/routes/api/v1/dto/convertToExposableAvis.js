@@ -41,6 +41,7 @@ module.exports = comment => {
                 organisme_formateur: {
                     raison_sociale: training.organisation.name,
                     siret: training.organisation.siret,
+                    numero: training.organisation.id,
                 },
                 session: {
                     numero: comment.idSession, //FIXME avis.idSession training.infoCarif.numeroSession ?

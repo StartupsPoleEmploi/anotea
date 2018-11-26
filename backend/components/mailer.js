@@ -65,15 +65,6 @@ module.exports = function(db, logger, configuration) {
         successCallback(carif);
     };
 
-    const getOrganisationNotReadComment = async siret => {
-        return await db.collection('comment').findOne({
-            'training.organisation.siret': siret,
-            'comment': { $ne: null },
-            'read': { $ne: true },
-            'published': true
-        });
-    };
-
     const buildContent = (template, extension, params) => {
         return new Promise((resolve, reject) => {
             ejs.renderFile(`views/mail/${template}.${extension}`, params, (err, str) => {
@@ -107,10 +98,7 @@ module.exports = function(db, logger, configuration) {
             if (!textOnly) {
                 mailOptions.html = values[1];
             }
-            // in DEV mode we send the email to a configured email
-            if (configuration.smtp.mailDev) {
-                mailOptions.to = configuration.smtp.mailDev;
-            }
+
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     logger.error(`An error occurs while sending mail : ${error}̀`);
@@ -131,23 +119,19 @@ module.exports = function(db, logger, configuration) {
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
         getOrganisationPasswordForgottenLink: getOrganisationPasswordForgottenLink,
-        sendVosAvisNonLusMail: async (mailOptions, organisation, count, successCallback, errorCallback) => {
+        sendNewCommentsNotification: async (mailOptions, data, successCallback, errorCallback) => {
 
-            const trackingLink = getTrackingLink(organisation);
-            let comment = await getOrganisationNotReadComment(organisation.meta.siretAsString);
-
-            mailOptions.subject = `Pôle Emploi - Vous avez ${count} nouveaux avis stagiaires`;
-
-            getCarif(organisation.codeRegion, carif => {
+            let { organisme, comment } = data;
+            getCarif(organisme.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
+                mailOptions.subject = `Pôle Emploi - Vous avez ${organisme.meta.nbAvis} nouveaux avis stagiaires`;
                 const params = {
-                    comment: comment.comment.text,
-                    trackingLink: trackingLink,
                     hostname: configuration.app.public_hostname,
-                    organisation: organisation,
+                    organisme: organisme,
+                    comment: comment.comment.text,
                     contact: getContact(carif)
                 };
-                sendMail('organisation_avis_notRead', params, mailOptions, successCallback, errorCallback);
+                sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);
         },
         sendOrganisationAccountLink: async (mailOptions, organisation, successCallback, errorCallback) => {

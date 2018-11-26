@@ -1,18 +1,25 @@
 {
   "app": {
-    "env": "dev",
     "name": "Anotea",
     "public_hostname": "http://127.0.0.1:3000",
     "port": 8080,
     "mailer": {
-      "limit": 500
+      "limit": 1
     },
     "active_regions": [
       {
-        "code_region": "11"
+        "code_region": "11",
+        "jobs": {
+          "resend": false,
+          "retry": false
+        }
       },
       {
-        "code_region": "17"
+        "code_region": "17",
+        "jobs": {
+          "resend": false,
+          "retry": false
+        }
       },
       {
         "code_region": "2",
@@ -20,6 +27,10 @@
           "code_financeurs": [
             "-2"
           ]
+        },
+        "jobs": {
+          "resend": false,
+          "retry": false
         }
       },
       {
@@ -28,6 +39,10 @@
           "code_financeurs": [
             "-2"
           ]
+        },
+        "jobs": {
+          "resend": true,
+          "retry": true
         }
       }
     ]
@@ -91,13 +106,13 @@
     "from": "anotea@pole-emploi.fr",
     "maxRelaunch": 1,
     "relaunchDelay": 7,
-    "mailDev": "anotea.pe@gmail.com"
+    "organisme": {
+      "newAccountRelaunchDelay": 7,
+      "newCommentsNotificationRelaunchDelay": 15
+    }
   },
   "api": {
     "pagination": 20
-  },
-  "exports": {
-    "path": ".data/exports"
   },
   "front": {
     "googleSiteVerification": "12345"

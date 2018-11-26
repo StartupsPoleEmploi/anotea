@@ -7,12 +7,12 @@ services:
     build:
       context: ./misc/nginx
     ports:
-    - 80:80
+      - 80:80
     volumes:
-    - ./.data/nginx:/var/log/nginx:rw
+      - ./.data/nginx:/var/log/nginx:rw
     depends_on:
-    - backend
-    - backoffice
+      - backend
+      - backoffice
 
   backoffice:
     image: anotea_backoffice
@@ -20,7 +20,7 @@ services:
     build:
       context: backoffice
     depends_on:
-    - backend
+      - backend
 
   backend:
     image: anotea_backend
@@ -28,9 +28,9 @@ services:
     build:
       context: backend
     environment:
-    - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
-    - ANOTEA_SMTP_HOST=smtp
-    - ANOTEA_SMTP_PORT=25
+      - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
+      - ANOTEA_SMTP_HOST=smtp
+      - ANOTEA_SMTP_PORT=25
     depends_on:
-    - mongodb
-    - smtp
+      - mongodb
+      - smtp

@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const { buildToken, buildEmail } = require('../utils');
 
+const parseDate = value => new Date(value + 'Z');
+
 module.exports = (db, logger, configuration) => {
 
     const { findCodeRegionByPostalCode } = require('../../../../components/regions')(db);
@@ -87,6 +89,7 @@ module.exports = (db, logger, configuration) => {
             return count === 0 && trainee.trainee.emailValid && activeRegion && _.every(filters, filter => filter(trainee));
         },
         buildTrainee: async (record, campaign) => {
+
             try {
                 if (_.isEmpty(record)) {
                     return Promise.reject(new Error(`Données CSV invalides ${record}`));
@@ -98,7 +101,8 @@ module.exports = (db, logger, configuration) => {
 
                 return {
                     _id: campaign + '/' + token,
-                    campaign: campaign,
+                    campaign: campaign.name,
+                    campaignDate: campaign.date,
                     importDate: new Date(),
                     unsubscribe: false,
                     mailSent: false,
@@ -118,8 +122,8 @@ module.exports = (db, logger, configuration) => {
                         idFormation: record['dc_formation_id'],
                         origineSession: record['dc_origine_session_id'],
                         title: buildFormationTitle(record['dc_lblformation']),
-                        startDate: new Date(record['dd_datedebutmodule']),
-                        scheduledEndDate: new Date(record['dd_datefinmodule']),
+                        startDate: parseDate(record['dd_datedebutmodule']),
+                        scheduledEndDate: parseDate(record['dd_datefinmodule']),
                         organisation: {
                             id: record['dc_organisme_id'],
                             siret: record['dc_siret'],

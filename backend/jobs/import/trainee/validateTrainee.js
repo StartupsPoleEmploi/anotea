@@ -5,6 +5,7 @@ module.exports = trainee => {
     return Joi.validate(trainee, {
         _id: Joi.string().required(),
         campaign: Joi.string().required(),
+        campaignDate: Joi.date().required(),
         sourceIDF: Joi.boolean().optional(),
         importDate: Joi.date().required(),
         unsubscribe: Joi.boolean().required(),

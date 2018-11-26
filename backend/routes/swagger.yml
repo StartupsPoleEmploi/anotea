@@ -10,8 +10,8 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 basePath: /api
 schemes:
-- https
-- http
+  - https
+  - http
 securityDefinitions:
   Authorization:
     type: apiKey
@@ -275,6 +275,8 @@ definitions:
                     type: string
                   siret:
                     type: string
+                  numero:
+                    type: string
               session:
                 type: object
                 properties:
@@ -439,38 +441,38 @@ paths:
       description: Renvoie tous les avis triés par date et filtrés en fonction des paramètres
       operationId: getAvis
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: query
-        name: organisme_formateur
-        description: Le numéro SIRET de l'organisme formateur
-        type: string
-        required: false
-      - in: query
-        name: formacode
-        description: Le formacode de la formation (Français appliqué=15226) ou un domaine de formation (Langues=152)
-        type: string
-        required: false
-      - in: query
-        name: certif_info
-        description: Le certif info de la formation
-        type: string
-        required: false
-      - in: query
-        name: lieu_de_formation
-        description: Le code postal du lieu de formation
-        type: string
-        required: false
-      - in: query
-        name: page
-        description: Le numéro de la page
-        type: number
-        required: false
-      - in: query
-        name: items_par_page
-        description: Le nombre d'avis par page
-        type: number
-        required: false
+        - in: query
+          name: organisme_formateur
+          description: Le numéro SIRET de l'organisme formateur
+          type: string
+          required: false
+        - in: query
+          name: formacode
+          description: Le formacode de la formation (Français appliqué=15226) ou un domaine de formation (Langues=152)
+          type: string
+          required: false
+        - in: query
+          name: certif_info
+          description: Le certif info de la formation
+          type: string
+          required: false
+        - in: query
+          name: lieu_de_formation
+          description: Le code postal du lieu de formation
+          type: string
+          required: false
+        - in: query
+          name: page
+          description: Le numéro de la page
+          type: number
+          required: false
+        - in: query
+          name: items_par_page
+          description: Le nombre d'avis par page
+          type: number
+          required: false
       responses:
         200:
           $ref: "#/responses/AvisResponse"
@@ -484,14 +486,14 @@ paths:
       description: >
         Permet d'obtenir un avis à partir de son identifiant
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: id
-        type: string
-        required: true
+        - in: path
+          name: id
+          type: string
+          required: true
       security:
-      - Authorization: []
+        - Authorization: []
       responses:
         200:
           $ref: "#/responses/AvisByIdResponse"
@@ -510,52 +512,52 @@ paths:
         Une session est considérée comme similaire si elle possède un organisme formateur (SIRET), un lieu de formation (code postal) et
         au moins un FORMACODE ou CERTIFINFOs identiquent à ceux de la formation dispensée durant la session.
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: query
-        name: id
-        description: >
-          Permet de filtrer la recherche avec un ou plusieurs identifiants de sessions
-          Les identifiants des sessions sont de la forme suivante `numero_formation|numero_action|numero_session`
-          (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
-        type: string
-        required: false
-      - in: query
-        name: numero
-        description: Permet de filtrer la recherche avec un ou plusieurs numéros de sessions
-        type: string
-        required: false
-      - in: query
-        name: region
-        description: Permet de filtrer la recherche pour une région donnée
-        type: string
-        required: false
-      - in: query
-        name: nb_avis
-        description: Permet de filtrer la recherche en renvoyant uniquement les sessions ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
-        type: string
-        required: false
-      - in: query
-        name: fields
-        description: >
-          Permet de limiter les champs renvoyés.
-          Exemple:
-          `fields=score` renvoie uniquement le champ score
-          `fields=-avis` renvoie tous sauf le champ avis
-        type: number
-        required: false
-      - in: query
-        name: page
-        description: Le numéro de la page
-        type: number
-        required: false
-      - in: query
-        name: items_par_page
-        description: Le nombre d'avis par page
-        type: number
-        required: false
+        - in: query
+          name: id
+          description: >
+            Permet de filtrer la recherche avec un ou plusieurs identifiants de sessions
+            Les identifiants des sessions sont de la forme suivante `numero_formation|numero_action|numero_session`
+            (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
+          type: string
+          required: false
+        - in: query
+          name: numero
+          description: Permet de filtrer la recherche avec un ou plusieurs numéros de sessions
+          type: string
+          required: false
+        - in: query
+          name: region
+          description: Permet de filtrer la recherche pour une région donnée
+          type: string
+          required: false
+        - in: query
+          name: nb_avis
+          description: Permet de filtrer la recherche en renvoyant uniquement les sessions ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
+          type: string
+          required: false
+        - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=score` renvoie uniquement le champ score
+            `fields=-avis` renvoie tous sauf le champ avis
+          type: number
+          required: false
+        - in: query
+          name: page
+          description: Le numéro de la page
+          type: number
+          required: false
+        - in: query
+          name: items_par_page
+          description: Le nombre d'avis par page
+          type: number
+          required: false
       security:
-      - Authorization: []
+        - Authorization: []
       responses:
         200:
           $ref: "#/responses/SessionsResponse"
@@ -569,17 +571,17 @@ paths:
       description: >
         Permet d'obtenir une session à partir de son identifiant
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: id
-        description: >
-          L'identifiant d'une session est de la forme suivante `numero_formation|numero_action|numero_session`
-           (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
-        type: string
-        required: true
+        - in: path
+          name: id
+          description: >
+            L'identifiant d'une session est de la forme suivante `numero_formation|numero_action|numero_session`
+             (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
+          type: string
+          required: true
       security:
-      - Authorization: []
+        - Authorization: []
       responses:
         200:
           $ref: "#/responses/SessionByIdResponse"
@@ -598,52 +600,52 @@ paths:
         Une action est considérée comme similaire si elle possède un organisme formateur (SIRET), un lieu de formation (code postal) et
         au moins un FORMACODE ou CERTIFINFOs identiquent à ceux de la formation dispensée durant la session.
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: query
-        name: id
-        description: >
-          Permet de filtrer la recherche avec un ou plusieurs identifiants d'actions
-          Les identifiants des actions sont de la forme suivante `numero_formation|numero_action`
-          (ex. `id=14_AF_0000011111|14_SE_0000102222`)
-        type: string
-        required: false
-      - in: query
-        name: numero
-        description: Permet de filtrer la recherche avec un ou plusieurs numéros d'actions
-        type: string
-        required: false
-      - in: query
-        name: region
-        description: Permet de filtrer la recherche pour une région donnée
-        type: string
-        required: false
-      - in: query
-        name: nb_avis
-        description: Permet de filtrer la recherche en renvoyant uniquement les actions ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
-        type: string
-        required: false
-      - in: query
-        name: fields
-        description: >
-          Permet de limiter les champs renvoyés.
-          Exemple:
-          `fields=score` renvoie uniquement le champ score
-          `fields=-avis` renvoie tous sauf le champ avis
-        type: number
-        required: false
-      - in: query
-        name: page
-        description: Le numéro de la page
-        type: number
-        required: false
-      - in: query
-        name: items_par_page
-        description: Le nombre d'avis par page
-        type: number
-        required: false
+        - in: query
+          name: id
+          description: >
+            Permet de filtrer la recherche avec un ou plusieurs identifiants d'actions
+            Les identifiants des actions sont de la forme suivante `numero_formation|numero_action`
+            (ex. `id=14_AF_0000011111|14_SE_0000102222`)
+          type: string
+          required: false
+        - in: query
+          name: numero
+          description: Permet de filtrer la recherche avec un ou plusieurs numéros d'actions
+          type: string
+          required: false
+        - in: query
+          name: region
+          description: Permet de filtrer la recherche pour une région donnée
+          type: string
+          required: false
+        - in: query
+          name: nb_avis
+          description: Permet de filtrer la recherche en renvoyant uniquement les actions ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
+          type: string
+          required: false
+        - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=score` renvoie uniquement le champ score
+            `fields=-avis` renvoie tous sauf le champ avis
+          type: number
+          required: false
+        - in: query
+          name: page
+          description: Le numéro de la page
+          type: number
+          required: false
+        - in: query
+          name: items_par_page
+          description: Le nombre d'avis par page
+          type: number
+          required: false
       security:
-      - Authorization: []
+        - Authorization: []
       responses:
         200:
           $ref: "#/responses/ActionsResponse"
@@ -657,17 +659,17 @@ paths:
       description: >
         Permet d'obtenir une action à partir de son identifiant
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: id
-        description: >
-          L'identifiant d'une action à la forme suivante `numero_formation|numero_action`
-           (ex. `id=14_AF_0000011111|14_SE_0000102222`)
-        type: string
-        required: true
+        - in: path
+          name: id
+          description: >
+            L'identifiant d'une action à la forme suivante `numero_formation|numero_action`
+             (ex. `id=14_AF_0000011111|14_SE_0000102222`)
+          type: string
+          required: true
       security:
-      - Authorization: []
+        - Authorization: []
       responses:
         200:
           $ref: "#/responses/ActionByIdResponse"
@@ -684,56 +686,56 @@ paths:
         Permet d'obtenir la liste de tous les organismes formateurs contenus dans l'intercarif avec pour chacun d'eux leur score.
         Le score est calculé en prenant en compte l'intégralité des avis recueillis pour cet organisme.
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: query
-        name: id
-        description: Permet de filtrer la recherche avec un ou plusieurs identifiants d'organismes
-        type: string
-        required: false
-      - in: query
-        name: numero
-        description: Permet de filtrer la recherche avec un ou plusieurs numéros d'organismes
-        type: string
-        required: false
-      - in: query
-        name: siret
-        description: Permet de filtrer la recherche à un ou SIRETs d'organismes
-        type: string
-        required: false
-      - in: query
-        name: lieu_de_formation
-        description: >
-          Permet de filtrer la recherche en filtrant les organismes ayant des formations dans des lieux de formation spécifiques
-          Un lieu de formation peut être identifié par son code postal ou par sa région
-        type: string
-        required: false
-      - in: query
-        name: nb_avis
-        description: Permet de filtrer la recherche en renvoyant uniquement les organismes ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
-        type: string
-        required: false
-      - in: query
-        name: fields
-        description: >
-          Permet de limiter les champs renvoyés.
-          Exemple:
-          `fields=organisme_responsable` renvoie uniquement le champ organisme_responsable
-          `fields=-lieux_de_formation` renvoie tous sauf le champ lieux_de_formation
-        type: number
-        required: false
-      - in: query
-        name: page
-        description: Le numéro de la page
-        type: number
-        required: false
-      - in: query
-        name: items_par_page
-        description: Le nombre d'avis par page
-        type: number
-        required: false
+        - in: query
+          name: id
+          description: Permet de filtrer la recherche avec un ou plusieurs identifiants d'organismes
+          type: string
+          required: false
+        - in: query
+          name: numero
+          description: Permet de filtrer la recherche avec un ou plusieurs numéros d'organismes
+          type: string
+          required: false
+        - in: query
+          name: siret
+          description: Permet de filtrer la recherche à un ou SIRETs d'organismes
+          type: string
+          required: false
+        - in: query
+          name: lieu_de_formation
+          description: >
+            Permet de filtrer la recherche en filtrant les organismes ayant des formations dans des lieux de formation spécifiques
+            Un lieu de formation peut être identifié par son code postal ou par sa région
+          type: string
+          required: false
+        - in: query
+          name: nb_avis
+          description: Permet de filtrer la recherche en renvoyant uniquement les organismes ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
+          type: string
+          required: false
+        - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=organisme_responsable` renvoie uniquement le champ organisme_responsable
+            `fields=-lieux_de_formation` renvoie tous sauf le champ lieux_de_formation
+          type: number
+          required: false
+        - in: query
+          name: page
+          description: Le numéro de la page
+          type: number
+          required: false
+        - in: query
+          name: items_par_page
+          description: Le nombre d'avis par page
+          type: number
+          required: false
       security:
-      - Authorization: []
+        - Authorization: []
       responses:
         200:
           $ref: "#/responses/OrganismesFormateursResponse"
@@ -747,16 +749,16 @@ paths:
       description: >
         Permet d'obtenir un organisme formateur à partir de son identifiant
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: id
-        description: >
-          L'identifiant d'un organisme correspond à son numéro de SIRET
-        type: string
-        required: true
+        - in: path
+          name: id
+          description: >
+            L'identifiant d'un organisme correspond à son numéro de SIRET
+          type: string
+          required: true
       security:
-      - Authorization: []
+        - Authorization: []
       responses:
         200:
           $ref: "#/responses/OrganismeFormateurByIdResponse"
@@ -772,7 +774,7 @@ paths:
       description: Permet de vérifier que l'api fonctionne
       operationId: pingAnonymous
       produces:
-      - application/json
+        - application/json
       responses:
         200:
           description: Successful
@@ -788,9 +790,9 @@ paths:
       description: Permet de valider l'authentification
       operationId: pingAuthenticated
       produces:
-      - application/json
+        - application/json
       security:
-      - Authorization: []
+        - Authorization: []
       responses:
         200:
           description: Successful
@@ -802,7 +804,7 @@ paths:
       description: Permet de générer une erreur
       operationId: pingError
       produces:
-      - application/json
+        - application/json
       responses:
         default:
           description: Error
@@ -815,32 +817,32 @@ paths:
         Permet de générer un lien pour authentifier en SSO un organisme sur le backoffice Anotéa (signin).
         Si l'organisme n'est pas connu par Anotéa, il sera créé durant l'appel (signup)
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: body
-        name: payload
-        required: true
-        description: L'ensemble des informations permettant l'identification ou la création d'un organisme
-        schema:
-          type: object
-          properties:
-            filters:
-              type: array
-              items:
-                type: object
-                properties:
-                  siret:
-                    description: Le numéro SIRET de l'organisme formateur
-                    type: string
-                  raison_sociale:
-                    type: string
-                  courriel:
-                    type: string
-                  region:
-                    type: string
+        - in: body
+          name: payload
+          required: true
+          description: L'ensemble des informations permettant l'identification ou la création d'un organisme
+          schema:
+            type: object
+            properties:
+              filters:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    siret:
+                      description: Le numéro SIRET de l'organisme formateur
+                      type: string
+                    raison_sociale:
+                      type: string
+                    courriel:
+                      type: string
+                    region:
+                      type: string
 
       security:
-      - Bearer: []
+        - Bearer: []
       responses:
         200:
           $ref: "#/responses/GenerateAuthUrlResponse"

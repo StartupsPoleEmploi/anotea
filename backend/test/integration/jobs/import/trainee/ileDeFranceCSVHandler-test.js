@@ -24,8 +24,9 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         let docs = await db.collection('trainee').find({ 'trainee.email': 'email1@pe.fr' }).toArray();
         assert.ok(docs[0]._id);
         assert.ok(docs[0].importDate);
+        assert.ok(docs[0].campaignDate);
         assert.ok(docs[0].token);
-        assert.deepEqual(_.omit(docs[0], ['_id', 'importDate', 'token']), {
+        assert.deepEqual(_.omit(docs[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-idf',
             sourceIDF: true,
             trainee: {
@@ -42,8 +43,8 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                 idFormation: null,
                 origineSession: null,
                 title: 'ANOTEA FORMATION',
-                startDate: new Date('2017-03-14T23:00:00.000Z'),
-                scheduledEndDate: new Date('2018-08-30T22:00:00.000Z'),
+                startDate: new Date('2017-03-15T00:00:00.000Z'),
+                scheduledEndDate: new Date('2018-08-31T00:00:00.000Z'),
                 organisation: {
                     id: null,
                     siret: '77568497000673',
@@ -87,38 +88,4 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         });
     });
 
-    it('should store import status', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-idf.csv');
-        let importer = traineeImporter(db, logger, configuration);
-        let handler = ileDeFranceCSVHandler(db, logger, configuration);
-        let hash = await md5File(csvFile);
-
-        await importer.importTrainee(csvFile, handler);
-
-        let status = await db.collection('importTrainee').findOne();
-        assert.deepEqual(_.omit(status, ['_id', 'date']), {
-            campaign: 'stagiaires-idf',
-            hash: hash,
-        });
-    });
-
-    it('cannot import same CSV twice', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-idf.csv');
-        let importer = traineeImporter(db, logger, configuration);
-        let handler = ileDeFranceCSVHandler(db, logger, configuration);
-
-        await importer.importTrainee(csvFile, handler);
-
-        try {
-            await importer.importTrainee(csvFile, handler);
-            assert.fail('Should have fail');
-        } catch (e) {
-            assert.ok(e.message.indexOf('already imported') !== -1);
-        }
-
-    });
 }));

@@ -2,6 +2,8 @@ const _ = require('lodash');
 const moment = require('moment');
 const { buildToken, buildEmail } = require('../utils');
 
+const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
+
 module.exports = () => {
     return {
         name: 'Île-De-France',
@@ -29,6 +31,7 @@ module.exports = () => {
         },
         shouldBeImported: async trainee => trainee.trainee.emailValid && trainee.training.infoCarif.numeroSession === null,
         buildTrainee: (record, campaign) => {
+
             try {
                 if (_.isEmpty(record)) {
                     return Promise.reject(new Error('Invalid record length'));
@@ -38,7 +41,8 @@ module.exports = () => {
 
                 let obj = {
                     _id: campaign + '/' + token,
-                    campaign: campaign,
+                    campaign: campaign.name,
+                    campaignDate: campaign.date,
                     importDate: new Date(),
                     sourceIDF: true,
                     unsubscribe: false,
@@ -59,8 +63,8 @@ module.exports = () => {
                         idFormation: null,
                         origineSession: null,
                         title: record['Libellé Action'],
-                        startDate: moment(record['Date Entree'], 'DD/MM/YYYY').toDate(),
-                        scheduledEndDate: moment(record['Date Sortie'], 'DD/MM/YYYY').toDate(),
+                        startDate: parseDate(record['Date Entree']),
+                        scheduledEndDate: parseDate(record['Date Sortie']),
                         organisation: {
                             id: null,
                             siret: record['SIRET'],
