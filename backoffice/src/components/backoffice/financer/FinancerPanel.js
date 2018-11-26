@@ -432,6 +432,7 @@ export default class FinancerPanel extends React.Component {
                                                     <em>Cet utilisateur n'a pas laissé d'avis</em>}
                                                 </p>
                                             </div>
+                                            Qualification: {advice.qualification}
                                         </div>
                                         }
                                         {!advice.comment &&
