@@ -127,6 +127,7 @@ module.exports = function(db, logger, configuration) {
                 mailOptions.subject = `Pôle Emploi - Vous avez ${organisme.meta.nbAvis} nouveaux avis stagiaires`;
                 const params = {
                     hostname: configuration.app.public_hostname,
+                    trackingLink: getTrackingLink(organisme),
                     organisme: organisme,
                     comment: comment.comment.text,
                     contact: getContact(carif)
