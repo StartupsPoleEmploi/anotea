@@ -5,7 +5,9 @@ export const exportToExcel = (comments, codeFinancer) => {
     let lines = '\ufeffnote accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
 
     if (codeFinancer === POLE_EMPLOI) {
-        lines = '\ufeffnote accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;qualification;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
+        let array = lines.split(';');
+        array.splice(9, 0, 'qualification');
+        lines = array.join(';');
     }
 
     for (const idx in comments) {
