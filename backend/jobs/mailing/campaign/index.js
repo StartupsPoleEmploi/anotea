@@ -6,18 +6,8 @@ const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
+const createCampaignMailer = require('./campaignMailer');
 
-/**
- *   Can be launched with the following command
- *   `node jobs/mailing/campaign [resend] [retry]`
- *
- *   default : send email to trainee
- *
- *   resend is optional (default false) and is a boolean : if true resend an email to trainee that did'nt submit an advice
- *   retry is optional (default false) and is a boolean : if true resend every email with an SMTP error
- *
- *   Warning: default, resend and retry parameters are exclusive.
- **/
 const main = async () => {
 
     let launchTime = new Date().getTime();
@@ -29,8 +19,7 @@ const main = async () => {
     cli.description('send email campaign')
     .option('-c, --campaign [campaign]', 'Limit emailing to the campaign name')
     .option('-r, --region [region]', 'Limit emailing to the region')
-    .option('-s, --resend', 'Resend an email to trainee that did\'nt submit an advice')
-    .option('-t, --retry', 'Resend every email with an SMTP error')
+    .option('-t, --type [type]', 'resend,retry,send (default: send))')
     .parse(process.argv);
 
     const abort = message => {
@@ -39,24 +28,20 @@ const main = async () => {
         });
     };
 
+    let type = cli.type || 'send';
     let regions = configuration.app.active_regions.map(e => e.code_region);
     if (cli.region && !regions.includes(cli.region)) {
         return abort('Region is not active');
     }
 
     let filters = { campaign: cli.campaign, codeRegion: cli.region, limit: 1 };
+    let handler = require(`./handlers/${type}Handler`)(db, configuration);
+    let campaignMailer = createCampaignMailer(db, logger, mailer);
 
     try {
-        logger.info('Sending emails to stagiaires...');
+        logger.info(`Sending emails to stagiaires (${type})...`);
 
-        let results;
-        if (cli.resend) {
-            results = await require('./resendCampaignMailer.js')(db, logger, configuration, mailer, filters);
-        } else if (cli.retry) {
-            results = await require('./retryCampaignMailer.js')(db, logger, configuration, mailer, filters);
-        } else {
-            results = await require('./campaignMailer')(db, logger, configuration, mailer, filters);
-        }
+        let results = await campaignMailer.sendEmails(handler, filters);
 
         await client.close();
 
