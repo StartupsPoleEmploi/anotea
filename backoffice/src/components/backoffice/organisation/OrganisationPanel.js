@@ -276,6 +276,8 @@ export default class OrganisationPanel extends React.Component {
         });
     };
 
+    getActiveStatus = current => this.state.tab === current ? 'active' : '';
+
     render() {
         const { currentEntity, entities } = this.state.training;
 
@@ -310,25 +312,25 @@ export default class OrganisationPanel extends React.Component {
 
                     <div className="avis">
                         <ul className="nav nav-tabs">
-                            <li role="presentation" {...this.state.tab === 'unread' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'unread')}>Nouveaux <span
-                                    className="badge reported">{this.state.inventory.unread}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('unread')}`} onClick={this.switchTab.bind(this, 'unread')}>Nouveaux <span
+                                    className="badge reported">{this.state.inventory.unread}</span></button>
                             </li>
-                            <li role="presentation" {...this.state.tab === 'reported' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'reported')}>Signalés <span
-                                    className="badge rejected">{this.state.inventory.reported}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('reported')}`}onClick={this.switchTab.bind(this, 'reported')}>Signalés <span
+                                    className="badge rejected">{this.state.inventory.reported}</span></button>
                             </li>
-                            <li role="presentation" {...this.state.tab === 'answered' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'answered')}>Répondus <span
-                                    className="badge published">{this.state.inventory.answered}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('answered')}`} onClick={this.switchTab.bind(this, 'answered')}>Répondus <span
+                                    className="badge published">{this.state.inventory.answered}</span></button>
                             </li>
-                            <li role="presentation" {...this.state.tab === 'read' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'read')}>Lus <span
-                                    className="badge toModerate">{this.state.inventory.read}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('read')}`} onClick={this.switchTab.bind(this, 'read')}>Lus <span
+                                    className="badge toModerate">{this.state.inventory.read}</span></button>
                             </li>
-                            <li role="presentation" {...this.state.tab === 'all' ? { className: 'active' } : {}}>
-                                <a role="button" onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et
-                                    avis <span className="badge">{this.state.inventory.all}</span></a>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et
+                                    avis <span className="badge badge-secondary">{this.state.inventory.all}</span></button>
                             </li>
                         </ul>
 
@@ -342,7 +344,7 @@ export default class OrganisationPanel extends React.Component {
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <h3 className="header">
-                                                    <i className="avatar glyphicon glyphicon-user"></i>
+                                                <span className="oi oi-person"></span>
                                                     {advice.pseudo}
                                                     {!advice.pseudo && <em>anonyme</em>} -&nbsp;
                                                     <FormattedDate
@@ -376,19 +378,19 @@ export default class OrganisationPanel extends React.Component {
                                                             pour écrire votre réponse.</p>
 
                                                         <div className="actions">
-                                                            <button className="btn btn-success btn-xs"
+                                                            <button className="btn btn-success btn-sm"
                                                                 onClick={this.handleDoReply.bind(this, advice._id)}>
-                                                                <i className="glyphicon glyphicon-comment"></i> Valider
+                                                                <span className="oi oi-comment-square"></span> Valider
                                                                 la réponse
                                                             </button>
                                                             {advice.answered &&
-                                                            <button className="btn btn-danger btn-xs"
+                                                            <button className="btn btn-danger btn-sm"
                                                                 onClick={this.handleRemoveReply.bind(this, advice._id)}>
-                                                                <i className="glyphicon glyphicon-remove"></i> &Ocirc;ter
+                                                                <span className="oi oi-trash"></span> &Ocirc;ter
                                                                 la réponse</button>}
-                                                            <button className="btn btn-warning btn-xs"
+                                                            <button className="btn btn-warning btn-sm"
                                                                 onClick={this.handleCancelReply.bind(this, advice._id)}>
-                                                                <i className="glyphicon glyphicon-comment"></i> Annuler
+                                                                <span className="oi oi-comment-square"></span> Annuler
                                                             </button>
                                                         </div>
                                                     </div>
@@ -402,31 +404,30 @@ export default class OrganisationPanel extends React.Component {
                                                     {!(this.state.reply.shown === true && this.state.reply.id === advice._id) &&
                                                     <div className="actions">
                                                         {(advice.read !== true && this.state.tab !== 'reported') &&
-                                                        <button className="btn btn-info btn-xs"
+                                                        <button className="btn btn-info btn-sm"
                                                             onClick={this.handleMarkAsRead.bind(this, advice._id)}>
-                                                            <i className="glyphicon glyphicon-ok"></i> Marquer comme lu
+                                                            <span className="oi oi-eye"></span> Marquer comme lu
                                                         </button>}
                                                         {(advice.read === true && this.state.tab !== 'reported') &&
-                                                        <button className="btn btn-info btn-xs"
+                                                        <button className="btn btn-info btn-sm"
                                                             onClick={this.handleMarkAsNotRead.bind(this, advice._id)}>
-                                                            <i className="glyphicon glyphicon-ko"></i> Marquer comme non
+                                                            <span className="oi oi-eye"></span> Marquer comme non
                                                             lu</button>}
                                                         {this.state.tab !== 'reported' &&
-                                                        <button className="btn btn-success btn-xs"
+                                                        <button className="btn btn-success btn-sm"
                                                             onClick={this.handleReply.bind(this, advice._id)}
                                                             title="votre réponse à avis sera publiée sur les sites partenaires et accessible aux futurs stagiaires potentiels">
-                                                            <i className="glyphicon glyphicon-comment"></i> {advice.answered ? 'Modifier la réponse' : 'Répondre'}
+                                                            <span className="oi oi-comment-square"></span> {advice.answered ? 'Modifier la réponse' : 'Répondre'}
                                                         </button>}
                                                         {(this.state.tab !== 'reported' && advice.reported !== true) &&
-                                                        <button className="btn btn-danger btn-xs"
+                                                        <button className="btn btn-danger btn-sm"
                                                             onClick={this.handleReport.bind(this, advice._id)}
                                                             title="signaler un avis permet d'alerter le modérateur sur son non-respect potentiel de la charte de modération">
-                                                            <i className="glyphicon glyphicon-alert"></i> Signaler
+                                                            <span className="oi oi-warning"></span> Signaler
                                                         </button>}
                                                         {advice.reported === true &&
-                                                        <button className="btn btn-danger btn-xs"
-                                                            onClick={this.handleUnreport.bind(this, advice._id)}><i
-                                                                className="glyphicon glyphicon-alert"></i> Marquer comme non
+                                                        <button className="btn btn-danger btn-sm"
+                                                            onClick={this.handleUnreport.bind(this, advice._id)}><span className="oi oi-warning"></span> Marquer comme non
                                                             signalé</button>}
                                                     </div>
                                                     }
@@ -467,31 +468,41 @@ export default class OrganisationPanel extends React.Component {
                             {currentEntity && this.state.pagination.count > 1 &&
                             <ReactPaginate previousLabel={'<'}
                                 nextLabel={'>'}
-                                breakLabel={<a href="">...</a>}
-                                breakClassName={'break-me'}
                                 pageCount={this.state.pagination.count}
                                 forcePage={this.state.pagination.current - 1}
                                 marginPagesDisplayed={2}
                                 pageRangeDisplayed={5}
                                 onPageChange={this.handlePageClick}
-                                containerClassName={'pagination'}
-                                subContainerClassName={'pages pagination'}
+                                breakClassName="page-item"
+                                breakLabel={<a className="page-link">...</a>}
+                                pageClassName="page-item"
+                                previousClassName="page-item"
+                                nextClassName="page-item"
+                                pageLinkClassName="page-link"
+                                previousLinkClassName="page-link"
+                                nextLinkClassName="page-link"
                                 activeClassName={'active'}
+                                containerClassName={'pagination'}
                                 disableInitialCallback={true} />
                             }
                             {!currentEntity && this.state.pagination.count > 1 &&
                             <ReactPaginate previousLabel={'<'}
                                 nextLabel={'>'}
-                                breakLabel={<a href="">...</a>}
-                                breakClassName={'break-me'}
                                 pageCount={this.state.pagination.count}
                                 forcePage={this.state.pagination.current - 1}
                                 marginPagesDisplayed={2}
                                 pageRangeDisplayed={5}
                                 onPageChange={this.handlePageClickWhenSelectingPlace}
-                                containerClassName={'pagination'}
-                                subContainerClassName={'pages pagination'}
+                                breakClassName="page-item"
+                                breakLabel={<a className="page-link">...</a>}
+                                pageClassName="page-item"
+                                previousClassName="page-item"
+                                nextClassName="page-item"
+                                pageLinkClassName="page-link"
+                                previousLinkClassName="page-link"
+                                nextLinkClassName="page-link"
                                 activeClassName={'active'}
+                                containerClassName={'pagination'}
                                 disableInitialCallback={true} />
                             }
                         </div>

@@ -1,6 +1,8 @@
 import React from 'react';
 import Modal from 'react-modal';
 
+import PropTypes from 'prop-types';
+
 const customStyles = {
     content: {
         top: '50%',
@@ -14,10 +16,14 @@ const customStyles = {
 
 export default class Toolbar extends React.PureComponent {
 
+    static propTypes = {
+        exportOrganisationAdvicesToExcel: PropTypes.func.isRequired,
+        profile: PropTypes.string.isRequired
+    }
+
     state = {
         modalIsOpen: false,
     };
-
 
     constructor(props) {
         super(props);
@@ -43,9 +49,9 @@ export default class Toolbar extends React.PureComponent {
             <div className="toolbar">
                 {profile === 'financer' &&
                 <div className="pull-left">
-                    <button className="btn btn-success btn-xs"
+                    <button className="btn btn-success btn-sm"
                         onClick={this.onclick}>
-                        <i className="glyphicon glyphicon glyphicon-download-alt" /> Exporter vers Excel
+                        <span className="oi oi-data-transfer-download"></span> Exporter vers Excel
                     </button>
                     <Modal
                         isOpen={this.state.modalIsOpen}
@@ -54,9 +60,9 @@ export default class Toolbar extends React.PureComponent {
                     >
 
                         <div className="pull-right">
-                            <button className="btn btn-success btn-xs"
+                            <button className="btn btn-success btn-sm"
                                 onClick={this.closeModal}>
-                                Fermer <i className="glyphicon glyphicon glyphicon-remove" />
+                                Fermer <span className="oi oi-x"></span>
                             </button>
                         </div>
                         <h2> Le téléchargement de votre export excel peut durer quelques secondes.

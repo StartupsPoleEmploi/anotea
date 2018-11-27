@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Stars from '../common/Stars';
+
 export default class NoteFilter extends React.Component {
 
     state = {
@@ -22,39 +24,7 @@ export default class NoteFilter extends React.Component {
                             <input type="radio" />
                             {star.valeur}
                             <div>
-                                {star.starNumber === 1 ?
-                                    <i className="glyphicon glyphicon-star"></i> :
-                                    (star.starNumber === 2 ?
-                                        <div>
-                                            <i className="glyphicon glyphicon-star"></i>
-                                            <i className="glyphicon glyphicon-star"></i>
-                                        </div> :
-                                        (star.starNumber === 3 ?
-                                            <div>
-                                                <i className="glyphicon glyphicon-star"></i>
-                                                <i className="glyphicon glyphicon-star"></i>
-                                                <i className="glyphicon glyphicon-star"></i>
-                                            </div> :
-                                            (star.starNumber === 4 ?
-                                                <div>
-                                                    <i className="glyphicon glyphicon-star"></i>
-                                                    <i className="glyphicon glyphicon-star"></i>
-                                                    <i className="glyphicon glyphicon-star"></i>
-                                                    <i className="glyphicon glyphicon-star"></i>
-
-                                                </div> :
-                                                <div>
-                                                    <i className="glyphicon glyphicon-star"></i>
-                                                    <i className="glyphicon glyphicon-star"></i>
-                                                    <i className="glyphicon glyphicon-star"></i>
-                                                    <i className="glyphicon glyphicon-star"></i>
-                                                    <i className="glyphicon glyphicon-star"></i>
-
-                                                </div>
-                                            )
-                                        )
-                                    )
-                                }
+                                <Stars value={star.starNumber} style={{ display: 'inline' }} />
                             </div>
                         </label>
                     </div>

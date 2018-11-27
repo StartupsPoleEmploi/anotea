@@ -28,14 +28,14 @@ export default class EntitySearchForm extends React.PureComponent {
                         Changer de Lieu
                         <span className="caret"></span>
                     </button>
-                    <ul className="dropdown-menu">
+                    <div className="dropdown-menu">
                         {entities.map(entity =>
-                            <li key={entity._id}><a role="button"
+                            <a key={entity._id} className="dropdown-item" role="button"
                                 onClick={this.handleEntityChange.bind(this, entity._id)}>{entity.city}
                                 <small>({entity._id})</small>
-                            </a></li>
+                            </a>
                         )}
-                    </ul>
+                    </div>
                 </div>
             </h2>
         );

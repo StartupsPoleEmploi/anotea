@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import './index.css';
 
-import '../node_modules/bootstrap/dist/js/bootstrap.min.js';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import 'jquery/dist/jquery.min.js';
+import 'popper.js/dist/popper.min.js';
+import 'bootstrap/dist/js/bootstrap.min.js';
+
+import App from './App';
 
 ReactDOM.render(<App />, document.getElementById('root'));

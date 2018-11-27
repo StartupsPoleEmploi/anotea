@@ -88,8 +88,9 @@ export class ForgottenPassword extends React.Component {
 
                         <div className="wrapper">
                             <span className="group-btn">
-                                <button onClick={this.handleAsk} className="btn btn-primary btn-md">Envoyer <i
-                                    className="glyphicon glyphicon-send"></i></button>
+                                <button onClick={this.handleAsk} className="btn btn-primary btn-md">
+                                    Envoyer <span className="oi oi-location"></span>
+                                </button>
                             </span>
                         </div>
                     </div>
