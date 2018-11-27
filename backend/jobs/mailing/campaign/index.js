@@ -44,7 +44,7 @@ const main = async () => {
         return abort('Region is not active');
     }
 
-    let filters = { campaign: cli.campaign, codeRegion: cli.region };
+    let filters = { campaign: cli.campaign, codeRegion: cli.region, limit: 1 };
 
     try {
         logger.info('Sending emails to stagiaires...');

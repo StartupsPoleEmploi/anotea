@@ -25,7 +25,11 @@ module.exports = function(db, logger, configuration, mailer, filters) {
             ...(filters.codeRegion ? { codeRegion: filters.codeRegion } : { codeRegion: { $in: activeRegions } }),
             ...(filters.campaign ? { campaign: filters.campaign } : {}),
             $or: [{ mailRetry: { $eq: null } }, { mailRetry: { $lt: parseInt(maxRelaunch) } }]
-        }).limit(configuration.app.mailer.limit);
+        });
+
+        if (filters.limit()) {
+            cursor.limit(filters.limit);
+        }
 
         while (await cursor.hasNext()) {
             const trainee = await cursor.next();
