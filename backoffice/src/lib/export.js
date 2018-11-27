@@ -1,7 +1,13 @@
 const S = require('string');
+const POLE_EMPLOI = '4';
 
-export const exportToExcel = comments => {
+export const exportToExcel = (comments, codeFinancer) => {
     let lines = '\ufeffnote accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
+
+    if (codeFinancer === POLE_EMPLOI) {
+        lines = lines.substring(0, lines.length-2) + ';qualification\n';
+    }
+
     for (const idx in comments) {
 
         if (comments[idx].comment !== undefined && comments[idx].comment !== null) {
@@ -17,6 +23,11 @@ export const exportToExcel = comments => {
             commentTitle = '"' + S(comments[idx].comment.title).decodeHTMLEntities().s + '"';
             commentText = '"' + S(comments[idx].comment.text).decodeHTMLEntities().s + '"';
             pseudo = '"' + S(comments[idx].pseudo).decodeHTMLEntities().s + '"';
+        }
+
+        let qualification = '';
+        if (codeFinancer === POLE_EMPLOI) {
+            qualification = ';' + comments[idx].qualification + '\n';
         }
 
         lines += (comments[idx].rates !== undefined ? comments[idx].rates.accueil : '') + ';' +
@@ -51,7 +62,8 @@ export const exportToExcel = comments => {
             comments[idx].training.idSessionAudeFormation + ';' +
             (comments[idx].training.infoCarif !== undefined ? comments[idx].training.infoCarif.numeroAction : '') + ';' +
             (comments[idx].training.infoCarif !== undefined ? comments[idx].training.infoCarif.numeroSession : '') + ';' +
-            comments[idx].training.codeFinanceur + '\n';
+            comments[idx].training.codeFinanceur  + (codeFinancer === POLE_EMPLOI ?
+                qualification : '\n')
     }
     const hiddenElement = document.createElement('a');
     let csvData = new Blob([lines], { type: 'text/csv;charset=utf-8' });
