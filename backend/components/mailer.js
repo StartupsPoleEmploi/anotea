@@ -104,7 +104,10 @@ module.exports = function(db, logger, configuration) {
                     logger.error(`An error occurs while sending mail : ${error}̀`);
                     errorCallback(error);
                 } else {
-                    logger.info(`Message ${info.messageId} sent: ${info.response}`);
+                    logger.info(`Message sent to ${mailOptions.to}`, {
+                        messageId: info.messageId,
+                        response: info.response,
+                    });
                     successCallback();
                 }
             });

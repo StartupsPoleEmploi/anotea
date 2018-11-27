@@ -2,6 +2,7 @@
 'use strict';
 
 const cli = require('commander');
+const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
@@ -18,9 +19,12 @@ const getLogger = require('../../../components/logger');
  *   Warning: default, resend and retry parameters are exclusive.
  **/
 const main = async () => {
-    const client = await getMongoClient(configuration.mongodb.uri);
-    const db = client.db();
-    const logger = getLogger('anotea-job-email-campaign', configuration);
+
+    let launchTime = new Date().getTime();
+    let client = await getMongoClient(configuration.mongodb.uri);
+    let db = client.db();
+    let logger = getLogger('anotea-job-email-campaign', configuration);
+    let mailer = require('../../../components/mailer.js')(db, logger, configuration);
 
     cli.description('send email campaign')
     .option('-c, --campaign [campaign]', 'Limit emailing to the campaign name')
@@ -42,13 +46,27 @@ const main = async () => {
 
     let filters = { campaign: cli.campaign, codeRegion: cli.region };
 
-    if (cli.resend) {
-        require('./resendCampaignMailer.js')(db, logger, configuration, filters);
-    } else if (cli.retry) {
-        require('./retryCampaignMailer.js')(db, logger, configuration, filters);
-    } else {
-        require('./campaignMailer')(db, logger, configuration, filters);
+    try {
+        logger.info('Sending emails to stagiaires...');
+
+        let results;
+        if (cli.resend) {
+            results = await require('./resendCampaignMailer.js')(db, logger, configuration, mailer, filters);
+        } else if (cli.retry) {
+            results = await require('./retryCampaignMailer.js')(db, logger, configuration, mailer, filters);
+        } else {
+            results = await require('./campaignMailer')(db, logger, configuration, mailer, filters);
+        }
+
+        await client.close();
+
+        let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
+        logger.info(`Completed in ${duration}`, results);
+
+    } catch (e) {
+        abort(e);
     }
+
 };
 
 main();

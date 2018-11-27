@@ -1,55 +1,60 @@
-module.exports = function(db, logger, configuration, filters) {
+let titleize = require('underscore.string/titleize');
 
-    let mailer = require('../../../components/mailer.js')(db, logger, configuration);
-    let titleize = require('underscore.string/titleize');
-    let launchTime = new Date().getTime();
+module.exports = (db, logger, configuration, mailer, filters) => {
 
-    let cursor = db.collection('trainee').find({
-        'sourceIDF': null,
-        'mailSent': false,
-        'unsubscribe': false,
-        'training.organisation.siret': { $ne: '' },
-        'training.scheduledEndDate': { $lte: new Date() },
-        ...(filters.codeRegion ? { 'codeRegion': filters.codeRegion } : {}),
-        ...(filters.campaign ? { 'campaign': filters.campaign } : {}),
-    }).limit(configuration.app.mailer.limit);
+    return new Promise(async (resolve, reject) => {
 
-    cursor.count((err, count) => {
-        logger.info(`Mailer campaign - ${filters.campaign}`);
-        let stream = cursor.stream();
+        let promises = [];
+        let stats = {
+            total: 0,
+            sent: 0,
+            error: 0,
+        };
 
-        stream.on('data', function(trainee) {
-            let options = {
-                to: trainee.trainee.email
-            };
+        let cursor = db.collection('trainee')
+        .find({
+            'sourceIDF': null,
+            'mailSent': false,
+            'unsubscribe': false,
+            'training.organisation.siret': { $ne: '' },
+            'training.scheduledEndDate': { $lte: new Date() },
+            ...(filters.codeRegion ? { 'codeRegion': filters.codeRegion } : {}),
+            ...(filters.campaign ? { 'campaign': filters.campaign } : {}),
+        }).limit(configuration.app.mailer.limit);
+
+        while (await cursor.hasNext()) {
+            const trainee = await cursor.next();
             trainee.trainee.firstName = titleize(trainee.trainee.firstName);
             trainee.trainee.name = titleize(trainee.trainee.name);
-            mailer.sendVotreAvisMail(options, trainee, function() {
-                try {
-                    db.collection('trainee').update({ '_id': trainee._id }, {
-                        $set: {
-                            'mailSent': true,
-                            'mailSentDate': new Date()
-                        }, $unset: { 'mailError': '', 'mailErrorDetail': '' }
-                    });
-                } catch (e) {
-                    logger.error(e);
-                }
-            }, function(err) {
-                db.collection('trainee').update({ '_id': trainee._id }, {
-                    $set: {
-                        'mailSent': true,
-                        'mailError': 'smtpError',
-                        'mailErrorDetail': err
-                    }
-                });
-            });
-        });
 
-        // TODO: use promise array to be sure that every emails are sent !
-        stream.on('end', function() {
-            let endTime = new Date().getTime();
-            logger.info('Mailer campaign - completed (' + count + ' emails, ' + (endTime - launchTime) + 'ms)');
-        });
+            promises.push(
+                new Promise((resolve, reject) => {
+                    mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee, () => {
+                        db.collection('trainee').update({ '_id': trainee._id }, {
+                            $set: {
+                                'mailSent': true,
+                                'mailSentDate': new Date()
+                            }, $unset: { 'mailError': '', 'mailErrorDetail': '' }
+                        });
+                        stats.sent++;
+                        return resolve();
+                    }, err => {
+                        db.collection('trainee').update({ '_id': trainee._id }, {
+                            $set: {
+                                'mailSent': true,
+                                'mailError': 'smtpError',
+                                'mailErrorDetail': err
+                            }
+                        });
+                        logger.error(err);
+                        stats.error++;
+                        return reject();
+                    });
+                })
+            );
+        }
+
+        await Promise.all(promises);
+        return stats.error === 0 ? resolve(stats) : reject(stats);
     });
 };
