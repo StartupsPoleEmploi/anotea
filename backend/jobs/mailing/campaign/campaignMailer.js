@@ -10,6 +10,9 @@ module.exports = (db, logger, configuration, mailer, filters) => {
             sent: 0,
             error: 0,
         };
+        let activeRegions = configuration.app.active_regions
+        .filter(region => region.jobs.send === true)
+        .map(region => region.code_region);
 
         let cursor = db.collection('trainee')
         .find({
@@ -18,7 +21,7 @@ module.exports = (db, logger, configuration, mailer, filters) => {
             'unsubscribe': false,
             'training.organisation.siret': { $ne: '' },
             'training.scheduledEndDate': { $lte: new Date() },
-            ...(filters.codeRegion ? { 'codeRegion': filters.codeRegion } : {}),
+            ...(filters.codeRegion ? { codeRegion: filters.codeRegion } : { codeRegion: { $in: activeRegions } }),
             ...(filters.campaign ? { 'campaign': filters.campaign } : {}),
         }).limit(configuration.app.mailer.limit);
 
