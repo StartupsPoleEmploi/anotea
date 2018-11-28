@@ -1,4 +1,5 @@
 let titleize = require('underscore.string/titleize');
+let { delay } = require('../../../utils');
 
 class AvisMailer {
 
@@ -65,6 +66,11 @@ class AvisMailer {
                                 return reject(err);
                             });
                     });
+
+                    if (options.delay) {
+                        await delay(options.delay);
+                    }
+
                     stats.sent++;
                 } catch (err) {
                     stats.error++;

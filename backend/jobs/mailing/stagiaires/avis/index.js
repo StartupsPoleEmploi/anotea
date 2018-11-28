@@ -21,6 +21,7 @@ const main = async () => {
     .option('-r, --region [region]', 'Limit emailing to the region')
     .option('-t, --type [type]', 'resend,retry,send (default: send))')
     .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)')
+    .option('-d, --delay [delay]', 'Time in seconds between two emails (default: 0s)')
     .parse(process.argv);
 
     const abort = message => {
@@ -45,7 +46,10 @@ const main = async () => {
     try {
         logger.info(`Sending emails to stagiaires (${type})...`);
 
-        let results = await traineeMailer.sendEmails(action, { limit: cli.limit });
+        let results = await traineeMailer.sendEmails(action, {
+            limit: cli.limit,
+            delay: cli.delay,
+        });
 
         await client.close();
 
