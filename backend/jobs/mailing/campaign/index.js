@@ -6,7 +6,7 @@ const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-const createCampaignMailer = require('./campaignMailer');
+const CampaignMailer = require('./CampaignMailer');
 
 const main = async () => {
 
@@ -20,6 +20,7 @@ const main = async () => {
     .option('-c, --campaign [campaign]', 'Limit emailing to the campaign name')
     .option('-r, --region [region]', 'Limit emailing to the region')
     .option('-t, --type [type]', 'resend,retry,send (default: send))')
+    .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)')
     .parse(process.argv);
 
     const abort = message => {
@@ -34,14 +35,17 @@ const main = async () => {
         return abort('Region is not active');
     }
 
-    let filters = { campaign: cli.campaign, codeRegion: cli.region, limit: 1 };
-    let handler = require(`./handlers/${type}Handler`)(db, configuration);
-    let campaignMailer = createCampaignMailer(db, logger, mailer);
+    let campaignMailer = new CampaignMailer(db, logger, mailer);
+    let ActionClass = require(`./backend/jobs/mailing/campaign/actions/${type}Action`);
+    let action = new ActionClass(db, configuration, {
+        campaign: cli.campaign,
+        codeRegion: cli.region,
+    });
 
     try {
         logger.info(`Sending emails to stagiaires (${type})...`);
 
-        let results = await campaignMailer.sendEmails(handler, filters);
+        let results = await campaignMailer.sendEmails(action, { limit: cli.limit });
 
         await client.close();
 
