@@ -132,7 +132,7 @@ module.exports = function(db, logger, configuration) {
                     hostname: configuration.app.public_hostname,
                     trackingLink: getTrackingLink(organisme),
                     organisme: organisme,
-                    comment: comment.comment.text,
+                    comment: comment ? comment.comment.text : null,
                     contact: getContact(carif)
                 };
                 sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
