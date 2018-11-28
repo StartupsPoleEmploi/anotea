@@ -1,9 +1,9 @@
 const assert = require('assert');
-const { withMongoDB } = require('../../../helpers/test-db');
-const { newTrainee, randomize } = require('../../../helpers/data/dataset');
-const logger = require('../../../helpers/test-logger');
-const CampaignMailer = require('../../../../jobs/mailing/campaign/CampaignMailer');
-const { successMailer, errorMailer } = require('./fake-mailers');
+const { withMongoDB } = require('../../../../helpers/test-db');
+const { newTrainee, randomize } = require('../../../../helpers/data/dataset');
+const logger = require('../../../../helpers/test-logger');
+const AvisMailer = require('../../../../../jobs/mailing/stagiaires/avis/AvisMailer');
+const { successMailer, errorMailer } = require('../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
@@ -13,7 +13,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let id = randomize('trainee');
         let email = `${randomize('name')}@email.fr`;
-        let mailer = new CampaignMailer(db, logger, successMailer(emailsSent));
+        let mailer = new AvisMailer(db, logger, successMailer(emailsSent));
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
                 _id: id,
@@ -40,7 +40,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should update trainee when mailer succeed', async () => {
 
         let db = await getTestDatabase();
-        let mailer = new CampaignMailer(db, logger, successMailer());
+        let mailer = new AvisMailer(db, logger, successMailer());
         let id = randomize('trainee');
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
@@ -66,7 +66,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should update trainee when mailer fails', async () => {
 
         let db = await getTestDatabase();
-        let mailer = new CampaignMailer(db, logger, errorMailer());
+        let mailer = new AvisMailer(db, logger, errorMailer());
         let id = randomize('trainee');
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({

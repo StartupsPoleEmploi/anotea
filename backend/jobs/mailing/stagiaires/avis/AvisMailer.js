@@ -1,6 +1,6 @@
 let titleize = require('underscore.string/titleize');
 
-class CampaignMailer {
+class AvisMailer {
 
     constructor(db, logger, mailer) {
         this.db = db;
@@ -77,4 +77,4 @@ class CampaignMailer {
     }
 }
 
-module.exports = CampaignMailer;
+module.exports = AvisMailer;

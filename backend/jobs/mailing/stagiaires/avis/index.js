@@ -4,9 +4,9 @@
 const cli = require('commander');
 const moment = require('moment');
 const configuration = require('config');
-const getMongoClient = require('../../../components/mongodb');
-const getLogger = require('../../../components/logger');
-const CampaignMailer = require('./CampaignMailer');
+const getMongoClient = require('../../../../components/mongodb');
+const getLogger = require('../../../../components/logger');
+const TraineeMailer = require('./AvisMailer');
 
 const main = async () => {
 
@@ -14,7 +14,7 @@ const main = async () => {
     let client = await getMongoClient(configuration.mongodb.uri);
     let db = client.db();
     let logger = getLogger('anotea-job-email-campaign', configuration);
-    let mailer = require('../../../components/mailer.js')(db, logger, configuration);
+    let mailer = require('../../../../components/mailer.js')(db, logger, configuration);
 
     cli.description('send email campaign')
     .option('-c, --campaign [campaign]', 'Limit emailing to the campaign name')
@@ -35,8 +35,8 @@ const main = async () => {
         return abort('Region is not active');
     }
 
-    let campaignMailer = new CampaignMailer(db, logger, mailer);
-    let ActionClass = require(`./backend/jobs/mailing/campaign/actions/${type}Action`);
+    let traineeMailer = new TraineeMailer(db, logger, mailer);
+    let ActionClass = require(`./actions/${type}Action`);
     let action = new ActionClass(db, configuration, {
         campaign: cli.campaign,
         codeRegion: cli.region,
@@ -45,7 +45,7 @@ const main = async () => {
     try {
         logger.info(`Sending emails to stagiaires (${type})...`);
 
-        let results = await campaignMailer.sendEmails(action, { limit: cli.limit });
+        let results = await traineeMailer.sendEmails(action, { limit: cli.limit });
 
         await client.close();
 

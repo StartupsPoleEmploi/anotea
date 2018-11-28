@@ -1,12 +1,11 @@
 const assert = require('assert');
-const moment = require('moment');
 const configuration = require('config');
-const { withMongoDB } = require('../../../../helpers/test-db');
-const { newTrainee, randomize } = require('../../../../helpers/data/dataset');
-const logger = require('../../../../helpers/test-logger');
-const CampaignMailer = require('../../../../../jobs/mailing/campaign/CampaignMailer');
-const ResendAction = require('../../../../../jobs/mailing/campaign/actions/ResendAction');
-const { successMailer } = require('../fake-mailers');
+const { withMongoDB } = require('../../../../../helpers/test-db');
+const { newTrainee, randomize } = require('../../../../../helpers/data/dataset');
+const logger = require('../../../../../helpers/test-logger');
+const AvisMailer = require('../../../../../../jobs/mailing/stagiaires/avis/AvisMailer');
+const RetryAction = require('../../../../../../jobs/mailing/stagiaires/avis/actions/RetryAction');
+const { successMailer } = require('../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
@@ -21,19 +20,19 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _id: id,
                 mailSent: true,
                 unsubscribe: false,
-                tracking: null,
+                mailError: 'smtpError',
+                mailErrorDetail: 'An error occurred',
                 mailRetry: 0,
-                mailSentDate: moment().subtract('10', 'days').toDate(),
                 trainee: {
                     email: email,
                 },
             })),
         ]);
 
-        let campaignMailer = new CampaignMailer(db, logger, successMailer(emailsSent));
-        let handler = new ResendAction(db, configuration);
+        let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
+        let handler = new RetryAction(db, configuration);
 
-        await campaignMailer.sendEmails(handler);
+        await avisMailer.sendEmails(handler);
 
         assert.deepEqual(emailsSent, [{ to: email }]);
     });
