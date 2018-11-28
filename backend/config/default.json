@@ -108,8 +108,10 @@
     "hostname": "localhost",
     "greetingTimeout": 300000,
     "from": "anotea@pole-emploi.fr",
-    "maxRelaunch": 1,
-    "relaunchDelay": 7,
+    "stagiaires": {
+      "relaunchDelay": 7,
+      "maxRelaunch": 1
+    },
     "organisme": {
       "newAccountRelaunchDelay": 7,
       "newCommentsNotificationRelaunchDelay": 15

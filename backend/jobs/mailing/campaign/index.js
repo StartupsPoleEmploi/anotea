@@ -45,7 +45,7 @@ const main = async () => {
     if (cli.resend) {
         require('./resendCampaignMailer.js')(db, logger, configuration, filters);
     } else if (cli.retry) {
-        require('./retryCampaignMailer.js')(db, logger, configuration);
+        require('./retryCampaignMailer.js')(db, logger, configuration, filters);
     } else {
         require('./campaignMailer')(db, logger, configuration, filters);
     }

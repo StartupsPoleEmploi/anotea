@@ -1,16 +1,19 @@
-module.exports = function(db, logger, configuration) {
+module.exports = function(db, logger, configuration, filters) {
 
     const mailer = require('../../../components/mailer.js')(db, logger, configuration);
 
     const launchTime = new Date().getTime();
 
-    const activeRegions = configuration.app.active_regions.filter(region => region.jobs && region.jobs.resend).map(region => region.code_region);
+    const activeRegions = configuration.app.active_regions
+    .filter(region => region.jobs.resend === true)
+    .map(region => region.code_region);
 
     const cursor = db.collection('trainee').find({
         mailSent: true,
         unsubscribe: false,
         mailError: { $ne: null },
-        codeRegion: { $in: activeRegions },
+        ...(filters.codeRegion ? { codeRegion: filters.codeRegion } : { codeRegion: { $in: activeRegions } }),
+        ...(filters.campaign ? { campaign: filters.campaign } : {}),
         $or: [{ mailRetry: { $eq: null } }, { mailRetry: { $lt: parseInt(configuration.smtp.maxRelaunch) } }]
     }).limit(configuration.app.mailer.limit);
 

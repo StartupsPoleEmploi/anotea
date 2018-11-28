@@ -14,8 +14,8 @@ module.exports = function(db, logger, configuration, filters) {
         ...(filters.campaign ? { 'campaign': filters.campaign } : {}),
     }).limit(configuration.app.mailer.limit);
 
-    cursor.count(function(err, count) {
-        logger.info('Mailer campaign - launch');
+    cursor.count((err, count) => {
+        logger.info(`Mailer campaign - ${filters.campaign}`);
         let stream = cursor.stream();
 
         stream.on('data', function(trainee) {
