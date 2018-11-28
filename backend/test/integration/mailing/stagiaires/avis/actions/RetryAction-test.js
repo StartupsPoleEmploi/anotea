@@ -15,6 +15,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let id = randomize('trainee');
         let email = `${randomize('name')}@email.fr`;
+        let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
+        let handler = new RetryAction(db, configuration);
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
                 _id: id,
@@ -28,9 +30,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 },
             })),
         ]);
-
-        let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
-        let handler = new RetryAction(db, configuration);
 
         await avisMailer.sendEmails(handler);
 
