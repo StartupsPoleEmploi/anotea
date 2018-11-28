@@ -1,14 +1,14 @@
-import React                from 'react';
-import { FormattedDate }    from 'react-intl';
-import ReactPaginate        from 'react-paginate';
+import React from 'react';
+import { FormattedDate } from 'react-intl';
+import ReactPaginate from 'react-paginate';
 
-import AdviceRates              from '../common/adviceRates';
-import Toolbar                  from '../common/Toolbar';
-import TrainingSearchForm       from './trainingSearchForm';
-import EntitySearchForm         from './EntitySearchForm';
-import OrganisationSearchForm   from './OrganisationSearchForm';
-import CodeFinancerSearchForm   from './CodeFinancerSearchForm';
-import SessionStats             from '../organisation/sessionStats';
+import AdviceRates from '../common/adviceRates';
+import Toolbar from '../common/Toolbar';
+import TrainingSearchForm from './trainingSearchForm';
+import EntitySearchForm from './EntitySearchForm';
+import OrganisationSearchForm from './OrganisationSearchForm';
+import CodeFinancerSearchForm from './CodeFinancerSearchForm';
+import SessionStats from '../organisation/sessionStats';
 import {
     getOrganisationAdvices,
     getOrganisationPlaces,
