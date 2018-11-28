@@ -1,14 +1,14 @@
-import React from 'react';
-import { FormattedDate } from 'react-intl';
-import ReactPaginate from 'react-paginate';
+import React                from 'react';
+import { FormattedDate }    from 'react-intl';
+import ReactPaginate        from 'react-paginate';
 
-import AdviceRates from '../common/adviceRates';
-import Toolbar from '../common/Toolbar';
-import TrainingSearchForm from './trainingSearchForm';
-import EntitySearchForm from './EntitySearchForm';
-import OrganisationSearchForm from './OrganisationSearchForm';
-import CodeFinancerSearchForm from './CodeFinancerSearchForm';
-import SessionStats from '../organisation/sessionStats';
+import AdviceRates              from '../common/adviceRates';
+import Toolbar                  from '../common/Toolbar';
+import TrainingSearchForm       from './trainingSearchForm';
+import EntitySearchForm         from './EntitySearchForm';
+import OrganisationSearchForm   from './OrganisationSearchForm';
+import CodeFinancerSearchForm   from './CodeFinancerSearchForm';
+import SessionStats             from '../organisation/sessionStats';
 import {
     getOrganisationAdvices,
     getOrganisationPlaces,
@@ -63,8 +63,7 @@ export default class FinancerPanel extends React.Component {
         super(props);
 
         if (props.codeFinanceur === POLE_EMPLOI) {
-            this.setState(Object.assign(this.state, {
-                financers: [
+            this.state.financers = [
                     { _id: '4', title: `Pôle Emploi` },
                     { _id: '2', title: `Collectivité territoriale - Conseil régional` },
                     { _id: '10', title: `Béneficiaire de l'action` },
@@ -81,15 +80,10 @@ export default class FinancerPanel extends React.Component {
                     { _id: '7', title: `AGEFIPH` },
                     { _id: '17', title: `OPACIF` },
                     { _id: '9', title: `Collectivité territoriale - Commune` },
-                ],
-                currentFinancer: '',
-            }));
+                ];
+            this.state.currentFinancer = '';
         } else {
-            this.setState(Object.assign(this.state, {
-                currentFinancer: {
-                    _id: props.codeFinanceur
-                }
-            }));
+            this.state.currentFinancer._id = props.codeFinanceur;
         }
 
         getOrganisations(props.codeRegion, props.codeFinanceur).then(organisations => {
@@ -243,6 +237,7 @@ export default class FinancerPanel extends React.Component {
 
         const page = this.state.pagination.current;
         const result = await getOrganisationLieuAdvices(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.trainingId, this.state.training.currentEntity._id, this.state.tab, order, page);
+
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
             advices: result.advices.map(advice => {
