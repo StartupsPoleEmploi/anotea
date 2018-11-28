@@ -1,9 +1,10 @@
 const configuration = require('config');
+const moment = require('moment');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const { newComment, newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const newAccountMailer = require('../../../../../jobs/mailing/organismes/account/newAccountMailer');
+const ResendAccountMailer = require('../../../../../jobs/mailing/organismes/account/ResendAccountMailer');
 
 let fakeMailer = spy => {
     return {
@@ -16,41 +17,7 @@ let fakeMailer = spy => {
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    it('should send email by siret', async () => {
-
-        let spy = [];
-        let db = await getTestDatabase();
-
-        await Promise.all([
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: `${31705038300064}`,
-                    },
-                }
-            })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
-                courriel: 'new@organisme.fr',
-                meta: {
-                    nbAvis: 1,
-                    siretAsString: `${31705038300064}`,
-                },
-                mailSentDate: null,
-            })),
-        ]);
-
-        let { sendEmailBySiret } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await sendEmailBySiret('31705038300064');
-
-        assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(spy, [{
-            to: 'new@organisme.fr'
-        }]);
-    });
-
-    it('should send emails by region', async () => {
+    it('should resend email', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -72,24 +39,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     siretAsString: `${31705038300064}`,
                 },
                 passwordHash: null,
-                sources: ['intercarif'],
-                mailSentDate: null,
-            })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: 11111111111111,
-                SIRET: 11111111111111,
-                meta: {
-                    nbAvis: 0,
-                    siretAsString: '11111111111111',
-                },
-                passwordHash: null,
-                sources: ['intercarif'],
-                mailSentDate: null,
+                mailSentDate: moment().subtract('10', 'days').toDate(),
             })),
         ]);
 
-        let { sendEmailsByRegion } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await sendEmailsByRegion('11');
+        let resendAccountMailer = new ResendAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await resendAccountMailer.resendEmails();
 
         assert.deepEqual(results, { mailSent: 1 });
         assert.deepEqual(spy, [{
@@ -97,7 +52,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         }]);
     });
 
-    it('should not resent emails', async () => {
+    it('should ignore organisme with sent date lesser than relaunch delay', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -118,18 +73,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
-                mailSentDate: new Date(),
+                passwordHash: null,
+                mailSentDate: moment().subtract('1', 'days').toDate(),
             })),
         ]);
 
-        let { sendEmailsByRegion } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await sendEmailsByRegion('11');
+        let resendAccountMailer = new ResendAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await resendAccountMailer.resendEmails();
 
         assert.deepEqual(results, { mailSent: 0 });
-        assert.deepEqual(spy, []);
     });
 
-    it('should ignore account from another region', async () => {
+    it('should ignore organisme with email already resent', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -150,14 +105,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
-                codeRegion: '17',
+                passwordHash: null,
+                resend: true,
+                mailSentDate: moment().subtract('20', 'days').toDate(),
             })),
         ]);
 
-        let { sendEmailsByRegion } = newAccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await sendEmailsByRegion('11');
+        let resendAccountMailer = new ResendAccountMailer(db, logger, configuration, fakeMailer(spy));
+        let results = await resendAccountMailer.resendEmails();
 
         assert.deepEqual(results, { mailSent: 0 });
-        assert.deepEqual(spy, []);
     });
 }));

@@ -20,8 +20,8 @@ const main = async () => {
     .option('-c, --campaign [campaign]', 'Limit emailing to the campaign name')
     .option('-r, --region [region]', 'Limit emailing to the region')
     .option('-t, --type [type]', 'resend,retry,send (default: send))')
-    .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)')
-    .option('-d, --delay [delay]', 'Time in seconds between two emails (default: 0s)')
+    .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
+    .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
     .parse(process.argv);
 
     const abort = message => {

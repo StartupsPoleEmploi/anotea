@@ -6,8 +6,8 @@ const cli = require('commander');
 const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
-const newAccountMailer = require('./newAccountMailer');
-const resendAccountMailer = require('./resendAccountMailer');
+const AccountMailer = require('./AccountMailer');
+const ResendAccountMailer = require('./ResendAccountMailer');
 
 const main = async () => {
 
@@ -16,8 +16,8 @@ const main = async () => {
     let db = client.db();
     let logger = getLogger('anotea-job-mailing-account', configuration);
     let mailer = require('../../../../components/mailer.js')(db, logger, configuration);
-    let { sendEmailsByRegion, sendEmailBySiret } = newAccountMailer(db, logger, configuration, mailer);
-    let { resendEmails } = resendAccountMailer(db, logger, configuration, mailer);
+    let accountMailer = new AccountMailer(db, logger, configuration, mailer);
+    let resendAccountMailer = new ResendAccountMailer(db, logger, configuration, mailer);
 
     const abort = message => {
         logger.error(message, () => {
@@ -29,6 +29,8 @@ const main = async () => {
     .option('-r, --region [region]', 'The region code')
     .option('-s, --siret [siret]', 'Siret of a specific organisme')
     .option('-e, --resend', 'Resend an email to trainee that did\'nt create an account')
+    .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
+    .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
     .parse(process.argv);
 
     if (!cli.region && !cli.siret) {
@@ -40,16 +42,20 @@ const main = async () => {
         return abort('Region is not active');
     }
 
+    let options = {
+        limit: cli.limit,
+        delay: cli.delay,
+    };
     try {
         logger.info('Sending emails to new organismes...');
 
         let results;
         if (cli.siret) {
-            results = await sendEmailBySiret(cli.siret);
+            results = await accountMailer.sendEmailBySiret(cli.siret, options);
         } else if (cli.resend) {
-            results = await resendEmails();
+            results = await resendAccountMailer.resendEmails(options);
         } else {
-            results = await sendEmailsByRegion(cli.region);
+            results = await accountMailer.sendEmailsByRegion(cli.region, options);
         }
 
 

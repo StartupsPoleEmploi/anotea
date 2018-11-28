@@ -9,7 +9,7 @@ class AvisMailer {
         this.mailer = mailer;
     }
 
-    onSuccess(trainee) {
+    _onSuccess(trainee) {
         return this.db.collection('trainee').updateOne({ '_id': trainee._id }, {
             $set: {
                 mailSent: true,
@@ -25,7 +25,7 @@ class AvisMailer {
         });
     }
 
-    onError(err, trainee) {
+    _onError(err, trainee) {
         return this.db.collection('trainee').updateOne({ '_id': trainee._id }, {
             $set: {
                 mailSent: true,
@@ -59,10 +59,10 @@ class AvisMailer {
                     await new Promise((resolve, reject) => {
                         this.mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee,
                             async () => {
-                                await this.onSuccess(trainee);
+                                await this._onSuccess(trainee);
                                 return resolve();
                             }, async err => {
-                                await this.onError(err, trainee);
+                                await this._onError(err, trainee);
                                 return reject(err);
                             });
                     });

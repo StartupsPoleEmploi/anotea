@@ -1,9 +1,9 @@
 module.exports = {
     successMailer: (spy = []) => {
         return {
-            sendVotreAvisMail: (options, trainee, success) => {
-                success();
+            sendVotreAvisMail: async (options, trainee, success) => {
                 spy.push(options);
+                success();
             }
         };
     },
