@@ -1,11 +1,13 @@
 const _ = require('lodash');
 const uuid = require('uuid');
+const moment = require('moment');
 const ObjectID = require('mongodb').ObjectID;
 
 const randomize = value => `${value}-${uuid.v4()}`;
 const randomSIRET = () => `${Math.floor(Math.random() * 9000000000) + 1000000000}`;
+const getDateInThePast = () => moment().subtract('100', 'days').toDate();
 
-let newComment = (custom, date = new Date()) => {
+let newComment = (custom, date = getDateInThePast()) => {
     return _.merge({
         _id: new ObjectID(),
         token: randomize('token-12345'),
@@ -103,7 +105,7 @@ module.exports = {
         return _.merge({
             _id: `${randomize('test-campaign')}`,
             campaign: 'test-campaign',
-            importDate: new Date(),
+            importDate: getDateInThePast(),
             trainee: {
                 name: 'Dupont',
                 firstName: 'Henri',
@@ -119,8 +121,8 @@ module.exports = {
             training: {
                 idFormation: '14_AF_0000011111',
                 title: 'Développeur',
-                startDate: new Date(),
-                scheduledEndDate: new Date(),
+                startDate: getDateInThePast(),
+                scheduledEndDate: getDateInThePast(),
                 organisation: {
                     id: '14_OF_XXXXXXXXXX',
                     siret: '11111111111111',
@@ -149,9 +151,9 @@ module.exports = {
             unsubscribe: false,
             mailSent: true,
             token: randomize('token'),
-            mailSentDate: new Date(),
+            mailSentDate: getDateInThePast(),
             tracking: {
-                firstRead: new Date()
+                firstRead: getDateInThePast()
             },
             codeRegion: '11'
         }, custom);
@@ -170,9 +172,9 @@ module.exports = {
             raisonSociale: 'Pole Emploi Formation',
             courriel: 'contact@poleemploi-formation.fr',
             passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
-            creationDate: new Date(),
+            creationDate: getDateInThePast(),
             token: randomize('token'),
-            mailSentDate: new Date(),
+            mailSentDate: getDateInThePast(),
             meta: {
                 siretAsString: '6080274100045'
             },
