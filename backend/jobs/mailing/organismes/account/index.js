@@ -48,7 +48,7 @@ const main = async () => {
             let ActionClass = require(`./actions/${type}Action`);
             let action = new ActionClass(configuration, {
                 codeRegions: cli.region ? [cli.region] :
-                    findActiveRegions(configuration.app.active_regions, 'organismes.account'),
+                    findActiveRegions(configuration.app.active_regions, 'organismes.accounts'),
             });
 
             results = await accountMailer.sendEmails(action, options);

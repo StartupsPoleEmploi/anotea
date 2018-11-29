@@ -2,7 +2,7 @@ const moment = require('moment');
 const getContactEmail = require('../../../../components/getContactEmail');
 let { delay } = require('../../../utils');
 
-class CommentsMailer {
+class NotificationMailer {
 
     constructor(db, logger, configuration, mailer) {
         this.db = db;
@@ -13,7 +13,7 @@ class CommentsMailer {
 
     _findOrganismes(codeRegions) {
         this.logger.info('Searching organismes with at least 5 non read comments...');
-        let delay = this.configuration.smtp.organisme.newCommentsNotificationRelaunchDelay;
+        let delay = this.configuration.smtp.organisme.notificationsRelaunchDelay;
 
         return this.db.collection('organismes')
         .find({
@@ -81,4 +81,4 @@ class CommentsMailer {
 
 }
 
-module.exports = CommentsMailer;
+module.exports = NotificationMailer;

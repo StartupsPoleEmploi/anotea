@@ -12,8 +12,8 @@
             "avis": true
           },
           "organismes": {
-            "account": true,
-            "newCommentsNotification": true
+            "accounts": true,
+            "notifications": true
           }
         }
       },
@@ -25,8 +25,8 @@
             "avis": true
           },
           "organismes": {
-            "account": true,
-            "newCommentsNotification": true
+            "accounts": true,
+            "notifications": true
           }
         }
       },
@@ -43,8 +43,8 @@
             "avis": true
           },
           "organismes": {
-            "account": false,
-            "newCommentsNotification": false
+            "accounts": false,
+            "notifications": false
           }
         }
       },
@@ -63,8 +63,8 @@
             "retry": true
           },
           "organismes": {
-            "account": false,
-            "newCommentsNotification": false
+            "accounts": false,
+            "notifications": false
           }
         }
       }
@@ -132,8 +132,8 @@
       "maxRelaunch": 1
     },
     "organisme": {
-      "accountRelaunchDelay": 7,
-      "newCommentsNotificationRelaunchDelay": 15
+      "accountsRelaunchDelay": 7,
+      "notificationsRelaunchDelay": 15
     }
   },
   "api": {

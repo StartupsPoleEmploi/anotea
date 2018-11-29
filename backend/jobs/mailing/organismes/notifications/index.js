@@ -6,7 +6,7 @@ const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
-const CommentsMailer = require('./CommentsMailer');
+const NotificationMailer = require('./NotificationMailer');
 const findActiveRegions = require('../../findActiveRegions');
 
 const main = async () => {
@@ -16,7 +16,7 @@ const main = async () => {
     let db = client.db();
     let logger = getLogger('anotea-job-email-campaign-with-at-least-five-not-read-comments', configuration);
     let mailer = require('../../../../components/mailer.js')(db, logger, configuration);
-    let commentsMailer = new CommentsMailer(db, logger, configuration, mailer);
+    let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
 
     cli.description('send notifications to organismes')
     .option('-r, --region [region]', 'Limit emailing to the region')
@@ -32,11 +32,11 @@ const main = async () => {
 
     try {
         logger.info(`Sending emails to organismes...`);
-        let results = await commentsMailer.sendEmails({
+        let results = await notificationMailer.sendEmails({
             limit: cli.limit,
             delay: cli.delay,
             codeRegions: cli.region ? [cli.region] :
-                findActiveRegions(configuration.app.active_regions, 'organismes.newCommentsNotification'),
+                findActiveRegions(configuration.app.active_regions, 'organismes.notifications'),
         });
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');

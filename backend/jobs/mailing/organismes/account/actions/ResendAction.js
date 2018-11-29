@@ -8,7 +8,7 @@ class ResendAction {
     }
 
     getQuery() {
-        let delay = this.configuration.smtp.organisme.accountRelaunchDelay;
+        let delay = this.configuration.smtp.organisme.accountsRelaunchDelay;
 
         return {
             'meta.nbAvis': { $gte: 1 },
