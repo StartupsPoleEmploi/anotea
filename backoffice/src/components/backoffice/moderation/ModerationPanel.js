@@ -17,6 +17,13 @@ import {
 } from '../../../lib/adviceService';
 
 const DEFAULT_ORDER = 'moderation';
+const QUALIFICATION =[
+    {qualif: 'négatif', value: 'Négatif'},
+    {qualif: 'positif', value: 'Positif ou neutre'},
+    {qualif: 'pe', value: 'PE'},
+    {qualif: 'of', value: 'OF'},
+    {qualif: 'cr', value: 'CR'},
+];
 
 export default class ModerationPanel extends React.Component {
 
@@ -232,7 +239,7 @@ export default class ModerationPanel extends React.Component {
                             <div className="row">
                                 <div className="col-md-6">
                                     <h3>
-                                        <span className="oi oi-person"></span>
+                                        <span className="oi oi-person"/>
 
                                         <div className="pseudo">
                                             {advice.pseudo &&
@@ -294,7 +301,7 @@ export default class ModerationPanel extends React.Component {
                                                 <button className="btn btn-default dropdown-toggle btn-danger btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <span className="oi oi-circle-x"></span> Rejeter
+                                                    <span className="oi oi-circle-x"/> Rejeter
                                                 </button>
                                                 <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
                                                     <h6 className="dropdown-header">Motif de rejet</h6>
@@ -312,27 +319,24 @@ export default class ModerationPanel extends React.Component {
                                                 <button className="btn btn-default dropdown-toggle btn-success btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <span className="oi oi-circle-check"></span> Publier
+                                                    <span className="oi oi-circle-check"/> Publier
                                                 </button>
-                                                <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
+
+                                                <div className="dropdown-menu"
+                                                    aria-labelledby="dropdownMenu1">
                                                     <h6 className="dropdown-header">Qualification</h6>
-                                                    <a className="dropdown-item" onClick={this.handlePublish.bind(this, advice._id, 'négatif')}
-                                                        role="button">Négatif</a>
-                                                    <a className="dropdown-item"
-                                                        onClick={this.handlePublish.bind(this, advice._id, 'positif')}
-                                                        role="button">Positif ou neutre</a>
-                                                    <a className="dropdown-item" onClick={this.handlePublish.bind(this, advice._id, 'pe')}
-                                                        role="button">PE</a>
-                                                    <a className="dropdown-item" onClick={this.handlePublish.bind(this, advice._id, 'of')}
-                                                        role="button">OF</a>
-                                                    <a className="dropdown-item" onClick={this.handlePublish.bind(this, advice._id, 'cr')}
-                                                        role="button">CR</a>
+                                                    {QUALIFICATION.map((qualif, index) =>
+                                                        <a  key={index}
+                                                            className="dropdown-item"
+                                                            onClick={this.handlePublish.bind(this, advice._id, qualif.qualif)}
+                                                            role="button">{qualif.value}</a>
+                                                    )}
                                                 </div>
                                             </div>}
 
                                             <button className="btn btn-primary btn-sm"
                                                 onClick={this.handleEdit.bind(this, advice._id)}>
-                                                <span className="oi oi-pencil"></span> Modifier
+                                                <span className="oi oi-pencil"/> Modifier
                                             </button>
                                         </div>
                                     </div>
@@ -341,32 +345,29 @@ export default class ModerationPanel extends React.Component {
                                     <div>
                                         <textarea type="text" className="form-control"
                                             onChange={this.handleChange.bind(this, advice._id)}
-                                            value={advice.comment.text}></textarea>
+                                            value={advice.comment.text}/>
                                         <div className="actions">
                                             <div className="dropdown">
                                                 <button {...this.state.currentEdit.newValue === undefined ? { disabled: 'disabled' } : {}}
                                                     className="btn btn-default dropdown-toggle btn-success btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <span className="oi oi-circle-check"></span> Valider et Publier
+                                                    <span className="oi oi-circle-check"/> Valider et Publier
                                                 </button>
-                                                <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                <div className="dropdown-menu"
+                                                     aria-labelledby="dropdownMenu1">
                                                     <h6 className="dropdown-header">Qualification</h6>
-                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'négatif')}
-                                                        role="button">Négatif</a>
-                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'positif')}
-                                                        role="button">Positif ou neutre</a>
-                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'pe')}
-                                                        role="button">PE</a>
-                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'of')}
-                                                        role="button">OF</a>
-                                                    <a className="dropdown-item" onClick={this.handleUpdate.bind(this, advice._id, 'cr')}
-                                                        role="button">CR</a>
+                                                    {QUALIFICATION.map((qualif, index) =>
+                                                        <a  key={index}
+                                                            className="dropdown-item"
+                                                            onClick={this.handleUpdate().bind(this, advice._id, qualif.qualif)}
+                                                            role="button">{qualif.value}</a>
+                                                    )}
                                                 </div>
                                             </div>
 
                                             <button className="btn btn-danger btn-sm" onClick={this.handleCancel.bind(this, advice._id)}>
-                                                <span className="oi oi-circle-x"></span> Annuler
+                                                <span className="oi oi-circle-x"/> Annuler
                                             </button>
                                         </div>
                                     </div>

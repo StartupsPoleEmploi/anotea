@@ -9,17 +9,17 @@ export default class ModerationMain extends React.Component {
 
     state = {
         currentPage: 'moderation'
-    }
+    };
 
     propTypes = {
         id: PropTypes.string.isRequired,
         codeRegion: PropTypes.string.isRequired,
         features: PropTypes.array.isRequired
-    }
+    };
 
     handleChangePage = page => {
         this.setState({ currentPage: page });
-    }
+    };
 
     render() {
         return (
