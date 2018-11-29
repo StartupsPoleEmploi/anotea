@@ -62,11 +62,13 @@
                     <td  style="padding:2em" colspan="2" align="left" valign="middle">
                         Bonjour,
                 </tr>
-                <tr>
-                    <td colspan="3" style="color:#555">
-                        <p style="font-family: Arial">"<%= comment %>"</p>
-                    </td>
-                </tr>
+                <% if (comment) { %>
+                    <tr>
+                        <td colspan="3" style="color:#555">
+                            <p style="font-family: Arial">"<%= comment %>"</p>
+                        </td>
+                    </tr>
+                <% } %>
                 <tr>
                     <td colspan="3" style="padding:0em 2em">
                         <p><strong>Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur https://labonneformation.pole-emploi.fr</strong></p>

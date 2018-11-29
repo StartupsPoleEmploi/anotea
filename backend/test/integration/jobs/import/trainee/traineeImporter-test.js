@@ -182,7 +182,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-filtered.csv');
         let importer = traineeImporter(db, logger);
         await insertDepartements();
-        let handler = poleEmploiCSVHandler(db, logger, _.merge(configuration, {
+        let handler = poleEmploiCSVHandler(db, logger, _.merge({}, configuration, {
             app: {
                 active_regions: [
                     {

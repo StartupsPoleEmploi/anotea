@@ -1,3 +1,5 @@
+const AccountMailer = require('../../mailing/organismes/account/AccountMailer');
+
 module.exports = function(db, logger, configuration) {
 
     const fs = require('fs');
@@ -8,12 +10,10 @@ module.exports = function(db, logger, configuration) {
     const importEditedEmail = file => {
         logger.info('Organisation edited email import - launch');
 
-        const mailer = require('../../../components/mailer.js')(db, logger, configuration);
-        const newAccountMailer = require('../../mailing/organismes/account/newAccountMailer')(db, logger, configuration, mailer);
-
-        const launchTime = new Date().getTime();
+        let mailer = require('../../../components/mailer.js')(db, logger, configuration);
+        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
+        let launchTime = new Date().getTime();
         let parser = parse({ delimiter: ',', quote: '"' });
-
         let input = fs.createReadStream(file, { encoding: 'utf-8' });
 
         let found = 0;
@@ -30,7 +30,7 @@ module.exports = function(db, logger, configuration) {
                         logger.error(err);
                     } else {
                         updated += count;
-                        newAccountMailer.sendEmailBySiret(organisation.meta.siretAsString);
+                        accountMailer.sendEmailBySiret(organisation.meta.siretAsString);
                         callback(null);
                     }
                 });

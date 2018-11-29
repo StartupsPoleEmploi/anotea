@@ -3,14 +3,12 @@
     "name": "Anotea",
     "public_hostname": "http://127.0.0.1:3000",
     "port": 8080,
-    "mailer": {
-      "limit": 1
-    },
     "active_regions": [
       {
         "code_region": "11",
         "name": "Île-de-France",
         "jobs": {
+          "send": true,
           "resend": false,
           "retry": false
         }
@@ -19,6 +17,7 @@
         "code_region": "17",
         "name": "Pays de la Loire",
         "jobs": {
+          "send": true,
           "resend": false,
           "retry": false
         }
@@ -32,6 +31,7 @@
           ]
         },
         "jobs": {
+          "send": true,
           "resend": false,
           "retry": false
         }
@@ -45,6 +45,7 @@
           ]
         },
         "jobs": {
+          "send": true,
           "resend": true,
           "retry": true
         }

@@ -5,7 +5,7 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const { newComment, newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const newCommentsMailer = require('../../../../../jobs/mailing/organismes/notifications/newCommentsMailer');
+const CommentsMailer = require('../../../../../jobs/mailing/organismes/notifications/CommentsMailer');
 
 let fakeMailer = spy => {
     return {
@@ -22,7 +22,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let spy = [];
         let db = await getTestDatabase();
-        let { sendEmails } = newCommentsMailer(db, logger, configuration, fakeMailer(spy));
+        let commentsMailer = new CommentsMailer(db, logger, configuration, fakeMailer(spy));
         await Promise.all([
             ...(
                 _.range(5).map(() => {
@@ -48,7 +48,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let results = await sendEmails();
+        let results = await commentsMailer.sendEmails();
 
         assert.deepEqual(results, { mailSent: 1 });
         assert.deepEqual(spy, [{
@@ -62,7 +62,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let spy = [];
         let db = await getTestDatabase();
-        let { sendEmails } = newCommentsMailer(db, logger, configuration, fakeMailer(spy));
+        let commentsMailer = new CommentsMailer(db, logger, configuration, fakeMailer(spy));
         let newCommentsNotificationEmailSentDate = moment().subtract('25', 'days').toDate();
         await Promise.all([
             ...(
@@ -90,7 +90,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let results = await sendEmails();
+        let results = await commentsMailer.sendEmails();
 
         assert.deepEqual(results, { mailSent: 1 });
         assert.deepEqual(spy, [{
@@ -104,7 +104,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let spy = [];
         let db = await getTestDatabase();
-        let { sendEmails } = newCommentsMailer(db, logger, configuration, fakeMailer(spy));
+        let commentsMailer = new CommentsMailer(db, logger, configuration, fakeMailer(spy));
         await Promise.all([
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: 31705038300064,
@@ -117,7 +117,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let results = await sendEmails();
+        let results = await commentsMailer.sendEmails();
 
         assert.deepEqual(results, { mailSent: 0 });
     });
@@ -126,7 +126,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let spy = [];
         let db = await getTestDatabase();
-        let { sendEmails } = newCommentsMailer(db, logger, configuration, fakeMailer(spy));
+        let commentsMailer = new CommentsMailer(db, logger, configuration, fakeMailer(spy));
         await Promise.all([
             ...(
                 _.range(5).map(() => {
@@ -153,7 +153,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let results = await sendEmails();
+        let results = await commentsMailer.sendEmails();
 
         assert.deepEqual(results, { mailSent: 0 });
     });

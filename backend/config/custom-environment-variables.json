@@ -1,12 +1,6 @@
 {
   "app": {
-    "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME",
-    "mailer": {
-      "limit": {
-        "__name": "ANOTEA_APP_MAILER_LIMIT",
-        "__format": "json"
-      }
-    }
+    "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME"
   },
   "mongodb": {
     "uri": "ANOTEA_MONGODB_URI"

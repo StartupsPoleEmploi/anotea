@@ -104,7 +104,10 @@ module.exports = function(db, logger, configuration) {
                     logger.error(`An error occurs while sending mail : ${error}̀`);
                     errorCallback(error);
                 } else {
-                    logger.info(`Message ${info.messageId} sent: ${info.response}`);
+                    logger.info(`Message sent to ${mailOptions.to}`, {
+                        messageId: info.messageId,
+                        response: info.response,
+                    });
                     successCallback();
                 }
             });
@@ -129,7 +132,7 @@ module.exports = function(db, logger, configuration) {
                     hostname: configuration.app.public_hostname,
                     trackingLink: getTrackingLink(organisme),
                     organisme: organisme,
-                    comment: comment.comment.text,
+                    comment: comment ? comment.comment.text : null,
                     contact: getContact(carif)
                 };
                 sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
