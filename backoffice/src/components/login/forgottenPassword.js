@@ -39,7 +39,6 @@ export class ForgottenPassword extends React.Component {
     handleAsk = () => {
         askNewPassword(this.state.username).then(() => this.setState({ error: false, asked: true }))
         .catch(e => {
-            console.log(e);
             this.setState({ error: true });
         });
     };
