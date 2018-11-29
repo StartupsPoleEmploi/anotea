@@ -7,7 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
 const AccountMailer = require('./AccountMailer');
-const { findActiveRegions } = require('../../../utils');
+const findActiveRegions = require('../../findActiveRegions');
 
 const main = async () => {
 
@@ -32,10 +32,6 @@ const main = async () => {
     .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
     .parse(process.argv);
 
-    if (!cli.siret) {
-        return abort('Invalid arguments');
-    }
-
     let type = cli.type || 'send';
     let options = {
         limit: cli.limit,
@@ -52,7 +48,7 @@ const main = async () => {
             let ActionClass = require(`./actions/${type}Action`);
             let action = new ActionClass(configuration, {
                 codeRegions: cli.region ? [cli.region] :
-                    findActiveRegions(this.configuration.app.active_regions, 'organismes.newAccount'),
+                    findActiveRegions(configuration.app.active_regions, 'organismes.account'),
             });
 
             results = await accountMailer.sendEmails(action, options);

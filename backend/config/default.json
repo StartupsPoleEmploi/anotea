@@ -7,14 +7,12 @@
       {
         "code_region": "11",
         "name": "Île-de-France",
-        "jobs": {
+        "mailing": {
           "stagiaires": {
-            "send": true,
-            "resend": false,
-            "retry": false
+            "avis": true
           },
           "organismes": {
-            "newAccount": true,
+            "account": true,
             "newCommentsNotification": true
           }
         }
@@ -22,14 +20,12 @@
       {
         "code_region": "17",
         "name": "Pays de la Loire",
-        "jobs": {
+        "mailing": {
           "stagiaires": {
-            "send": true,
-            "resend": false,
-            "retry": false
+            "avis": true
           },
           "organismes": {
-            "newAccount": true,
+            "account": true,
             "newCommentsNotification": true
           }
         }
@@ -42,14 +38,12 @@
             "-2"
           ]
         },
-        "jobs": {
+        "mailing": {
           "stagiaires": {
-            "send": true,
-            "resend": false,
-            "retry": false
+            "avis": true
           },
           "organismes": {
-            "newAccount": false,
+            "account": false,
             "newCommentsNotification": false
           }
         }
@@ -62,14 +56,14 @@
             "-2"
           ]
         },
-        "jobs": {
+        "mailing": {
           "stagiaires": {
             "send": true,
             "resend": true,
             "retry": true
           },
           "organismes": {
-            "newAccount": false,
+            "account": false,
             "newCommentsNotification": false
           }
         }
@@ -138,7 +132,7 @@
       "maxRelaunch": 1
     },
     "organisme": {
-      "newAccountRelaunchDelay": 7,
+      "accountRelaunchDelay": 7,
       "newCommentsNotificationRelaunchDelay": 15
     }
   },

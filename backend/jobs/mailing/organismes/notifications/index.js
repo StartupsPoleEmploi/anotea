@@ -7,7 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
 const CommentsMailer = require('./CommentsMailer');
-const { findActiveRegions } = require('../../utils');
+const findActiveRegions = require('../../findActiveRegions');
 
 const main = async () => {
 
@@ -36,7 +36,7 @@ const main = async () => {
             limit: cli.limit,
             delay: cli.delay,
             codeRegions: cli.region ? [cli.region] :
-                findActiveRegions(this.configuration.app.active_regions, 'organismes.newCommentsNotification'),
+                findActiveRegions(configuration.app.active_regions, 'organismes.newCommentsNotification'),
         });
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');

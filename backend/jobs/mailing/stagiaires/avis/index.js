@@ -7,7 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
 const TraineeMailer = require('./AvisMailer');
-const { findActiveRegions } = require('../../utils');
+const findActiveRegions = require('../../findActiveRegions');
 
 const main = async () => {
 
@@ -36,8 +36,7 @@ const main = async () => {
     let ActionClass = require(`./actions/${type}Action`);
     let action = new ActionClass(configuration, {
         campaign: cli.campaign,
-        codeRegions: cli.region ? [cli.region] :
-            findActiveRegions(this.configuration.app.active_regions, `stagiaires.${type}`),
+        codeRegions: cli.region ? [cli.region] : findActiveRegions(configuration.app.active_regions, 'stagiaires.avis'),
     });
 
     try {
