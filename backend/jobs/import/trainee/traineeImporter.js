@@ -25,18 +25,19 @@ module.exports = (db, logger) => {
 
             return new Promise(async (resolve, reject) => {
 
+                let stats = {
+                    total: 0,
+                    imported: 0,
+                    ignored: 0,
+                    invalid: 0,
+                };
+
                 if (await db.collection('importTrainee').findOne({ hash })) {
-                    reject(new Error(`CSV file ${file} already imported`));
+                    logger.info(`CSV file ${file} already imported`);
+                    return resolve(stats);
                 } else {
 
                     logger.info(`Trainee import ${handler.name}/${campaign.name}...`);
-
-                    let stats = {
-                        total: 0,
-                        imported: 0,
-                        ignored: 0,
-                        invalid: 0,
-                    };
 
                     fs.createReadStream(file)
                     .pipe(parse(handler.csvOptions))

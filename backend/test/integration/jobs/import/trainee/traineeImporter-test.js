@@ -111,12 +111,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await importer.importTrainee(csvFile, handler);
 
-        try {
-            await importer.importTrainee(csvFile, handler);
-            assert.fail('Should have fail');
-        } catch (e) {
-            assert.ok(e.message.indexOf('already imported') !== -1);
-        }
+        let results = await importer.importTrainee(csvFile, handler);
+        assert.deepEqual(results, {
+            invalid: 0,
+            ignored: 0,
+            imported: 0,
+            total: 0,
+        });
     });
 
     it('should fail to import trainee with invalid email', async () => {
