@@ -5,18 +5,18 @@ const { newTrainee, randomize } = require('../../../../../helpers/data/dataset')
 const logger = require('../../../../../helpers/test-logger');
 const AvisMailer = require('../../../../../../jobs/mailing/stagiaires/avis/AvisMailer');
 const SendAction = require('../../../../../../jobs/mailing/stagiaires/avis/actions/SendAction');
-const { successMailer } = require('../../fake-mailers');
+const { successMailer } = require('../../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    it('should select trainee according to its state', async () => {
+    it('should send email to new trainee', async () => {
 
         let emailsSent = [];
         let db = await getTestDatabase();
         let id = randomize('trainee');
         let email = `${randomize('name')}@email.fr`;
         let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
-        let handler = new SendAction(db, configuration);
+        let action = new SendAction(configuration);
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
                 _id: id,
@@ -28,9 +28,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     email: email,
                 },
             })),
+            insertIntoDatabase('trainee', newTrainee({
+                codeRegion: '11',
+                sourceIDF: null,
+                mailSent: false,
+                unsubscribe: true,
+                trainee: {
+                    email: 'not-sent@trainee.org',
+                },
+            })),
         ]);
 
-        await avisMailer.sendEmails(handler);
+        await avisMailer.sendEmails(action);
 
         assert.deepEqual(emailsSent, [{ to: email }]);
     });
@@ -42,27 +51,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
-                codeRegion: '11',
+                codeRegion: 'XX',
                 sourceIDF: null,
                 mailSent: false,
                 unsubscribe: false,
             })),
         ]);
 
-        let handler = new SendAction(db, {
-            app: {
-                active_regions: [
-                    {
-                        code_region: '11',
-                        name: 'Île-de-France',
-                        jobs: {
-                            send: false,
-                            resend: true,
-                            retry: true
-                        }
-                    },
-                ]
-            }
+        let handler = new SendAction(configuration, {
+            codeRegions: ['11']
         });
         await avisMailer.sendEmails(handler);
 

@@ -1,7 +1,6 @@
 const moment = require('moment');
 const getContactEmail = require('../../../../components/getContactEmail');
 let { delay } = require('../../../utils');
-const { getActiveRegionsForJob } = require('../../utils');
 
 class CommentsMailer {
 
@@ -12,15 +11,14 @@ class CommentsMailer {
         this.mailer = mailer;
     }
 
-    _findOrganismes() {
+    _findOrganismes(codeRegions) {
         this.logger.info('Searching organismes with at least 5 non read comments...');
         let delay = this.configuration.smtp.organisme.newCommentsNotificationRelaunchDelay;
-        let activeRegions = getActiveRegionsForJob(this.configuration.app.active_regions, 'organismes.newAccount');
 
         return this.db.collection('organismes')
         .find({
             'meta.nbAvis': { $gte: 5 },
-            'codeRegion': { $in: activeRegions },
+            ...(codeRegions ? { 'codeRegion': { $in: codeRegions } } : {}),
             '$or': [
                 { 'newCommentsNotificationEmailSentDate': { $lte: moment().subtract(delay, 'days').toDate() } },
                 { 'newCommentsNotificationEmailSentDate': null },
@@ -57,7 +55,7 @@ class CommentsMailer {
 
     async sendEmails(options = {}) {
         let total = 0;
-        let cursor = await this._findOrganismes();
+        let cursor = await this._findOrganismes(options.codeRegions);
         if (options.limit) {
             cursor.limit(options.limit);
         }

@@ -5,18 +5,18 @@ const { newTrainee, randomize } = require('../../../../../helpers/data/dataset')
 const logger = require('../../../../../helpers/test-logger');
 const AvisMailer = require('../../../../../../jobs/mailing/stagiaires/avis/AvisMailer');
 const RetryAction = require('../../../../../../jobs/mailing/stagiaires/avis/actions/RetryAction');
-const { successMailer } = require('../../fake-mailers');
+const { successMailer } = require('../../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    it('should select trainee according to its state', async () => {
+    it('should send email to trainee with errors', async () => {
 
         let emailsSent = [];
         let db = await getTestDatabase();
         let id = randomize('trainee');
         let email = `${randomize('name')}@email.fr`;
         let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
-        let handler = new RetryAction(db, configuration);
+        let action = new RetryAction(configuration);
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
                 _id: id,
@@ -32,7 +32,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        await avisMailer.sendEmails(handler);
+        await avisMailer.sendEmails(action);
 
         assert.deepEqual(emailsSent, [{ to: email }]);
     });
