@@ -3,7 +3,7 @@ import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
 import Toolbar from '../common/Toolbar';
-import AdviceRates from '../common/adviceRates';
+import AdviceRates from '../common/AdviceRates';
 import {
     loadAdvices,
     loadInventory,
@@ -232,7 +232,7 @@ export default class ModerationPanel extends React.Component {
                             <div className="row">
                                 <div className="col-md-6">
                                     <h3>
-                                        <span className="oi oi-person"></span>
+                                        <span className="fas fa-person"></span>
 
                                         <div className="pseudo">
                                             {advice.pseudo &&
@@ -294,7 +294,7 @@ export default class ModerationPanel extends React.Component {
                                                 <button className="btn btn-default dropdown-toggle btn-danger btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <span className="oi oi-circle-x"></span> Rejeter
+                                                    <span className="fas fa-times-circle"/> Rejeter
                                                 </button>
                                                 <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
                                                     <h6 className="dropdown-header">Motif de rejet</h6>
@@ -312,7 +312,7 @@ export default class ModerationPanel extends React.Component {
                                                 <button className="btn btn-default dropdown-toggle btn-success btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <span className="oi oi-circle-check"></span> Publier
+                                                    <span className="fas fa-check-circle"/> Publier
                                                 </button>
                                                 <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
                                                     <h6 className="dropdown-header">Qualification</h6>
@@ -332,7 +332,7 @@ export default class ModerationPanel extends React.Component {
 
                                             <button className="btn btn-primary btn-sm"
                                                 onClick={this.handleEdit.bind(this, advice._id)}>
-                                                <span className="oi oi-pencil"></span> Modifier
+                                                <span className="fas fa-pencil"/> Modifier
                                             </button>
                                         </div>
                                     </div>
@@ -348,7 +348,7 @@ export default class ModerationPanel extends React.Component {
                                                     className="btn btn-default dropdown-toggle btn-success btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <span className="oi oi-circle-check"></span> Valider et Publier
+                                                    <span className="fas fa-check-circle"/> Valider et Publier
                                                 </button>
                                                 <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
                                                     <h6 className="dropdown-header">Qualification</h6>
@@ -366,7 +366,7 @@ export default class ModerationPanel extends React.Component {
                                             </div>
 
                                             <button className="btn btn-danger btn-sm" onClick={this.handleCancel.bind(this, advice._id)}>
-                                                <span className="oi oi-circle-x"></span> Annuler
+                                                <span className="fas fa-times-circle"/> Annuler
                                             </button>
                                         </div>
                                     </div>

@@ -78,7 +78,9 @@ export class LoginForm extends React.Component {
 
                     <div className="wrapper">
                         <span className="group-btn">
-                            <button onClick={this.handleLogin} className="btn btn-primary btn-md">Se connecter <span className="oi oi-account-login"></span></button>
+                            <button onClick={this.handleLogin} className="btn btn-primary btn-md">
+                                Se connecter <span className="fas fa-sign-in-alt"/>
+                            </button>
                         </span>
                     </div>
                 </div>

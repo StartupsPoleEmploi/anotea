@@ -51,7 +51,7 @@ export default class Toolbar extends React.PureComponent {
                 <div className="pull-left">
                     <button className="btn btn-success btn-sm"
                         onClick={this.onclick}>
-                        <span className="oi oi-data-transfer-download"></span> Exporter vers Excel
+                        <span className="fas fa-download"/> Exporter vers Excel
                     </button>
                     <Modal
                         isOpen={this.state.modalIsOpen}
@@ -62,7 +62,7 @@ export default class Toolbar extends React.PureComponent {
                         <div className="pull-right">
                             <button className="btn btn-success btn-sm"
                                 onClick={this.closeModal}>
-                                Fermer <span className="oi oi-x"></span>
+                                Fermer <span className="fas fa-times"/>
                             </button>
                         </div>
                         <h2> Le téléchargement de votre export excel peut durer quelques secondes.
