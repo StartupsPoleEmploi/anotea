@@ -1,3 +1,5 @@
+const { getActiveRegionsForJob } = require('../../../utils');
+
 class SendAction {
 
     constructor(db, configuration, filters = {}) {
@@ -7,9 +9,7 @@ class SendAction {
     }
 
     getQuery() {
-        let activeRegions = this.configuration.app.active_regions
-        .filter(region => region.jobs.send === true)
-        .map(region => region.code_region);
+        let activeRegions = getActiveRegionsForJob(this.configuration.app.active_regions, 'stagiaires.send');
 
         return {
             'sourceIDF': null,

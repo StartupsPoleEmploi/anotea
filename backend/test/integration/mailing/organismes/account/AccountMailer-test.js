@@ -50,7 +50,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         }]);
     });
 
-    it('should send emails by region', async () => {
+    it('should send emails', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -89,7 +89,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         ]);
 
         let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await accountMailer.sendEmailsByRegion('11');
+        let results = await accountMailer.sendEmails('11');
 
         assert.deepEqual(results, { mailSent: 1 });
         assert.deepEqual(spy, [{
@@ -123,7 +123,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         ]);
 
         let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await accountMailer.sendEmailsByRegion('11');
+        let results = await accountMailer.sendEmails('11');
 
         assert.deepEqual(results, { mailSent: 0 });
         assert.deepEqual(spy, []);
@@ -150,12 +150,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
-                codeRegion: '17',
+                codeRegion: 'XX',
             })),
         ]);
 
         let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await accountMailer.sendEmailsByRegion('11');
+        let results = await accountMailer.sendEmails('11');
 
         assert.deepEqual(results, { mailSent: 0 });
         assert.deepEqual(spy, []);

@@ -35,5 +35,39 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepEqual(emailsSent, [{ to: email }]);
     });
 
+    it('should ignore region', async () => {
+
+        let emailsSent = [];
+        let db = await getTestDatabase();
+        let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
+        await Promise.all([
+            insertIntoDatabase('trainee', newTrainee({
+                codeRegion: '11',
+                sourceIDF: null,
+                mailSent: false,
+                unsubscribe: false,
+            })),
+        ]);
+
+        let handler = new SendAction(db, {
+            app: {
+                active_regions: [
+                    {
+                        code_region: '11',
+                        name: 'Île-de-France',
+                        jobs: {
+                            send: false,
+                            resend: true,
+                            retry: true
+                        }
+                    },
+                ]
+            }
+        });
+        await avisMailer.sendEmails(handler);
+
+        assert.deepEqual(emailsSent, []);
+    });
+
 
 }));

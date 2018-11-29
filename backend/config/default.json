@@ -8,18 +8,30 @@
         "code_region": "11",
         "name": "Île-de-France",
         "jobs": {
-          "send": true,
-          "resend": false,
-          "retry": false
+          "stagiaires": {
+            "send": true,
+            "resend": false,
+            "retry": false
+          },
+          "organismes": {
+            "newAccount": true,
+            "newCommentsNotification": true
+          }
         }
       },
       {
         "code_region": "17",
         "name": "Pays de la Loire",
         "jobs": {
-          "send": true,
-          "resend": false,
-          "retry": false
+          "stagiaires": {
+            "send": true,
+            "resend": false,
+            "retry": false
+          },
+          "organismes": {
+            "newAccount": true,
+            "newCommentsNotification": true
+          }
         }
       },
       {
@@ -31,9 +43,15 @@
           ]
         },
         "jobs": {
-          "send": true,
-          "resend": false,
-          "retry": false
+          "stagiaires": {
+            "send": true,
+            "resend": false,
+            "retry": false
+          },
+          "organismes": {
+            "newAccount": false,
+            "newCommentsNotification": false
+          }
         }
       },
       {
@@ -45,9 +63,15 @@
           ]
         },
         "jobs": {
-          "send": true,
-          "resend": true,
-          "retry": true
+          "stagiaires": {
+            "send": true,
+            "resend": true,
+            "retry": true
+          },
+          "organismes": {
+            "newAccount": false,
+            "newCommentsNotification": false
+          }
         }
       }
     ]

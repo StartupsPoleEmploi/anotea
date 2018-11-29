@@ -21,6 +21,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
                 _id: id,
+                codeRegion: '18',
                 mailSent: true,
                 unsubscribe: false,
                 tracking: null,

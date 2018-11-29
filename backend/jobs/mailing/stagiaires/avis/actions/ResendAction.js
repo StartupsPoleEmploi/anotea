@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { getActiveRegionsForJob } = require('../../../utils');
 
 class ResendAction {
 
@@ -10,9 +11,7 @@ class ResendAction {
 
     getQuery() {
         let { relaunchDelay, maxRelaunch } = this.configuration.smtp.stagiaires;
-        let activeRegions = this.configuration.app.active_regions
-        .filter(region => region.jobs.send === true)
-        .map(region => region.code_region);
+        let activeRegions = getActiveRegionsForJob(this.configuration.app.active_regions, 'stagiaires.resend');
 
         return {
             mailSent: true,

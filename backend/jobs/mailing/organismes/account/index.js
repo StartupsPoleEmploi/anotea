@@ -26,9 +26,8 @@ const main = async () => {
     };
 
     cli.description('Send new account emails')
-    .option('-r, --region [region]', 'The region code')
     .option('-s, --siret [siret]', 'Siret of a specific organisme')
-    .option('-e, --resend', 'Resend an email to trainee that did\'nt create an account')
+    .option('-e, --resend', 'Resend an email to organismes that did\'nt create an account')
     .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
     .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
     .parse(process.argv);
@@ -55,7 +54,7 @@ const main = async () => {
         } else if (cli.resend) {
             results = await resendAccountMailer.resendEmails(options);
         } else {
-            results = await accountMailer.sendEmailsByRegion(cli.region, options);
+            results = await accountMailer.sendEmails(options);
         }
 
 

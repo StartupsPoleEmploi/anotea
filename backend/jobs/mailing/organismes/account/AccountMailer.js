@@ -1,5 +1,6 @@
 const getContactEmail = require('../../../../components/getContactEmail');
 let { delay } = require('../../../utils');
+const { getActiveRegionsForJob } = require('../../utils');
 
 class AccountMailer {
 
@@ -10,15 +11,18 @@ class AccountMailer {
         this.mailer = mailer;
     }
 
-    _findOrganismesByRegion(region) {
+    _findOrganismes() {
         this.logger.debug('Searching organismes with at least one comment...');
+
+        let activeRegions = getActiveRegionsForJob(this.configuration.app.active_regions, 'organismes.newAccount');
+
         return this.db.collection('organismes')
         .find({
             'passwordHash': null,
             'mailSentDate': null,
             'sources': { $ne: null },
-            'codeRegion': region,
             'meta.nbAvis': { $gte: 1 },
+            'codeRegion': { $in: activeRegions },
         });
     }
 
@@ -51,9 +55,9 @@ class AccountMailer {
         });
     }
 
-    async sendEmailsByRegion(region, options = {}) {
+    async sendEmails(options = {}) {
         let total = 0;
-        let cursor = await this._findOrganismesByRegion(region);
+        let cursor = await this._findOrganismes();
         if (options.limit) {
             cursor.limit(options.limit);
         }

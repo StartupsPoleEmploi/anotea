@@ -1,6 +1,7 @@
 const moment = require('moment');
 const getContactEmail = require('../../../../components/getContactEmail');
-let { delay } = require('../../../utils');
+const { delay } = require('../../../utils');
+const { getActiveRegionsForJob } = require('../../utils');
 
 class ResendAccountMailer {
 
@@ -14,6 +15,7 @@ class ResendAccountMailer {
     async _findOrganismes() {
         this.logger.debug('Searching organismes with at least one comment that didn\'t create an account yet...');
         let delay = this.configuration.smtp.organisme.newAccountRelaunchDelay;
+        let activeRegions = getActiveRegionsForJob(this.configuration.app.active_regions, 'organismes.newAccount');
 
         return await this.db.collection('organismes')
         .find({
@@ -23,7 +25,8 @@ class ResendAccountMailer {
                 { mailSentDate: { $lte: moment().subtract(delay, 'days').toDate() } },
             ],
             'passwordHash': null,
-            'resend': { $ne: true }
+            'resend': { $ne: true },
+            'codeRegion': { $in: activeRegions },
         })
         .sort({ mailSentDate: -1 });
     }
@@ -58,7 +61,7 @@ class ResendAccountMailer {
         });
     }
 
-    async resendEmails(options={}) {
+    async resendEmails(options = {}) {
         let total = 0;
         let cursor = await this._findOrganismes();
         if (options.limit) {
