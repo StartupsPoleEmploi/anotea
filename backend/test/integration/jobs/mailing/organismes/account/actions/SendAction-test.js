@@ -53,22 +53,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let emailsSent = [];
         let db = await getTestDatabase();
-        let id = 31705038300064;
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: id,
-                SIRET: id,
-                courriel: 'new@organisme.fr',
-                meta: {
-                    nbAvis: 1,
-                    siretAsString: `${id}`,
-                },
-                passwordHash: null,
-                mailSentDate: null,
-                sources: ['intercarif'],
-                codeRegion: '11',
-            })),
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: 11111111111,
                 SIRET: 11111111111,
@@ -89,8 +75,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         });
         let results = await accountMailer.sendEmails(action);
 
-        assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(emailsSent, [{ to: 'new@organisme.fr' }]);
+        assert.deepEqual(results, { mailSent: 0 });
     });
 
 }));

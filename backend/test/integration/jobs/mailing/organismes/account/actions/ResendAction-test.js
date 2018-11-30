@@ -14,17 +14,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let emailsSent = [];
         let db = await getTestDatabase();
-        let id = 31705038300064;
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: id,
-                SIRET: id,
+                _id: 31705038300064,
+                SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
                     nbAvis: 1,
-                    siretAsString: `${id}`,
+                    siretAsString: `${31705038300064}`,
                 },
                 passwordHash: null,
                 mailSentDate: moment().subtract('40', 'days').toDate(),
@@ -54,22 +53,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let emailsSent = [];
         let db = await getTestDatabase();
-        let id = 31705038300064;
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         let action = new ResendAction(configuration);
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: id,
-                SIRET: id,
-                courriel: 'new@organisme.fr',
-                meta: {
-                    nbAvis: 1,
-                    siretAsString: `${id}`,
-                },
-                passwordHash: null,
-                mailSentDate: moment().subtract('40', 'days').toDate(),
-                sources: ['intercarif'],
-            })),
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: 11111111111,
                 SIRET: 11111111111,
@@ -86,8 +72,33 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await accountMailer.sendEmails(action);
 
-        assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(emailsSent, [{ to: 'new@organisme.fr' }]);
+        assert.deepEqual(results, { mailSent: 0 });
+    });
+
+    it('should ignore organisme with password already set', async () => {
+
+        let emailsSent = [];
+        let db = await getTestDatabase();
+        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        let action = new ResendAction(configuration);
+        await Promise.all([
+            insertIntoDatabase('organismes', newOrganismeAccount({
+                _id: 31705038300064,
+                SIRET: 31705038300064,
+                courriel: 'new@organisme.fr',
+                meta: {
+                    nbAvis: 1,
+                    siretAsString: `${31705038300064}`,
+                },
+                passwordHash: '12345',
+                mailSentDate: moment().subtract('40', 'days').toDate(),
+                sources: ['intercarif'],
+            })),
+        ]);
+
+        let results = await accountMailer.sendEmails(action);
+
+        assert.deepEqual(results, { mailSent: 0 });
     });
 
 }));
