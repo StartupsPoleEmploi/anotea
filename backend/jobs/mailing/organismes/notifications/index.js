@@ -7,7 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
 const NotificationMailer = require('./NotificationMailer');
-const findActiveRegions = require('../../findActiveRegions');
+const { findActiveRegions } = require('../../../job-utils');
 
 const main = async () => {
 

@@ -2,7 +2,7 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const md5File = require('md5-file/promise');
 const validateTrainee = require('./validateTrainee');
-const { handleBackPressure } = require('../../utils');
+const { handleBackPressure } = require('../../job-utils');
 const { getCampaignDate, getCampaignName } = require('./utils');
 
 module.exports = (db, logger) => {

@@ -28,5 +28,9 @@ module.exports = {
     },
     delay: seconds => {
         return new Promise(resolve => setTimeout(() => resolve(), seconds * 1000));
-    }
+    },
+    findActiveRegions: (activeRegions, path) => {
+        return activeRegions.filter(region => _.get(region.mailing, path) === true).map(region => region.code_region);
+    },
+    capitalizeFirstLetter: string => string.charAt(0).toUpperCase() + string.slice(1),
 };

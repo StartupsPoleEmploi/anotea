@@ -7,7 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
 const AccountMailer = require('./AccountMailer');
-const findActiveRegions = require('../../findActiveRegions');
+const { findActiveRegions, capitalizeFirstLetter } = require('../../../job-utils');
 
 const main = async () => {
 
@@ -27,7 +27,7 @@ const main = async () => {
     cli.description('Send new account emails')
     .option('-s, --siret [siret]', 'Siret of a specific organisme')
     .option('-r, --region [region]', 'Limit emailing to the region')
-    .option('-t, --type [type]', 'resend,send (default: send))')
+    .option('-t, --type [type]', 'resend,send (default: send))', capitalizeFirstLetter)
     .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
     .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
     .parse(process.argv);

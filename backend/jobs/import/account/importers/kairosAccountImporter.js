@@ -2,7 +2,7 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const uuid = require('node-uuid');
 const moment = require('moment');
-const { handleBackPressure } = require('../../../utils');
+const { handleBackPressure } = require('../../../job-utils');
 const regions = require('../../../../components/regions');
 
 const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');

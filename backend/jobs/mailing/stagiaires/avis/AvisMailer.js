@@ -1,5 +1,5 @@
 let titleize = require('underscore.string/titleize');
-let { delay } = require('../../../utils');
+let { delay } = require('../../../job-utils');
 
 class AvisMailer {
 

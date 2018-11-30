@@ -1,6 +1,6 @@
 const moment = require('moment');
 const getContactEmail = require('../../../../components/getContactEmail');
-let { delay } = require('../../../utils');
+let { delay } = require('../../../job-utils');
 
 class NotificationMailer {
 
