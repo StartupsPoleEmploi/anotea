@@ -5,7 +5,6 @@ const { hashPassword, isPasswordStrongEnough } = require('../../components/passw
 
 module.exports = (db, authService, logger, configuration) => {
 
-    const dataExposer = require('../../components/dataExposer')();
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
@@ -17,7 +16,7 @@ module.exports = (db, authService, logger, configuration) => {
         return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     };
 
-    const saveEvent = function(id, type, source) {
+    const saveEvent = (id, type, source) => {
         db.collection('events').save({ organisationId: id, date: new Date(), type: type, source: source });
     };
 
@@ -453,7 +452,7 @@ module.exports = (db, authService, logger, configuration) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/editedEmail/delete', checkAuth, tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/organisation/:id/editedEmail', checkAuth, tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
