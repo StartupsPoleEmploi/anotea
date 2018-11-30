@@ -1,4 +1,4 @@
-import { _get, _post } from '../utils/http-client';
+import { _get, _post, _delete } from '../utils/http-client';
 
 export const getActivationAccountStatus = activationToken => {
     return _get(`/backoffice/organisation/getActivationAccountStatus?token=${activationToken}`);
@@ -57,7 +57,7 @@ export const updateEditedEmail = (id, email) => {
 };
 
 export const deleteEditedEmail = (id, email) => {
-    return _get(`/backoffice/organisation/${id}/editedEmail/delete`, { email: email });
+    return _delete(`/backoffice/organisation/${id}/editedEmail`, { email: email });
 };
 
 export const resendEmailAccount = id => {
