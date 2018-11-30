@@ -1,21 +1,22 @@
 const configuration = require('config');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../../helpers/test-db');
-const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
-const logger = require('../../../../../helpers/test-logger');
-const AccountMailer = require('../../../../../../jobs/mailing/organismes/account/AccountMailer');
-const SendAction = require('../../../../../../jobs/mailing/organismes/account/actions/SendAction');
+const moment = require('moment');
+const { withMongoDB } = require('../../../../../../helpers/test-db');
+const { newOrganismeAccount } = require('../../../../../../helpers/data/dataset');
+const logger = require('../../../../../../helpers/test-logger');
+const AccountMailer = require('../../../../../../../jobs/mailing/organismes/account/AccountMailer');
+const ResendAction = require('../../../../../../../jobs/mailing/organismes/account/actions/ResendAction');
 const { successMailer } = require('../../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    it('should send email to new organismes only', async () => {
+    it('should ignore organisme with email already resent', async () => {
 
         let emailsSent = [];
         let db = await getTestDatabase();
         let id = 31705038300064;
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
-        let action = new SendAction(configuration);
+        let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: id,
@@ -26,7 +27,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     siretAsString: `${id}`,
                 },
                 passwordHash: null,
-                mailSentDate: null,
+                mailSentDate: moment().subtract('40', 'days').toDate(),
                 sources: ['intercarif'],
             })),
             insertIntoDatabase('organismes', newOrganismeAccount({
@@ -49,12 +50,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepEqual(emailsSent, [{ to: 'new@organisme.fr' }]);
     });
 
-    it('should send email only to organismes in active regions', async () => {
+    it('should ignore organisme with sent date lesser than relaunch delay', async () => {
 
         let emailsSent = [];
         let db = await getTestDatabase();
         let id = 31705038300064;
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: id,
@@ -65,9 +67,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     siretAsString: `${id}`,
                 },
                 passwordHash: null,
-                mailSentDate: null,
+                mailSentDate: moment().subtract('40', 'days').toDate(),
                 sources: ['intercarif'],
-                codeRegion: '11',
             })),
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: 11111111111,
@@ -77,16 +78,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     nbAvis: 1,
                     siretAsString: `11111111111`,
                 },
-                passwordHash: null,
-                mailSentDate: null,
+                passwordHash: '12345',
+                mailSentDate: moment().subtract('1', 'days').toDate(),
                 sources: ['intercarif'],
-                codeRegion: 'XX',
             })),
         ]);
 
-        let action = new SendAction(configuration, {
-            codeRegions: ['11'],
-        });
         let results = await accountMailer.sendEmails(action);
 
         assert.deepEqual(results, { mailSent: 1 });
