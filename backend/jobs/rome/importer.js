@@ -22,17 +22,16 @@ module.exports = function(db, logger, configuration) {
                         return { formacode: formacode, label: formacodeArr.join(' ') };
                     });
                     let romeFormacode = { codeROME: record[0], label: record[1], formacodes: formacodes };
-                    await db.collection('formacodeRomeMapping').insertOne(romeFormacode, () => {
-                        resolve();
-                        count++;
-                    });
+                    await db.collection('formacodeRomeMapping').insertOne(romeFormacode);
+                    callback();
+                    count++;
+                    resolve();
                 });
                 promises.push(promise);
-            }, { parallel: 10 }).on('finish', function() {
-                Promise.all(promises).then(() => {
-                    resolve();
-                    logger.info(`ROME <-> FORMACODE mapping import - completed (${count} mapping imported, ${moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS')}`);
-                });
+            }, { parallel: 10 }).on('finish', async () => {
+                await Promise.all(promises);
+                resolve();
+                logger.info(`ROME <-> FORMACODE mapping import - completed (${count} mapping imported, ${moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS')}`);
             });
             input.pipe(parser).pipe(transformer);
         });
