@@ -10,64 +10,61 @@ class AccountMailer {
         this.mailer = mailer;
     }
 
-    _findOrganismesByRegion(region) {
-        this.logger.debug('Searching organismes with at least one comment...');
-        return this.db.collection('organismes')
-        .find({
-            'passwordHash': null,
-            'mailSentDate': null,
-            'sources': { $ne: null },
-            'codeRegion': region,
-            'meta.nbAvis': { $gte: 1 },
-        });
-    }
-
     _sendEmail(organisme) {
-        this.logger.debug('Sending email to', organisme);
-
         return new Promise((resolve, reject) => {
-            this.mailer.sendOrganisationAccountLink({ to: getContactEmail(organisme) }, organisme, async () => {
-                await this.db.collection('organismes').updateOne({ '_id': organisme._id }, {
-                    $set: {
-                        mailSentDate: new Date()
-                    },
-                    $unset: {
-                        mailError: '',
-                        mailErrorDetail: ''
-                    },
+            this.mailer.sendOrganisationAccountLink({ to: getContactEmail(organisme) }, organisme,
+                async () => {
+                    await this._onSuccess(organisme);
+                    return resolve();
+                }, async err => {
+                    await this._onError(err, organisme);
+                    return reject(err);
                 });
-                resolve();
-            }, err => reject(err));
         });
     }
 
-    _handleSendError(organisme, error) {
-        this.logger.error('Unable to send email: ', error);
+    _onSuccess(organisme) {
+        return this.db.collection('organismes').updateOne({ '_id': organisme._id }, {
+            $set: {
+                mailSentDate: new Date(),
+                resend: !!organisme.mailSentDate,
+            },
+            $unset: {
+                mailError: '',
+                mailErrorDetail: ''
+            },
+        });
+    }
+
+    _onError(error, organisme) {
         return this.db.collection('organismes').updateOne({ '_id': organisme._id }, {
             $set: {
                 mailError: 'smtpError',
-                mailErrorDetail: error
+                mailErrorDetail: error.message
             }
         });
     }
 
-    async sendEmailsByRegion(region, options = {}) {
+    async sendEmails(action, options = {}) {
         let total = 0;
-        let cursor = await this._findOrganismesByRegion(region);
+        let cursor = await this.db.collection('organismes').find(action.getQuery());
         if (options.limit) {
             cursor.limit(options.limit);
         }
 
         while (await cursor.hasNext()) {
             let organisme = await cursor.next();
+            this.logger.debug('Sending email to', organisme);
+
+            total++;
             try {
                 await this._sendEmail(organisme);
-                total++;
+
                 if (options.delay) {
                     await delay(options.delay);
                 }
-            } catch (e) {
-                await this._handleSendError(organisme, e);
+            } catch (err) {
+                this.logger.error(err);
             }
         }
         return {
@@ -80,7 +77,7 @@ class AccountMailer {
         try {
             await this._sendEmail(organisme);
         } catch (e) {
-            await this._handleSendError(organisme, e);
+            await this._onError(e, organisme);
         }
         return {
             mailSent: 1

@@ -7,6 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
 const TraineeMailer = require('./AvisMailer');
+const findActiveRegions = require('../../findActiveRegions');
 
 const main = async () => {
 
@@ -31,16 +32,11 @@ const main = async () => {
     };
 
     let type = cli.type || 'send';
-    let regions = configuration.app.active_regions.map(e => e.code_region);
-    if (cli.region && !regions.includes(cli.region)) {
-        return abort('Region is not active');
-    }
-
     let traineeMailer = new TraineeMailer(db, logger, mailer);
     let ActionClass = require(`./actions/${type}Action`);
-    let action = new ActionClass(db, configuration, {
+    let action = new ActionClass(configuration, {
         campaign: cli.campaign,
-        codeRegion: cli.region,
+        codeRegions: cli.region ? [cli.region] : findActiveRegions(configuration.app.active_regions, 'stagiaires.avis'),
     });
 
     try {

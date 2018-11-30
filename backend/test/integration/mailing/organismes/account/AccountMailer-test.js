@@ -1,163 +1,108 @@
 const configuration = require('config');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
-const { newComment, newOrganismeAccount } = require('../../../../helpers/data/dataset');
+const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
 const AccountMailer = require('../../../../../jobs/mailing/organismes/account/AccountMailer');
+const { successMailer, errorMailer } = require('../../fake-mailers');
 
-let fakeMailer = spy => {
-    return {
-        sendOrganisationAccountLink: async (options, organisme, callback) => {
-            await callback();
-            spy.push(options);
-        }
-    };
-};
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
+    let dummyAction = {
+        getQuery: () => ({}),
+    };
+
     it('should send email by siret', async () => {
 
-        let spy = [];
+        let emailsSent = [];
         let db = await getTestDatabase();
-
+        let id = 31705038300064;
         await Promise.all([
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: `${31705038300064}`,
-                    },
-                }
-            })),
             insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
+                _id: id,
+                SIRET: id,
                 courriel: 'new@organisme.fr',
                 meta: {
                     nbAvis: 1,
-                    siretAsString: `${31705038300064}`,
+                    siretAsString: `${id}`,
                 },
-                mailSentDate: null,
             })),
         ]);
 
-        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer(spy));
+        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         let results = await accountMailer.sendEmailBySiret('31705038300064');
 
         assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(spy, [{
+        assert.deepEqual(emailsSent, [{
             to: 'new@organisme.fr'
         }]);
     });
 
-    it('should send emails by region', async () => {
+    it('should send emails', async () => {
 
-        let spy = [];
+        let emailsSent = [];
         let db = await getTestDatabase();
+        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        await insertIntoDatabase('organismes', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
 
-        await Promise.all([
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: `${31705038300064}`,
-                    },
-                }
-            })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
-                courriel: 'new@organisme.fr',
-                meta: {
-                    nbAvis: 1,
-                    siretAsString: `${31705038300064}`,
-                },
-                passwordHash: null,
-                sources: ['intercarif'],
-                mailSentDate: null,
-            })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: 11111111111111,
-                SIRET: 11111111111111,
-                meta: {
-                    nbAvis: 0,
-                    siretAsString: '11111111111111',
-                },
-                passwordHash: null,
-                sources: ['intercarif'],
-                mailSentDate: null,
-            })),
-        ]);
-
-        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await accountMailer.sendEmailsByRegion('11');
+        let results = await accountMailer.sendEmails(dummyAction);
 
         assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(spy, [{
+        assert.deepEqual(emailsSent, [{
             to: 'new@organisme.fr'
         }]);
     });
 
-    it('should not resent emails', async () => {
+    it('should update organisme when mailer succeed', async () => {
 
-        let spy = [];
         let db = await getTestDatabase();
+        let emailsSent = [];
+        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        await insertIntoDatabase('organismes', newOrganismeAccount({
+            courriel: 'new@organisme.fr',
+            mailSentDate: null
+        }));
 
-        await Promise.all([
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: `${31705038300064}`,
-                    },
-                }
-            })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
-                courriel: 'new@organisme.fr',
-                meta: {
-                    nbAvis: 1,
-                    siretAsString: `${31705038300064}`,
-                },
-                mailSentDate: new Date(),
-            })),
-        ]);
+        await accountMailer.sendEmails(dummyAction);
 
-        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await accountMailer.sendEmailsByRegion('11');
-
-        assert.deepEqual(results, { mailSent: 0 });
-        assert.deepEqual(spy, []);
+        let organisme = await db.collection('organismes').findOne({ courriel: 'new@organisme.fr' });
+        assert.ok(organisme.mailSentDate);
+        assert.deepEqual(organisme.resend, false);
+        assert.deepEqual(organisme.mailError, undefined);
+        assert.deepEqual(organisme.mailErrorDetail, undefined);
     });
 
-    it('should ignore account from another region', async () => {
+    it('should update set resend property to true on resend', async () => {
 
-        let spy = [];
         let db = await getTestDatabase();
+        let emailsSent = [];
+        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        await insertIntoDatabase('organismes', newOrganismeAccount({
+            courriel: 'new@organisme.fr',
+            mailSentDate: new Date()
+        }));
 
-        await Promise.all([
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: `${31705038300064}`,
-                    },
-                }
-            })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
-                courriel: 'new@organisme.fr',
-                meta: {
-                    nbAvis: 1,
-                    siretAsString: `${31705038300064}`,
-                },
-                codeRegion: '17',
-            })),
-        ]);
+        await accountMailer.sendEmails(dummyAction);
 
-        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer(spy));
-        let results = await accountMailer.sendEmailsByRegion('11');
+        let organisme = await db.collection('organismes').findOne({ courriel: 'new@organisme.fr' });
+        assert.deepEqual(organisme.resend, true);
+    });
 
-        assert.deepEqual(results, { mailSent: 0 });
-        assert.deepEqual(spy, []);
+
+    it('should update organisme when mailer fails', async () => {
+
+        let db = await getTestDatabase();
+        let accountMailer = new AccountMailer(db, logger, configuration, errorMailer());
+        await insertIntoDatabase('organismes', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
+
+        try {
+            await accountMailer.sendEmails(dummyAction);
+            assert.fail();
+        } catch (e) {
+            let organisme = await db.collection('organismes').findOne({ courriel: 'new@organisme.fr' });
+            assert.deepEqual(organisme.mailError, 'smtpError');
+            assert.deepEqual(organisme.mailErrorDetail, 'timeout');
+        }
     });
 }));
