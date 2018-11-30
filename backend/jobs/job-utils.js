@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { Transform } = require('stream');
 const throughParallel = require('through2-parallel');
 

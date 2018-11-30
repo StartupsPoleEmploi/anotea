@@ -31,7 +31,7 @@ const main = async () => {
         });
     };
 
-    let type = cli.type || 'send';
+    let type = cli.type || 'Send';
     let traineeMailer = new TraineeMailer(db, logger, mailer);
     let ActionClass = require(`./actions/${type}Action`);
     let action = new ActionClass(configuration, {

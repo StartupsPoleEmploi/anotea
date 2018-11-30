@@ -32,7 +32,7 @@ const main = async () => {
     .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
     .parse(process.argv);
 
-    let type = cli.type || 'send';
+    let type = cli.type || 'Send';
     let options = {
         limit: cli.limit,
         delay: cli.delay,
