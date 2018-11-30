@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
-import AdviceRates from '../common/adviceRates';
+import AdviceRates from '../common/AdviceRates';
 import Toolbar from '../common/Toolbar';
 import SearchForm from './searchForm';
 import EntitySearchForm from './entitySearchForm';
@@ -344,7 +344,7 @@ export default class OrganisationPanel extends React.Component {
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <h3 className="header">
-                                                <span className="oi oi-person"></span>
+                                                <span className="fas fa-person"></span>
                                                     {advice.pseudo}
                                                     {!advice.pseudo && <em>anonyme</em>} -&nbsp;
                                                     <FormattedDate
@@ -380,17 +380,17 @@ export default class OrganisationPanel extends React.Component {
                                                         <div className="actions">
                                                             <button className="btn btn-success btn-sm"
                                                                 onClick={this.handleDoReply.bind(this, advice._id)}>
-                                                                <span className="oi oi-comment-square"></span> Valider
+                                                                <span className="fas comment-alt"/> Valider
                                                                 la réponse
                                                             </button>
                                                             {advice.answered &&
                                                             <button className="btn btn-danger btn-sm"
                                                                 onClick={this.handleRemoveReply.bind(this, advice._id)}>
-                                                                <span className="oi oi-trash"></span> &Ocirc;ter
+                                                                <span className="fas fa-trash"/> &Ocirc;ter
                                                                 la réponse</button>}
                                                             <button className="btn btn-warning btn-sm"
                                                                 onClick={this.handleCancelReply.bind(this, advice._id)}>
-                                                                <span className="oi oi-comment-square"></span> Annuler
+                                                                <span className="fas fa-comment-alt"/> Annuler
                                                             </button>
                                                         </div>
                                                     </div>
@@ -406,29 +406,30 @@ export default class OrganisationPanel extends React.Component {
                                                         {(advice.read !== true && this.state.tab !== 'reported') &&
                                                         <button className="btn btn-info btn-sm"
                                                             onClick={this.handleMarkAsRead.bind(this, advice._id)}>
-                                                            <span className="oi oi-eye"></span> Marquer comme lu
+                                                            <span className="fas fa-eye"/> Marquer comme lu
                                                         </button>}
                                                         {(advice.read === true && this.state.tab !== 'reported') &&
                                                         <button className="btn btn-info btn-sm"
                                                             onClick={this.handleMarkAsNotRead.bind(this, advice._id)}>
-                                                            <span className="oi oi-eye"></span> Marquer comme non
+                                                            <span className="fas fa-eye"/> Marquer comme non
                                                             lu</button>}
                                                         {this.state.tab !== 'reported' &&
                                                         <button className="btn btn-success btn-sm"
                                                             onClick={this.handleReply.bind(this, advice._id)}
                                                             title="votre réponse à avis sera publiée sur les sites partenaires et accessible aux futurs stagiaires potentiels">
-                                                            <span className="oi oi-comment-square"></span> {advice.answered ? 'Modifier la réponse' : 'Répondre'}
+                                                            <span className="fas fa-comment-alt"/> {advice.answered ? 'Modifier la réponse' : 'Répondre'}
                                                         </button>}
                                                         {(this.state.tab !== 'reported' && advice.reported !== true) &&
                                                         <button className="btn btn-danger btn-sm"
                                                             onClick={this.handleReport.bind(this, advice._id)}
                                                             title="signaler un avis permet d'alerter le modérateur sur son non-respect potentiel de la charte de modération">
-                                                            <span className="oi oi-warning"></span> Signaler
+                                                            <span className="fas fa-exclamation-triangle"/> Signaler
                                                         </button>}
                                                         {advice.reported === true &&
                                                         <button className="btn btn-danger btn-sm"
-                                                            onClick={this.handleUnreport.bind(this, advice._id)}><span className="oi oi-warning"></span> Marquer comme non
-                                                            signalé</button>}
+                                                            onClick={this.handleUnreport.bind(this, advice._id)}>
+                                                            <span className="fas fa-warning"/> Marquer comme non signalé
+                                                        </button>}
                                                     </div>
                                                     }
                                                 </div>

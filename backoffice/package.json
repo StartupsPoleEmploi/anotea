@@ -41,6 +41,7 @@
     "translate": "NODE_ENV=production babel ./src >/dev/null"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "5.5.0",
     "babel-cli": "6.26.0",
     "babel-plugin-react-intl": "2.4.0",
     "babel-preset-react-app": "3.1.1",

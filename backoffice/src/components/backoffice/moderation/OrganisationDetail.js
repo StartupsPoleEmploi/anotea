@@ -106,7 +106,7 @@ export default class OrganisationDetail extends React.PureComponent {
 
                         { this.props.organisation.advicesCount &&
                             <button id="btnResend" className="btn btn-info" disabled={this.state.resendDisabled} onClick={this.resend}>
-                                <span className="oi oi-location"></span> Renvoyer le lien de connexion
+                                <span className="fas fa-location"></span> Renvoyer le lien de connexion
                             </button>
                         }
 
