@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { fixData } = require('../../../../jobs/data-fix/fixData.js');
+const fixData = require('../../../../jobs/data-fix/fixData.js');
 
 describe('Sanitize advices', function() {
 

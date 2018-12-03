@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
-import AdviceRates from '../common/adviceRates';
+import AdviceRates from '../common/AdviceRates';
 import Toolbar from '../common/Toolbar';
 import TrainingSearchForm from './trainingSearchForm';
 import EntitySearchForm from './EntitySearchForm';
@@ -63,8 +63,7 @@ export default class FinancerPanel extends React.Component {
         super(props);
 
         if (props.codeFinanceur === POLE_EMPLOI) {
-            this.setState(Object.assign(this.state, {
-                financers: [
+            this.state.financers = [
                     { _id: '4', title: `Pôle Emploi` },
                     { _id: '2', title: `Collectivité territoriale - Conseil régional` },
                     { _id: '10', title: `Béneficiaire de l'action` },
@@ -81,15 +80,10 @@ export default class FinancerPanel extends React.Component {
                     { _id: '7', title: `AGEFIPH` },
                     { _id: '17', title: `OPACIF` },
                     { _id: '9', title: `Collectivité territoriale - Commune` },
-                ],
-                currentFinancer: '',
-            }));
+                ];
+            this.state.currentFinancer = '';
         } else {
-            this.setState(Object.assign(this.state, {
-                currentFinancer: {
-                    _id: props.codeFinanceur
-                }
-            }));
+            this.state.currentFinancer._id = props.codeFinanceur;
         }
 
         getOrganisations(props.codeRegion, props.codeFinanceur).then(organisations => {
@@ -243,6 +237,7 @@ export default class FinancerPanel extends React.Component {
 
         const page = this.state.pagination.current;
         const result = await getOrganisationLieuAdvices(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.trainingId, this.state.training.currentEntity._id, this.state.tab, order, page);
+
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
             advices: result.advices.map(advice => {
@@ -348,8 +343,10 @@ export default class FinancerPanel extends React.Component {
 
     exportOrganisationAdvicesToExcel = async () => {
         const comments = await getOrganisationAdvicesToExportToExcel(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.training.currentEntity._id, this.state.trainingId, this.state.tab);
-        exportToExcel(comments);
+        exportToExcel(comments, this.props.codeFinanceur);
     };
+
+    getActiveStatus = current => this.state.tab === current ? 'active' : '';
 
     render() {
         const { currentOrganisation, currentEntity, organisations, entities } = this.state.training;
@@ -384,17 +381,17 @@ export default class FinancerPanel extends React.Component {
                 <h2>Liste des notes et avis</h2>
 
                 <ul className="nav nav-tabs">
-                    <li role="presentation" {...tab === 'reported' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
-                            className="badge rejected">{inventory.reported}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`} onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
+                            className="badge rejected">{inventory.reported}</span></button>
                     </li>
-                    <li role="presentation" {...tab === 'commented' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
-                            className="badge published">{inventory.commented}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('commented')}`} onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
+                            className="badge published">{inventory.commented}</span></button>
                     </li>
-                    <li role="presentation" {...tab === 'all' ? { className: 'active' } : {}}>
-                        <a role="button" onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
-                            className="badge">{inventory.all}</span></a>
+                    <li className="nav-item">
+                        <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
+                            className="badge badge-secondary">{inventory.all}</span></button>
                     </li>
                 </ul>
 
@@ -468,46 +465,61 @@ export default class FinancerPanel extends React.Component {
                     {currentEntity && this.state.pagination.count > 1 &&
                     <ReactPaginate previousLabel={'<'}
                         nextLabel={'>'}
-                        breakLabel={<a href="">...</a>}
-                        breakClassName={'break-me'}
                         pageCount={this.state.pagination.count}
                         forcePage={this.state.pagination.current - 1}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}
                         onPageChange={this.handlePageClick}
-                        containerClassName={'pagination'}
-                        subContainerClassName={'pages pagination'}
+                        breakClassName="page-item"
+                        breakLabel={<a className="page-link">...</a>}
+                        pageClassName="page-item"
+                        previousClassName="page-item"
+                        nextClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousLinkClassName="page-link"
+                        nextLinkClassName="page-link"
                         activeClassName={'active'}
+                        containerClassName={'pagination'}
                         disableInitialCallback={true} />
                     }
                     {!currentEntity && currentOrganisation && this.state.pagination.count > 1 &&
                     <ReactPaginate previousLabel={'<'}
                         nextLabel={'>'}
-                        breakLabel={<a href="">...</a>}
-                        breakClassName={'break-me'}
                         pageCount={this.state.pagination.count}
                         forcePage={this.state.pagination.current - 1}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}
                         onPageChange={this.handlePageClickInCaseOfShowingOneOrganisationAdvices}
-                        containerClassName={'pagination'}
-                        subContainerClassName={'pages pagination'}
+                        breakClassName="page-item"
+                        breakLabel={<a className="page-link">...</a>}
+                        pageClassName="page-item"
+                        previousClassName="page-item"
+                        nextClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousLinkClassName="page-link"
+                        nextLinkClassName="page-link"
                         activeClassName={'active'}
+                        containerClassName={'pagination'}
                         disableInitialCallback={true} />
                     }
                     {!currentOrganisation && this.state.pagination.count > 1 &&
                     <ReactPaginate previousLabel={'<'}
                         nextLabel={'>'}
-                        breakLabel={<a href="">...</a>}
-                        breakClassName={'break-me'}
                         pageCount={this.state.pagination.count}
                         forcePage={this.state.pagination.current - 1}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}
                         onPageChange={this.handlePageClickInCaseOfDisplayingAllAdvicesForARegion}
-                        containerClassName={'pagination'}
-                        subContainerClassName={'pages pagination'}
+                        breakClassName="page-item"
+                        breakLabel={<a className="page-link">...</a>}
+                        pageClassName="page-item"
+                        previousClassName="page-item"
+                        nextClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousLinkClassName="page-link"
+                        nextLinkClassName="page-link"
                         activeClassName={'active'}
+                        containerClassName={'pagination'}
                         disableInitialCallback={true} />
                     }
                 </div>

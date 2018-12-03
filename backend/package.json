@@ -12,8 +12,8 @@
     "start:default": "node app.js",
     "start:watch": "nodemon --inspect --ignore test/ app.js",
     "lint": "eslint components jobs routes scripts test",
-    "smtp:start": "docker rm fakesmtp; docker run -d --name fakesmtp -p 1025:25 -v $(pwd)/../.data/fakesmtp:/var/mail digiplant/fake-smtp",
-    "smtp:stop": "docker stop fakesmtp"
+    "smtp:start": "docker rm smtp; docker run -d --name smtp -p 1025:1025 -p 8025:8025 mailhog/mailhog",
+    "smtp:stop": "docker stop smtp"
   },
   "repository": {
     "type": "git",

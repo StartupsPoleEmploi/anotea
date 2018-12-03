@@ -1,7 +1,15 @@
 const S = require('string');
+const POLE_EMPLOI = '4';
 
-export const exportToExcel = comments => {
+export const exportToExcel = (comments, codeFinancer) => {
     let lines = '\ufeffnote accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
+
+    if (codeFinancer === POLE_EMPLOI) {
+        let array = lines.split(';');
+        array.splice(9, 0, 'qualification');
+        lines = array.join(';');
+    }
+
     for (const idx in comments) {
 
         if (comments[idx].comment !== undefined && comments[idx].comment !== null) {
@@ -19,6 +27,11 @@ export const exportToExcel = comments => {
             pseudo = '"' + S(comments[idx].pseudo).decodeHTMLEntities().s + '"';
         }
 
+        let qualification = '';
+        if (codeFinancer === POLE_EMPLOI) {
+            qualification = ';' + comments[idx].qualification;
+        }
+
         lines += (comments[idx].rates !== undefined ? comments[idx].rates.accueil : '') + ';' +
             (comments[idx].rates !== undefined ? comments[idx].rates.contenu_formation : '') + ';' +
             (comments[idx].rates !== undefined ? comments[idx].rates.equipe_formateurs : '') + ';' +
@@ -27,7 +40,8 @@ export const exportToExcel = comments => {
             (comments[idx].rates !== undefined ? comments[idx].rates.global : '') + ';' +
             pseudo + ';' +
             commentTitle + ';' +
-            commentText + ';' +
+            commentText +
+            (codeFinancer === POLE_EMPLOI ? qualification : ``) + ';' +
             comments[idx].campaign + ';' +
             comments[idx].step + ';' +
             comments[idx].date + ';' +
@@ -51,7 +65,7 @@ export const exportToExcel = comments => {
             comments[idx].training.idSessionAudeFormation + ';' +
             (comments[idx].training.infoCarif !== undefined ? comments[idx].training.infoCarif.numeroAction : '') + ';' +
             (comments[idx].training.infoCarif !== undefined ? comments[idx].training.infoCarif.numeroSession : '') + ';' +
-            comments[idx].training.codeFinanceur + '\n';
+            comments[idx].training.codeFinanceur  + '\n';
     }
     const hiddenElement = document.createElement('a');
     let csvData = new Blob([lines], { type: 'text/csv;charset=utf-8' });

@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { Transform } = require('stream');
 const throughParallel = require('through2-parallel');
 
@@ -25,5 +26,12 @@ module.exports = {
             this.push(res);
             next();
         });
-    }
+    },
+    delay: seconds => {
+        return new Promise(resolve => setTimeout(() => resolve(), seconds * 1000));
+    },
+    findActiveRegions: (activeRegions, path) => {
+        return activeRegions.filter(region => _.get(region.mailing, path) === true).map(region => region.code_region);
+    },
+    capitalizeFirstLetter: string => string.charAt(0).toUpperCase() + string.slice(1),
 };

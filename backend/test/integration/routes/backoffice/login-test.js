@@ -162,4 +162,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.equal(response.statusCode, 400);
         assert.deepEqual(response.body.message, 'Token invalide');
     });
+
+    it('can not access a ressource with invalid token', async () => {
+
+        let app = await startServer();
+        let response = await request(app)
+        .get('/api/backoffice/organisation/111111111111/info')
+        .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiZmluYW.INVALID');
+
+        assert.equal(response.statusCode, 401);
+    });
 }));

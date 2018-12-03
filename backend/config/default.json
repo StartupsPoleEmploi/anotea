@@ -3,46 +3,67 @@
     "name": "Anotea",
     "public_hostname": "http://127.0.0.1:3000",
     "port": 8080,
-    "mailer": {
-      "limit": 1
-    },
     "active_regions": [
       {
         "code_region": "11",
-        "jobs": {
-          "resend": false,
-          "retry": false
+        "name": "Île-de-France",
+        "mailing": {
+          "stagiaires": {
+            "avis": true
+          },
+          "organismes": {
+            "accounts": true,
+            "notifications": true
+          }
         }
       },
       {
         "code_region": "17",
-        "jobs": {
-          "resend": false,
-          "retry": false
+        "name": "Pays de la Loire",
+        "mailing": {
+          "stagiaires": {
+            "avis": true
+          },
+          "organismes": {
+            "accounts": true,
+            "notifications": true
+          }
         }
       },
       {
         "code_region": "2",
+        "name": "Auvergne-Rhône-Alpes",
         "filters": {
           "code_financeurs": [
             "-2"
           ]
         },
-        "jobs": {
-          "resend": false,
-          "retry": false
+        "mailing": {
+          "stagiaires": {
+            "avis": true
+          },
+          "organismes": {
+            "accounts": true,
+            "notifications": true
+          }
         }
       },
       {
         "code_region": "18",
+        "name": "Provence-Alpes-Côte d'Azur",
         "filters": {
           "code_financeurs": [
             "-2"
           ]
         },
-        "jobs": {
-          "resend": true,
-          "retry": true
+        "mailing": {
+          "stagiaires": {
+            "avis": true
+          },
+          "organismes": {
+            "accounts": true,
+            "notifications": true
+          }
         }
       }
     ]
@@ -105,12 +126,12 @@
     "greetingTimeout": 300000,
     "from": "anotea@pole-emploi.fr",
     "stagiaires": {
-      "relaunchDelay": 7,
-      "maxRelaunch": 1
+      "avisRelaunchDelay": 7,
+      "avisMaxRelaunch": 1
     },
     "organisme": {
-      "newAccountRelaunchDelay": 7,
-      "newCommentsNotificationRelaunchDelay": 15
+      "accountsRelaunchDelay": 7,
+      "notificationsRelaunchDelay": 15
     }
   },
   "api": {

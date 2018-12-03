@@ -40,9 +40,14 @@ export default class OrganisationPanel extends React.PureComponent {
         return (
             <div className="organisationPanel">
                 <h1>Gestion des organismes</h1>
-                <input type="text" className="searchField" placeholder="SIRET" value={this.state.siret} onChange={this.updateSIRET} onKeyPress={this.handleKeypress}/>
-                <button className="btn btn-primary" onClick={this.doSearch}><i className="glyphicon glyphicon-search"></i> Chercher</button>
-
+                <div className="input-group">
+                    <input type="text" className="searchField form-control" placeholder="SIRET" value={this.state.siret} onChange={this.updateSIRET} onKeyPress={this.handleKeypress} style={{ margin: 0, width: '400px', flex: 'inherit'}}/>
+                    <div className="input-group-append">
+                        <button className="btn btn-outline-primary" onClick={this.doSearch}>
+                            <span className="fas fa-search"/> Chercher
+                        </button>
+                    </div>
+                </div>
                 <OrganisationDetail organisation={this.state.organisation} refresh={this.doSearch} />
             </div>
         );

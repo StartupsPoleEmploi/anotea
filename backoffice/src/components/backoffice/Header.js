@@ -1,7 +1,5 @@
 import React from 'react';
-
-import { Logout } from './Logout';
-
+import Logout from './Logout';
 import './header.css';
 
 export const Header = props => {
@@ -24,9 +22,7 @@ export const Header = props => {
         { code: '9', label: `Collectivité territoriale - Commune ` }
         ];
 
-    const getLabel = (code) => {
-        return tab.map(e => e.code === code ? (e.label) : '');
-    };
+    const getLabel = code => tab.map(e => e.code === code ? (e.label) : '');
 
     return(
         <div className="App-header">
@@ -35,7 +31,7 @@ export const Header = props => {
                 props.profile === 'financer' ? <h1>Espace Financeur {getLabel(props.codeFinanceur)} {props.region}</h1> :
                     <h1>Espace Anotea</h1>
             }
-            { props.profile === 'organisme' && <a className="helpLink pull-right" href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide</a>}
+            { props.profile === 'organisme' && <a className="helpLink float-right" href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide</a>}
             { props.loggedIn && <Logout handleLogout={props.handleLogout} /> }
         </div>
     );

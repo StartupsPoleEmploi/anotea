@@ -22,22 +22,20 @@ export default class SideMenu extends React.PureComponent {
     render() {
         return (
             <div className="sideMenu">
-                <div className="dropdown">
-                    <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                        Menu
-                        <span className="caret"></span>
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li>
-                            <button className={this.state.currentPage === 'moderation' ? 'active' : ''} onClick={this.changePage.bind(this, 'moderation')}>Modération des avis</button>
-                        </li>
-                        { this.props.features.includes('EDIT_ORGANISATIONS') &&
-                            <li>
-                                <button className={this.state.currentPage === 'organisme' ? 'active' : ''} onClick={this.changePage.bind(this, 'organisme')}>Gestion des organismes</button>
-                            </li>
-                        }
-                    </ul>
-                </div>
+                {this.props.features &&
+                    <div className="dropdown">
+                        <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                            Menu
+                            <span className="caret"></span>
+                        </button>
+                        <div className="dropdown-menu">
+                            <button className={`"dropdown-item ${this.state.currentPage === 'moderation' ? 'active' : ''}`} onClick={this.changePage.bind(this, 'moderation')}>Modération des avis</button>
+                            {this.props.features.includes('EDIT_ORGANISATIONS') &&
+                            <button className={`"dropdown-item ${this.state.currentPage === 'organisme' ? 'active' : ''}`} onClick={this.changePage.bind(this, 'organisme')}>Gestion des organismes</button>
+                            }
+                        </div>
+                    </div>
+                }
             </div>
         );
     }

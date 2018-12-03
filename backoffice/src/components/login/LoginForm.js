@@ -78,13 +78,14 @@ export class LoginForm extends React.Component {
 
                     <div className="wrapper">
                         <span className="group-btn">
-                            <button onClick={this.handleLogin} className="btn btn-primary btn-md">Se connecter <i
-                                className="glyphicon glyphicon-log-in"></i></button>
+                            <button onClick={this.handleLogin} className="btn btn-primary btn-md">
+                                Se connecter <span className="fas fa-sign-in-alt"/>
+                            </button>
                         </span>
                     </div>
                 </div>
                 <div className="loginHelp">
-                    <a onClick={this.handleForgottenPassword} role="button">Mot de passe oublié?</a>
+                    <button type="button" className="btn btn-link" onClick={this.handleForgottenPassword}>Mot de passe oublié?</button>
                 </div>
             </div>
         );

@@ -10,14 +10,14 @@ export class ForgottenPassword extends React.Component {
     state = {
         error: false,
         asked: false
-    }
+    };
 
     static propTypes = {
         onSuccess: PropTypes.func.isRequired,
         onError: PropTypes.func.isRequired,
         passwordLost: PropTypes.bool.isRequired,
         token: PropTypes.string.isRequired
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -34,25 +34,22 @@ export class ForgottenPassword extends React.Component {
 
     handleUsernameChange = evt => {
         this.setState({ username: evt.target.value });
-    }
+    };
 
     handleAsk = () => {
-        askNewPassword(this.state.username).then(result => {
-            if (result.error) {
-                this.setState({ error: true });
-            } else {
-                this.setState({ error: false, asked: true });
-            }
+        askNewPassword(this.state.username).then(() => this.setState({ error: false, asked: true }))
+        .catch(e => {
+            this.setState({ error: true });
         });
-    }
+    };
 
     handlePasswordChange = evt => {
         this.setState({ password: evt.target.value });
-    }
+    };
 
     handlePasswordConfirmChange = evt => {
         this.setState({ passwordConfirm: evt.target.value });
-    }
+    };
 
     handePasswordChange = () => {
         updatePassword(this.state.token, this.state.password).then(result => {
@@ -61,11 +58,11 @@ export class ForgottenPassword extends React.Component {
                 history.pushState(null, "", location.href.split("?")[0])  // eslint-disable-line
             }
         });
-    }
+    };
 
     onSuccess = evt => {
         this.onSuccessCallback(this.state.userInfo);
-    }
+    };
 
     render() {
         return (
@@ -88,8 +85,9 @@ export class ForgottenPassword extends React.Component {
 
                         <div className="wrapper">
                             <span className="group-btn">
-                                <button onClick={this.handleAsk} className="btn btn-primary btn-md">Envoyer <i
-                                    className="glyphicon glyphicon-send"></i></button>
+                                <button onClick={this.handleAsk} className="btn btn-primary btn-md">
+                                    Envoyer <span className="fas fa-location"></span>
+                                </button>
                             </span>
                         </div>
                     </div>
