@@ -3,7 +3,7 @@ import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
 import Toolbar from '../common/Toolbar';
-import AdviceRates from '../common/adviceRates';
+import AdviceRates from '../common/AdviceRates';
 import {
     loadAdvices,
     loadInventory,
