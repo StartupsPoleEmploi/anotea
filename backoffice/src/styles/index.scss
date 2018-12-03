@@ -374,35 +374,11 @@ body {
     border-radius: 5px;
 }
 
-.AdviceRates .row {
-    margin-right: 0px;
-}
-
 .AdviceRates .detail {
     padding-top: 10px;
 }
 
-.AdviceRates button.unfold {
-    border: none;
-    background-color: transparent;
-}
-
-.AdviceRates button.unfold:focus {
-    outline: 0;
-}
-
-.AdviceRates .description {
-    white-space: nowrap;
-    min-width: 135px;
-    padding-right: 0;
-}
-
-.AdviceRates .starsContainer .AdviceRates {
-    padding: 0;
-}
-
 .Stars {
-    margin-left: 5px;
     color: #facc2e;
 }
 

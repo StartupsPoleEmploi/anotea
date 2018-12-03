@@ -9,7 +9,7 @@ services:
       - ./.data/mongodb/config:/data/configdb
 
   smtp:
-    image: digiplant/fake-smtp
+    image: mailhog/mailhog
     container_name: anotea_smtp
-    volumes:
-      - ./.data/fakesmtp:/var/mail
+    ports:
+      - 8024:8025

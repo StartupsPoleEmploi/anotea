@@ -2,7 +2,7 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const md5File = require('md5-file/promise');
 const validateTrainee = require('./validateTrainee');
-const { handleBackPressure } = require('../../utils');
+const { handleBackPressure } = require('../../job-utils');
 const { getCampaignDate, getCampaignName } = require('./utils');
 
 module.exports = (db, logger) => {
@@ -25,18 +25,19 @@ module.exports = (db, logger) => {
 
             return new Promise(async (resolve, reject) => {
 
+                let stats = {
+                    total: 0,
+                    imported: 0,
+                    ignored: 0,
+                    invalid: 0,
+                };
+
                 if (await db.collection('importTrainee').findOne({ hash })) {
-                    reject(new Error(`CSV file ${file} already imported`));
+                    logger.info(`CSV file ${file} already imported`);
+                    return resolve(stats);
                 } else {
 
                     logger.info(`Trainee import ${handler.name}/${campaign.name}...`);
-
-                    let stats = {
-                        total: 0,
-                        imported: 0,
-                        ignored: 0,
-                        invalid: 0,
-                    };
 
                     fs.createReadStream(file)
                     .pipe(parse(handler.csvOptions))

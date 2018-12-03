@@ -7,6 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
 const TraineeMailer = require('./AvisMailer');
+const { findActiveRegions, capitalizeFirstLetter } = require('../../../job-utils');
 
 const main = async () => {
 
@@ -19,7 +20,7 @@ const main = async () => {
     cli.description('send email campaign')
     .option('-c, --campaign [campaign]', 'Limit emailing to the campaign name')
     .option('-r, --region [region]', 'Limit emailing to the region')
-    .option('-t, --type [type]', 'resend,retry,send (default: send))')
+    .option('-t, --type [type]', 'resend,retry,send (default: send))', capitalizeFirstLetter)
     .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
     .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
     .parse(process.argv);
@@ -30,17 +31,12 @@ const main = async () => {
         });
     };
 
-    let type = cli.type || 'send';
-    let regions = configuration.app.active_regions.map(e => e.code_region);
-    if (cli.region && !regions.includes(cli.region)) {
-        return abort('Region is not active');
-    }
-
+    let type = cli.type || 'Send';
     let traineeMailer = new TraineeMailer(db, logger, mailer);
     let ActionClass = require(`./actions/${type}Action`);
-    let action = new ActionClass(db, configuration, {
+    let action = new ActionClass(configuration, {
         campaign: cli.campaign,
-        codeRegion: cli.region,
+        codeRegions: cli.region ? [cli.region] : findActiveRegions(configuration.app.active_regions, 'stagiaires.avis'),
     });
 
     try {

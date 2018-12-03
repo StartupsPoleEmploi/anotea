@@ -1,5 +1,5 @@
 let titleize = require('underscore.string/titleize');
-let { delay } = require('../../../utils');
+let { delay } = require('../../../job-utils');
 
 class AvisMailer {
 
@@ -35,7 +35,7 @@ class AvisMailer {
         });
     }
 
-    sendEmails(handler, options = {}) {
+    sendEmails(action, options = {}) {
         return new Promise(async (resolve, reject) => {
 
             let stats = {
@@ -44,7 +44,7 @@ class AvisMailer {
                 error: 0,
             };
 
-            let cursor = this.db.collection('trainee').find(handler.getQuery());
+            let cursor = this.db.collection('trainee').find(action.getQuery());
             if (options.limit) {
                 cursor.limit(options.limit);
             }
