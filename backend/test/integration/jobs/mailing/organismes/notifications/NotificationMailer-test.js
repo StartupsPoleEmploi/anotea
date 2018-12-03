@@ -27,7 +27,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             ...(
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
-                        read: false,
+                        read: true,
                         published: true,
                         training: {
                             organisation: {
@@ -58,7 +58,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.ok(organisme.newCommentsNotificationEmailSentDate);
     });
 
-    it('should send email notification to organisme when not email sent since 15 days', async () => {
+    it('should send another email notification to organisme when not email sent since 15 days', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -68,7 +68,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             ...(
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
-                        read: false,
+                        read: true,
                         published: true,
                         training: {
                             organisation: {
@@ -100,7 +100,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.ok(moment(organisme.newCommentsNotificationEmailSentDate).isAfter(newCommentsNotificationEmailSentDate));
     });
 
-    it('should ignore organisme when less than 5 not yet read comments', async () => {
+    it('should ignore organisme with less than 5 comments', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
@@ -112,6 +112,41 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 courriel: 'new@organisme.fr',
                 meta: {
                     nbAvis: 2,
+                    siretAsString: `${31705038300064}`,
+                },
+            })),
+        ]);
+
+        let results = await notificationMailer.sendEmails();
+
+        assert.deepEqual(results, { mailSent: 0 });
+    });
+
+    it('should ignore organisme with less than 5 comments not read yet', async () => {
+
+        let spy = [];
+        let db = await getTestDatabase();
+        let notificationMailer = new NotificationMailer(db, logger, configuration, fakeMailer(spy));
+        await Promise.all([
+            ...(
+                _.range(2).map(() => {
+                    return insertIntoDatabase('comment', newComment({
+                        read: true,
+                        published: true,
+                        training: {
+                            organisation: {
+                                siret: `${31705038300064}`,
+                            },
+                        }
+                    }));
+                })
+            ),
+            insertIntoDatabase('organismes', newOrganismeAccount({
+                _id: 31705038300064,
+                SIRET: 31705038300064,
+                courriel: 'new@organisme.fr',
+                meta: {
+                    nbAvis: 5,
                     siretAsString: `${31705038300064}`,
                 },
             })),
