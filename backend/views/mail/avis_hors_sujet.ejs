@@ -1,89 +1,90 @@
 <html>
-<head>
-    <title>Votre avis a été supprimé</title>
-    <meta name="viewport" content="width=device-width">
-    <style>
-        body {
-            font-size:1em;
-        }
-
-        body td {
-            padding:2em;
-            width: 33%;
-        }
-
-        .banner {
-            height: 193px;
-        }
-
-        .icons-mobile {
-            display: none;
-        }
-
-        .icons td {
-            padding: 0px 0px 5px 20px;
-        }
-
-        .labels td {
-            padding: 0px 0px 20px 20px;
-        }
-        @media only screen and (max-width: 596px) {
+    <head>
+        <title>Votre avis a été supprimé</title>
+        <meta name="viewport" content="width=device-width">
+        <style>
             body {
-                width:100%;
                 font-size:1em;
             }
+
             body td {
-                padding:.5em;
+                padding:2em;
                 width: 33%;
             }
-            .labels, .icons {
+
+            .banner {
+                height: 193px;
+            }
+
+            .icons-mobile {
                 display: none;
             }
-            .icons-mobile {
-                display: inherit;
-                background: white;
-                width: 760px;
-                padding: 20px 0px 50px 0px;
-            }
-        }
-    </style>
-</head>
-<body style="background-color:#ebebeb;font-size:1.3em">
-<div style="display:none">
-    <p>Bonjour <%= comment.trainee.firstName %> <%= comment.trainee.name %>,</p>
-</div>
-<center>
-    <table height="100%" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
-        <tr>
-            <td colspan="3" valign="middle" align="center" style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;">
-                Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
-            </td>
-        </tr>
-        <tr>
-            <td  style="padding:2em" align="left" valign="middle"><img src="<%= hostname %>/img/email/logo_Anotea_Vertical_baseline.png" alt=""/></td>
-            <td  style="padding:2em" colspan="2" align="right" valign="middle">
-                Propulsé par &nbsp;
-                <img src="<%= hostname %>/img/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" style="vertical-align: middle;" />
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3" style="padding:0em 2em">
-                <p>Bonjour <%= comment.trainee.firstName %> <%= comment.trainee.name %>,</p>
-                <p>Votre commentaire du <%= moment(comment.date).format('DD/MM/YYYY') %> ne respecte pas notre charte de modération et a été supprimé.</p>
-                <p>Nous vous invitons à réécrire votre commentaire en cliquant sur ce lien : <%= formLink %></p>
-                <p>Partagez votre expérience, donnez des éléments qui vous semblent importants pour choisir cette formation.</p>
-            </td>
-        </tr>
-    </table>
-    <table  width="760px" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
-        <tr>
-            <td colspan="3" align="center" style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
-                <%- include('../legal/mentions.ejs'); %>
 
-                <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous pouvez vous désinscrire</a>.</p>
-            </td>
-        </tr>
-    </table>
-</center>
-</body>
+            .icons td {
+                padding: 0px 0px 5px 20px;
+            }
+
+            .labels td {
+                padding: 0px 0px 20px 20px;
+            }
+            @media only screen and (max-width: 596px) {
+                body {
+                    width:100%;
+                    font-size:1em;
+                }
+                body td {
+                    padding:.5em;
+                    width: 33%;
+                }
+                .labels, .icons {
+                    display: none;
+                }
+                .icons-mobile {
+                    display: inherit;
+                    background: white;
+                    width: 760px;
+                    padding: 20px 0px 50px 0px;
+                }
+            }
+        </style>
+    </head>
+    <body style="background-color:#ebebeb;font-size:1.3em">
+        <div style="display:none">
+            <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
+        </div>
+        <center>
+            <table height="100%" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
+                <tr>
+                    <td colspan="3" valign="middle" align="center" style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;">
+                        Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td  style="padding:2em" align="left" valign="middle"><img src="<%= hostname %>/img/email/logo_Anotea_Vertical_baseline.png" alt=""/></td>
+                    <td  style="padding:2em" colspan="2" align="right" valign="middle">
+                        Propulsé par &nbsp;
+                        <img src="<%= hostname %>/img/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" style="vertical-align: middle;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding:0em 2em">
+                        <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
+                        <p>Votre commentaire ne respecte pas notre charte de modération et a été supprimé.</p>
+                        <p>Nous vous invitons à réécrire votre commentaire en cliquant sur ce lien : <%= formLink %></p>
+                        <p>Partagez votre expérience, donnez des éléments qui vous semblent importants pour choisir cette formation.</p>
+                    </td>
+                </tr>
+            </table>
+            <table  width="760px" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
+                <tr>
+                    <td colspan="3" align="center" style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
+                        <%- include('../legal/mentions.ejs'); %>
+
+                        <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous pouvez vous désinscrire</a>.</p>
+                    </td>
+                </tr>
+            </table>
+        </center>
+        <img src="<%= trackingLink %>" />
+    </body>
 </html>

@@ -4,7 +4,6 @@ import ReactPaginate from 'react-paginate';
 
 import Toolbar from '../common/Toolbar';
 import AdviceRates from '../common/adviceRates';
-import { sendMailToOffTopicCommentOwner } from '../../../lib/offTopicCommentsService';
 import {
     loadAdvices,
     loadInventory,
@@ -16,6 +15,7 @@ import {
     maskTitle,
     unmaskTitle,
 } from '../../../lib/adviceService';
+import { sendMailToOffTopicCommentOwner } from '../../../lib/offTopicCommentsService';
 
 const DEFAULT_ORDER = 'moderation';
 const QUALIFICATION =[

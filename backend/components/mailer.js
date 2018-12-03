@@ -198,21 +198,21 @@ module.exports = function(db, logger, configuration) {
             const cc = configuration.smtp.import_error_cc;
             sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
         },
-        sendOffTopicCommentMail: async (mailOptions, comment, successCallback, errorCallback) => {
-            mailOptions.subject = `${comment.trainee.firstName} ${comment.trainee.name},Votre commentaire a été supprimé`;
+        sendOffTopicCommentMail: async (mailOptions, trainee, successCallback, errorCallback) => {
+            mailOptions.subject = `${trainee.trainee.firstName} ${trainee.trainee.name},Votre commentaire a été supprimé`;
 
-            const consultationLink = getConsultationLink(comment);
-            const unsubscribeLink = getUnsubscribeLink(comment);
-            const formLink = getFormLink(comment);
-            // const trackingLink = getTrackingLink(trainee);
-            getCarif(comment.codeRegion, carif => {
+            const consultationLink = getConsultationLink(trainee);
+            const unsubscribeLink = getUnsubscribeLink(trainee);
+            const formLink = getFormLink(trainee);
+            const trackingLink = getTrackingLink(trainee);
+            getCarif(trainee.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
                 const params = {
-                    comment: comment,
+                    trainee: trainee,
                     consultationLink: consultationLink,
                     unsubscribeLink: unsubscribeLink,
                     formLink: formLink,
-                    // trackingLink: trackingLink,
+                    trackingLink: trackingLink,
                     hostname: configuration.app.public_hostname,
                     moment: moment,
                     carifNameHidden: carif.carifNameHidden,

@@ -1,5 +1,7 @@
-import { _get } from '../utils/http-client';
+import { _put} from '../utils/http-client';
 
 export const sendMailToOffTopicCommentOwner = (id) => {
-    return _get(`/backoffice/sendMailToOffTopicCommentOwner/${id}`);
+    return _put(`/backoffice/sendMailToOffTopicCommentOwner`, {
+        id: id
+    });
 };
