@@ -9,7 +9,7 @@ const { successMailer } = require('../../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    it('should send email to trainee with errors', async () => {
+    it('should send email to trainee with smtp error', async () => {
 
         let emailsSent = [];
         let db = await getTestDatabase();
