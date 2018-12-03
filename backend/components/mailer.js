@@ -197,6 +197,30 @@ module.exports = function(db, logger, configuration) {
             mailOptions.from = configuration.smtp.from;
             const cc = configuration.smtp.import_error_cc;
             sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
-        }
+        },
+        sendOffTopicCommentMail: async (mailOptions, comment, successCallback, errorCallback) => {
+            mailOptions.subject = `${comment.trainee.firstName} ${comment.trainee.name},Votre commentaire a été supprimé`;
+
+            const consultationLink = getConsultationLink(comment);
+            const unsubscribeLink = getUnsubscribeLink(comment);
+            const formLink = getFormLink(comment);
+            // const trackingLink = getTrackingLink(trainee);
+            getCarif(comment.codeRegion, carif => {
+                mailOptions.from = getFrom(carif);
+                const params = {
+                    comment: comment,
+                    consultationLink: consultationLink,
+                    unsubscribeLink: unsubscribeLink,
+                    formLink: formLink,
+                    // trackingLink: trackingLink,
+                    hostname: configuration.app.public_hostname,
+                    moment: moment,
+                    carifNameHidden: carif.carifNameHidden,
+                    carifName: carif.name,
+                    carifEmail: mailOptions.from
+                };
+                sendMail('avis_hors_sujet', params, mailOptions, successCallback, errorCallback);
+            }, errorCallback);
+        },
     };
 };

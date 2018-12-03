@@ -1,0 +1,12 @@
+Bonjour <%= comment.trainee.firstName %> <%= comment.trainee.name %>,
+
+Votre commentaire du <%= moment(comment.date).format('DD/MM/YYYY') %> ne respecte pas notre charte de modération et a été supprimé.
+
+Nous vous invitons à réécrire votre commentaire en cliquant sur ce lien : <%= formLink %>
+
+Partagez votre expérience, donnez des éléments qui vous semblent importants pour choisir cette formation.
+
+Cordialement
+L’équipe Anotéa
+
+<%- include('../legal/mentions.txt'); %>

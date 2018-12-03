@@ -4,16 +4,17 @@ import ReactPaginate from 'react-paginate';
 
 import Toolbar from '../common/Toolbar';
 import AdviceRates from '../common/adviceRates';
+import { sendMailToOffTopicCommentOwner } from '../../../lib/offTopicCommentsService';
 import {
-    loadAdvices,
-    loadInventory,
-    rejectAdvice,
-    publishAdvice,
-    updateAdvice,
-    maskPseudo,
-    unmaskPseudo,
-    maskTitle,
-    unmaskTitle
+loadAdvices,
+loadInventory,
+rejectAdvice,
+publishAdvice,
+updateAdvice,
+maskPseudo,
+unmaskPseudo,
+maskTitle,
+unmaskTitle,
 } from '../../../lib/adviceService';
 
 const DEFAULT_ORDER = 'moderation';
@@ -75,6 +76,11 @@ export default class ModerationPanel extends React.Component {
         );
     };
 
+    handleOffTopic = (id, reason, evt) => {
+        this.handleReject(id, reason, evt);
+        sendMailToOffTopicCommentOwner(id);
+    };
+
     handlePublish = (id, qualification, evt) => {
         publishAdvice(id, qualification).then(result =>
             this.doLoadAdvices()
@@ -94,7 +100,6 @@ export default class ModerationPanel extends React.Component {
         if (this.state.currentEditBackup === null) {
             this.state.advices.map(advice => {
                 if (advice._id === id) {
-
                     this.setState({ currentEditBackup: advice.comment.text });
                 }
             });
@@ -309,7 +314,7 @@ export default class ModerationPanel extends React.Component {
                                                         role="button">Injure</a>
                                                     <a className="dropdown-item" onClick={this.handleReject.bind(this, advice._id, 'alerte')}
                                                         role="button">Alerte</a>
-                                                    <a className="dropdown-item" onClick={this.handleReject.bind(this, advice._id, 'non concerné')}
+                                                    <a className="dropdown-item" onClick={this.handleOffTopic.bind(this, advice._id, 'non concerné')}
                                                         role="button">Non concerné</a>
                                                 </div>
                                             </div>}
@@ -360,7 +365,7 @@ export default class ModerationPanel extends React.Component {
                                                     {QUALIFICATION.map((qualif, index) =>
                                                         <a  key={index}
                                                             className="dropdown-item"
-                                                            onClick={this.handleUpdate().bind(this, advice._id, qualif.qualif)}
+                                                            onClick={this.handleUpdate.bind(this, advice._id, qualif.qualif)}
                                                             role="button">{qualif.value}</a>
                                                     )}
                                                 </div>
