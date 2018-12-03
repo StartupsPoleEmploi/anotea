@@ -17,21 +17,25 @@ export default class Stars extends React.PureComponent {
     constructor(props) {
         super(props);
         if (props.value !== null) {
-            this.state.starArray = new Array(MAX_STARS).fill('star', 0, props.value).fill('star_empty', props.value, MAX_STARS);
+            this.state.starArray = new Array(MAX_STARS)
+            .fill('star', 0, props.value)
+            .fill('star_empty', props.value, MAX_STARS);
         }
     }
 
     render() {
         return (
-            <div className="Stars" style={this.props.style}>
-                {this.state.starArray.map((star, index) =>
-                    <img
-                        key={index}
-                        src={`${process.env.PUBLIC_URL}/images/${star}.png`}
-                        style={{ width: '20px', opacity: star === 'star_empty' ? '0.6' : '1' }}
-                    />
-                )}
-            </div>
+            <span className="Stars" style={this.props.style}>
+                {
+                    this.state.starArray.map((star, index) =>
+                        <span
+                            key={index}
+                            className={star === 'star_empty' ? 'far fa-star' : 'fas fa-star'}
+                            style={{ width: '18px' }}
+                        />
+                    )
+                }
+            </span>
         );
     }
 }

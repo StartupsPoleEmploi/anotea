@@ -70,17 +70,17 @@ export default class Email extends React.Component {
 
                 {this.state.mode === 'view' &&
                     <div className="view">
-                        <span className="oi oi-check"></span> <span>{this.props.label}</span> <a href={`mailto:${this.props.current}`}>{this.state.current}</a>
+                        <span className="fas fa-check"></span> <span>{this.props.label}</span> <a href={`mailto:${this.props.current}`}>{this.state.current}</a>
 
                         {this.state.active && this.props.editButton &&
                             <button className="btn btn-primary" onClick={this.changeMode.bind(this, 'edit')}>
-                                <span className="oi oi-pencil"></span> Modifier l'adresse Anotéa
+                                <span className="fas fa-pencil"></span> Modifier l'adresse Anotéa
                             </button>
                         }
 
                         {this.props.deleteEditedEmail &&
                             <button className="btn btn-danger" onClick={this.delete}>
-                                <span className="oi oi-trash"></span> Supprimer
+                                <span className="fas fa-trash"></span> Supprimer
                             </button>
                         }
                     </div>
@@ -88,7 +88,7 @@ export default class Email extends React.Component {
 
                 {this.state.mode === 'edit' &&
                     <div className="edit">
-                        Anotea : <input type="text" value={this.state.editedEmail} onChange={this.handleEmailChange} /> <button className="btn btn-primary" onClick={this.update}> <span className="oi oi-check"></span> Mettre à jour</button> <button className="btn" onClick={this.cancel}>Annuler</button>
+                        Anotea : <input type="text" value={this.state.editedEmail} onChange={this.handleEmailChange} /> <button className="btn btn-primary" onClick={this.update}> <span className="fas fa-check"></span> Mettre à jour</button> <button className="btn" onClick={this.cancel}>Annuler</button>
                     </div>
                 }
             </div>

@@ -3,7 +3,7 @@ import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
 import Toolbar from '../common/Toolbar';
-import AdviceRates from '../common/adviceRates';
+import AdviceRates from '../common/AdviceRates';
 import {
     loadAdvices,
     loadInventory,
@@ -240,7 +240,6 @@ export default class ModerationPanel extends React.Component {
                                 <div className="col-md-6">
                                     <h3>
                                         <span className="oi oi-person"/>
-
                                         <div className="pseudo">
                                             {advice.pseudo &&
                                             <span>
