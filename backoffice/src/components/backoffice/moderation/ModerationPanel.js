@@ -6,15 +6,15 @@ import Toolbar from '../common/Toolbar';
 import AdviceRates from '../common/adviceRates';
 import { sendMailToOffTopicCommentOwner } from '../../../lib/offTopicCommentsService';
 import {
-loadAdvices,
-loadInventory,
-rejectAdvice,
-publishAdvice,
-updateAdvice,
-maskPseudo,
-unmaskPseudo,
-maskTitle,
-unmaskTitle,
+    loadAdvices,
+    loadInventory,
+    rejectAdvice,
+    publishAdvice,
+    updateAdvice,
+    maskPseudo,
+    unmaskPseudo,
+    maskTitle,
+    unmaskTitle,
 } from '../../../lib/adviceService';
 
 const DEFAULT_ORDER = 'moderation';
