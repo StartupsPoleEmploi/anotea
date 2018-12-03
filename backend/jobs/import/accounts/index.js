@@ -19,8 +19,8 @@ const main = async () => {
     let client = await getMongoClient(configuration.mongodb.uri);
     let logger = getLogger('anotea-job-kairos-import', configuration);
     let db = client.db();
-    let intercarifAccountImporter = require(`./importers/intercarifAccountImporter`)(db, logger, configuration);
-    let kairosAccountImporter = require(`./importers/kairosAccountImporter`)(db, logger, configuration);
+    let intercarifAccountImporter = require(`./backend/jobs/import/organismes/importers`)(db, logger);
+    let kairosAccountImporter = require(`./backend/jobs/import/organismes/importers`)(db, logger);
 
     const abort = message => {
         logger.error(message, () => {

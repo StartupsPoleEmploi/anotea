@@ -1,10 +1,10 @@
 const path = require('path');
 const _ = require('lodash');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-db');
-const { newOrganismeAccount, newComment } = require('../../../../helpers/data/dataset');
-const logger = require('../../../../helpers/test-logger');
-const kairosOrganismesImporter = require('../../../../../jobs/import/accounts/importers/kairosAccountImporter');
+const { withMongoDB } = require('../../../../../helpers/test-db');
+const { newOrganismeAccount, newComment } = require('../../../../../helpers/data/dataset');
+const logger = require('../../../../../helpers/test-logger');
+const kairosOrganismesImporter = require('../../../../../../jobs/import/organismes/importers/kairosAccountImporter');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 

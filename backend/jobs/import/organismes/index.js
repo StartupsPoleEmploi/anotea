@@ -13,7 +13,8 @@ const getLogger = require('../../../components/logger');
 const generateOrganismesResponsables = require('../organismes/generateOrganismesResponsables');
 const generateOrganismesFormateurs = require('../organismes/generateOrganismesFormateurs');
 
-cli.description('Reconciling sessions/actions with comments...')
+cli.description('Import accounts from Intercarif and Kairos')
+.option('-f, --file [file]', 'The CSV file to import')
 .parse(process.argv);
 
 const main = async () => {
@@ -22,6 +23,8 @@ const main = async () => {
     let logger = getLogger('anotea-job-organimes-import', configuration);
     let client = await getMongoClient(configuration.mongodb.uri);
     let db = client.db();
+    let intercarifAccountImporter = require(`./backend/jobs/import/organismes/importers`)(db, logger, configuration);
+    let kairosAccountImporter = require(`./backend/jobs/import/organismes/importers`)(db, logger, configuration);
 
     const abort = message => {
         logger.error(message, () => {
@@ -36,10 +39,17 @@ const main = async () => {
         logger.info(`Generating organismes formateurs collection...`);
         await generateOrganismesFormateurs(db);
 
+        logger.info(`Importing accounts from Intercarif...`);
+        let intercatif = await intercarifAccountImporter.importAccounts();
+
+        logger.info(`Importing accounts from Kairos...`);
+        let kairos = await kairosAccountImporter.importAccounts(cli.file);
+
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
         logger.info(`Completed in ${duration}`);
+        logger.info(`Results: ${JSON.stringify({ intercatif, kairos }, null, 2)}`);
 
     } catch (e) {
         abort(e);
