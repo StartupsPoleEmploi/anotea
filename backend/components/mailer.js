@@ -221,6 +221,6 @@ module.exports = function(db, logger, configuration) {
                 };
                 sendMail('avis_hors_sujet', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);
-        },
+        }
     };
 };
