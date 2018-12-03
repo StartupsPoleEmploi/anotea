@@ -16,23 +16,66 @@ class NotificationMailer {
         let delay = this.configuration.smtp.organisme.notificationsRelaunchDelay;
 
         return this.db.collection('organismes')
-        .find({
-            'meta.nbAvis': { $gte: 5 },
-            ...(codeRegions ? { 'codeRegion': { $in: codeRegions } } : {}),
-            '$or': [
-                { 'newCommentsNotificationEmailSentDate': { $lte: moment().subtract(delay, 'days').toDate() } },
-                { 'newCommentsNotificationEmailSentDate': null },
-            ]
-        });
-    }
-
-    _getFirstUnreadComment(organisme) {
-        return this.db.collection('comment').findOne({
-            'training.organisation.siret': organisme.meta.siretAsString,
-            'comment': { $ne: null },
-            'read': { $ne: true },
-            'published': true
-        });
+        .aggregate([
+            {
+                $match: {
+                    'meta.nbAvis': { $gte: 5 },
+                    ...(codeRegions ? { 'codeRegion': { $in: codeRegions } } : {}),
+                    '$or': [
+                        { 'newCommentsNotificationEmailSentDate': { $lte: moment().subtract(delay, 'days').toDate() } },
+                        { 'newCommentsNotificationEmailSentDate': null },
+                    ]
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        organisme: '$$ROOT',
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'comment',
+                    let: {
+                        siret: '$organisme.meta.siretAsString',
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $ne: ['$comment', null] },
+                                        { $eq: ['$read', true] },
+                                        { $eq: ['$published', true] },
+                                        { $eq: ['$training.organisation.siret', '$$siret'] },
+                                    ]
+                                },
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: null,
+                                comments: { $push: '$$ROOT' },
+                                nbReadComments: { $sum: 1 }
+                            }
+                        },
+                    ],
+                    as: 'status'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$status',
+                    preserveNullAndEmptyArrays: true,
+                }
+            },
+            {
+                $match: {
+                    'status.nbReadComments': { $gte: 5 }
+                }
+            }
+        ]);
     }
 
     _markEmailAsSent(organisme) {
@@ -43,11 +86,11 @@ class NotificationMailer {
         });
     }
 
-    _sendEmail(organisme) {
+    async _sendEmail(organisme, comments) {
         return new Promise(async (resolve, reject) => {
             let data = {
                 organisme,
-                comment: await this._getFirstUnreadComment(organisme),
+                comment: comments[0],
             };
             this.mailer.sendNewCommentsNotification({ to: getContactEmail(organisme) }, data, () => resolve(), err => reject(err));
         });
@@ -61,10 +104,10 @@ class NotificationMailer {
         }
 
         while (await cursor.hasNext()) {
-            let organisme = await cursor.next();
+            let { organisme, status } = await cursor.next();
             try {
                 this.logger.info(`Sending email to ${organisme.courriel}`);
-                await this._sendEmail(organisme);
+                await this._sendEmail(organisme, status.comments);
                 await this._markEmailAsSent(organisme);
                 if (options.delay) {
                     await delay(options.delay);
