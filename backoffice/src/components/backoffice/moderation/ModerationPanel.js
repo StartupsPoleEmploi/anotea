@@ -245,7 +245,6 @@ export default class ModerationPanel extends React.Component {
                                 <div className="col-md-6">
                                     <h3>
                                         <span className="oi oi-person"/>
-
                                         <div className="pseudo">
                                             {advice.pseudo &&
                                             <span>
