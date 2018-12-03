@@ -16,9 +16,15 @@ module.exports = (db, logger) => {
         let region = data['Nouvelle région'];
         let email = data['mail RGC'];
 
-        let [codeRegion, nbAvis] = await Promise.all([
+        let [codeRegion, nbAvis, nbAvisAvecCommentaires] = await Promise.all([
             findCodeRegionByName(region),
-            db.collection('comment').countDocuments({ 'training.organisation.siret': data['SIRET'] })
+            db.collection('comment').countDocuments({ 'training.organisation.siret': data['SIRET'] }),
+            db.collection('comment').countDocuments({
+                'comment': { $ne: null },
+                'read': true,
+                'published': true,
+                'training.organisation.siret': data['SIRET']
+            })
         ]);
 
         return {
@@ -33,6 +39,7 @@ module.exports = (db, logger) => {
             meta: {
                 siretAsString: data['SIRET'],
                 nbAvis,
+                nbAvisAvecCommentaires,
                 kairosData: {
                     libelle: data['LIBELLE'],
                     region: region,

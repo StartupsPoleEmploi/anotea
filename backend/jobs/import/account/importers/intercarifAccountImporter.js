@@ -9,9 +9,15 @@ module.exports = (db, logger) => {
         let codePostal = type === 'formateur' ? organisme.lieux_de_formation[0].adresse.code_postal :
             organisme.adresse.code_postal;
 
-        let [codeRegion, nbAvis] = await Promise.all([
+        let [codeRegion, nbAvis, nbAvisAvecCommentaires] = await Promise.all([
             findCodeRegionByPostalCode(codePostal),
-            db.collection('comment').countDocuments({ 'training.organisation.siret': organisme.siret })
+            db.collection('comment').countDocuments({ 'training.organisation.siret': organisme.siret }),
+            db.collection('comment').countDocuments({
+                'comment': { $ne: null },
+                'read': true,
+                'published': true,
+                'training.organisation.siret': organisme.siret
+            })
         ]);
 
         return {
@@ -25,7 +31,8 @@ module.exports = (db, logger) => {
             codeRegion,
             meta: {
                 siretAsString: organisme.siret,
-                nbAvis
+                nbAvis,
+                nbAvisAvecCommentaires,
             }
         };
     };

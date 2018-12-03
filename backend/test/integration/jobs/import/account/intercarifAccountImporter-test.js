@@ -92,6 +92,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             meta: {
                 siretAsString: '11111111111111',
                 nbAvis: 0,
+                nbAvisAvecCommentaires: 0,
             }
         });
     });
@@ -113,6 +114,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             meta: {
                 siretAsString: '11111111111111',
                 nbAvis: 0,
+                nbAvisAvecCommentaires: 0,
             },
         }));
 
@@ -133,6 +135,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             meta: {
                 siretAsString: '11111111111111',
                 nbAvis: 0,
+                nbAvisAvecCommentaires: 0,
             },
 
             //UPDATED
@@ -164,6 +167,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             meta: {
                 siretAsString: '22222222222222',
                 nbAvis: 0,
+                nbAvisAvecCommentaires: 0,
             }
         });
     });
@@ -209,6 +213,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             meta: {
                 siretAsString: '22222222222222',
                 nbAvis: 0,
+                nbAvisAvecCommentaires: 0,
             },
         });
     });
@@ -251,6 +256,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
         assert.deepEqual(doc.meta.nbAvis, 1);
+        assert.deepEqual(doc.meta.nbAvisAvecCommentaires, 1);
     });
 
 }));

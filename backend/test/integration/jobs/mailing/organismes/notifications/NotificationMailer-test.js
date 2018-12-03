@@ -43,6 +43,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 courriel: 'new@organisme.fr',
                 meta: {
                     nbAvis: 5,
+                    nbAvisAvecCommentaires: 5,
                     siretAsString: `${31705038300064}`,
                 },
             })),
@@ -85,6 +86,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 newCommentsNotificationEmailSentDate: newCommentsNotificationEmailSentDate,
                 meta: {
                     nbAvis: 5,
+                    nbAvisAvecCommentaires: 5,
                     siretAsString: `${31705038300064}`,
                 },
             })),
@@ -111,7 +113,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
-                    nbAvis: 2,
+                    nbAvis: 4,
+                    nbAvisAvecCommentaires: 2,
                     siretAsString: `${31705038300064}`,
                 },
             })),
@@ -147,6 +150,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 courriel: 'new@organisme.fr',
                 meta: {
                     nbAvis: 5,
+                    nbAvisAvecCommentaires: 4,
                     siretAsString: `${31705038300064}`,
                 },
             })),
@@ -183,6 +187,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 courriel: 'new@organisme.fr',
                 meta: {
                     nbAvis: 5,
+                    nbAvisAvecCommentaires: 5,
                     siretAsString: `${31705038300064}`,
                 },
             })),
