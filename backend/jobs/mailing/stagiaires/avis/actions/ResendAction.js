@@ -16,7 +16,7 @@ class ResendAction {
             tracking: { $eq: null },
             $and: [
                 { mailSentDate: { $lte: moment().subtract(avisRelaunchDelay, 'days').toDate() } },
-                { mailSentDate: { $gte: moment().subtract(1, 'years').toDate() } },
+                { mailSentDate: { $gte: moment().subtract(6, 'months').toDate() } },
             ],
             ...(this.filters.codeRegions ? { codeRegion: { $in: this.filters.codeRegions } } : {}),
             ...(this.filters.campaign ? { campaign: this.filters.campaign } : {}),

@@ -56,6 +56,7 @@ class AvisMailer {
                 trainee.trainee.name = titleize(trainee.trainee.name);
 
                 try {
+                    this.logger.info(`Sending email to ${trainee.trainee.email} for campaign ${trainee.campaign}`);
                     await new Promise((resolve, reject) => {
                         this.mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee,
                             async () => {
