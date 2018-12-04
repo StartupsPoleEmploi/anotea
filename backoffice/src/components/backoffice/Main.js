@@ -36,6 +36,7 @@ export class Main extends React.Component {
             <div className="main">
                 {this.state.profile === 'moderateur' &&
                 <ModerationMain
+                    profile={this.state.profile}
                     id={this.state.id}
                     codeRegion={this.state.codeRegion}
                     features={this.state.features} />
