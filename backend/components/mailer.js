@@ -199,7 +199,7 @@ module.exports = function(db, logger, configuration) {
             sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
         },
         sendAvisHorsSujetMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
-            mailOptions.subject = `${trainee.trainee.firstName} ${trainee.trainee.name},Votre commentaire a été supprimé`;
+            mailOptions.subject = `${trainee.trainee.firstName} ${trainee.trainee.name}, Votre commentaire a été supprimé`;
 
             const consultationLink = getConsultationLink(trainee);
             const unsubscribeLink = getUnsubscribeLink(trainee);
