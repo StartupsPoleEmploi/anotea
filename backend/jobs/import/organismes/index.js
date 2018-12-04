@@ -12,6 +12,8 @@ const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
 const generateOrganismesResponsables = require('../organismes/generateOrganismesResponsables');
 const generateOrganismesFormateurs = require('../organismes/generateOrganismesFormateurs');
+const IntercarifAccountImporter = require('./importers/IntercarifAccountImporter');
+const KairosAccountImporter = require('./importers/KairosAccountImporter');
 
 cli.description('Import accounts from Intercarif and Kairos')
 .option('-f, --file [file]', 'The CSV file to import')
@@ -23,8 +25,6 @@ const main = async () => {
     let logger = getLogger('anotea-job-organimes-import', configuration);
     let client = await getMongoClient(configuration.mongodb.uri);
     let db = client.db();
-    let intercarifAccountImporter = require(`./backend/jobs/import/organismes/importers`)(db, logger, configuration);
-    let kairosAccountImporter = require(`./backend/jobs/import/organismes/importers`)(db, logger, configuration);
 
     const abort = message => {
         logger.error(message, () => {
@@ -33,16 +33,18 @@ const main = async () => {
     };
 
     try {
-        logger.info(`Generating organismes responsables collection...`);
+        logger.info('Generating organismes responsables collection...');
         await generateOrganismesResponsables(db);
 
-        logger.info(`Generating organismes formateurs collection...`);
+        logger.info('Generating organismes formateurs collection...');
         await generateOrganismesFormateurs(db);
 
-        logger.info(`Importing accounts from Intercarif...`);
+        logger.info('Importing accounts from Intercarif...');
+        let intercarifAccountImporter = new IntercarifAccountImporter(db, logger);
         let intercatif = await intercarifAccountImporter.importAccounts();
 
-        logger.info(`Importing accounts from Kairos...`);
+        logger.info('Importing accounts from Kairos...');
+        let kairosAccountImporter = new KairosAccountImporter(db, logger);
         let kairos = await kairosAccountImporter.importAccounts(cli.file);
 
         await client.close();
