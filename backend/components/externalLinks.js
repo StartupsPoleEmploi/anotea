@@ -18,7 +18,7 @@ module.exports = db => {
 
         let rome = romeList[0];
 
-        let insee = inseeMapping.insee ? inseeMapping.insee : postalCode;
+        let insee = inseeMapping ? inseeMapping.insee : postalCode;
 
         if (goto === 'lbb') {
             return `https://labonneboite.pole-emploi.fr/entreprises/commune/${insee}/rome/${rome}?d=${distance}`;
