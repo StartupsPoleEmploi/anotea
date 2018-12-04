@@ -3,8 +3,8 @@
 
 const cli = require('commander');
 const configuration = require('config');
-const getMongoClient = require('../../components/mongodb');
-const getLogger = require('../../components/logger');
+const getMongoClient = require('../../../components/mongodb');
+const getLogger = require('../../../components/logger');
 
 
 cli.description('Import Postal Code <-> City Code INSEE mapping from CSV file')
