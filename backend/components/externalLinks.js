@@ -26,13 +26,16 @@ module.exports = db => {
         });
 
         let rome = romeList[0];
-
         let insee = inseeMapping ? inseeMapping.insee : postalCode;
 
-        if (goto === 'lbb') {
-            return `https://labonneboite.pole-emploi.fr/entreprises/commune/${insee}/rome/${rome}?d=${distance}`;
+        if (romeList.length > 0) {
+            if (goto === 'lbb') {
+                return `https://labonneboite.pole-emploi.fr/entreprises/commune/${insee}/rome/${rome}?d=${distance}`;
+            } else {
+                return `https://candidat.pole-emploi.fr/offres/recherche?lieux=${insee}&motsCles=${romeList.join(',')}&offresPartenaires=true&rayon=${distance}&tri=0`;
+            }
         } else {
-            return `https://candidat.pole-emploi.fr/offres/recherche?lieux=${insee}&motsCles=${romeList.join(',')}&offresPartenaires=true&rayon=${distance}&tri=0`;
+            return null;
         }
     };
 

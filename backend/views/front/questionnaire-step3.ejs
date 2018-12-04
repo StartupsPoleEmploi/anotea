@@ -34,13 +34,15 @@
                 <p>Vous avez mis votre CV à jour ? Nous pouvons vous aider à trouver un emploi !</p>
                     
                 <p>Consultez les aides au retour à l’emploi : <a href="/link/<%= trainee.token %>?goto=clara" target="_blank">Clara</a></p>
-                    
-                <p class="peLink">
-                    <a class="btn" href="/link/<%= trainee.token %>?goto=pe" target="_blank">Offres d’emploi en lien avec votre formation</a>
-                </p>
-                <p class="lbbLink">
-                    <a class="btn" href="/link/<%= trainee.token %>?goto=lbb" target="_blank">Les entreprises qui recrutent</a>
-                </p>
+
+                <%if (showLinks) { %>
+                    <p class="peLink">
+                        <a class="btn" href="/link/<%= trainee.token %>?goto=pe" target="_blank">Offres d’emploi en lien avec votre formation</a>
+                    </p>
+                    <p class="lbbLink">
+                        <a class="btn" href="/link/<%= trainee.token %>?goto=lbb" target="_blank">Les entreprises qui recrutent</a>
+                    </p>
+                <% } %>
             </div>
             <blockquote class="remerciements">
                 <h2 class="txtH2">Merci d’avoir donné votre avis. il sera publié sur</h2>

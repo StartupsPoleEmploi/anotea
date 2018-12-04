@@ -198,7 +198,8 @@ module.exports = (db, logger, configuration, badwords) => {
         res.render('front/questionnaire-step3', {
             trainee: trainee,
             carifURL: carif.url,
-            carifLinkEnabled: carif.formLinkEnabled
+            carifLinkEnabled: carif.formLinkEnabled,
+            showLinks: await externalLinks(db).getLink(trainee, 'pe') !== null
         });
     });
 
@@ -214,7 +215,7 @@ module.exports = (db, logger, configuration, badwords) => {
         }
 
         const advice = await db.collection('comment').findOne({ token: req.params.token });
-        if (!(advice.tracking && advice.tracking.clickLink.filter(item => item.goto === goto).length > 0)) {
+        if (!(advice.tracking && advice.tracking.clickLink && advice.tracking.clickLink.filter(item => item.goto === goto).length > 0)) {
             db.collection('comment').updateOne({ token: req.params.token }, { $push: { 'tracking.clickLink' : { date: new Date(), goto: goto } } });
         }
 

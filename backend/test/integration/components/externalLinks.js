@@ -89,4 +89,39 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         assert.equal(await externalLinks(db).getLink(trainee, 'clara'), 'https://clara.pole-emploi.fr');
     });
 
+    it('should get null link when trying to get Offres Pôle Emploi link when training has no formacode', async () => {
+        let db = await getTestDatabase();
+        const trainee = newTrainee({
+            training: {
+                formacode: null,
+                place: { postalCode: '75011' }
+            }
+        });
+        let importerRome = doImportRome(db, logger);
+        await importerRome.doImport(path.join(__dirname, '../../helpers/data', 'romeMapping.csv'));
+
+        let importerINSEE = doImportINSEE(db, logger);
+        await importerINSEE.doImport(path.join(__dirname, '../../../data', 'correspondances-code-insee-code-postal.csv'));
+
+        assert.equal(await externalLinks(db).getLink(trainee, 'pe'), null);
+    });
+
+    it('should get null link when trying to get La Bonne Boite link when training has no formacode', async () => {
+        let db = await getTestDatabase();
+        const trainee = newTrainee({
+            training: {
+                formacode: null,
+                place: { postalCode: '75011' }
+            }
+        });
+        let importerRome = doImportRome(db, logger);
+        await importerRome.doImport(path.join(__dirname, '../../helpers/data', 'romeMapping.csv'));
+
+        let importerINSEE = doImportINSEE(db, logger);
+        await importerINSEE.doImport(path.join(__dirname, '../../../data', 'correspondances-code-insee-code-postal.csv'));
+
+        assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), null);
+    });
+
+
 }));
