@@ -406,7 +406,7 @@ export default class FinancerPanel extends React.Component {
                                 <div className="row">
                                     <div className="col-md-6">
                                         <h3 className="header">
-                                            <i className="avatar glyphicon glyphicon-user"></i>
+                                            <i className="avatar glyphicon glyphicon-user"/>
                                             {advice.pseudo}
                                             {!advice.pseudo && <em>anonyme</em>} -&nbsp;
 
@@ -429,7 +429,9 @@ export default class FinancerPanel extends React.Component {
                                                     <em>Cet utilisateur n'a pas laissé d'avis</em>}
                                                 </p>
                                             </div>
-                                            Qualification: {advice.qualification}
+                                            {this.props.codeFinanceur === POLE_EMPLOI &&
+                                            <div> Qualification: {advice.qualification} </div>
+                                            }
                                         </div>
                                         }
                                         {!advice.comment &&
