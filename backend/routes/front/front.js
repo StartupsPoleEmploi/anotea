@@ -204,12 +204,16 @@ module.exports = (db, logger, configuration, badwords) => {
 
     router.get('/link/:token', getTraineeFromToken, async (req, res) => {
         let trainee = req.trainee;
-
         const goto = req.query.goto;
 
         if (goto !== 'lbb' && goto !== 'pe') {
             res.status(404).render('errors/404');
             return;
+        }
+
+        const advice = await db.collection('comment').findOne({ token: req.params.token });
+        if (!(advice.tracking && advice.tracking.clickLink.filter(item => item.goto === goto).length > 0)) {
+            db.collection('comment').updateOne({ token: req.params.token }, { $push: { 'tracking.clickLink' : { date: new Date(), goto: goto } } });
         }
 
         res.redirect(await externalLinks(db).getLink(trainee, goto));
