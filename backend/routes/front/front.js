@@ -4,6 +4,7 @@ const Joi = require('joi');
 const s = require('string');
 const { getDeviceType } = require('../../components/analytics');
 const { sanitize } = require('../../components/userInput');
+const externalLinks = require('../../components/externalLinks');
 
 module.exports = (db, logger, configuration, badwords) => {
 
@@ -73,7 +74,7 @@ module.exports = (db, logger, configuration, badwords) => {
                 codeRegion: trainee.codeRegion
             };
 
-            db.collection('comment').save(comment).catch(e => logger.error(e));
+            db.collection('comment').insertOne(comment).catch(e => logger.error(e));
         }
 
         // we let user change it's advice if last step not validated
@@ -123,7 +124,7 @@ module.exports = (db, logger, configuration, badwords) => {
                 comment.accord = false;
                 comment.accordEntreprise = false;
                 comment.step = 2;
-                db.collection('comment').save(comment);
+                db.collection('comment').updateOne({ _id: comment._id }, { $set: comment });
                 res.render('front/questionnaire-step2', { trainee: trainee });
             } else {
                 res.render('front/refus', { reason: 'bad data', trainee: trainee });
@@ -170,14 +171,8 @@ module.exports = (db, logger, configuration, badwords) => {
                 if (pseudoOK && commentOK && commentTitleOK) {
                     comment.step = 3;
                     delete comment.badwords;
-                    db.collection('comment').save(comment);
-                    const carif = await db.collection('carif').findOne({ codeRegion: trainee.codeRegion });
-
-                    res.render('front/questionnaire-step3', {
-                        trainee: trainee,
-                        carifURL: carif.url,
-                        carifLinkEnabled: carif.formLinkEnabled
-                    });
+                    db.collection('comment').updateOne({ _id: comment._id }, { $set: comment });
+                    res.redirect(`/questionnaire/${req.params.token}/step3`);
                     return;
                 } else {
                     comment.badwords = {
@@ -185,7 +180,7 @@ module.exports = (db, logger, configuration, badwords) => {
                         comment: !commentOK,
                         commentTitle: !commentTitleOK
                     };
-                    db.collection('comment').save(comment);
+                    db.collection('comment').updateOne({ _id: comment._id }, { $set: comment });
 
                 }
             } else {
@@ -194,6 +189,30 @@ module.exports = (db, logger, configuration, badwords) => {
             }
             res.render('front/refus', { reason: 'badwords', trainee: trainee });
         }
+    });
+
+    router.get('/questionnaire/:token/step3', getTraineeFromToken, async (req, res) => {
+        let trainee = req.trainee;
+        const carif = await db.collection('carif').findOne({ codeRegion: trainee.codeRegion });
+
+        res.render('front/questionnaire-step3', {
+            trainee: trainee,
+            carifURL: carif.url,
+            carifLinkEnabled: carif.formLinkEnabled
+        });
+    });
+
+    router.get('/link/:token', getTraineeFromToken, async (req, res) => {
+        let trainee = req.trainee;
+
+        const goto = req.query.goto;
+
+        if (goto !== 'lbb' && goto !== 'pe') {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        res.redirect(await externalLinks(db).getLink(trainee, goto));
     });
 
     return router;
