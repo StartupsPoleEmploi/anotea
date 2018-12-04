@@ -2,23 +2,23 @@ const express = require('express');
 const Boom = require('boom');
 const mongo = require('mongodb');
 const tryAndCatch = require('../tryAndCatch');
-const getCommentOwnerEmail = require('../../components/getCommentOwnerMail');
+const getAvisOwnerEmail = require('../../components/getAvisOwnerMail');
 
 module.exports = (db, authService, logger, configuration) => {
 
     const mailer = require('../../components/mailer.js')(db, logger, configuration);
     const router = express.Router(); // eslint-disable-line new-cap
 
-    const sendEmailAsync = (trainee) => {
-        let contact = getCommentOwnerEmail(trainee);
-        mailer.sendOffTopicCommentMail({ to: contact }, trainee, () => {
+    const sendEmailAsync = (trainee, comment) => {
+        let contact = getAvisOwnerEmail(trainee);
+        mailer.sendAvisHorsSujetMail({ to: contact }, trainee, comment, () => {
             logger.error(`Sending email to ${contact}`, err);
         }, err => {
             logger.error(`Unable to send email to ${contact}`, err);
         });
     };
 
-    router.put('/backoffice/sendMailToOffTopicCommentOwner', tryAndCatch(async (req, res) => {
+    router.put('/backoffice/sendMailToAvisHorsSujetOwner', tryAndCatch(async (req, res) => {
 
         const id = mongo.ObjectID(req.body.id);
         let comment = await db.collection('comment').findOne({ _id: id });
@@ -26,7 +26,7 @@ module.exports = (db, authService, logger, configuration) => {
 
         if (comment) {
 
-            sendEmailAsync(trainee);
+            sendEmailAsync(trainee, comment);
 
             return res.json({ 'message': 'mail sent' });
         }

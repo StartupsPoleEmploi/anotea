@@ -198,7 +198,7 @@ module.exports = function(db, logger, configuration) {
             const cc = configuration.smtp.import_error_cc;
             sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
         },
-        sendOffTopicCommentMail: async (mailOptions, trainee, successCallback, errorCallback) => {
+        sendAvisHorsSujetMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
             mailOptions.subject = `${trainee.trainee.firstName} ${trainee.trainee.name},Votre commentaire a été supprimé`;
 
             const consultationLink = getConsultationLink(trainee);
@@ -208,13 +208,15 @@ module.exports = function(db, logger, configuration) {
             getCarif(trainee.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
                 const params = {
+                    comment: comment,
                     trainee: trainee,
                     consultationLink: consultationLink,
                     unsubscribeLink: unsubscribeLink,
                     formLink: formLink,
                     trackingLink: trackingLink,
                     hostname: configuration.app.public_hostname,
-                    carifEmail: mailOptions.from
+                    carifEmail: mailOptions.from,
+                    moment: moment
                 };
                 sendMail('avis_hors_sujet', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);

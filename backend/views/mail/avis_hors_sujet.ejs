@@ -69,9 +69,14 @@
                 <tr>
                     <td colspan="3" style="padding:0em 2em">
                         <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
-                        <p>Votre commentaire ne respecte pas notre charte de modération et a été supprimé.</p>
-                        <p>Nous vous invitons à réécrire votre commentaire en cliquant sur ce lien : <%= formLink %></p>
+                        <p>Votre commentaire du <%= moment(comment.date).format('DD/MM/YYYY') %> ne respecte pas notre charte de modération et a été supprimé.</p>
+                        <p>Nous vous invitons à réécrire votre commentaire en cliquant sur : <a href="<%= formLink %>" target="_blank"><img alt="ce lien" border="0"/></a></p>
                         <p>Partagez votre expérience, donnez des éléments qui vous semblent importants pour choisir cette formation.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding:0em 2em">
+                        <p>Cordialement <br /> L'équipe Anotéa.</p>
                     </td>
                 </tr>
             </table>

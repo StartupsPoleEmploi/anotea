@@ -15,7 +15,7 @@ import {
     maskTitle,
     unmaskTitle,
 } from '../../../lib/adviceService';
-import { sendMailToOffTopicCommentOwner } from '../../../lib/offTopicCommentsService';
+import { sendMailToAvisHorsSujetOwner } from '../../../lib/avisHorsSujetService';
 
 const DEFAULT_ORDER = 'moderation';
 const QUALIFICATION =[
@@ -78,7 +78,7 @@ export default class ModerationPanel extends React.Component {
 
     handleOffTopic = (id, reason, evt) => {
         this.handleReject(id, reason, evt);
-        sendMailToOffTopicCommentOwner(id);
+        sendMailToAvisHorsSujetOwner(id);
     };
 
     handlePublish = (id, qualification, evt) => {

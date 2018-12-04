@@ -1,6 +1,6 @@
 Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
 
-Votre commentaire ne respecte pas notre charte de modération et a été supprimé.
+Votre commentaire du <%= moment(comment.date).format('DD/MM/YYYY') %>  ne respecte pas notre charte de modération et a été supprimé.
 
 Nous vous invitons à réécrire votre commentaire en cliquant sur ce lien : <%= formLink %>
 
