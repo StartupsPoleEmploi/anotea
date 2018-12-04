@@ -206,7 +206,9 @@ module.exports = (db, logger, configuration, badwords) => {
         let trainee = req.trainee;
         const goto = req.query.goto;
 
-        if (goto !== 'lbb' && goto !== 'pe') {
+        const links = ['lbb', 'pe', 'clara'];
+
+        if (!links.includes(goto)) {
             res.status(404).render('errors/404');
             return;
         }

@@ -1,6 +1,15 @@
 module.exports = db => {
 
+    const staticLinks = [{ goto: 'clara', url: 'https://clara.pole-emploi.fr' }];
+
     const getLink = async (trainee, goto) => {
+
+        const url = staticLinks.filter(link => link.goto === goto).map(link => {
+            return link.url;
+        });
+        if (url.length) {
+            return url[0];
+        }
 
         const distance = 30; // km
         const postalCode = trainee.training.place.postalCode;

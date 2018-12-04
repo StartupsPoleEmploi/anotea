@@ -43,7 +43,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/75111/rome/A1101?d=30');
     });
 
-    it('should get PE link with a training having a postal code without INSEE mapping', async () => {
+    it('should get Offres Pôle Emploi link with a training having a postal code without INSEE mapping', async () => {
         let db = await getTestDatabase();
         const trainee = newTrainee({
             training: {
@@ -60,7 +60,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         assert.equal(await externalLinks(db).getLink(trainee, 'pe'), 'https://candidat.pole-emploi.fr/offres/recherche?lieux=44300&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
     });
 
-    it('should get PE link with a training having a postal code with an INSEE mapping', async () => {
+    it('should get Offres Pôle Emploi link with a training having a postal code with an INSEE mapping', async () => {
         let db = await getTestDatabase();
         const trainee = newTrainee({
             training: {
@@ -75,6 +75,18 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         await importerINSEE.doImport(path.join(__dirname, '../../../data', 'correspondances-code-insee-code-postal.csv'));
 
         assert.equal(await externalLinks(db).getLink(trainee, 'pe'), 'https://candidat.pole-emploi.fr/offres/recherche?lieux=75111&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
+    });
+
+    it('should get Clara link', async () => {
+        let db = await getTestDatabase();
+        const trainee = newTrainee({
+            training: {
+                formacode: '21032',
+                place: { postalCode: '75011' }
+            }
+        });
+
+        assert.equal(await externalLinks(db).getLink(trainee, 'clara'), 'https://clara.pole-emploi.fr');
     });
 
 }));
