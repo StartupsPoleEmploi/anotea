@@ -239,7 +239,7 @@ export default class ModerationPanel extends React.Component {
                             <div className="row">
                                 <div className="col-md-6">
                                     <h3>
-                                        <span className="oi oi-person"/>
+                                        <i className="fas fa-user"/>
                                         <div className="pseudo">
                                             {advice.pseudo &&
                                             <span>
@@ -300,7 +300,7 @@ export default class ModerationPanel extends React.Component {
                                                 <button className="btn btn-default dropdown-toggle btn-danger btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <span className="oi oi-circle-x"/> Rejeter
+                                                    <i className="fas fa-times-circle"/> Rejeter
                                                 </button>
                                                 <div className="dropdown-menu" aria-labelledby="dropdownMenu1">
                                                     <h6 className="dropdown-header">Motif de rejet</h6>
@@ -318,7 +318,7 @@ export default class ModerationPanel extends React.Component {
                                                 <button className="btn btn-default dropdown-toggle btn-success btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <span className="oi oi-circle-check"/> Publier
+                                                    <i className="fas fa-check-circle"/> Publier
                                                 </button>
 
                                                 <div className="dropdown-menu"
@@ -335,7 +335,7 @@ export default class ModerationPanel extends React.Component {
 
                                             <button className="btn btn-primary btn-sm"
                                                 onClick={this.handleEdit.bind(this, advice._id)}>
-                                                <span className="oi oi-pencil"/> Modifier
+                                                <i className="fa fa-pencil-alt"/> Modifier
                                             </button>
                                         </div>
                                     </div>
@@ -351,22 +351,22 @@ export default class ModerationPanel extends React.Component {
                                                     className="btn btn-default dropdown-toggle btn-success btn-sm"
                                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="true">
-                                                    <span className="oi oi-circle-check"/> Valider et Publier
+                                                    <i className="fas fa-check-circle"/> Valider et Publier
                                                 </button>
                                                 <div className="dropdown-menu"
                                                      aria-labelledby="dropdownMenu1">
                                                     <h6 className="dropdown-header">Qualification</h6>
                                                     {QUALIFICATION.map((qualif, index) =>
-                                                        <a  key={index}
+                                                        <a key={index}
                                                             className="dropdown-item"
-                                                            onClick={this.handleUpdate().bind(this, advice._id, qualif.qualif)}
+                                                            onClick={this.handleUpdate.bind(this, advice._id, qualif.qualif)}
                                                             role="button">{qualif.value}</a>
                                                     )}
                                                 </div>
                                             </div>
 
                                             <button className="btn btn-danger btn-sm" onClick={this.handleCancel.bind(this, advice._id)}>
-                                                <span className="oi oi-circle-x"/> Annuler
+                                                <i className="fas fa-times-circle"/> Annuler
                                             </button>
                                         </div>
                                     </div>
