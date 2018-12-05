@@ -15,7 +15,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 region_num: '11',
                 codeFinanceur: '2'
             }),
-            insertIntoDatabase('organismes_responsables', {
+            insertIntoDatabase('intercarif_organismes_responsables', {
                 numero: '14_OF_0000000261',
                 siret: '11111111111111',
                 nom: 'CSFIF',
@@ -43,7 +43,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     }
                 ]
             }),
-            insertIntoDatabase('organismes_formateurs', {
+            insertIntoDatabase('intercarif_organismes_formateurs', {
                 siret: '22222222222222',
                 courriel: 'organisme@formateur.com',
                 raison_sociale: 'Formateur',
@@ -261,8 +261,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await importer.generateOrganismes();
 
-        assert.deepEqual(await db.collection('organismes_responsables').count(), 1);
-        assert.deepEqual(await db.collection('organismes_formateurs').count(), 1);
+        assert.deepEqual(await db.collection('intercarif_organismes_responsables').count(), 1);
+        assert.deepEqual(await db.collection('intercarif_organismes_formateurs').count(), 1);
     });
 
 }));

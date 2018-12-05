@@ -11,7 +11,7 @@ const tryAndCatch = require('../../tryAndCatch');
 module.exports = (db, authService) => {
 
     let router = express.Router();// eslint-disable-line new-cap
-    let collection = db.collection('organismes_formateurs');
+    let collection = db.collection('intercarif_organismes_formateurs');
     let checkAuth = authService.createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
     router.get('/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {

@@ -88,7 +88,7 @@ module.exports = async db => {
             }
         },
         {
-            $out: 'organismes_responsables'
+            $out: 'intercarif_organismes_responsables'
         }
     ], { allowDiskUse: true }).toArray();
 };

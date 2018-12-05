@@ -9,7 +9,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let siret = '22222222222222';
-        await insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+        await insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({
             _id: siret,
             siret: siret,
         }));
@@ -64,8 +64,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '11111111111111' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '22222222222222' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ _id: '11111111111111' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ _id: '22222222222222' })),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs');
@@ -80,9 +80,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '11111111111111' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '22222222222222' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '33333333333333' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ _id: '11111111111111' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ _id: '22222222222222' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ _id: '33333333333333' })),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?id=11111111111111,22222222222222`);
@@ -98,9 +98,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ numero: 'OF_XX1' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ numero: 'OF_XX2' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ numero: 'OF_XX3' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ numero: 'OF_XX1' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ numero: 'OF_XX2' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ numero: 'OF_XX3' })),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?numero=OF_XX1,OF_XX2`);
@@ -116,9 +116,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '11111111111111' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '22222222222222' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '33333333333333' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ siret: '11111111111111' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ siret: '22222222222222' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ siret: '33333333333333' })),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?siret=11111111111111,22222222222222`);
@@ -134,13 +134,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({
                 _id: '11111111111111',
                 score: {
                     nb_avis: 1,
                 }
             })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({
                 _id: '22222222222222',
                 score: {
                     nb_avis: 0,
@@ -160,7 +160,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({
                 _id: '11111111111111',
                 lieux_de_formation: [
                     {
@@ -172,7 +172,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     }
                 ],
             })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({
                 _id: '22222222222222',
                 lieux_de_formation: [
                     {
@@ -199,7 +199,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({
                 _id: '11111111111111',
                 lieux_de_formation: [
                     {
@@ -211,7 +211,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     }
                 ],
             })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({
                 _id: '22222222222222',
                 lieux_de_formation: [
                     {
@@ -237,9 +237,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '11111111111111' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '22222222222222' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '33333333333333' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ siret: '11111111111111' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ siret: '22222222222222' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ siret: '33333333333333' })),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?page=0&items_par_page=1`);
@@ -262,7 +262,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '11111111111111' })),
+            insertIntoDatabase('intercarif_organismes_formateurs', newOrganismeFormateur({ _id: '11111111111111' })),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs?fields=-lieux_de_formation');

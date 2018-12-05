@@ -1,5 +1,5 @@
 module.exports = async db => {
-    await db.collection('organismes_responsables').aggregate([
+    await db.collection('intercarif_organismes_responsables').aggregate([
         {
             $project: {
                 _id: 0,
@@ -87,14 +87,14 @@ module.exports = async db => {
             }
         },
         {
-            $out: 'organismes_formateurs'
+            $out: 'intercarif_organismes_formateurs'
         }
     ], { allowDiskUse: true }).toArray();
 
     return Promise.all([
-        db.collection('organismes_formateurs').createIndex({ 'siret': 1 }, { unique: true }),
-        db.collection('organismes_formateurs').createIndex({ 'numero': 1 }),
-        db.collection('organismes_formateurs').createIndex({ 'score.nb_avis': 1 }),
+        db.collection('intercarif_organismes_formateurs').createIndex({ 'siret': 1 }, { unique: true }),
+        db.collection('intercarif_organismes_formateurs').createIndex({ 'numero': 1 }),
+        db.collection('intercarif_organismes_formateurs').createIndex({ 'score.nb_avis': 1 }),
     ]);
 };
 

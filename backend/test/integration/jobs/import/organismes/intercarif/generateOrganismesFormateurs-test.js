@@ -31,11 +31,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let db = await getTestDatabase();
 
-        await insertIntoDatabase('organismes_responsables', newOrganismeResponsable({ organismes_formateurs: getOrganismesFormateurs() }));
+        await insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable({ organismes_formateurs: getOrganismesFormateurs() }));
 
         await generateOrganismesFormateurs(db);
 
-        let organisme = await db.collection('organismes_formateurs').findOne();
+        let organisme = await db.collection('intercarif_organismes_formateurs').findOne();
         assert.ok(organisme._id);
         assert.deepEqual(_.omit(organisme, ['_id']), {
             siret: '22222222222222',
@@ -62,7 +62,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let db = await getTestDatabase();
         await Promise.all([
-            insertIntoDatabase('organismes_responsables', newOrganismeResponsable({ organismes_formateurs: getOrganismesFormateurs() })),
+            insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable({ organismes_formateurs: getOrganismesFormateurs() })),
             insertIntoDatabase('comment', newComment({
                 training: {
                     organisation: {
@@ -75,7 +75,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await generateOrganismesFormateurs(db);
 
-        let organisme = await db.collection('organismes_formateurs').findOne();
+        let organisme = await db.collection('intercarif_organismes_formateurs').findOne();
         assert.deepEqual(organisme.score, {
             nb_avis: 1,
             notes: {
@@ -93,17 +93,17 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let db = await getTestDatabase();
 
-        await insertIntoDatabase('organismes_responsables', newOrganismeResponsable({
+        await insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable({
             siret: '11111111111111',
             organismes_formateurs: getOrganismesFormateurs({ siret: '22222222222222' })
         }));
-        await insertIntoDatabase('organismes_responsables', newOrganismeResponsable({
+        await insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable({
             siret: '33333333333333'
         }));
 
         await generateOrganismesFormateurs(db);
 
-        let organisme = await db.collection('organismes_formateurs').findOne({ siret: '22222222222222' });
+        let organisme = await db.collection('intercarif_organismes_formateurs').findOne({ siret: '22222222222222' });
         assert.ok(organisme);
     });
 
@@ -111,12 +111,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let db = await getTestDatabase();
         await Promise.all([
-            insertIntoDatabase('organismes_responsables', newOrganismeResponsable()),
+            insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable()),
         ]);
 
         await generateOrganismesFormateurs(db);
 
-        let indexes = await db.collection('organismes_formateurs').indexInformation();
+        let indexes = await db.collection('intercarif_organismes_formateurs').indexInformation();
         assert.deepEqual(indexes, {
             '_id_': [['_id', 1]],
             'siret_1': [['siret', 1]],

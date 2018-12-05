@@ -11,7 +11,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
         await generateOrganismesResponsables(db);
 
-        let organisme = await db.collection('organismes_responsables').findOne();
+        let organisme = await db.collection('intercarif_organismes_responsables').findOne();
         assert.deepEqual(organisme, {
             _id: '11111111111111',
             siret: '11111111111111',

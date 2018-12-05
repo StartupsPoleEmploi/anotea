@@ -67,19 +67,19 @@ class IntercarifAccountImporter {
             try {
                 let newAccount = await this._buildAccount(organisme);
                 let previous = await this.db.collection('organismes').findOne({ _id: newAccount._id });
-                stats[sourceCollectionName].total++;
+                stats.total++;
 
                 if (!previous) {
-                    stats[sourceCollectionName].created++;
+                    stats.created++;
                     await this._createNewAccount(newAccount);
                     this.logger.debug(`New account ${newAccount.SIRET} created`);
                 } else {
-                    stats[sourceCollectionName].updated++;
+                    stats.updated++;
                     await this._updateAccount(previous, newAccount);
                     this.logger.debug(`Account ${newAccount.SIRET} updated`);
                 }
             } catch (e) {
-                stats[sourceCollectionName].invalid++;
+                stats.invalid++;
                 this.logger.error(`Account cannot be imported from ${sourceCollectionName}`, organisme, e);
             }
         }
@@ -109,8 +109,8 @@ class IntercarifAccountImporter {
             },
         };
 
-        await this._synchronizeAccounts('organismes_responsables', stats);
-        await this._synchronizeAccounts('organismes_formateurs', stats);
+        await this._synchronizeAccounts('intercarif_organismes_responsables', stats.organismes_responsables);
+        await this._synchronizeAccounts('intercarif_organismes_formateurs', stats.organismes_formateurs);
 
         return stats;
     }
