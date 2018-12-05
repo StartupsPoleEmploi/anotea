@@ -29,23 +29,26 @@
                 <p class="txtPage3">Vos notes et commentaires seront publi&eacute;s sur les futures formations similaires &agrave; votre session de formation, sur nos sites partenaires ci-dessous.</p>
             </blockquote>
             <div>
-                <p>Et après la formation...</p>
+                <h2>Et après la formation</h2>
 
-                <p>Vous avez mis votre CV à jour ? Nous pouvons vous aider à trouver un emploi !</p>
-                    
-                <p>Consultez les aides au retour à l’emploi : <a href="/link/<%= trainee.token %>?goto=clara" target="_blank">Clara</a></p>
+                <p>Vous avez mis votre CV à jour ? Nous pouvons vous aider à trouver un emploi !<br />
+                    Consultez les aides au retour à l’emploi : <a href="/link/<%= trainee.token %>?goto=clara" target="_blank">Clara</a></p>
 
                 <%if (showLinks) { %>
-                    <p class="peLink">
-                        <a class="btn" href="/link/<%= trainee.token %>?goto=pe" target="_blank">Offres d’emploi en lien avec votre formation</a>
-                    </p>
-                    <p class="lbbLink">
-                        <a class="btn" href="/link/<%= trainee.token %>?goto=lbb" target="_blank">Les entreprises qui recrutent</a>
-                    </p>
+                    <div class="links">
+                        <div class="link">
+                            <img src="/img/company.png" />
+                            <a class="btn" href="/link/<%= trainee.token %>?goto=pe" target="_blank">Consultez les offres d’emploi en lien avec votre formation</a>
+                        </div>
+                        <div class="link">
+                            <img src="/img/jobOffers.png" />
+                            <a class="btn" href="/link/<%= trainee.token %>?goto=lbb" target="_blank">Consultez les entreprises qui recrutent</a>
+                        </div>
+                    </div>
                 <% } %>
             </div>
             <blockquote class="remerciements">
-                <h2 class="txtH2">Merci d’avoir donné votre avis. il sera publié sur</h2>
+                <h2 class="publishedOn">Votre avis sera publié sur:</h2>
                 <div class="imgLien">
                     <a class="textimage" href="https://labonneformation.pole-emploi.fr/" title="Visiter labonneformation.fr"
                         target="_blank"><img src="/img/labonneformation.png" alt=""> </a>

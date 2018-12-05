@@ -5,7 +5,7 @@ html {
 body {
     background: #f2f2f2;
     font-family: 'Droid Sans', Verdana, sans-serif;
-    color: rgba(0, 0, 0, 0.7);
+    color: #8E9093;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 100%;
@@ -68,7 +68,7 @@ section.questionnnaire {
 
 body>div>section>h1 {
     font-size: 20px;
-    color: rgb(77, 122, 219);
+    color: #FCB42B;
     text-align: center;
     font-weight: bold;
 }
@@ -457,26 +457,49 @@ datalist {
 
 .divPage3 {
     margin-top: 50px;
-    border: solid 1px black;
     border-radius: 4px;
+    text-align: center;
+    border-top: 3px solid #F4F4F4;
+}
+.divPage3 h2 {
+    color: #1E2127;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
+    text-align: center;
+}
+.divPage3 h2.publishedOn {
+    font-size: 18px;
+    margin-bottom: 30px;
 }
 .divPage3 p {
     margin: 35px;
 }
 
-.divPage3 .lbbLink {
-    display: block;
-    float: right;
-    margin: 0px 100px 35px 35px;
+.divPage3 a {
+    color: #FCB42B;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
+    text-align: center;
 }
 
-.divPage3 a.btn {
-    text-decoration: none;
-    background-color: rgb(77, 122, 219);
-    color: white;
-    border-radius: 5px;
-    padding: 10px;
+.divPage3 .links {
+    width: 80%;
+    margin: auto;
 }
+
+.divPage3 .link {
+    width: 30%;
+    float: left;
+    margin: 20px 55px 50px 55px;
+}
+
+.divPage3 .link img {
+    display: block;
+    margin: auto;
+}
+
 .txtPage3 {
     text-align: center;
     font-size: 16px;
@@ -484,9 +507,8 @@ datalist {
 .remerciements {
     clear: both;
 }
-.txtH2 {
-    margin-top: 20px;
-    text-align: center;
+.remerciements a {
+    margin: 70px;
 }
 .imgLien {
     display: block;
