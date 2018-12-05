@@ -1,5 +1,7 @@
 const uuid = require('node-uuid');
 const regions = require('../../../../components/regions');
+const generateOrganismesResponsables = require('./generateOrganismesResponsables');
+const generateOrganismesFormateurs = require('./generateOrganismesFormateurs');
 
 class IntercarifAccountImporter {
 
@@ -8,9 +10,10 @@ class IntercarifAccountImporter {
         this.logger = logger;
     }
 
-    async _buildAccount(type, organisme) {
+    async _buildAccount(organisme) {
         let { findCodeRegionByPostalCode } = regions(this.db);
-        let codePostal = type === 'formateur' ? organisme.lieux_de_formation[0].adresse.code_postal :
+        let codePostal = organisme.lieux_de_formation ?
+            organisme.lieux_de_formation[0].adresse.code_postal :
             organisme.adresse.code_postal;
 
         let [codeRegion, nbAvis] = await Promise.all([
@@ -34,27 +37,26 @@ class IntercarifAccountImporter {
         };
     }
 
-    async _createAccountsFromOrganismes(source, type, stats) {
-        let collection = this.db.collection('organismes');
-        let cursor = this.db.collection(source).find({
+    async _createAccounts(sourceCollectionName, stats) {
+        let cursor = this.db.collection(sourceCollectionName).find({
             siret: { $ne: '00000000000000' },
             courriel: { $ne: null }
         });
 
         while (await cursor.hasNext()) {
-            const doc = await cursor.next();
+            const organisme = await cursor.next();
             try {
-                let newAccount = await this._buildAccount(type, doc);
-                let previous = await collection.findOne({ _id: newAccount._id });
-                stats[source].total++;
+                let newAccount = await this._buildAccount(organisme);
+                let previous = await this.db.collection('organismes').findOne({ _id: newAccount._id });
+                stats[sourceCollectionName].total++;
 
                 if (!previous) {
-                    stats[source].created++;
-                    await collection.insertOne(newAccount);
+                    stats[sourceCollectionName].created++;
+                    await this.db.collection('organismes').insertOne(newAccount);
                     this.logger.debug(`New account ${newAccount.SIRET} created`);
                 } else {
-                    stats[source].updated++;
-                    await collection.updateOne({ _id: previous._id }, {
+                    stats[sourceCollectionName].updated++;
+                    await this.db.collection('organismes').updateOne({ _id: previous._id }, {
                         $addToSet: {
                             courrielsSecondaires: newAccount.courriel,
                             sources: 'intercarif'
@@ -69,11 +71,19 @@ class IntercarifAccountImporter {
                     this.logger.debug(`Account ${newAccount.SIRET} updated`);
                 }
             } catch (e) {
-                stats[source].invalid++;
-                this.logger.error(`Account cannot be imported from ${source}`, doc, e);
+                stats[sourceCollectionName].invalid++;
+                this.logger.error(`Account cannot be imported from ${sourceCollectionName}`, organisme, e);
             }
         }
-    };
+    }
+
+    async generateOrganismes() {
+        this.logger.info('Generating organismes responsables collection...');
+        await generateOrganismesResponsables(this.db);
+
+        this.logger.info('Generating organismes formateurs collection...');
+        return generateOrganismesFormateurs(this.db);
+    }
 
     async importAccounts() {
         let stats = {
@@ -91,8 +101,8 @@ class IntercarifAccountImporter {
             },
         };
 
-        await this._createAccountsFromOrganismes('organismes_responsables', 'responsable', stats);
-        await this._createAccountsFromOrganismes('organismes_formateurs', 'formateur', stats);
+        await this._createAccounts('organismes_responsables', stats);
+        await this._createAccounts('organismes_formateurs', stats);
 
         return stats;
     }

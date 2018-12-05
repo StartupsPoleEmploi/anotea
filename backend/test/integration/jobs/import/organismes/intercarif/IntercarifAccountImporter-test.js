@@ -3,9 +3,9 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/test-db');
 const { newOrganismeAccount, newComment } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/test-logger');
-const IntercarifAccountImporter = require('../../../../../../jobs/import/organismes/accounts/IntercarifAccountImporter');
+const IntercarifAccountImporter = require('../../../../../../jobs/import/organismes/intercarif/IntercarifAccountImporter');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
     const prepareDatabase = () => {
         return Promise.all([
@@ -251,6 +251,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
         assert.deepEqual(doc.meta.nbAvis, 1);
+    });
+
+    it('should generate organismes collections', async () => {
+
+        let db = await getTestDatabase();
+        let importer = new IntercarifAccountImporter(db, logger);
+        await importIntercarif();
+
+        await importer.generateOrganismes();
+
+        assert.deepEqual(await db.collection('organismes_responsables').count(), 1);
+        assert.deepEqual(await db.collection('organismes_formateurs').count(), 1);
     });
 
 }));
