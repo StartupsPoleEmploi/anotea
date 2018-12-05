@@ -4,7 +4,7 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/test-db');
 const { newOrganismeAccount, newComment } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/test-logger');
-const KairosAccountImporter = require('../../../../../../jobs/import/organismes/importers/KairosAccountImporter');
+const KairosAccountImporter = require('../../../../../../jobs/import/organismes/accounts/KairosAccountImporter');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
