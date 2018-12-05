@@ -1,4 +1,5 @@
 const fs = require('fs');
+const _ = require('lodash');
 const parse = require('csv-parse');
 const uuid = require('node-uuid');
 const moment = require('moment');
@@ -20,10 +21,7 @@ class KairosAccountImporter {
         let region = data['Nouvelle région'];
         let email = data['mail RGC'];
 
-        let [codeRegion, nbAvis] = await Promise.all([
-            findCodeRegionByName(region),
-            this.db.collection('comment').countDocuments({ 'training.organisation.siret': data['SIRET'] })
-        ]);
+        let codeRegion = await findCodeRegionByName(region);
 
         return {
             _id: siret,
@@ -36,7 +34,6 @@ class KairosAccountImporter {
             codeRegion,
             meta: {
                 siretAsString: data['SIRET'],
-                nbAvis,
                 kairosData: {
                     libelle: data['LIBELLE'],
                     region: region,
@@ -53,8 +50,26 @@ class KairosAccountImporter {
         };
     }
 
+    _createNewAccount(account) {
+        return this.db.collection('organismes').insertOne(account);
+    }
+
+    _updateAccount(previous, newAccount) {
+        return this.db.collection('organismes').updateOne({ SIRET: newAccount.SIRET }, {
+            $addToSet: {
+                courrielsSecondaires: newAccount.meta.kairosData.emailRGC,
+                sources: 'kairos'
+            },
+            $set: {
+                ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
+                'updateDate': new Date(),
+                'codeRegion': newAccount.codeRegion,
+                'meta': _.merge({}, previous.meta, newAccount.meta),
+            }
+        });
+    }
+
     async importAccounts(file) {
-        let collection = this.db.collection('organismes');
         let results = {
             total: 0,
             created: 0,
@@ -88,25 +103,13 @@ class KairosAccountImporter {
                 try {
                     let newAccount = await this._buildAccount(data);
 
-                    let previous = await collection.findOne({ SIRET: newAccount.SIRET });
+                    let previous = await this.db.collection('organismes').findOne({ SIRET: newAccount.SIRET });
                     if (!previous) {
-                        await collection.insertOne(newAccount);
+                        await this._createNewAccount(newAccount);
                         return { status: 'created', account: newAccount };
 
                     } else {
-                        await collection.updateOne({ SIRET: newAccount.SIRET }, {
-                            $addToSet: {
-                                courrielsSecondaires: newAccount.meta.kairosData.emailRGC,
-                                sources: 'kairos'
-                            },
-                            $set: {
-                                ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
-                                'updateDate': new Date(),
-                                'codeRegion': newAccount.codeRegion,
-                                'meta': newAccount.meta,
-                            }
-                        });
-
+                        await this._updateAccount(previous, newAccount);
                         return { status: 'updated', account: newAccount };
                     }
                 } catch (e) {

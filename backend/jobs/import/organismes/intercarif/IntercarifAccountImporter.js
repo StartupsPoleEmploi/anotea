@@ -1,4 +1,5 @@
 const uuid = require('node-uuid');
+const _ = require('lodash');
 const regions = require('../../../../components/regions');
 const generateOrganismesResponsables = require('./generateOrganismesResponsables');
 const generateOrganismesFormateurs = require('./generateOrganismesFormateurs');
@@ -12,11 +13,8 @@ class IntercarifAccountImporter {
 
     async _buildAccount(organisme) {
         let { findCodeRegionByPostalCode } = regions(this.db);
-        let codePostal = organisme.lieux_de_formation ?
-            organisme.lieux_de_formation[0].adresse.code_postal :
-            organisme.adresse.code_postal;
-        let codeRegion = await findCodeRegionByPostalCode(codePostal);
-
+        let adresse = organisme.lieux_de_formation ? organisme.lieux_de_formation[0].adresse : organisme.adresse;
+        let codeRegion = await findCodeRegionByPostalCode(adresse.code_postal);
 
         return {
             _id: parseInt(organisme.siret, 10),
@@ -29,7 +27,9 @@ class IntercarifAccountImporter {
             codeRegion,
             meta: {
                 siretAsString: organisme.siret,
-                nbAvis: organisme.score.nb_avis,
+                numero: organisme.numero,
+                lieux_de_formation: organisme.lieux_de_formation ? organisme.lieux_de_formation : [],
+                score: organisme.score,
             }
         };
     }
@@ -48,7 +48,7 @@ class IntercarifAccountImporter {
                 ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
                 'updateDate': new Date(),
                 'codeRegion': newAccount.codeRegion,
-                'meta': newAccount.meta,
+                'meta': _.merge({}, previous.meta, newAccount.meta),
             },
         });
     }
