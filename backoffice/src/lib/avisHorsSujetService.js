@@ -1,7 +1,7 @@
 import { _put} from '../utils/http-client';
 
-export const sendMailToAvisHorsSujetOwner = (id) => {
-    return _put(`/backoffice/sendMailToAvisHorsSujetOwner`, {
+export const sendAvisHorsSujetEmail = (id) => {
+    return _put(`/backoffice/sendAvisHorsSujetEmail`, {
         id: id
     });
 };

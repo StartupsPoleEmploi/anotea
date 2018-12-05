@@ -2,7 +2,6 @@ const express = require('express');
 const Boom = require('boom');
 const mongo = require('mongodb');
 const tryAndCatch = require('../tryAndCatch');
-const getAvisOwnerEmail = require('../../components/getAvisOwnerMail');
 
 module.exports = (db, authService, logger, configuration) => {
 
@@ -10,7 +9,7 @@ module.exports = (db, authService, logger, configuration) => {
     const router = express.Router(); // eslint-disable-line new-cap
 
     const sendEmailAsync = (trainee, comment) => {
-        let contact = getAvisOwnerEmail(trainee);
+        let contact = trainee.trainee.email;
         mailer.sendAvisHorsSujetMail({ to: contact }, trainee, comment, () => {
             logger.error(`Sending email to ${contact}`, err);
         }, err => {
@@ -18,7 +17,7 @@ module.exports = (db, authService, logger, configuration) => {
         });
     };
 
-    router.put('/backoffice/sendMailToAvisHorsSujetOwner', tryAndCatch(async (req, res) => {
+    router.put('/backoffice/sendAvisHorsSujetEmail', tryAndCatch(async (req, res) => {
 
         const id = mongo.ObjectID(req.body.id);
         let comment = await db.collection('comment').findOne({ _id: id });
