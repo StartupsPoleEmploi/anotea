@@ -37,7 +37,26 @@ class IntercarifAccountImporter {
         };
     }
 
-    async _createAccounts(sourceCollectionName, stats) {
+    _createNewAccount(account) {
+        return this.db.collection('organismes').insertOne(account);
+    }
+
+    _updateAccount(previous, newAccount) {
+        return this.db.collection('organismes').updateOne({ _id: previous._id }, {
+            $addToSet: {
+                courrielsSecondaires: newAccount.courriel,
+                sources: 'intercarif'
+            },
+            $set: {
+                ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
+                'updateDate': new Date(),
+                'codeRegion': newAccount.codeRegion,
+                'meta': newAccount.meta,
+            },
+        });
+    }
+
+    async _synchronizeAccounts(sourceCollectionName, stats) {
         let cursor = this.db.collection(sourceCollectionName).find({
             siret: { $ne: '00000000000000' },
             courriel: { $ne: null }
@@ -52,22 +71,11 @@ class IntercarifAccountImporter {
 
                 if (!previous) {
                     stats[sourceCollectionName].created++;
-                    await this.db.collection('organismes').insertOne(newAccount);
+                    await this._createNewAccount(newAccount);
                     this.logger.debug(`New account ${newAccount.SIRET} created`);
                 } else {
                     stats[sourceCollectionName].updated++;
-                    await this.db.collection('organismes').updateOne({ _id: previous._id }, {
-                        $addToSet: {
-                            courrielsSecondaires: newAccount.courriel,
-                            sources: 'intercarif'
-                        },
-                        $set: {
-                            ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
-                            'updateDate': new Date(),
-                            'codeRegion': newAccount.codeRegion,
-                            'meta': newAccount.meta,
-                        },
-                    });
+                    await this._updateAccount(previous, newAccount);
                     this.logger.debug(`Account ${newAccount.SIRET} updated`);
                 }
             } catch (e) {
@@ -101,8 +109,8 @@ class IntercarifAccountImporter {
             },
         };
 
-        await this._createAccounts('organismes_responsables', stats);
-        await this._createAccounts('organismes_formateurs', stats);
+        await this._synchronizeAccounts('organismes_responsables', stats);
+        await this._synchronizeAccounts('organismes_formateurs', stats);
 
         return stats;
     }
