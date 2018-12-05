@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/test-db');
 const { newOrganismeAccount, newComment } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/test-logger');
-const IntercarifAccountImporter = require('../../../../../../jobs/import/organismes/importers/IntercarifAccountImporter');
+const IntercarifAccountImporter = require('../../../../../../jobs/import/organismes/accounts/IntercarifAccountImporter');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 

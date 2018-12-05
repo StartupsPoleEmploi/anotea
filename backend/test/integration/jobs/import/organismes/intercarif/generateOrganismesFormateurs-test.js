@@ -1,8 +1,8 @@
 const assert = require('assert');
 const _ = require('lodash');
-const { withMongoDB } = require('../../../../helpers/test-db');
-const { newComment, newOrganismeResponsable } = require('../../../../helpers/data/dataset');
-const generateOrganismesFormateurs = require('../../../../../jobs/import/organismes/generateOrganismesFormateurs');
+const { withMongoDB } = require('../../../../../helpers/test-db');
+const { newComment, newOrganismeResponsable } = require('../../../../../helpers/data/dataset');
+const generateOrganismesFormateurs = require('../../../../../../jobs/import/organismes/intercarif/generateOrganismesFormateurs');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 

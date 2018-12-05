@@ -1,6 +1,6 @@
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-db');
-const generateOrganismesResponsables = require('../../../../../jobs/import/organismes/generateOrganismesResponsables');
+const { withMongoDB } = require('../../../../../helpers/test-db');
+const generateOrganismesResponsables = require('../../../../../../jobs/import/organismes/intercarif/generateOrganismesResponsables');
 
 describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 

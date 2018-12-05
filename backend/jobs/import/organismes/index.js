@@ -10,10 +10,10 @@ const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-const generateOrganismesResponsables = require('../organismes/generateOrganismesResponsables');
-const generateOrganismesFormateurs = require('../organismes/generateOrganismesFormateurs');
-const IntercarifAccountImporter = require('./importers/IntercarifAccountImporter');
-const KairosAccountImporter = require('./importers/KairosAccountImporter');
+const generateOrganismesResponsables = require('./intercarif/generateOrganismesResponsables');
+const generateOrganismesFormateurs = require('./intercarif/generateOrganismesFormateurs');
+const IntercarifAccountImporter = require('./accounts/IntercarifAccountImporter');
+const KairosAccountImporter = require('./accounts/KairosAccountImporter');
 
 cli.description('Import accounts from Intercarif and Kairos')
 .option('-f, --file [file]', 'The CSV file to import')
