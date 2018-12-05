@@ -359,7 +359,7 @@ export default class ModerationPanel extends React.Component {
                                                     {QUALIFICATION.map((qualif, index) =>
                                                         <a  key={index}
                                                             className="dropdown-item"
-                                                            onClick={this.handleUpdate().bind(this, advice._id, qualif.qualif)}
+                                                            onClick={this.handleUpdate.bind(this, advice._id, qualif.qualif)}
                                                             role="button">{qualif.value}</a>
                                                     )}
                                                 </div>
