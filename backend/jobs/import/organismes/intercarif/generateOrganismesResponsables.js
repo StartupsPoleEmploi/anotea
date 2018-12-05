@@ -1,3 +1,5 @@
+const { computeScoreOperators } = require('./aggregation-utils');
+
 module.exports = async db => {
     return db.collection('intercarif').aggregate([
         {
@@ -82,6 +84,7 @@ module.exports = async db => {
                 newRoot: { $mergeObjects: ['$organisme_responsable', { organisme_formateurs: '$organisme_formateurs' }] }
             }
         },
+        ...computeScoreOperators(),
         {
             $addFields: {
                 _id: '$siret'

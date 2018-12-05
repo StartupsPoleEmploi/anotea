@@ -41,7 +41,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                             }
                         ]
                     }
-                ]
+                ],
+                score: {
+                    nb_avis: 2,
+                    notes: {
+                        accueil: 5,
+                        contenu_formation: 5,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 3,
+                        accompagnement: 4,
+                        global: 5
+                    }
+                }
             }),
             insertIntoDatabase('intercarif_organismes_formateurs', {
                 siret: '22222222222222',
@@ -56,16 +67,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         }
                     }
                 ],
-                organisme_responsable: {
-                    numero: '14_OF_0000000261',
-                    siret: '11111111111111',
-                    raison_sociale: 'Formateur',
-                    adresse: {
-                        code_postal: '75019',
-                        ville: 'Paris 19e',
-                        region: '11'
-                    },
-                    courriel: 'contact@responsable.com'
+                score: {
+                    nb_avis: 15,
+                    notes: {
+                        accueil: 5,
+                        contenu_formation: 5,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 3,
+                        accompagnement: 4,
+                        global: 5
+                    }
                 }
             })
         ]);
@@ -80,6 +91,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await importer.importAccounts();
 
         let doc = await db.collection('organismes').findOne({ SIRET: 11111111111111 });
+        assert.ok(doc);
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
         assert.deepEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
@@ -91,7 +103,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             codeRegion: '11',
             meta: {
                 siretAsString: '11111111111111',
-                nbAvis: 0,
+                nbAvis: 2,
             }
         });
     });
@@ -112,7 +124,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             mailSentDate: new Date('2018-09-12T15:21:28.083Z'),
             meta: {
                 siretAsString: '11111111111111',
-                nbAvis: 0,
+                nbAvis: 2,
             },
         }));
 
@@ -132,7 +144,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             token: 'token',
             meta: {
                 siretAsString: '11111111111111',
-                nbAvis: 0,
+                nbAvis: 2,
             },
 
             //UPDATED
@@ -163,7 +175,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             codeRegion: '11',
             meta: {
                 siretAsString: '22222222222222',
-                nbAvis: 0,
+                nbAvis: 15,
             }
         });
     });
@@ -208,7 +220,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             codeRegion: '11',
             meta: {
                 siretAsString: '22222222222222',
-                nbAvis: 0,
+                nbAvis: 15,
             },
         });
     });
@@ -232,27 +244,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.deepEqual(doc.courriel, 'organisme@formateur.com');
     });
 
-    it('should compute nbAvis', async () => {
-
-        let db = await getTestDatabase();
-        await Promise.all([
-            prepareDatabase(),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: `22222222222222`,
-                    },
-                }
-            }))
-        ]);
-
-        let importer = new IntercarifAccountImporter(db, logger);
-        await importer.importAccounts();
-
-        let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
-        assert.deepEqual(doc.meta.nbAvis, 1);
-    });
-
     it('should generate organismes collections', async () => {
 
         let db = await getTestDatabase();
@@ -261,8 +252,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await importer.generateOrganismes();
 
-        assert.deepEqual(await db.collection('intercarif_organismes_responsables').count(), 1);
-        assert.deepEqual(await db.collection('intercarif_organismes_formateurs').count(), 1);
+        assert.deepEqual(await db.collection('intercarif_organismes_responsables').countDocuments(), 1);
+        assert.deepEqual(await db.collection('intercarif_organismes_formateurs').countDocuments(), 1);
     });
 
 }));

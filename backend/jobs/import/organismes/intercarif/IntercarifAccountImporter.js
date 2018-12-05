@@ -15,11 +15,8 @@ class IntercarifAccountImporter {
         let codePostal = organisme.lieux_de_formation ?
             organisme.lieux_de_formation[0].adresse.code_postal :
             organisme.adresse.code_postal;
+        let codeRegion = await findCodeRegionByPostalCode(codePostal);
 
-        let [codeRegion, nbAvis] = await Promise.all([
-            findCodeRegionByPostalCode(codePostal),
-            this.db.collection('comment').countDocuments({ 'training.organisation.siret': organisme.siret })
-        ]);
 
         return {
             _id: parseInt(organisme.siret, 10),
@@ -32,7 +29,7 @@ class IntercarifAccountImporter {
             codeRegion,
             meta: {
                 siretAsString: organisme.siret,
-                nbAvis
+                nbAvis: organisme.score.nb_avis,
             }
         };
     }
