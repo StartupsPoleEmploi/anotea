@@ -40,7 +40,7 @@ module.exports = () => {
                 const { email, mailDomain } = buildEmail(record['Mail']);
 
                 let obj = {
-                    _id: campaign + '/' + token,
+                    _id: campaign.name + '/' + token,
                     campaign: campaign.name,
                     campaignDate: campaign.date,
                     importDate: new Date(),
