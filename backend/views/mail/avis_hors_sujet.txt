@@ -1,0 +1,15 @@
+Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
+
+Nous n’avons pas publié l’avis que vous avez laissé sur votre formation car il ne respecte pas les engagements que nous avons pris dans notre charte : https://anotea.pole-emploi.fr/cgu
+
+Nous vous invitons à laisser un nouvel avis ici <%= formLink %> pour éclairer les stagiaires :
+
+dites ce que vous avez aimé et moins aimé
+partagez votre expérience
+dîtes tout ce qui pourrait être utile aux futurs stagiaires, sans être diffamant ou insultant.
+
+
+Nous vous remercions de votre compréhension,
+L’Equipe Anotéa
+
+<%- include('../legal/mentions.txt'); %>

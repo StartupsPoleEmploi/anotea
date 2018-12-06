@@ -197,6 +197,29 @@ module.exports = function(db, logger, configuration) {
             mailOptions.from = configuration.smtp.from;
             const cc = configuration.smtp.import_error_cc;
             sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
+        },
+        sendAvisHorsSujetMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
+            mailOptions.subject = `Rejet de votre avis sur votre formation`;
+
+            const consultationLink = getConsultationLink(trainee);
+            const unsubscribeLink = getUnsubscribeLink(trainee);
+            const formLink = getFormLink(trainee);
+            const trackingLink = getTrackingLink(trainee);
+            getCarif(trainee.codeRegion, carif => {
+                mailOptions.from = getFrom(carif);
+                const params = {
+                    comment: comment,
+                    trainee: trainee,
+                    consultationLink: consultationLink,
+                    unsubscribeLink: unsubscribeLink,
+                    formLink: formLink,
+                    trackingLink: trackingLink,
+                    hostname: configuration.app.public_hostname,
+                    carifEmail: mailOptions.from,
+                    moment: moment
+                };
+                sendMail('avis_hors_sujet', params, mailOptions, successCallback, errorCallback);
+            }, errorCallback);
         }
     };
 };
