@@ -1,5 +1,3 @@
-const { computeScoreOperators } = require('./aggregation-utils');
-
 module.exports = async db => {
     await db.collection('intercarif_organismes_responsables').aggregate([
         {
@@ -25,7 +23,6 @@ module.exports = async db => {
                 }
             }
         },
-        ...computeScoreOperators(),
         {
             $addFields: {
                 _id: '$siret',
@@ -39,7 +36,6 @@ module.exports = async db => {
     return Promise.all([
         db.collection('intercarif_organismes_formateurs').createIndex({ 'siret': 1 }, { unique: true }),
         db.collection('intercarif_organismes_formateurs').createIndex({ 'numero': 1 }),
-        db.collection('intercarif_organismes_formateurs').createIndex({ 'score.nb_avis': 1 }),
     ]);
 };
 

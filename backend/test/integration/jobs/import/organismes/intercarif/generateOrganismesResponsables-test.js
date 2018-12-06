@@ -1,9 +1,8 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/test-db');
-const { newComment } = require('../../../../../helpers/data/dataset');
 const generateOrganismesResponsables = require('../../../../../../jobs/import/organismes/intercarif/generateOrganismesResponsables');
 
-describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
     it('should create collection with organismes responsables', async () => {
 
@@ -40,40 +39,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif, insertInt
                     numero: 'OF_XXX',
                 },
             ],
-            score: {
-                nb_avis: 0,
-            }
         });
     });
-
-    it('should compute score', async () => {
-
-        let db = await getTestDatabase();
-        await Promise.all([
-            importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: '11111111111111',
-                    },
-                }
-            }))
-        ]);
-
-        await generateOrganismesResponsables(db);
-
-        let organisme = await db.collection('intercarif_organismes_responsables').findOne();
-        assert.deepEqual(organisme.score, {
-            nb_avis: 1,
-            notes: {
-                accompagnement: 1,
-                accueil: 3,
-                contenu_formation: 2,
-                equipe_formateurs: 4,
-                global: 2,
-                moyen_materiel: 2,
-            }
-        });
-    });
-
 }));
