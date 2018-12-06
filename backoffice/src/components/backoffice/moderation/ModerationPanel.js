@@ -13,7 +13,7 @@ import {
     maskPseudo,
     unmaskPseudo,
     maskTitle,
-    unmaskTitle,
+    unmaskTitle
 } from '../../../lib/adviceService';
 
 const DEFAULT_ORDER = 'moderation';
@@ -94,6 +94,7 @@ export default class ModerationPanel extends React.Component {
         if (this.state.currentEditBackup === null) {
             this.state.advices.map(advice => {
                 if (advice._id === id) {
+
                     this.setState({ currentEditBackup: advice.comment.text });
                 }
             });
