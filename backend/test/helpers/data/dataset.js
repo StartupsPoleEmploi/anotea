@@ -176,6 +176,7 @@ module.exports = {
             token: randomize('token'),
             mailSentDate: getDateInThePast(),
             meta: {
+                numero: 'OF_XXX',
                 siretAsString: '6080274100045',
                 lieux_de_formation: [
                     {

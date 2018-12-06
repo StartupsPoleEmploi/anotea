@@ -1,8 +1,10 @@
-const _ = require('lodash');
-
 module.exports = organisme => {
-    let dto = _.cloneDeep(organisme);
-    dto.id = dto._id;
-    delete dto._id;
-    return _.pick(dto, ['id', 'numero', 'siret', 'raison_sociale', 'lieux_de_formation', 'score', 'meta']);
+    return {
+        id: `${organisme._id}`,
+        raison_sociale: organisme.raisonSociale,
+        siret: organisme.meta.siretAsString,
+        numero: organisme.meta.numero,
+        lieux_de_formation: organisme.meta.lieux_de_formation,
+        score: organisme.meta.score
+    };
 };
