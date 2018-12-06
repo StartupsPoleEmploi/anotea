@@ -21,8 +21,6 @@ class KairosAccountImporter {
         let region = data['Nouvelle région'];
         let email = data['mail RGC'];
 
-        let codeRegion = await findCodeRegionByName(region);
-
         return {
             _id: siret,
             SIRET: siret,
@@ -31,7 +29,7 @@ class KairosAccountImporter {
             token: uuid.v4(),
             creationDate: new Date(),
             sources: ['kairos'],
-            codeRegion,
+            codeRegion: await findCodeRegionByName(region),
             meta: {
                 siretAsString: data['SIRET'],
                 kairosData: {

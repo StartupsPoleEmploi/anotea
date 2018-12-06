@@ -14,14 +14,6 @@ module.exports = (db, authService) => {
     let collection = db.collection('organismes');
     let checkAuth = authService.createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
-    const getProjection = fields => {
-        let projection = buildProjection(fields);
-        return Object.keys(projection).reduce((acc, key) => {
-            acc[`meta.${key}`] = projection[key];
-            return acc;
-        }, {});
-    };
-
     router.get('/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
@@ -39,19 +31,19 @@ module.exports = (db, authService) => {
         let skip = pagination.page * limit;
         let query = {
             ...(parameters.id ? { '_id': { $in: parameters.id.map(id => parseInt(id)) } } : {}),
-            ...(parameters.numero ? { 'meta.numero': { $in: parameters.numero } } : {}),
-            ...(parameters.siret ? { 'meta.siretAsString': { $in: parameters.siret } } : {}),
-            ...(parameters.nb_avis ? { 'meta.score.nb_avis': { $gte: parameters.nb_avis } } : {}),
+            ...(parameters.numero ? { 'numero': { $in: parameters.numero } } : {}),
+            ...(parameters.siret ? { 'SIRET': { $in: parameters.siret.map(id => parseInt(id)) } } : {}),
+            ...(parameters.nb_avis ? { 'score.nb_avis': { $gte: parameters.nb_avis } } : {}),
             ...(parameters.lieu_de_formation ? {
                 $or: [
-                    { 'meta.lieux_de_formation.adresse.code_postal': { $in: parameters.lieu_de_formation } },
-                    { 'meta.lieux_de_formation.adresse.region': { $in: parameters.lieu_de_formation } }
+                    { 'lieux_de_formation.adresse.code_postal': { $in: parameters.lieu_de_formation } },
+                    { 'lieux_de_formation.adresse.region': { $in: parameters.lieu_de_formation } }
                 ]
             } : {}),
         };
 
         let cursor = await collection.find(query)
-        .project(getProjection(parameters.fields))
+        .project(buildProjection(parameters.fields))
         .limit(limit)
         .skip(skip);
 

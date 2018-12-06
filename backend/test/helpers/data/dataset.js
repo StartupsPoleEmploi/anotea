@@ -175,31 +175,31 @@ module.exports = {
             creationDate: getDateInThePast(),
             token: randomize('token'),
             mailSentDate: getDateInThePast(),
-            meta: {
-                numero: 'OF_XXX',
-                siretAsString: '6080274100045',
-                lieux_de_formation: [
-                    {
-                        adresse: {
-                            code_postal: '75019',
-                            ville: 'Paris 19e',
-                            region: '11'
-                        }
-                    }
-                ],
-                score: {
-                    nb_avis: 15,
-                    notes: {
-                        accueil: 5,
-                        contenu_formation: 5,
-                        equipe_formateurs: 4,
-                        moyen_materiel: 3,
-                        accompagnement: 4,
-                        global: 5
+            codeRegion: '11',
+            numero: '14_OF_0000000123',
+            lieux_de_formation: [
+                {
+                    adresse: {
+                        code_postal: '75019',
+                        ville: 'Paris 19e',
+                        region: '11'
                     }
                 }
+            ],
+            score: {
+                nb_avis: 15,
+                notes: {
+                    accueil: 5,
+                    contenu_formation: 5,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 3,
+                    accompagnement: 4,
+                    global: 5
+                }
             },
-            codeRegion: '11',
+            meta: {
+                siretAsString: '6080274100045',
+            },
         }, custom);
     },
     newFinancerAccount: custom => {

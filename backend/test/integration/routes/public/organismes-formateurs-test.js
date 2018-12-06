@@ -27,7 +27,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepEqual(response.body, {
             id: siret,
             siret: siret,
-            numero: 'OF_XXX',
+            numero: '14_OF_0000000123',
             raison_sociale: 'Pole Emploi Formation',
             lieux_de_formation: [
                 {
@@ -105,9 +105,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 11111111111111, meta: { numero: 'OF_XX1' } })),
-            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 22222222222222, meta: { numero: 'OF_XX2' } })),
-            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 33333333333333, meta: { numero: 'OF_XX3' } })),
+            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 11111111111111, numero: 'OF_XX1' })),
+            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 22222222222222, numero: 'OF_XX2' })),
+            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 33333333333333, numero: 'OF_XX3' })),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?numero=OF_XX1,OF_XX2`);
@@ -143,19 +143,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await Promise.all([
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '11111111111111',
-                meta: {
-                    score: {
-                        nb_avis: 1,
-                    }
-                },
+                score: {
+                    nb_avis: 1,
+                }
             })),
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '22222222222222',
-                meta: {
-                    score: {
-                        nb_avis: 0,
-                    }
-                },
+                score: {
+                    nb_avis: 0,
+                }
             })),
         ]);
 
@@ -173,31 +169,27 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await Promise.all([
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '11111111111111',
-                meta: {
-                    lieux_de_formation: [
-                        {
-                            adresse: {
-                                code_postal: '75011',
-                                ville: 'Paris 11e',
-                                region: '11'
-                            }
+                lieux_de_formation: [
+                    {
+                        adresse: {
+                            code_postal: '75011',
+                            ville: 'Paris 11e',
+                            region: '11'
                         }
-                    ],
-                },
+                    }
+                ],
             })),
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '22222222222222',
-                meta: {
-                    lieux_de_formation: [
-                        {
-                            adresse: {
-                                code_postal: '45000',
-                                ville: 'Nantes',
-                                region: '24'
-                            }
+                lieux_de_formation: [
+                    {
+                        adresse: {
+                            code_postal: '45000',
+                            ville: 'Nantes',
+                            region: '24'
                         }
-                    ],
-                },
+                    }
+                ],
             })),
         ]);
 
@@ -216,31 +208,27 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await Promise.all([
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '11111111111111',
-                meta: {
-                    lieux_de_formation: [
-                        {
-                            adresse: {
-                                code_postal: '75011',
-                                ville: 'Paris 11e',
-                                region: '11'
-                            }
+                lieux_de_formation: [
+                    {
+                        adresse: {
+                            code_postal: '75011',
+                            ville: 'Paris 11e',
+                            region: '11'
                         }
-                    ],
-                },
+                    }
+                ],
             })),
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '22222222222222',
-                meta: {
-                    lieux_de_formation: [
-                        {
-                            adresse: {
-                                code_postal: '45000',
-                                ville: 'Nantes',
-                                region: '24'
-                            }
+                lieux_de_formation: [
+                    {
+                        adresse: {
+                            code_postal: '45000',
+                            ville: 'Nantes',
+                            region: '24'
                         }
-                    ],
-                },
+                    }
+                ],
             })),
         ]);
 

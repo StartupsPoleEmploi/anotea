@@ -101,29 +101,29 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             courriel: 'organisme@formateur.com',
             sources: ['intercarif'],
             codeRegion: '11',
-            meta: {
-                siretAsString: '22222222222222',
-                numero: '14_OF_0000000123',
-                lieux_de_formation: [
-                    {
-                        adresse: {
-                            code_postal: '75019',
-                            ville: 'Paris 19e',
-                            region: '11'
-                        }
-                    }
-                ],
-                score: {
-                    nb_avis: 15,
-                    notes: {
-                        accueil: 5,
-                        contenu_formation: 5,
-                        equipe_formateurs: 4,
-                        moyen_materiel: 3,
-                        accompagnement: 4,
-                        global: 5
+            numero: '14_OF_0000000123',
+            lieux_de_formation: [
+                {
+                    adresse: {
+                        code_postal: '75019',
+                        ville: 'Paris 19e',
+                        region: '11'
                     }
                 }
+            ],
+            score: {
+                nb_avis: 15,
+                notes: {
+                    accueil: 5,
+                    contenu_formation: 5,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 3,
+                    accompagnement: 4,
+                    global: 5
+                }
+            },
+            meta: {
+                siretAsString: '22222222222222',
             },
         });
     });
@@ -138,7 +138,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             SIRET: 22222222222222,
             raisonSociale: 'Formateur',
             courriel: 'OLD@formateur.com',
-            codeRegion: '99', //INVALID
             passwordHash: 'hash',
             token: 'token',
             creationDate: new Date('2016-11-10T17:41:03.308Z'),
@@ -164,29 +163,29 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             courrielsSecondaires: ['organisme@formateur.com'],
             sources: ['intercarif'],
             codeRegion: '11',
-            meta: {
-                siretAsString: '22222222222222',
-                numero: '14_OF_0000000123',
-                lieux_de_formation: [
-                    {
-                        adresse: {
-                            code_postal: '75019',
-                            ville: 'Paris 19e',
-                            region: '11'
-                        }
-                    }
-                ],
-                score: {
-                    nb_avis: 15,
-                    notes: {
-                        accueil: 5,
-                        contenu_formation: 5,
-                        equipe_formateurs: 4,
-                        moyen_materiel: 3,
-                        accompagnement: 4,
-                        global: 5
+            numero: '14_OF_0000000123',
+            lieux_de_formation: [
+                {
+                    adresse: {
+                        code_postal: '75019',
+                        ville: 'Paris 19e',
+                        region: '11'
                     }
                 }
+            ],
+            score: {
+                nb_avis: 15,
+                notes: {
+                    accueil: 5,
+                    contenu_formation: 5,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 3,
+                    accompagnement: 4,
+                    global: 5
+                }
+            },
+            meta: {
+                siretAsString: '22222222222222',
             },
         });
     });

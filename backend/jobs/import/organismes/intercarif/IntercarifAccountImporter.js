@@ -14,7 +14,6 @@ class IntercarifAccountImporter {
     async _buildAccount(organisme) {
         let { findCodeRegionByPostalCode } = regions(this.db);
         let adresse = organisme.lieux_de_formation ? organisme.lieux_de_formation[0].adresse : organisme.adresse;
-        let codeRegion = await findCodeRegionByPostalCode(adresse.code_postal);
 
         return {
             _id: parseInt(organisme.siret, 10),
@@ -24,12 +23,12 @@ class IntercarifAccountImporter {
             token: uuid.v4(),
             creationDate: new Date(),
             sources: ['intercarif'],
-            codeRegion,
+            codeRegion: await findCodeRegionByPostalCode(adresse.code_postal),
+            numero: organisme.numero,
+            lieux_de_formation: organisme.lieux_de_formation ? organisme.lieux_de_formation : [],
+            score: organisme.score,
             meta: {
                 siretAsString: organisme.siret,
-                numero: organisme.numero,
-                lieux_de_formation: organisme.lieux_de_formation ? organisme.lieux_de_formation : [],
-                score: organisme.score,
             }
         };
     }
@@ -47,8 +46,6 @@ class IntercarifAccountImporter {
             $set: {
                 ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
                 'updateDate': new Date(),
-                'codeRegion': newAccount.codeRegion,
-                'meta': _.merge({}, previous.meta, newAccount.meta),
             },
         });
     }

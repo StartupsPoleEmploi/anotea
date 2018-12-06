@@ -2,7 +2,7 @@ const path = require('path');
 const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/test-db');
-const { newOrganismeAccount, newComment } = require('../../../../../helpers/data/dataset');
+const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/test-logger');
 const KairosAccountImporter = require('../../../../../../jobs/import/organismes/kairos/KairosAccountImporter');
 
@@ -98,8 +98,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         assert.ok(doc.updateDate);
         assert.deepEqual(_.omit(doc, ['updateDate']), {
-
-            //UNTOUCHED
             _id: 22222222222222,
             SIRET: 22222222222222,
             creationDate: new Date('2016-11-10T17:41:03.308Z'),
@@ -107,12 +105,31 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             raisonSociale: 'Pole Emploi',
             passwordHash: '123456780',
             mailSentDate: new Date('2017-11-10T17:41:03.308Z'),
-
-            //UPDATED
             courriel: 'contact@formation',
             courrielsSecondaires: ['contact+kairos@formation.fr'],
             sources: ['kairos'],
             codeRegion: '1',
+            numero: '14_OF_0000000123',
+            lieux_de_formation: [
+                {
+                    adresse: {
+                        code_postal: '75019',
+                        ville: 'Paris 19e',
+                        region: '11'
+                    }
+                }
+            ],
+            score: {
+                nb_avis: 15,
+                notes: {
+                    accueil: 5,
+                    contenu_formation: 5,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 3,
+                    accompagnement: 4,
+                    global: 5
+                }
+            },
             meta: {
                 siretAsString: '22222222222222',
                 kairosData: {
@@ -126,26 +143,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     convention: '01184XX-1',
                     dateDebut: new Date('2016-04-25T00:00:00.000Z'),
                     dateFin: new Date('2019-04-24T00:00:00.000Z')
-                },
-                lieux_de_formation: [
-                    {
-                        adresse: {
-                            code_postal: '75019',
-                            ville: 'Paris 19e',
-                            region: '11'
-                        }
-                    }
-                ],
-                score: {
-                    nb_avis: 15,
-                    notes: {
-                        accueil: 5,
-                        contenu_formation: 5,
-                        equipe_formateurs: 4,
-                        moyen_materiel: 3,
-                        accompagnement: 4,
-                        global: 5
-                    }
                 },
             },
         });
