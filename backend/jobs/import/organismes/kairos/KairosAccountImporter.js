@@ -2,11 +2,9 @@ const fs = require('fs');
 const _ = require('lodash');
 const parse = require('csv-parse');
 const uuid = require('node-uuid');
-const moment = require('moment');
 const { handleBackPressure } = require('../../../job-utils');
 const regions = require('../../../../components/regions');
-
-const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
+const computeScore = require('../computeScore');
 
 class KairosAccountImporter {
 
@@ -21,50 +19,42 @@ class KairosAccountImporter {
         let region = data['Nouvelle région'];
         let email = data['mail RGC'];
 
+        let [codeRegion, score] = await Promise.all([
+            findCodeRegionByName(region),
+            computeScore(this.db, data['SIRET']),
+        ]);
+
         return {
             _id: siret,
             SIRET: siret,
             raisonSociale: data['LIBELLE'],
             courriel: email,
+            kairosCourriel: email,
             token: uuid.v4(),
             creationDate: new Date(),
+            codeRegion: codeRegion,
             sources: ['kairos'],
-            codeRegion: await findCodeRegionByName(region),
+            score: score,
             meta: {
                 siretAsString: data['SIRET'],
-                kairosData: {
-                    libelle: data['LIBELLE'],
-                    region: region,
-                    nomRGC: data['Nom RGC'],
-                    prenomRGC: data['Prénom RGC'],
-                    emailRGC: email,
-                    telephoneRGC: data['Téléphone RGC'],
-                    assedic: data['ASSEDIC'],
-                    convention: data['convention'],
-                    dateDebut: parseDate(data['date début']),
-                    dateFin: parseDate(data['date fin']),
-                },
             }
         };
     }
 
-    _createNewAccount(account) {
-        return this.db.collection('organismes').insertOne(account);
-    }
-
-    _updateAccount(previous, newAccount) {
-        return this.db.collection('organismes').updateOne({ SIRET: newAccount.SIRET }, {
-            $addToSet: {
-                courrielsSecondaires: newAccount.meta.kairosData.emailRGC,
-                sources: 'kairos'
+    _updateAccount(account) {
+        return this.db.collection('organismes').updateOne({ _id: account._id },
+            {
+                $setOnInsert: _.omit(account, ['sources', 'score', 'codeRegion', 'kairosCourriel']),
+                $addToSet: {
+                    sources: 'kairos',
+                    courriels: account.courriel,
+                },
+                $set: {
+                    updateDate: new Date(),
+                    ..._.pick(account, ['score', 'codeRegion', 'kairosCourriel'])
+                },
             },
-            $set: {
-                ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
-                'updateDate': new Date(),
-                'codeRegion': newAccount.codeRegion,
-                'meta': _.merge({}, previous.meta, newAccount.meta),
-            }
-        });
+            { upsert: true });
     }
 
     async importAccounts(file) {
@@ -101,13 +91,11 @@ class KairosAccountImporter {
                 try {
                     let newAccount = await this._buildAccount(data);
 
-                    let previous = await this.db.collection('organismes').findOne({ SIRET: newAccount.SIRET });
-                    if (!previous) {
-                        await this._createNewAccount(newAccount);
-                        return { status: 'created', account: newAccount };
+                    let results = await this._updateAccount(newAccount);
 
+                    if (results.nModified > 0) {
+                        return { status: 'created', account: newAccount };
                     } else {
-                        await this._updateAccount(previous, newAccount);
                         return { status: 'updated', account: newAccount };
                     }
                 } catch (e) {

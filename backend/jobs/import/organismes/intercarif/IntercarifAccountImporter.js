@@ -3,6 +3,7 @@ const _ = require('lodash');
 const regions = require('../../../../components/regions');
 const generateOrganismesResponsables = require('./generateOrganismesResponsables');
 const generateOrganismesFormateurs = require('./generateOrganismesFormateurs');
+const computeScore = require('../computeScore');
 
 class IntercarifAccountImporter {
 
@@ -14,40 +15,45 @@ class IntercarifAccountImporter {
     async _buildAccount(organisme) {
         let { findCodeRegionByPostalCode } = regions(this.db);
         let adresse = organisme.lieux_de_formation ? organisme.lieux_de_formation[0].adresse : organisme.adresse;
+        let siret = organisme.siret;
+
+        let [codeRegion, score] = await Promise.all([
+            findCodeRegionByPostalCode(adresse.code_postal),
+            computeScore(this.db, siret),
+        ]);
 
         return {
-            _id: parseInt(organisme.siret, 10),
-            SIRET: parseInt(organisme.siret, 10),
+            _id: parseInt(siret, 10),
+            SIRET: parseInt(siret, 10),
             raisonSociale: organisme.raison_sociale,
             courriel: organisme.courriel,
             token: uuid.v4(),
             creationDate: new Date(),
+            codeRegion: codeRegion,
             sources: ['intercarif'],
-            codeRegion: await findCodeRegionByPostalCode(adresse.code_postal),
             numero: organisme.numero,
             lieux_de_formation: organisme.lieux_de_formation ? organisme.lieux_de_formation : [],
-            score: organisme.score,
+            score: score,
             meta: {
-                siretAsString: organisme.siret,
+                siretAsString: siret,
             }
         };
     }
 
-    _createNewAccount(account) {
-        return this.db.collection('organismes').insertOne(account);
-    }
-
-    _updateAccount(previous, newAccount) {
-        return this.db.collection('organismes').updateOne({ _id: previous._id }, {
-            $addToSet: {
-                courrielsSecondaires: newAccount.courriel,
-                sources: 'intercarif'
+    _updateAccount(account) {
+        return this.db.collection('organismes').updateOne({ _id: account._id },
+            {
+                $setOnInsert: _.omit(account, ['sources', 'numero', 'lieux_de_formation', 'score']),
+                $addToSet: {
+                    sources: 'intercarif',
+                    courriels: account.courriel,
+                },
+                $set: {
+                    updateDate: new Date(),
+                    ..._.pick(account, ['numero', 'lieux_de_formation', 'score'])
+                },
             },
-            $set: {
-                ...(previous.courriel ? {} : { courriel: newAccount.courriel }),
-                'updateDate': new Date(),
-            },
-        });
+            { upsert: true });
     }
 
     async _synchronizeAccounts(sourceCollectionName, stats) {
@@ -60,18 +66,16 @@ class IntercarifAccountImporter {
             const organisme = await cursor.next();
             try {
                 let newAccount = await this._buildAccount(organisme);
-                let previous = await this.db.collection('organismes').findOne({ _id: newAccount._id });
+
+                let results = await this._updateAccount(newAccount);
+
+                if (results.nModified > 0) {
+                    stats.updated++;
+                } else {
+                    stats.created++;
+                }
                 stats.total++;
 
-                if (!previous) {
-                    stats.created++;
-                    await this._createNewAccount(newAccount);
-                    this.logger.debug(`New account ${newAccount.SIRET} created`);
-                } else {
-                    stats.updated++;
-                    await this._updateAccount(previous, newAccount);
-                    this.logger.debug(`Account ${newAccount.SIRET} updated`);
-                }
             } catch (e) {
                 stats.invalid++;
                 this.logger.error(`Account cannot be imported from ${sourceCollectionName}`, organisme, e);
