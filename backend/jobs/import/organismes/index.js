@@ -10,21 +10,16 @@ const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-const unpackGzFile = require('./utils/unpackGzFile');
-const importIntercarif = require('./importIntercarif');
+const generateOrganismesResponsables = require('../organismes/generateOrganismesResponsables');
+const generateOrganismesFormateurs = require('../organismes/generateOrganismesFormateurs');
 
-let unpack = false;
-cli.description('Import intercarif and generate all related collections')
-.option('-f, --file [file]', 'The file to import')
-.option('-x, --unpack', 'Handle file as an archive', () => {
-    unpack = true;
-})
+cli.description('Reconciling sessions/actions with comments...')
 .parse(process.argv);
 
 const main = async () => {
 
     let launchTime = new Date().getTime();
-    let logger = getLogger('anotea-job-intercarif-import', configuration);
+    let logger = getLogger('anotea-job-organimes-import', configuration);
     let client = await getMongoClient(configuration.mongodb.uri);
     let db = client.db();
 
@@ -35,18 +30,11 @@ const main = async () => {
     };
 
     try {
-        if (!cli.file) {
-            return abort('file are required');
-        }
+        logger.info(`Generating organismes responsables collection...`);
+        await generateOrganismesResponsables(db);
 
-        let xmlFile = cli.file;
-        if (unpack) {
-            logger.info(`Decompressing ${cli.file}...`);
-            xmlFile = await unpackGzFile(cli.file);
-        }
-
-        logger.info(`Generating intercarif collection...`);
-        await importIntercarif(db, logger, xmlFile);
+        logger.info(`Generating organismes formateurs collection...`);
+        await generateOrganismesFormateurs(db);
 
         await client.close();
 
