@@ -15,7 +15,6 @@ import {
     maskTitle,
     unmaskTitle,
 } from '../../../lib/adviceService';
-import { sendAvisHorsSujetEmail } from '../../../lib/avisHorsSujetService';
 
 const DEFAULT_ORDER = 'moderation';
 const QUALIFICATION =[
@@ -74,11 +73,6 @@ export default class ModerationPanel extends React.Component {
         rejectAdvice(id, reason).then(result =>
             this.doLoadAdvices()
         );
-    };
-
-    handleOffTopic = (id, reason, evt) => {
-        this.handleReject(id, reason, evt);
-        sendAvisHorsSujetEmail(id);
     };
 
     handlePublish = (id, qualification, evt) => {
@@ -313,7 +307,7 @@ export default class ModerationPanel extends React.Component {
                                                         role="button">Injure</a>
                                                     <a className="dropdown-item" onClick={this.handleReject.bind(this, advice._id, 'alerte')}
                                                         role="button">Alerte</a>
-                                                    <a className="dropdown-item" onClick={this.handleOffTopic.bind(this, advice._id, 'non concerné')}
+                                                    <a className="dropdown-item" onClick={this.handleReject.bind(this, advice._id, 'non concerné')}
                                                         role="button">Non concerné</a>
                                                 </div>
                                             </div>}
