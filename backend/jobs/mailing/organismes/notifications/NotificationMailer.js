@@ -19,6 +19,7 @@ class NotificationMailer {
         .aggregate([
             {
                 $match: {
+                    'passwordHash': { $ne: null },
                     'meta.nbAvis': { $gte: 5 },
                     ...(codeRegions ? { 'codeRegion': { $in: codeRegions } } : {}),
                     '$or': [

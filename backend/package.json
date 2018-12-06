@@ -48,7 +48,7 @@
     "md5-file": "3.2.3",
     "mobile-detect": "1.4.1",
     "moment": "2.22.1",
-    "mongodb": "3.1.9",
+    "mongodb": "3.1.10",
     "node-uuid": "1.4.8",
     "nodemailer": "3.1.8",
     "stream-transform": "0.1.2",
