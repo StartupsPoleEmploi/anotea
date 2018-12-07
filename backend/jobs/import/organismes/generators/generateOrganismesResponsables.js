@@ -1,5 +1,5 @@
 module.exports = async db => {
-    return db.collection('intercarif').aggregate([
+    await db.collection('intercarif').aggregate([
         {
             $project: {
                 organisme_responsable: {
@@ -12,7 +12,12 @@ module.exports = async db => {
                         ville: '$organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.ville',
                         region: '$organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.region',
                     },
-                    courriel: '$organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel'
+                    courriel: {
+                        $ifNull: [
+                            '$organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel',
+                            '$organisme_formation_responsable.contact_organisme.coordonnees.courriel'
+                        ]
+                    }
                 },
                 actions: {
                     $map: {
@@ -91,6 +96,8 @@ module.exports = async db => {
             $out: 'intercarif_organismes_responsables'
         }
     ], { allowDiskUse: true }).toArray();
+
+    return db.collection('intercarif_organismes_responsables').countDocuments();
 };
 
 

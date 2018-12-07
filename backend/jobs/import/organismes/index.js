@@ -1,20 +1,17 @@
 #!/usr/bin/env node
 'use strict';
 
-/*
- Can be launched with the following command
-    `node jobs/import/intercarif /path/to/lheo_offre_info_complet.xml`
- */
 const cli = require('commander');
 const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-const IntercarifAccountImporter = require('./intercarif/IntercarifAccountImporter');
-const KairosAccountImporter = require('./kairos/KairosAccountImporter');
+const importAccounts = require('./importAccounts');
+const generateOrganismes = require('./generateOrganismes');
 
 cli.description('Import accounts from Intercarif and Kairos')
 .option('-f, --file [file]', 'The CSV file to import')
+.option('-g, --generate', 'Generate all collections')
 .parse(process.argv);
 
 const main = async () => {
@@ -30,21 +27,25 @@ const main = async () => {
         });
     };
 
-    try {
-        logger.info('Importing accounts from Intercarif...');
-        let intercarifAccountImporter = new IntercarifAccountImporter(db, logger);
-        await intercarifAccountImporter.generateOrganismes();
-        let intercatif = await intercarifAccountImporter.importAccounts();
+    if (cli.generate && !cli.file) {
+        return abort('Kairos CSV File is required to generate kairos collection');
+    }
 
-        logger.info('Importing accounts from Kairos...');
-        let kairosAccountImporter = new KairosAccountImporter(db, logger);
-        let kairos = await kairosAccountImporter.importAccounts(cli.file);
+    try {
+        let organismes = {};
+        if (cli.generate) {
+            logger.info('Generating organismes collections...');
+            organismes = await generateOrganismes(db, logger, cli.file);
+        }
+
+        logger.info('Importing accounts...');
+        let accounts = await importAccounts(db, logger);
 
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
         logger.info(`Completed in ${duration}`);
-        logger.info(`Results: ${JSON.stringify({ intercatif, kairos }, null, 2)}`);
+        logger.info(`Results: ${JSON.stringify({ organismes, accounts }, null, 2)}`);
 
     } catch (e) {
         abort(e);

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/test-db');
-const generateOrganismesResponsables = require('../../../../../../jobs/import/organismes/intercarif/generateOrganismesResponsables');
+const generateOrganismesResponsables = require('../../../../../../jobs/import/organismes/generators/generateOrganismesResponsables');
 
 describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
@@ -18,6 +18,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             nom: 'Anotea Formation',
             numero: 'OR_XX_XXX',
             raison_sociale: 'Centre de formation Anotéa',
+            courriel: 'anotea.pe+responsable@gmail.com',
             adresse: {
                 code_postal: '93100',
                 region: '11',
