@@ -10,11 +10,11 @@ const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-const IntercarifAccountImporter = require('./intercarif/IntercarifAccountImporter');
-const KairosAccountImporter = require('./kairos/KairosAccountImporter');
+const AccountImporter = require('./AccountImporter');
 
 cli.description('Import accounts from Intercarif and Kairos')
 .option('-f, --file [file]', 'The CSV file to import')
+.option('-g, --generate', 'Generate all collections')
 .parse(process.argv);
 
 const main = async () => {
@@ -30,21 +30,26 @@ const main = async () => {
         });
     };
 
+    if (cli.generate && !cli.file) {
+        return abort('Kairos CSV File is required to generate kairos collection');
+    }
+
     try {
         logger.info('Importing accounts from Intercarif...');
-        let intercarifAccountImporter = new IntercarifAccountImporter(db, logger);
-        await intercarifAccountImporter.generateOrganismes();
-        let intercatif = await intercarifAccountImporter.importAccounts();
+        let accountImporter = new AccountImporter(db, logger);
+        let generated = {};
 
-        logger.info('Importing accounts from Kairos...');
-        let kairosAccountImporter = new KairosAccountImporter(db, logger);
-        let kairos = await kairosAccountImporter.importAccounts(cli.file);
+        if (cli.generate) {
+            generated.kairos = await accountImporter.generateOrganismes(cli.file);
+        }
+
+        let imported = await accountImporter.importAccounts();
 
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
         logger.info(`Completed in ${duration}`);
-        logger.info(`Results: ${JSON.stringify({ intercatif, kairos }, null, 2)}`);
+        logger.info(`Results: ${JSON.stringify({ generated, imported }, null, 2)}`);
 
     } catch (e) {
         abort(e);

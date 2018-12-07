@@ -12,7 +12,12 @@ module.exports = async db => {
                         ville: '$organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.ville',
                         region: '$organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.region',
                     },
-                    courriel: '$organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel'
+                    courriel: {
+                        $ifNull: [
+                            '$organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel',
+                            '$organisme_formation_responsable.contact_organisme.coordonnees.courriel'
+                        ]
+                    }
                 },
                 actions: {
                     $map: {
