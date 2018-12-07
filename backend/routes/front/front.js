@@ -123,7 +123,10 @@ module.exports = (db, logger, configuration, badwords) => {
                 comment.accord = false;
                 comment.accordEntreprise = false;
                 comment.step = 2;
-                db.collection('comment').save(comment);
+                await Promise.all([
+                    db.collection('comment').save(comment),
+                    db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avis: true } }),
+                ]);
                 res.render('front/questionnaire-step2', { trainee: trainee });
             } else {
                 res.render('front/refus', { reason: 'bad data', trainee: trainee });
