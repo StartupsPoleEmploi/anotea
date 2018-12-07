@@ -1,7 +1,7 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const { newComment } = require('../../../../helpers/data/dataset');
-const reconcileSessions = require('../../../../../jobs/import/reconcile/reconcileSessions');
+const reconcileSessions = require('../../../../../jobs/import/reconciliation/reconcileSessions');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 

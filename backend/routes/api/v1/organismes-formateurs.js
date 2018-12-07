@@ -11,7 +11,7 @@ const tryAndCatch = require('../../tryAndCatch');
 module.exports = (db, authService) => {
 
     let router = express.Router();// eslint-disable-line new-cap
-    let collection = db.collection('organismes_formateurs');
+    let collection = db.collection('organismes');
     let checkAuth = authService.createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
     router.get('/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {
@@ -30,9 +30,9 @@ module.exports = (db, authService) => {
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
         let query = {
-            ...(parameters.id ? { '_id': { $in: parameters.id } } : {}),
+            ...(parameters.id ? { '_id': { $in: parameters.id.map(id => parseInt(id)) } } : {}),
             ...(parameters.numero ? { 'numero': { $in: parameters.numero } } : {}),
-            ...(parameters.siret ? { 'siret': { $in: parameters.siret } } : {}),
+            ...(parameters.siret ? { 'SIRET': { $in: parameters.siret.map(id => parseInt(id)) } } : {}),
             ...(parameters.nb_avis ? { 'score.nb_avis': { $gte: parameters.nb_avis } } : {}),
             ...(parameters.lieu_de_formation ? {
                 $or: [
@@ -63,7 +63,7 @@ module.exports = (db, authService) => {
             id: Joi.string().required(),
         }, { abortEarly: false });
 
-        let organisme = await collection.findOne({ _id: parameters.id });
+        let organisme = await collection.findOne({ _id: parseInt(parameters.id) });
 
         if (!organisme) {
             throw Boom.notFound('Identifiant inconnu');

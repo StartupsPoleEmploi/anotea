@@ -112,7 +112,7 @@ module.exports = (db, configuration) => {
 
         let [nbOrganimes, nbOrganismesAvecAvis, nbOrganismesActifs] = await Promise.all([
             organismes.countDocuments({ 'codeRegion': codeRegion }),
-            organismes.countDocuments({ 'meta.nbAvis': { $gte: 1 }, 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'score.nb_avis': { $gte: 1 }, 'codeRegion': codeRegion }),
             organismes.countDocuments({ 'passwordHash': { $ne: null }, 'codeRegion': codeRegion }),
         ]);
 
