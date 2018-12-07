@@ -127,7 +127,7 @@ module.exports = function(db, logger, configuration) {
             let { organisme, comment } = data;
             getCarif(organisme.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
-                mailOptions.subject = `Pôle Emploi - Vous avez ${organisme.meta.nbAvis} nouveaux avis stagiaires`;
+                mailOptions.subject = `Pôle Emploi - Vous avez ${organisme.score.nb_avis} nouveaux avis stagiaires`;
                 const params = {
                     hostname: configuration.app.public_hostname,
                     trackingLink: getTrackingLink(organisme),
