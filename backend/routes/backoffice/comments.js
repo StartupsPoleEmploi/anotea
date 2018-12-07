@@ -300,10 +300,8 @@ module.exports = function(db, authService, logger, configuration) {
     router.post('/backoffice/advice/:id/reject', checkAuth, tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         const reason = req.body.reason;
-        let [comment, trainee] = await Promise.all([
-            db.collection('comment').findOne({ _id: id }),
-            db.collection('trainee').findOne({ token: comment.token })
-        ]);
+        let comment = await db.collection('comment').findOne({ _id: id });
+        let trainee = await db.collection('trainee').findOne({ token: comment.token });
 
         db.collection('comment').update({ _id: id }, {
             $set: {
