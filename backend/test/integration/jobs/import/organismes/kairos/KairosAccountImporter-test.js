@@ -2,7 +2,7 @@ const path = require('path');
 const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/test-db');
-const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
+const { newOrganismeAccount, newComment } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/test-logger');
 const KairosAccountImporter = require('../../../../../../jobs/import/organismes/kairos/KairosAccountImporter');
 
@@ -24,7 +24,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 region: 'Hauts-de-France',
                 dept_num: '59',
                 region_num: '10'
-            }),
+            })
         ]);
     };
 
@@ -34,6 +34,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../../helpers/data', 'kairos-organismes.csv');
         let importer = new KairosAccountImporter(db, logger);
         await insertDepartements();
+        await Promise.all(_.range(2).map(() => {
+            return insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '11111111111111',
+                    },
+                }
+            }));
+        }));
 
         await importer.importAccounts(csvFile);
 
@@ -44,53 +53,67 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
-        let comparable = _.omit(doc, ['creationDate', 'token']);
-        delete comparable.meta.kairosData.updateDate;
+        let comparable = _.omit(doc, ['creationDate', 'token', 'updateDate']);
         assert.deepEqual(comparable, {
             _id: 11111111111111,
             SIRET: 11111111111111,
             raisonSociale: 'Pole Emploi Alsace',
             courriel: 'contact@formation.fr',
+            kairosCourriel: 'contact@formation.fr',
+            courriels: ['contact@formation.fr'],
             sources: ['kairos'],
             codeRegion: '7',
+            score: {
+                nb_avis: 2,
+                notes: {
+                    accompagnement: 1,
+                    accueil: 3,
+                    contenu_formation: 2,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 2,
+                    global: 2,
+                }
+            },
             meta: {
                 siretAsString: '11111111111111',
-                kairosData: {
-                    libelle: 'Pole Emploi Alsace',
-                    region: 'Grand Est',
-                    nomRGC: 'Dupont',
-                    prenomRGC: 'Henri',
-                    emailRGC: 'contact@formation.fr',
-                    telephoneRGC: '',
-                    assedic: '17',
-                    convention: '0126XXX-1/1',
-                    dateDebut: new Date('2017-09-05T00:00:00.000Z'),
-                    dateFin: new Date('2020-09-05T00:00:00.000Z'),
-                },
             },
         });
     });
 
-    it('should update only specific properties of an exiting organisme', async () => {
+    it('should update organismes', async () => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../../helpers/data', 'kairos-organismes.csv');
         let importer = new KairosAccountImporter(db, logger);
         await insertDepartements();
-        await insertIntoDatabase('organismes', newOrganismeAccount({
-            _id: 22222222222222,
-            SIRET: 22222222222222,
-            raisonSociale: 'Pole Emploi',
-            courriel: 'contact@formation',
-            codeRegion: '99', //Invalid
-            passwordHash: '123456780',
-            token: '12345',
-            creationDate: new Date('2016-11-10T17:41:03.308Z'),
-            mailSentDate: new Date('2017-11-10T17:41:03.308Z'),
-            meta: {
-                siretAsString: '22222222222222',
-            },
-        }));
+        await Promise.all([
+            insertIntoDatabase('organismes', newOrganismeAccount({
+                _id: 22222222222222,
+                SIRET: 22222222222222,
+                raisonSociale: 'Pole Emploi',
+                courriel: 'previous@formation.fr',
+                codeRegion: '99', //Invalid
+                passwordHash: '123456780',
+                token: '12345',
+                creationDate: new Date('2016-11-10T17:41:03.308Z'),
+                mailSentDate: new Date('2017-11-10T17:41:03.308Z'),
+                score: {
+                    nb_avis: 1,
+                },
+                meta: {
+                    siretAsString: '22222222222222',
+                },
+            })),
+            _.range(2).map(() => {
+                return insertIntoDatabase('comment', newComment({
+                    training: {
+                        organisation: {
+                            siret: '22222222222222',
+                        },
+                    }
+                }));
+            })
+        ]);
 
         await importer.importAccounts(csvFile);
 
@@ -105,10 +128,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             raisonSociale: 'Pole Emploi',
             passwordHash: '123456780',
             mailSentDate: new Date('2017-11-10T17:41:03.308Z'),
-            courriel: 'contact@formation',
-            courrielsSecondaires: ['contact+kairos@formation.fr'],
-            sources: ['kairos'],
+            courriel: 'previous@formation.fr',
+            kairosCourriel: 'contact+kairos@formation.fr',
+            courriels: ['contact+kairos@formation.fr'],
             codeRegion: '1',
+            sources: ['kairos'],
             numero: '14_OF_0000000123',
             lieux_de_formation: [
                 {
@@ -120,55 +144,19 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 }
             ],
             score: {
-                nb_avis: 15,
+                nb_avis: 2,
                 notes: {
-                    accueil: 5,
-                    contenu_formation: 5,
+                    accompagnement: 1,
+                    accueil: 3,
+                    contenu_formation: 2,
                     equipe_formateurs: 4,
-                    moyen_materiel: 3,
-                    accompagnement: 4,
-                    global: 5
+                    moyen_materiel: 2,
+                    global: 2,
                 }
             },
             meta: {
                 siretAsString: '22222222222222',
-                kairosData: {
-                    libelle: 'Pole Emploi Formation Aquitaine',
-                    region: 'Nouvelle Aquitaine',
-                    nomRGC: 'Dupont',
-                    prenomRGC: 'Mauricette',
-                    emailRGC: 'contact+kairos@formation.fr',
-                    telephoneRGC: '0123456789',
-                    assedic: '17',
-                    convention: '01184XX-1',
-                    dateDebut: new Date('2016-04-25T00:00:00.000Z'),
-                    dateFin: new Date('2019-04-24T00:00:00.000Z')
-                },
-            },
+            }
         });
     });
-
-    it('when courriel is missing should add it', async () => {
-
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../../helpers/data', 'kairos-organismes.csv');
-        let importer = new KairosAccountImporter(db, logger);
-        await insertDepartements();
-        await insertIntoDatabase('organismes', {
-            _id: 22222222222222,
-            SIRET: 22222222222222,
-            raisonSociale: 'Pole Emploi',
-            creationDate: new Date('2017-11-10T17:16:37.758Z'),
-            token: '538df592-7f28-47ac-8686-1563caf1218a',
-            mailSentDate: new Date('2017-11-10T17:41:03.308Z'),
-            passwordHash: 'faceb588f56d25ca26296ea08421ae6a79c6e78b51117b5e12c99c6ad8214361'
-        });
-
-        await importer.importAccounts(csvFile);
-
-        let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
-
-        assert.deepEqual(doc.courriel, 'contact+kairos@formation.fr');
-    });
-
 }));
