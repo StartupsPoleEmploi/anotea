@@ -1,28 +1,28 @@
 const uuid = require('node-uuid');
 const _ = require('lodash');
 const regions = require('../../../components/regions');
-const generateOrganismesResponsables = require('./generators/generateOrganismesResponsables');
-const generateOrganismesFormateurs = require('./generators/generateOrganismesFormateurs');
-const generateOrganismesKairos = require('./generators/generateOrganismesKairos');
 const computeScore = require('./computeScore');
 
-class AccountImporter {
 
-    constructor(db, logger) {
-        this.db = db;
-        this.logger = logger;
-    }
+module.exports = async (db, logger) => {
 
-    async _buildAccountFromIntercarif(organisme) {
-        let { findCodeRegionByPostalCode } = regions(this.db);
+    let stats = {
+        total: 0,
+        updated: 0,
+        created: 0,
+        invalid: 0,
+    };
+
+    const buildAccountFromIntercarif = async organisme => {
+        let { findCodeRegionByPostalCode } = regions(db);
         let adresse = organisme.lieux_de_formation ?
             organisme.lieux_de_formation.find(l => l.adresse.code_postal).adresse : organisme.adresse;
         let siret = organisme.siret;
 
         let [codeRegion, score, kairosData] = await Promise.all([
             findCodeRegionByPostalCode(adresse.code_postal),
-            computeScore(this.db, siret),
-            this.db.collection('kairos_organismes').findOne({ siret }),
+            computeScore(db, siret),
+            db.collection('kairos_organismes').findOne({ siret }),
         ]);
 
         let document = {
@@ -49,12 +49,12 @@ class AccountImporter {
             });
         }
         return document;
-    }
+    };
 
-    async _buildAccountFromKairos(data) {
+    const buildAccountFromKairos = async data => {
 
         let siretAsInt = parseInt(data.siret, 10);
-        let [score] = await Promise.all([computeScore(this.db, data.siret)]);
+        let [score] = await Promise.all([computeScore(db, data.siret)]);
 
         return {
             _id: siretAsInt,
@@ -74,11 +74,11 @@ class AccountImporter {
                 siretAsString: data.siret,
             }
         };
-    }
+    };
 
-    async _importIntercarifAccounts(sourceCollectionName, stats) {
+    const importIntercarifAccounts = async (sourceCollectionName, stats) => {
 
-        let cursor = this.db.collection(sourceCollectionName).find({
+        let cursor = db.collection(sourceCollectionName).find({
             siret: { $ne: '00000000000000' },
             courriel: { $ne: null }
         });
@@ -86,9 +86,9 @@ class AccountImporter {
         while (await cursor.hasNext()) {
             const organisme = await cursor.next();
             try {
-                let account = await this._buildAccountFromIntercarif(organisme);
+                let account = await buildAccountFromIntercarif(organisme);
 
-                let results = await this.db.collection('organismes')
+                let results = await db.collection('organismes')
                 .updateOne(
                     { _id: account._id },
                     {
@@ -114,58 +114,37 @@ class AccountImporter {
 
             } catch (e) {
                 stats.invalid++;
-                this.logger.error(`Account cannot be imported from ${sourceCollectionName}`, JSON.stringify(organisme, null, 2), e);
+                logger.error(`Account cannot be imported from ${sourceCollectionName}`, JSON.stringify(organisme, null, 2), e);
             }
         }
-    }
+    };
 
-    async _importMissingKairosAccounts(stats) {
+    const importMissingKairosAccounts = async stats => {
 
-        let cursor = this.db.collection('kairos_organismes').find();
+        let cursor = db.collection('kairos_organismes').find();
 
         while (await cursor.hasNext()) {
             const data = await cursor.next();
             try {
-                let account = await this._buildAccountFromKairos(data);
+                let account = await buildAccountFromKairos(data);
 
-                let count = await this.db.collection('organismes').countDocuments({ _id: account._id });
+                let count = await db.collection('organismes').countDocuments({ _id: account._id });
                 if (count === 0) {
-                    await this.db.collection('organismes').insertOne(account);
+                    await db.collection('organismes').insertOne(account);
                     stats.created++;
                     stats.total++;
                 }
             } catch (e) {
                 stats.invalid++;
-                this.logger.error(`Account cannot be imported from kairos`, JSON.stringify(data, null, 2), e);
+                logger.error(`Account cannot be imported from kairos`, JSON.stringify(data, null, 2), e);
             }
         }
-    }
+    };
 
-    async generateOrganismes(file) {
-        this.logger.info('Generating organismes responsables from intercarif...');
-        await generateOrganismesResponsables(this.db);
+    await importIntercarifAccounts('intercarif_organismes_responsables', stats);
+    await importIntercarifAccounts('intercarif_organismes_formateurs', stats);
+    await importMissingKairosAccounts(stats);
 
-        this.logger.info('Generating organismes formateurs from intercarif...');
-        await generateOrganismesFormateurs(this.db);
+    return stats;
 
-        this.logger.info('Generating organismes from kairos...');
-        return generateOrganismesKairos(this.db, this.logger, file);
-    }
-
-    async importAccounts() {
-        let stats = {
-            total: 0,
-            updated: 0,
-            created: 0,
-            invalid: 0,
-        };
-
-        await this._importIntercarifAccounts('intercarif_organismes_responsables', stats);
-        await this._importIntercarifAccounts('intercarif_organismes_formateurs', stats);
-        await this._importMissingKairosAccounts(stats);
-
-        return stats;
-    }
-}
-
-module.exports = AccountImporter;
+};

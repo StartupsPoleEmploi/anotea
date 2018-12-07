@@ -36,7 +36,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let stats = await generateOrganismesKairos(db, logger, csvFile);
 
         assert.deepEqual(stats, {
-            total: 3,
             inserted: 3,
             invalid: 0,
         });

@@ -1,16 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
-/*
- Can be launched with the following command
-    `node jobs/import/intercarif /path/to/lheo_offre_info_complet.xml`
- */
 const cli = require('commander');
 const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-const AccountImporter = require('./AccountImporter');
+const importAccounts = require('./importAccounts');
+const generateOrganismes = require('./generateOrganismes');
 
 cli.description('Import accounts from Intercarif and Kairos')
 .option('-f, --file [file]', 'The CSV file to import')
@@ -35,21 +32,20 @@ const main = async () => {
     }
 
     try {
-        logger.info('Importing accounts from Intercarif...');
-        let accountImporter = new AccountImporter(db, logger);
-        let generated = {};
-
+        let organismes = {};
         if (cli.generate) {
-            generated.kairos = await accountImporter.generateOrganismes(cli.file);
+            logger.info('Generating organismes collections...');
+            organismes = await generateOrganismes(db, logger, cli.file);
         }
 
-        let imported = await accountImporter.importAccounts();
+        logger.info('Importing accounts...');
+        let accounts = await importAccounts(db, logger);
 
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
         logger.info(`Completed in ${duration}`);
-        logger.info(`Results: ${JSON.stringify({ generated, imported }, null, 2)}`);
+        logger.info(`Results: ${JSON.stringify({ organismes, accounts }, null, 2)}`);
 
     } catch (e) {
         abort(e);

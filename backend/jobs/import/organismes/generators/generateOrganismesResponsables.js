@@ -1,5 +1,5 @@
 module.exports = async db => {
-    return db.collection('intercarif').aggregate([
+    await db.collection('intercarif').aggregate([
         {
             $project: {
                 organisme_responsable: {
@@ -96,6 +96,8 @@ module.exports = async db => {
             $out: 'intercarif_organismes_responsables'
         }
     ], { allowDiskUse: true }).toArray();
+
+    return db.collection('intercarif_organismes_responsables').countDocuments();
 };
 
 

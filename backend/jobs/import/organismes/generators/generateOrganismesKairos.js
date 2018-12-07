@@ -8,9 +8,6 @@ const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-
 
 module.exports = async (db, logger, file) => {
 
-    let errors = 0;
-    await db.collection('departements').createIndex({ region: 'text' });
-
     const buildDocument = async data => {
         const { findCodeRegionByName } = regions(db);
         return {
@@ -30,10 +27,12 @@ module.exports = async (db, logger, file) => {
     };
 
     let stats = {
-        total: 0,
         inserted: 0,
         invalid: 0,
     };
+
+    await db.collection('kairos_organismes').removeMany({});
+    await db.collection('departements').createIndex({ region: 'text' });
 
     return new Promise((resolve, reject) => {
         fs.createReadStream(file)
@@ -56,12 +55,11 @@ module.exports = async (db, logger, file) => {
             ],
         }))
         .pipe(handleBackPressure(async data => {
-            stats.total++;
             try {
                 let document = await buildDocument(data);
 
                 await db.collection('kairos_organismes').insertOne(document);
-                return { organisme: data };
+                return { organisme: document };
             } catch (e) {
                 return { error: e, organisme: data };
             }
@@ -75,7 +73,7 @@ module.exports = async (db, logger, file) => {
                 logger.debug(`Organisme imported ${organisme.siret}`);
             }
         })
-        .on('finish', async () => errors === 0 ? resolve(stats) : reject(stats));
+        .on('finish', async () => stats.invalid === 0 ? resolve(stats) : reject(stats));
     });
 
 };
