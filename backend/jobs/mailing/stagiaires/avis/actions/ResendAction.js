@@ -13,7 +13,7 @@ class ResendAction {
         return {
             mailSent: true,
             unsubscribe: false,
-            tracking: { $eq: null },
+            avis: false,
             $and: [
                 { mailSentDate: { $lte: moment().subtract(avisRelaunchDelay, 'days').toDate() } },
                 { mailSentDate: { $gte: moment().subtract(6, 'months').toDate() } },

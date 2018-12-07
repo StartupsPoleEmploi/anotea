@@ -102,6 +102,7 @@ class NotificationMailer {
         if (options.limit) {
             cursor.limit(options.limit);
         }
+        cursor.batchSize(10);
 
         while (await cursor.hasNext()) {
             let { organisme, status } = await cursor.next();
