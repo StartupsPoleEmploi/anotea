@@ -63,7 +63,7 @@
     "yamljs": "0.3.0"
   },
   "engines": {
-    "node": ">= 8.9.4"
+    "node": ">= 10.14.1"
   },
   "devDependencies": {
     "eslint": "5.10.0",

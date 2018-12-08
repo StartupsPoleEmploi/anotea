@@ -1,6 +1,4 @@
-FROM node:8.9.4-wheezy as builder
-
-RUN npm install -g npm@6.4.1
+FROM node:10.14.1-stretch as builder
 
 #Install and cache node_modules waiting for npm 6.1.1 to be able to use npm ci instead of npm install
 COPY package.json package-lock.json /tmp/
