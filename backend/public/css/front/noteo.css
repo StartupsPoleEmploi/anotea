@@ -45,7 +45,7 @@ header p {
 
 header .links {
     margin: 40px 0px 0px 0px;
-    height: 60px;
+    height: 140px;
 }
 
 header .link {
@@ -58,6 +58,28 @@ header .link {
     float: left;
     margin-right: 15px;
     padding-top: 10px;
+}
+
+header .link img {
+    display: block;
+    margin: auto;
+    margin-top: 25px;
+}
+
+header .link.lbb {
+    background-color: #9136A7;
+}
+
+header .link.lbb img {
+    margin-top: 50px;
+}
+
+header .link.pe {
+    background-color: #19286A;
+}
+
+header .link.clara {
+    background-color: #007DC1;
 }
 
 header .link:hover {
