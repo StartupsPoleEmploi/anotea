@@ -15,40 +15,30 @@
 <body>
     <div>
         <header>
-            <br>
-            <img src="/img/logo_Anotea_Vertical_baseline.png" alt="" class="logoAnotea">
-            <div class="serviceProQuestionnaire">
-            <p>Service propulsé par</p>
-                <img src="/img/poleemploi.png" alt="" class="logoPE" />
-                <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
-            </div>
+            <img src="/img/logo_Anotea_Horizontal_baseline.png" alt="" class="logoAnotea">
+            <h1>Et après la formation ?</h1>
+            <p>Vous avez <strong>mis votre CV à jour</strong> ? Nous pouvons vous aidez à <strong>trouver un emploi</strong> !</p>
+
+            <%if (showLinks) { %>
+                <div class="links">
+                    <div class="link">
+                        <a class="btn" href="/link/<%= trainee.token %>?goto=lbb" target="_blank"><strong>Les entreprises qui recrutent</strong> dans votre secteur</a>
+                    </div>
+                    <div class="link">
+                            <a class="btn" href="/link/<%= trainee.token %>?goto=pe" target="_blank"><strong>Les offres d’emploi</strong> en lien avec votre formation</a>
+                        </div>
+                    <div class="link">
+                        <a class="btn" href="/link/<%= trainee.token %>?goto=clara" target="_blank"><strong>Les aides au retour à l’emploi</strong> avec l’outil Clara</a>
+                    </div>
+                </div>
+            <% } %>
         </header>
         <section class="divPage3">
-            <h1>Merci d'avoir particip&eacute;</h1>
+            <h2>Merci d'avoir particip&eacute;</h2>
             <blockquote>
                 <p class="txtPage3">Vos notes et commentaires seront publi&eacute;s sur les futures formations similaires &agrave; votre session de formation, sur nos sites partenaires ci-dessous.</p>
             </blockquote>
-            <div>
-                <h2>Et après la formation</h2>
-
-                <p>Vous avez mis votre CV à jour ? Nous pouvons vous aider à trouver un emploi !<br />
-                    Consultez les aides au retour à l’emploi : <a href="/link/<%= trainee.token %>?goto=clara" target="_blank">Clara</a></p>
-
-                <%if (showLinks) { %>
-                    <div class="links">
-                        <div class="link">
-                            <img src="/img/company.png" />
-                            <a class="btn" href="/link/<%= trainee.token %>?goto=pe" target="_blank">Consultez les offres d’emploi en lien avec votre formation</a>
-                        </div>
-                        <div class="link">
-                            <img src="/img/jobOffers.png" />
-                            <a class="btn" href="/link/<%= trainee.token %>?goto=lbb" target="_blank">Consultez les entreprises qui recrutent</a>
-                        </div>
-                    </div>
-                <% } %>
-            </div>
             <blockquote class="remerciements">
-                <h2 class="publishedOn">Votre avis sera publié sur:</h2>
                 <div class="imgLien">
                     <a class="textimage" href="https://labonneformation.pole-emploi.fr/" title="Visiter labonneformation.fr"
                         target="_blank"><img src="/img/labonneformation.png" alt=""> </a>
@@ -59,6 +49,11 @@
             </blockquote>
         </section>
         <footer>
+                <div class="serviceProQuestionnaire">
+                        <p>Service propulsé par</p>
+                            <img src="/img/poleemploi.png" alt="" class="logoPE" />
+                            <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
+                        </div>
         </footer>
     </div>
     <%- include('../analyticsTrackers'); %>

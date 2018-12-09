@@ -16,19 +16,61 @@ body {
 /*****************header****************/
 
 body>div {
-    max-width: 720px;
+    max-width: 760px;
     margin: auto;
     background-color: white;
-    padding: 40px;
+    padding: 20px;
 }
 
 header {
-    height: 100px;
+    text-align: center;
+}
+
+
+header h1 {
+    color: #1E2127;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 24px;
+    text-align: center;
+    margin-top: 40px;
+}
+
+header p {
+    color: #8E9093;
+    font-size: 16px;
+    line-height: 21px;
+    text-align: center;
+}
+
+header .links {
+    margin: 40px 0px 0px 0px;
+    height: 60px;
+}
+
+header .link {
+	height: 64px;
+	width: 238px;
+	border-radius: 5px;
+    background-color: #FCB42B;
+    font-size: 16px;
+    line-height: 24px;
+    float: left;
+    margin-right: 15px;
+    padding-top: 10px;
+}
+
+header .link:hover {
+    cursor: pointer;
+}
+
+header .link a {
+    color: white;
+    text-decoration: none;
 }
 
 .logoAnotea {
-    width: 100px;
-    position: absolute;
+    height: 68px;
 }
 
 .error-page {
@@ -43,7 +85,7 @@ header {
 }
 
 .serviceProQuestionnaire {
-    margin-left: 280px;
+    margin-left: 130px;
 }
 
 .logoPE {
@@ -66,11 +108,13 @@ section.questionnnaire {
 
 /***************section*****************/
 
-body>div>section>h1 {
+body>div>section>h2 {
     font-size: 20px;
     color: #FCB42B;
     text-align: center;
     font-weight: bold;
+    font-size: 18px;
+    margin-top: 20px;
 }
 
 #intitule {
@@ -461,14 +505,14 @@ datalist {
     text-align: center;
     border-top: 3px solid #F4F4F4;
 }
-.divPage3 h2 {
+.divPage3 h3 {
     color: #1E2127;
     font-size: 16px;
     font-weight: bold;
     line-height: 24px;
     text-align: center;
 }
-.divPage3 h2.publishedOn {
+.divPage3 h3.publishedOn {
     font-size: 18px;
     margin-bottom: 30px;
 }
@@ -482,11 +526,6 @@ datalist {
     font-weight: bold;
     line-height: 24px;
     text-align: center;
-}
-
-.divPage3 .links {
-    width: 80%;
-    margin: auto;
 }
 
 .divPage3 .link {
@@ -515,6 +554,11 @@ datalist {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+}
+
+footer {
+    border-top: 3px solid #F4F4F4;
+    height: 100px;
 }
 
 /***refus***/

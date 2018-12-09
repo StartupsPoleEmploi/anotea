@@ -16,16 +16,10 @@
 <body>
   <div>
     <header href="/">
-      <br>
-      <img src="/img/logo_Anotea_Vertical_baseline.png" alt="" class="logoAnotea">
-      <div class="serviceProQuestionnaire">
-          <p>Service propulsé par</p>
-          <img src="/img/poleemploi.png" alt="" class="logoPE" />
-          <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
-      </div>
+      <img src="/img/logo_Anotea_Horizontal_baseline.png" alt="" class="logoAnotea">
     </header>
     <section class="questionnnaire">
-      <h1>Notez et commentez votre formation</h1>
+      <h2>Notez et commentez votre formation</h2>
       <p id="intitule">
         <span id="formationB"><%= trainee.training.title %></span> | <span id="formationD"><%= moment(trainee.training.startDate).format('DD/MM/YYYY') %></span>                au <span id="formationE"><%= moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %></span>
         <br>
@@ -158,6 +152,13 @@
   <div class="suivant" id="etapeSuivante"><button type="submit" disabled="disabled" class="suivantTxt">Valider</button></div>
   <div id="alert6" class="alert-validation"></div>
 </form>
+<footer>
+    <div class="serviceProQuestionnaire">
+            <p>Service propulsé par</p>
+                <img src="/img/poleemploi.png" alt="" class="logoPE" />
+                <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
+            </div>
+</footer>
 </div>
 <script type="text/javascript" src="/script/jquery.js"></script>
 <script type="text/javascript" src="/script/indexForm.js"></script>

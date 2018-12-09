@@ -13,13 +13,15 @@ module.exports = db => {
 
         const distance = 30; // km
         const postalCode = trainee.training.place.postalCode;
-        const romeMapping = await db.collection('formacodeRomeMapping').aggregate([{
-            $match: { formacodes: { $elemMatch: { formacode: trainee.training.formacode } } }
-        }, {
-            $group: { _id: '$codeROME' }
-        }
-        ]).toArray();
-        const inseeMapping = await db.collection('inseeCode').findOne({ postalCode: postalCode });
+
+        let [romeMapping, inseeMapping] = await Promise.all([
+            db.collection('formacodeRomeMapping').aggregate([{
+                $match: { formacodes: { $elemMatch: { formacode: trainee.training.formacode } } }
+            }, {
+                $group: { _id: '$codeROME' }
+            }]).toArray(),
+            db.collection('inseeCode').findOne({ postalCode: postalCode })
+        ]);
 
         const romeList = romeMapping.map(mapping => {
             return mapping._id;
