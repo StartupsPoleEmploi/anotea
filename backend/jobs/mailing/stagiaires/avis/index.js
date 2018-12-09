@@ -7,7 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
 const TraineeMailer = require('./AvisMailer');
-const { findActiveRegions, capitalizeFirstLetter } = require('../../../job-utils');
+const { findActiveRegions, capitalizeFirstLetter, catchUnexpectedErrors } = require('../../../job-utils');
 
 const main = async () => {
 
@@ -30,6 +30,8 @@ const main = async () => {
             client.close(() => process.exit(1));
         });
     };
+
+    catchUnexpectedErrors(abort);
 
     let type = cli.type || 'Send';
     let traineeMailer = new TraineeMailer(db, logger, mailer);

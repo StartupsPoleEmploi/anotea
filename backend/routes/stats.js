@@ -110,14 +110,16 @@ module.exports = (db, configuration) => {
 
         let organismes = db.collection('organismes');
 
-        let [nbOrganimes, nbOrganismesAvecAvis] = await Promise.all([
+        let [nbOrganimes, nbOrganismesAvecAvis, nbOrganismesActifs] = await Promise.all([
             organismes.countDocuments({ 'codeRegion': codeRegion }),
-            organismes.countDocuments({ 'meta.nbAvis': { $gte: 1 }, 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'score.nb_avis': { $gte: 1 }, 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'passwordHash': { $ne: null }, 'codeRegion': codeRegion }),
         ]);
 
         return {
             region: name,
             nbOrganimes,
+            nbOrganismesActifs,
             nbOrganismesAvecAvis,
             pourcentageOrganismesAvecAuMoinsUnAvis: Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes),
         };

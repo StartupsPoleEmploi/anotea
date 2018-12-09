@@ -12,16 +12,8 @@ import { resendEmailAccount } from '../../../lib/organisationService';
 export default class OrganisationDetail extends React.PureComponent {
 
     getEmail = () => {
-        let email = this.state.organisation.courriel;
-        try {
-            email = this.state.organisation.meta.kairosData.emailRGC;
-        } catch (e) {
-
-        }
-        email = this.state.editedEmail !== undefined ? this.state.editedEmail : email;
-
-        return email;
-    }
+        return this.state.editedEmail || this.state.organisation.kairosCourriel || this.state.organisation.courriel;
+    };
 
     state = {
         email: null,
@@ -104,14 +96,12 @@ export default class OrganisationDetail extends React.PureComponent {
 
                         <OrganisationInfo organisation={this.state.organisation} />
 
-                        { this.props.organisation.advicesCount &&
-                            <button id="btnResend" className="btn btn-info" disabled={this.state.resendDisabled} onClick={this.resend}>
-                                <span className="fas fa-location"></span> Renvoyer le lien de connexion
-                            </button>
-                        }
+                        <button id="btnResend" className="btn btn-info" disabled={this.state.resendDisabled} onClick={this.resend}>
+                            <span className="fas fa-location"></span> Renvoyer le lien de connexion
+                        </button>
 
                         <h5>Modifier l'adresse d'un Organisme de Formation</h5>
-                        
+
                         <div className={`updateSuccess ${this.state.successShown ? 'visible' : 'hidden'} alert alert-success`}>
                             Adresse email mise à jour avec succès.
                         </div>
@@ -120,13 +110,13 @@ export default class OrganisationDetail extends React.PureComponent {
                             { (this.state.editedEmail || this.state.anoteaEmailmode) &&
                                 <Email label="Anotea" current={this.state.editedEmail} active={this.state.email} organisationId={this.state.organisation._id} deleteEditedEmail={this.deleteEditedEmail} updateEditedEmail={this.updateEditedEmail} mode={this.state.anoteaEmailmode} changeMode={this.changeMode} editButton={true} />
                             }
-                            { (this.state.organisation.meta.kairosData && this.state.editedEmail) &&
+                            { (this.state.organisation.kairosCourriel && this.state.editedEmail) &&
                                 <strong>Adresses inactives:</strong>
                             }
-                            { this.state.organisation.meta.kairosData &&
-                                <Email label="Kairos" current={this.state.organisation.meta.kairosData.emailRGC} active={this.state.email} organisationId={this.state.organisation._id} changeMode={this.changeMode} editButton={this.state.anoteaEmailmode === 'view'} />
+                            { this.state.organisation.kairosCourriel &&
+                                <Email label="Kairos" current={this.state.organisation.kairosCourriel} active={this.state.email} organisationId={this.state.organisation._id} changeMode={this.changeMode} editButton={this.state.anoteaEmailmode === 'view'} />
                             }
-                            { (this.state.organisation.meta.kairosData && !this.state.editedEmail || !this.state.organisation.meta.kairosData && this.state.editedEmail) &&
+                            { (this.state.organisation.kairosCourriel || this.state.editedEmail) &&
                                 <strong>Adresses inactives:</strong>
                             }
                             <Email label="Intercarif" current={this.state.organisation.courriel} active={this.state.email} organisationId={this.state.organisation._id} changeMode={this.changeMode} editButton={this.state.anoteaEmailmode === 'view'} />

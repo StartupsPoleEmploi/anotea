@@ -23,8 +23,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _id: id,
                 SIRET: id,
                 courriel: 'new@organisme.fr',
+                score: {
+                    nb_avis: 1,
+                },
                 meta: {
-                    nbAvis: 1,
                     siretAsString: `${id}`,
                 },
             })),

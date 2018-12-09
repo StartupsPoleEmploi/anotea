@@ -56,7 +56,7 @@ class AuthService {
         };
     }
 
-    createJWTAuthMiddleware(type, options) {
+    createJWTAuthMiddleware(type, options = {}) {
         return (req, res, next) => {
             let scheme = 'Bearer ';
             if (!req.headers.authorization || !req.headers.authorization.startsWith(scheme)) {

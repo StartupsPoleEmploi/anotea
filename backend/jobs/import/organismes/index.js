@@ -1,26 +1,25 @@
 #!/usr/bin/env node
 'use strict';
 
-const moment = require('moment');
 const cli = require('commander');
+const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-
+const importAccounts = require('./importAccounts');
+const generateOrganismes = require('./generateOrganismes');
 
 cli.description('Import accounts from Intercarif and Kairos')
 .option('-f, --file [file]', 'The CSV file to import')
+.option('-g, --generate', 'Generate all collections')
 .parse(process.argv);
-
 
 const main = async () => {
 
     let launchTime = new Date().getTime();
+    let logger = getLogger('anotea-job-organimes-import', configuration);
     let client = await getMongoClient(configuration.mongodb.uri);
-    let logger = getLogger('anotea-job-kairos-import', configuration);
     let db = client.db();
-    let intercarifAccountImporter = require(`./importers/intercarifAccountImporter`)(db, logger, configuration);
-    let kairosAccountImporter = require(`./importers/kairosAccountImporter`)(db, logger, configuration);
 
     const abort = message => {
         logger.error(message, () => {
@@ -28,23 +27,25 @@ const main = async () => {
         });
     };
 
-    if (!cli.file) {
-        return abort('invalid arguments');
+    if (cli.generate && !cli.file) {
+        return abort('Kairos CSV File is required to generate kairos collection');
     }
 
     try {
-        logger.info(`Importing accounts from Intercarif...`);
-        let intercatif = await intercarifAccountImporter.importAccounts();
+        let organismes = {};
+        if (cli.generate) {
+            logger.info('Generating organismes collections...');
+            organismes = await generateOrganismes(db, logger, cli.file);
+        }
 
-        logger.info(`Importing accounts from Kairos...`);
-        let kairos = await kairosAccountImporter.importAccounts(cli.file);
+        logger.info('Importing accounts...');
+        let accounts = await importAccounts(db, logger);
 
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
-        logger.info(`Completed in ${duration})`);
-        logger.info(`Intercarif: ${JSON.stringify(intercatif, null, 2)}`);
-        logger.info(`Kairos: ${JSON.stringify(kairos, null, 2)}`);
+        logger.info(`Completed in ${duration}`);
+        logger.info(`Results: ${JSON.stringify({ organismes, accounts }, null, 2)}`);
 
     } catch (e) {
         abort(e);

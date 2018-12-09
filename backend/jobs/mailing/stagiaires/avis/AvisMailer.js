@@ -48,6 +48,7 @@ class AvisMailer {
             if (options.limit) {
                 cursor.limit(options.limit);
             }
+            cursor.batchSize(10);
 
             while (await cursor.hasNext()) {
                 stats.total++;
@@ -56,6 +57,7 @@ class AvisMailer {
                 trainee.trainee.name = titleize(trainee.trainee.name);
 
                 try {
+                    this.logger.info(`Sending email to ${trainee.trainee.email} for campaign ${trainee.campaign}`);
                     await new Promise((resolve, reject) => {
                         this.mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee,
                             async () => {
