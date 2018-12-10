@@ -1,7 +1,6 @@
 const uuid = require('node-uuid');
 const _ = require('lodash');
 const regions = require('../../../components/regions');
-const computeScore = require('./computeScore');
 
 module.exports = async (db, logger) => {
 
@@ -18,9 +17,8 @@ module.exports = async (db, logger) => {
             organisme.lieux_de_formation.find(l => l.adresse.code_postal).adresse : organisme.adresse;
         let siret = `${parseInt(organisme.siret, 10)}`;
 
-        let [codeRegion, score, kairosData] = await Promise.all([
+        let [codeRegion, kairosData] = await Promise.all([
             findCodeRegionByPostalCode(adresse.code_postal),
-            computeScore(db, siret),
             db.collection('kairos_organismes').findOne({ siret }),
         ]);
 
@@ -35,7 +33,6 @@ module.exports = async (db, logger) => {
             sources: ['intercarif'],
             numero: organisme.numero,
             lieux_de_formation: organisme.lieux_de_formation ? organisme.lieux_de_formation : [],
-            score: score,
             meta: {
                 siretAsString: siret,
             }
@@ -53,7 +50,6 @@ module.exports = async (db, logger) => {
     const buildAccountFromKairos = async data => {
 
         let siretAsInt = parseInt(data.siret, 10);
-        let score = await computeScore(db, data.siret);
 
         return {
             _id: siretAsInt,
@@ -68,7 +64,6 @@ module.exports = async (db, logger) => {
             sources: ['kairos'],
             numero: null,
             lieux_de_formation: [],
-            score: score,
             meta: {
                 siretAsString: data.siret,
             }
@@ -88,14 +83,14 @@ module.exports = async (db, logger) => {
                 .updateOne(
                     { _id: account._id },
                     {
-                        $setOnInsert: _.omit(account, ['sources', 'numero', 'lieux_de_formation', 'score']),
+                        $setOnInsert: _.omit(account, ['sources', 'numero', 'lieux_de_formation']),
                         $addToSet: {
                             sources: 'intercarif',
                             courriels: account.courriel,
                         },
                         $set: {
                             updateDate: new Date(),
-                            ..._.pick(account, ['numero', 'lieux_de_formation', 'score'])
+                            ..._.pick(account, ['numero', 'lieux_de_formation'])
                         },
                     },
                     { upsert: true }

@@ -8,6 +8,7 @@ const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
 const importAccounts = require('./importAccounts');
 const generateOrganismes = require('./generateOrganismes');
+const computeScore = require('./computeScore');
 
 cli.description('Import accounts from Intercarif and Kairos')
 .option('-f, --file [file]', 'The CSV file to import')
@@ -40,6 +41,9 @@ const main = async () => {
 
         logger.info('Importing accounts...');
         let accounts = await importAccounts(db, logger);
+
+        logger.info('Computing score...');
+        await computeScore(db, logger);
 
         await client.close();
 
