@@ -429,7 +429,7 @@ module.exports = (db, authService, logger, configuration) => {
         }
     });
 
-    router.post('/backoffice/organisation/:id/editedEmail', checkAuth, tryAndCatch(async (req, res) => {
+    router.post('/backoffice/organisation/:id/editedCourriel', checkAuth, tryAndCatch(async (req, res) => {
         const email = req.body.email;
         const id = parseInt(req.params.id);
 
@@ -439,7 +439,7 @@ module.exports = (db, authService, logger, configuration) => {
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
         if (organisme) {
-            await db.collection('organismes').update({ _id: id }, { $set: { editedEmail: email } });
+            await db.collection('organismes').update({ _id: id }, { $set: { editedCourriel: email } });
             saveEvent(id, 'editEmail', {
                 app: 'moderation',
                 profile: 'moderateur',
@@ -452,7 +452,7 @@ module.exports = (db, authService, logger, configuration) => {
         }
     }));
 
-    router.delete('/backoffice/organisation/:id/editedEmail', checkAuth, tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/organisation/:id/editedCourriel', checkAuth, tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
@@ -461,7 +461,7 @@ module.exports = (db, authService, logger, configuration) => {
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
         if (organisme) {
-            await db.collection('organismes').update({ _id: id }, { $unset: { editedEmail: '' } });
+            await db.collection('organismes').update({ _id: id }, { $unset: { editedCourriel: '' } });
             saveEvent(id, 'deleteEmail', {
                 app: 'moderation',
                 profile: 'moderateur',

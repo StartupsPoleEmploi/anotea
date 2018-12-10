@@ -131,7 +131,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .post(`/api/backoffice/organisation/${id}/editedEmail`)
+        .post(`/api/backoffice/organisation/${id}/editedCourriel`)
         .set('authorization', `Bearer ${token}`)
         .send({ email: 'edited@pole-emploi.fr' });
 
@@ -140,7 +140,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let db = await getTestDatabase();
         let res = await db.collection('organismes').findOne({ _id: id });
-        assert.deepEqual(res.editedEmail, 'edited@pole-emploi.fr');
+        assert.deepEqual(res.editedCourriel, 'edited@pole-emploi.fr');
     });
 
     it('can delete an edited email', async () => {
@@ -152,14 +152,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         await insertIntoDatabase('organismes', newOrganismeAccount({
             _id: id,
             SIRET: id,
-            editedEmail: 'edited@pole-emploi.fr',
+            editedCourriel: 'edited@pole-emploi.fr',
             meta: {
                 siretAsString: '11111111111111'
             },
         }));
 
         let response = await request(app)
-        .delete(`/api/backoffice/organisation/${id}/editedEmail`)
+        .delete(`/api/backoffice/organisation/${id}/editedCourriel`)
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 200);
@@ -167,6 +167,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let db = await getTestDatabase();
         let res = await db.collection('organismes').findOne({ _id: id });
-        assert.ok(!res.editedEmail);
+        assert.ok(!res.editedCourriel);
     });
 }));
