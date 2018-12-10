@@ -54,7 +54,7 @@ module.exports = async (db, logger) => {
     const buildAccountFromKairos = async data => {
 
         let siretAsInt = parseInt(data.siret, 10);
-        let [score] = await Promise.all([computeScore(db, data.siret)]);
+        let score = await computeScore(db, data.siret);
 
         return {
             _id: siretAsInt,
