@@ -48,9 +48,16 @@ module.exports = async (db, logger) => {
         return results.length === 0 ? { nb_avis: 0 } : results[0];
     };
 
+    let stats = {
+        total: 0,
+        updated: 0,
+        invalid: 0,
+    };
+
     while (await cursor.hasNext()) {
         const organisme = await cursor.next();
         try {
+            stats.total++;
             await db.collection('organismes')
             .updateOne({ _id: organisme._id }, {
                 $set: {
@@ -58,8 +65,13 @@ module.exports = async (db, logger) => {
                 },
 
             });
+            stats.updated++;
+
         } catch (e) {
+            stats.invalid++;
             logger.error(`Can not compute score for organisme ${organisme.meta.siretAsString}`, e);
         }
     }
+
+    return stats.invalid === 0 ? Promise.resolve(stats) : Promise.reject(stats);
 };

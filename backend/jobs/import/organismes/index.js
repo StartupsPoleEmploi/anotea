@@ -6,13 +6,12 @@ const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-const importAccounts = require('./importAccounts');
+const synchronizeOrganismes = require('./synchronizeOrganismes');
 const generateOrganismes = require('./generateOrganismes');
 const computeScore = require('./computeScore');
 
 cli.description('Import accounts from Intercarif and Kairos')
-.option('-f, --file [file]', 'The CSV file to import')
-.option('-g, --generate', 'Generate all collections')
+.option('-i, --import [import]', 'The CSV file to import')
 .parse(process.argv);
 
 const main = async () => {
@@ -28,28 +27,24 @@ const main = async () => {
         });
     };
 
-    if (cli.generate && !cli.file) {
-        return abort('Kairos CSV File is required to generate kairos collection');
-    }
-
     try {
-        let organismes = {};
-        if (cli.generate) {
-            logger.info('Generating organismes collections...');
-            organismes = await generateOrganismes(db, logger, cli.file);
+        let imported = {};
+        if (cli.import) {
+            logger.info('Generating organismes data from intercarif and kairos...');
+            imported = await generateOrganismes(db, logger, cli.import);
         }
 
-        logger.info('Importing accounts...');
-        let accounts = await importAccounts(db, logger);
+        logger.info('Synchronizing organismes with existing ones...');
+        let synchronized = await synchronizeOrganismes(db, logger);
 
-        logger.info('Computing score...');
-        await computeScore(db, logger);
+        logger.info('Computing score for all organismes...');
+        let computed = await computeScore(db, logger);
 
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
         logger.info(`Completed in ${duration}`);
-        logger.info(`Results: ${JSON.stringify({ organismes, accounts }, null, 2)}`);
+        logger.info(`Results: ${JSON.stringify({ imported, synchronized, computed }, null, 2)}`);
 
     } catch (e) {
         abort(e);

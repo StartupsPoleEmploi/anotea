@@ -48,9 +48,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })), ['score']),
         ]);
 
-        await computeScore(db, logger);
+        let stats = await computeScore(db, logger);
 
         let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
+        assert.deepEqual(stats, {
+            total: 1,
+            updated: 1,
+            invalid: 0,
+        });
         assert.deepEqual(doc.score, {
             nb_avis: 2,
             notes: {
