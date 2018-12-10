@@ -86,7 +86,7 @@
     }
   },
   "mongodb": {
-    "uri": "mongodb://127.0.0.1:27017/anotea?w=1"
+    "uri": "mongodb://127.0.0.1:27017/anotea?w=1&socketTimeoutMS=600000"
   },
   "security": {
     "secret": "1234"
