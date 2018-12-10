@@ -52,12 +52,12 @@ export const getOrganisationStates = id => {
     return _get(`/backoffice/organisation/${id}/states`);
 };
 
-export const updateEditedEmail = (id, email) => {
-    return _post(`/backoffice/organisation/${id}/editedEmail`, { email: email });
+export const updateEditedCourriel = (id, email) => {
+    return _post(`/backoffice/organisation/${id}/editedCourriel`, { email: email });
 };
 
-export const deleteEditedEmail = (id, email) => {
-    return _delete(`/backoffice/organisation/${id}/editedEmail`, { email: email });
+export const deleteEditedCourriel = (id, email) => {
+    return _delete(`/backoffice/organisation/${id}/editedCourriel`, { email: email });
 };
 
 export const resendEmailAccount = id => {
