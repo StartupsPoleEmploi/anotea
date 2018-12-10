@@ -28,6 +28,7 @@ export default class ModerationMain extends React.Component {
 
                 {this.state.currentPage === 'moderation' &&
                 <ModerationPanel
+                    profile={this.props.profile}
                     id={this.props.id}
                     codeRegion={this.props.codeRegion} />}
 

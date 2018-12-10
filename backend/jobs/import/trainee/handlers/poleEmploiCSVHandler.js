@@ -100,7 +100,7 @@ module.exports = (db, logger, configuration) => {
                 let { email, mailDomain } = buildEmail(record['c_adresseemail']);
 
                 return {
-                    _id: campaign + '/' + token,
+                    _id: campaign.name + '/' + token,
                     campaign: campaign.name,
                     campaignDate: campaign.date,
                     importDate: new Date(),

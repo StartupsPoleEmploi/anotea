@@ -3,7 +3,7 @@ const mongo = require('mongodb');
 const { randomize } = require('./data/dataset');
 const configuration = require('config');
 const logger = require('./test-logger');
-const importIntercarif = require('../../jobs/import/intercarif/steps/importIntercarif');
+const importIntercarif = require('../../jobs/import/intercarif/importIntercarif');
 
 let _mongoClientHolder = null;
 

@@ -17,7 +17,7 @@ class RetryAction {
                     mailRetry: { $eq: null }
                 },
                 {
-                    mailRetry: { $lt: parseInt(this.configuration.smtp.stagiaires.maxRelaunch) }
+                    mailRetry: { $lt: parseInt(this.configuration.smtp.stagiaires.avisMaxRelaunch) }
                 }
             ]
         };

@@ -22,7 +22,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
-                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 passwordHash: null,
@@ -34,7 +33,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 11111111111,
                 courriel: 'not-sent@organisme.fr',
                 meta: {
-                    nbAvis: 1,
                     siretAsString: `11111111111`,
                 },
                 passwordHash: '12345',
@@ -61,7 +59,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 11111111111,
                 courriel: 'not-sent@organisme.fr',
                 meta: {
-                    nbAvis: 1,
                     siretAsString: `11111111111`,
                 },
                 passwordHash: '12345',
@@ -87,7 +84,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 meta: {
-                    nbAvis: 1,
                     siretAsString: `${31705038300064}`,
                 },
                 passwordHash: '12345',
