@@ -24,6 +24,11 @@ module.exports = async db => {
             }
         },
         {
+            $match: {
+                siret: { $ne: '0' },
+            }
+        },
+        {
             $addFields: {
                 _id: '$siret',
             }

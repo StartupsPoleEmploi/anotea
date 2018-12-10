@@ -116,6 +116,11 @@ const sanitizeJson = json => {
                     value.nom_region = getRegionName(value[key]);
                     return;
                 }
+                if (key === 'siret') {
+                    // Sometimes siret are prefixed by 0
+                    value[key] = `${parseInt(value[key], 10)}`;
+                    return;
+                }
 
                 if (tagsWithMultipleOccurrences.includes(key) && value[key].constructor !== Array) {
                     value[`${key}s`] = [value[key]];

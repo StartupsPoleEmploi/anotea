@@ -6,32 +6,12 @@ const generateOrganismesFormateurs = require('../../../../../../jobs/import/orga
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    const getOrganismesFormateurs = () => {
-        return [
-            {
-                _id: '22222222222222',
-                siret: '22222222222222',
-                numero: 'OF_XXX',
-                raison_sociale: 'PE Formation',
-                lieux_de_formation: [
-                    {
-                        nom: 'PE Formation',
-                        adresse: {
-                            code_postal: '37250',
-                            ville: 'Veigné',
-                            region: '24'
-                        }
-                    }
-                ]
-            }
-        ];
-    };
 
     it('should create collection with organismes formateurs', async () => {
 
         let db = await getTestDatabase();
 
-        await insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable({ organismes_formateurs: getOrganismesFormateurs() }));
+        await insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable());
 
         await generateOrganismesFormateurs(db);
 
@@ -41,6 +21,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             siret: '22222222222222',
             numero: 'OF_XXX',
             raison_sociale: 'PE Formation',
+            courriel: 'contact@poleemploi-formation.fr',
             lieux_de_formation: [
                 {
                     nom: 'PE Formation',
@@ -54,13 +35,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         });
     });
 
-    it('should ignore same organismes formateurs', async () => {
+    it('should ignore same organismes formateurs from two different organismes responsables', async () => {
 
         let db = await getTestDatabase();
 
         await insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable({
             siret: '11111111111111',
-            organismes_formateurs: getOrganismesFormateurs({ siret: '22222222222222' })
         }));
         await insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable({
             siret: '33333333333333'
@@ -68,8 +48,43 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await generateOrganismesFormateurs(db);
 
-        let organisme = await db.collection('intercarif_organismes_formateurs').findOne({ siret: '22222222222222' });
-        assert.ok(organisme);
+        let count = await db.collection('intercarif_organismes_formateurs').countDocuments({ siret: '22222222222222' });
+        assert.deepEqual(count, 1);
+    });
+
+    it('should ignore organismes formateurs with missing data', async () => {
+
+        let db = await getTestDatabase();
+
+        let responsable = newOrganismeResponsable();
+        responsable.organisme_formateurs = [
+            {
+                _id: '0',
+                siret: '0',
+                numero: 'OF_XXX',
+                raison_sociale: 'PE Formation',
+                courriel: 'contact@poleemploi-formation.fr',
+                lieux_de_formation: [
+                    {
+                        nom: 'PE Formation',
+                        adresse: {
+                            code_postal: '37250',
+                            ville: 'Veigné',
+                            region: '24'
+                        }
+                    }
+                ]
+            }
+        ];
+        await insertIntoDatabase('intercarif_organismes_responsables', responsable);
+
+        await generateOrganismesFormateurs(db);
+
+        let count = await db.collection('intercarif_organismes_formateurs').countDocuments({ siret: '0' });
+        assert.deepEqual(count, 0);
+
+        count = await db.collection('intercarif_organismes_formateurs').countDocuments({ siret: '44444444444444' });
+        assert.deepEqual(count, 0);
     });
 
     it('should create indexes', async () => {

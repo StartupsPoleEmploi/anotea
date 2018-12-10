@@ -327,6 +327,7 @@ module.exports = {
             siret: '11111111111111',
             nom: 'PE Formation',
             raison_sociale: 'Pole Emploi Formation',
+            courriel: 'contact@organisme-responsable.fr',
             adresse: {
                 code_postal: '45160',
                 ville: 'Olivet',
@@ -334,9 +335,11 @@ module.exports = {
             },
             organisme_formateurs: [
                 {
+                    _id: '22222222222222',
                     siret: '22222222222222',
                     numero: 'OF_XXX',
                     raison_sociale: 'PE Formation',
+                    courriel: 'contact@poleemploi-formation.fr',
                     lieux_de_formation: [
                         {
                             nom: 'PE Formation',

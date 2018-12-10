@@ -3,7 +3,6 @@ const _ = require('lodash');
 const regions = require('../../../components/regions');
 const computeScore = require('./computeScore');
 
-
 module.exports = async (db, logger) => {
 
     let stats = {
@@ -17,7 +16,7 @@ module.exports = async (db, logger) => {
         let { findCodeRegionByPostalCode } = regions(db);
         let adresse = organisme.lieux_de_formation ?
             organisme.lieux_de_formation.find(l => l.adresse.code_postal).adresse : organisme.adresse;
-        let siret = organisme.siret;
+        let siret = `${parseInt(organisme.siret, 10)}`;
 
         let [codeRegion, score, kairosData] = await Promise.all([
             findCodeRegionByPostalCode(adresse.code_postal),
@@ -26,8 +25,8 @@ module.exports = async (db, logger) => {
         ]);
 
         let document = {
-            _id: parseInt(siret, 10),
-            SIRET: parseInt(siret, 10),
+            _id: parseInt(organisme.siret, 10),
+            SIRET: parseInt(organisme.siret, 10),
             raisonSociale: organisme.raison_sociale,
             courriel: organisme.courriel,
             token: uuid.v4(),
@@ -78,10 +77,7 @@ module.exports = async (db, logger) => {
 
     const importIntercarifAccounts = async (sourceCollectionName, stats) => {
 
-        let cursor = db.collection(sourceCollectionName).find({
-            siret: { $ne: '00000000000000' },
-            courriel: { $ne: null }
-        });
+        let cursor = db.collection(sourceCollectionName).find({ courriel: { $ne: null } });
 
         while (await cursor.hasNext()) {
             const organisme = await cursor.next();
@@ -127,8 +123,8 @@ module.exports = async (db, logger) => {
             const data = await cursor.next();
             try {
                 let account = await buildAccountFromKairos(data);
-
                 let count = await db.collection('organismes').countDocuments({ _id: account._id });
+
                 if (count === 0) {
                     await db.collection('organismes').insertOne(account);
                     stats.created++;
