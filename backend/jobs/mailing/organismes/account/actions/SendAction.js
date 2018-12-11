@@ -7,6 +7,7 @@ class SendAction {
 
     getQuery() {
         return {
+            'courriel': { $ne: null },
             'passwordHash': null,
             'mailSentDate': null,
             'sources': { $ne: null },

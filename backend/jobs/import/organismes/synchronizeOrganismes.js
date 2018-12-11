@@ -73,7 +73,7 @@ module.exports = async (db, logger) => {
 
     const synchronizeOrganismes = async (sourceCollectionName, stats) => {
 
-        let cursor = db.collection(sourceCollectionName).find({ courriel: { $ne: null } });
+        let cursor = db.collection(sourceCollectionName).find();
 
         while (await cursor.hasNext()) {
             const data = await cursor.next();
