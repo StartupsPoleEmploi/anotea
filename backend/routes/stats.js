@@ -8,32 +8,20 @@ module.exports = (db, configuration) => {
     const router = express.Router(); // eslint-disable-line new-cap
     const dataExposer = require('../components/dataExposer')();
 
-    const computeCommentStats = async codeRegion => {
-        let match = { $match: {} };
-        let matchUnwind = { $match: {} };
-
-        if (codeRegion !== undefined) {
-            match = {
-                '$match': {
-                    'codeRegion': codeRegion
-                }
-            };
-
-            matchUnwind = {
-                '$match': {
-                    'comments.codeRegion': codeRegion
-                }
-            };
-        }
+    const computeMailingStats = async codeRegion => {
 
         const docs = await db.collection('trainee').aggregate([
-            match,
+            {
+                $match: {
+                    ...(codeRegion ? { codeRegion: codeRegion } : {}),
+                }
+            },
             {
                 $group: {
                     _id: '$campaign',
-                    date: { $first: '$mailSentDate' },
+                    date: { $min: '$mailSentDate' },
                     mailSent: { $sum: { $cond: ['$mailSent', 1, 0] } },
-                    mailOpen: { $sum: { $cond: ['$tracking', 1, 0] } }
+                    mailOpen: { $sum: { $cond: ['$tracking', 1, 0] } },
                 }
             },
             {
@@ -52,7 +40,11 @@ module.exports = (db, configuration) => {
                         preserveNullAndEmptyArrays: true
                     }
             },
-            matchUnwind,
+            {
+                $match: {
+                    ...(codeRegion ? { 'comments.codeRegion': codeRegion } : {}),
+                }
+            },
             {
                 $group:
                     {
@@ -151,7 +143,7 @@ module.exports = (db, configuration) => {
 
     router.get('/stats/mailing.:format', async (req, res) => {
 
-        let data = await computeCommentStats(req.query.codeRegion);
+        let data = await computeMailingStats(req.query.codeRegion);
         if (req.params.format === 'json' || !req.params.format) {
             res.send(data);
         } else if (req.params.format === 'csv') {
