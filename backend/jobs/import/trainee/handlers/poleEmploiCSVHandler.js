@@ -106,6 +106,7 @@ module.exports = (db, logger, configuration) => {
                     importDate: new Date(),
                     unsubscribe: false,
                     mailSent: false,
+                    avisCreated: false,
                     token: token,
                     codeRegion: codeRegion,
                     trainee: {
