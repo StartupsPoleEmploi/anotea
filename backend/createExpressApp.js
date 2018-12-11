@@ -107,7 +107,7 @@ module.exports = (logger, configuration) => {
             app.use('/api', require('./routes/backoffice/organisations')(db, authService, logger, configuration));
             app.use('/api', require('./routes/backoffice/financer')(db, authService, logger, configuration));
             app.use('/api', require('./routes/backoffice/dashboard')(db, authService, logger, configuration));
-
+            app.use('/api', require('./routes/backoffice/stats')(db, authService, logger, configuration));
 
             // catch 404
             app.use(function(req, res) {

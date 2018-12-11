@@ -99,7 +99,7 @@ module.exports = (db, logger) => {
                         year: { $year: '$mailSentDate' },
                         month: { $month: '$mailSentDate' },
                         codeRegion: '$codeRegion',
-                        codeFinanceur: '$training.codeFinanceur'
+                        codeFinanceur: '$codeFinanceur'
                     },
                     count: { $sum: 1 },
                     countOpen: { $sum: { $size: '$emailOpen' } },
