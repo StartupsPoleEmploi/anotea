@@ -19,17 +19,19 @@ const main = async () => {
 
     try {
         let launchTime = new Date().getTime();
-        let promises = [];
         logger.info(`Launch...`);
 
-        let cursor = db.collection('comment').find();
+        let cursor = db.collection('trainee').find();
         while (await cursor.hasNext()) {
-            let comment = await cursor.next();
-
-            promises.push(db.collection('trainee').updateOne({ token: comment.token }, { $set: { avis: true } }));
+            let trainee = await cursor.next();
+            let nbAvis = await db.collection('comment').countDocuments({ token: trainee.token });
+            await db.collection('trainee').updateOne({ token: trainee.token }, {
+                $set: {
+                    avisCreated: nbAvis > 0
+                }
+            });
         }
 
-        await Promise.all(promises);
         await client.close();
 
         let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');

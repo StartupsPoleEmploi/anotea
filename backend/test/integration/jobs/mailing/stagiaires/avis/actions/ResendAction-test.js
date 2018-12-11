@@ -24,7 +24,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 codeRegion: '18',
                 mailSent: true,
                 unsubscribe: false,
-                avis: false,
+                avisCreated: false,
                 mailRetry: 0,
                 mailSentDate: moment().subtract('10', 'days').toDate(),
                 trainee: {
@@ -52,7 +52,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 codeRegion: '18',
                 mailSent: true,
                 unsubscribe: false,
-                avis: true,
+                avisCreated: true,
                 mailRetry: 0,
                 mailSentDate: moment().subtract('10', 'days').toDate(),
                 trainee: {
