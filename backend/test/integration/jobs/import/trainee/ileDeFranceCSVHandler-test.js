@@ -28,7 +28,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         assert.deepEqual(_.omit(docs[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-idf',
             sourceIDF: true,
-            avis: false,
+            avisCreated: false,
             trainee: {
                 name: 'MARTIN',
                 firstName: 'Pierre',

@@ -27,7 +27,7 @@ const main = async () => {
             let nbAvis = await db.collection('comment').countDocuments({ token: trainee.token });
             await db.collection('trainee').updateOne({ token: trainee.token }, {
                 $set: {
-                    avis: nbAvis > 0
+                    avisCreated: nbAvis > 0
                 }
             });
         }

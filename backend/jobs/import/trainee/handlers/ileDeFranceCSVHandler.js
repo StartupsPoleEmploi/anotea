@@ -45,7 +45,7 @@ module.exports = () => {
                     campaignDate: campaign.date,
                     importDate: new Date(),
                     sourceIDF: true,
-                    avis: false,
+                    avisCreated: false,
                     unsubscribe: false,
                     mailSent: false,
                     codeRegion: '11',
