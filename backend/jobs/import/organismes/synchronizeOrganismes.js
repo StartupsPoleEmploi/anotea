@@ -27,7 +27,7 @@ module.exports = async (db, logger) => {
             SIRET: parseInt(data.siret, 10),
             raisonSociale: data.raison_sociale,
             courriel: data.courriel,
-            courriels: [data.courriel],
+            courriels: data.courriel ? [data.courriel] : [],
             token: uuid.v4(),
             creationDate: new Date(),
             codeRegion: codeRegion,
