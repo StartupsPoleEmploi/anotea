@@ -7,6 +7,7 @@ module.exports = trainee => {
         campaign: Joi.string().required(),
         campaignDate: Joi.date().required(),
         sourceIDF: Joi.boolean().optional(),
+        avis: Joi.boolean().required(),
         importDate: Joi.date().required(),
         unsubscribe: Joi.boolean().required(),
         mailSent: Joi.boolean().required(),

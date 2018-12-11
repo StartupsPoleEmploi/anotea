@@ -2,7 +2,6 @@ const path = require('path');
 const _ = require('lodash');
 const assert = require('assert');
 const configuration = require('config');
-const md5File = require('md5-file/promise');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const logger = require('../../../../helpers/test-logger');
 const traineeImporter = require('../../../../../jobs/import/trainee/traineeImporter');
@@ -29,6 +28,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         assert.deepEqual(_.omit(docs[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-idf',
             sourceIDF: true,
+            avis: false,
             trainee: {
                 name: 'MARTIN',
                 firstName: 'Pierre',
