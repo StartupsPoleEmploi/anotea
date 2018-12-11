@@ -1,11 +1,11 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const { newComment } = require('../../../../helpers/data/dataset');
-const reconcileActions = require('../../../../../jobs/import/reconciliation/reconcileActions');
+const generateActions = require('../../../../../jobs/import/sessions/generateActions');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
-    it('should reconcile actions from sessions', async () => {
+    it('should generate actions from sessions', async () => {
 
         let db = await getTestDatabase();
         let date = new Date();
@@ -64,7 +64,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             }),
         ]);
 
-        await reconcileActions(db);
+        await generateActions(db);
 
         let session = await db.collection('actionsReconciliees').findOne();
         assert.deepEqual(session, {

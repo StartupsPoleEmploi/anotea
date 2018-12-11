@@ -10,8 +10,8 @@ const moment = require('moment');
 const configuration = require('config');
 const getMongoClient = require('../../../components/mongodb');
 const getLogger = require('../../../components/logger');
-const reconcileSessions = require('./reconcileSessions');
-const reconcileActions = require('./reconcileActions');
+const generateSessions = require('./generateSessions');
+const generateActions = require('./generateActions');
 
 cli.description('Reconciling sessions/actions with comments...')
 .parse(process.argv);
@@ -19,7 +19,7 @@ cli.description('Reconciling sessions/actions with comments...')
 const main = async () => {
 
     let launchTime = new Date().getTime();
-    let logger = getLogger('anotea-job-reconcile-import', configuration);
+    let logger = getLogger('anotea-job-sessions-import', configuration);
     let client = await getMongoClient(configuration.mongodb.uri);
     let db = client.db();
 
@@ -31,10 +31,10 @@ const main = async () => {
 
     try {
         logger.info(`Generating sessions collection...`);
-        await reconcileSessions(db);
+        await generateSessions(db);
 
         logger.info(`Generating actions collection...`);
-        await reconcileActions(db);
+        await generateActions(db);
 
         await client.close();
 

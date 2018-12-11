@@ -1,6 +1,11 @@
 module.exports = async db => {
     await db.collection('intercarif').aggregate([
         {
+            $match: {
+                siret: { $ne: '0' },
+            }
+        },
+        {
             $project: {
                 organisme_responsable: {
                     numero: '$organisme_formation_responsable._attributes.numero',

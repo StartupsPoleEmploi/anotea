@@ -2,9 +2,9 @@ const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../../helpers/test-db');
-const { newOrganismeAccount, newComment } = require('../../../../helpers/data/dataset');
+const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const importAccounts = require('../../../../../jobs/import/organismes/importAccounts');
+const synchronizeOrganismes = require('../../../../../jobs/import/organismes/synchronizeOrganismes');
 const generateOrganismes = require('../../../../../jobs/import/organismes/generateOrganismes');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
@@ -39,28 +39,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 dept_num: '93',
                 region_num: '11'
             }),
-            ...(
-                _.range(1).map(() => {
-                    return insertIntoDatabase('comment', newComment({
-                        training: {
-                            organisation: {
-                                siret: '11111111111111',
-                            },
-                        }
-                    }));
-                })
-            ),
-            ...(
-                _.range(2).map(() => {
-                    return insertIntoDatabase('comment', newComment({
-                        training: {
-                            organisation: {
-                                siret: '22222222222222',
-                            },
-                        }
-                    }));
-                })
-            ),
         ]);
     };
 
@@ -70,7 +48,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([importIntercarif(), prepareDatabase()]);
 
         await generateOrganismes(db, logger, csvFile);
-        await importAccounts(db, logger);
+        await synchronizeOrganismes(db, logger);
 
         let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.creationDate);
@@ -95,17 +73,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     }
                 }
             ],
-            score: {
-                nb_avis: 2,
-                notes: {
-                    accompagnement: 1,
-                    accueil: 3,
-                    contenu_formation: 2,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 2,
-                    global: 2,
-                }
-            },
             meta: {
                 siretAsString: '22222222222222',
             },
@@ -127,9 +94,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 token: 'token',
                 creationDate: new Date('2016-11-10T17:41:03.308Z'),
                 mailSentDate: new Date('2018-09-12T15:21:28.083Z'),
-                score: {
-                    nb_avis: 1,
-                },
                 meta: {
                     siretAsString: '22222222222222',
                 },
@@ -137,7 +101,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         ]);
 
         await generateOrganismes(db, logger, csvFile);
-        await importAccounts(db, logger);
+        await synchronizeOrganismes(db, logger);
 
         let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.updateDate);
@@ -165,14 +129,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             ],
             score: {
-                nb_avis: 2,
+                nb_avis: 15,
                 notes: {
-                    accompagnement: 1,
-                    accueil: 3,
-                    contenu_formation: 2,
+                    accueil: 5,
+                    contenu_formation: 5,
                     equipe_formateurs: 4,
-                    moyen_materiel: 2,
-                    global: 2,
+                    moyen_materiel: 3,
+                    accompagnement: 4,
+                    global: 5
                 }
             },
             meta: {
@@ -187,11 +151,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([importIntercarif(), prepareDatabase()]);
 
         await generateOrganismes(db, logger, csvFile);
-        await importAccounts(db, logger);
+        await synchronizeOrganismes(db, logger);
 
         let doc = await db.collection('organismes').findOne({ SIRET: 11111111111111 });
         assert.ok(doc);
-        assert.deepEqual(doc.score.nb_avis, 1);
     });
 
     it('should create new organisme from kairos', async () => {
@@ -200,7 +163,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([importIntercarif(), prepareDatabase()]);
 
         await generateOrganismes(db, logger, csvFile);
-        await importAccounts(db, logger);
+        await synchronizeOrganismes(db, logger);
 
         let doc = await db.collection('organismes').findOne({ SIRET: 33333333333333 });
         assert.ok(doc.creationDate);
@@ -216,9 +179,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             numero: null,
             raisonSociale: 'Pole Emploi Formation Nord',
             lieux_de_formation: [],
-            score: {
-                nb_avis: 0,
-            },
             meta: {
                 siretAsString: '33333333333333',
             },

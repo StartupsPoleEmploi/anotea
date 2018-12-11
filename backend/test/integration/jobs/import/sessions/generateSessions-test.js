@@ -1,11 +1,11 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const { newComment } = require('../../../../helpers/data/dataset');
-const reconcileSessions = require('../../../../../jobs/import/reconciliation/reconcileSessions');
+const generateSessions = require('../../../../../jobs/import/sessions/generateSessions');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
-    it('should reconcile sessions with comments', async () => {
+    it('should generate sessions with comments', async () => {
 
         let db = await getTestDatabase();
         let date = new Date();
@@ -30,7 +30,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await reconcileSessions(db);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepEqual(session, {
@@ -75,7 +75,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await importIntercarif();
 
-        await reconcileSessions(db);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepEqual(session, {
@@ -124,7 +124,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await reconcileSessions(db);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepEqual(session, {
@@ -187,7 +187,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await reconcileSessions(db);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepEqual(session, {
@@ -237,7 +237,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcileSessions(db);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.ok(session._id);
@@ -257,7 +257,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await reconcileSessions(db);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.ok(session._id);
@@ -277,7 +277,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcileSessions(db);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.equal(session.avis, undefined);
@@ -293,7 +293,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await reconcileSessions(db);
+        await generateSessions(db);
 
         let indexes = await db.collection('sessionsReconciliees').indexInformation();
         assert.deepEqual(indexes, {
