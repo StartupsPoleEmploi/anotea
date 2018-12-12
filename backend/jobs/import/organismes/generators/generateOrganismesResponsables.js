@@ -58,8 +58,8 @@ module.exports = async db => {
                     organisme_formateur_siret: '$actions.organisme_formateur.siret',
                     lieu_de_formation_code_postal: '$actions.lieu_de_formation.adresse.code_postal'
                 },
-                organisme_responsable: { $first: '$organisme_responsable' },
-                organisme_formateur: { $first: '$actions.organisme_formateur' },
+                organisme_responsable: { $mergeObjects: '$organisme_responsable' },
+                organisme_formateur: { $mergeObjects: '$actions.organisme_formateur' },
                 lieu_de_formation: { $first: '$actions.lieu_de_formation' }
             }
         },
@@ -69,8 +69,8 @@ module.exports = async db => {
                     numero: '$organisme_responsable.numero',
                     organisme_formateur_siret: '$organisme_formateur.siret'
                 },
-                organisme_responsable: { $first: '$organisme_responsable' },
-                organisme_formateur: { $first: '$organisme_formateur' },
+                organisme_responsable: { $mergeObjects: '$organisme_responsable' },
+                organisme_formateur: { $mergeObjects: '$organisme_formateur' },
                 lieux_de_formation: { $push: '$lieu_de_formation' }
             }
         },
