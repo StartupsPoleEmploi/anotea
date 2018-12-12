@@ -207,7 +207,7 @@ module.exports = {
             courriel: 'contact@financer.fr',
             password: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             codeRegion: '11',
-            raisonSocial: 'Conseil Regional',
+            raisonSociale: 'Conseil Regional',
             codeFinanceur: '2'
         }, custom);
     },
