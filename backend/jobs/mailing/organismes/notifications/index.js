@@ -21,7 +21,7 @@ const main = async () => {
     cli.description('send notifications to organismes')
     .option('-r, --region [region]', 'Limit emailing to the region')
     .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
-    .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
+    .option('-d, --delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
     .parse(process.argv);
 
     const abort = message => {
