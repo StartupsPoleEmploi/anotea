@@ -3,8 +3,8 @@
 
 const cli = require('commander');
 const configuration = require('config');
-const getMongoClient = require('../../components/mongodb');
-const getLogger = require('../../components/logger');
+const getMongoClient = require('../../../components/mongodb');
+const getLogger = require('../../../components/logger');
 
 
 cli.description('Import ROME <-> FORMACODE mapping from CSV file')

@@ -230,7 +230,7 @@ export default class ModerationPanel extends React.Component {
                     </li>
                 </ul>
 
-                <Toolbar orderBy={this.orderBy} currentTab={this.state.tab} />
+                <Toolbar orderBy={this.orderBy} currentTab={this.state.tab} profile={this.props.profile}/>
 
                 <div className="advices">
                     {(this.state.advices.length === 0) && <span>Pas d'avis pour le moment</span>}

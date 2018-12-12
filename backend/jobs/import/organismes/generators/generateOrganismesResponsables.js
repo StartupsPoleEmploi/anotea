@@ -1,5 +1,10 @@
 module.exports = async db => {
-    return db.collection('intercarif').aggregate([
+    await db.collection('intercarif').aggregate([
+        {
+            $match: {
+                siret: { $ne: '0' },
+            }
+        },
         {
             $project: {
                 organisme_responsable: {
@@ -12,7 +17,12 @@ module.exports = async db => {
                         ville: '$organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.ville',
                         region: '$organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.region',
                     },
-                    courriel: '$organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel'
+                    courriel: {
+                        $ifNull: [
+                            '$organisme_formation_responsable.coordonnees_organisme.coordonnees.courriel',
+                            '$organisme_formation_responsable.contact_organisme.coordonnees.courriel'
+                        ]
+                    }
                 },
                 actions: {
                     $map: {
@@ -48,8 +58,8 @@ module.exports = async db => {
                     organisme_formateur_siret: '$actions.organisme_formateur.siret',
                     lieu_de_formation_code_postal: '$actions.lieu_de_formation.adresse.code_postal'
                 },
-                organisme_responsable: { $first: '$organisme_responsable' },
-                organisme_formateur: { $first: '$actions.organisme_formateur' },
+                organisme_responsable: { $mergeObjects: '$organisme_responsable' },
+                organisme_formateur: { $mergeObjects: '$actions.organisme_formateur' },
                 lieu_de_formation: { $first: '$actions.lieu_de_formation' }
             }
         },
@@ -59,8 +69,8 @@ module.exports = async db => {
                     numero: '$organisme_responsable.numero',
                     organisme_formateur_siret: '$organisme_formateur.siret'
                 },
-                organisme_responsable: { $first: '$organisme_responsable' },
-                organisme_formateur: { $first: '$organisme_formateur' },
+                organisme_responsable: { $mergeObjects: '$organisme_responsable' },
+                organisme_formateur: { $mergeObjects: '$organisme_formateur' },
                 lieux_de_formation: { $push: '$lieu_de_formation' }
             }
         },
@@ -88,9 +98,11 @@ module.exports = async db => {
             }
         },
         {
-            $out: 'organismes_responsables'
+            $out: 'intercarif_organismes_responsables'
         }
     ], { allowDiskUse: true }).toArray();
+
+    return db.collection('intercarif_organismes_responsables').countDocuments();
 };
 
 

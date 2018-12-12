@@ -41,8 +41,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
+                score: {
+                    nb_avis: 5,
+                },
                 meta: {
-                    nbAvis: 5,
                     siretAsString: `${31705038300064}`,
                 },
             })),
@@ -83,8 +85,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 newCommentsNotificationEmailSentDate: newCommentsNotificationEmailSentDate,
+                score: {
+                    nb_avis: 5,
+                },
                 meta: {
-                    nbAvis: 5,
                     siretAsString: `${31705038300064}`,
                 },
             })),
@@ -110,8 +114,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
+                score: {
+                    nb_avis: 2,
+                },
                 meta: {
-                    nbAvis: 2,
                     siretAsString: `${31705038300064}`,
                 },
             })),
@@ -145,8 +151,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
+                score: {
+                    nb_avis: 5,
+                },
                 meta: {
-                    nbAvis: 5,
                     siretAsString: `${31705038300064}`,
                 },
             })),
@@ -181,8 +189,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 SIRET: 31705038300064,
                 newCommentsNotificationEmailSentDate: moment().subtract('3', 'days'),
                 courriel: 'new@organisme.fr',
+                score: {
+                    nb_avis: 5,
+                },
                 meta: {
-                    nbAvis: 5,
                     siretAsString: `${31705038300064}`,
                 },
             })),
