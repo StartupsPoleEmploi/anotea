@@ -3,13 +3,13 @@ const { Transform } = require('stream');
 const throughParallel = require('through2-parallel');
 
 module.exports = {
-    handleBackPressure: callback => {
+    transformObject: (callback, options = { ignoreFirstLine: false }) => {
         let lines = 0;
         return new Transform({
             writableObjectMode: true,
             readableObjectMode: true,
             transform: async function(data, encoding, next) {
-                if (lines++ === 0) {
+                if (options.ignoreFirstLine && lines++ === 0) {
                     return next();
                 }
 

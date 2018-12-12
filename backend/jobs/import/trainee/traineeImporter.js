@@ -2,7 +2,7 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const md5File = require('md5-file/promise');
 const validateTrainee = require('./validateTrainee');
-const { handleBackPressure } = require('../../job-utils');
+const { transformObject } = require('../../job-utils');
 const { getCampaignDate, getCampaignName } = require('./utils');
 
 module.exports = (db, logger) => {
@@ -41,7 +41,7 @@ module.exports = (db, logger) => {
 
                     fs.createReadStream(file)
                     .pipe(parse(handler.csvOptions))
-                    .pipe(handleBackPressure(async data => {
+                    .pipe(transformObject(async data => {
                         try {
                             let trainee = await handler.buildTrainee(data, campaign);
 
@@ -55,7 +55,7 @@ module.exports = (db, logger) => {
                         } catch (e) {
                             return { status: 'invalid', trainee: data, error: e };
                         }
-                    }))
+                    }, { ignoreFirstLine: true }))
                     .on('data', ({ trainee, status, error }) => {
                         stats.total++;
                         stats[status]++;
