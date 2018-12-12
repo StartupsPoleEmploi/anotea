@@ -29,7 +29,7 @@ const main = async () => {
     .option('-r, --region [region]', 'Limit emailing to the region')
     .option('-t, --type [type]', 'resend,send (default: send))', capitalizeFirstLetter)
     .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
-    .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
+    .option('-d, --delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
     .parse(process.argv);
 
     let type = cli.type || 'Send';

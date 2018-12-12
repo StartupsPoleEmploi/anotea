@@ -27,8 +27,8 @@ module.exports = {
             next();
         });
     },
-    delay: seconds => {
-        return new Promise(resolve => setTimeout(() => resolve(), seconds * 1000));
+    delay: milliseconds => {
+        return new Promise(resolve => setTimeout(() => resolve(), milliseconds));
     },
     findActiveRegions: (activeRegions, path) => {
         return activeRegions.filter(region => _.get(region.mailing, path) === true).map(region => region.code_region);
