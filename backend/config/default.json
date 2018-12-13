@@ -65,6 +65,24 @@
             "notifications": true
           }
         }
+      },
+      {
+        "code_region": "7",
+        "name": "Grand-Est",
+        "filters": {
+          "code_financeurs": [
+            "-2"
+          ]
+        },
+        "mailing": {
+          "stagiaires": {
+            "avis": false
+          },
+          "organismes": {
+            "accounts": false,
+            "notifications": false
+          }
+        }
       }
     ]
   },
