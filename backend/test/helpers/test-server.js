@@ -5,17 +5,25 @@ const server = require('../../server');
 const logger = require('./test-logger');
 const { withMongoDB } = require('./test-db');
 const { newModerateurAccount } = require('./data/dataset');
+const createComponents = require('../../components/components');
 
 module.exports = {
     withServer: callback => {
         return withMongoDB(mongoContext => {
             let context = {
-                startServer: () => {
-                    return server(logger, Object.assign({}, configuration, {
-                        mongodb: {
-                            uri: mongoContext.uri
-                        },
-                    }));
+                startServer: async () => {
+                    let context = await createComponents({
+                        configuration: Object.assign({}, configuration, {
+                            mongodb: {
+                                uri: mongoContext.uri
+                            },
+                        }),
+                        context: {
+                            logger,
+                        }
+                    });
+
+                    return server(context);
                 },
                 logAsModerateur: async (app, courriel) => {
 

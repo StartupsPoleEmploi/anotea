@@ -1,19 +1,16 @@
-const configuration = require('config');
-const getLogger = require('./components/logger');
 const server = require('./server');
+const createComponents = require('./components/components');
 
-let logger = getLogger('anotea-server', configuration);
-
-process.on('uncaughtException', err => {
-    logger.error(err);
-    process.exit(1);
-});
+process.on('uncaughtException', err => console.log(err));
 
 const main = async () => {
-    let app = await server(logger, configuration);
-    let httpServer = app.listen(configuration.app.port, () => {
+
+    let components = await createComponents();
+    let app = server(components);
+
+    let httpServer = app.listen(components.configuration.app.port, () => {
         const address = httpServer.address();
-        logger.info('Listening to http://%s:%s', address.address, address.port);
+        components.logger.info('Listening to http://%s:%s', address.address, address.port);
     });
 };
 
