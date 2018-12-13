@@ -1,9 +1,10 @@
-const configuration = require('config');
+const config = require('config');
 const mongo = require('mongodb');
 const getLogger = require('./logger');
 const AuthService = require('./AuthService');
-const regions = require('../components/regions');
-const mailer = require('./mailer.js');
+const createRegions = require('../components/regions');
+const createMailer = require('./mailer.js');
+const sendForgottenPasswordEmail = require('./sendForgottenPasswordEmail.js');
 
 const connectToMongoDB = (logger, configuration) => {
     return new Promise(resolve => {
@@ -20,17 +21,19 @@ const connectToMongoDB = (logger, configuration) => {
 
 module.exports = async (options = {}) => {
 
-    let conf = options.configuration || configuration;
-    let logger = getLogger('anotea-server', conf);
-    let client = await connectToMongoDB(logger, conf);
+    let configuration = options.configuration || config;
+    let logger = getLogger('anotea-server', configuration);
+    let client = await connectToMongoDB(logger, configuration);
     let db = client.db();
+    let mailer = createMailer(db, logger, configuration);
 
     return Object.assign({}, {
         db,
         logger,
-        configuration: conf,
-        authService: new AuthService(logger, conf),
-        regions: regions(db),
-        mailer: mailer(db, logger, configuration),
+        mailer,
+        configuration,
+        authService: new AuthService(logger, configuration),
+        regions: createRegions(db),
+        sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, logger, mailer),
     }, options.context || {});
 };
