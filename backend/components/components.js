@@ -20,7 +20,7 @@ const connectToMongoDB = (logger, configuration) => {
     });
 };
 
-module.exports = async (options = {}) => {
+module.exports = async (options = { core: {}, context: {} }) => {
 
     //Core
     let configuration = options.core.configuration || config;

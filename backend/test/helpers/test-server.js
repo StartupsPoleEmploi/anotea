@@ -6,15 +6,14 @@ const { newModerateurAccount } = require('./data/dataset');
 
 module.exports = {
     withServer: callback => {
-        return withMongoDB(mongoContext => {
-
-            let context = {
+        return withMongoDB(context => {
+            return callback(Object.assign({}, context, {
                 startServer: async () => {
-                    return server(await mongoContext.getComponents());
+                    return server(await context.getComponents());
                 },
                 logAsModerateur: async (app, courriel) => {
 
-                    await mongoContext.insertIntoDatabase('moderator', newModerateurAccount({
+                    await context.insertIntoDatabase('moderator', newModerateurAccount({
                         courriel,
                     }));
 
@@ -25,8 +24,7 @@ module.exports = {
 
                     return response.body.access_token;
                 },
-            };
-            return callback(Object.assign({}, mongoContext, context));
+            }));
         });
     }
 };
