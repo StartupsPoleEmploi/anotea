@@ -1,53 +1,27 @@
 const path = require('path');
-const mongo = require('mongodb');
-const { randomize } = require('./data/dataset');
-const configuration = require('config');
 const logger = require('./test-logger');
 const importIntercarif = require('../../jobs/import/intercarif/importIntercarif');
-
-let _mongoClientHolder = null;
+const { withComponents } = require('./test-components');
 
 module.exports = {
-    withMongoDB: tests => {
-
-        let dbName = randomize('anotea_test');
-        let uri = configuration.mongodb.uri.split('anotea').join(dbName);
-
-        let connect = async () => {
-            _mongoClientHolder = mongo.connect(configuration.mongodb.uri, { useNewUrlParser: true });
-        };
-
-        let disconnect = async () => {
-            let client = await _mongoClientHolder;
-            return client.close();
-        };
-
-
-        return () => {
-            before(() => connect());
-            after(() => disconnect());
-
-            afterEach(async () => {
-                let client = await _mongoClientHolder;
-
-                return Promise.all([
-                    client.db(dbName).dropDatabase(),
-                    client.db().collection('comment').deleteMany({ test: true })
-                ]);
-            });
+    withMongoDB: callback => {
+        return withComponents(context => {
 
             let getTestDatabase = async () => {
-                let client = await _mongoClientHolder;
-                return client.db(dbName);
+                let { db } = await context.getComponents();
+                return db;
             };
 
-            return tests({
-                dbName,
-                uri,
+            afterEach(async () => {
+                let db = await getTestDatabase();
+                return db.dropDatabase();
+            });
+
+            return callback(Object.assign({}, context, {
                 getTestDatabase,
                 insertIntoDatabase: async (collection, data) => {
-                    let client = await _mongoClientHolder;
-                    return client.db(dbName).collection(collection).insertOne(data);
+                    let db = await getTestDatabase();
+                    return db.collection(collection).insertOne(data);
                 },
                 importIntercarif: async file => {
                     let intercarifFile = path.join(__dirname, 'data', 'intercarif-data-test.xml');
@@ -55,7 +29,7 @@ module.exports = {
 
                     return importIntercarif(db, logger, file || intercarifFile);
                 },
-            });
-        };
+            }));
+        });
     }
 };
