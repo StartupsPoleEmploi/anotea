@@ -3,13 +3,12 @@ const Boom = require('boom');
 const tryAndCatch = require('../tryAndCatch');
 const { hashPassword, isPasswordStrongEnough } = require('../../components/password');
 
-module.exports = ({ db, authService, logger, configuration }) => {
+module.exports = ({ db, authService, mailer, configuration }) => {
 
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
 
-    const mailer = require('../../components/mailer.js')(db, logger, configuration);
     const getContactEmail = require('../../components/getContactEmail');
 
     const getRemoteAddress = req => {
