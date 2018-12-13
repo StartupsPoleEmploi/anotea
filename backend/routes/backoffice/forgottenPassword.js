@@ -5,9 +5,8 @@ const tryAndCatch = require('../tryAndCatch');
 const getContactEmail = require('../../components/getContactEmail');
 const { hashPassword, isPasswordStrongEnough } = require('../../components/password');
 
-module.exports = ({ db, logger, configuration }) => {
+module.exports = ({ db, logger, mailer }) => {
 
-    const mailer = require('../../components/mailer.js')(db, logger, configuration);
     const router = express.Router(); // eslint-disable-line new-cap
 
     const saveEventAsync = (id, type) => db.collection('events').save({ organisationId: id, date: new Date(), type });

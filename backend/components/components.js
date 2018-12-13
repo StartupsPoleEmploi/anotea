@@ -3,6 +3,7 @@ const mongo = require('mongodb');
 const getLogger = require('./logger');
 const AuthService = require('./AuthService');
 const regions = require('../components/regions');
+const mailer = require('./mailer.js');
 
 const connectToMongoDB = (logger, configuration) => {
     return new Promise(resolve => {
@@ -30,5 +31,6 @@ module.exports = async (options = {}) => {
         configuration: conf,
         authService: new AuthService(logger, conf),
         regions: regions(db),
+        mailer: mailer(db, logger, configuration),
     }, options.context || {});
 };
