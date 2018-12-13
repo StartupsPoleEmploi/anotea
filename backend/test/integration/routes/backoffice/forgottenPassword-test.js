@@ -1,18 +1,22 @@
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../helpers/test-server');
-const { newOrganismeAccount, newForgottenPasswordToken, randomize } = require('../../../helpers/data/dataset');
+const { newOrganismeAccount, newCarif, newForgottenPasswordToken, randomize } = require('../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase, getComponents }) => {
 
     it('can ask for a new password', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('organismes', newOrganismeAccount({
-            meta: {
-                siretAsString: '6080274100045'
-            }
-        }));
+        await Promise.all([
+            insertIntoDatabase('organismes', newOrganismeAccount({
+                courriel: 'contactus@poleemploi-formation.fr',
+                meta: {
+                    siretAsString: '6080274100045'
+                }
+            })),
+            insertIntoDatabase('carif', newCarif({ codeRegion: '11' }))
+        ]);
 
         let response = await request(app)
         .put('/api/backoffice/askNewPassword')
@@ -22,6 +26,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepEqual(response.body, {
             message: 'mail sent',
         });
+
+        let { mailer } = await getComponents();
+        let email = mailer.getCalls()[0];
+        assert.deepEqual(email[0], { to: 'contactus@poleemploi-formation.fr' });
     });
 
     it('can not ask for a new password with an invalid identifier', async () => {

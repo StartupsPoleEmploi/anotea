@@ -13,8 +13,7 @@ module.exports = ({ db, sendForgottenPasswordEmail }) => {
 
         let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
         if (organisme) {
-            sendForgottenPasswordEmail(organisme);
-
+            await sendForgottenPasswordEmail(organisme);
             return res.json({ 'message': 'mail sent' });
         }
 

@@ -1,53 +1,54 @@
 const path = require('path');
-const mongo = require('mongodb');
 const { randomize } = require('./data/dataset');
 const configuration = require('config');
 const logger = require('./test-logger');
+const fakeMailer = require('./fake-mailer');
 const importIntercarif = require('../../jobs/import/intercarif/importIntercarif');
+const createComponents = require('../../components/components');
 
-let _mongoClientHolder = null;
+let _componentsHolder = null;
 
 module.exports = {
-    withMongoDB: tests => {
+    withMongoDB: callback => {
 
         let dbName = randomize('anotea_test');
         let uri = configuration.mongodb.uri.split('anotea').join(dbName);
 
         let connect = async () => {
-            _mongoClientHolder = mongo.connect(configuration.mongodb.uri, { useNewUrlParser: true });
+            _componentsHolder = createComponents({
+                core: {
+                    logger,
+                    mailer: fakeMailer(),
+                    configuration: Object.assign({}, configuration, {
+                        mongodb: {
+                            uri
+                        },
+                    }),
+                }
+            });
         };
 
-        let disconnect = async () => {
-            let client = await _mongoClientHolder;
-            return client.close();
+        let getTestDatabase = async () => {
+            let { db } = await _componentsHolder;
+            return db;
         };
-
 
         return () => {
+
             before(() => connect());
-            after(() => disconnect());
-
             afterEach(async () => {
-                let client = await _mongoClientHolder;
-
-                return Promise.all([
-                    client.db(dbName).dropDatabase(),
-                    client.db().collection('comment').deleteMany({ test: true })
-                ]);
+                let db = await getTestDatabase();
+                return db.dropDatabase();
             });
 
-            let getTestDatabase = async () => {
-                let client = await _mongoClientHolder;
-                return client.db(dbName);
-            };
-
-            return tests({
+            return callback({
                 dbName,
                 uri,
+                getComponents: () => _componentsHolder,
                 getTestDatabase,
                 insertIntoDatabase: async (collection, data) => {
-                    let client = await _mongoClientHolder;
-                    return client.db(dbName).collection(collection).insertOne(data);
+                    let { db } = await _componentsHolder;
+                    return db.collection(collection).insertOne(data);
                 },
                 importIntercarif: async file => {
                     let intercarifFile = path.join(__dirname, 'data', 'intercarif-data-test.xml');
