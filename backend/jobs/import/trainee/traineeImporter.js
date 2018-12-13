@@ -2,7 +2,7 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const md5File = require('md5-file/promise');
 const validateTrainee = require('./validateTrainee');
-const { transformObject } = require('../../job-utils');
+const { transformObject } = require('../../../components/stream-utils');
 const { getCampaignDate, getCampaignName } = require('./utils');
 
 module.exports = (db, logger) => {

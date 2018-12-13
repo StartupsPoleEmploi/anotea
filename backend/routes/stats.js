@@ -1,12 +1,18 @@
 const express = require('express');
 const moment = require('moment');
+const { encodeStream } = require('iconv-lite');
+const Boom = require('boom');
 const tryAndCatch = require('./tryAndCatch');
+const { jsonStream } = require('../components/stream-utils');
+const { transformObject } = require('../components/stream-utils');
+const { findLabelByCodeFinanceur } = require('../components/financeurs');
 
-module.exports = ({ db, configuration, regions }) => {
 
-    let router = express.Router(); // eslint-disable-line new-cap
-    let dataExposer = require('./dataExposer')();
-    let { findRegionByCodeRegion } = regions;
+module.exports = ({db, configuration, logger, regions}) => {
+
+    const router = express.Router(); // eslint-disable-line new-cap
+    const dataExposer = require('./dataExposer')();
+    const { findRegionByCodeRegion } = regions;
 
     const computeMailingStats = async codeRegion => {
 
@@ -159,6 +165,66 @@ module.exports = ({ db, configuration, regions }) => {
             res.status(404).render('errors/404');
         }
     });
+
+    router.get('/stats/stagiaires/ventilation.:format', tryAndCatch(async (req, res) => {
+
+        let stream = db.collection('trainee').aggregate([
+            {
+                $group: {
+                    _id: {
+                        campaign: '$campaign',
+                        codeFinanceurs: '$training.codeFinanceur',
+                        codeRegion: '$codeRegion',
+                    },
+                    nbStagiaires: { $sum: 1 },
+                },
+            },
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        campaign: '$_id.campaign',
+                        codeRegion: '$_id.codeRegion',
+                        codeFinanceurs: '$_id.codeFinanceurs',
+                        nbStagiaires: '$nbStagiaires',
+                    }
+                }
+            },
+        ]);
+
+        let handleError = e => {
+            logger.error('An error occurred', e);
+            res.status(500);
+            stream.push(Boom.boomify(e).output.payload);
+        };
+
+        if (req.params.format === 'json' || !req.params.format) {
+
+            res.setHeader('Content-Type', 'application/json');
+            stream
+            .on('error', handleError)
+            .pipe(jsonStream())
+            .pipe(res);
+
+        } else if (req.params.format === 'csv') {
+
+            res.setHeader('Content-disposition', 'attachment; filename=stats-stagiaires-ventilation.csv');
+            res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
+            res.write(`Campagne;Libelle Region;Code Region;Libelle Financeur;Code Financeur;Nombre de stagiaires\n`);
+
+            stream
+            .on('error', handleError)
+            .pipe(transformObject(doc => {
+                let { campaign, codeRegion, codeFinanceurs, nbStagiaires } = doc;
+                let libelleFinanceurs = codeFinanceurs.map(code => findLabelByCodeFinanceur(code) || 'Inconnu').join(',');
+                let libelleRegion = findRegionByCodeRegion(codeRegion).name;
+                return `"${campaign}";"${libelleRegion}";="${codeRegion}";"${libelleFinanceurs}";="${codeFinanceurs}";"${nbStagiaires}"\n`;
+            }))
+            .pipe(encodeStream('UTF-16BE'))
+            .pipe(res);
+        } else {
+            throw Boom.badRequest('Format invalide');
+        }
+    }));
 
     return router;
 };
