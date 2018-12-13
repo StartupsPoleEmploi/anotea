@@ -2,6 +2,7 @@ const configuration = require('config');
 const mongo = require('mongodb');
 const getLogger = require('./logger');
 const AuthService = require('./AuthService');
+const regions = require('../components/regions');
 
 const connectToMongoDB = (logger, configuration) => {
     return new Promise(resolve => {
@@ -28,5 +29,6 @@ module.exports = async (options = {}) => {
         logger,
         configuration: conf,
         authService: new AuthService(logger, conf),
+        regions: regions(db),
     }, options.context || {});
 };
