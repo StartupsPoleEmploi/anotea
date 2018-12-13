@@ -1,7 +1,6 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const mongo = require('mongodb');
 const RateLimit = require('express-rate-limit');
@@ -24,11 +23,9 @@ module.exports = (logger, configuration) => {
     return new Promise(resolve => {
 
         connectToMongoDB(client => {
-            //FIXME add extra tabs to prevent huge diffs. This must be fixed after the current PR is merged
             logger.info('Successfully connected to MongoDB database');
 
             let db = client.db();
-            let badwords = require('./components/badwords')(logger, configuration);
             let authService = new AuthService(logger, configuration);
             let app = express();
 
@@ -86,27 +83,29 @@ module.exports = (logger, configuration) => {
                 }
             }));
 
+            let context = { db, authService, logger, configuration };
+
             //Public routes
-            app.use('/api', require('./routes/swagger')());
-            app.use('/api', require('./routes/api/v1/ping')(authService));
-            app.use('/api', require('./routes/api/v1/avis')(db, authService));
-            app.use('/api', require('./routes/api/v1/sessions')(db, authService));
-            app.use('/api', require('./routes/api/v1/actions')(db, authService));
-            app.use('/api', require('./routes/api/v1/organismes-formateurs')(db, authService));
-            app.use('/api', require('./routes/stats')(db, configuration));
-            app.use('/api', require('./routes/backoffice/kairos')(db, authService, configuration));
+            app.use('/api', require('./routes/swagger')(context));
+            app.use('/api', require('./routes/api/v1/ping')(context));
+            app.use('/api', require('./routes/api/v1/avis')(context));
+            app.use('/api', require('./routes/api/v1/sessions')(context));
+            app.use('/api', require('./routes/api/v1/actions')(context));
+            app.use('/api', require('./routes/api/v1/organismes-formateurs')(context));
+            app.use('/api', require('./routes/stats')(context));
+            app.use('/api', require('./routes/backoffice/kairos')(context));
 
             //Pubic routes with server-side rendering (ie. questionary)
-            app.use('/', require('./routes/front/front')(db, logger, configuration, badwords));
-            app.use('/', require('./routes/front/mailing')(db, logger, configuration));
+            app.use('/', require('./routes/front/front')(context));
+            app.use('/', require('./routes/front/mailing')(context));
 
             //Routes used by backoffice applications
-            app.use('/api', require('./routes/backoffice/login')(db, authService, logger, configuration));
-            app.use('/api', require('./routes/backoffice/forgottenPassword')(db, authService, logger, configuration));
-            app.use('/api', require('./routes/backoffice/comments')(db, authService, logger, configuration));
-            app.use('/api', require('./routes/backoffice/organisations')(db, authService, logger, configuration));
-            app.use('/api', require('./routes/backoffice/financer')(db, authService, logger, configuration));
-            app.use('/api', require('./routes/backoffice/dashboard')(db, authService, logger, configuration));
+            app.use('/api', require('./routes/backoffice/login')(context));
+            app.use('/api', require('./routes/backoffice/forgottenPassword')(context));
+            app.use('/api', require('./routes/backoffice/comments')(context));
+            app.use('/api', require('./routes/backoffice/organisations')(context));
+            app.use('/api', require('./routes/backoffice/financer')(context));
+            app.use('/api', require('./routes/backoffice/dashboard')(context));
 
 
             // catch 404

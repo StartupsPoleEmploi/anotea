@@ -5,7 +5,7 @@ const tryAndCatch = require('../tryAndCatch');
 const getContactEmail = require('../../components/getContactEmail');
 const { hashPassword, isPasswordStrongEnough } = require('../../components/password');
 
-module.exports = (db, authService, logger, configuration) => {
+module.exports = ({ db, logger, configuration }) => {
 
     const mailer = require('../../components/mailer.js')(db, logger, configuration);
     const router = express.Router(); // eslint-disable-line new-cap

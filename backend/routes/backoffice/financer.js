@@ -1,7 +1,7 @@
 const express = require('express');
 const JSONStream = require('JSONStream');
 
-module.exports = function(db, authService, logger, configuration) {
+module.exports = ({ db, authService, configuration }) => {
 
     const dataExposer = require('../../components/dataExposer')();
     const pagination = configuration.api.pagination;
@@ -340,7 +340,7 @@ module.exports = function(db, authService, logger, configuration) {
             { $match: filter },
             { $group: { _id: '$training.place.postalCode', city: { $first: '$training.place.city' } } },
             { $sort: { _id: 1 } }]).toArray();
-        
+
         res.status(200).send(places);
     });
 

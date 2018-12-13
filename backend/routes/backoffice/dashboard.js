@@ -1,6 +1,6 @@
 const express = require('express');
 
-module.exports = function(db, authService, logger) {
+module.exports = ({ db, authService, logger }) => {
 
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
     const router = express.Router(); // eslint-disable-line new-cap

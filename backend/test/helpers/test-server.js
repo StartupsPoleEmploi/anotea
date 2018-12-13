@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const configuration = require('config');
-const createExpressApp = require('../../createExpressApp');
+const server = require('../../server');
 const logger = require('./test-logger');
 const { withMongoDB } = require('./test-db');
 const { newModerateurAccount } = require('./data/dataset');
@@ -11,7 +11,7 @@ module.exports = {
         return withMongoDB(mongoContext => {
             let context = {
                 startServer: () => {
-                    return createExpressApp(logger, Object.assign({}, configuration, {
+                    return server(logger, Object.assign({}, configuration, {
                         mongodb: {
                             uri: mongoContext.uri
                         },

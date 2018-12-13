@@ -3,7 +3,7 @@ const moment = require('moment');
 const regions = require('../components/regions');
 const tryAndCatch = require('./tryAndCatch');
 
-module.exports = (db, configuration) => {
+module.exports = ({ db, configuration }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const dataExposer = require('../components/dataExposer')();
