@@ -1,12 +1,12 @@
 const express = require('express');
 const moment = require('moment');
-const regions = require('../components/regions');
 const tryAndCatch = require('./tryAndCatch');
 
-module.exports = ({ db, configuration }) => {
+module.exports = ({ db, configuration, regions }) => {
 
-    const router = express.Router(); // eslint-disable-line new-cap
-    const dataExposer = require('../components/dataExposer')();
+    let router = express.Router(); // eslint-disable-line new-cap
+    let dataExposer = require('./dataExposer')();
+    let { findRegionByCodeRegion } = regions;
 
     const computeMailingStats = async codeRegion => {
 
@@ -119,8 +119,6 @@ module.exports = ({ db, configuration }) => {
 
     router.get('/stats/sessions.:format', tryAndCatch(async (req, res) => {
 
-        let { findRegionByCodeRegion } = regions(db);
-
         let sessions = await Promise.all(configuration.app.active_regions.map(ar => {
             let { name, codeINSEE } = findRegionByCodeRegion(ar.code_region);
             return computeSessionStats(name, codeINSEE);
@@ -130,8 +128,6 @@ module.exports = ({ db, configuration }) => {
     }));
 
     router.get('/stats/organismes.:format', tryAndCatch(async (req, res) => {
-
-        let { findRegionByCodeRegion } = regions(db);
 
         let organismes = await Promise.all(configuration.app.active_regions.map(ar => {
             let { name } = findRegionByCodeRegion(ar.code_region);
