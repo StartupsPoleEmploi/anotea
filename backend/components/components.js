@@ -1,7 +1,7 @@
 const configuration = require('config');
 const mongo = require('mongodb');
 const getLogger = require('./logger');
-const AuthService = require('./auth-service');
+const AuthService = require('./AuthService');
 
 const connectToMongoDB = (logger, configuration) => {
     return new Promise(resolve => {
