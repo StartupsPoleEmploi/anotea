@@ -3,7 +3,7 @@ const Boom = require('boom');
 const tryAndCatch = require('../tryAndCatch');
 const { hashPassword, isPasswordStrongEnough } = require('../../components/password');
 
-module.exports = ({ db, authService, mailer, configuration }) => {
+module.exports = ({ db, authService, mailer, configuration, sendForgottenPasswordEmail }) => {
 
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
@@ -484,25 +484,30 @@ module.exports = ({ db, authService, mailer, configuration }) => {
 
         let organisme = await organismes.findOne({ _id: id });
         if (organisme) {
-            mailer.sendOrganisationAccountLink({ to: getContactEmail(organisme) }, organisme, async () => {
-                await organismes.update({ '_id': organisme._id }, {
-                    $set: {
-                        mailSentDate: new Date(),
-                        resent: true
-                    },
-                    $unset: {
-                        mailError: '',
-                        mailErrorDetail: ''
-                    },
+            if (organisme.passwordHash) {
+                sendForgottenPasswordEmail(organisme);
+            } else {
+                mailer.sendOrganisationAccountLink({ to: getContactEmail(organisme) }, organisme, async () => {
+                    await organismes.update({ '_id': organisme._id }, {
+                        $set: {
+                            mailSentDate: new Date(),
+                            resent: true
+                        },
+                        $unset: {
+                            mailError: '',
+                            mailErrorDetail: ''
+                        },
+                    });
+                    saveEvent(id, 'resendEmailAccount', {
+                        app: 'moderation',
+                        profile: 'moderateur',
+                        user: 'admin',
+                        ip: getRemoteAddress(req)
+                    });
+                    res.status(200).send({ 'status': 'OK' });
                 });
-                saveEvent(id, 'resendEmailAccount', {
-                    app: 'moderation',
-                    profile: 'moderateur',
-                    user: 'admin',
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'status': 'OK' });
-            });
+            }
+
         } else {
             throw Boom.notFound('Not found');
         }
