@@ -1,13 +1,16 @@
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../helpers/test-db');
-const { newTrainee } = require('../../helpers/data/dataset');
-const doImportRome = require('../../../jobs/import/rome/importer');
-const doImportINSEE = require('../../../jobs/import/insee/importer');
-const logger = require('../../helpers/test-logger');
-const externalLinks = require('../../../components/externalLinks');
+const { withMongoDB } = require('../../../../helpers/test-db');
+const { newTrainee } = require('../../../../helpers/data/dataset');
+const doImportRome = require('../../../../../jobs/import/rome/importer');
+const doImportINSEE = require('../../../../../jobs/import/insee/importer');
+const logger = require('../../../../helpers/test-logger');
+const externalLinks = require('../../../../../routes/front/utils/externalLinks');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
+
+    let romeMappgingFile = path.join(__dirname, '../../../../helpers/data', 'romeMapping.csv');
+    let correspondancesFile = path.join(__dirname, '../../../../helpers/data', 'correspondances-code-insee-code-postal.csv');
 
     it('should get La Bonne Boite link with a training having a postal code without INSEE mapping', async () => {
         let db = await getTestDatabase();
@@ -18,10 +21,10 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             }
         });
         let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(path.join(__dirname, '../../helpers/data', 'romeMapping.csv'));
+        await importerRome.doImport(romeMappgingFile);
 
         let importerINSEE = doImportINSEE(db, logger);
-        await importerINSEE.doImport(path.join(__dirname, '../../../data', 'correspondances-code-insee-code-postal.csv'));
+        await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/44300/rome/A1101?d=30');
     });
@@ -35,10 +38,10 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             }
         });
         let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(path.join(__dirname, '../../helpers/data', 'romeMapping.csv'));
+        await importerRome.doImport(romeMappgingFile);
 
         let importerINSEE = doImportINSEE(db, logger);
-        await importerINSEE.doImport(path.join(__dirname, '../../../data', 'correspondances-code-insee-code-postal.csv'));
+        await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/75111/rome/A1101?d=30');
     });
@@ -52,12 +55,13 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             }
         });
         let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(path.join(__dirname, '../../helpers/data', 'romeMapping.csv'));
+        await importerRome.doImport(romeMappgingFile);
 
         let importerINSEE = doImportINSEE(db, logger);
-        await importerINSEE.doImport(path.join(__dirname, '../../../data', 'correspondances-code-insee-code-postal.csv'));
+        await importerINSEE.doImport(correspondancesFile);
 
-        assert.equal(await externalLinks(db).getLink(trainee, 'pe'), 'https://candidat.pole-emploi.fr/offres/recherche?lieux=44300&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
+        assert.equal(await externalLinks(db).getLink(trainee, 'pe'),
+            'https://candidat.pole-emploi.fr/offres/recherche?lieux=44300&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
     });
 
     it('should get Offres Pôle Emploi link with a training having a postal code with an INSEE mapping', async () => {
@@ -69,12 +73,13 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             }
         });
         let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(path.join(__dirname, '../../helpers/data', 'romeMapping.csv'));
+        await importerRome.doImport(romeMappgingFile);
 
         let importerINSEE = doImportINSEE(db, logger);
-        await importerINSEE.doImport(path.join(__dirname, '../../../data', 'correspondances-code-insee-code-postal.csv'));
+        await importerINSEE.doImport(correspondancesFile);
 
-        assert.equal(await externalLinks(db).getLink(trainee, 'pe'), 'https://candidat.pole-emploi.fr/offres/recherche?lieux=75111&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
+        assert.equal(await externalLinks(db).getLink(trainee, 'pe'),
+            'https://candidat.pole-emploi.fr/offres/recherche?lieux=75111&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
     });
 
     it('should get Clara link', async () => {
@@ -98,10 +103,10 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             }
         });
         let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(path.join(__dirname, '../../helpers/data', 'romeMapping.csv'));
+        await importerRome.doImport(romeMappgingFile);
 
         let importerINSEE = doImportINSEE(db, logger);
-        await importerINSEE.doImport(path.join(__dirname, '../../../data', 'correspondances-code-insee-code-postal.csv'));
+        await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'pe'), null);
     });
@@ -115,10 +120,10 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             }
         });
         let importerRome = doImportRome(db, logger);
-        await importerRome.doImport(path.join(__dirname, '../../helpers/data', 'romeMapping.csv'));
+        await importerRome.doImport(romeMappgingFile);
 
         let importerINSEE = doImportINSEE(db, logger);
-        await importerINSEE.doImport(path.join(__dirname, '../../../data', 'correspondances-code-insee-code-postal.csv'));
+        await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), null);
     });

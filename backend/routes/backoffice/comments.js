@@ -4,7 +4,7 @@ const mongo = require('mongodb');
 const s = require('string');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = function(db, authService, logger, configuration) {
+module.exports = ({ db, authService, logger, configuration }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');

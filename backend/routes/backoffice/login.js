@@ -4,7 +4,7 @@ const Joi = require('joi');
 const tryAndCatch = require('../tryAndCatch');
 const { verifyPassword, getSHA256PasswordHashSync, hashPassword } = require('../../components/password');
 
-module.exports = function(db, authService, logger, configuration) {
+module.exports = ({ db, authService, logger, configuration }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 

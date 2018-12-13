@@ -1,25 +1,19 @@
 const request = require('supertest');
 const assert = require('assert');
-const configuration = require('config');
-const createExpressApp = require('../../createExpressApp');
-const logger = require('./test-logger');
+const server = require('../../server');
 const { withMongoDB } = require('./test-db');
 const { newModerateurAccount } = require('./data/dataset');
 
 module.exports = {
     withServer: callback => {
-        return withMongoDB(mongoContext => {
-            let context = {
-                startServer: () => {
-                    return createExpressApp(logger, Object.assign({}, configuration, {
-                        mongodb: {
-                            uri: mongoContext.uri
-                        },
-                    }));
+        return withMongoDB(context => {
+            return callback(Object.assign({}, context, {
+                startServer: async () => {
+                    return server(await context.getComponents());
                 },
                 logAsModerateur: async (app, courriel) => {
 
-                    await mongoContext.insertIntoDatabase('moderator', newModerateurAccount({
+                    await context.insertIntoDatabase('moderator', newModerateurAccount({
                         courriel,
                     }));
 
@@ -30,8 +24,7 @@ module.exports = {
 
                     return response.body.access_token;
                 },
-            };
-            return callback(Object.assign({}, mongoContext, context));
+            }));
         });
     }
 };

@@ -1,51 +1,19 @@
 const express = require('express');
-const uuid = require('node-uuid');
 const Boom = require('boom');
 const tryAndCatch = require('../tryAndCatch');
-const getContactEmail = require('../../components/getContactEmail');
 const { hashPassword, isPasswordStrongEnough } = require('../../components/password');
 
-module.exports = (db, authService, logger, configuration) => {
+module.exports = ({ db, sendForgottenPasswordEmail }) => {
 
-    const mailer = require('../../components/mailer.js')(db, logger, configuration);
     const router = express.Router(); // eslint-disable-line new-cap
-
-    const saveEventAsync = (id, type) => db.collection('events').save({ organisationId: id, date: new Date(), type });
-
-    const sendEmailAsync = (organisme, passwordToken) => {
-        let contact = getContactEmail(organisme);
-        mailer.sendOrganisationPasswordForgotten({ to: contact }, organisme, passwordToken, () => {
-            db.collection('organismes').update({ _id: organisme._id }, {
-                $set: { mailSentDate: new Date() },
-                $unset: {
-                    mailError: '',
-                    mailErrorDetail: ''
-                }
-            });
-        }, err => {
-            logger.error(`Unable to send email to ${contact}`, err);
-            db.collection('organismes').update({ _id: organisme._id }, {
-                $set: {
-                    mailError: 'smtpError',
-                    mailErrorDetail: err
-                }
-            });
-        });
-    };
 
     router.put('/backoffice/askNewPassword', tryAndCatch(async (req, res) => {
 
         const identifier = req.body.username;
-        const passwordToken = uuid.v4();
 
         let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
         if (organisme) {
-
-            await db.collection('forgottenPasswordTokens').save({ token: passwordToken, id: organisme._id });
-
-            saveEventAsync(organisme.id, 'askNewPassword');
-            sendEmailAsync(organisme, passwordToken);
-
+            await sendForgottenPasswordEmail(organisme);
             return res.json({ 'message': 'mail sent' });
         }
 
