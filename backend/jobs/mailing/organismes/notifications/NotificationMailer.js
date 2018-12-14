@@ -20,7 +20,6 @@ class NotificationMailer {
             {
                 $match: {
                     'passwordHash': { $ne: null },
-                    'meta.nbAvis': { $gte: 5 },
                     ...(codeRegions ? { 'codeRegion': { $in: codeRegions } } : {}),
                     '$or': [
                         { 'newCommentsNotificationEmailSentDate': { $lte: moment().subtract(delay, 'days').toDate() } },
@@ -103,6 +102,7 @@ class NotificationMailer {
         if (options.limit) {
             cursor.limit(options.limit);
         }
+        cursor.batchSize(10);
 
         while (await cursor.hasNext()) {
             let { organisme, status } = await cursor.next();

@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { getDeviceType } = require('../../components/analytics.js');
+const { getDeviceType } = require('../../routes/front/utils/analytics.js');
 
 describe(__filename, () => {
     it('should detect mobile', () => {

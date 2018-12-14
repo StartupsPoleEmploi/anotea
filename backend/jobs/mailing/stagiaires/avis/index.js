@@ -7,7 +7,7 @@ const configuration = require('config');
 const getMongoClient = require('../../../../components/mongodb');
 const getLogger = require('../../../../components/logger');
 const TraineeMailer = require('./AvisMailer');
-const { findActiveRegions, capitalizeFirstLetter } = require('../../../job-utils');
+const { findActiveRegions, capitalizeFirstLetter, catchUnexpectedErrors } = require('../../../job-utils');
 
 const main = async () => {
 
@@ -22,7 +22,7 @@ const main = async () => {
     .option('-r, --region [region]', 'Limit emailing to the region')
     .option('-t, --type [type]', 'resend,retry,send (default: send))', capitalizeFirstLetter)
     .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
-    .option('-d, --delay [delay]', 'Time in seconds to wait before sending the next email (default: 0s)', parseInt)
+    .option('-d, --delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
     .parse(process.argv);
 
     const abort = message => {
@@ -30,6 +30,8 @@ const main = async () => {
             client.close(() => process.exit(1));
         });
     };
+
+    catchUnexpectedErrors(abort);
 
     let type = cli.type || 'Send';
     let traineeMailer = new TraineeMailer(db, logger, mailer);

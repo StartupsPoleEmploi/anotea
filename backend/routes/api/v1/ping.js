@@ -1,7 +1,7 @@
 const express = require('express');
 const { boomify } = require('boom');
 
-module.exports = authService => {
+module.exports = ({ authService }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = authService.createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: false });

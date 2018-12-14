@@ -175,10 +175,31 @@ module.exports = {
             creationDate: getDateInThePast(),
             token: randomize('token'),
             mailSentDate: getDateInThePast(),
-            meta: {
-                siretAsString: '6080274100045'
-            },
             codeRegion: '11',
+            numero: '14_OF_0000000123',
+            lieux_de_formation: [
+                {
+                    adresse: {
+                        code_postal: '75019',
+                        ville: 'Paris 19e',
+                        region: '11'
+                    }
+                }
+            ],
+            score: {
+                nb_avis: 15,
+                notes: {
+                    accueil: 5,
+                    contenu_formation: 5,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 3,
+                    accompagnement: 4,
+                    global: 5
+                }
+            },
+            meta: {
+                siretAsString: '6080274100045',
+            },
         }, custom);
     },
     newFinancerAccount: custom => {
@@ -186,7 +207,7 @@ module.exports = {
             courriel: 'contact@financer.fr',
             password: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             codeRegion: '11',
-            raisonSocial: 'Conseil Regional',
+            raisonSociale: 'Conseil Regional',
             codeFinanceur: '2'
         }, custom);
     },
@@ -306,6 +327,7 @@ module.exports = {
             siret: '11111111111111',
             nom: 'PE Formation',
             raison_sociale: 'Pole Emploi Formation',
+            courriel: 'contact@organisme-responsable.fr',
             adresse: {
                 code_postal: '45160',
                 ville: 'Olivet',
@@ -313,9 +335,11 @@ module.exports = {
             },
             organisme_formateurs: [
                 {
+                    _id: '22222222222222',
                     siret: '22222222222222',
                     numero: 'OF_XXX',
                     raison_sociale: 'PE Formation',
+                    courriel: 'contact@poleemploi-formation.fr',
                     lieux_de_formation: [
                         {
                             nom: 'PE Formation',
@@ -329,6 +353,16 @@ module.exports = {
                 }
             ]
         }, custom, { test: true });
+    },
+    newCarif: custom => {
+        return _.merge({
+            codeRegion: '11',
+            name: 'Défi Métiers',
+            url: 'https://www.defi-metiers.fr/',
+            formLinkEnabled: true,
+            courriel: 'anotea-idf@pole-emploi.fr',
+            carifNameHidden: false
+        }, custom);
     },
     newFormation: custom => {
         return _.merge({

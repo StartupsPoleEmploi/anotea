@@ -15,13 +15,7 @@
 <body>
     <div class="divPrin">
         <header href="/">
-            <br>
-            <img src="/img/logo_Anotea_Vertical_baseline.png" alt="" class="logoAnotea">
-            <div class="serviceProQuestionnaire">
-                <p>Service propulsé par</p>
-                <img src="/img/poleemploi.png" alt="" class="logoPE" />
-                <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
-            </div>
+            <img src="/img/logo_Anotea_Horizontal_baseline.png" alt="" class="logoAnotea">
         </header>
         <div class="formulaire">
             <form action="/questionnaire/<%= trainee.token%>/step2" method="POST" autocomplete="off">
@@ -69,11 +63,13 @@
                 <br>
             </form>
         </div>
-        <br>
+        <p class='facu'>Commentaire facultatif mais cependant très important pour estimer la qualité de la formation.</p>
         <footer>
-            <hr>
-            <br>
-            <p class='facu'>Commentaire facultatif mais cependant très important pour estimer la qualité de la formation.</p>
+                <div class="serviceProQuestionnaire">
+                        <p>Service propulsé par</p>
+                            <img src="/img/poleemploi.png" alt="" class="logoPE" />
+                            <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
+                        </div>
         </footer>
     </div>
     <script type="text/javascript" src="/script/jquery.js"></script>

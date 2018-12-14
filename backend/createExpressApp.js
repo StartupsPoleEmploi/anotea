@@ -139,3 +139,4 @@ module.exports = (logger, configuration) => {
         });
     });
 };
+

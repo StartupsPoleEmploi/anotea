@@ -12,20 +12,12 @@ import { resendEmailAccount } from '../../../lib/organisationService';
 export default class OrganisationDetail extends React.PureComponent {
 
     getEmail = () => {
-        let email = this.state.organisation.courriel;
-        try {
-            email = this.state.organisation.meta.kairosData.emailRGC;
-        } catch (e) {
-
-        }
-        email = this.state.editedEmail !== undefined ? this.state.editedEmail : email;
-
-        return email;
-    }
+        return this.state.editedCourriel || this.state.organisation.kairosCourriel || this.state.organisation.courriel;
+    };
 
     state = {
         email: null,
-        editedEmail: null,
+        editedCourriel: null,
         anoteaEmailmode: 'view',
         resendDisabled: false,
         lastResend: null,
@@ -42,7 +34,7 @@ export default class OrganisationDetail extends React.PureComponent {
         if (props.organisation !== undefined) {
             this.state.organisation = props.organisation;
             if (props.organisation !== null) {
-                this.state.editedEmail = props.organisation.editedEmail;
+                this.state.editedCourriel = props.organisation.editedCourriel;
                 this.state.email = this.getEmail();
             }
         }
@@ -54,7 +46,7 @@ export default class OrganisationDetail extends React.PureComponent {
             this.setState({ organisation: nextProps.organisation });
             if (nextProps.organisation !== null) {
                 this.setState({
-                    editedEmail: nextProps.organisation.editedEmail,
+                    editedCourriel: nextProps.organisation.editedCourriel,
                     organisation: nextProps.organisation
                 },
                 () => this.setState({
@@ -64,12 +56,12 @@ export default class OrganisationDetail extends React.PureComponent {
         }
     }
 
-    deleteEditedEmail = () => {
-        this.setState({ editedEmail: undefined }, () => this.setState({ email: this.getEmail() }));
+    deleteEditedCourriel = () => {
+        this.setState({ editedCourriel: undefined }, () => this.setState({ email: this.getEmail() }));
     }
 
-    updateEditedEmail = email => {
-        this.setState({ editedEmail: email, successShown: true }, () => this.setState({ email: this.getEmail() }));
+    updateEditedCourriel = email => {
+        this.setState({ editedCourriel: email, successShown: true }, () => this.setState({ email: this.getEmail() }));
         setTimeout(() => {
             this.setState({ successShown: false });
         }, 3000);
@@ -104,29 +96,27 @@ export default class OrganisationDetail extends React.PureComponent {
 
                         <OrganisationInfo organisation={this.state.organisation} />
 
-                        { this.props.organisation.advicesCount &&
-                            <button id="btnResend" className="btn btn-info" disabled={this.state.resendDisabled} onClick={this.resend}>
-                                <span className="fas fa-location"></span> Renvoyer le lien de connexion
-                            </button>
-                        }
+                        <button id="btnResend" className="btn btn-info" disabled={this.state.resendDisabled} onClick={this.resend}>
+                            <span className="fas fa-location"></span> Renvoyer le lien de connexion
+                        </button>
 
                         <h5>Modifier l'adresse d'un Organisme de Formation</h5>
-                        
+
                         <div className={`updateSuccess ${this.state.successShown ? 'visible' : 'hidden'} alert alert-success`}>
                             Adresse email mise à jour avec succès.
                         </div>
 
                         <div>
-                            { (this.state.editedEmail || this.state.anoteaEmailmode) &&
-                                <Email label="Anotea" current={this.state.editedEmail} active={this.state.email} organisationId={this.state.organisation._id} deleteEditedEmail={this.deleteEditedEmail} updateEditedEmail={this.updateEditedEmail} mode={this.state.anoteaEmailmode} changeMode={this.changeMode} editButton={true} />
+                            { (this.state.editedCourriel || this.state.anoteaEmailmode) &&
+                                <Email label="Anotea" current={this.state.editedCourriel} active={this.state.email} organisationId={this.state.organisation._id} deleteEditedCourriel={this.deleteEditedCourriel} updateEditedCourriel={this.updateEditedCourriel} mode={this.state.anoteaEmailmode} changeMode={this.changeMode} editButton={true} />
                             }
-                            { (this.state.organisation.meta.kairosData && this.state.editedEmail) &&
+                            { (this.state.organisation.kairosCourriel && this.state.editedCourriel) &&
                                 <strong>Adresses inactives:</strong>
                             }
-                            { this.state.organisation.meta.kairosData &&
-                                <Email label="Kairos" current={this.state.organisation.meta.kairosData.emailRGC} active={this.state.email} organisationId={this.state.organisation._id} changeMode={this.changeMode} editButton={this.state.anoteaEmailmode === 'view'} />
+                            { this.state.organisation.kairosCourriel &&
+                                <Email label="Kairos" current={this.state.organisation.kairosCourriel} active={this.state.email} organisationId={this.state.organisation._id} changeMode={this.changeMode} editButton={this.state.anoteaEmailmode === 'view'} />
                             }
-                            { (this.state.organisation.meta.kairosData && !this.state.editedEmail || !this.state.organisation.meta.kairosData && this.state.editedEmail) &&
+                            { (this.state.organisation.kairosCourriel || this.state.editedCourriel) &&
                                 <strong>Adresses inactives:</strong>
                             }
                             <Email label="Intercarif" current={this.state.organisation.courriel} active={this.state.email} organisationId={this.state.organisation._id} changeMode={this.changeMode} editButton={this.state.anoteaEmailmode === 'view'} />

@@ -7,7 +7,7 @@ module.exports = function(db, logger, configuration) {
     const parse = require('csv-parse');
     const transform = require('stream-transform');
 
-    const importEditedEmail = file => {
+    const importEditedCourriel = file => {
         logger.info('Organisation edited email import - launch');
 
         let mailer = require('../../../components/mailer.js')(db, logger, configuration);
@@ -44,6 +44,6 @@ module.exports = function(db, logger, configuration) {
     };
 
     return {
-        importEditedEmail: importEditedEmail
+        importEditedCourriel: importEditedCourriel
     };
 };

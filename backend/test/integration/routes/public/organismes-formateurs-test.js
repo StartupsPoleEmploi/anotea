@@ -1,18 +1,25 @@
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../helpers/test-server');
-const { newOrganismeFormateur } = require('../../../helpers/data/dataset');
+const { newOrganismeAccount } = require('../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
+
+    const buildOrganismeAccount = siret => {
+        return newOrganismeAccount({
+            _id: parseInt(siret),
+            SIRET: parseInt(siret),
+            meta: {
+                siretAsString: siret
+            },
+        });
+    };
 
     it('can return organisme by id', async () => {
 
         let app = await startServer();
         let siret = '22222222222222';
-        await insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
-            _id: siret,
-            siret: siret,
-        }));
+        await insertIntoDatabase('organismes', buildOrganismeAccount(siret));
 
         let response = await request(app).get(`/api/v1/organismes-formateurs/${siret}`);
 
@@ -20,26 +27,26 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepEqual(response.body, {
             id: siret,
             siret: siret,
-            numero: 'OF_XXX',
+            numero: '14_OF_0000000123',
             raison_sociale: 'Pole Emploi Formation',
             lieux_de_formation: [
                 {
                     adresse: {
-                        code_postal: '75011',
-                        ville: 'Paris 11e',
+                        code_postal: '75019',
+                        ville: 'Paris 19e',
                         region: '11'
                     }
                 }
             ],
             score: {
-                nb_avis: 1,
+                nb_avis: 15,
                 notes: {
-                    accueil: 2,
-                    contenu_formation: 3,
-                    equipe_formateurs: 2,
-                    moyen_materiel: 2,
-                    accompagnement: 1,
-                    global: 2
+                    accueil: 5,
+                    contenu_formation: 5,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 3,
+                    accompagnement: 4,
+                    global: 5
                 }
             }
         });
@@ -64,8 +71,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '11111111111111' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '22222222222222' })),
+            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('organismes', buildOrganismeAccount('22222222222222')),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs');
@@ -80,9 +87,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '11111111111111' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '22222222222222' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '33333333333333' })),
+            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('organismes', buildOrganismeAccount('22222222222222')),
+            insertIntoDatabase('organismes', buildOrganismeAccount('33333333333333')),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?id=11111111111111,22222222222222`);
@@ -98,9 +105,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ numero: 'OF_XX1' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ numero: 'OF_XX2' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ numero: 'OF_XX3' })),
+            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 11111111111111, numero: 'OF_XX1' })),
+            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 22222222222222, numero: 'OF_XX2' })),
+            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 33333333333333, numero: 'OF_XX3' })),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?numero=OF_XX1,OF_XX2`);
@@ -116,9 +123,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '11111111111111' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '22222222222222' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '33333333333333' })),
+            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('organismes', buildOrganismeAccount('22222222222222')),
+            insertIntoDatabase('organismes', buildOrganismeAccount('33333333333333')),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?siret=11111111111111,22222222222222`);
@@ -134,13 +141,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '11111111111111',
                 score: {
                     nb_avis: 1,
                 }
             })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '22222222222222',
                 score: {
                     nb_avis: 0,
@@ -160,7 +167,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '11111111111111',
                 lieux_de_formation: [
                     {
@@ -172,7 +179,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     }
                 ],
             })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '22222222222222',
                 lieux_de_formation: [
                     {
@@ -199,7 +206,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '11111111111111',
                 lieux_de_formation: [
                     {
@@ -211,7 +218,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     }
                 ],
             })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({
+            insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: '22222222222222',
                 lieux_de_formation: [
                     {
@@ -237,9 +244,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '11111111111111' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '22222222222222' })),
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ siret: '33333333333333' })),
+            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('organismes', buildOrganismeAccount('22222222222222')),
+            insertIntoDatabase('organismes', buildOrganismeAccount('33333333333333')),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?page=0&items_par_page=1`);
@@ -257,18 +264,32 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('can search though all sessions with projection', async () => {
+    it('can search though all sessions with projection (blacklist)', async () => {
 
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('organismes_formateurs', newOrganismeFormateur({ _id: '11111111111111' })),
+            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs?fields=-lieux_de_formation');
         assert.equal(response.statusCode, 200);
         assert.equal(response.body.organismes_formateurs.length, 1);
-        assert.deepEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'numero', 'siret', 'raison_sociale', 'score']);
+        assert.deepEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'raison_sociale', 'siret', 'numero', 'score']);
+    });
+
+    it('can search though all sessions with projection (whitelist)', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs?fields=lieux_de_formation');
+        assert.equal(response.statusCode, 200);
+        assert.equal(response.body.organismes_formateurs.length, 1);
+        assert.deepEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'lieux_de_formation']);
     });
 
 }));

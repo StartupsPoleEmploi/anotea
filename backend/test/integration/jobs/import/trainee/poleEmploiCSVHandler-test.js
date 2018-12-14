@@ -44,6 +44,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.ok(results[0].token);
         assert.deepEqual(_.omit(results[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-pe',
+            avisCreated: false,
             trainee: {
                 name: 'MARTIN',
                 firstName: 'EUGENE',

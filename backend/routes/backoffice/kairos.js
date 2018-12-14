@@ -5,7 +5,7 @@ const Joi = require('joi');
 const configuration = require('config');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = (db, authService) => {
+module.exports = ({ db, authService }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let collection = db.collection('organismes');
@@ -19,19 +19,22 @@ module.exports = (db, authService) => {
     });
 
     const buildAccount = async data => {
-
         return {
             _id: parseInt(data.siret),
             SIRET: parseInt(data.siret),
             raisonSociale: data.raison_sociale,
             courriel: data.courriel,
+            courriels: [data.courriel],
+            kairosCourriel: data.courriel,
             token: uuid.v4(),
             creationDate: new Date(),
             sources: ['kairos', 'sso'],
             codeRegion: await findCodeRegionByName(data.region),
+            numero: null,
+            lieux_de_formation: [],
             meta: {
                 siretAsString: data.siret,
-            }
+            },
         };
     };
 

@@ -11,13 +11,7 @@
     <body>
         <div>
             <header>
-                <br />
-                <img src="/img/logo_Anotea_Vertical_baseline.png" alt="" class="logoAnotea" />
-                <div class="serviceProQuestionnaire">
-                    <p>Service propulsé par</p>
-                    <img src="/img/poleemploi.png" alt="" class="logoPE" />
-                    <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
-                </div>
+                <img src="/img/logo_Anotea_Horizontal_baseline.png" alt="" class="logoAnotea" />
             </header>
 
             <section>
@@ -45,6 +39,13 @@
                     <% } %>
                 </h2>
             </section>
+            <footer>
+                    <div class="serviceProQuestionnaire">
+                            <p>Service propulsé par</p>
+                                <img src="/img/poleemploi.png" alt="" class="logoPE" />
+                                <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
+                            </div>
+            </footer>
         </div>
         <%- include('../analyticsTrackers'); %>
         <script>

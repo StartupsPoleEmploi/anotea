@@ -1,39 +1,33 @@
 const express = require('express');
 const moment = require('moment');
-const regions = require('../components/regions');
+const { encodeStream } = require('iconv-lite');
+const Boom = require('boom');
 const tryAndCatch = require('./tryAndCatch');
+const { jsonStream } = require('../components/stream-utils');
+const { transformObject } = require('../components/stream-utils');
+const { findLabelByCodeFinanceur } = require('../components/financeurs');
 
-module.exports = (db, configuration) => {
+
+module.exports = ({db, configuration, logger, regions}) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const dataExposer = require('../components/dataExposer')();
+    const dataExposer = require('./dataExposer')();
+    const { findRegionByCodeRegion } = regions;
 
-    const computeCommentStats = async codeRegion => {
-        let match = { $match: {} };
-        let matchUnwind = { $match: {} };
-
-        if (codeRegion !== undefined) {
-            match = {
-                '$match': {
-                    'codeRegion': codeRegion
-                }
-            };
-
-            matchUnwind = {
-                '$match': {
-                    'comments.codeRegion': codeRegion
-                }
-            };
-        }
+    const computeMailingStats = async codeRegion => {
 
         const docs = await db.collection('trainee').aggregate([
-            match,
+            {
+                $match: {
+                    ...(codeRegion ? { codeRegion: codeRegion } : {}),
+                }
+            },
             {
                 $group: {
                     _id: '$campaign',
-                    date: { $first: '$mailSentDate' },
+                    date: { $min: '$mailSentDate' },
                     mailSent: { $sum: { $cond: ['$mailSent', 1, 0] } },
-                    mailOpen: { $sum: { $cond: ['$tracking', 1, 0] } }
+                    mailOpen: { $sum: { $cond: ['$tracking', 1, 0] } },
                 }
             },
             {
@@ -52,7 +46,11 @@ module.exports = (db, configuration) => {
                         preserveNullAndEmptyArrays: true
                     }
             },
-            matchUnwind,
+            {
+                $match: {
+                    ...(codeRegion ? { 'comments.codeRegion': codeRegion } : {}),
+                }
+            },
             {
                 $group:
                     {
@@ -110,22 +108,22 @@ module.exports = (db, configuration) => {
 
         let organismes = db.collection('organismes');
 
-        let [nbOrganimes, nbOrganismesAvecAvis] = await Promise.all([
+        let [nbOrganimes, nbOrganismesAvecAvis, nbOrganismesActifs] = await Promise.all([
             organismes.countDocuments({ 'codeRegion': codeRegion }),
-            organismes.countDocuments({ 'meta.nbAvis': { $gte: 1 }, 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'score.nb_avis': { $gte: 1 }, 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'passwordHash': { $ne: null }, 'codeRegion': codeRegion }),
         ]);
 
         return {
             region: name,
             nbOrganimes,
+            nbOrganismesActifs,
             nbOrganismesAvecAvis,
             pourcentageOrganismesAvecAuMoinsUnAvis: Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes),
         };
     };
 
     router.get('/stats/sessions.:format', tryAndCatch(async (req, res) => {
-
-        let { findRegionByCodeRegion } = regions(db);
 
         let sessions = await Promise.all(configuration.app.active_regions.map(ar => {
             let { name, codeINSEE } = findRegionByCodeRegion(ar.code_region);
@@ -137,8 +135,6 @@ module.exports = (db, configuration) => {
 
     router.get('/stats/organismes.:format', tryAndCatch(async (req, res) => {
 
-        let { findRegionByCodeRegion } = regions(db);
-
         let organismes = await Promise.all(configuration.app.active_regions.map(ar => {
             let { name } = findRegionByCodeRegion(ar.code_region);
             return computeOrganismesStats(name, ar.code_region);
@@ -149,7 +145,7 @@ module.exports = (db, configuration) => {
 
     router.get('/stats/mailing.:format', async (req, res) => {
 
-        let data = await computeCommentStats(req.query.codeRegion);
+        let data = await computeMailingStats(req.query.codeRegion);
         if (req.params.format === 'json' || !req.params.format) {
             res.send(data);
         } else if (req.params.format === 'csv') {
@@ -169,6 +165,66 @@ module.exports = (db, configuration) => {
             res.status(404).render('errors/404');
         }
     });
+
+    router.get('/stats/stagiaires/ventilation.:format', tryAndCatch(async (req, res) => {
+
+        let stream = db.collection('trainee').aggregate([
+            {
+                $group: {
+                    _id: {
+                        campaign: '$campaign',
+                        codeFinanceurs: '$training.codeFinanceur',
+                        codeRegion: '$codeRegion',
+                    },
+                    nbStagiaires: { $sum: 1 },
+                },
+            },
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        campaign: '$_id.campaign',
+                        codeRegion: '$_id.codeRegion',
+                        codeFinanceurs: '$_id.codeFinanceurs',
+                        nbStagiaires: '$nbStagiaires',
+                    }
+                }
+            },
+        ]);
+
+        let handleError = e => {
+            logger.error('An error occurred', e);
+            res.status(500);
+            stream.push(Boom.boomify(e).output.payload);
+        };
+
+        if (req.params.format === 'json' || !req.params.format) {
+
+            res.setHeader('Content-Type', 'application/json');
+            stream
+            .on('error', handleError)
+            .pipe(jsonStream())
+            .pipe(res);
+
+        } else if (req.params.format === 'csv') {
+
+            res.setHeader('Content-disposition', 'attachment; filename=stats-stagiaires-ventilation.csv');
+            res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
+            res.write(`Campagne;Libelle Region;Code Region;Libelle Financeur;Code Financeur;Nombre de stagiaires\n`);
+
+            stream
+            .on('error', handleError)
+            .pipe(transformObject(doc => {
+                let { campaign, codeRegion, codeFinanceurs, nbStagiaires } = doc;
+                let libelleFinanceurs = codeFinanceurs.map(code => findLabelByCodeFinanceur(code) || 'Inconnu').join(',');
+                let libelleRegion = findRegionByCodeRegion(codeRegion).name;
+                return `"${campaign}";"${libelleRegion}";="${codeRegion}";"${libelleFinanceurs}";="${codeFinanceurs}";"${nbStagiaires}"\n`;
+            }))
+            .pipe(encodeStream('UTF-16BE'))
+            .pipe(res);
+        } else {
+            throw Boom.badRequest('Format invalide');
+        }
+    }));
 
     return router;
 };

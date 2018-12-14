@@ -6,7 +6,7 @@ const configuration = require('config');
 const { withServer } = require('../../helpers/test-server');
 const logger = require('../../helpers/test-logger');
 const { newOrganismeAccount, randomSIRET } = require('../../helpers/data/dataset');
-const AuthService = require('../../../components/auth-service');
+const AuthService = require('../../../components/AuthService');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
 
@@ -91,11 +91,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             SIRET: parseInt(siret),
             raisonSociale: 'Pole Emploi Formation',
             courriel: 'contact@organisme.fr',
+            courriels: ['contact@organisme.fr'],
+            kairosCourriel: 'contact@organisme.fr',
             sources: [
                 'kairos',
                 'sso'
             ],
             codeRegion: '11',
+            numero: null,
+            lieux_de_formation: [],
             meta: {
                 siretAsString: siret,
             }

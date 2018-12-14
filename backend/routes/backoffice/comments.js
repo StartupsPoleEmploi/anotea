@@ -2,13 +2,25 @@ const express = require('express');
 const moment = require('moment');
 const mongo = require('mongodb');
 const s = require('string');
+const tryAndCatch = require('../tryAndCatch');
 
-module.exports = function(db, authService, logger, configuration) {
+module.exports = ({ db, authService, logger, configuration }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const dataExposer = require('../../components/dataExposer')();
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
     const pagination = configuration.api.pagination;
+    const mailer = require('../../components/mailer.js')(db, logger, configuration);
+
+    const sendEmailAsync = (trainee, comment, reason) => {
+        let contact = trainee.trainee.email;
+        if (reason === 'non concerné') {
+            mailer.sendAvisHorsSujetMail({ to: contact }, trainee, comment, () => {
+                logger.info(`email sent to ${contact}`, err);
+            }, err => {
+                logger.error(`Unable to send email to ${contact}`, err);
+            });
+        }
+    };
 
     const getRemoteAddress = req => {
         return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -285,8 +297,12 @@ module.exports = function(db, authService, logger, configuration) {
         });
     });
 
-    router.post('/backoffice/advice/:id/reject', checkAuth, (req, res) => {
+    router.post('/backoffice/advice/:id/reject', checkAuth, tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+        const reason = req.body.reason;
+        let comment = await db.collection('comment').findOne({ _id: id });
+        let trainee = await db.collection('trainee').findOne({ token: comment.token });
+
         db.collection('comment').update({ _id: id }, {
             $set: {
                 reported: false,
@@ -301,6 +317,7 @@ module.exports = function(db, authService, logger, configuration) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
             } else if (result.result.n === 1) {
+                sendEmailAsync(trainee, comment, reason);
                 saveEvent(id, 'reject', {
                     app: 'moderation',
                     user: 'admin',
@@ -312,7 +329,7 @@ module.exports = function(db, authService, logger, configuration) {
                 res.status(404).send({ 'error': 'Not found' });
             }
         });
-    });
+    }));
 
     router.post('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap

@@ -2,12 +2,14 @@ const express = require('express');
 const moment = require('moment');
 const Joi = require('joi');
 const s = require('string');
-const { getDeviceType } = require('../../components/analytics');
-const { sanitize } = require('../../components/userInput');
+const { getDeviceType } = require('./utils/analytics');
+const { sanitize } = require('./utils/userInput');
+const externalLinks = require('./utils/externalLinks');
 
-module.exports = (db, logger, configuration, badwords) => {
+module.exports = ({ db, logger, configuration }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
+    let badwords = require('./utils/badwords')(logger, configuration);
 
     const getTraineeFromToken = (req, res, next) => {
         db.collection('trainee').findOne({ token: req.params.token })
@@ -73,7 +75,7 @@ module.exports = (db, logger, configuration, badwords) => {
                 codeRegion: trainee.codeRegion
             };
 
-            db.collection('comment').save(comment).catch(e => logger.error(e));
+            db.collection('comment').insertOne(comment).catch(e => logger.error(e));
         }
 
         // we let user change it's advice if last step not validated
@@ -123,7 +125,10 @@ module.exports = (db, logger, configuration, badwords) => {
                 comment.accord = false;
                 comment.accordEntreprise = false;
                 comment.step = 2;
-                db.collection('comment').save(comment);
+                await Promise.all([
+                    db.collection('comment').save(comment),
+                    db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),
+                ]);
                 res.render('front/questionnaire-step2', { trainee: trainee });
             } else {
                 res.render('front/refus', { reason: 'bad data', trainee: trainee });
@@ -170,14 +175,8 @@ module.exports = (db, logger, configuration, badwords) => {
                 if (pseudoOK && commentOK && commentTitleOK) {
                     comment.step = 3;
                     delete comment.badwords;
-                    db.collection('comment').save(comment);
-                    const carif = await db.collection('carif').findOne({ codeRegion: trainee.codeRegion });
-
-                    res.render('front/questionnaire-step3', {
-                        trainee: trainee,
-                        carifURL: carif.url,
-                        carifLinkEnabled: carif.formLinkEnabled
-                    });
+                    db.collection('comment').updateOne({ _id: comment._id }, { $set: comment });
+                    res.redirect(`/questionnaire/${req.params.token}/step3`);
                     return;
                 } else {
                     comment.badwords = {
@@ -185,7 +184,7 @@ module.exports = (db, logger, configuration, badwords) => {
                         comment: !commentOK,
                         commentTitle: !commentTitleOK
                     };
-                    db.collection('comment').save(comment);
+                    db.collection('comment').updateOne({ _id: comment._id }, { $set: comment });
 
                 }
             } else {
@@ -194,6 +193,44 @@ module.exports = (db, logger, configuration, badwords) => {
             }
             res.render('front/refus', { reason: 'badwords', trainee: trainee });
         }
+    });
+
+    router.get('/questionnaire/:token/step3', getTraineeFromToken, async (req, res) => {
+        let trainee = req.trainee;
+        const carif = await db.collection('carif').findOne({ codeRegion: trainee.codeRegion });
+
+        res.render('front/questionnaire-step3', {
+            trainee: trainee,
+            carifURL: carif.url,
+            carifLinkEnabled: carif.formLinkEnabled,
+            showLinks: await externalLinks(db).getLink(trainee, 'pe') !== null
+        });
+    });
+
+    router.get('/link/:token', getTraineeFromToken, async (req, res) => {
+        let trainee = req.trainee;
+        const goto = req.query.goto;
+
+        const links = ['lbb', 'pe', 'clara'];
+
+        if (!links.includes(goto)) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const advice = await db.collection('comment').findOne({ token: req.params.token });
+        if (!(advice.tracking && advice.tracking.clickLink && advice.tracking.clickLink.filter(item => item.goto === goto).length > 0)) {
+            db.collection('comment').updateOne({ token: req.params.token }, {
+                $push: {
+                    'tracking.clickLink': {
+                        date: new Date(),
+                        goto: goto
+                    }
+                }
+            });
+        }
+
+        res.redirect(await externalLinks(db).getLink(trainee, goto));
     });
 
     return router;

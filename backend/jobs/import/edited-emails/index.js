@@ -16,7 +16,7 @@ const main = async () => {
     let client = await getMongoClient(configuration.mongodb.uri);
     let logger = getLogger('anotea-job-edited-email-import', configuration);
     let db = client.db();
-    let editedEmailImporter = require(`./importer`)(db, logger, configuration);
+    let editedCourrielImporter = require(`./importer`)(db, logger, configuration);
 
     const abort = message => {
         logger.error(message, () => {
@@ -29,7 +29,7 @@ const main = async () => {
     }
 
     try {
-        editedEmailImporter.importEditedEmail(cli.file);
+        editedCourrielImporter.importEditedCourriel(cli.file);
     } catch (e) {
         abort(e);
     }
