@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { resendEmailAccount, updateEditedCourriel } from '../../../../lib/organisationService';
+import { resendEmailAccount, updateEditedCourriel, deleteEditedCourriel } from '../../../../lib/organisationService';
 
 export default class OrganisationCard extends React.PureComponent {
 
@@ -26,8 +26,19 @@ export default class OrganisationCard extends React.PureComponent {
     updateCourriel = async () => {
         try {
             await updateEditedCourriel(this.props.organisation._id, this.state.newEditedCourriel);
-            this.setState({ editMode: false });
+            this.setState({ editMode: false, newEditedCourriel: '' });
             this.props.showMessage('success', 'Adresse email mise à jour avec succès.');
+            this.props.reloadOrganisation();
+        } catch (e) {
+            console.log(e);
+            this.props.showMessage('danger', 'Une erreur est survenue.');
+        }
+    };
+
+    deleteCourriel = async () => {
+        try {
+            await deleteEditedCourriel(this.props.organisation._id, this.state.newEditedCourriel);
+            this.props.showMessage('success', 'L\'adresse email Anotéa a été supprimée.');
             this.props.reloadOrganisation();
         } catch (e) {
             console.log(e);
@@ -130,17 +141,26 @@ export default class OrganisationCard extends React.PureComponent {
                 </div>
                 <div className="card-footer">
                     <button
-                        className="btn btn-secondary card-link"
+                        className="btn btn-primary"
                         style={{ marginLeft: '10px' }}
                         onClick={() => this.setState({ editMode: true })}>
-                        Modifier l'adresse Anotéa
+                        <span className="fas fa-pencil-alt" /> Modifier l'adresse Anotéa
                     </button>
+                    {
+                        this.props.organisation.editedCourriel &&
+                        <button
+                            className="btn btn-danger"
+                            style={{ marginLeft: '10px' }}
+                            onClick={() => this.deleteCourriel()}>
+                            <span className="fas fa-trash-alt" /> Supprimer l'adresse Anotéa
+                        </button>
+                    }
                     <button
-                        className="btn btn-primary card-link"
+                        className="btn btn-secondary"
                         disabled={this.state.resendDisabled}
                         style={{ marginLeft: '10px' }}
                         onClick={() => this.resendCourriel()}>
-                        Renvoyer le lien de connexion
+                        <span className="fas fa-envelope" /> Renvoyer le lien de connexion
                     </button>
                 </div>
             </div>
