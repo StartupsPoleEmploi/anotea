@@ -84,6 +84,7 @@ module.exports = components => {
     app.use('/api', require('./routes/backoffice/forgottenPassword')(components));
     app.use('/api', require('./routes/backoffice/comments')(components));
     app.use('/api', require('./routes/backoffice/organisations')(components));
+    app.use('/api', require('./routes/backoffice/editCourriel')(components));
     app.use('/api', require('./routes/backoffice/financer')(components));
     app.use('/api', require('./routes/backoffice/dashboard')(components));
 
