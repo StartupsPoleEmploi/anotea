@@ -1,5 +1,6 @@
 const express = require('express');
 const Boom = require('boom');
+const Joi = require('joi');
 const tryAndCatch = require('../tryAndCatch');
 
 module.exports = ({ db, authService, sendOrganisationAccountEmail, sendForgottenPasswordEmail }) => {
@@ -14,16 +15,19 @@ module.exports = ({ db, authService, sendOrganisationAccountEmail, sendForgotten
     };
 
     router.post('/backoffice/organisation/:id/editedCourriel', checkAuth, tryAndCatch(async (req, res) => {
-        const email = req.body.email;
-        const id = parseInt(req.params.id);
 
+        let parameters = await Joi.validate(req.body, {
+            email: Joi.string().email().required(),
+        }, { abortEarly: false });
+
+        let id = parseInt(req.params.id);
         if (isNaN(id)) {
             throw Boom.badRequest('Bad request');
         }
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
         if (organisme) {
-            await db.collection('organismes').update({ _id: id }, { $set: { editedCourriel: email } });
+            await db.collection('organismes').update({ _id: id }, { $set: { editedCourriel: parameters.email } });
             saveEvent(id, 'editEmail', {
                 app: 'moderation',
                 profile: 'moderateur',
