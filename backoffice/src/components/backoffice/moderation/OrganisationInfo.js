@@ -17,7 +17,7 @@ export default class OrganisationInfo extends React.Component {
                         { this.props.organisation.mailSentDate && <span>Email envoyé {moment(this.props.organisation.mailSentDate).fromNow()}</span>}
                         { !this.props.organisation.mailSentDate && <span>Email non envoyé</span> }
                     </li>
-                    <li>Mot de passé créé : {this.props.organisation.passwordHash !== undefined ? 'oui' : 'non'}</li>
+                    <li>Mot de passé créé : {this.props.organisation.accountCreated ? 'oui' : 'non'}</li>
                     <li>{this.props.organisation.advicesCount ? this.props.organisation.advicesCount : 'aucun'} avis</li>
                 </ul>
             </div>

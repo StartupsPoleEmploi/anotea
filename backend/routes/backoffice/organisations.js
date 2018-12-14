@@ -63,11 +63,9 @@ module.exports = ({ db, authService, configuration, sendOrganisationAccountEmail
     router.get('/backoffice/organisation/:id/info', checkAuth, async (req, res) => {
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
-            delete organisation.passwordHash;
-            delete organisation.mailErrorDetail;
-            delete organisation.mailError;
 
-            const places = await db.collection('comment').aggregate([
+            organisation.accountCreated = !!organisation.passwordHash;
+            organisation.places = await db.collection('comment').aggregate([
                 {
                     $match: {
                         '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
@@ -77,7 +75,12 @@ module.exports = ({ db, authService, configuration, sendOrganisationAccountEmail
                 },
                 { $group: { _id: '$training.place.postalCode', city: { $first: '$training.place.city' } } },
                 { $sort: { _id: 1 } }]).toArray();
-            organisation.places = places;
+
+
+            delete organisation.passwordHash;
+            delete organisation.mailErrorDetail;
+            delete organisation.mailError;
+
             res.status(200).send(organisation);
         } else {
             res.status(404).send({ 'error': 'Not found' });
