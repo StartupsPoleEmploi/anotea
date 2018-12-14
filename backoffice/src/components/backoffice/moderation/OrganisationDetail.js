@@ -22,12 +22,12 @@ export default class OrganisationDetail extends React.PureComponent {
         resendDisabled: false,
         lastResend: null,
         successShown: false
-    }
+    };
 
     static propTypes = {
         organisation: PropTypes.object,
         refresh: PropTypes.func.isRequired
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -58,28 +58,27 @@ export default class OrganisationDetail extends React.PureComponent {
 
     deleteEditedCourriel = () => {
         this.setState({ editedCourriel: undefined }, () => this.setState({ email: this.getEmail() }));
-    }
+    };
 
     updateEditedCourriel = email => {
-        this.setState({ editedCourriel: email, successShown: true }, () => this.setState({ email: this.getEmail() }));
-        setTimeout(() => {
-            this.setState({ successShown: false });
-        }, 3000);
-    }
+        this.setState({ editedCourriel: email, successShown: true }, () => {
+            setTimeout(() => this.setState({ successShown: false }), 3000);
+            return this.setState({ email: this.getEmail() });
+        });
+    };
 
     changeMode = mode => {
         this.setState({ anoteaEmailmode: mode });
-    }
+    };
 
     resend = () => {
-        resendEmailAccount(this.state.organisation._id).then(() => {
-            this.props.refresh();
-            this.setState({ resendDisabled: true, lastResend: new Date() });
-            setTimeout(() => {
-                this.setState({ resendDisabled: false });
-            }, 60000);
+        this.setState({ resendDisabled: true }, () => {
+            resendEmailAccount(this.state.organisation._id).then(() => {
+                this.props.refresh();
+                this.setState({ resendDisabled: false, lastResend: new Date() });
+            });
         });
-    }
+    };
 
     render() {
         return (
