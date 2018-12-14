@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import SideMenu from './SideMenu';
 import ModerationPanel from './ModerationPanel';
-import OrganisationPanel from './OrganisationPanel';
+import OrganisationPanel from './organisation/OrganisationPanel';
 
 export default class ModerationMain extends React.Component {
 
