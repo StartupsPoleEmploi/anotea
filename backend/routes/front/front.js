@@ -199,11 +199,13 @@ module.exports = ({ db, logger, configuration }) => {
         let trainee = req.trainee;
         const carif = await db.collection('carif').findOne({ codeRegion: trainee.codeRegion });
 
+        const trainingTooOld = trainee.training.scheduledEndDate < moment().subtract(30, 'days');
+
         res.render('front/questionnaire-step3', {
             trainee: trainee,
             carifURL: carif.url,
             carifLinkEnabled: carif.formLinkEnabled,
-            showLinks: await externalLinks(db).getLink(trainee, 'pe') !== null
+            showLinks: await externalLinks(db).getLink(trainee, 'pe') !== null && !trainingTooOld
         });
     });
 
