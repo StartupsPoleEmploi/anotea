@@ -56,7 +56,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                                 numeroSession: 'SE_0000109418'
                             },
                         }
-                    }, date)
+                    }, date),
                 ],
             }))
         ]);
@@ -144,6 +144,32 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             }]
         });
+    });
+
+    it('should return session with rejected avis', async () => {
+
+        let app = await startServer();
+        let date = new Date();
+        let sessionId = '14_AF_0000010729|14_SE_0000109418|SE_0000109418';
+        await Promise.all([
+            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('sessionsReconciliees', buildNewSession(sessionId, {
+                avis: [
+                    newComment({
+                        rejected: true,
+                        comment: {
+                            title: 'WTF',
+                            text: 'WTF',
+                        },
+                    }, date),
+                ],
+            }))
+        ]);
+
+        let response = await request(app).get(`/api/v1/sessions/${sessionId}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.avis[0].commentaire, undefined);
     });
 
     it('should fail when numero de session is unknown', async () => {

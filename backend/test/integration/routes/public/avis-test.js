@@ -445,6 +445,27 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.equal(response.body.avis.filter(a => a.pseudo === pseudo).length, 0);
     });
 
+    it('should return rejected avis (without pseudo and comment)', async () => {
+
+        let app = await startServer();
+        let pseudo = randomize('pseudo');
+
+        await insertIntoDatabase('comment', newComment({
+            _id: '12345',
+            pseudo: pseudo,
+            step: 2,
+            published: false,
+            rejected: true,
+        }));
+
+        let response = await request(app).get(`/api/v1/avis`);
+
+        assert.equal(response.statusCode, 200);
+        let avis = response.body.avis.find(a => a.id === '12345');
+        assert.ok(avis);
+        assert.deepEqual(avis.commentaire, undefined);
+    });
+
     it('should fail when parameters are invalid', async () => {
 
         let app = await startServer();

@@ -1,18 +1,28 @@
 const _ = require('lodash');
 
+const convertCommentaire = comment => {
+    if (!comment.comment || comment.rejected) {
+        return undefined;
+    }
+
+    let texte = _.isEmpty(comment.comment.text) ? undefined : comment.comment.text;
+
+    return {
+        titre: (comment.titleMasked || _.isEmpty(comment.comment.title)) ? undefined : comment.comment.title,
+        texte: comment.editedComment ? comment.editedComment : texte,
+        reponse: comment.answered ? comment.answer : undefined,
+    };
+};
+
 module.exports = comment => {
     let training = comment.training;
     let rates = comment.rates;
 
     return {
         id: comment._id,
-        pseudo: comment.pseudoMasked ? undefined : comment.pseudo,
+        pseudo: (comment.pseudoMasked || comment.rejected || _.isEmpty(comment.pseudo)) ? undefined : comment.pseudo,
         date: comment.date ? comment.date : comment._id.getTimestamp(),
-        commentaire: comment.comment ? {
-            titre: comment.titleMasked ? undefined : comment.comment.title,
-            texte: comment.editedComment ? comment.editedComment : comment.comment.text,
-            reponse: comment.answered ? comment.answer : undefined,
-        } : undefined,
+        commentaire: convertCommentaire(comment),
         notes: {
             accueil: rates.accueil,
             contenu_formation: rates.contenu_formation,
