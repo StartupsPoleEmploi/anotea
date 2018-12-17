@@ -32,7 +32,7 @@ module.exports = (db, logger) => {
                     invalid: 0,
                 };
 
-                if (await db.collection('importTrainee').findOne({ hash })) {
+                if (!filters.append && await db.collection('importTrainee').findOne({ hash })) {
                     logger.info(`CSV file ${file} already imported`);
                     return resolve(stats);
                 } else {
@@ -70,16 +70,24 @@ module.exports = (db, logger) => {
                     })
                     .on('finish', async () => {
                         try {
-                            await db.collection('importTrainee').insertOne({
-                                hash,
-                                campaign: campaign.name,
-                                campaignDate: campaign.date,
-                                file,
-                                filters,
-                                stats: stats,
-                                date: new Date(),
-                            });
-
+                            if (!filters.append) {
+                                await db.collection('importTrainee').insertOne({
+                                    hash,
+                                    campaign: campaign.name,
+                                    campaignDate: campaign.date,
+                                    file,
+                                    filters,
+                                    stats: stats,
+                                    date: new Date(),
+                                });
+                            } else {
+                                await db.collection('importTrainee').updateOne({ campaign: campaign.name }, {
+                                    $inc: {
+                                        'stats.imported': stats.imported,
+                                        'stats.invalid': stats.invalid,
+                                    }
+                                });
+                            }
                             return stats.invalid === 0 ? resolve(stats) : reject(stats);
 
                         } catch (e) {
