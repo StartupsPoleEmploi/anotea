@@ -23,6 +23,8 @@ import {
 import {
     exportToExcel
 } from '../../../lib/export';
+import PropTypes from 'prop-types';
+import Graph from './Graph';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
@@ -59,28 +61,34 @@ export default class FinancerPanel extends React.Component {
         },
     };
 
+    static propTypes = {
+        codeRegion: PropTypes.string.isRequired,
+        codeFinanceur: PropTypes.string.isRequired,
+        profile: PropTypes.string.isRequired
+    }
+
     constructor(props) {
         super(props);
 
         if (props.codeFinanceur === POLE_EMPLOI) {
             this.state.financers = [
-                    { _id: '4', title: `Pôle Emploi` },
-                    { _id: '2', title: `Collectivité territoriale - Conseil régional` },
-                    { _id: '10', title: `Béneficiaire de l'action` },
-                    { _id: '0', title: `Autre` },
-                    { _id: '16', title: `OPCA` },
-                    { _id: '13', title: `Etat - Autre` },
-                    { _id: '8', title: `Collectivité territoriale - Conseil général` },
-                    { _id: '5', title: `Entreprise` },
-                    { _id: '11', title: `Etat - Ministère chargé de l'emoploi` },
-                    { _id: '15', title: `Collectivité territoriale - Autre` },
-                    { _id: '14', title: `Fonds Européens - Autre` },
-                    { _id: '3', title: `Fonds Européens - FSE` },
-                    { _id: '12', title: `Etat - Ministère de l'éducation nationale` },
-                    { _id: '7', title: `AGEFIPH` },
-                    { _id: '17', title: `OPACIF` },
-                    { _id: '9', title: `Collectivité territoriale - Commune` },
-                ];
+                { _id: '4', title: `Pôle Emploi` },
+                { _id: '2', title: `Collectivité territoriale - Conseil régional` },
+                { _id: '10', title: `Béneficiaire de l'action` },
+                { _id: '0', title: `Autre` },
+                { _id: '16', title: `OPCA` },
+                { _id: '13', title: `Etat - Autre` },
+                { _id: '8', title: `Collectivité territoriale - Conseil général` },
+                { _id: '5', title: `Entreprise` },
+                { _id: '11', title: `Etat - Ministère chargé de l'emoploi` },
+                { _id: '15', title: `Collectivité territoriale - Autre` },
+                { _id: '14', title: `Fonds Européens - Autre` },
+                { _id: '3', title: `Fonds Européens - FSE` },
+                { _id: '12', title: `Etat - Ministère de l'éducation nationale` },
+                { _id: '7', title: `AGEFIPH` },
+                { _id: '17', title: `OPACIF` },
+                { _id: '9', title: `Collectivité territoriale - Commune` },
+            ];
             this.state.currentFinancer = '';
         } else {
             this.state.currentFinancer._id = props.codeFinanceur;
@@ -354,6 +362,8 @@ export default class FinancerPanel extends React.Component {
 
         return (
             <div className="organisationPanel mainPanel">
+
+                <Graph codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} />
 
                 {this.props.codeFinanceur === POLE_EMPLOI &&
                 <CodeFinancerSearchForm currentFinancer={currentFinancer} financers={financers}

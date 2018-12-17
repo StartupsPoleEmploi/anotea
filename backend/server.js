@@ -87,7 +87,7 @@ module.exports = components => {
     app.use('/api', require('./routes/backoffice/editCourriel')(components));
     app.use('/api', require('./routes/backoffice/financer')(components));
     app.use('/api', require('./routes/backoffice/dashboard')(components));
-
+    app.use('/api', require('./routes/backoffice/stats')(components));
 
     // catch 404
     app.use(function(req, res) {
