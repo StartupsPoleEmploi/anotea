@@ -170,4 +170,19 @@ describe(__filename, () => {
         assert.deepEqual(data.pseudo, undefined);
     });
 
+    it('should return editedComment when comment has been edited', async () => {
+
+        let comment = newComment({
+            editedComment: 'Formation super géniale.',
+            comment: {
+                title: 'Génial',
+                text: 'Formation géniale.'
+            },
+        });
+
+        let data = convertToExposableAvis(comment);
+
+        assert.deepEqual(data.commentaire.texte, 'Formation super géniale.');
+    });
+
 });
