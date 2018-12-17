@@ -44,8 +44,6 @@ header p {
 }
 
 header .links {
-    margin: 40px 0px 0px 0px;
-    height: 60px;
 }
 
 header .link {
@@ -58,6 +56,11 @@ header .link {
     float: left;
     margin-right: 15px;
     padding-top: 10px;
+    margin-bottom: 20px;
+}
+
+div.clear {
+    clear: both;
 }
 
 header .link:hover {
@@ -77,7 +80,7 @@ header .link a {
     margin-top: 60px;
 }
 
-.servicePro, .serviceProQuestionnaire {
+.servicePro {
     font-size: 14px;
     margin-top: 38px;
     margin-left: 500px;
@@ -85,20 +88,12 @@ header .link a {
 }
 
 .serviceProQuestionnaire {
-    margin-left: 130px;
-}
-
-.logoPE {
-    margin-top: -60px;
-    margin-left: 130px;
-    position: absolute;
+    margin-left:25%;
+    margin-top: 10px;
 }
 
 .logoRegion {
     width: 140px;
-    margin-top: -35px;
-    margin-left: 250px;
-    position: absolute;
 }
 
 section.questionnnaire {
@@ -252,27 +247,24 @@ hr {
         background-color: white;
         margin: 0px 40px 0px 40px;
     }
-    .logoAnotea {
-        width: 120px;
-        position: absolute;
+
+    header {
+        padding-top: 10px;
+        position: relative;
     }
+
     .servicePro {
         font-size: 14px;
         margin-top: 38px;
         margin-left: 40%;
         position: absolute;
     }
+
     .logoPE {
         width: 60px;
-        margin-top: 18px;
-        margin-left: 70%;
-        position: absolute;
     }
     .logoIleDeFrance {
         width: 100px;
-        margin-top: 70px;
-        margin-left: 60%;
-        position: absolute;
     }
     /*************/
     body>div>section>h1 {
@@ -366,8 +358,27 @@ hr {
 
     .starSpace {
         position: absolute;
-        margin-left: 0px;
+        margin-left: 30%;
         margin-top: -2px;
+    }
+
+    .serviceProQuestionnaire {
+        margin-left:0;
+        margin-top: 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .starSpace {
+        position: absolute;
+        margin-left: 15%;
+        margin-top: -2px;
+    }
+    .logoRegion {
+        width: 98px;
+    }
+    .serviceProQuestionnaire span {
+        font-size: 8px;
     }
 }
 
@@ -591,5 +602,5 @@ section.error-page h2 {
     font-size: 20px;
     color: rgb(77, 122, 219);
     text-align: center;
-    font-weight: bold;  
+    font-weight: bold;
 }
