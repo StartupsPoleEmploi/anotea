@@ -207,7 +207,7 @@ module.exports = {
             courriel: 'contact@financer.fr',
             password: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             codeRegion: '11',
-            raisonSocial: 'Conseil Regional',
+            raisonSociale: 'Conseil Regional',
             codeFinanceur: '2'
         }, custom);
     },
@@ -353,6 +353,16 @@ module.exports = {
                 }
             ]
         }, custom, { test: true });
+    },
+    newCarif: custom => {
+        return _.merge({
+            codeRegion: '11',
+            name: 'Défi Métiers',
+            url: 'https://www.defi-metiers.fr/',
+            formLinkEnabled: true,
+            courriel: 'anotea-idf@pole-emploi.fr',
+            carifNameHidden: false
+        }, custom);
     },
     newFormation: custom => {
         return _.merge({

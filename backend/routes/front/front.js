@@ -2,13 +2,14 @@ const express = require('express');
 const moment = require('moment');
 const Joi = require('joi');
 const s = require('string');
-const { getDeviceType } = require('../../components/analytics');
-const { sanitize } = require('../../components/userInput');
-const externalLinks = require('../../components/externalLinks');
+const { getDeviceType } = require('./utils/analytics');
+const { sanitize } = require('./utils/userInput');
+const externalLinks = require('./utils/externalLinks');
 
-module.exports = (db, logger, configuration, badwords) => {
+module.exports = ({ db, logger, configuration }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
+    let badwords = require('./utils/badwords')(logger, configuration);
 
     const getTraineeFromToken = (req, res, next) => {
         db.collection('trainee').findOne({ token: req.params.token })
@@ -219,7 +220,14 @@ module.exports = (db, logger, configuration, badwords) => {
 
         const advice = await db.collection('comment').findOne({ token: req.params.token });
         if (!(advice.tracking && advice.tracking.clickLink && advice.tracking.clickLink.filter(item => item.goto === goto).length > 0)) {
-            db.collection('comment').updateOne({ token: req.params.token }, { $push: { 'tracking.clickLink' : { date: new Date(), goto: goto } } });
+            db.collection('comment').updateOne({ token: req.params.token }, {
+                $push: {
+                    'tracking.clickLink': {
+                        date: new Date(),
+                        goto: goto
+                    }
+                }
+            });
         }
 
         res.redirect(await externalLinks(db).getLink(trainee, goto));

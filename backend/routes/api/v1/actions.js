@@ -8,7 +8,7 @@ const convertToExposableAction = require('./dto/convertToExposableAction');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
 const tryAndCatch = require('../../tryAndCatch');
 
-module.exports = (db, authService) => {
+module.exports = ({ db, authService }) => {
 
     let router = express.Router();// eslint-disable-line new-cap
     let collection = db.collection('actionsReconciliees');

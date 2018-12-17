@@ -2,7 +2,7 @@
 'use strict';
 
 const configuration = require('config');
-const AuthService = require('../../components/auth-service');
+const AuthService = require('../../components/AuthService');
 const getLogger = require('../../components/logger');
 
 

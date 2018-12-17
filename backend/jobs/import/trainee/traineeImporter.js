@@ -2,7 +2,7 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const md5File = require('md5-file/promise');
 const validateTrainee = require('./validateTrainee');
-const { handleBackPressure } = require('../../job-utils');
+const { transformObject } = require('../../../components/stream-utils');
 const { getCampaignDate, getCampaignName } = require('./utils');
 
 module.exports = (db, logger) => {
@@ -32,7 +32,7 @@ module.exports = (db, logger) => {
                     invalid: 0,
                 };
 
-                if (await db.collection('importTrainee').findOne({ hash })) {
+                if (!filters.append && await db.collection('importTrainee').findOne({ hash })) {
                     logger.info(`CSV file ${file} already imported`);
                     return resolve(stats);
                 } else {
@@ -41,7 +41,7 @@ module.exports = (db, logger) => {
 
                     fs.createReadStream(file)
                     .pipe(parse(handler.csvOptions))
-                    .pipe(handleBackPressure(async data => {
+                    .pipe(transformObject(async data => {
                         try {
                             let trainee = await handler.buildTrainee(data, campaign);
 
@@ -55,7 +55,7 @@ module.exports = (db, logger) => {
                         } catch (e) {
                             return { status: 'invalid', trainee: data, error: e };
                         }
-                    }))
+                    }, { ignoreFirstLine: true }))
                     .on('data', ({ trainee, status, error }) => {
                         stats.total++;
                         stats[status]++;
@@ -70,16 +70,24 @@ module.exports = (db, logger) => {
                     })
                     .on('finish', async () => {
                         try {
-                            await db.collection('importTrainee').insertOne({
-                                hash,
-                                campaign: campaign.name,
-                                campaignDate: campaign.date,
-                                file,
-                                filters,
-                                stats: stats,
-                                date: new Date(),
-                            });
-
+                            if (!filters.append) {
+                                await db.collection('importTrainee').insertOne({
+                                    hash,
+                                    campaign: campaign.name,
+                                    campaignDate: campaign.date,
+                                    file,
+                                    filters,
+                                    stats: stats,
+                                    date: new Date(),
+                                });
+                            } else {
+                                await db.collection('importTrainee').updateOne({ campaign: campaign.name }, {
+                                    $inc: {
+                                        'stats.imported': stats.imported,
+                                        'stats.invalid': stats.invalid,
+                                    }
+                                });
+                            }
                             return stats.invalid === 0 ? resolve(stats) : reject(stats);
 
                         } catch (e) {

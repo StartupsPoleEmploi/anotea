@@ -6,7 +6,7 @@ const configuration = require('config');
 const { withServer } = require('../../helpers/test-server');
 const logger = require('../../helpers/test-logger');
 const { newOrganismeAccount, randomSIRET } = require('../../helpers/data/dataset');
-const AuthService = require('../../../components/auth-service');
+const AuthService = require('../../../components/AuthService');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
 

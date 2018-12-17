@@ -108,15 +108,42 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, logger, configuration);
         await insertDepartements();
-
         await importer.importTrainee(csvFile, handler);
 
         let results = await importer.importTrainee(csvFile, handler);
+
         assert.deepEqual(results, {
             invalid: 0,
             ignored: 0,
             imported: 0,
             total: 0,
+        });
+    });
+
+    it('can append stagiaires to an existing campaign', async () => {
+
+        let db = await getTestDatabase();
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
+        let importer = traineeImporter(db, logger);
+        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        await insertDepartements();
+        await importer.importTrainee(csvFile, handler);
+
+        let results = await importer.importTrainee(csvFile, handler, { append: true });
+
+        assert.deepEqual(results, {
+            ignored: 4,
+            imported: 0,
+            invalid: 0,
+            total: 4,
+        });
+        assert.deepEqual(await db.collection('importTrainee').countDocuments(), 1);
+        let status = await db.collection('importTrainee').findOne();
+        assert.deepEqual(status.stats, {
+            ignored: 0,
+            imported: 4,
+            invalid: 0,
+            total: 4,
         });
     });
 

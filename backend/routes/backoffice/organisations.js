@@ -3,18 +3,13 @@ const Boom = require('boom');
 const tryAndCatch = require('../tryAndCatch');
 const { hashPassword, isPasswordStrongEnough } = require('../../components/password');
 
-module.exports = (db, authService, logger, configuration) => {
+module.exports = ({ db, authService, configuration, sendOrganisationAccountEmail, sendForgottenPasswordEmail }) => {
 
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
 
-    const mailer = require('../../components/mailer.js')(db, logger, configuration);
-    const getContactEmail = require('../../components/getContactEmail');
-
-    const getRemoteAddress = req => {
-        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    };
+    const getRemoteAddress = req => req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     const saveEvent = (id, type, source) => {
         db.collection('events').save({ organisationId: id, date: new Date(), type: type, source: source });
@@ -68,11 +63,9 @@ module.exports = (db, authService, logger, configuration) => {
     router.get('/backoffice/organisation/:id/info', checkAuth, async (req, res) => {
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
-            delete organisation.passwordHash;
-            delete organisation.mailErrorDetail;
-            delete organisation.mailError;
 
-            const places = await db.collection('comment').aggregate([
+            organisation.accountCreated = !!organisation.passwordHash;
+            organisation.places = await db.collection('comment').aggregate([
                 {
                     $match: {
                         '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
@@ -82,7 +75,12 @@ module.exports = (db, authService, logger, configuration) => {
                 },
                 { $group: { _id: '$training.place.postalCode', city: { $first: '$training.place.city' } } },
                 { $sort: { _id: 1 } }]).toArray();
-            organisation.places = places;
+
+
+            delete organisation.passwordHash;
+            delete organisation.mailErrorDetail;
+            delete organisation.mailError;
+
             res.status(200).send(organisation);
         } else {
             res.status(404).send({ 'error': 'Not found' });
@@ -485,25 +483,14 @@ module.exports = (db, authService, logger, configuration) => {
 
         let organisme = await organismes.findOne({ _id: id });
         if (organisme) {
-            mailer.sendOrganisationAccountLink({ to: getContactEmail(organisme) }, organisme, async () => {
-                await organismes.update({ '_id': organisme._id }, {
-                    $set: {
-                        mailSentDate: new Date(),
-                        resent: true
-                    },
-                    $unset: {
-                        mailError: '',
-                        mailErrorDetail: ''
-                    },
-                });
-                saveEvent(id, 'resendEmailAccount', {
-                    app: 'moderation',
-                    profile: 'moderateur',
-                    user: 'admin',
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'status': 'OK' });
-            });
+            if (organisme.passwordHash) {
+                await sendForgottenPasswordEmail(organisme);
+            } else {
+                await sendOrganisationAccountEmail(organisme, { ip: getRemoteAddress(req) });
+            }
+
+            res.status(200).send({ 'status': 'OK' });
+
         } else {
             throw Boom.notFound('Not found');
         }

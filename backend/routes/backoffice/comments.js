@@ -4,7 +4,7 @@ const mongo = require('mongodb');
 const s = require('string');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = function(db, authService, logger, configuration) {
+module.exports = ({ db, authService, logger, configuration }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
@@ -317,7 +317,7 @@ module.exports = function(db, authService, logger, configuration) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
             } else if (result.result.n === 1) {
-                //sendEmailAsync(trainee, comment, reason);
+                sendEmailAsync(trainee, comment, reason);
                 saveEvent(id, 'reject', {
                     app: 'moderation',
                     user: 'admin',

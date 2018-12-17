@@ -1,4 +1,4 @@
-module.exports = (db, logger, configuration) => {
+module.exports = ({ db, logger, configuration }) => {
 
     const express = require('express');
     const moment = require('moment');

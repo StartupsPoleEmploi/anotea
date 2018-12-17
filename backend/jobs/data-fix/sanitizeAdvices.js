@@ -2,12 +2,10 @@
 'use strict';
 
 const cli = require('commander');
-const s = require('string');
 const configuration = require('config');
 const moment = require('moment');
 const getMongoClient = require('../../components/mongodb');
 const getLogger = require('../../components/logger');
-const { sanitize } = require('../../components/userInput');
 const fixData = require('./fixData');
 
 const doUnescapeHTMLAndStripTags = async db => {
