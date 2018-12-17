@@ -142,4 +142,47 @@ describe(__filename, () => {
         assert.deepEqual(new Date(data.date).toISOString(), '1970-01-01T00:00:01.000Z');
     });
 
+
+    it('should ignore title when titleMasked is true', async () => {
+
+        let comment = newComment({
+            titleMasked: true,
+            comment: {
+                title: 'Génial',
+                text: 'Super formation.'
+            },
+        });
+
+        let data = convertToExposableAvis(comment);
+
+        assert.deepEqual(data.commentaire.titre, undefined);
+    });
+
+    it('should ignore pseudo when pseudoMasked is true', async () => {
+
+        let comment = newComment({
+            pseudoMasked: true,
+            pseudo: 'hacker',
+        });
+
+        let data = convertToExposableAvis(comment);
+
+        assert.deepEqual(data.pseudo, undefined);
+    });
+
+    it('should return editedComment when comment has been edited', async () => {
+
+        let comment = newComment({
+            editedComment: 'Formation super géniale.',
+            comment: {
+                title: 'Génial',
+                text: 'Formation géniale.'
+            },
+        });
+
+        let data = convertToExposableAvis(comment);
+
+        assert.deepEqual(data.commentaire.texte, 'Formation super géniale.');
+    });
+
 });
