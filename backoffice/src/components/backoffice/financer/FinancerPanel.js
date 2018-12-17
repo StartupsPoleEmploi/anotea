@@ -24,7 +24,7 @@ import {
     exportToExcel
 } from '../../../lib/export';
 import PropTypes from 'prop-types';
-import Graph from './stats/Graph';
+import Dashboard from './stats/Dashboard';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
@@ -363,7 +363,7 @@ export default class FinancerPanel extends React.Component {
         return (
             <div className="organisationPanel mainPanel">
 
-                <Graph codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} />
+                <Dashboard codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} />
 
                 {this.props.codeFinanceur === POLE_EMPLOI &&
                 <CodeFinancerSearchForm currentFinancer={currentFinancer} financers={financers}

@@ -1,0 +1,11 @@
+tr.selected {
+    font-weight: bold;
+}
+
+td {
+    cursor: pointer;
+}
+
+td.value {
+    text-align: right;
+}
