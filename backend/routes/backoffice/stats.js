@@ -63,10 +63,13 @@ module.exports = ({ db, authService }) => {
             }
         ]).toArray();
 
-        let obj = stats[0];
-        delete obj._id;
-        
-        res.status(200).send(obj);
+        if (stats.length > 0) {
+            let obj = stats[0];
+            delete obj._id;
+            res.status(200).send(obj);
+        } else {
+            res.status(200).send({});
+        }
     }));
 
     return router;
