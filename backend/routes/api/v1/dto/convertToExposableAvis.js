@@ -6,10 +6,10 @@ module.exports = comment => {
 
     return {
         id: comment._id,
-        pseudo: comment.pseudo,
+        pseudo: comment.pseudoMasked ? undefined : comment.pseudo,
         date: comment.date ? comment.date : comment._id.getTimestamp(),
         commentaire: comment.comment ? {
-            titre: comment.comment.title,
+            titre: comment.titleMasked ? undefined : comment.comment.title,
             texte: comment.comment.text,
             reponse: comment.answered ? comment.answer : undefined,
         } : undefined,
