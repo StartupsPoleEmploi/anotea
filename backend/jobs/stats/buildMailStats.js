@@ -24,8 +24,8 @@ const main = async () => {
     };
 
     try {
-        mailStatsBuilder.buildStats();
-        client.close();
+        await mailStatsBuilder.buildStats();
+        await client.close();
     } catch (e) {
         abort(e);
     }
