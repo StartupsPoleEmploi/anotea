@@ -24,7 +24,7 @@ import {
     exportToExcel
 } from '../../../lib/export';
 import PropTypes from 'prop-types';
-import Graph from './Graph';
+import Graph from './stats/Graph';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
