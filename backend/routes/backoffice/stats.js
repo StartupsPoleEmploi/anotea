@@ -23,8 +23,9 @@ module.exports = ({ db, authService }) => {
                 {
                     _id: '$_id.month',
                     count: { $sum: '$count' },
-                    countOpen: { $sum: '$countOpen' },
-                    countAdvices: { $sum: '$countAdvices' },
+                    countEmailOpen: { $sum: '$countEmailOpen' },
+                    countAdvicesPublished: { $sum: '$countAdvicesPublished' },
+                    countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
                     countAdvicesPositif: { $sum: '$countAdvicesPositif' },
                     countAdvicesNegatif: { $sum: '$countAdvicesNegatif' },
                     countAdvicesRejected: { $sum: '$countAdvicesRejected' }
@@ -52,8 +53,9 @@ module.exports = ({ db, authService }) => {
                 {
                     _id: null,
                     count: { $sum: '$count' },
-                    countOpen: { $sum: '$countOpen' },
-                    countAdvices: { $sum: '$countAdvices' },
+                    countEmailOpen: { $sum: '$countEmailOpen' },
+                    countAdvicesPublished: { $sum: '$countAdvicesPublished' },
+                    countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
                     countAdvicesPositif: { $sum: '$countAdvicesPositif' },
                     countAdvicesNegatif: { $sum: '$countAdvicesNegatif' },
                     countAdvicesRejected: { $sum: '$countAdvicesRejected' }
