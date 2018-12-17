@@ -23,6 +23,9 @@ import {
 import {
     exportToExcel
 } from '../../../lib/export';
+import PropTypes from 'prop-types';
+import Dashboard from './stats/Dashboard';
+import SideMenu from './SideMenu';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
@@ -57,30 +60,37 @@ export default class FinancerPanel extends React.Component {
         currentFinancer: {
             _id: null
         },
+        currentPage: 'advices'
     };
+
+    static propTypes = {
+        codeRegion: PropTypes.string.isRequired,
+        codeFinanceur: PropTypes.string.isRequired,
+        profile: PropTypes.string.isRequired
+    }
 
     constructor(props) {
         super(props);
 
         if (props.codeFinanceur === POLE_EMPLOI) {
             this.state.financers = [
-                    { _id: '4', title: `Pôle Emploi` },
-                    { _id: '2', title: `Collectivité territoriale - Conseil régional` },
-                    { _id: '10', title: `Béneficiaire de l'action` },
-                    { _id: '0', title: `Autre` },
-                    { _id: '16', title: `OPCA` },
-                    { _id: '13', title: `Etat - Autre` },
-                    { _id: '8', title: `Collectivité territoriale - Conseil général` },
-                    { _id: '5', title: `Entreprise` },
-                    { _id: '11', title: `Etat - Ministère chargé de l'emoploi` },
-                    { _id: '15', title: `Collectivité territoriale - Autre` },
-                    { _id: '14', title: `Fonds Européens - Autre` },
-                    { _id: '3', title: `Fonds Européens - FSE` },
-                    { _id: '12', title: `Etat - Ministère de l'éducation nationale` },
-                    { _id: '7', title: `AGEFIPH` },
-                    { _id: '17', title: `OPACIF` },
-                    { _id: '9', title: `Collectivité territoriale - Commune` },
-                ];
+                { _id: '4', title: `Pôle Emploi` },
+                { _id: '2', title: `Collectivité territoriale - Conseil régional` },
+                { _id: '10', title: `Béneficiaire de l'action` },
+                { _id: '0', title: `Autre` },
+                { _id: '16', title: `OPCA` },
+                { _id: '13', title: `Etat - Autre` },
+                { _id: '8', title: `Collectivité territoriale - Conseil général` },
+                { _id: '5', title: `Entreprise` },
+                { _id: '11', title: `Etat - Ministère chargé de l'emoploi` },
+                { _id: '15', title: `Collectivité territoriale - Autre` },
+                { _id: '14', title: `Fonds Européens - Autre` },
+                { _id: '3', title: `Fonds Européens - FSE` },
+                { _id: '12', title: `Etat - Ministère de l'éducation nationale` },
+                { _id: '7', title: `AGEFIPH` },
+                { _id: '17', title: `OPACIF` },
+                { _id: '9', title: `Collectivité territoriale - Commune` },
+            ];
             this.state.currentFinancer = '';
         } else {
             this.state.currentFinancer._id = props.codeFinanceur;
@@ -107,7 +117,7 @@ export default class FinancerPanel extends React.Component {
                 entities: [],
                 currentEntity: '',
             }),
-            currentFinancer: this.state.financers.filter(function(financer) {
+            currentFinancer: this.state.financers.filter(function (financer) {
                 return financer._id === options.id;
             })[0]
         }, () => {
@@ -139,7 +149,7 @@ export default class FinancerPanel extends React.Component {
                 training: Object.assign(this.state.training, {
                     entities: [],
                     currentEntity: '',
-                    currentOrganisation: this.state.training.organisations.filter(function(organisation) {
+                    currentOrganisation: this.state.training.organisations.filter(function (organisation) {
                         return organisation._id === options.id;
                     })[0]
                 })
@@ -179,7 +189,7 @@ export default class FinancerPanel extends React.Component {
             inventory: { reported: 0, commented: 0, all: 0 },
             advices: [],
             training: Object.assign(this.state.training, {
-                currentEntity: this.state.training.entities.filter(function(entity) {
+                currentEntity: this.state.training.entities.filter(function (entity) {
                     return entity._id === id;
                 })[0]
             })
@@ -348,6 +358,10 @@ export default class FinancerPanel extends React.Component {
 
     getActiveStatus = current => this.state.tab === current ? 'active' : '';
 
+    handleChangePage = page => {
+        this.setState({ currentPage: page });
+    };
+
     render() {
         const { currentOrganisation, currentEntity, organisations, entities } = this.state.training;
         const { currentFinancer, financers, inventory, tab } = this.state;
@@ -355,176 +369,186 @@ export default class FinancerPanel extends React.Component {
         return (
             <div className="organisationPanel mainPanel">
 
-                {this.props.codeFinanceur === POLE_EMPLOI &&
-                <CodeFinancerSearchForm currentFinancer={currentFinancer} financers={financers}
-                    handleFinancerChange={this.handleFinancerChange}
-                    unsetFinancer={this.unsetFinancer} />
+                <SideMenu onChangePage={this.handleChangePage} />
+
+                {this.state.currentPage === 'stats' &&
+                    <Dashboard codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} />
                 }
 
-                <OrganisationSearchForm currentOrganisation={currentOrganisation} organisations={organisations}
-                    handleOrganisationChange={this.handleOrganisationChange}
-                    unsetOrganisation={this.unsetOrganisation} />
+                {this.state.currentPage === 'advices' &&
+                    <div>
+                        {this.props.codeFinanceur === POLE_EMPLOI &&
+                            <CodeFinancerSearchForm currentFinancer={currentFinancer} financers={financers}
+                                handleFinancerChange={this.handleFinancerChange}
+                                unsetFinancer={this.unsetFinancer} />
+                        }
 
-                {currentOrganisation &&
-                <EntitySearchForm currentEntity={currentEntity} entities={entities}
-                    handleEntityChange={this.handleEntityChange} unsetEntity={this.unsetEntity} />
-                }
+                        <OrganisationSearchForm currentOrganisation={currentOrganisation} organisations={organisations}
+                            handleOrganisationChange={this.handleOrganisationChange}
+                            unsetOrganisation={this.unsetOrganisation} />
 
-                {currentEntity &&
-                <TrainingSearchForm id={currentOrganisation._id} currentEntity={currentEntity}
-                    codeFinanceur={currentFinancer._id} codeRegion={this.props.codeRegion}
-                    changeTrainingSession={this.changeTrainingSession} />
-                }
+                        {currentOrganisation &&
+                            <EntitySearchForm currentEntity={currentEntity} entities={entities}
+                                handleEntityChange={this.handleEntityChange} unsetEntity={this.unsetEntity} />
+                        }
 
-                {false && <SessionStats id={this.state.organisationId} />}
+                        {currentEntity &&
+                            <TrainingSearchForm id={currentOrganisation._id} currentEntity={currentEntity}
+                                codeFinanceur={currentFinancer._id} codeRegion={this.props.codeRegion}
+                                changeTrainingSession={this.changeTrainingSession} />
+                        }
 
-                <h2>Liste des notes et avis</h2>
+                        {false && <SessionStats id={this.state.organisationId} />}
 
-                <ul className="nav nav-tabs">
-                    <li className="nav-item">
-                        <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`} onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
-                            className="badge rejected">{inventory.reported}</span></button>
-                    </li>
-                    <li className="nav-item">
-                        <button className={`nav-link btn btn-link ${this.getActiveStatus('commented')}`} onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
-                            className="badge published">{inventory.commented}</span></button>
-                    </li>
-                    <li className="nav-item">
-                        <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
-                            className="badge badge-secondary">{inventory.all}</span></button>
-                    </li>
-                </ul>
+                        <h2>Liste des notes et avis</h2>
 
-                <Toolbar profile={this.props.profile}
-                    exportOrganisationAdvicesToExcel={this.exportOrganisationAdvicesToExcel} />
+                        <ul className="nav nav-tabs">
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`} onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
+                                    className="badge rejected">{inventory.reported}</span></button>
+                            </li>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('commented')}`} onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
+                                    className="badge published">{inventory.commented}</span></button>
+                            </li>
+                            <li className="nav-item">
+                                <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
+                                    className="badge badge-secondary">{inventory.all}</span></button>
+                            </li>
+                        </ul>
 
-                <div className="advices">
-                    {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}
-                    {this.state.advices.map(advice =>
-                        <div key={advice._id} className="advice">
-                            <div className="content">
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <h3 className="header">
-                                            <i className="avatar glyphicon glyphicon-user"/>
-                                            {advice.pseudo}
-                                            {!advice.pseudo && <em>anonyme</em>} -&nbsp;
+                        <Toolbar profile={this.props.profile}
+                            exportOrganisationAdvicesToExcel={this.exportOrganisationAdvicesToExcel} />
 
+                        <div className="advices">
+                            {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}
+                            {this.state.advices.map(advice =>
+                                <div key={advice._id} className="advice">
+                                    <div className="content">
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <h3 className="header">
+                                                    <i className="avatar glyphicon glyphicon-user" />
+                                                    {advice.pseudo}
+                                                    {!advice.pseudo && <em>anonyme</em>} -&nbsp;
+        
                                             {advice.date &&
-                                            <FormattedDate
-                                                value={new Date(advice.date)}
-                                                day="numeric"
-                                                month="long"
-                                                year="numeric" />
-                                            }
-                                            {!advice.date && <em>Pas de date pour cet avis</em>}
-                                        </h3>
-                                        {advice.comment &&
-                                        <div>
-                                            <div className="comment">
-                                                <h4>{advice.comment.title}</h4>
-                                                <p>
-                                                    {advice.comment.text}
-                                                    {!advice.comment.text &&
-                                                    <em>Cet utilisateur n'a pas laissé d'avis</em>}
-                                                </p>
+                                                        <FormattedDate
+                                                            value={new Date(advice.date)}
+                                                            day="numeric"
+                                                            month="long"
+                                                            year="numeric" />
+                                                    }
+                                                    {!advice.date && <em>Pas de date pour cet avis</em>}
+                                                </h3>
+                                                {advice.comment &&
+                                                    <div>
+                                                        <div className="comment">
+                                                            <h4>{advice.comment.title}</h4>
+                                                            <p>
+                                                                {advice.comment.text}
+                                                                {!advice.comment.text &&
+                                                                    <em>Cet utilisateur n'a pas laissé d'avis</em>}
+                                                            </p>
+                                                        </div>
+                                                        {this.props.codeFinanceur === POLE_EMPLOI &&
+                                                            <div> Qualification: {advice.qualification} </div>
+                                                        }
+                                                    </div>
+                                                }
+                                                {!advice.comment &&
+                                                    <div>
+                                                        <div className="noComment">Cet utilisateur n'a pas laissé d'avis.</div>
+                                                    </div>
+                                                }
                                             </div>
-                                            {this.props.codeFinanceur === POLE_EMPLOI &&
-                                            <div> Qualification: {advice.qualification} </div>
-                                            }
-                                        </div>
-                                        }
-                                        {!advice.comment &&
-                                        <div>
-                                            <div className="noComment">Cet utilisateur n'a pas laissé d'avis.</div>
-                                        </div>
-                                        }
-                                    </div>
-                                    <div className="col-md-3">
-                                        <AdviceRates rates={advice.rates} />
-                                    </div>
-                                    <div className="col-md-3">
-                                        <div><strong>Organisme</strong> {advice.training.organisation.name}</div>
-                                        <div><strong>Formation</strong> {advice.training.title}</div>
-                                        <strong>Session</strong> {advice.training.place.city}
-                                        <div>
-                                            du <strong><FormattedDate
-                                                value={new Date(advice.training.startDate)}
-                                                day="numeric"
-                                                month="numeric"
-                                                year="numeric" /></strong>
-                                            &nbsp;au <strong><FormattedDate
-                                                value={new Date(advice.training.scheduledEndDate)}
-                                                day="numeric"
-                                                month="numeric"
-                                                year="numeric" /></strong>
+                                            <div className="col-md-3">
+                                                <AdviceRates rates={advice.rates} />
+                                            </div>
+                                            <div className="col-md-3">
+                                                <div><strong>Organisme</strong> {advice.training.organisation.name}</div>
+                                                <div><strong>Formation</strong> {advice.training.title}</div>
+                                                <strong>Session</strong> {advice.training.place.city}
+                                                <div>
+                                                    du <strong><FormattedDate
+                                                        value={new Date(advice.training.startDate)}
+                                                        day="numeric"
+                                                        month="numeric"
+                                                        year="numeric" /></strong>
+                                                    &nbsp;au <strong><FormattedDate
+                                                        value={new Date(advice.training.scheduledEndDate)}
+                                                        day="numeric"
+                                                        month="numeric"
+                                                        year="numeric" /></strong>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>)}
+                                </div>)}
 
-                    {currentEntity && this.state.pagination.count > 1 &&
-                    <ReactPaginate previousLabel={'<'}
-                        nextLabel={'>'}
-                        pageCount={this.state.pagination.count}
-                        forcePage={this.state.pagination.current - 1}
-                        marginPagesDisplayed={2}
-                        pageRangeDisplayed={5}
-                        onPageChange={this.handlePageClick}
-                        breakClassName="page-item"
-                        breakLabel={<a className="page-link">...</a>}
-                        pageClassName="page-item"
-                        previousClassName="page-item"
-                        nextClassName="page-item"
-                        pageLinkClassName="page-link"
-                        previousLinkClassName="page-link"
-                        nextLinkClassName="page-link"
-                        activeClassName={'active'}
-                        containerClassName={'pagination'}
-                        disableInitialCallback={true} />
-                    }
-                    {!currentEntity && currentOrganisation && this.state.pagination.count > 1 &&
-                    <ReactPaginate previousLabel={'<'}
-                        nextLabel={'>'}
-                        pageCount={this.state.pagination.count}
-                        forcePage={this.state.pagination.current - 1}
-                        marginPagesDisplayed={2}
-                        pageRangeDisplayed={5}
-                        onPageChange={this.handlePageClickInCaseOfShowingOneOrganisationAdvices}
-                        breakClassName="page-item"
-                        breakLabel={<a className="page-link">...</a>}
-                        pageClassName="page-item"
-                        previousClassName="page-item"
-                        nextClassName="page-item"
-                        pageLinkClassName="page-link"
-                        previousLinkClassName="page-link"
-                        nextLinkClassName="page-link"
-                        activeClassName={'active'}
-                        containerClassName={'pagination'}
-                        disableInitialCallback={true} />
-                    }
-                    {!currentOrganisation && this.state.pagination.count > 1 &&
-                    <ReactPaginate previousLabel={'<'}
-                        nextLabel={'>'}
-                        pageCount={this.state.pagination.count}
-                        forcePage={this.state.pagination.current - 1}
-                        marginPagesDisplayed={2}
-                        pageRangeDisplayed={5}
-                        onPageChange={this.handlePageClickInCaseOfDisplayingAllAdvicesForARegion}
-                        breakClassName="page-item"
-                        breakLabel={<a className="page-link">...</a>}
-                        pageClassName="page-item"
-                        previousClassName="page-item"
-                        nextClassName="page-item"
-                        pageLinkClassName="page-link"
-                        previousLinkClassName="page-link"
-                        nextLinkClassName="page-link"
-                        activeClassName={'active'}
-                        containerClassName={'pagination'}
-                        disableInitialCallback={true} />
-                    }
-                </div>
+                            {currentEntity && this.state.pagination.count > 1 &&
+                                <ReactPaginate previousLabel={'<'}
+                                    nextLabel={'>'}
+                                    pageCount={this.state.pagination.count}
+                                    forcePage={this.state.pagination.current - 1}
+                                    marginPagesDisplayed={2}
+                                    pageRangeDisplayed={5}
+                                    onPageChange={this.handlePageClick}
+                                    breakClassName="page-item"
+                                    breakLabel={<a className="page-link">...</a>}
+                                    pageClassName="page-item"
+                                    previousClassName="page-item"
+                                    nextClassName="page-item"
+                                    pageLinkClassName="page-link"
+                                    previousLinkClassName="page-link"
+                                    nextLinkClassName="page-link"
+                                    activeClassName={'active'}
+                                    containerClassName={'pagination'}
+                                    disableInitialCallback={true} />
+                            }
+                            {!currentEntity && currentOrganisation && this.state.pagination.count > 1 &&
+                                <ReactPaginate previousLabel={'<'}
+                                    nextLabel={'>'}
+                                    pageCount={this.state.pagination.count}
+                                    forcePage={this.state.pagination.current - 1}
+                                    marginPagesDisplayed={2}
+                                    pageRangeDisplayed={5}
+                                    onPageChange={this.handlePageClickInCaseOfShowingOneOrganisationAdvices}
+                                    breakClassName="page-item"
+                                    breakLabel={<a className="page-link">...</a>}
+                                    pageClassName="page-item"
+                                    previousClassName="page-item"
+                                    nextClassName="page-item"
+                                    pageLinkClassName="page-link"
+                                    previousLinkClassName="page-link"
+                                    nextLinkClassName="page-link"
+                                    activeClassName={'active'}
+                                    containerClassName={'pagination'}
+                                    disableInitialCallback={true} />
+                            }
+                            {!currentOrganisation && this.state.pagination.count > 1 &&
+                                <ReactPaginate previousLabel={'<'}
+                                    nextLabel={'>'}
+                                    pageCount={this.state.pagination.count}
+                                    forcePage={this.state.pagination.current - 1}
+                                    marginPagesDisplayed={2}
+                                    pageRangeDisplayed={5}
+                                    onPageChange={this.handlePageClickInCaseOfDisplayingAllAdvicesForARegion}
+                                    breakClassName="page-item"
+                                    breakLabel={<a className="page-link">...</a>}
+                                    pageClassName="page-item"
+                                    previousClassName="page-item"
+                                    nextClassName="page-item"
+                                    pageLinkClassName="page-link"
+                                    previousLinkClassName="page-link"
+                                    nextLinkClassName="page-link"
+                                    activeClassName={'active'}
+                                    containerClassName={'pagination'}
+                                    disableInitialCallback={true} />
+                            }
+                        </div>
+                    </div>
+                }
             </div>
         );
     }
