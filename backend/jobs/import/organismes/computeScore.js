@@ -14,7 +14,8 @@ module.exports = async (db, logger) => {
                     $or: [
                         { 'comment': { $exists: false } },
                         { 'comment': null },
-                        { 'published': true }
+                        { 'published': true },
+                        { 'rejected': true },
                     ]
                 }
             },
