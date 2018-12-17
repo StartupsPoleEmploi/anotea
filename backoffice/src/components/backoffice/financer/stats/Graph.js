@@ -1,62 +1,67 @@
 import React from 'react';
-import { Pie } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 
 import {
-    getDashboardData,
     getGraphData
 } from '../../../../lib/mailStatsService';
+
+const MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 export default class Graph extends React.Component {
 
     state = {
-        dashboardData: []
+        allData: [],
+        graphData: []
     };
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
-        codeFinanceur: PropTypes.string.isRequired
+        codeFinanceur: PropTypes.string.isRequired,
+        type: PropTypes.number.isRequired
     }
 
     constructor(props) {
         super(props);
+        getGraphData(props.codeRegion, new Date().getFullYear(), props.codeFinanceur).then(graphData => {
 
-        getDashboardData(props.codeRegion, new Date().getFullYear(), props.codeFinanceur).then(dashboardData => {
-            this.setState({ dashboardData: dashboardData });
+            const allData = [
+                { label: 'Nombre de mails envoyés', data: graphData.map(item => item.count) },
+                { label: 'Nombre de mails ouverts', data: graphData.map(item => item.countEmailOpen) },
+                { label: 'Nombre d\'avis déposés', data: graphData.map(item => item.countAdvicesPublished) },
+                { label: 'Nombre d\'avis avec commentaires', data: graphData.map(item => item.countAdvicesWithComments) },
+                { label: 'Nombre de commentaires positifs ou neutres', data: graphData.map(item => item.countAdvicesPositif) },
+                { label: 'Nombre de commentaires négatifs', data: graphData.map(item => item.countAdvicesNegatif) },
+                { label: 'Nombre de commentaires rejetés', data: graphData.map(item => item.countAdvicesRejected) }
+            ];
+
+            this.setState({
+                allData: allData,
+                graphData: {
+                    labels: MONTHS,
+                    datasets: [
+                        allData[props.type]
+                    ]
+                }
+            });
         });
     }
 
-    getRate = (value, total) => `${(value / total * 100).toFixed(2)} %`;
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            graphData: {
+                labels: MONTHS,
+                datasets: [
+                    this.state.allData[nextProps.type]
+                ]
+            }
+        });
+    }
 
     render() {
         return (
             <div>
-                <table className="table table-striped">
-                    <tbody>
-                        <tr>
-                            <td>Nombre de mails envoyés</td><td>{this.state.dashboardData.count}</td>
-                        </tr>
-                        <tr>
-                            <td>Tx d'ouverture des mails</td><td>{this.getRate(this.state.dashboardData.countEmailOpen, this.state.dashboardData.count)}</td>
-                        </tr>
-                        <tr>
-                            <td>Tx d'avis déposés</td><td>{this.getRate(this.state.dashboardData.countAdvicesPublished, this.state.dashboardData.countEmailOpen)}</td>
-                        </tr>
-                        <tr>
-                            <td>Tx d'avis avec commentaires</td><td>{this.getRate(this.state.dashboardData.countAdvicesWithComments, this.state.dashboardData.countAdvicesPublished)}</td>
-                        </tr>
-                        <tr>
-                            <td>Tx de commentaires positifs ou neutres</td><td>{this.getRate(this.state.dashboardData.countAdvicesPositif, this.state.dashboardData.countAdvicesWithComments)}</td>
-                        </tr>
-                        <tr>
-                            <td>Tx de commentaires négatifs</td><td>{this.getRate(this.state.dashboardData.countAdvicesNegatif, this.state.dashboardData.countAdvicesWithComments)}</td>
-                        </tr>
-                        <tr>
-                            <td>Tx de commentaires rejetés</td><td>{this.getRate(this.state.dashboardData.countAdvicesRejected, this.state.dashboardData.countAdvicesWithComments)}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
+                <Line data={this.state.graphData} />
             </div>
         );
     }
