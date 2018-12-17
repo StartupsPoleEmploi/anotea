@@ -10,7 +10,7 @@ module.exports = comment => {
         date: comment.date ? comment.date : comment._id.getTimestamp(),
         commentaire: comment.comment ? {
             titre: comment.titleMasked ? undefined : comment.comment.title,
-            texte: comment.comment.text,
+            texte: comment.editedComment ? comment.editedComment : comment.comment.text,
             reponse: comment.answered ? comment.answer : undefined,
         } : undefined,
         notes: {
