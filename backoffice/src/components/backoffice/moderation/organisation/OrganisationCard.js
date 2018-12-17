@@ -141,6 +141,13 @@ export default class OrganisationCard extends React.PureComponent {
                 </div>
                 <div className="card-footer">
                     <button
+                        className="btn btn-secondary"
+                        disabled={this.state.resendDisabled}
+                        style={{ marginLeft: '10px' }}
+                        onClick={() => this.resendCourriel()}>
+                        <span className="fas fa-envelope" /> Renvoyer le lien de connexion
+                    </button>
+                    <button
                         className="btn btn-primary"
                         style={{ marginLeft: '10px' }}
                         onClick={() => this.setState({ editMode: true })}>
@@ -155,13 +162,6 @@ export default class OrganisationCard extends React.PureComponent {
                             <span className="fas fa-trash-alt" /> Supprimer l'adresse Anotéa
                         </button>
                     }
-                    <button
-                        className="btn btn-secondary"
-                        disabled={this.state.resendDisabled}
-                        style={{ marginLeft: '10px' }}
-                        onClick={() => this.resendCourriel()}>
-                        <span className="fas fa-envelope" /> Renvoyer le lien de connexion
-                    </button>
                 </div>
             </div>
         );
