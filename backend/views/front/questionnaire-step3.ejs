@@ -16,10 +16,10 @@
     <div>
         <header>
             <img src="/img/logo_Anotea_Horizontal_baseline.png" alt="" class="logoAnotea">
+            <%if (showLinks) { %>
             <h1>Et après la formation ?</h1>
             <p>Vous avez <strong>mis votre CV à jour</strong> ? Nous pouvons vous aider à <strong>trouver un emploi</strong> !</p>
 
-            <%if (showLinks) { %>
                 <div class="links">
                     <div class="link">
                         <a class="btn" href="/link/<%= trainee.token %>?goto=lbb" target="_blank"><strong>Les entreprises qui recrutent</strong> dans votre secteur</a>
