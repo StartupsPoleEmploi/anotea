@@ -12,18 +12,24 @@ export default class Graph extends React.Component {
 
     state = {
         allData: [],
-        graphData: []
+        graphData: [],
+        isEmpty: true
     };
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
         codeFinanceur: PropTypes.string.isRequired,
-        type: PropTypes.number.isRequired
+        type: PropTypes.number.isRequired,
+        year: PropTypes.number.isRequired
     }
 
     constructor(props) {
         super(props);
-        getGraphData(props.codeRegion, new Date().getFullYear(), props.codeFinanceur).then(graphData => {
+        this.loadData(this.props.codeRegion, this.props.year, this.props.codeFinanceur, this.props.type);
+    }
+
+    loadData = (codeRegion, year, codeFinanceur, type) => {
+        getGraphData(codeRegion, year, codeFinanceur).then(graphData => {
 
             const allData = [
                 { label: 'Nombre de mails envoyés', data: graphData.map(item => item.count) },
@@ -40,28 +46,35 @@ export default class Graph extends React.Component {
                 graphData: {
                     labels: MONTHS,
                     datasets: [
-                        allData[props.type]
+                        allData[type]
                     ]
-                }
+                },
+                isEmpty: graphData.length > 0
             });
         });
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            graphData: {
-                labels: MONTHS,
-                datasets: [
-                    this.state.allData[nextProps.type]
-                ]
-            }
-        });
+        if (nextProps.year !== this.props.year) {
+            this.loadData(this.props.codeRegion, nextProps.year, this.props.codeFinanceur, this.props.type);
+        } else {
+            this.setState({
+                graphData: {
+                    labels: MONTHS,
+                    datasets: [
+                        this.state.allData[nextProps.type]
+                    ]
+                }
+            });
+        }
     }
 
     render() {
         return (
             <div>
-                <Line data={this.state.graphData} />
+                { this.state.isEmpty &&
+                    <Line data={this.state.graphData} />
+                }
             </div>
         );
     }
