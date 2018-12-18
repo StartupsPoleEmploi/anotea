@@ -66,7 +66,6 @@ module.exports = ({ db, authService }) => {
             match = Object.assign(match, { '_id.codeFinanceur': codeFinanceur });
         }
 
-        console.log(match)
         let stats = await db.collection('mailStats').aggregate([
             { $match:
                 match
