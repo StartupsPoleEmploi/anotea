@@ -1,6 +1,6 @@
 let assert = require('assert');
 
-let dataExposer = require('../../routes/dataExposer')();
+let dataExposer = require('../../lib/http/routes/dataExposer')();
 
 describe('DataExposer (API)', function() {
 

@@ -3,9 +3,9 @@ const assert = require('assert');
 const configuration = require('config');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const logger = require('../../../../helpers/test-logger');
-const validateCsvFile = require('../../../../../jobs/import/trainee/validateCsvFile');
-const poleEmploiCSVHandler = require('../../../../../jobs/import/trainee/handlers/poleEmploiCSVHandler');
-const ileDeFranceCSVHandler = require('../../../../../jobs/import/trainee/handlers/ileDeFranceCSVHandler');
+const validateCsvFile = require('../../../../../lib/jobs/import/trainee/validateCsvFile');
+const poleEmploiCSVHandler = require('../../../../../lib/jobs/import/trainee/handlers/poleEmploiCSVHandler');
+const ileDeFranceCSVHandler = require('../../../../../lib/jobs/import/trainee/handlers/ileDeFranceCSVHandler');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
