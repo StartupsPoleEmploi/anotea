@@ -69,6 +69,52 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         });
     });
 
+    it('should use rejected avis to compute score', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            prepareDatabase(),
+            insertIntoDatabase('organismes', _.omit(newOrganismeAccount({
+                _id: 22222222222222,
+                SIRET: 22222222222222,
+                meta: {
+                    siretAsString: '22222222222222'
+                },
+            })), ['score']),
+            insertIntoDatabase('comment', newComment({
+                rejected: true,
+                rates: {
+                    accueil: 0,
+                    contenu_formation: 0,
+                    equipe_formateurs: 0,
+                    moyen_materiel: 0,
+                    accompagnement: 0,
+                    global: 0
+                },
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            })),
+        ]);
+
+        await computeScore(db, logger);
+
+        let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
+        assert.deepEqual(doc.score, {
+            nb_avis: 3,
+            notes: {
+                accompagnement: 1,
+                accueil: 2,
+                contenu_formation: 2,
+                equipe_formateurs: 3,
+                moyen_materiel: 2,
+                global: 2,
+            }
+        });
+    });
+
     it('should give default score when no comments', async () => {
 
         let db = await getTestDatabase();

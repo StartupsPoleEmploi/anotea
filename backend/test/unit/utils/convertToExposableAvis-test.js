@@ -185,4 +185,35 @@ describe(__filename, () => {
         assert.deepEqual(data.commentaire.texte, 'Formation super géniale.');
     });
 
+    it('should not return commentaire when avis has been rejected', async () => {
+
+        let comment = newComment({
+            rejected: true,
+            comment: {
+                title: 'Génial',
+                text: 'Formation géniale.'
+            },
+        });
+
+        let data = convertToExposableAvis(comment);
+
+        assert.deepEqual(data.commentaire, undefined);
+    });
+
+    it('should not return pseudo when avis has been rejected', async () => {
+
+        let comment = newComment({
+            rejected: true,
+            pseudo: 'hacker',
+            comment: {
+                title: 'Génial',
+                text: 'Formation géniale.'
+            },
+        });
+
+        let data = convertToExposableAvis(comment);
+
+        assert.deepEqual(data.pseudo, undefined);
+    });
+
 });

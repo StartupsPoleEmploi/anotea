@@ -5,7 +5,7 @@ const generateSessions = require('../../../../../jobs/import/sessions/generateSe
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
-    it('should generate sessions with comments', async () => {
+    it('should reconcile sessions with comments', async () => {
 
         let db = await getTestDatabase();
         let date = new Date();
@@ -234,22 +234,46 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
                 comment: null,
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
             })),
         ]);
 
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
-        assert.ok(session._id);
-        assert.ok(session.meta.reconciliation);
-        assert.ok(session.meta.source);
-        assert.equal(session.avis, undefined);
+        assert.equal(session.avis.length, 1);
+        assert.equal(session.avis[0].comment, undefined);
     });
 
     it('should reconcile comment without commentaire (undefined)', async () => {
 
         let db = await getTestDatabase();
-        let comment = newComment();
+        let comment = newComment({
+            comment: undefined,
+            training: {
+                formacode: '22403',
+                certifInfo: {
+                    id: '80735',
+                },
+                organisation: {
+                    siret: '22222222222222',
+                },
+                place: {
+                    postalCode: '75019',
+                },
+            },
+        });
         delete comment.comment;
 
         await Promise.all([
@@ -260,12 +284,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
-        assert.ok(session._id);
-        assert.ok(session.meta.reconciliation);
-        assert.ok(session.meta.source);
-        assert.equal(session.avis, undefined);
+        assert.equal(session.avis.length, 1);
+        assert.equal(session.avis[0].comment, undefined);
     });
-
 
     it('should ignore not yet published comment', async () => {
 
@@ -274,6 +295,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
                 published: false,
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
             })),
         ]);
 
@@ -281,9 +314,40 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.equal(session.avis, undefined);
-        assert.ok(session._id);
-        assert.ok(session.meta.reconciliation);
-        assert.ok(session.meta.source);
+    });
+
+    it('should reconcile rejected comment', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            importIntercarif(),
+            insertIntoDatabase('comment', newComment({
+                published: false,
+                rejected: true,
+                comment: {
+                    title: 'WTF',
+                    text: 'WTF',
+                },
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+            })),
+        ]);
+
+        await generateSessions(db);
+
+        let session = await db.collection('sessionsReconciliees').findOne();
+        assert.equal(session.avis.length, 1);
+        assert.equal(session.avis[0].rejected, true);
     });
 
     it('should create indexes', async () => {
