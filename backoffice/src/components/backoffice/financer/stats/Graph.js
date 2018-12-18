@@ -29,7 +29,7 @@ export default class Graph extends React.Component {
     }
 
     loadData = (codeRegion, year, codeFinanceur, type) => {
-        getGraphData(codeRegion, year, codeFinanceur).then(graphData => {
+        getGraphData(codeRegion, year, codeFinanceur === '4' ? 'all' : codeFinanceur).then(graphData => {
 
             const allData = [
                 { label: 'Nombre de mails envoyés', data: graphData.map(item => item.count) },
