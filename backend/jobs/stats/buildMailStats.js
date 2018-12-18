@@ -26,8 +26,8 @@ const main = async () => {
     try {
         logger.info('Build email statistics displayed on financer dashboard - launch');
         let launchTime = new Date().getTime();
-        await mailStatsBuilder.buildStats(true);
-        await mailStatsBuilder.buildStats(false);
+        await mailStatsBuilder.buildStats({ unwind: true });
+        await mailStatsBuilder.buildStats({ unwind: false });
         await client.close();
         logger.info(`Build email statistics displayed on financer dashboard - completed (${moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS')})`);
     } catch (e) {

@@ -1,16 +1,16 @@
 module.exports = db => {
 
-    const buildStats = async unwind => {
+    const buildStats = async option => {
         const request = [{ $match: { 'mailSentDate': { $ne: null } } }];
         let codeFinancerProject;
         let outCollection;
-        if (unwind) {
+        if (option.unwind) {
             request.push({ $unwind: '$training.codeFinanceur' });
             codeFinancerProject = '$training.codeFinanceur';
-            outCollection = 'mailStats';
+            outCollection = 'mailStatsByCodeFinanceur';
         } else {
             codeFinancerProject = 'all';
-            outCollection = 'mailStatsAll';
+            outCollection = 'mailStats';
         }
 
         [{
