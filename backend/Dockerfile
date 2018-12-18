@@ -10,4 +10,4 @@ COPY ./ /opt/anotea/backend
 
 WORKDIR /opt/anotea/backend
 
-CMD ["forever", "app.js"]
+CMD ["forever", "index.js"]

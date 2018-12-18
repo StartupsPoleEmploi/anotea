@@ -2,7 +2,7 @@ const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../../helpers/test-db');
 const logger = require('../../../../helpers/test-logger');
-const generateOrganismes = require('../../../../../jobs/import/organismes/generateOrganismes');
+const generateOrganismes = require('../../../../../lib/jobs/import/organismes/generateOrganismes');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
