@@ -22,13 +22,13 @@ export default class Graph extends React.Component {
     constructor(props) {
         super(props);
 
-        getDashboardData(props.codeRegion, props.year, props.codeFinanceur).then(dashboardData => {
+        getDashboardData(props.codeRegion, props.year, props.codeFinanceur === '4' ? 'all' : props.codeFinanceur).then(dashboardData => {
             this.setState({ dashboardData: dashboardData });
         });
     }
 
     componentWillReceiveProps(nextProps) {
-        getDashboardData(nextProps.codeRegion, nextProps.year, nextProps.codeFinanceur).then(dashboardData => {
+        getDashboardData(nextProps.codeRegion, nextProps.year, nextProps.codeFinanceur === '4' ? 'all' : nextProps.codeFinanceur).then(dashboardData => {
             this.setState({ dashboardData: dashboardData });
         });
     }
