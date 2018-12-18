@@ -6,7 +6,7 @@ module.exports = ({ db, authService }) => {
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
 
-    router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', checkAuth, tryAndCatch(async (req, res) => {
 
         let codeFinanceur = req.query.codeFinanceur;
 
@@ -14,9 +14,9 @@ module.exports = ({ db, authService }) => {
         let mailStatsCollection;
         if (codeFinanceur) {
             match = Object.assign(match, { '_id.codeFinanceur': codeFinanceur });
-            mailStatsCollection = 'mailStats';
+            mailStatsCollection = 'mailStatsByCodeFinanceur';
         } else {
-            mailStatsCollection = 'mailStatsAll';
+            mailStatsCollection = 'mailStats';
         }
 
         let results = Array.from(Array(12).keys()).map(i => {
@@ -57,7 +57,7 @@ module.exports = ({ db, authService }) => {
         res.status(200).send(results);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/mailStats/:year', tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/mailStats/:year', checkAuth, tryAndCatch(async (req, res) => {
 
         let codeFinanceur = req.query.codeFinanceur;
 
