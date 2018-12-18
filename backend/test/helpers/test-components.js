@@ -2,7 +2,7 @@ const { randomize } = require('./data/dataset');
 const configuration = require('config');
 const logger = require('./test-logger');
 const fakeMailer = require('./fake-mailer');
-const createComponents = require('../../components/components');
+const createComponents = require('../../lib/common/createComponents');
 
 let _componentsHolder = null;
 

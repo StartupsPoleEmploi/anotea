@@ -4,8 +4,8 @@ const moment = require('moment');
 const { withMongoDB } = require('../../../../../../helpers/test-db');
 const { newOrganismeAccount } = require('../../../../../../helpers/data/dataset');
 const logger = require('../../../../../../helpers/test-logger');
-const AccountMailer = require('../../../../../../../jobs/mailing/organismes/account/AccountMailer');
-const ResendAction = require('../../../../../../../jobs/mailing/organismes/account/actions/ResendAction');
+const AccountMailer = require('../../../../../../../lib/jobs/mailing/organismes/account/AccountMailer');
+const ResendAction = require('../../../../../../../lib/jobs/mailing/organismes/account/actions/ResendAction');
 const { successMailer } = require('../../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {

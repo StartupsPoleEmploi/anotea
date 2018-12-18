@@ -2,15 +2,15 @@
   "name": "anotea",
   "version": "1.0.0",
   "description": "Anotea : l'advisor de la formation ! Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
-  "main": "server.js",
+  "main": "lib/http/server.js",
   "scripts": {
     "test": "npm run test:unit",
     "test:unit": "mocha --recursive --exit --timeout 1000 test/unit",
     "test:integration": "mocha --recursive --exit --timeout 5000 test/integration",
     "test:all": "npm run test:unit && npm run test:integration",
     "start": "npm run start:default",
-    "start:default": "node app.js",
-    "start:watch": "nodemon --inspect --ignore test/ app.js",
+    "start:default": "node index.js",
+    "start:watch": "nodemon --inspect --ignore test/ index.js",
     "lint": "eslint components jobs routes scripts test",
     "smtp:start": "docker rm smtp; docker run -d --name smtp -p 1025:1025 -p 8025:8025 mailhog/mailhog",
     "smtp:stop": "docker stop smtp"

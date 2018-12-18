@@ -1,6 +1,6 @@
 const path = require('path');
 const logger = require('./test-logger');
-const importIntercarif = require('../../jobs/import/intercarif/importIntercarif');
+const importIntercarif = require('../../lib/jobs/import/intercarif/importIntercarif');
 const { withComponents } = require('./test-components');
 
 module.exports = {

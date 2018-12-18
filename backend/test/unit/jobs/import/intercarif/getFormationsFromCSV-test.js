@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const getFormations = require('../../../../../jobs/import/intercarif/utils/getFormationsFromCSV');
+const getFormations = require('../../../../../lib/jobs/import/intercarif/utils/getFormationsFromCSV');
 
 describe(__filename, () => {
 
