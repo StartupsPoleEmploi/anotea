@@ -5,7 +5,7 @@ const cli = require('commander');
 const configuration = require('config');
 const getMongoClient = require('../../components/mongodb');
 const getLogger = require('../../components/logger');
-
+const moment = require('moment');
 
 cli.description('Build email statistics displayed on financer dashboard')
 .parse(process.argv);
@@ -24,8 +24,12 @@ const main = async () => {
     };
 
     try {
-        await mailStatsBuilder.buildStats();
+        logger.info('Build email statistics displayed on financer dashboard - launch');
+        let launchTime = new Date().getTime();
+        await mailStatsBuilder.buildStats(true);
+        await mailStatsBuilder.buildStats(false);
         await client.close();
+        logger.info(`Build email statistics displayed on financer dashboard - completed (${moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS')})`);
     } catch (e) {
         abort(e);
     }

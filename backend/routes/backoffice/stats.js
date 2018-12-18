@@ -6,16 +6,33 @@ module.exports = ({ db, authService }) => {
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
 
-    router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', tryAndCatch(async (req, res) => {
 
         let codeFinanceur = req.query.codeFinanceur;
 
         let match = { '_id.codeRegion': req.params.idregion, '_id.year': parseInt(req.params.year) };
+        let mailStatsCollection;
         if (codeFinanceur) {
             match = Object.assign(match, { '_id.codeFinanceur': codeFinanceur });
+            mailStatsCollection = 'mailStats';
+        } else {
+            mailStatsCollection = 'mailStatsAll';
         }
 
-        let stats = await db.collection('mailStats').aggregate([
+        let results = Array.from(Array(12).keys()).map(i => {
+            return {
+                _id: i,
+                count: 0,
+                countEmailOpen: 0,
+                countAdvicesPublished: 0,
+                countAdvicesWithComments: 0,
+                countAdvicesPositif: 0,
+                countAdvicesNegatif: 0,
+                countAdvicesRejected: 0
+            };
+        });
+
+        let stats = await db.collection(mailStatsCollection).aggregate([
             { $match:
                 match
             },
@@ -32,11 +49,15 @@ module.exports = ({ db, authService }) => {
                 }
             }
         ]).toArray();
+
+        stats.forEach(item => {
+            results[item._id] = item;
+        });
         
-        res.status(200).send(stats);
+        res.status(200).send(results);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/mailStats/:year', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/mailStats/:year', tryAndCatch(async (req, res) => {
 
         let codeFinanceur = req.query.codeFinanceur;
 
@@ -45,6 +66,7 @@ module.exports = ({ db, authService }) => {
             match = Object.assign(match, { '_id.codeFinanceur': codeFinanceur });
         }
 
+        console.log(match)
         let stats = await db.collection('mailStats').aggregate([
             { $match:
                 match
