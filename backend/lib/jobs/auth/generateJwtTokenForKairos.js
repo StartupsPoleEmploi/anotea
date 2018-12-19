@@ -20,14 +20,12 @@ const main = async () => {
     };
 
     try {
-        let data = {
+        let jwt = await authService.buildJWT('kairos', {
             sub: 'kairos',
             iat: Math.floor(Date.now() / 1000),
-        };
+        });
 
-        let jwt = await authService.buildJWT('kairos', data);
-
-        console.log(`\nBearer ${jwt.access_token}\n`);
+        console.log(`Bearer ${jwt.access_token}`);
 
     } catch (e) {
         abort(e);

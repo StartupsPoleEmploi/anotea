@@ -10,40 +10,49 @@ module.exports = ({ db, authService, logger, configuration }) => {
 
     const getRemoteAddress = req => req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-    const logEvent = (req, profile) => {
-        db.collection('events').save({
+    const logLoginEvent = (req, profile) => {
+        return db.collection('events').insertOne({
             date: new Date(),
             type: 'log in',
             source: { user: req.body.username, profile, ip: getRemoteAddress(req) }
         });
     };
 
+    const logLoginWithAccessTokenEvent = (req, organisme) => {
+        return db.collection('events').insertOne({
+            date: new Date(),
+            type: 'login-access-token',
+            source: {
+                siret: organisme.meta.siretAsString,
+                ip: getRemoteAddress(req)
+            }
+        });
+    };
+
     const handleModerator = async (req, res, moderator) => {
-        logEvent(req, 'moderateur');
-        let token = await authService.buildJWT('backoffice', {
+        logLoginEvent(req, 'moderateur');
+        return await authService.buildJWT('backoffice', {
             sub: req.body.username,
             profile: 'moderateur',
             id: moderator._id,
             codeRegion: moderator.codeRegion,
             features: moderator.features
         });
-        return res.status(200).send(token);
     };
 
     const handleOrganisme = async (req, res, organisme) => {
-        logEvent(req, 'organisme');
-        let token = await authService.buildJWT('backoffice', {
+        logLoginEvent(req, 'organisme');
+        return await authService.buildJWT('backoffice', {
             sub: organisme.meta.siretAsString,
             profile: 'organisme',
             id: organisme._id,
             codeRegion: organisme.codeRegion,
             raisonSociale: organisme.raisonSociale,
         });
-        return res.status(200).send(token);
     };
 
     const invalidateAuthToken = async (id, token) => {
-        return db.collection('invalidAuthTokens').insert({
+        return db.collection('invalidAuthTokens').insertOne({
             subject: id,
             token,
             creationDate: new Date(),
@@ -60,15 +69,14 @@ module.exports = ({ db, authService, logger, configuration }) => {
 
     const handleFinancer = async (req, res, financer) => {
         let profile = 'financer';
-        logEvent(req, profile);
-        let token = await authService.buildJWT('backoffice', {
+        logLoginEvent(req, profile);
+        return await authService.buildJWT('backoffice', {
             sub: req.body.username,
             profile: 'financer',
             id: financer._id,
             codeRegion: financer.codeRegion,
             codeFinanceur: financer.codeFinanceur
         });
-        return res.status(200).send(token);
     };
 
     const checkPassword = async (password, hash) => {
@@ -94,27 +102,32 @@ module.exports = ({ db, authService, logger, configuration }) => {
 
         let identifier = req.body.username.toLowerCase();
         let password = req.body.password;
+        let token;
 
         try {
             const moderator = await db.collection('moderator').findOne({ courriel: identifier });
             if (moderator !== null && await checkPassword(password, moderator.password)) {
                 await rehashPassword('moderator', moderator, password);
-                return await handleModerator(req, res, moderator);
+                token = await handleModerator(req, res, moderator);
             }
 
             let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
             if (organisme !== null && await checkPassword(password, organisme.passwordHash)) {
                 await rehashPassword('organismes', organisme, password, 'passwordHash');
-                return await handleOrganisme(req, res, organisme);
+                token = await handleOrganisme(req, res, organisme);
             }
 
             const financer = await db.collection('financer').findOne({ courriel: identifier });
             if (financer !== null && await checkPassword(password, financer.password)) {
                 await rehashPassword('financer', financer, password);
-                return await handleFinancer(req, res, financer);
+                token = await handleFinancer(req, res, financer);
             }
 
-            return res.status(400).send({ error: true });
+            if (token) {
+                return res.status(200).send(token);
+            } else {
+                return res.status(400).send({ error: true });
+            }
 
         } catch (e) {
             logger.error(`Unable to log in user ${identifier}`, e);
@@ -143,10 +156,12 @@ module.exports = ({ db, authService, logger, configuration }) => {
         }
 
         if (organisme !== null) {
-            return await Promise.all([
-                invalidateAuthToken(organisme._id, parameters.access_token),
+            let [token] = await Promise.all([
                 handleOrganisme(req, res, organisme),
+                invalidateAuthToken(organisme._id, parameters.access_token),
+                logLoginWithAccessTokenEvent(req, organisme),
             ]);
+            return res.status(200).send(token);
         } else {
             throw Boom.badRequest('Token invalide');
         }
