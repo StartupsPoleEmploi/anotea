@@ -1,5 +1,5 @@
 const AccountMailer = require('../../mailing/organismes/account/AccountMailer');
-const createMailer = require('../../../common/createMailer.js');
+const createMailer = require('../../../smtp/createMailer.js');
 
 module.exports = function(db, logger, configuration) {
 
