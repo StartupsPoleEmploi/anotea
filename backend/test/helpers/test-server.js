@@ -1,6 +1,6 @@
 const request = require('supertest');
 const assert = require('assert');
-const server = require('../../lib/http/createServer');
+const server = require('../../lib/http/server');
 const { withMongoDB } = require('./test-db');
 const { newModerateurAccount } = require('./data/dataset');
 
