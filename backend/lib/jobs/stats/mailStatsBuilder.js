@@ -7,10 +7,10 @@ module.exports = db => {
         if (option.unwind) {
             request.push({ $unwind: '$training.codeFinanceur' });
             codeFinancerProject = '$training.codeFinanceur';
-            outCollection = 'mailStats';
+            outCollection = 'mailStatsByCodeFinanceur';
         } else {
             codeFinancerProject = 'all';
-            outCollection = 'mailStatsAll';
+            outCollection = 'mailStats';
         }
 
         [{
