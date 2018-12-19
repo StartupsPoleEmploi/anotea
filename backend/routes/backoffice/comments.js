@@ -317,7 +317,7 @@ module.exports = ({ db, authService, logger, configuration }) => {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
             } else if (result.result.n === 1) {
-                sendEmailAsync(trainee, comment, reason);
+                //sendEmailAsync(trainee, comment, reason);
                 saveEvent(id, 'reject', {
                     app: 'moderation',
                     user: 'admin',
