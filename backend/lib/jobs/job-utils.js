@@ -18,7 +18,6 @@ module.exports = {
         let components = await createComponents();
         let logger = components.logger;
         let client = components.client;
-
         const exit = error => {
             if (error) {
                 return logger.error(error, () => {
@@ -28,9 +27,11 @@ module.exports = {
             return client.close();
         };
 
+        let jobComponents = Object.assign({}, components, { exit, client });
+
         try {
             let launchTime = new Date().getTime();
-            let results = await callback(Object.assign({}, components, { exit, client }));
+            let results = await callback(jobComponents);
 
             let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
             logger.info(`Completed in ${duration}`);

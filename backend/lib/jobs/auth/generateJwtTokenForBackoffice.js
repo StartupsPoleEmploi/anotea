@@ -8,7 +8,7 @@ cli.description('Generate jwt token')
 .option('-s, --siret [siret]')
 .parse(process.argv);
 
-execute(async ({ db, authService, exit }) => {
+execute(async ({ db, auth, exit }) => {
 
     if (!cli.siret) {
         exit('Invalid arguments');
@@ -22,7 +22,7 @@ execute(async ({ db, authService, exit }) => {
         codeRegion: account.codeRegion,
     };
 
-    let jwt = await authService.buildJWT('backoffice', data, { expiresIn: '1h' });
+    let jwt = await auth.buildJWT('backoffice', data, { expiresIn: '1h' });
 
-    return authService.checkJWT('backoffice', jwt.access_token, { expiresIn: '1h' });
+    return auth.checkJWT('backoffice', jwt.access_token, { expiresIn: '1h' });
 });

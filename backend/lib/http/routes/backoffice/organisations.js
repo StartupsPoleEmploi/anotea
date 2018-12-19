@@ -3,11 +3,11 @@ const Boom = require('boom');
 const tryAndCatch = require('../tryAndCatch');
 const { hashPassword, isPasswordStrongEnough } = require('../../../common/components/password');
 
-module.exports = ({ db, authService, configuration }) => {
+module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
 
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = authService.createJWTAuthMiddleware('backoffice');
+    const checkAuth = createJWTAuthMiddleware('backoffice');
 
     router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 

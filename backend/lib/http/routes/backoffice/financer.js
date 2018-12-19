@@ -1,12 +1,11 @@
 const express = require('express');
 const JSONStream = require('JSONStream');
 
-module.exports = ({ db, authService, configuration }) => {
+module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
 
-    const dataExposer = require('../dataExposer')();
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = authService.createJWTAuthMiddleware('backoffice');
+    const checkAuth = createJWTAuthMiddleware('backoffice');
     const POLE_EMPLOI = '4';
 
     router.get('/backoffice/financeur/region/:idregion', async (req, res) => {

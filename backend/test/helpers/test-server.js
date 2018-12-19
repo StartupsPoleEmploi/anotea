@@ -25,8 +25,8 @@ module.exports = {
                     return response.body.access_token;
                 },
                 generateKairosToken: async app => {
-                    let { authService } = await context.getComponents();
-                    let jwt = await authService.buildJWT('kairos', {
+                    let { auth } = await context.getComponents();
+                    let jwt = await auth.buildJWT('kairos', {
                         sub: 'kairos',
                         iat: Math.floor(Date.now() / 1000)
                     });

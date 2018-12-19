@@ -5,12 +5,12 @@ const Joi = require('joi');
 const configuration = require('config');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = ({ db, authService }) => {
+module.exports = ({ db, createJWTAuthMiddleware, auth }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let collection = db.collection('organismes');
     let { findCodeRegionByName } = require('../../../common/components/regions')(db);
-    let checkAuth = authService.createJWTAuthMiddleware('kairos', {
+    let checkAuth = createJWTAuthMiddleware('kairos', {
         externalToken: true,
         onInvalidToken: e => {
             let message = e.name === 'TokenExpiredError' ? 'Token expiré' : 'Token invalide';
@@ -55,7 +55,7 @@ module.exports = ({ db, authService }) => {
             await collection.insert(organisme);
         }
 
-        let token = await authService.buildJWT('backoffice', {
+        let token = await auth.buildJWT('backoffice', {
             sub: organisme.meta.siretAsString,
             profile: 'organisme',
             id: organisme._id,

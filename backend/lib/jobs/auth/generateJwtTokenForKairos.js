@@ -3,9 +3,9 @@
 
 const { execute } = require('../job-utils');
 
-execute(async ({ authService }) => {
+execute(async ({ auth }) => {
 
-    let jwt = await authService.buildJWT('kairos', {
+    let jwt = await auth.buildJWT('kairos', {
         sub: 'kairos',
         iat: Math.floor(Date.now() / 1000),
     });

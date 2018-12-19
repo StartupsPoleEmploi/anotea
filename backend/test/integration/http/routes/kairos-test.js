@@ -4,9 +4,8 @@ const request = require('supertest');
 const assert = require('assert');
 const configuration = require('config');
 const { withServer } = require('../../../helpers/test-server');
-const logger = require('../../../helpers/test-logger');
 const { newOrganismeAccount, randomSIRET } = require('../../../helpers/data/dataset');
-const AuthService = require('../../../../lib/common/components/AuthService');
+const auth = require('../../../../lib/common/components/auth');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
 
@@ -48,9 +47,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     it('can get authentication url for an existing organisme', async () => {
 
         let app = await startServer();
-        let authService = new AuthService(logger, configuration);
+        let { buildJWT } = auth(configuration);
         let siret = randomSIRET();
-        let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
+        let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
 
         await Promise.all([insertDepartements(), insertOrganisme(siret)]);
 
@@ -73,9 +72,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     it('when organisme is unknown, it is created during authentication url generation', async () => {
 
         let app = await startServer();
-        let authService = new AuthService(logger, configuration);
+        let { buildJWT } = auth(configuration);
         let siret = randomSIRET();
-        let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
+        let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
         let db = await getTestDatabase();
         await insertDepartements();
 
@@ -110,9 +109,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     it('can login with auth url', async () => {
 
         let app = await startServer();
-        let authService = new AuthService(logger, configuration);
+        let { buildJWT } = auth(configuration);
         let siret = randomSIRET();
-        let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
+        let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
 
         await Promise.all([insertDepartements(), insertOrganisme(siret)]);
 
@@ -144,9 +143,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     it('should invalidate auth token after first login', async () => {
 
         let app = await startServer();
-        let authService = new AuthService(logger, configuration);
+        let { buildJWT } = auth(configuration);
         let siret = randomSIRET();
-        let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
+        let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
 
         await Promise.all([insertDepartements(), insertOrganisme(siret)]);
 
@@ -175,9 +174,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     it('should fail when kairos token is expired', async () => {
 
         let app = await startServer();
-        let authService = new AuthService(logger, configuration);
+        let { buildJWT } = auth(configuration);
         let sixMinutesAgo = Math.floor(Date.now() / 1000) - 360;
-        let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: sixMinutesAgo });
+        let jwt = await buildJWT('kairos', { sub: 'kairos', iat: sixMinutesAgo });
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
@@ -195,8 +194,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     it('should fail when kairos token is issued in the future', async () => {
 
         let app = await startServer();
-        let authService = new AuthService(logger, configuration);
-        let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: 999999999999999 });
+        let { buildJWT } = auth(configuration);
+        let jwt = await buildJWT('kairos', { sub: 'kairos', iat: 999999999999999 });
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
@@ -231,8 +230,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     it('should fail when subject token is invalid', async () => {
 
         let app = await startServer();
-        let authService = new AuthService(logger, configuration);
-        let jwt = await authService.buildJWT('kairos', { sub: 'INVALID' });
+        let { buildJWT } = auth(configuration);
+        let jwt = await buildJWT('kairos', { sub: 'INVALID' });
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
@@ -250,8 +249,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     it('should fail when body is invalid', async () => {
 
         let app = await startServer();
-        let authService = new AuthService(logger, configuration);
-        let jwt = await authService.buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
+        let { buildJWT } = auth(configuration);
+        let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
