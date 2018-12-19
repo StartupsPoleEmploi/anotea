@@ -14,7 +14,7 @@ export default class OrganisationCard extends React.PureComponent {
     state = {
         newEditedCourriel: '',
         editMode: false,
-        resendDisabled: false,
+        resendIsAllowed: true,
     };
 
     constructor(props) {
@@ -48,14 +48,16 @@ export default class OrganisationCard extends React.PureComponent {
 
     resendCourriel = async () => {
         try {
-            this.setState({ resendDisabled: true });
+            this.setState({ resendIsAllowed: false });
             await resendEmailAccount(this.props.organisation._id);
             this.props.showMessage('success', 'Email envoyé avec succès.');
             this.props.reloadOrganisation();
-            setTimeout(() => this.setState({ resendDisabled: false }), 10000);
+            setTimeout(() => this.setState({ resendIsAllowed: true }), 5000);
         } catch (e) {
             console.log(e);
             this.props.showMessage('danger', 'Une erreur est survenue.');
+            setTimeout(() => this.setState({ resendIsAllowed: true }), 5000);
+        } finally {
         }
     };
 
@@ -142,7 +144,7 @@ export default class OrganisationCard extends React.PureComponent {
                 <div className="card-footer">
                     <button
                         className="btn btn-secondary"
-                        disabled={this.state.resendDisabled}
+                        disabled={!this.state.resendIsAllowed}
                         style={{ marginLeft: '10px' }}
                         onClick={() => this.resendCourriel()}>
                         <span className="fas fa-envelope" /> Renvoyer le lien de connexion
