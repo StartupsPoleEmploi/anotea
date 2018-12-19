@@ -11,7 +11,7 @@ export default class OrganisationPanel extends React.PureComponent {
 
     showMessage = (type, text) => {
         this.setState({ message: { type, text } }, () => {
-            setTimeout(() => this.removeMessage(), 3000);
+            setTimeout(() => this.removeMessage(), 5000);
         });
     };
 
