@@ -8,7 +8,7 @@ const createMongoDBClient = require('../../../../common/createMongoDBClient');
 const createLogger = require('../../../../common/createLogger');
 const NotificationMailer = require('./NotificationMailer');
 const { findActiveRegions } = require('../../../job-utils');
-const createMailer = require('../../../../common/createMailer.js');
+const createMailer = require('../../../../smtp/createMailer.js');
 
 const main = async () => {
 

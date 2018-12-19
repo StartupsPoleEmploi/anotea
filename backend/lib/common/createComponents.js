@@ -3,7 +3,7 @@ const mongo = require('mongodb');
 const AuthService = require('./components/AuthService');
 const createRegions = require('./components/regions');
 const createLogger = require('./createLogger');
-const createMailer = require('./createMailer.js');
+const createMailer = require('../smtp/createMailer.js');
 const sendForgottenPasswordEmail = require('./components/sendForgottenPasswordEmail.js');
 const sendOrganisationAccountEmail = require('./components/sendOrganisationAccountEmail.js');
 
