@@ -1,4 +1,4 @@
-const server = require('./lib/http/server');
+const server = require('./lib/http/createServer');
 const createComponents = require('./lib/common/createComponents');
 
 process.on('uncaughtException', err => console.log(err));
