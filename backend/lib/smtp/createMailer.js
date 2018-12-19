@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = function(db, logger, configuration) {
 
     const nodemailer = require('nodemailer');
@@ -67,7 +69,7 @@ module.exports = function(db, logger, configuration) {
 
     const buildContent = (template, extension, params) => {
         return new Promise((resolve, reject) => {
-            ejs.renderFile(`views/mail/${template}.${extension}`, params, (err, str) => {
+            ejs.renderFile(path.join(__dirname, `views/${template}.${extension}`), params, (err, str) => {
                 if (err) {
                     logger.error(err);
                     reject(err);

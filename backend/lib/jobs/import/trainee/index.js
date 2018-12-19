@@ -11,7 +11,7 @@ const createMongoDBClient = require('../../../common/createMongoDBClient');
 const createLogger = require('../../../common/createLogger');
 const createImporter = require('./traineeImporter');
 const validateCsvFile = require('./validateCsvFile');
-const createMailer = require('../../../common/createMailer');
+const createMailer = require('../../../smtp/createMailer');
 
 const sources = {
     'PE': 'poleEmploi',

@@ -2,7 +2,7 @@
   "name": "anotea",
   "version": "1.0.0",
   "description": "Anotea : l'advisor de la formation ! Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
-  "main": "lib/http/server.js",
+  "main": "lib/http/createServer.js",
   "scripts": {
     "test": "npm run test:unit",
     "test:unit": "mocha --recursive --exit --timeout 1000 test/unit",

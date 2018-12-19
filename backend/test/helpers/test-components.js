@@ -11,15 +11,13 @@ module.exports = {
         return () => {
             before(() => {
                 _componentsHolder = createComponents({
-                    core: {
-                        logger,
-                        mailer: fakeMailer(),
-                        configuration: Object.assign({}, configuration, {
-                            mongodb: {
-                                uri: configuration.mongodb.uri.split('anotea').join(randomize('anotea_test'))
-                            },
-                        }),
-                    }
+                    configuration: Object.assign({}, configuration, {
+                        mongodb: {
+                            uri: configuration.mongodb.uri.split('anotea').join(randomize('anotea_test'))
+                        },
+                    }),
+                    logger,
+                    mailer: fakeMailer(),
                 });
             });
 

@@ -6,7 +6,7 @@ const moment = require('moment');
 const configuration = require('config');
 const createMongoDBClient = require('../../../../common/createMongoDBClient');
 const createLogger = require('../../../../common/createLogger');
-const createMailer = require('../../../../common/createMailer.js');
+const createMailer = require('../../../../smtp/createMailer.js');
 const TraineeMailer = require('./AvisMailer');
 const { findActiveRegions, capitalizeFirstLetter, catchUnexpectedErrors } = require('../../../job-utils');
 

@@ -4,7 +4,7 @@ module.exports = ({ db, logger, configuration }) => {
     const moment = require('moment');
     const titleize = require('underscore.string/titleize');
 
-    const mailer = require('../../../common/createMailer.js')(db, logger, configuration);
+    const mailer = require('../../../smtp/createMailer.js')(db, logger, configuration);
 
     const router = express.Router(); // eslint-disable-line new-cap
 

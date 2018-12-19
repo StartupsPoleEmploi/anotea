@@ -9,7 +9,7 @@ module.exports = ({ db, authService, logger, configuration }) => {
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
     const pagination = configuration.api.pagination;
-    const mailer = require('../../../common/createMailer.js')(db, logger, configuration);
+    const mailer = require('../../../smtp/createMailer.js')(db, logger, configuration);
 
     const sendEmailAsync = (trainee, comment, reason) => {
         let contact = trainee.trainee.email;

@@ -3,7 +3,7 @@ const mongo = require('mongodb');
 const AuthService = require('./components/AuthService');
 const createRegions = require('./components/regions');
 const createLogger = require('./createLogger');
-const createMailer = require('./createMailer.js');
+const createMailer = require('../smtp/createMailer.js');
 const sendForgottenPasswordEmail = require('./components/sendForgottenPasswordEmail.js');
 const sendOrganisationAccountEmail = require('./components/sendOrganisationAccountEmail.js');
 
@@ -20,24 +20,22 @@ const connectToMongoDB = (logger, configuration) => {
     });
 };
 
-module.exports = async (options = { core: {}, context: {} }) => {
+module.exports = async (options = {}) => {
 
-    //Core
-    let configuration = options.core.configuration || config;
-    let logger = options.core.logger || createLogger('anotea-server', configuration);
+    let configuration = options.configuration || config;
+    let logger = options.logger || createLogger('anotea-server', configuration);
     let client = await connectToMongoDB(logger, configuration);
     let db = client.db();
-    let mailer = options.core.mailer || createMailer(db, logger, configuration);
+    let mailer = options.mailer || createMailer(db, logger, configuration);
 
-    //Components
     return Object.assign({}, {
-        db,
-        logger,
-        mailer,
         configuration,
+        logger,
+        db,
+        mailer,
         authService: new AuthService(logger, configuration),
         regions: createRegions(db),
         sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
         sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
-    }, options.context || {});
+    }, options || {});
 };
