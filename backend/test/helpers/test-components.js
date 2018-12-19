@@ -2,7 +2,7 @@ const { randomize } = require('./data/dataset');
 const configuration = require('config');
 const logger = require('./test-logger');
 const fakeMailer = require('./fake-mailer');
-const createComponents = require('../../lib/common/createComponents');
+const components = require('../../lib/common/components');
 
 let _componentsHolder = null;
 
@@ -10,7 +10,7 @@ module.exports = {
     withComponents: callback => {
         return () => {
             before(() => {
-                _componentsHolder = createComponents({
+                _componentsHolder = components({
                     configuration: Object.assign({}, configuration, {
                         mongodb: {
                             uri: configuration.mongodb.uri.split('anotea').join(randomize('anotea_test'))

@@ -3,12 +3,10 @@ const moment = require('moment');
 const { encodeStream } = require('iconv-lite');
 const Boom = require('boom');
 const tryAndCatch = require('./tryAndCatch');
-const { jsonStream } = require('../../common/utils/stream-utils');
-const { transformObject } = require('../../common/utils/stream-utils');
+const { jsonStream, transformObject } = require('../../common/stream-utils');
 const { findLabelByCodeFinanceur } = require('../../common/components/financeurs');
 
-
-module.exports = ({db, configuration, logger, regions}) => {
+module.exports = ({ db, configuration, logger, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const dataExposer = require('./dataExposer')();

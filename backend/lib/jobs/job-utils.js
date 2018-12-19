@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const moment = require('moment');
-const createComponents = require('../../lib/common/createComponents');
+const createComponents = require('../common/components');
 
 module.exports = {
     delay: milliseconds => {
