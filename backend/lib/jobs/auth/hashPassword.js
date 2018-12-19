@@ -3,13 +3,10 @@
 
 const path = require('path');
 const crypto = require('crypto');
-const configuration = require('config');
-const createLogger = require('../../common/createLogger');
 const { hashPassword } = require('../../common/components/password');
+const { execute } = require('../job-utils');
 
-const main = async () => {
-
-    const logger = createLogger('anotea-job-auth', configuration);
+execute(async ({ logger, configuration }) => {
 
     let password = process.argv[2];
     if (!password) {
@@ -21,10 +18,8 @@ const main = async () => {
     .update(password)
     .digest('hex');
 
-    console.log(JSON.stringify({
+    return {
         bcrypt: await hashPassword(password),
         bcrypt_legacy_sha256: await hashPassword(sha256),
-    }, null, 2));
-};
-
-main();
+    };
+});
