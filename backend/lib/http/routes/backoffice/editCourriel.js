@@ -3,10 +3,10 @@ const Boom = require('boom');
 const Joi = require('joi');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = ({ db, authService, sendOrganisationAccountEmail, sendForgottenPasswordEmail }) => {
+module.exports = ({ db, sendOrganisationAccountEmail, sendForgottenPasswordEmail, createJWTAuthMiddleware }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = authService.createJWTAuthMiddleware('backoffice');
+    const checkAuth = createJWTAuthMiddleware('backoffice');
 
     const getRemoteAddress = req => req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 

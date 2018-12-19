@@ -4,7 +4,7 @@ const Joi = require('joi');
 const tryAndCatch = require('../tryAndCatch');
 const { verifyPassword, getSHA256PasswordHashSync, hashPassword } = require('../../../common/components/password');
 
-module.exports = ({ db, authService, logger, configuration }) => {
+module.exports = ({ db, auth, logger, configuration }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
@@ -31,7 +31,7 @@ module.exports = ({ db, authService, logger, configuration }) => {
 
     const handleModerator = async (req, res, moderator) => {
         logLoginEvent(req, 'moderateur');
-        return await authService.buildJWT('backoffice', {
+        return await auth.buildJWT('backoffice', {
             sub: req.body.username,
             profile: 'moderateur',
             id: moderator._id,
@@ -42,7 +42,7 @@ module.exports = ({ db, authService, logger, configuration }) => {
 
     const handleOrganisme = async (req, res, organisme) => {
         logLoginEvent(req, 'organisme');
-        return await authService.buildJWT('backoffice', {
+        return await auth.buildJWT('backoffice', {
             sub: organisme.meta.siretAsString,
             profile: 'organisme',
             id: organisme._id,
@@ -70,7 +70,7 @@ module.exports = ({ db, authService, logger, configuration }) => {
     const handleFinancer = async (req, res, financer) => {
         let profile = 'financer';
         logLoginEvent(req, profile);
-        return await authService.buildJWT('backoffice', {
+        return await auth.buildJWT('backoffice', {
             sub: req.body.username,
             profile: 'financer',
             id: financer._id,
@@ -142,7 +142,7 @@ module.exports = ({ db, authService, logger, configuration }) => {
 
         let user;
         try {
-            user = await authService.checkJWT('backoffice', parameters.access_token);
+            user = await auth.checkJWT('backoffice', parameters.access_token);
         } catch (e) {
             throw Boom.badRequest('Token invalide', e);
         }

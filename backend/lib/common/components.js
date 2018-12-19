@@ -1,7 +1,7 @@
 const config = require('config');
 const mongo = require('mongodb');
-const AuthService = require('./components/AuthService');
-const createRegions = require('./components/regions');
+const auth = require('./components/auth');
+const regions = require('./components/regions');
 const createLogger = require('./components/logger');
 const createMailer = require('../smtp/createMailer.js');
 const sendForgottenPasswordEmail = require('./components/sendForgottenPasswordEmail.js');
@@ -33,8 +33,8 @@ module.exports = async (options = {}) => {
         logger,
         db,
         mailer,
-        authService: new AuthService(logger, configuration),
-        regions: createRegions(db),
+        auth: auth(configuration),
+        regions: regions(db),
         sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
         sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
     }, options || {});

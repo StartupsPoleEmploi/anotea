@@ -1,10 +1,10 @@
 const express = require('express');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = ({ db, authService }) => {
+module.exports = ({ db, createJWTAuthMiddleware }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = authService.createJWTAuthMiddleware('backoffice');
+    const checkAuth = createJWTAuthMiddleware('backoffice');
 
     router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', checkAuth, tryAndCatch(async (req, res) => {
 
