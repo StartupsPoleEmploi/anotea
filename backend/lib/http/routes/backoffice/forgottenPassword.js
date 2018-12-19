@@ -3,9 +3,9 @@ const Boom = require('boom');
 const tryAndCatch = require('../tryAndCatch');
 const { hashPassword, isPasswordStrongEnough } = require('../../../common/components/password');
 
-module.exports = ({ db, sendForgottenPasswordEmail }) => {
+module.exports = ({ db, mailing }) => {
 
-    const router = express.Router(); // eslint-disable-line new-cap
+    let router = express.Router(); // eslint-disable-line new-cap
 
     router.put('/backoffice/askNewPassword', tryAndCatch(async (req, res) => {
 
@@ -13,7 +13,7 @@ module.exports = ({ db, sendForgottenPasswordEmail }) => {
 
         let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
         if (organisme) {
-            await sendForgottenPasswordEmail(organisme);
+            await mailing.sendForgottenPasswordEmail(organisme);
             return res.json({ 'message': 'mail sent' });
         }
 

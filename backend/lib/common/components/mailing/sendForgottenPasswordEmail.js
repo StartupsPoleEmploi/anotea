@@ -1,4 +1,4 @@
-const getContactEmail = require('./getContactEmail');
+const getContactEmail = require('../getContactEmail');
 const uuid = require('node-uuid');
 
 module.exports = (db, mailer) => {

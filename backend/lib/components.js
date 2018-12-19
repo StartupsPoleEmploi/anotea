@@ -1,11 +1,11 @@
 const config = require('config');
 const mongo = require('mongodb');
-const auth = require('./components/auth');
-const regions = require('./components/regions');
-const createLogger = require('./components/logger');
-const createMailer = require('../smtp/createMailer.js');
-const sendForgottenPasswordEmail = require('./components/sendForgottenPasswordEmail.js');
-const sendOrganisationAccountEmail = require('./components/sendOrganisationAccountEmail.js');
+const auth = require('./common/components/auth');
+const regions = require('./common/components/regions');
+const createLogger = require('./common/components/logger');
+const createMailer = require('./smtp/mailer.js');
+const sendForgottenPasswordEmail = require('./common/components/mailing/sendForgottenPasswordEmail.js');
+const sendOrganisationAccountEmail = require('./common/components/mailing/sendOrganisationAccountEmail.js');
 
 const connectToMongoDB = (logger, configuration) => {
     return new Promise(resolve => {
@@ -35,7 +35,9 @@ module.exports = async (options = {}) => {
         mailer,
         auth: auth(configuration),
         regions: regions(db),
-        sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
-        sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
+        mailing: {
+            sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
+            sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
+        }
     }, options || {});
 };
