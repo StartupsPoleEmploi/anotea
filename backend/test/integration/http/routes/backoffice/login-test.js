@@ -5,7 +5,7 @@ const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
 const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoDatabase, getTestDatabase }) => {
 
     it('can login as moderator', async () => {
 
@@ -105,7 +105,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.equal(response.statusCode, 200);
     });
 
-
     it('should rehash password', async () => {
 
         let app = await startServer();
@@ -153,9 +152,38 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         });
     });
 
+    it('can login with access_token', async () => {
+
+        let db = await getTestDatabase();
+        let app = await startServer();
+        await Promise.all([
+            db.collection('departements').createIndex({ region: 'text' }), //FIXME
+            insertIntoDatabase('departements', {
+                region: 'Ile De France',
+                dept_num: '91',
+                region_num: '11',
+                codeFinanceur: '2'
+            })
+        ]);
+
+        let authUrl = await generateKairosToken(app);
+
+        let response = await request(app)
+        .get(`/api/backoffice/login?access_token=${authUrl.split('access_token=')[1]}`);
+
+        assert.deepEqual(response.statusCode, 200);
+        assert.ok(response.body.access_token);
+        let event = await db.collection('events').findOne({ type: 'login-access-token' });
+        assert.ok(event.date);
+        assert.ok(event.source.ip);
+        assert.deepEqual(event.source.siret, '22222222222222');
+    });
+
+
     it('can not login with invalid auth url', async () => {
 
         let app = await startServer();
+
         let response = await request(app)
         .get('/api/backoffice/login?access_token=INVALID');
 
@@ -166,6 +194,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     it('can not access a ressource with invalid token', async () => {
 
         let app = await startServer();
+
         let response = await request(app)
         .get('/api/backoffice/organisation/111111111111/info')
         .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiZmluYW.INVALID');

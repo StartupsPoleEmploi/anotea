@@ -7,7 +7,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     const insertDepartements = async () => {
         let db = await getTestDatabase();
         return Promise.all([
-            db.collection('departements').createIndex({ region: 'text' }),
+            db.collection('departements').createIndex({ region: 'text' }), //FIXME
             insertIntoDatabase('departements', {
                 region: 'Grand Est',
                 dept_num: '57',
