@@ -1,7 +1,6 @@
 const AccountMailer = require('../../mailing/organismes/account/AccountMailer');
-const createMailer = require('../../../smtp/createMailer.js');
 
-module.exports = function(db, logger, configuration) {
+module.exports = function(db, logger, configuration, mailer) {
 
     const fs = require('fs');
     const moment = require('moment');
@@ -11,7 +10,6 @@ module.exports = function(db, logger, configuration) {
     const importEditedCourriel = file => {
         logger.info('Organisation edited email import - launch');
 
-        let mailer = createMailer(db, logger, configuration);
         let accountMailer = new AccountMailer(db, logger, configuration, mailer);
         let launchTime = new Date().getTime();
         let parser = parse({ delimiter: ',', quote: '"' });

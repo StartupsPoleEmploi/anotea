@@ -1,7 +1,8 @@
 const server = require('./lib/http/createServer');
 const createComponents = require('./lib/common/createComponents');
 
-process.on('uncaughtException', err => console.log(err));
+process.on('unhandledRejection', e => console.log(e));
+process.on('uncaughtException', e => console.log(e));
 
 const main = async () => {
 

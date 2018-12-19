@@ -2,31 +2,17 @@
 'use strict';
 
 const cli = require('commander');
-const configuration = require('config');
-const createMongoDBClient = require('../../common/createMongoDBClient');
-const createLogger = require('../../common/createLogger');
+const { execute } = require('../job-utils');
 
-/**
- *
- *  Can be launched with the following command
- *  `node jobs/archive/archive`
- *
- **/
+cli.description('launch trainees & advices archive')
+.parse(process.argv);
 
-const main = async () => {
-
-    const client = await createMongoDBClient(configuration.mongodb.uri);
-    const db = client.db();
-    const logger = createLogger('anotea-job-trainee-advices-archive', configuration);
-
-    cli.description('launch trainees & advices archive')
-    .parse(process.argv);
+execute(async ({ db, logger, configuration }) => {
 
     logger.info(`Archiving old ${cli.source}s from the collection ${cli.source}...`);
 
-    require(`./archive`)(db, logger, configuration).archive('comment', 'archivedAdvices');
-    require(`./archive`)(db, logger, configuration).archive('trainee', 'archivedTrainees');
+    let archiver = require(`./archive`)(db, logger, configuration);
 
-};
-
-main();
+    archiver.archive('comment', 'archivedAdvices');
+    archiver.archive('trainee', 'archivedTrainees');
+});

@@ -4,12 +4,11 @@ const mongo = require('mongodb');
 const s = require('string');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = ({ db, authService, logger, configuration }) => {
+module.exports = ({ db, authService, logger, configuration, mailer }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = authService.createJWTAuthMiddleware('backoffice');
     const pagination = configuration.api.pagination;
-    const mailer = require('../../../smtp/createMailer.js')(db, logger, configuration);
 
     const sendEmailAsync = (trainee, comment, reason) => {
         let contact = trainee.trainee.email;

@@ -6,31 +6,17 @@ const _ = require('lodash');
 const moment = require('moment');
 const cli = require('commander');
 const colors = require('colors/safe');
-const configuration = require('config');
-const createMongoDBClient = require('../../../common/createMongoDBClient');
-const createLogger = require('../../../common/createLogger');
+const { execute } = require('../../job-utils');
 const createImporter = require('./traineeImporter');
 const validateCsvFile = require('./validateCsvFile');
-const createMailer = require('../../../smtp/createMailer');
 
 const sources = {
     'PE': 'poleEmploi',
     'IDF': 'ileDeFrance',
 };
 
-const main = async () => {
 
-    let launchTime = new Date().getTime();
-    let client = await createMongoDBClient(configuration.mongodb.uri);
-    let db = client.db();
-    let logger = createLogger('anotea-job-trainee-import', configuration);
-    let mailer = createMailer(db, logger, configuration);
-
-    const abort = message => {
-        logger.error(message, () => {
-            client.close(() => process.exit(1));
-        });
-    };
+execute(async ({ logger, db, exit, configuration, mailer }) => {
 
     const handleValidationError = (validationError, csvOptions) => {
         let { line, type } = validationError;
@@ -47,7 +33,7 @@ const main = async () => {
             date: moment().format('DD/MM/YYYY'),
             reason: type.message,
             source: cli.source
-        }, () => ({}), e => abort(e));
+        }, () => ({}), e => exit(e));
     };
 
     let dryRun = false;
@@ -64,19 +50,19 @@ const main = async () => {
 
     let allowedSources = Object.keys(sources);
     if (cli.source === undefined || !allowedSources.includes(cli.source)) {
-        return abort(`Source param is required, please choose one : ${JSON.stringify(allowedSources)}`);
+        return exit(`Source param is required, please choose one : ${JSON.stringify(allowedSources)}`);
     }
 
     if (!cli.file) {
-        return abort('CSV File is required');
+        return exit('CSV File is required');
     }
 
     if (cli.region && isNaN(cli.region)) {
-        return abort('Region is invalid');
+        return exit('Region is invalid');
     }
 
     if (cli.since && !cli.since.isValid()) {
-        return abort('startDate is invalid, please use format \'YYYY-MM-DD\'');
+        return exit('startDate is invalid, please use format \'YYYY-MM-DD\'');
     }
 
     let importer = createImporter(db, logger);
@@ -88,27 +74,15 @@ const main = async () => {
         append: cli.append,
     };
 
-    try {
-
-        if (dryRun === true) {
-            logger.info(`Validating file ${cli.file} in dry-run mode...`);
-            let validationError = await validateCsvFile(cli.file, handler);
-            if (validationError) {
-                handleValidationError(validationError, handler.csvOptions);
-            }
-        } else {
-            logger.info(`Importing source ${cli.source} from file ${cli.file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
-            let results = await importer.importTrainee(cli.file, handler, filters);
-
-            let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
-            logger.info(`Completed in ${duration}: ${JSON.stringify(results, null, 2)}`);
+    if (dryRun === true) {
+        logger.info(`Validating file ${cli.file} in dry-run mode...`);
+        let validationError = await validateCsvFile(cli.file, handler);
+        if (validationError) {
+            handleValidationError(validationError, handler.csvOptions);
         }
+    } else {
+        logger.info(`Importing source ${cli.source} from file ${cli.file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
 
-        await client.close();
-
-    } catch (e) {
-        abort(e);
+        return importer.importTrainee(cli.file, handler, filters);
     }
-};
-
-main();
+});
