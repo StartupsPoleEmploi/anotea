@@ -7,10 +7,10 @@ module.exports = db => {
         if (option.unwind) {
             request.push({ $unwind: '$training.codeFinanceur' });
             codeFinancerProject = '$training.codeFinanceur';
-            outCollection = 'mailStatsByCodeFinanceur';
+            outCollection = 'mailStats';
         } else {
             codeFinancerProject = 'all';
-            outCollection = 'mailStats';
+            outCollection = 'mailStatsAll';
         }
 
         [{
@@ -28,11 +28,7 @@ module.exports = db => {
                 codeFinanceur: codeFinancerProject,
                 count: { '$sum': 1 },
                 emailOpen: {
-                    $filter: {
-                        input: '$advices',
-                        as: 'advice',
-                        cond: { $gte: ['$$advice.step', 1] }
-                    }
+                    $cond: { if: { $ifNull: ['$tracking', false] }, then: 0, else: 1 }
                 },
                 advicesPublished: {
                     $filter: {
@@ -100,9 +96,7 @@ module.exports = db => {
                 codeRegion: '$codeRegion',
                 codeFinanceur: '$codeFinanceur',
                 count: '$count',
-                countEmailOpen: {
-                    '$size': '$emailOpen'
-                },
+                emailOpen: '$emailOpen',
                 countAdvicesPublished: {
                     '$size': '$advicesPublished'
                 },
@@ -130,7 +124,7 @@ module.exports = db => {
                     codeFinanceur: '$codeFinanceur'
                 },
                 count: { $sum: '$count' },
-                countEmailOpen: { $sum: '$countEmailOpen' },
+                countEmailOpen: { $sum: '$emailOpen' },
                 countAdvicesPublished: { $sum: '$countAdvicesPublished' },
                 countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
                 countAdvicesPositif: { $sum: '$countAdvicesPositif' },
