@@ -32,6 +32,7 @@ module.exports = async (options = {}) => {
         configuration,
         logger,
         db,
+        client,
         mailer,
         auth: auth(configuration),
         regions: regions(db),
