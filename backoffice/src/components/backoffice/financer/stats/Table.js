@@ -57,7 +57,7 @@ export default class Graph extends React.Component {
                             </tr>
                             <tr className={this.props.type === 2 ? 'selected' : ''}>
                                 <td onClick={this.props.changeType.bind(this, 2)}>Tx d'avis déposés</td>
-                                <td className="value">{this.getRate(this.state.dashboardData.countAdvicesPublished, this.state.dashboardData.countEmailOpen)}</td>
+                                <td className="value">{this.getRate(this.state.dashboardData.countAdvicesPublished, this.state.dashboardData.count)}</td>
                             </tr>
                             <tr className={this.props.type === 3 ? 'selected' : ''}>
                                 <td onClick={this.props.changeType.bind(this, 3)}>Tx d'avis avec commentaires</td>

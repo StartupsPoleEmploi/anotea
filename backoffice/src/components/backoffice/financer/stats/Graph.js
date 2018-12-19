@@ -8,6 +8,16 @@ import {
 
 const MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
+const options = {
+    fill: false,
+    spanGaps: false,
+    backgroundColor: 'rgba(75,192,192,0.4)',
+    pointBorderColor: 'rgba(75,192,192,1)',
+    borderColor: 'rgba(75,192,192,1)',
+    pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+    pointHoverBorderColor: 'rgba(220,220,220,1)'
+};
+
 export default class Graph extends React.Component {
 
     state = {
@@ -32,13 +42,13 @@ export default class Graph extends React.Component {
         getGraphData(codeRegion, year, codeFinanceur === '4' ? 'all' : codeFinanceur).then(graphData => {
 
             const allData = [
-                { label: 'Nombre de mails envoyés', data: graphData.map(item => item.count) },
-                { label: 'Nombre de mails ouverts', data: graphData.map(item => item.countEmailOpen) },
-                { label: 'Nombre d\'avis déposés', data: graphData.map(item => item.countAdvicesPublished) },
-                { label: 'Nombre d\'avis avec commentaires', data: graphData.map(item => item.countAdvicesWithComments) },
-                { label: 'Nombre de commentaires positifs ou neutres', data: graphData.map(item => item.countAdvicesPositif) },
-                { label: 'Nombre de commentaires négatifs', data: graphData.map(item => item.countAdvicesNegatif) },
-                { label: 'Nombre de commentaires rejetés', data: graphData.map(item => item.countAdvicesRejected) }
+                Object.assign({ label: 'Nombre de mails envoyés', data: graphData.map(item => item.count) }, options),
+                Object.assign({ label: 'Nombre de mails ouverts', data: graphData.map(item => item.countEmailOpen) }, options),
+                Object.assign({ label: 'Nombre d\'avis déposés', data: graphData.map(item => item.countAdvicesPublished) }, options),
+                Object.assign({ label: 'Nombre d\'avis avec commentaires', data: graphData.map(item => item.countAdvicesWithComments) }, options),
+                Object.assign({ label: 'Nombre de commentaires positifs ou neutres', data: graphData.map(item => item.countAdvicesPositif) }, options),
+                Object.assign({ label: 'Nombre de commentaires négatifs', data: graphData.map(item => item.countAdvicesNegatif) }, options),
+                Object.assign({ label: 'Nombre de commentaires rejetés', data: graphData.map(item => item.countAdvicesRejected) }, options)
             ];
 
             this.setState({

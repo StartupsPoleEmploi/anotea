@@ -22,13 +22,13 @@ module.exports = ({ db, authService }) => {
         let results = Array.from(Array(12).keys()).map(i => {
             return {
                 _id: i,
-                count: 0,
-                countEmailOpen: 0,
-                countAdvicesPublished: 0,
-                countAdvicesWithComments: 0,
-                countAdvicesPositif: 0,
-                countAdvicesNegatif: 0,
-                countAdvicesRejected: 0
+                count: null,
+                countEmailOpen: null,
+                countAdvicesPublished: null,
+                countAdvicesWithComments: null,
+                countAdvicesPositif: null,
+                countAdvicesNegatif: null,
+                countAdvicesRejected: null
             };
         });
 
@@ -51,7 +51,7 @@ module.exports = ({ db, authService }) => {
         ]).toArray();
 
         stats.forEach(item => {
-            results[item._id] = item;
+            results[item._id - 1] = item;
         });
         
         res.status(200).send(results);
