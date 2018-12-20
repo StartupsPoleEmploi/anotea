@@ -17,12 +17,8 @@ import {
     loadInventoryForAllAdvicesWhenFinancerFirstConnexion,
     getAdvices,
     getOrganisations,
-    loadInventoryASelectedOrganisation,
-    getOrganisationAdvicesToExportToExcel
+    loadInventoryASelectedOrganisation
 } from '../../../lib/financerService';
-import {
-    exportToExcel
-} from '../../../lib/export';
 import PropTypes from 'prop-types';
 import Dashboard from './stats/Dashboard';
 import SideMenu from './SideMenu';
@@ -351,11 +347,6 @@ export default class FinancerPanel extends React.Component {
         });
     };
 
-    exportOrganisationAdvicesToExcel = async () => {
-        const comments = await getOrganisationAdvicesToExportToExcel(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.training.currentEntity._id, this.state.trainingId, this.state.tab);
-        exportToExcel(comments, this.props.codeFinanceur);
-    };
-
     getActiveStatus = current => this.state.tab === current ? 'active' : '';
 
     handleChangePage = page => {
@@ -417,8 +408,7 @@ export default class FinancerPanel extends React.Component {
                             </li>
                         </ul>
 
-                        <Toolbar profile={this.props.profile}
-                            exportOrganisationAdvicesToExcel={this.exportOrganisationAdvicesToExcel} />
+                        <Toolbar profile={this.props.profile} />
 
                         <div className="advices">
                             {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}

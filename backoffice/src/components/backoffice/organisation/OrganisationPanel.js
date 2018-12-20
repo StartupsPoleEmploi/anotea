@@ -334,7 +334,7 @@ export default class OrganisationPanel extends React.Component {
                             </li>
                         </ul>
 
-                        <Toolbar orderBy={this.orderBy} />
+                        <Toolbar profile={this.props.profile} />
 
                         <div className="advices">
                             {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}

@@ -48,6 +48,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
             id: organisme._id,
             codeRegion: organisme.codeRegion,
             raisonSociale: organisme.raisonSociale,
+            siret: organisme.meta.siretAsString
         });
     };
 

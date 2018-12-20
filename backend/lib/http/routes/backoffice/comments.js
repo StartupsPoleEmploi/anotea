@@ -35,17 +35,25 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
     });
 
     // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
-    router.get('/avis.csv', async (req, res) => {
+    router.get('/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
         let query = { step: { $gte: 2 } };
         if (req.query.filter === 'region') {
             query['training.infoRegion'] = { $ne: null };
         }
+        
+        if (req.user.profile === 'organisme') {
+            query['training.organisation.siret'] = req.user.siret;
+        } else if (req.user.profile === 'financer') {
+            query['codeRegion'] = req.user.codeRegion;
+            query['training.codeFinanceur'] = { '$elemMatch' : { '$eq': req.user.codeFinanceur } };
+        }
+        
         const advices = await db.collection('comment').find(query, { token: 0 }).toArray();
         res.setHeader('Content-disposition', 'attachment; filename=avis.csv');
         res.setHeader('Content-Type', 'text/csv');
         let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
         advices.forEach(comment => {
-            if (comment.comment !== undefined) {
+            if (comment.comment !== undefined && comment.comment !== null) {
                 comment.comment.pseudo = (comment.comment.pseudo !== undefined) ? comment.comment.pseudo.replace(/\r?\n|\r/g, ' ') : '';
                 comment.comment.title = (comment.comment.title !== undefined) ? comment.comment.title.replace(/\r?\n|\r/g, ' ') : '';
                 comment.comment.text = (comment.comment.text !== undefined) ? comment.comment.text.replace(/\r?\n|\r/g, ' ') : '';
@@ -57,9 +65,9 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
                 (comment.rates !== undefined ? comment.rates.moyen_materiel : '') + ';' +
                 (comment.rates !== undefined ? comment.rates.accompagnement : '') + ';' +
                 (comment.rates !== undefined ? comment.rates.global : '') + ';' +
-                (comment.comment !== undefined ? s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
-                (comment.comment !== undefined ? s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
-                (comment.comment !== undefined ? s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
+                (comment.comment !== undefined && comment.comment !== null ? s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
+                (comment.comment !== undefined && comment.comment !== null ? s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
+                (comment.comment !== undefined && comment.comment !== null ? s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
                 comment.campaign + ';' +
                 comment.step + ';' +
                 comment.date + ';' +
@@ -86,7 +94,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
                 comment.training.codeFinanceur + '\n';
         });
         res.send(lines);
-    });
+    }));
 
     router.get('/backoffice/advices/:codeRegion/', checkAuth, async (req, res) => {
         const projection = { token: 0 };

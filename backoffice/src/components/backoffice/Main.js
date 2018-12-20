@@ -43,6 +43,7 @@ export class Main extends React.Component {
                 }
                 {this.state.profile === 'organisme' &&
                 <OrganisationPanel
+                    profile={this.state.profile}
                     id={this.state.id}
                     raisonSociale={this.state.raisonSociale}
                     codeRegion={this.state.codeRegion}
