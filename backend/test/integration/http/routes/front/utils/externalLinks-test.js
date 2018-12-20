@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../../helpers/test-database');
 const { newTrainee } = require('../../../../../helpers/data/dataset');
 const doImportRome = require('../../../../../../lib/jobs/import/rome/importer');
 const doImportINSEE = require('../../../../../../lib/jobs/import/insee/importer');

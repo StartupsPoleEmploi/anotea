@@ -1,31 +1,11 @@
 const assert = require('assert');
 const path = require('path');
 const _ = require('lodash');
-const { withMongoDB } = require('../../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../../helpers/test-database');
 const logger = require('../../../../../helpers/test-logger');
 const generateOrganismesKairos = require('../../../../../../lib/jobs/import/organismes/generators/generateOrganismesKairos');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
-
-    const insertDepartements = () => {
-        return Promise.all([
-            insertIntoDatabase('departements', {
-                region: 'Grand Est',
-                dept_num: '57',
-                region_num: '7'
-            }),
-            insertIntoDatabase('departements', {
-                region: 'Aquitaine',
-                dept_num: '33',
-                region_num: '1'
-            }),
-            insertIntoDatabase('departements', {
-                region: 'Hauts-de-France',
-                dept_num: '59',
-                region_num: '10'
-            })
-        ]);
-    };
+describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
 
     it('should create collection with organismes from CSV file', async () => {
 

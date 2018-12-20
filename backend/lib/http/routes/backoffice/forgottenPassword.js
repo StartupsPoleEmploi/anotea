@@ -46,7 +46,7 @@ module.exports = ({ db, mailing }) => {
                         let passwordHash = await hashPassword(password);
                         await Promise.all([
                             db.collection('forgottenPasswordTokens').remove({ token }),
-                            db.collection('organismes').update({ _id: organisme._id }, {
+                            db.collection('organismes').updateOne({ _id: organisme._id }, {
                                 $set: {
                                     'meta.rehashed': true,
                                     'passwordHash': passwordHash,

@@ -1,5 +1,5 @@
-module.exports = async db => {
-    await db.collection('sessionsReconciliees').aggregate([
+module.exports = db => {
+    return db.collection('sessionsReconciliees').aggregate([
         {
             $group: {
                 _id: '$meta.source.numero_action',
@@ -31,11 +31,5 @@ module.exports = async db => {
             $out: 'actionsReconciliees'
         }
     ], { allowDiskUse: true }).toArray();
-
-    return Promise.all([
-        db.collection('actionsReconciliees').createIndex({ 'numero': 1 }),
-        db.collection('actionsReconciliees').createIndex({ 'region': 1 }),
-        db.collection('actionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
-    ]);
 };
 

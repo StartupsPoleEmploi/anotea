@@ -1,36 +1,20 @@
 const path = require('path');
 const assert = require('assert');
 const configuration = require('config');
-const { withMongoDB } = require('../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
 const validateCsvFile = require('../../../../../lib/jobs/import/trainee/validateCsvFile');
 const poleEmploiCSVHandler = require('../../../../../lib/jobs/import/trainee/handlers/poleEmploiCSVHandler');
 const ileDeFranceCSVHandler = require('../../../../../lib/jobs/import/trainee/handlers/ileDeFranceCSVHandler');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
-
-    const insertDepartement = () => {
-        return Promise.all([
-            insertIntoDatabase('departements', {
-                region: 'Auvergne-Rhône-Alpes',
-                dept_num: '69',
-                region_num: '2',
-            }),
-            insertIntoDatabase('departements', {
-                region: 'Ile De France',
-                dept_num: '91',
-                region_num: '11',
-                codeFinanceur: '2'
-            })
-        ]);
-    };
+describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
 
     it('can validate PE file', async () => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartement();
+        await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
@@ -53,7 +37,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-header.csv');
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartement();
+        await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
@@ -69,7 +53,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-line.csv');
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartement();
+        await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
@@ -85,7 +69,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-duplicated.csv');
         let handler = poleEmploiCSVHandler(db, logger, configuration);
-        await insertDepartement();
+        await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 

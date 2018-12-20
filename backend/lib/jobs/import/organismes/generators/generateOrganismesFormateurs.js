@@ -38,11 +38,6 @@ module.exports = async db => {
         }
     ], { allowDiskUse: true }).toArray();
 
-    await Promise.all([
-        db.collection('intercarif_organismes_formateurs').createIndex({ 'siret': 1 }, { unique: true }),
-        db.collection('intercarif_organismes_formateurs').createIndex({ 'numero': 1 }),
-    ]);
-
     return db.collection('intercarif_organismes_formateurs').countDocuments();
 };
 

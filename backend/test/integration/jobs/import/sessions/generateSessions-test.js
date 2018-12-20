@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
 const generateSessions = require('../../../../../lib/jobs/import/sessions/generateSessions');
 
@@ -349,23 +349,4 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.equal(session.avis.length, 1);
         assert.equal(session.avis[0].rejected, true);
     });
-
-    it('should create indexes', async () => {
-
-        let db = await getTestDatabase();
-        await Promise.all([
-            importIntercarif(),
-        ]);
-
-        await generateSessions(db);
-
-        let indexes = await db.collection('sessionsReconciliees').indexInformation();
-        assert.deepEqual(indexes, {
-            '_id_': [['_id', 1]],
-            'numero_1': [['numero', 1]],
-            'region_1': [['region', 1]],
-            'score.nb_avis_1': [['score.nb_avis', 1]],
-        });
-    });
-
 }));

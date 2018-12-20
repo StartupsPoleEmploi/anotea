@@ -1,6 +1,6 @@
 const assert = require('assert');
 const _ = require('lodash');
-const { withMongoDB } = require('../../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../../helpers/test-database');
 const { newOrganismeResponsable } = require('../../../../../helpers/data/dataset');
 const generateOrganismesFormateurs = require('../../../../../../lib/jobs/import/organismes/generators/generateOrganismesFormateurs');
 
@@ -85,22 +85,5 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         count = await db.collection('intercarif_organismes_formateurs').countDocuments({ siret: '44444444444444' });
         assert.deepEqual(count, 0);
-    });
-
-    it('should create indexes', async () => {
-
-        let db = await getTestDatabase();
-        await Promise.all([
-            insertIntoDatabase('intercarif_organismes_responsables', newOrganismeResponsable()),
-        ]);
-
-        await generateOrganismesFormateurs(db);
-
-        let indexes = await db.collection('intercarif_organismes_formateurs').indexInformation();
-        assert.deepEqual(indexes, {
-            '_id_': [['_id', 1]],
-            'siret_1': [['siret', 1]],
-            'numero_1': [['numero', 1]],
-        });
     });
 }));

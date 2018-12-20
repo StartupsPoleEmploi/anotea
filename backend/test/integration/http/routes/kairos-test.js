@@ -7,20 +7,7 @@ const { withServer } = require('../../../helpers/test-server');
 const { newOrganismeAccount, randomSIRET } = require('../../../helpers/data/dataset');
 const auth = require('../../../../lib/common/components/auth');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
-
-    const insertDepartements = async () => {
-
-        await insertIntoDatabase('departements', {
-            region: 'Ile De France',
-            dept_num: '75',
-            region_num: '11',
-            codeFinanceur: '2'
-        });
-
-        let db = await getTestDatabase();
-        return db.collection('departements').ensureIndex({ region: 'text' });
-    };
+describe(__filename, withServer(({ startServer, insertDepartements, insertIntoDatabase, getTestDatabase }) => {
 
     const insertOrganisme = async siret => {
         return insertIntoDatabase('organismes', newOrganismeAccount({

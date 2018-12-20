@@ -1,5 +1,5 @@
-module.exports = async db => {
-    await db.collection('intercarif').aggregate([
+module.exports = db => {
+    return db.collection('intercarif').aggregate([
         {
             $project: {
                 _id: 0,
@@ -148,11 +148,5 @@ module.exports = async db => {
             $out: 'sessionsReconciliees'
         }
     ], { allowDiskUse: true }).toArray();
-
-    return Promise.all([
-        db.collection('sessionsReconciliees').createIndex({ 'numero': 1 }),
-        db.collection('sessionsReconciliees').createIndex({ 'region': 1 }),
-        db.collection('sessionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
-    ]);
 };
 
