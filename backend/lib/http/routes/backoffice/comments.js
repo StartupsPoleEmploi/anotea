@@ -46,6 +46,8 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
         } else if (req.user.profile === 'financer') {
             query['codeRegion'] = req.user.codeRegion;
             query['training.codeFinanceur'] = { '$elemMatch' : { '$eq': req.user.codeFinanceur } };
+
+            // TODO : filter postalCode / SIRET
         }
         
         const advices = await db.collection('comment').find(query, { token: 0 }).toArray();
