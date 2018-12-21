@@ -61,13 +61,14 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
                 query['training.codeFinanceur'] = { '$elemMatch': { '$eq': req.query.codeFinanceur } };
             }
     
-            if (req.query.trainingId === 'null') {
+            if (req.query.siret) {
+                query['training.organisation.siret'] = req.query.siret;
+            }
+            if (req.query.postalCode) {
                 query['training.place.postalCode'] = req.query.postalCode;
-            } else {
-                Object.assign(query, {
-                    'training.place.postalCode': req.query.postalCode,
-                    'training.idFormation': req.query.trainingId
-                });
+            }
+            if (req.query.trainingId) {
+                query['training.idFormation'] = req.query.trainingId;
             }
         }
         
