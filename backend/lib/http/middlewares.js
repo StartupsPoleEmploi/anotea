@@ -57,7 +57,7 @@ module.exports = (auth, logger, configuration) => {
                     return;
                 }
 
-                const token = req.headers.authorization.substring(scheme.length);
+                const token = req.headers.authorization.substring(scheme.length) || req.query.token ;
                 return auth.checkJWT(type, token, options)
                 .then(decoded => {
                     req.user = decoded;
