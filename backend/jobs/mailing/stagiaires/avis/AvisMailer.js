@@ -20,7 +20,7 @@ class AvisMailer {
                 mailErrorDetail: ''
             },
             $inc: {
-                mailRetry: trainee.mailRetry ? 1 : 0
+                mailRetry: trainee.mailRetry >= 0 ? 1 : 0
             }
         });
     }
