@@ -1,7 +1,7 @@
 const configuration = require('config');
 const assert = require('assert');
 const moment = require('moment');
-const { withMongoDB } = require('../../../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../../../helpers/test-database');
 const { newOrganismeAccount } = require('../../../../../../helpers/data/dataset');
 const logger = require('../../../../../../helpers/test-logger');
 const AccountMailer = require('../../../../../../../lib/jobs/mailing/organismes/account/AccountMailer');

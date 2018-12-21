@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
 const generateActions = require('../../../../../lib/jobs/import/sessions/generateActions');
 

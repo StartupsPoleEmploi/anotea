@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const server = require('../../lib/http/server');
-const { withMongoDB } = require('./test-db');
+const { withMongoDB } = require('./test-database');
 const { newModerateurAccount } = require('./data/dataset');
 
 module.exports = {

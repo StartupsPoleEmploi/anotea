@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
 const doImport = require('../../../../../lib/jobs/import/rome/importer');
 

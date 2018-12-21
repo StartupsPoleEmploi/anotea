@@ -32,7 +32,6 @@ module.exports = async (db, logger, file) => {
     };
 
     await db.collection('kairos_organismes').removeMany({});
-    await db.collection('departements').createIndex({ region: 'text' });
 
     return new Promise((resolve, reject) => {
         fs.createReadStream(file)
