@@ -38,7 +38,15 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
 
     // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
     router.get('/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
-        let query = { step: { $gte: 2 } };
+        let query = {
+            $or: [
+                { 'comment': { $exists: false } },
+                { 'comment': null },
+                { 'published': true }
+            ],
+            step: { $gte: 2 }
+        };
+        
         if (req.query.filter === 'region') {
             query['training.infoRegion'] = { $ne: null };
         }
