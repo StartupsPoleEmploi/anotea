@@ -1,5 +1,4 @@
 const express = require('express');
-const JSONStream = require('JSONStream');
 
 module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
 

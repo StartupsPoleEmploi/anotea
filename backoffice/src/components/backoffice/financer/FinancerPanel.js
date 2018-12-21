@@ -30,7 +30,6 @@ export default class FinancerPanel extends React.Component {
 
     state = {
         financerId: null,
-        postalCode: null,
         reportedAdvicesCount: 0,
         tab: 'all',
         inventory: {
@@ -353,9 +352,28 @@ export default class FinancerPanel extends React.Component {
         this.setState({ currentPage: page });
     };
 
+    getExportFilters = () => {
+        let str = '';
+        if (this.state.currentFinancer) {
+            str = `?codeFinanceur=${this.state.currentFinancer._id}`;
+        }
+        if (this.state.training) {
+            if (this.state.training.currentOrganisation) {
+                str += `&siret=${this.state.training.currentOrganisation._id}`;
+            }
+            if (this.state.training.currentEntity) {
+                str += `&postalCode=${this.state.training.currentEntity._id}`;
+            }
+            if (this.state.trainingId) {
+                str += `&trainingId=${this.state.trainingId}`;
+            }
+        }
+        return str;
+    }
+
     render() {
         const { currentOrganisation, currentEntity, organisations, entities } = this.state.training;
-        const { currentFinancer, financers, inventory, tab } = this.state;
+        const { currentFinancer, financers, inventory } = this.state;
 
         return (
             <div className="organisationPanel mainPanel">
@@ -389,8 +407,6 @@ export default class FinancerPanel extends React.Component {
                                 changeTrainingSession={this.changeTrainingSession} />
                         }
 
-                        {false && <SessionStats id={this.state.organisationId} />}
-
                         <h2>Liste des notes et avis</h2>
 
                         <ul className="nav nav-tabs">
@@ -408,7 +424,7 @@ export default class FinancerPanel extends React.Component {
                             </li>
                         </ul>
 
-                        <Toolbar profile={this.props.profile} />
+                        <Toolbar profile={this.props.profile} exportFilters={this.getExportFilters()} />
 
                         <div className="advices">
                             {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}
@@ -422,7 +438,7 @@ export default class FinancerPanel extends React.Component {
                                                     {advice.pseudo}
                                                     {!advice.pseudo && <em>anonyme</em>} -&nbsp;
         
-                                            {advice.date &&
+                                                    {advice.date &&
                                                         <FormattedDate
                                                             value={new Date(advice.date)}
                                                             day="numeric"

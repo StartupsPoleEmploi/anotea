@@ -10,6 +10,8 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
     const checkAuth = createJWTAuthMiddleware('backoffice');
     const pagination = configuration.api.pagination;
 
+    const POLE_EMPLOI = '4';
+
     const sendEmailAsync = (trainee, comment, reason) => {
         let contact = trainee.trainee.email;
         if (reason === 'non concerné') {
@@ -45,14 +47,25 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
             query['training.organisation.siret'] = req.user.siret;
         } else if (req.user.profile === 'financer') {
             query['codeRegion'] = req.user.codeRegion;
-            query['training.codeFinanceur'] = { '$elemMatch' : { '$eq': req.user.codeFinanceur } };
-
-            // TODO : filter postalCode / SIRET
+            if (req.user.codeFinanceur !== POLE_EMPLOI) {
+                query['training.codeFinanceur'] = { '$elemMatch': { '$eq': req.user.codeFinanceur } };
+            } else if (req.user.codeFinanceur === POLE_EMPLOI && req.query.codeFinanceur) {
+                query['training.codeFinanceur'] = { '$elemMatch': { '$eq': req.query.codeFinanceur } };
+            }
+    
+            if (req.query.trainingId === 'null') {
+                query['training.place.postalCode'] = req.query.postalCode;
+            } else {
+                Object.assign(query, {
+                    'training.place.postalCode': req.query.postalCode,
+                    'training.idFormation': req.query.trainingId
+                });
+            }
         }
         
         const advices = await db.collection('comment').find(query, { token: 0 }).toArray();
         res.setHeader('Content-disposition', 'attachment; filename=avis.csv');
-        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
         let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
         advices.forEach(comment => {
             if (comment.comment !== undefined && comment.comment !== null) {
