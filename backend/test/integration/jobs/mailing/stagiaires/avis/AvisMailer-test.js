@@ -63,6 +63,29 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepEqual(trainee.mailRetry, 0);
     });
 
+    it('should increase maxRetry when an email has already been sent', async () => {
+
+        let db = await getTestDatabase();
+        let mailer = new AvisMailer(db, logger, successMailer());
+        let id = randomize('trainee');
+        await Promise.all([
+            insertIntoDatabase('trainee', newTrainee({
+                _id: id,
+                mailRetry: 0,
+                trainee: {
+                    email: `${randomize('name')}@email.fr`,
+                },
+            })),
+        ]);
+
+        await mailer.sendEmails({
+            getQuery: () => ({}),
+        });
+
+        let trainee = await db.collection('trainee').findOne({ _id: id });
+        assert.deepEqual(trainee.mailRetry, 1);
+    });
+
     it('should update trainee when mailer fails', async () => {
 
         let db = await getTestDatabase();
