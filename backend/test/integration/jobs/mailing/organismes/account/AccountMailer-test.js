@@ -1,9 +1,9 @@
 const configuration = require('config');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../../helpers/test-database');
 const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/test-logger');
-const AccountMailer = require('../../../../../../jobs/mailing/organismes/account/AccountMailer');
+const AccountMailer = require('../../../../../../lib/jobs/mailing/organismes/account/AccountMailer');
 const { successMailer, errorMailer } = require('../../fake-mailers');
 
 

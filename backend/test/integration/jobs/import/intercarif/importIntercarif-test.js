@@ -1,8 +1,8 @@
 const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../../../helpers/test-db');
-const importIntercarif = require('../../../../../jobs/import/intercarif/importIntercarif');
+const { withMongoDB } = require('../../../../helpers/test-database');
+const importIntercarif = require('../../../../../lib/jobs/import/intercarif/importIntercarif');
 const logger = require('../../../../helpers/test-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
@@ -700,28 +700,5 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
         let count = await db.collection('intercarif').countDocuments({});
         assert.equal(count, 1);
-    });
-
-    it('should create indexes', async () => {
-
-        let db = await getTestDatabase();
-
-        await importIntercarif(db, logger, intercarifFile);
-
-        let intercarif = db.collection('intercarif');
-        let indexes = await intercarif.indexInformation();
-        assert.deepEqual(indexes, {
-            '_id_': [['_id', 1]],
-            '_attributes.numero_1': [['_attributes.numero', 1]],
-            'certifications.code_certifinfo_1': [['certifications.code_certifinfo', 1]],
-            'domaine_formation.code_formacode._value_1': [['domaine_formation.code_formacode._value', 1]],
-            'actions.sessions._attributes.numero_1': [['actions.sessions._attributes.numero', 1]],
-            'actions.organisme_formateur.siret_formateur.siret_1': [['actions.organisme_formateur.siret_formateur.siret', 1]],
-            'organisme_formation_responsable.siret_organisme-formation.siret_1': [['organisme_formation_responsable.siret_organisme-formation.siret', 1]],
-            'organisme_formation_responsable._attributes.numero_1': [['organisme_formation_responsable._attributes.numero', 1]],
-            'actions.lieu_de_formation.coordonnees.adresse.codepostal_1': [['actions.lieu_de_formation.coordonnees.adresse.codepostal', 1]],
-            'actions.lieu_de_formation.coordonnees.adresse.region_1': [['actions.lieu_de_formation.coordonnees.adresse.region', 1]],
-            'intercarif.organisme_formation_responsable.region': [['organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.region', 1]],
-        });
     });
 }));

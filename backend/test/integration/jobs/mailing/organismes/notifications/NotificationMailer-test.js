@@ -2,10 +2,10 @@ const configuration = require('config');
 const _ = require('lodash');
 const moment = require('moment');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../../helpers/test-database');
 const { newComment, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/test-logger');
-const NotificationMailer = require('../../../../../../jobs/mailing/organismes/notifications/NotificationMailer');
+const NotificationMailer = require('../../../../../../lib/jobs/mailing/organismes/notifications/NotificationMailer');
 
 let fakeMailer = spy => {
     return {

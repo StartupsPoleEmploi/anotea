@@ -1,6 +1,6 @@
-FROM node:8.9.4-wheezy
+FROM node:10.14.1-stretch
 
-RUN npm install -g npm@6.4.1 forever
+RUN npm install -g forever
 
 #Install and cache node_modules waiting for npm 6.1.1 to be able to use npm ci instead of npm install
 COPY package.json package-lock.json /tmp/
@@ -10,4 +10,4 @@ COPY ./ /opt/anotea/backend
 
 WORKDIR /opt/anotea/backend
 
-CMD ["forever", "app.js"]
+CMD ["forever", "index.js"]

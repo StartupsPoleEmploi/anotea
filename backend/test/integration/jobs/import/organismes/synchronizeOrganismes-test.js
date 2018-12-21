@@ -1,51 +1,20 @@
 const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../helpers/test-database');
 const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const synchronizeOrganismes = require('../../../../../jobs/import/organismes/synchronizeOrganismes');
-const generateOrganismes = require('../../../../../jobs/import/organismes/generateOrganismes');
+const synchronizeOrganismes = require('../../../../../lib/jobs/import/organismes/synchronizeOrganismes');
+const generateOrganismes = require('../../../../../lib/jobs/import/organismes/generateOrganismes');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertIntoDatabase, importIntercarif }) => {
 
     let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
-
-    const prepareDatabase = () => {
-        return Promise.all([
-            insertIntoDatabase('departements', {
-                region: 'Ile De France',
-                dept_num: '75',
-                region_num: '11',
-                codeFinanceur: '2'
-            }),
-            insertIntoDatabase('departements', {
-                region: 'Aquitaine',
-                dept_num: '33',
-                region_num: '1'
-            }),
-            insertIntoDatabase('departements', {
-                region: 'Grand Est',
-                dept_num: '57',
-                region_num: '7'
-            }),
-            insertIntoDatabase('departements', {
-                region: 'Hauts-de-France',
-                dept_num: '59',
-                region_num: '10'
-            }),
-            insertIntoDatabase('departements', {
-                region: 'Seine-Saint-Denis',
-                dept_num: '93',
-                region_num: '11'
-            }),
-        ]);
-    };
 
     it('should create new organisme formateur and merge Kairos data', async () => {
 
         let db = await getTestDatabase();
-        await Promise.all([importIntercarif(), prepareDatabase()]);
+        await Promise.all([importIntercarif(), insertDepartements()]);
 
         await generateOrganismes(db, logger, csvFile);
         await synchronizeOrganismes(db, logger);
@@ -84,7 +53,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            prepareDatabase(),
+            insertDepartements(),
             insertIntoDatabase('organismes', newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
@@ -148,7 +117,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should create new organisme responsable', async () => {
 
         let db = await getTestDatabase();
-        await Promise.all([importIntercarif(), prepareDatabase()]);
+        await Promise.all([importIntercarif(), insertDepartements()]);
 
         await generateOrganismes(db, logger, csvFile);
         await synchronizeOrganismes(db, logger);
@@ -160,7 +129,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should create new organisme from kairos', async () => {
 
         let db = await getTestDatabase();
-        await Promise.all([importIntercarif(), prepareDatabase()]);
+        await Promise.all([importIntercarif(), insertDepartements()]);
 
         await generateOrganismes(db, logger, csvFile);
         await synchronizeOrganismes(db, logger);

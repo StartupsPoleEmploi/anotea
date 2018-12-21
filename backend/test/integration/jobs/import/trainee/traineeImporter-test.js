@@ -4,28 +4,12 @@ const _ = require('lodash');
 const assert = require('assert');
 const md5File = require('md5-file/promise');
 const configuration = require('config');
-const { withMongoDB } = require('../../../../helpers/test-db');
+const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const traineeImporter = require('../../../../../jobs/import/trainee/traineeImporter');
-const poleEmploiCSVHandler = require('../../../../../jobs/import/trainee/handlers/poleEmploiCSVHandler');
+const traineeImporter = require('../../../../../lib/jobs/import/trainee/traineeImporter');
+const poleEmploiCSVHandler = require('../../../../../lib/jobs/import/trainee/handlers/poleEmploiCSVHandler');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
-
-    const insertDepartements = () => {
-        return Promise.all([
-            insertIntoDatabase('departements', {
-                region: 'Auvergne-Rhône-Alpes',
-                dept_num: '69',
-                region_num: '2',
-            }),
-            insertIntoDatabase('departements', {
-                region: 'Ile De France',
-                dept_num: '91',
-                region_num: '11',
-                codeFinanceur: '2'
-            })
-        ]);
-    };
+describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
 
     it('should store import status', async () => {
 
