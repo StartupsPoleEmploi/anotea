@@ -136,6 +136,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             profile: 'organisme',
             raisonSociale: 'Pole Emploi Formation',
             sub: siret,
+            siret: siret,
             codeRegion: '11',
         });
     });

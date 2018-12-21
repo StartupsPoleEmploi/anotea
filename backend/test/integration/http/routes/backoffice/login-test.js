@@ -57,6 +57,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.deepEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             profile: 'organisme',
             raisonSociale: 'Pole Emploi Formation',
+            siret: '6080274100045',
             sub: '6080274100045',
             codeRegion: '11',
         });
