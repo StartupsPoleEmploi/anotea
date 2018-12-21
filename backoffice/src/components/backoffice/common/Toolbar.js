@@ -16,7 +16,7 @@ export default class Toolbar extends React.PureComponent {
                     (profile === 'organisme' || profile === 'financer') &&
                     <div className="pull-left">
                         <a className="btn btn-success btn-sm"
-                            href={`/api/avis.csv${this.props.exportFilters}`}>
+                            href={`/api/avis.csv${this.props.exportFilters !== undefined ? this.props.exportFilters : ''}`}>
                             <span className="fas fa-file-export" /> Exporter vers Excel
                         </a>
                     </div>
