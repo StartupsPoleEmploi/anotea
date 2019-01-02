@@ -12,39 +12,6 @@ export const getRegion = (idregion) => {
     return _get(`/backoffice/financeur/region/${idregion}`)
 };
 
-export const getOrganisationAdvicesToExportToExcel = (idregion, codeFinanceur, siren, postalCode, trainingId, filter) => {
-    let query = '';
-    if (codeFinanceur) {
-        query += `?codeFinanceur=${codeFinanceur}`;
-    }
-    if (siren) {
-        let prefix = '&';
-        if (query === '') {
-            prefix = '?';
-        }
-        query += `${prefix}siren=${siren}`;
-    }
-    if (postalCode) {
-        let prefix = '&';
-        if (query === '') {
-            prefix = '?';
-        }
-        query += `${prefix}postalCode=${postalCode}`;
-    }
-    if (trainingId) {
-        query += `&trainingId=${trainingId}`;
-    }
-    if (filter) {
-        let prefix = '&';
-        if (query === '') {
-            prefix = '?';
-        }
-        query += `${prefix}filter=${filter}`;
-    }
-
-    return _get(`/backoffice/financeur/export/region/${idregion}/advices${query}`);
-};
-
 export const getAdvices = (idRegion, codeFinanceur, filter, order, page) => {
     let query = '';
     if (codeFinanceur) {

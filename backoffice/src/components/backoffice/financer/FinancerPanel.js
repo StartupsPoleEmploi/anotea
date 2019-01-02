@@ -17,12 +17,8 @@ import {
     loadInventoryForAllAdvicesWhenFinancerFirstConnexion,
     getAdvices,
     getOrganisations,
-    loadInventoryASelectedOrganisation,
-    getOrganisationAdvicesToExportToExcel
+    loadInventoryASelectedOrganisation
 } from '../../../lib/financerService';
-import {
-    exportToExcel
-} from '../../../lib/export';
 import PropTypes from 'prop-types';
 import Dashboard from './stats/Dashboard';
 import SideMenu from './SideMenu';
@@ -34,7 +30,6 @@ export default class FinancerPanel extends React.Component {
 
     state = {
         financerId: null,
-        postalCode: null,
         reportedAdvicesCount: 0,
         tab: 'all',
         inventory: {
@@ -351,20 +346,34 @@ export default class FinancerPanel extends React.Component {
         });
     };
 
-    exportOrganisationAdvicesToExcel = async () => {
-        const comments = await getOrganisationAdvicesToExportToExcel(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.training.currentEntity._id, this.state.trainingId, this.state.tab);
-        exportToExcel(comments, this.props.codeFinanceur);
-    };
-
     getActiveStatus = current => this.state.tab === current ? 'active' : '';
 
     handleChangePage = page => {
         this.setState({ currentPage: page });
     };
 
+    getExportFilters = () => {
+        let str = '';
+        if (this.state.currentFinancer) {
+            str = `?codeFinanceur=${this.state.currentFinancer._id}`;
+        }
+        if (this.state.training) {
+            if (this.state.training.currentOrganisation) {
+                str += `&siret=${this.state.training.currentOrganisation._id}`;
+            }
+            if (this.state.training.currentEntity) {
+                str += `&postalCode=${this.state.training.currentEntity._id}`;
+            }
+            if (this.state.trainingId) {
+                str += `&trainingId=${this.state.trainingId}`;
+            }
+        }
+        return str;
+    }
+
     render() {
         const { currentOrganisation, currentEntity, organisations, entities } = this.state.training;
-        const { currentFinancer, financers, inventory, tab } = this.state;
+        const { currentFinancer, financers, inventory } = this.state;
 
         return (
             <div className="organisationPanel mainPanel">
@@ -398,8 +407,6 @@ export default class FinancerPanel extends React.Component {
                                 changeTrainingSession={this.changeTrainingSession} />
                         }
 
-                        {false && <SessionStats id={this.state.organisationId} />}
-
                         <h2>Liste des notes et avis</h2>
 
                         <ul className="nav nav-tabs">
@@ -417,8 +424,7 @@ export default class FinancerPanel extends React.Component {
                             </li>
                         </ul>
 
-                        <Toolbar profile={this.props.profile}
-                            exportOrganisationAdvicesToExcel={this.exportOrganisationAdvicesToExcel} />
+                        <Toolbar profile={this.props.profile} exportFilters={this.getExportFilters()} />
 
                         <div className="advices">
                             {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}
@@ -432,7 +438,7 @@ export default class FinancerPanel extends React.Component {
                                                     {advice.pseudo}
                                                     {!advice.pseudo && <em>anonyme</em>} -&nbsp;
         
-                                            {advice.date &&
+                                                    {advice.date &&
                                                         <FormattedDate
                                                             value={new Date(advice.date)}
                                                             day="numeric"

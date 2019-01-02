@@ -1,5 +1,4 @@
 const express = require('express');
-const JSONStream = require('JSONStream');
 
 module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
 
@@ -270,55 +269,6 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             pageCount: Math.ceil(count / pagination)
 
         });
-    });
-
-    //Les avis concernant UN organisme donné dans la même region que le financeur connecté
-    //Cette API sert à l'export des avis en Excel
-    //il n'y aura pas de limite sur cette API, ainsi on obtient la TOTALITE des avis et non pas 20 par 20
-    router.get('/backoffice/financeur/export/region/:idregion/advices', (req, res) => {
-        res.set('Content-Type', 'application/json');
-        res.set('Accept', 'application/json');
-
-        const projection = { token: 0 };
-        let filter = { 'step': { $gte: 2 }, 'codeRegion': `${req.params.idregion}` };
-
-        if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
-            filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
-        }
-
-        if (req.query.siren && !req.query.postalCode && !req.query.trainingId) {
-            Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.siren}` } });
-        } else if (req.query.siren && req.query.postalCode && !req.query.trainingId) {
-            Object.assign(filter, {
-                'training.organisation.siret': { '$regex': `${req.query.siren}` },
-                'training.place.postalCode': req.query.postalCode
-            });
-        } else if (req.query.siren && req.query.trainingId && req.query.postalCode) {
-            Object.assign(filter, {
-                'training.organisation.siret': { '$regex': `${req.query.siren}` },
-                'training.place.postalCode': req.query.postalCode,
-                'training.idFormation': req.query.trainingId
-            });
-        }
-
-        if (req.query.filter) {
-            if (req.query.filter === 'reported') {
-                filter.reported = true;
-            } else if (req.query.filter === 'commented') {
-                filter.published = true;
-                filter.comment = { $exists: true };
-                filter.comment = { $ne: null };
-            } else if (req.query.filter === 'all') {
-                filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
-            }
-        }
-
-        let stream = db.collection('comment').find(filter, projection).stream().pipe(JSONStream.stringify()).pipe(res);
-
-        stream.on('end', function() {
-            res.end();
-        });
-
     });
 
     //liste des lieux d'un organisme choisi
