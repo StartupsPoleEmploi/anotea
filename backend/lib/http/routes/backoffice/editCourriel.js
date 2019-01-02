@@ -1,15 +1,13 @@
 const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
-const tryAndCatch = require('../tryAndCatch');
+const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 
 module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
-
-    const getRemoteAddress = req => req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     const saveEvent = (id, type, source) => {
         db.collection('events').save({ organisationId: id, date: new Date(), type: type, source: source });

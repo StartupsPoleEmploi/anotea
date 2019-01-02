@@ -3,10 +3,10 @@ const Joi = require('joi');
 const _ = require('lodash');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
+const { tryAndCatch } = require('../../routes-utils');
 const { paginationValidator } = require('./utils/validators');
 const convertToExposableAvis = require('./dto/convertToExposableAvis');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
-const tryAndCatch = require('../../tryAndCatch');
 
 const buildAvisQuery = filters => {
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const Boom = require('boom');
-const tryAndCatch = require('../tryAndCatch');
+const { tryAndCatch } = require('../routes-utils');
 const { hashPassword, isPasswordStrongEnough } = require('../../../common/components/password');
 
 module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {

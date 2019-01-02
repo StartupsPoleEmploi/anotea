@@ -2,11 +2,11 @@ const express = require('express');
 const Joi = require('joi');
 const _ = require('lodash');
 const Boom = require('boom');
+const { tryAndCatch } = require('../../routes-utils');
 const { paginationValidator, arrayOfValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const convertToExposableOrganismeFomateur = require('./dto/convertToExposableOrganismeFomateur');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
-const tryAndCatch = require('../../tryAndCatch');
 
 module.exports = ({ db, createHMACAuthMiddleware }) => {
 

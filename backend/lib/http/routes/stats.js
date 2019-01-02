@@ -2,7 +2,7 @@ const express = require('express');
 const moment = require('moment');
 const { encodeStream } = require('iconv-lite');
 const Boom = require('boom');
-const tryAndCatch = require('./tryAndCatch');
+const { tryAndCatch } = require('./routes-utils');
 const { jsonStream, transformObject } = require('../../common/stream-utils');
 const { findLabelByCodeFinanceur } = require('../../common/components/financeurs');
 

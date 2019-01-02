@@ -2,7 +2,7 @@ const express = require('express');
 const moment = require('moment');
 const mongo = require('mongodb');
 const s = require('string');
-const tryAndCatch = require('../tryAndCatch');
+const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 const { encodeStream } = require('iconv-lite');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
@@ -30,10 +30,6 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
                 logger.error(`Unable to send email to ${contact}`, err);
             });
         }
-    };
-
-    const getRemoteAddress = req => {
-        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     };
 
     router.get('/backoffice/status', checkAuth, (req, res) => {

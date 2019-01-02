@@ -1,5 +1,6 @@
 const express = require('express');
 const mongo = require('mongodb');
+const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 
 module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
 
@@ -10,11 +11,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
-    const getRemoteAddress = req => {
-        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    };
-
-    router.post('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
+    router.post('/backoffice/advice/:id/answer', checkAuth, tryAndCatch((req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         const answer = req.body.answer;
         db.collection('comment').update({ _id: id }, {
@@ -39,9 +36,9 @@ module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
                 res.status(404).send({ 'error': 'Not found' });
             }
         });
-    });
+    }));
 
-    router.delete('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
+    router.delete('/backoffice/advice/:id/answer', checkAuth, tryAndCatch((req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').update({ _id: id }, {
             $set: { answered: false },
@@ -61,7 +58,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
                 res.status(404).send({ 'error': 'Not found' });
             }
         });
-    });
+    }));
 
     return router;
 };

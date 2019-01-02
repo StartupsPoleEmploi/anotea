@@ -1,6 +1,6 @@
 const express = require('express');
 const Joi = require('joi');
-const tryAndCatch = require('../tryAndCatch');
+const { tryAndCatch } = require('../routes-utils');
 
 module.exports = ({ db, createJWTAuthMiddleware }) => {
 
