@@ -9,7 +9,6 @@ const { findLabelByCodeFinanceur } = require('../../common/components/financeurs
 module.exports = ({ db, configuration, logger, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const dataExposer = require('./dataExposer')();
     const { findRegionByCodeRegion } = regions;
 
     const computeMailingStats = async codeRegion => {
@@ -80,7 +79,19 @@ module.exports = ({ db, configuration, logger, regions }) => {
             }
         ]).toArray();
 
-        return docs.map(dataExposer.buildCommentsStats);
+        return docs.map(doc => {
+            doc.comments = 0;
+            for (let idx in doc.commentsArray) {
+                if (doc.commentsArray[idx] !== null &&
+                    (doc.commentsArray[idx].title !== '' || doc.commentsArray[idx].text !== '')) {
+                    doc.comments++;
+                }
+            }
+            doc.commentsRejected = doc.commentsRejectedArray.length;
+            delete doc.commentsArray;
+            delete doc.commentsRejectedArray;
+            return doc;
+        });
     };
 
     const computeSessionStats = async (regionName, codeINSEE) => {

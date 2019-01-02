@@ -75,7 +75,10 @@ describe(__filename, () => {
     it('should map avis with réponse', async () => {
 
         let comment = newComment({
-            answer: 'Voici notre réponse',
+            answer: {
+                text: 'Voici notre réponse',
+                published: true,
+            },
             answered: true,
         });
 
@@ -85,6 +88,25 @@ describe(__filename, () => {
             titre: 'Génial',
             texte: 'Super formation.',
             reponse: 'Voici notre réponse',
+        });
+    });
+
+    it('should ignore réponse not yet published', async () => {
+
+        let comment = newComment({
+            answer: {
+                text: 'Voici notre réponse',
+                published: false,
+            },
+            answered: true,
+        });
+
+        let data = convertToExposableAvis(comment);
+
+        assert.deepEqual(data.commentaire, {
+            titre: 'Génial',
+            texte: 'Super formation.',
+            reponse: undefined,
         });
     });
 

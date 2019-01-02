@@ -1,63 +1,67 @@
 const express = require('express');
 const mongo = require('mongodb');
+const Boom = require('boom');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 
-module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
+module.exports = ({ db, createJWTAuthMiddleware }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
-    const saveEvent = function(id, type, source) {
+    const saveEvent = (id, type, source) => {
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
-    router.post('/backoffice/advice/:id/answer', checkAuth, tryAndCatch((req, res) => {
+    router.post('/backoffice/advice/:id/answer', checkAuth, tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        const answer = req.body.answer;
-        db.collection('comment').update({ _id: id }, {
+        const text = req.body.answer;
+
+        let results = await db.collection('comment').update({ _id: id }, {
             $set: {
-                answer: answer,
+                answer: {
+                    text: text,
+                    published: false,
+                    rejected: false,
+                    moderated: false,
+                    reported: false,
+                },
                 answered: true,
                 read: true
             }
-        }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'answer', {
-                    app: 'organisation',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req),
-                    answer: answer
-                });
-                res.status(200).send({ 'message': 'advice answered' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
         });
+
+        if (results.result.n === 1) {
+            saveEvent(id, 'answer', {
+                app: 'organisation',
+                user: req.query.userId,
+                ip: getRemoteAddress(req),
+                answer: text
+            });
+            return res.json({ 'message': 'advice answered' });
+        } else {
+            throw Boom.notFound('Identifiant inconnu');
+        }
     }));
 
-    router.delete('/backoffice/advice/:id/answer', checkAuth, tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, {
+    router.delete('/backoffice/advice/:id/answer', checkAuth, tryAndCatch(async (req, res) => {
+
+        let id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+
+        let results = await db.collection('comment').update({ _id: id }, {
             $set: { answered: false },
             $unset: { answer: '' }
-        }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'answer removed', {
-                    app: 'organisation',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'advice answer removed' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
         });
+
+        if (results.result.n === 1) {
+            saveEvent(id, 'answer removed', {
+                app: 'organisation',
+                user: req.query.userId,
+                ip: getRemoteAddress(req)
+            });
+            res.json({ 'message': 'advice answer removed' });
+        } else {
+            throw Boom.notFound('Identifiant inconnu');
+        }
     }));
 
     return router;
