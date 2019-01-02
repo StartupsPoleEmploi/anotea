@@ -8,7 +8,8 @@ import './table.css';
 export default class Graph extends React.Component {
 
     state = {
-        dashboardData: {}
+        dashboardData: {},
+        tableContent : []
     };
 
     static propTypes = {
@@ -22,14 +23,88 @@ export default class Graph extends React.Component {
     constructor(props) {
         super(props);
 
-        getDashboardData(props.codeRegion, props.year, props.codeFinanceur === '4' ? 'all' : props.codeFinanceur).then(dashboardData => {
-            this.setState({ dashboardData: dashboardData });
-        });
+        this.updateDashboard(props);
     }
 
     componentWillReceiveProps(nextProps) {
-        getDashboardData(nextProps.codeRegion, nextProps.year, nextProps.codeFinanceur === '4' ? 'all' : nextProps.codeFinanceur).then(dashboardData => {
-            this.setState({ dashboardData: dashboardData });
+        this.updateDashboard(nextProps);
+    }
+
+
+    updateDashboard = props => {
+        getDashboardData(props.codeRegion, props.year, props.codeFinanceur === '4' ? 'all' : props.codeFinanceur).then(dashboardData => {
+            this.setState({ dashboardData: dashboardData, tableContent: [
+                {
+                    type: 0,
+                    label: 'Nombre de mails envoyés',
+                    value: dashboardData.count
+                },
+                {
+                    type: 1,
+                    label: 'Taux d\'ouverture des mails',
+                    value: this.getRate(dashboardData.countEmailOpen, dashboardData.count)
+                },
+                {
+                    type: 2,
+                    label: 'Taux d\'avis déposés',
+                    value: this.getRate(dashboardData.countAdvicesPublished, dashboardData.count)
+                },
+                {
+                    type: 3,
+                    label: 'Taux d\'avis avec commentaires',
+                    value: this.getRate(dashboardData.countAdvicesWithComments, dashboardData.countAdvicesPublished)
+                },
+                {
+                    type: 4,
+                    label: 'Taux de commentaires positifs ou neutres',
+                    value: this.getRate(dashboardData.countAdvicesPositif, dashboardData.countAdvicesWithComments)
+                },
+                {
+                    type: 5,
+                    label: 'Taux de commentaires négatifs',
+                    value: this.getRate(dashboardData.countAdvicesNegatif, dashboardData.countAdvicesWithComments)
+                },
+                {
+                    type: 6,
+                    label: 'Taux de commentaires rejetés',
+                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                },
+                {
+                    type: 7,
+                    label: 'Nombre de sessions diffusées',
+                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                },
+                {
+                    type: 8,
+                    label: 'Taux de commentaires rejetés',
+                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                },
+                {
+                    type: 9,
+                    label: 'Taux de sessions avec au moins un avis',
+                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                },
+                {
+                    type: 10,
+                    label: 'Taux de sessions avec au moins trois avis',
+                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                },
+                {
+                    type: 11,
+                    label: 'Nombre d\'organismes de formation',
+                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                },
+                {
+                    type: 12,
+                    label: 'Taux d\'organismes de formation avec au moins un avis',
+                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                },
+                {
+                    type: 13,
+                    label: 'Taux d\'organismes de formation connectés dans les trois derniers mois',
+                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                }
+            ] });
         });
     }
 
@@ -47,34 +122,12 @@ export default class Graph extends React.Component {
                 { Object.keys(this.state.dashboardData).length > 0 &&
                     <table className="table table-striped">
                         <tbody>
-                            <tr className={this.props.type === 0 ? 'selected' : ''}>
-                                <td onClick={this.props.changeType.bind(this, 0)}>Nombre de mails envoyés</td>
-                                <td className="value">{this.state.dashboardData.count}</td>
-                            </tr>
-                            <tr className={this.props.type === 1 ? 'selected' : ''}>
-                                <td onClick={this.props.changeType.bind(this, 1)}>Tx d'ouverture des mails</td>
-                                <td className="value">{this.getRate(this.state.dashboardData.countEmailOpen, this.state.dashboardData.count)}</td>
-                            </tr>
-                            <tr className={this.props.type === 2 ? 'selected' : ''}>
-                                <td onClick={this.props.changeType.bind(this, 2)}>Tx d'avis déposés</td>
-                                <td className="value">{this.getRate(this.state.dashboardData.countAdvicesPublished, this.state.dashboardData.count)}</td>
-                            </tr>
-                            <tr className={this.props.type === 3 ? 'selected' : ''}>
-                                <td onClick={this.props.changeType.bind(this, 3)}>Tx d'avis avec commentaires</td>
-                                <td className="value">{this.getRate(this.state.dashboardData.countAdvicesWithComments, this.state.dashboardData.countAdvicesPublished)}</td>
-                            </tr>
-                            <tr className={this.props.type === 4 ? 'selected' : ''}>
-                                <td onClick={this.props.changeType.bind(this, 4)}>Tx de commentaires positifs ou neutres</td>
-                                <td className="value">{this.getRate(this.state.dashboardData.countAdvicesPositif, this.state.dashboardData.countAdvicesWithComments)}</td>
-                            </tr>
-                            <tr className={this.props.type === 5 ? 'selected' : ''}>
-                                <td onClick={this.props.changeType.bind(this, 5)}>Tx de commentaires négatifs</td>
-                                <td className="value">{this.getRate(this.state.dashboardData.countAdvicesNegatif, this.state.dashboardData.countAdvicesWithComments)}</td>
-                            </tr>
-                            <tr className={this.props.type === 6 ? 'selected' : ''}>
-                                <td onClick={this.props.changeType.bind(this, 6)}>Tx de commentaires rejetés</td>
-                                <td className="value">{this.getRate(this.state.dashboardData.countAdvicesRejected, this.state.dashboardData.countAdvicesWithComments)}</td>
-                            </tr>
+                            {this.state.tableContent.map(content =>
+                                <tr key={content.type} className={this.props.type === content.type ? 'selected' : ''}>
+                                    <td onClick={this.props.changeType.bind(this, content.type)}>{content.label}</td>
+                                    <td className="value">{content.value}</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 }

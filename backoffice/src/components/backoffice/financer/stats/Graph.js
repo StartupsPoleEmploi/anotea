@@ -59,7 +59,14 @@ export default class Graph extends React.Component {
                 Object.assign({ label: 'Nombre d\'avis avec commentaires', data: graphData.map(item => item.countAdvicesWithComments) }, options),
                 Object.assign({ label: 'Nombre de commentaires positifs ou neutres', data: graphData.map(item => item.countAdvicesPositif) }, options),
                 Object.assign({ label: 'Nombre de commentaires négatifs', data: graphData.map(item => item.countAdvicesNegatif) }, options),
-                Object.assign({ label: 'Nombre de commentaires rejetés', data: graphData.map(item => item.countAdvicesRejected) }, options)
+                Object.assign({ label: 'Nombre de commentaires rejetés', data: graphData.map(item => item.countAdvicesRejected) }, options),
+                Object.assign({ label: 'Nombre de sessions diffusées', data: graphData.map(item => item.countAdvicesRejected) }, options),
+                Object.assign({ label: 'Nombre de sessions avec avis', data: graphData.map(item => item.countAdvicesRejected) }, options),
+                Object.assign({ label: 'Nombre de sessions avec au moins un avis', data: graphData.map(item => item.countAdvicesRejected) }, options),
+                Object.assign({ label: 'Nombre de sessions avec au moins trois avis', data: graphData.map(item => item.countAdvicesRejected) }, options),
+                Object.assign({ label: 'Nombre d\'organismes de formation', data: graphData.map(item => item.countAdvicesRejected) }, options),
+                Object.assign({ label: 'Nombre d\'organismes de formation avec au moins un avis', data: graphData.map(item => item.countAdvicesRejected) }, options),
+                Object.assign({ label: 'Nombre d\'organismes de formation connectés dans les trois derniers mois', data: graphData.map(item => item.countAdvicesRejected) }, options)
             ];
 
             this.setState({
