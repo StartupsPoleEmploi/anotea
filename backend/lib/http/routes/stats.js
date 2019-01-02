@@ -83,7 +83,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
         return docs.map(dataExposer.buildCommentsStats);
     };
 
-    const computeSessionStats = async (name, codeINSEE) => {
+    const computeSessionStats = async (regionName, codeINSEE) => {
 
         let sessionsReconciliees = db.collection('sessionsReconciliees');
 
@@ -94,7 +94,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
         ]);
 
         return {
-            region: name,
+            region: regionName,
             nbSessions,
             nbSessionsAvecAuMoinsUnAvis,
             pourcentageDeSessionsAvecAuMoinsUnAvis: Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions),
@@ -102,7 +102,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
         };
     };
 
-    const computeOrganismesStats = async (name, codeRegion) => {
+    const computeOrganismesStats = async (regionName, codeRegion) => {
 
         let organismes = db.collection('organismes');
 
@@ -113,7 +113,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
         ]);
 
         return {
-            region: name,
+            region: regionName,
             nbOrganimes,
             nbOrganismesActifs,
             nbOrganismesAvecAvis,
@@ -123,9 +123,9 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
     router.get('/stats/sessions.:format', tryAndCatch(async (req, res) => {
 
-        let sessions = await Promise.all(configuration.app.active_regions.map(ar => {
-            let { name, codeINSEE } = findRegionByCodeRegion(ar.code_region);
-            return computeSessionStats(name, codeINSEE);
+        let sessions = await Promise.all(configuration.app.active_regions.map(async ar => {
+            let { nom, codeINSEE } = await findRegionByCodeRegion(ar.code_region);
+            return computeSessionStats(nom, codeINSEE);
         }));
 
         res.json(sessions);
@@ -133,9 +133,9 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
     router.get('/stats/organismes.:format', tryAndCatch(async (req, res) => {
 
-        let organismes = await Promise.all(configuration.app.active_regions.map(ar => {
-            let { name } = findRegionByCodeRegion(ar.code_region);
-            return computeOrganismesStats(name, ar.code_region);
+        let organismes = await Promise.all(configuration.app.active_regions.map(async ar => {
+            let { nom } = await findRegionByCodeRegion(ar.code_region);
+            return computeOrganismesStats(nom, ar.code_region);
         }));
 
         res.json(organismes);
@@ -211,10 +211,10 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
             stream
             .on('error', handleError)
-            .pipe(transformObject(doc => {
+            .pipe(transformObject(async doc => {
                 let { campaign, codeRegion, codeFinanceurs, nbStagiaires } = doc;
                 let libelleFinanceurs = codeFinanceurs.map(code => findLabelByCodeFinanceur(code) || 'Inconnu').join(',');
-                let libelleRegion = findRegionByCodeRegion(codeRegion).name;
+                let libelleRegion = await findRegionByCodeRegion(codeRegion).name;
                 return `"${campaign}";"${libelleRegion}";="${codeRegion}";"${libelleFinanceurs}";="${codeFinanceurs}";"${nbStagiaires}"\n`;
             }))
             .pipe(encodeStream('UTF-16BE'))

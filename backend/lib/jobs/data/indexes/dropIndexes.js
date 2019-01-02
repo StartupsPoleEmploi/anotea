@@ -16,7 +16,6 @@ module.exports = db => {
         db.collection('comment').dropIndex('trainee.email_1'),
         db.collection('organismes').dropIndex('raisonSociale_text'),
         db.collection('organismes').dropIndex('idLBF_1'),
-        db.collection('organismes').dropIndex('courriel_1'),
         db.collection('forgottenPasswordTokens').dropIndex('expireAfterSeconds_172800'),
         db.collection('intercarif').dropIndex('actions.lieu_de_formation.coordonnees.adresse.region_1'),
         db.collection('intercarif').dropIndex('intercarif.organisme_formation_responsable.region'),
@@ -30,5 +29,6 @@ module.exports = db => {
         db.collection('intercarif').dropIndex('actions.lieu_de_formation.coordonnees.adresse.codepostal_1'),
         db.collection('intercarif_organismes_formateurs').dropIndex({ 'siret': 1 }),
         db.collection('intercarif_organismes_formateurs').dropIndex({ 'numero': 1 }),
+        db.collection('sessionsReconciliees').dropIndex({ 'score.nbAvis_1': 1 }),
     ]);
 };
