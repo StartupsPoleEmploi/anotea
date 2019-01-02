@@ -13,6 +13,7 @@ module.exports = db => {
                     _id: { $concat: ['$session.meta.source.numero_formation', '|', '$_id'] },
                     numero: '$_id',
                     region: '$session.region',
+                    code_financeurs: '$session.code_financeurs',
                     avis: '$session.avis',
                     score: '$session.score',
                     meta: {

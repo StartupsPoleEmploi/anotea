@@ -37,6 +37,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
+            code_financeurs: ['2'],
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -82,6 +83,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
+            code_financeurs: ['2'],
             score: {
                 nb_avis: 0
             },
@@ -131,6 +133,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
+            code_financeurs: ['2'],
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -194,6 +197,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
+            code_financeurs: ['2'],
             avis: [comment],
             score: {
                 nb_avis: 1,

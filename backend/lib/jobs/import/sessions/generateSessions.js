@@ -21,6 +21,7 @@ module.exports = db => {
                 numero_action: '$actions._attributes.numero',
                 numero_session: '$actions.sessions._attributes.numero',
                 organisme_formateur: '$actions.organisme_formateur.siret_formateur.siret',
+                organisme_financeurs: '$actions.organisme_financeurs',
                 lieu_de_formation: '$actions.lieu_de_formation.coordonnees.adresse.codepostal',
                 region: '$actions.lieu_de_formation.coordonnees.adresse.region',
                 certifinfos: '$_meta.certifinfos',
@@ -110,6 +111,7 @@ module.exports = db => {
                     _id: { $concat: ['$numero_formation', '|', '$numero_action', '|', '$numero_session'] },
                     numero: '$numero_session',
                     region: '$region',
+                    code_financeurs: '$organisme_financeurs.code_financeur',
                     avis: '$results.comments',
                     score: '$results.score',
                     meta: {
