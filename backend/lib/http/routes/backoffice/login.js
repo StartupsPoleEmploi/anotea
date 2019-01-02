@@ -10,27 +10,28 @@ module.exports = ({ db, auth, logger, configuration }) => {
 
     const getRemoteAddress = req => req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-    const logLoginEvent = (req, profile) => {
+    const logLoginEvent = (req, profile, id) => {
         return db.collection('events').insertOne({
             date: new Date(),
             type: 'log in',
-            source: { user: req.body.username, profile, ip: getRemoteAddress(req) }
+            source: { user: req.body.username, profile, ip: getRemoteAddress(req), id }
         });
     };
 
-    const logLoginWithAccessTokenEvent = (req, organisme) => {
+    const logLoginWithAccessTokenEvent = (req, organisme, id) => {
         return db.collection('events').insertOne({
             date: new Date(),
             type: 'login-access-token',
             source: {
                 siret: organisme.meta.siretAsString,
-                ip: getRemoteAddress(req)
+                ip: getRemoteAddress(req),
+                id
             }
         });
     };
 
     const handleModerator = async (req, res, moderator) => {
-        logLoginEvent(req, 'moderateur');
+        logLoginEvent(req, 'moderateur', moderator._id);
         return await auth.buildJWT('backoffice', {
             sub: req.body.username,
             profile: 'moderateur',
@@ -41,7 +42,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
     };
 
     const handleOrganisme = async (req, res, organisme) => {
-        logLoginEvent(req, 'organisme');
+        logLoginEvent(req, 'organisme', organisme._id);
         return await auth.buildJWT('backoffice', {
             sub: organisme.meta.siretAsString,
             profile: 'organisme',
@@ -70,7 +71,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
 
     const handleFinancer = async (req, res, financer) => {
         let profile = 'financer';
-        logLoginEvent(req, profile);
+        logLoginEvent(req, profile, financer._id);
         return await auth.buildJWT('backoffice', {
             sub: req.body.username,
             profile: 'financer',
@@ -160,7 +161,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
             let [token] = await Promise.all([
                 handleOrganisme(req, res, organisme),
                 invalidateAuthToken(organisme._id, parameters.access_token),
-                logLoginWithAccessTokenEvent(req, organisme),
+                logLoginWithAccessTokenEvent(req, organisme, organisme._id),
             ]);
             return res.status(200).send(token);
         } else {
