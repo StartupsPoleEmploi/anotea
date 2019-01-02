@@ -12,4 +12,4 @@ dîtes tout ce qui pourrait être utile aux futurs stagiaires, sans être diffam
 Nous vous remercions de votre compréhension,
 L’Equipe Anotéa
 
-<%- include('../legal/mentions.txt'); %>
+<%- include('./legal/mentions.txt'); %>
