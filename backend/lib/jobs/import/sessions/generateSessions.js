@@ -21,11 +21,24 @@ module.exports = db => {
                 numero_action: '$actions._attributes.numero',
                 numero_session: '$actions.sessions._attributes.numero',
                 organisme_formateur: '$actions.organisme_formateur.siret_formateur.siret',
+                organisme_financeurs: '$actions.organisme_financeurs',
                 lieu_de_formation: '$actions.lieu_de_formation.coordonnees.adresse.codepostal',
                 region: '$actions.lieu_de_formation.coordonnees.adresse.region',
                 certifinfos: '$_meta.certifinfos',
                 formacodes: '$_meta.formacodes',
             }
+        },
+        //Resolving region
+        {
+            $lookup: {
+                from: 'regions',
+                localField: 'region',
+                foreignField: 'codeINSEE',
+                as: 'regions'
+            }
+        },
+        {
+            $unwind: { path: '$regions', preserveNullAndEmptyArrays: true }
         },
         //Reconciling comments
         {
@@ -91,16 +104,16 @@ module.exports = db => {
                             }
                         }
                     }],
-                as: 'results'
+                as: 'reconciliation'
             }
         },
         {
-            $unwind: { path: '$results', preserveNullAndEmptyArrays: true }
+            $unwind: { path: '$reconciliation', preserveNullAndEmptyArrays: true }
         },
         //Add score when session has not comments
         {
             $addFields: {
-                'results.score': { $ifNull: ['$results.score', { nb_avis: 0 }] },
+                'reconciliation.score': { $ifNull: ['$reconciliation.score', { nb_avis: 0 }] },
             }
         },
         //Build final session document
@@ -110,8 +123,10 @@ module.exports = db => {
                     _id: { $concat: ['$numero_formation', '|', '$numero_action', '|', '$numero_session'] },
                     numero: '$numero_session',
                     region: '$region',
-                    avis: '$results.comments',
-                    score: '$results.score',
+                    code_region: '$regions.codeRegion',
+                    code_financeurs: '$organisme_financeurs.code_financeur',
+                    avis: '$reconciliation.comments',
+                    score: '$reconciliation.score',
                     meta: {
                         reconciliation: {
                             organisme_formateur: '$organisme_formateur',

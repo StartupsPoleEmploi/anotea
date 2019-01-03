@@ -3,7 +3,7 @@ const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
 const generateSessions = require('../../../../../lib/jobs/import/sessions/generateSessions');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, insertRegions }) => {
 
     it('should reconcile sessions with comments', async () => {
 
@@ -27,6 +27,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
+            insertRegions(),
             insertIntoDatabase('comment', comment),
         ]);
 
@@ -37,6 +38,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
+            code_region: '11',
+            code_financeurs: ['2'],
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -73,7 +76,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should create session with empty avis list when no comment can be found', async () => {
 
         let db = await getTestDatabase();
-        await importIntercarif();
+        await Promise.all([
+            importIntercarif(),
+            insertRegions(),
+        ]);
 
         await generateSessions(db);
 
@@ -82,6 +88,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
+            code_region: '11',
+            code_financeurs: ['2'],
             score: {
                 nb_avis: 0
             },
@@ -121,6 +129,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
+            insertRegions(),
             insertIntoDatabase('comment', comment),
         ]);
 
@@ -131,6 +140,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
+            code_region: '11',
+            code_financeurs: ['2'],
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -184,6 +195,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
+            insertRegions(),
             insertIntoDatabase('comment', comment),
         ]);
 
@@ -194,6 +206,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
+            code_region: '11',
+            code_financeurs: ['2'],
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -232,6 +246,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
+            insertRegions(),
             insertIntoDatabase('comment', newComment({
                 comment: null,
                 training: {
@@ -278,6 +293,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
+            insertRegions(),
             insertIntoDatabase('comment', comment),
         ]);
 
@@ -321,6 +337,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
+            insertRegions(),
             insertIntoDatabase('comment', newComment({
                 published: false,
                 rejected: true,
