@@ -24,10 +24,7 @@ execute(async ({ logger, db, configuration }) => {
         if (organisme.meta.kairosData !== undefined) {
             emails.push(organisme.meta.kairosData.emailRGC);
         }
-        if(organisme.courriel === 'secretariat@elantiel.com') {
-            console.log({ 'source.profile': 'organisme', 'source.user': { $in: emails } })
-            console.log({ $set: { 'source.id': organisme._id }});
-        }
+
         db.collection('events').updateOne({ 'source.profile': 'organisme', 'source.user': { $in: emails } }, { $set: { 'source.id': organisme._id } });
     });
 
