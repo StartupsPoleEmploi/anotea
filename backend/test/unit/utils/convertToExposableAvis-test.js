@@ -79,7 +79,6 @@ describe(__filename, () => {
                 text: 'Voici notre réponse',
                 published: true,
             },
-            answered: true,
         });
 
         let data = convertToExposableAvis(comment);
@@ -98,7 +97,6 @@ describe(__filename, () => {
                 text: 'Voici notre réponse',
                 published: false,
             },
-            answered: true,
         });
 
         let data = convertToExposableAvis(comment);

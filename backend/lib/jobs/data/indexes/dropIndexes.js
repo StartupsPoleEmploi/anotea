@@ -29,6 +29,5 @@ module.exports = db => {
         db.collection('intercarif').dropIndex('actions.lieu_de_formation.coordonnees.adresse.codepostal_1'),
         db.collection('intercarif_organismes_formateurs').dropIndex({ 'siret': 1 }),
         db.collection('intercarif_organismes_formateurs').dropIndex({ 'numero': 1 }),
-        db.collection('sessionsReconciliees').dropIndex({ 'score.nbAvis_1': 1 }),
     ]);
 };

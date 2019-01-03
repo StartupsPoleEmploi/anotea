@@ -1,5 +1,5 @@
 const express = require('express');
-const mongo = require('mongodb');
+const ObjectID = require('mongodb').ObjectID;
 const Boom = require('boom');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 
@@ -13,19 +13,24 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
     };
 
     router.post('/backoffice/advice/:id/answer', checkAuth, tryAndCatch(async (req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        const text = req.body.answer;
+
+        if (!ObjectID.isValid(req.params.id)) {
+            throw Boom.badRequest('Identifiant invalide');
+        }
+
+        let text = req.body.answer;
+        const id = ObjectID(req.params.id); // eslint-disable-line new-cap
 
         let results = await db.collection('comment').update({ _id: id }, {
             $set: {
                 answer: {
                     text: text,
-                    published: false,
+                    //TODO set to false when features will be available
+                    published: true,
                     rejected: false,
                     moderated: false,
                     reported: false,
                 },
-                answered: true,
                 read: true
             }
         });
@@ -45,13 +50,13 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
 
     router.delete('/backoffice/advice/:id/answer', checkAuth, tryAndCatch(async (req, res) => {
 
-        let id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+        if (!ObjectID.isValid(req.params.id)) {
+            throw Boom.badRequest('Identifiant invalide');
+        }
 
-        let results = await db.collection('comment').update({ _id: id }, {
-            $set: { answered: false },
-            $unset: { answer: '' }
-        });
+        let id = ObjectID(req.params.id); // eslint-disable-line new-cap
 
+        let results = await db.collection('comment').update({ _id: id }, { $unset: { answer: '' } });
         if (results.result.n === 1) {
             saveEvent(id, 'answer removed', {
                 app: 'organisation',

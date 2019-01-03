@@ -120,7 +120,7 @@ export default class OrganisationPanel extends React.Component {
                     reply: {
                         shown: true,
                         id: id,
-                        text: advice.answer !== undefined ? advice.answer : ''
+                        text: advice.answer !== undefined ? advice.answer.text : ''
                     }
                 });
             }
@@ -383,7 +383,7 @@ export default class OrganisationPanel extends React.Component {
                                                                 <span className="fas comment-alt"/> Valider
                                                                 la réponse
                                                             </button>
-                                                            {advice.answered &&
+                                                            {advice.answer &&
                                                             <button className="btn btn-danger btn-sm"
                                                                 onClick={this.handleRemoveReply.bind(this, advice._id)}>
                                                                 <span className="fas fa-trash"/> &Ocirc;ter
@@ -398,7 +398,7 @@ export default class OrganisationPanel extends React.Component {
                                                     {(advice.answer && !this.state.reply.shown) &&
                                                     <div className="answer">
                                                         <h4>Votre réponse</h4>
-                                                        <p>{advice.answer}</p>
+                                                        <p>{advice.answer.text}</p>
                                                     </div>
                                                     }
                                                     {!(this.state.reply.shown === true && this.state.reply.id === advice._id) &&
@@ -417,7 +417,7 @@ export default class OrganisationPanel extends React.Component {
                                                         <button className="btn btn-success btn-sm"
                                                             onClick={this.handleReply.bind(this, advice._id)}
                                                             title="votre réponse à avis sera publiée sur les sites partenaires et accessible aux futurs stagiaires potentiels">
-                                                            <span className="fas fa-comment-alt"/> {advice.answered ? 'Modifier la réponse' : 'Répondre'}
+                                                            <span className="fas fa-comment-alt"/> {advice.answer ? 'Modifier la réponse' : 'Répondre'}
                                                         </button>}
                                                         {(this.state.tab !== 'reported' && advice.reported !== true) &&
                                                         <button className="btn btn-danger btn-sm"

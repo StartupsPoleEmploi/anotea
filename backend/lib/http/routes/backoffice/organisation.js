@@ -90,13 +90,12 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             } else if (req.query.filter === 'read') {
                 filter.read = true;
                 filter.reported = { $ne: true };
-                filter.answered = { $ne: true };
             } else if (req.query.filter === 'unread') {
                 filter.read = { $ne: true };
                 filter.published = { $eq: true };
                 filter.reported = { $ne: true };
             } else if (req.query.filter === 'answered') {
-                filter.answered = true;
+                filter.answer = { $exists: true };
             } else if (req.query.filter === 'all') {
                 filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
             }
@@ -184,13 +183,12 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             } else if (req.query.filter === 'read') {
                 filter.read = true;
                 filter.reported = { $ne: true };
-                filter.answered = { $ne: true };
             } else if (req.query.filter === 'unread') {
                 filter.read = { $ne: true };
                 filter.published = { $eq: true };
                 filter.reported = { $ne: true };
             } else if (req.query.filter === 'answered') {
-                filter.answered = true;
+                filter.answer = { $exists: true };
             } else if (req.query.filter === 'all') {
                 filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
             }
@@ -313,12 +311,11 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
                 ...filter,
                 read: true,
                 reported: { $ne: true },
-                answered: { $ne: true }
             });
             inventory.reported = await db.collection('comment').countDocuments({ ...filter, reported: true });
             inventory.answered = await db.collection('comment').countDocuments({
                 ...filter,
-                answered: true
+                answer: { $exists: true },
             });
 
             filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
@@ -347,14 +344,13 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
                 ...filter,
                 read: true,
                 reported: { $ne: true },
-                answered: { $ne: true }
             });
 
             inventory.reported = await db.collection('comment').countDocuments({ ...filter, reported: true });
 
             inventory.answered = await db.collection('comment').countDocuments({
                 ...filter,
-                answered: true
+                answer: { $exists: true },
             });
 
             filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
