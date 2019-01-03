@@ -13,21 +13,28 @@ module.exports = db => {
         }, {
             $lookup: {
                 from: 'events',
-                let: { id: '$source.id', type: '$type' },
+                let: { source: '$source', type: '$type', date: '$date' },
                 pipeline: [
                     {
                         $match:
                         {
-                            id: '$id',
-                            type: 'log in',
-                            date: { $gt: THREE_MONTHS_AGO }
-                        },
-                    },
+                            $expr:
+                            {
+                                $and:
+                                    [
+                                        { $eq: ['$$source.id', '$id'] }, // TODO : doesn't work
+                                        { $eq: ['$$type', 'log in'] },
+                                        { $gt: ['$$date', THREE_MONTHS_AGO] }
+                                    ]
+                            }
+
+                        }
+                    }/*,
                     {
                         $group: {
                             _id: '$id'
                         }
-                    }
+                    }*/
                 ],
                 as: 'events',
             }

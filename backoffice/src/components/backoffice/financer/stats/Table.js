@@ -9,7 +9,7 @@ export default class Graph extends React.Component {
 
     state = {
         dashboardData: {},
-        tableContent : []
+        tableContent: []
     };
 
     static propTypes = {
@@ -92,23 +92,26 @@ export default class Graph extends React.Component {
                 {
                     type: 11,
                     label: 'Nombre d\'organismes de formation',
-                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                    value: dashboardData.countOrganisme
                 },
                 {
                     type: 12,
                     label: 'Taux d\'organismes de formation avec au moins un avis',
-                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                    value: this.getRate(dashboardData.countOrganismeWithMorethanOneAdvice, dashboardData.countOrganisme)
                 },
                 {
                     type: 13,
                     label: 'Taux d\'organismes de formation connectés dans les trois derniers mois',
-                    value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                    value: this.getRate(dashboardData.countOrganismeLogin, dashboardData.countOrganisme)
                 }
             ] });
         });
     }
 
-    getRate = (value, total) => `${(value / total * 100).toFixed(2).replace('.', ',')} %`;
+    getRate = (value, total) => {
+        const result = `${(value / total * 100).toFixed(2).replace('.', ',')} %`;
+        return isNaN(value / total) ? '-' : result;
+    }
 
     render() {
         return (

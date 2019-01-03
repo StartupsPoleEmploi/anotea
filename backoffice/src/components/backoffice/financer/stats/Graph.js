@@ -64,9 +64,9 @@ export default class Graph extends React.Component {
                 Object.assign({ label: 'Nombre de sessions avec avis', data: graphData.map(item => item.countAdvicesRejected) }, options),
                 Object.assign({ label: 'Nombre de sessions avec au moins un avis', data: graphData.map(item => item.countAdvicesRejected) }, options),
                 Object.assign({ label: 'Nombre de sessions avec au moins trois avis', data: graphData.map(item => item.countAdvicesRejected) }, options),
-                Object.assign({ label: 'Nombre d\'organismes de formation', data: graphData.map(item => item.countAdvicesRejected) }, options),
-                Object.assign({ label: 'Nombre d\'organismes de formation avec au moins un avis', data: graphData.map(item => item.countAdvicesRejected) }, options),
-                Object.assign({ label: 'Nombre d\'organismes de formation connectés dans les trois derniers mois', data: graphData.map(item => item.countAdvicesRejected) }, options)
+                Object.assign({ label: 'Nombre d\'organismes de formation', data: graphData.map(item => item.countOrganisme) }, options),
+                Object.assign({ label: 'Nombre d\'organismes de formation avec au moins un avis', data: graphData.map(item => item.countOrganismeWithMorethanOneAdvice) }, options),
+                Object.assign({ label: 'Nombre d\'organismes de formation connectés dans les trois derniers mois', data: graphData.map(item => item.countOrganismeLogin) }, options)
             ];
 
             this.setState({

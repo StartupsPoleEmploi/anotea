@@ -22,13 +22,13 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
         let results = Array.from(Array(12).keys()).map(i => {
             return {
                 _id: i,
-                count: null,
-                countEmailOpen: null,
-                countAdvicesPublished: null,
-                countAdvicesWithComments: null,
-                countAdvicesPositif: null,
-                countAdvicesNegatif: null,
-                countAdvicesRejected: null
+                count: 0,
+                countEmailOpen: 0,
+                countAdvicesPublished: 0,
+                countAdvicesWithComments: 0,
+                countAdvicesPositif: 0,
+                countAdvicesNegatif: 0,
+                countAdvicesRejected: 0
             };
         });
 
@@ -53,7 +53,16 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
         stats.forEach(item => {
             results[item._id - 1] = item;
         });
-        
+
+        let organismesStats = await db.collection('organismesStats').find(match).toArray();
+
+        organismesStats.forEach(item => {
+            results[item._id.month - 1].countOrganisme = item.count;
+            results[item._id.month - 1].countOrganismeAccountCreated = item.countAccountCreated;
+            results[item._id.month - 1].countOrganismeWithMorethanOneAdvice = item.countWithMorethanOneAdvice;
+            results[item._id.month - 1].countOrganismeLogin = item.countLogin;
+        });
+
         res.status(200).send(results);
     }));
 
@@ -88,13 +97,46 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
             }
         ]).toArray();
 
+
+        let organismesStats = await db.collection('organismesStats').aggregate([
+            { $match:
+                match
+            },
+            { $group:
+                {
+                    _id: null,
+                    countOrganisme: { $sum: '$count' },
+                    countOrganismeAccountCreated: { $sum: '$countAccountCreated' },
+                    countOrganismeWithMorethanOneAdvice: { $sum: '$countWithMorethanOneAdvice' },
+                    countOrganismeLogin: { $sum: '$countLogin' }
+                }
+            }
+        ]).toArray();
+
+        let obj = {
+            count: 0,
+            countEmailOpen: 0,
+            countAdvicesPublished: 0,
+            countAdvicesWithComments: 0,
+            countAdvicesPositif: 0,
+            countAdvicesNegatif: 0,
+            countAdvicesRejected: 0,
+            countOrganisme: 0,
+            countOrganismeAccountCreated: 0,
+            countOrganismeWithMorethanOneAdvice: 0,
+            countOrganismeLogin: 0
+        };
         if (stats.length > 0) {
-            let obj = stats[0];
+            obj = Object.assign(obj, stats[0]);
             delete obj._id;
-            res.status(200).send(obj);
-        } else {
-            res.status(200).send({});
         }
+
+        if (organismesStats.length > 0) {
+            obj = Object.assign(obj, organismesStats[0]);
+            delete obj._id;
+        }
+
+        res.status(200).send(obj);
     }));
 
     return router;
