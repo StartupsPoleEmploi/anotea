@@ -23,8 +23,8 @@ module.exports = db => {
                 {
                     _id: { codeRegion: '$code_region', codeFinanceur: codeFinancerProject },
                     count: { $sum: 1 },
-                    countHavingAdvices: { $sum: { $cond: { if: { $gte: ['$score.nb_avis', 1] }, then: 1, else: 0 } } },
-                    countHavingMoreThanTwoAdvices: { $sum: { $cond: { if: { $gte: ['$score.nb_avis', 3] }, then: 1, else: 0 } } }
+                    countWithAdvices: { $sum: { $cond: { if: { $gte: ['$score.nb_avis', 1] }, then: 1, else: 0 } } },
+                    countWithMoreThanTwoAdvices: { $sum: { $cond: { if: { $gte: ['$score.nb_avis', 3] }, then: 1, else: 0 } } }
                 }
             }
         ].forEach(item => {
@@ -36,7 +36,7 @@ module.exports = db => {
         stats.forEach(stat => {
             stat._id.year = today.getFullYear();
             stat._id.month = today.getMonth() + 1;
-            db.collection(outCollection).updateOne(stat._id, { $set: { count: stat.count, countHavingAdvices: stat.countHavingAdvices, countHavingMoreThanTwoAdvices: stat.countHavingMoreThanTwoAdvices } }, { upsert: true });
+            db.collection(outCollection).updateOne(stat._id, { $set: { count: stat.count, countWithAdvices: stat.countWithAdvices, countWithMoreThanTwoAdvices: stat.countWithMoreThanTwoAdvices } }, { upsert: true });
         });
     };
 

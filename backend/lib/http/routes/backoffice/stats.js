@@ -33,8 +33,8 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
                 countAdvicesNegatif: 0,
                 countAdvicesRejected: 0,
                 countSession: 0,
-                countSessionHavingAdvices: 0,
-                countSessionHavingMoreThanTwoAdvices: 0,
+                countSessionWithAdvices: 0,
+                countSessionWithMoreThanTwoAdvices: 0,
                 countOrganisme: 0,
                 countOrganismeAccountCreated: 0,
                 countOrganismeWithMorethanOneAdvice: 0,
@@ -68,8 +68,8 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
 
         sessionStats.forEach(item => {
             results[item._id.month - 1].countSession = item.count;
-            results[item._id.month - 1].countSessionHavingAdvices = item.countHavingAdvices;
-            results[item._id.month - 1].countSessionHavingMoreThanTwoAdvices = item.countHavingMoreThanTwoAdvices;
+            results[item._id.month - 1].countSessionWithAdvices = item.countWithAdvices;
+            results[item._id.month - 1].countSessionWithMoreThanTwoAdvices = item.countWithMoreThanTwoAdvices;
         });
 
         let organismesStats = await db.collection('organismesStats').find(match).toArray();
@@ -142,8 +142,8 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
                 {
                     _id: null,
                     countSessions: { $sum: '$count' },
-                    countSessionsHavingAdvices: { $sum: '$countHavingAdvices' },
-                    countSessionsHavingMoreThanTwoAdvices: { $sum: '$countHavingMoreThanTwoAdvices' }
+                    countSessionsWithAdvices: { $sum: '$countWithAdvices' },
+                    countSessionsWithMoreThanTwoAdvices: { $sum: '$countWithMoreThanTwoAdvices' }
                 }
             }
         ]).toArray();
@@ -157,8 +157,8 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
             countAdvicesNegatif: 0,
             countAdvicesRejected: 0,
             countSessions: 0,
-            countSessionsHavingAdvices: 0,
-            countSessionsHavingMoreThanTwoAdvices: 0,
+            countSessionsWithAdvices: 0,
+            countSessionsWithMoreThanTwoAdvices: 0,
             countOrganisme: 0,
             countOrganismeAccountCreated: 0,
             countOrganismeWithMorethanOneAdvice: 0,

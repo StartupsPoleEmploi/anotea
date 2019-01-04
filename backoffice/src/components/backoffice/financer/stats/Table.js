@@ -77,17 +77,17 @@ export default class Graph extends React.Component {
                 {
                     type: 8,
                     label: 'Nombre de sessions avec avis',
-                    value: dashboardData.countSessionsHavingAdvices
+                    value: dashboardData.countSessionsWithAdvices
                 },
                 {
                     type: 9,
                     label: 'Taux de sessions avec au moins un avis',
-                    value: this.getRate(dashboardData.countSessionsHavingAdvices, dashboardData.countSession)
+                    value: this.getRate(dashboardData.countSessionsWithAdvices, dashboardData.countSession)
                 },
                 {
                     type: 10,
                     label: 'Taux de sessions avec au moins trois avis',
-                    value: this.getRate(dashboardData.countHavingMoreThanTwoAdvices, dashboardData.countSession)
+                    value: this.getRate(dashboardData.countWithMoreThanTwoAdvices, dashboardData.countSession)
                 },
                 {
                     type: 11,
