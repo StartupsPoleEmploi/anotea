@@ -24,7 +24,7 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
 
         let results = Array.from(Array(12).keys()).map(i => {
             return {
-                _id: i+1,
+                _id: i + 1,
                 count: 0,
                 countEmailOpen: 0,
                 countAdvicesPublished: 0,
