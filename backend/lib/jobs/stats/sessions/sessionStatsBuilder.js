@@ -36,7 +36,7 @@ module.exports = db => {
         stats.forEach(stat => {
             stat._id.year = today.getFullYear();
             stat._id.month = today.getMonth() + 1;
-            db.collection(outCollection).updateOne(stat._id, { $set: { count: stat.count, countWithAdvices: stat.countWithAdvices, countWithMoreThanTwoAdvices: stat.countWithMoreThanTwoAdvices } }, { upsert: true });
+            db.collection(outCollection).updateOne({_id : stat._id}, { $set: { count: stat.count, countWithAdvices: stat.countWithAdvices, countWithMoreThanTwoAdvices: stat.countWithMoreThanTwoAdvices } }, { upsert: true });
         });
     };
 
