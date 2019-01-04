@@ -32,6 +32,7 @@ module.exports = db => {
         db.collection('organismes').createIndex({ 'score.nb_avis': 1 }),
         db.collection('organismes').createIndex({ 'lieux_de_formation.adresse.code_postal': 1 }),
         db.collection('organismes').createIndex({ 'lieux_de_formation.adresse.region': 1 }),
+        db.collection('organismes').createIndex({ 'codeRegion': 1 }),
         db.collection('sessionsReconciliees').createIndex({ 'numero': 1 }),
         db.collection('sessionsReconciliees').createIndex({ 'region': 1 }),
         db.collection('sessionsReconciliees').createIndex({ 'score.nb_avis': 1 }),

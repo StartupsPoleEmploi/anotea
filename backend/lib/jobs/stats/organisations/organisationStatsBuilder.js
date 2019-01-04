@@ -13,40 +13,39 @@ module.exports = db => {
         }, {
             $lookup: {
                 from: 'events',
-                let: { source: '$source', type: '$type', date: '$date' },
-                pipeline: [
-                    {
-                        $match:
-                        {
-                            $expr:
-                            {
-                                $and:
-                                    [
-                                        { $eq: ['$$source.id', '$id'] }, // TODO : doesn't work
-                                        { $eq: ['$$type', 'log in'] },
-                                        { $gt: ['$$date', THREE_MONTHS_AGO] }
-                                    ]
-                            }
-
-                        }
-                    }/*,
-                    {
-                        $group: {
-                            _id: '$id'
-                        }
-                    }*/
-                ],
+                localField: 'meta.siretAsString',
+                foreignField: 'source.id',
                 as: 'events',
             }
-        }, {
+        },
+        {
+            $project: {
+                codeRegion: '$codeRegion',
+                passwordHash: '$passwordHash',
+                nbAvis: '$meta.nbAvis',
+                login: {
+                    $filter: {
+                        input: '$events',
+                        as: 'event',
+                        cond: {
+                            $and: [
+                                { $eq: ['$$event.type', 'log in'] },
+                                { $gte: ['$$event.date', THREE_MONTHS_AGO] },
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
             $group: {
                 _id: {
                     codeRegion: '$codeRegion',
                 },
                 count: { $sum: 1 },
                 countAccountCreated: { $sum: { $cond: ['$passwordHash', 1, 0] } },
-                countWithMorethanOneAdvice: { $sum: { $cond: ['$meta.nbAvis', 1, 0] } },
-                countLogin: { $sum: { $size: '$events' } }
+                countWithMorethanOneAdvice: { $sum: { $cond: ['$nbAvis', 1, 0] } },
+                countLogin: { $sum: { $cond: [ { $size : '$login'}, 1, 0] } } //$size: '$login'
             }
         }]).toArray();
 

@@ -46,7 +46,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
         return await auth.buildJWT('backoffice', {
             sub: organisme.meta.siretAsString,
             profile: 'organisme',
-            id: organisme._id,
+            id: organisme.meta.siretAsString,
             codeRegion: organisme.codeRegion,
             raisonSociale: organisme.raisonSociale,
             siret: organisme.meta.siretAsString

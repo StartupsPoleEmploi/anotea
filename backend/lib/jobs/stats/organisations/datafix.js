@@ -25,7 +25,7 @@ execute(async ({ logger, db, configuration }) => {
             emails.push(organisme.meta.kairosData.emailRGC);
         }
 
-        db.collection('events').updateOne({ 'source.profile': 'organisme', 'source.user': { $in: emails } }, { $set: { 'source.id': organisme._id } });
+        db.collection('events').updateMany({ 'source.profile': 'organisme', $or: [{ 'source.user': { $in: emails } }, { 'source.user': organisme.meta.siretAsString }] }, { $set: { 'source.id': organisme.meta.siretAsString } }, { multi: true });
     });
 
 });
