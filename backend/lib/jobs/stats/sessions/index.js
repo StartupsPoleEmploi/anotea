@@ -12,5 +12,6 @@ execute(async ({ logger, db, configuration }) => {
     logger.info('Building training session statistics displayed on financer dashboard');
 
     let sessionStatsBuilder = require('./sessionStatsBuilder')(db, logger, configuration);
-    await sessionStatsBuilder.buildStats();
+    await sessionStatsBuilder.buildStats({ unwind: true });
+    await sessionStatsBuilder.buildStats({ unwind: false });
 });
