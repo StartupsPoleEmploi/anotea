@@ -45,7 +45,7 @@ module.exports = db => {
                 count: { $sum: 1 },
                 countAccountCreated: { $sum: { $cond: ['$passwordHash', 1, 0] } },
                 countWithMorethanOneAdvice: { $sum: { $cond: ['$nbAvis', 1, 0] } },
-                countLogin: { $sum: { $cond: [ { $size : '$login'}, 1, 0] } } //$size: '$login'
+                countLogin: { $sum: { $cond: [{ $size: '$login' }, 1, 0] } }
             }
         }]).toArray();
 
