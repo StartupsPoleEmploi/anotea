@@ -1,0 +1,45 @@
+@import '../../../../../../styles/variables';
+
+.Edition {
+
+  font-size: 0.9em;
+  position: relative;
+
+  .fa-star {
+    color: #FCB42B;
+    font-size: 0.8em;
+  }
+
+  .actions {
+    text-align: right;
+
+    .action {
+      background-color: $color-white;
+      border: none;
+      font-size: 0.8rem;
+
+      &.cancel {
+        color: $color-red;
+
+        &.active, &:hover, &:focus {
+          background-color: $color-white;
+          border: none;
+          box-shadow: none;
+        }
+      }
+
+      &.publish {
+        color: $color-green;
+        background-color: $color-white;
+        border: none;
+
+        &.active, &:hover, &:focus {
+          background-color: $color-white;
+          border: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+}

@@ -2,13 +2,12 @@ import React from 'react';
 import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
-import AdviceRates from '../common/AdviceRates';
-import Toolbar from '../common/Toolbar';
+import AdviceRates from '../common/deprecated/AdviceRates';
+import Toolbar from '../common/deprecated/Toolbar';
 import TrainingSearchForm from './trainingSearchForm';
 import EntitySearchForm from './EntitySearchForm';
 import OrganisationSearchForm from './OrganisationSearchForm';
 import CodeFinancerSearchForm from './CodeFinancerSearchForm';
-import SessionStats from '../organisation/sessionStats';
 import {
     getOrganisationAdvices,
     getOrganisationPlaces,

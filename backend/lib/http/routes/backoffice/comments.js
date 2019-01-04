@@ -40,7 +40,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
         res.send({ 'status': 'OK' });
     });
 
-    router.get('/backoffice/advices.json', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/avis.json', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let advices = await db.collection('comment').find({ step: { $gte: 2 } }, { token: 0 }).limit(10).toArray();
         res.send(advices);
     }));
@@ -139,7 +139,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
         .pipe(res);
     }));
 
-    router.get('/backoffice/advices/:codeRegion/', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/avis/:codeRegion/', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         if (req.params.codeRegion !== req.user.codeRegion) {
             throw Boom.forbidden('Action non autorisé');
         }
@@ -181,203 +181,242 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
             res.send({ error: 404 });
             return;
         }
-        const advices = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
+        const avis = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
 
         res.send({
-            advices: advices,
+            avis: avis,
             page: page,
-            pageCount: Math.ceil(count / pagination)
+            pageCount: Math.ceil(count / pagination),
+            elementsPerPage: pagination,
+            elementsOnThisPage: avis.length,
         });
     }));
 
-    router.put('/backoffice/advice/:id/markAsRead', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
+    router.put('/backoffice/avis/:id/markAsRead', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, { $set: { read: true } }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'markAsRead', {
-                    app: 'organisation',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'advice marked as read' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            { $set: { read: true } },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'markAsRead', {
+                        app: 'organisation',
+                        user: req.query.userId,
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
     }));
 
-    router.put('/backoffice/advice/:id/markAsNotRead', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
+    router.put('/backoffice/avis/:id/markAsNotRead', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, { $set: { read: false } }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'markAsNotRead', {
-                    app: 'organisation',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'advice marked as not read' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            { $set: { read: false } },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'markAsNotRead', {
+                        app: 'organisation',
+                        user: req.query.userId,
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
     }));
 
-    router.put('/backoffice/advice/:id/maskPseudo', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, { $set: { pseudoMasked: true } }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'maskPseudo', {
-                    app: 'moderation',
-                    profile: 'moderateur',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'pseudo masked masked' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
-    }));
-
-    router.put('/backoffice/advice/:id/unmaskPseudo', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, { $set: { pseudoMasked: false } }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'maskPseudo', {
-                    app: 'moderation',
-                    profile: 'moderateur',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'pseudo unmasked' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
-    }));
-
-    router.put('/backoffice/advice/:id/maskTitle', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, { $set: { titleMasked: true } }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'maskTitle', {
-                    app: 'moderation',
-                    profile: 'moderateur',
-                    user: req.query.userId,
-                    ip: req.connection.remoteAddress
-                });
-                res.status(200).send({ 'message': 'pseudo masked masked' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
-    }));
-
-    router.put('/backoffice/advice/:id/unmaskTitle', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, { $set: { titleMasked: false } }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'maskTitle', {
-                    app: 'moderation',
-                    profile: 'moderateur',
-                    user: req.query.userId,
-                    ip: req.connection.remoteAddress
-                });
-                res.status(200).send({ 'message': 'pseudo unmasked' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
-    }));
-
-    router.put('/backoffice/advice/:id/report', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, { $set: { reported: true } }, function(err, result) {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'report', {
-                    app: 'organisation',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'advice reported' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
-    }));
-
-    router.put('/backoffice/advice/:id/unreport', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, { $set: { reported: false, read: true } }, function(err, result) {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'report', {
-                    app: 'organisation',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'advice unreported' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
-    }));
-
-    router.post('/backoffice/advice/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/maskPseudo', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
 
-        db.collection('comment').updateOne({ _id: id }, {
-            $set: {
-                reported: false,
-                moderated: true,
-                rejected: true,
-                published: false,
-                rejectReason: req.body.reason,
-                lastModerationAction: new Date()
-            }
-        }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                //sendEmailAsync(trainee, comment, reason);
-                saveEvent(id, 'reject', {
-                    app: 'moderation',
-                    user: 'admin',
-                    profile: 'moderateur',
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'advice rejected' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            { $set: { pseudoMasked: true } },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'maskPseudo', {
+                        app: 'moderation',
+                        profile: 'moderateur',
+                        user: req.query.userId,
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
     }));
 
-    router.delete('/backoffice/advice/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/unmaskPseudo', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
+        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            { $set: { pseudoMasked: false } },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'maskPseudo', {
+                        app: 'moderation',
+                        profile: 'moderateur',
+                        user: req.query.userId,
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
+    }));
+
+    router.put('/backoffice/avis/:id/maskTitle', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
+        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            { $set: { titleMasked: true } },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'maskTitle', {
+                        app: 'moderation',
+                        profile: 'moderateur',
+                        user: req.query.userId,
+                        ip: req.connection.remoteAddress
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
+    }));
+
+    router.put('/backoffice/avis/:id/unmaskTitle', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
+        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            { $set: { titleMasked: false } },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'maskTitle', {
+                        app: 'moderation',
+                        profile: 'moderateur',
+                        user: req.query.userId,
+                        ip: req.connection.remoteAddress
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
+    }));
+
+    router.put('/backoffice/avis/:id/report', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
+        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            { $set: { reported: true } },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'report', {
+                        app: 'organisation',
+                        user: req.query.userId,
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
+    }));
+
+    router.put('/backoffice/avis/:id/unreport', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
+        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            { $set: { reported: false, read: true } },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'report', {
+                        app: 'organisation',
+                        user: req.query.userId,
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
+    }));
+
+    router.post('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            {
+                $set: {
+                    reported: false,
+                    moderated: true,
+                    rejected: true,
+                    published: false,
+                    rejectReason: req.body.reason,
+                    lastModerationAction: new Date()
+                }
+            },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    //sendEmailAsync(trainee, comment, reason);
+                    saveEvent(id, 'reject', {
+                        app: 'moderation',
+                        user: 'admin',
+                        profile: 'moderateur',
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
+    }));
+
+    router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
 
         db.collection('comment').removeOne({ _id: id }, (err, result) => {
@@ -398,67 +437,72 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
         });
     }));
 
-    router.post('/backoffice/advice/:id/publish', checkAuth, checkProfile('moderateur'), (req, res) => {
+    router.post('/backoffice/avis/:id/publish', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, {
-            $set: {
-                reported: false,
-                moderated: true,
-                published: true,
-                rejected: false,
-                rejectReason: null,
-                qualification: req.body.qualification,
-                lastModerationAction: new Date()
-            }
-        }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'publish', {
-                    app: 'moderation',
-                    user: 'admin',
-                    profile: 'moderateur',
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'advice published' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
+        const answer = req.body.answer;
+
+        db.collection('comment').findOneAndUpdate(
+            { _id: id }, {
+                $set: {
+                    answer: answer,
+                    answered: true,
+                    read: true
+                }
+            },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'answer', {
+                        app: 'organisation',
+                        user: req.query.userId,
+                        ip: getRemoteAddress(req),
+                        answer: answer
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
     });
 
-    router.post('/backoffice/advice/:id/update', checkAuth, checkProfile('moderateur'), (req, res) => {
+    router.post('/backoffice/avis/:id/update', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').updateOne({ _id: id }, {
-            $set: {
-                'reported': false,
-                'moderated': true,
-                'published': true,
-                'rejected': false,
-                'qualification': req.body.qualification,
-                'editedComment': { text: req.body.text, date: new Date() },
-                'lastModerationAction': new Date()
-            }
-        }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.modifiedCount === 1) {
-                saveEvent(id, 'publish', {
-                    app: 'moderation',
-                    user: 'admin',
-                    profile: 'moderateur',
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'advice updated' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            {
+                $set: {
+                    'reported': false,
+                    'moderated': true,
+                    'published': true,
+                    'rejected': false,
+                    'qualification': req.body.qualification,
+                    'editedComment': { text: req.body.text, date: new Date() },
+                    'lastModerationAction': new Date()
+                }
+            },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'publish', {
+                        app: 'moderation',
+                        user: 'admin',
+                        profile: 'moderateur',
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
     });
 
-    router.get('/backoffice/advices/:codeRegion/inventory', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.get('/backoffice/avis/:codeRegion/inventory', checkAuth, checkProfile('moderateur'), async (req, res) => {
         if (req.params.codeRegion !== req.user.codeRegion) {
             throw Boom.forbidden('Action non autorisé');
         }
@@ -476,7 +520,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
         res.status(200).send(inventory);
     });
 
-    router.get('/backoffice/advice/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { sendVotreAvisEmail } = mailing;
 
         const parameters = await Joi.validate(req.params, {
