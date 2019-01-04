@@ -12,23 +12,33 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
 
         let match = { '_id.codeRegion': req.params.idregion, '_id.year': parseInt(req.params.year) };
         let mailStatsCollection;
+        let sessionsStatsCollection;
         if (codeFinanceur) {
             match = Object.assign(match, { '_id.codeFinanceur': codeFinanceur });
             mailStatsCollection = 'mailStatsByCodeFinanceur';
+            sessionsStatsCollection = 'sessionsStatsByCodeFinanceur';
         } else {
             mailStatsCollection = 'mailStats';
+            sessionsStatsCollection = 'sessionsStats';
         }
 
         let results = Array.from(Array(12).keys()).map(i => {
             return {
-                _id: i,
+                _id: i+1,
                 count: 0,
                 countEmailOpen: 0,
                 countAdvicesPublished: 0,
                 countAdvicesWithComments: 0,
                 countAdvicesPositif: 0,
                 countAdvicesNegatif: 0,
-                countAdvicesRejected: 0
+                countAdvicesRejected: 0,
+                countSession: 0,
+                countSessionHavingAdvices: 0,
+                countSessionHavingMoreThanTwoAdvices: 0,
+                countOrganisme: 0,
+                countOrganismeAccountCreated: 0,
+                countOrganismeWithMorethanOneAdvice: 0,
+                countOrganismeLogin: 0
             };
         });
 
@@ -54,6 +64,14 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
             results[item._id - 1] = item;
         });
 
+        let sessionStats = await db.collection(sessionsStatsCollection).find(match).toArray();
+
+        sessionStats.forEach(item => {
+            results[item._id.month - 1].countSession = item.count;
+            results[item._id.month - 1].countSessionHavingAdvices = item.countHavingAdvices;
+            results[item._id.month - 1].countSessionHavingMoreThanTwoAdvices = item.countHavingMoreThanTwoAdvices;
+        });
+
         let organismesStats = await db.collection('organismesStats').find(match).toArray();
 
         organismesStats.forEach(item => {
@@ -72,11 +90,14 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
 
         let match = { '_id.codeRegion': req.params.idregion, '_id.year': parseInt(req.params.year) };
         let mailStatsCollection;
+        let sessionsStatsCollection;
         if (codeFinanceur) {
             match = Object.assign(match, { '_id.codeFinanceur': codeFinanceur });
             mailStatsCollection = 'mailStatsByCodeFinanceur';
+            sessionsStatsCollection = 'sessionsStatsByCodeFinanceur';
         } else {
             mailStatsCollection = 'mailStats';
+            sessionsStatsCollection = 'sessionsStats';
         }
 
         let stats = await db.collection(mailStatsCollection).aggregate([
@@ -113,6 +134,20 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
             }
         ]).toArray();
 
+        let sessionsStats = await db.collection(sessionsStatsCollection).aggregate([
+            { $match:
+                match
+            },
+            { $group:
+                {
+                    _id: null,
+                    countSessions: { $sum: '$count' },
+                    countSessionsHavingAdvices: { $sum: '$countHavingAdvices' },
+                    countSessionsHavingMoreThanTwoAdvices: { $sum: '$countHavingMoreThanTwoAdvices' }
+                }
+            }
+        ]).toArray();
+
         let obj = {
             count: 0,
             countEmailOpen: 0,
@@ -121,20 +156,27 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
             countAdvicesPositif: 0,
             countAdvicesNegatif: 0,
             countAdvicesRejected: 0,
+            countSessions: 0,
+            countSessionsHavingAdvices: 0,
+            countSessionsHavingMoreThanTwoAdvices: 0,
             countOrganisme: 0,
             countOrganismeAccountCreated: 0,
             countOrganismeWithMorethanOneAdvice: 0,
             countOrganismeLogin: 0
         };
+
         if (stats.length > 0) {
             obj = Object.assign(obj, stats[0]);
-            delete obj._id;
         }
 
         if (organismesStats.length > 0) {
             obj = Object.assign(obj, organismesStats[0]);
-            delete obj._id;
         }
+
+        if (sessionsStats.length > 0) {
+            obj = Object.assign(obj, sessionsStats[0]);
+        }
+        delete obj._id;
 
         res.status(200).send(obj);
     }));
