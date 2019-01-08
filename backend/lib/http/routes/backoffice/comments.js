@@ -3,6 +3,9 @@ const moment = require('moment');
 const mongo = require('mongodb');
 const s = require('string');
 const tryAndCatch = require('../tryAndCatch');
+const { encodeStream } = require('iconv-lite');
+const Boom = require('boom');
+const { transformObject } = require('../../../common/stream-utils');
 
 module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }) => {
 
@@ -71,18 +74,27 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
                 query['training.idFormation'] = req.query.trainingId;
             }
         }
-        
-        const advices = await db.collection('comment').find(query, { token: 0 }).toArray();
+
+        let stream = await db.collection('comment').find(query, { token: 0 }).stream();
         res.setHeader('Content-disposition', 'attachment; filename=avis.csv');
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
-        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
-        advices.forEach(comment => {
+        res.write('id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n');
+        
+        let handleError = e => {
+            logger.error('An error occurred', e);
+            res.status(500);
+            stream.push(Boom.boomify(e).output.payload);
+        };
+
+        stream
+        .on('error', handleError)
+        .pipe(transformObject(async comment => {
             if (comment.comment !== undefined && comment.comment !== null) {
                 comment.comment.pseudo = (comment.comment.pseudo !== undefined) ? comment.comment.pseudo.replace(/\r?\n|\r/g, ' ') : '';
                 comment.comment.title = (comment.comment.title !== undefined) ? comment.comment.title.replace(/\r?\n|\r/g, ' ') : '';
                 comment.comment.text = (comment.comment.text !== undefined) ? comment.comment.text.replace(/\r?\n|\r/g, ' ') : '';
             }
-            lines += comment._id + ';' +
+            return comment._id + ';' +
                 (comment.rates !== undefined ? comment.rates.accueil : '') + ';' +
                 (comment.rates !== undefined ? comment.rates.contenu_formation : '') + ';' +
                 (comment.rates !== undefined ? comment.rates.equipe_formateurs : '') + ';' +
@@ -116,8 +128,9 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
                 (comment.infoCarif !== undefined ? comment.infoCarif.numeroAction : '') + ';' +
                 (comment.infoCarif !== undefined ? comment.infoCarif.numeroSession : '') + ';' +
                 comment.training.codeFinanceur + '\n';
-        });
-        res.send(lines);
+        }))
+        .pipe(encodeStream('UTF-16BE'))
+        .pipe(res);
     }));
 
     router.get('/backoffice/advices/:codeRegion/', checkAuth, async (req, res) => {
