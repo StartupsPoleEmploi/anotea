@@ -1,4 +1,5 @@
 const express = require('express');
+const Joi = require('joi');
 const tryAndCatch = require('../tryAndCatch');
 
 module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }) => {
@@ -9,26 +10,26 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
     const PAGE_SIZE = 5;
 
     router.get('/backoffice/trainee/search', checkAuth, tryAndCatch(async (req, res) => {
-        if (req.query.query === undefined || req.query.codeRegion === undefined) {
-            return res.status(400).send({ error: true });
-        }
+        const parameters = await Joi.validate(req.query, {
+            query: Joi.string().required(),
+            codeRegion: Joi.number().required(),
+            page: Joi.number().min(0),
+            codeFinancer: Joi.number() },
+        { abortEarly: false });
 
         let currentPage = 0;
-        if (!isNaN(req.query.page) && parseInt(req.query.page) >= 0) {
-            currentPage = parseInt(req.query.page);
-        } else if (req.query.page !== undefined && isNaN(req.query.page)) {
-            return res.status(400).send({ error: true });
+        if (parameters.page !== undefined) {
+            currentPage = parameters.page;
         }
-        const regexp = { $regex: req.query.query, $options: 'i' };
-
+        const regexp = { $regex: parameters.query, $options: 'i' };
 
         let match = {
-            'codeRegion': req.query.codeRegion,
+            'codeRegion': `${parameters.codeRegion}`,
             'step': { $gte: 2 }
         };
 
-        if (req.query.codeFinanceur !== undefined) {
-            match['training.codeFinanceur'] = { $elemMatch: { $eq: req.query.codeFinanceur } };
+        if (parameters.codeFinanceur !== undefined) {
+            match['training.codeFinanceur'] = { $elemMatch: { $eq: parameters.codeFinanceur } };
         }
 
         const trainees = await db.collection('comment').aggregate([
