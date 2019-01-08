@@ -362,7 +362,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
         });
     }));
 
-    router.delete('/backoffice/advice/:id', tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/advice/:id', checkAuth, tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').removeOne({ _id: id }, (err, result) => {
             if (err) {
