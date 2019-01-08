@@ -8,13 +8,13 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
     const PAGE_SIZE = 5;
+    const POLE_EMPLOI = '4';
 
     router.get('/backoffice/trainee/search', checkAuth, tryAndCatch(async (req, res) => {
         const parameters = await Joi.validate(req.query, {
             query: Joi.string().required(),
-            codeRegion: Joi.number().required(),
-            page: Joi.number().min(0),
-            codeFinancer: Joi.number() },
+            page: Joi.number().min(0)
+        },
         { abortEarly: false });
 
         let currentPage = 0;
@@ -24,12 +24,12 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
         const regexp = { $regex: parameters.query, $options: 'i' };
 
         let match = {
-            'codeRegion': `${parameters.codeRegion}`,
+            'codeRegion': req.user.codeRegion,
             'step': { $gte: 2 }
         };
 
-        if (parameters.codeFinanceur !== undefined) {
-            match['training.codeFinanceur'] = { $elemMatch: { $eq: parameters.codeFinanceur } };
+        if (req.user.codeFinanceur !== POLE_EMPLOI) {
+            match['training.codeFinanceur'] = { $elemMatch: { $eq: req.user.codeFinanceur } };
         }
 
         const trainees = await db.collection('comment').aggregate([
