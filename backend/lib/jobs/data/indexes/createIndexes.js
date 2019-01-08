@@ -4,6 +4,7 @@ module.exports = db => {
         db.collection('trainee').createIndex({ 'token': 1, 'formacode': 1, 'idSession': 1 }),
         db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
         db.collection('trainee').createIndex({ 'codeRegion': 1 }),
+        db.collection('trainee').createIndex({ 'trainee.email': 'text' }),
         db.collection('comment').createIndex({ 'step': 1 }),
         db.collection('comment').createIndex({ 'formacode': 1 }),
         db.collection('comment').createIndex({ 'token': 1 }),
