@@ -362,6 +362,26 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
         });
     }));
 
+    router.delete('/backoffice/advice/:id', tryAndCatch(async (req, res) => {
+        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+        db.collection('comment').removeOne({ _id: id }, (err, result) => {
+            if (err) {
+                logger.error(err);
+                res.status(500).send({ 'error': 'An error occurs' });
+            } else if (result.result.n === 1) {
+                saveEvent(id, 'delete', {
+                    app: 'moderation',
+                    profile: 'moderateur',
+                    user: req.query.userId,
+                    ip: req.connection.remoteAddress
+                });
+                res.status(200).send({ 'message': 'advice deleted' });
+            } else {
+                res.status(404).send({ 'error': 'Not found' });
+            }
+        });
+    }));
+
     router.post('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         const answer = req.body.answer;
