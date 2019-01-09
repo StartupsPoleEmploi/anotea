@@ -37,7 +37,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
     });
 
     router.get('/backoffice/advices.json', checkAuth, async (req, res) => {
-        let advices = await db.collection('comment').find({ step: { $gte: 2 } }, { token: 0 }).limit(10).toArray();
+        let advices = await db.collection('comment').findOne({ step: { $gte: 2 } }, { token: 0 }).limit(10).toArray();
         res.send(advices);
     });
 
@@ -193,7 +193,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.put('/backoffice/advice/:id/markAsRead', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, { $set: { read: true } }, (err, result) => {
+        db.collection('comment').updateOne({ _id: id }, { $set: { read: true } }, (err, result) => {
             if (err) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
@@ -212,7 +212,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.put('/backoffice/advice/:id/markAsNotRead', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, { $set: { read: false } }, (err, result) => {
+        db.collection('comment').updateOne({ _id: id }, { $set: { read: false } }, (err, result) => {
             if (err) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
@@ -231,7 +231,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.put('/backoffice/advice/:id/maskPseudo', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, { $set: { pseudoMasked: true } }, (err, result) => {
+        db.collection('comment').updateOne({ _id: id }, { $set: { pseudoMasked: true } }, (err, result) => {
             if (err) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
@@ -251,7 +251,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.put('/backoffice/advice/:id/unmaskPseudo', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, { $set: { pseudoMasked: false } }, (err, result) => {
+        db.collection('comment').updateOne({ _id: id }, { $set: { pseudoMasked: false } }, (err, result) => {
             if (err) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
@@ -271,7 +271,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.put('/backoffice/advice/:id/maskTitle', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, { $set: { titleMasked: true } }, (err, result) => {
+        db.collection('comment').updateOne({ _id: id }, { $set: { titleMasked: true } }, (err, result) => {
             if (err) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
@@ -291,7 +291,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.put('/backoffice/advice/:id/unmaskTitle', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, { $set: { titleMasked: false } }, (err, result) => {
+        db.collection('comment').updateOne({ _id: id }, { $set: { titleMasked: false } }, (err, result) => {
             if (err) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
@@ -311,7 +311,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.put('/backoffice/advice/:id/report', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, { $set: { reported: true } }, function(err, result) {
+        db.collection('comment').updateOne({ _id: id }, { $set: { reported: true } }, function(err, result) {
             if (err) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
@@ -330,7 +330,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.put('/backoffice/advice/:id/unreport', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, { $set: { reported: false, read: true } }, function(err, result) {
+        db.collection('comment').updateOne({ _id: id }, { $set: { reported: false, read: true } }, function(err, result) {
             if (err) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
@@ -349,11 +349,8 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.post('/backoffice/advice/:id/reject', checkAuth, tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        const reason = req.body.reason;
-        let comment = await db.collection('comment').findOne({ _id: id });
-        let trainee = await db.collection('trainee').findOne({ token: comment.token });
 
-        db.collection('comment').update({ _id: id }, {
+        db.collection('comment').updateOne({ _id: id }, {
             $set: {
                 reported: false,
                 moderated: true,
@@ -382,11 +379,6 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
     }));
 
     router.delete('/backoffice/advice/:id', checkAuth, tryAndCatch(async (req, res) => {
-        if (req.profile !== 'moderateur') {
-            res.status(403).send({ 'error': 'Forbidden' });
-            return;
-        }
-
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
 
         db.collection('comment').removeOne({ _id: id }, (err, result) => {
@@ -410,7 +402,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
     router.post('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         const answer = req.body.answer;
-        db.collection('comment').update({ _id: id }, {
+        db.collection('comment').updateOne({ _id: id }, {
             $set: {
                 answer: answer,
                 answered: true,
@@ -436,7 +428,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.delete('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, {
+        db.collection('comment').updateOne({ _id: id }, {
             $set: { answered: false },
             $unset: { answer: '' }
         }, (err, result) => {
@@ -458,7 +450,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.post('/backoffice/advice/:id/publish', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, {
+        db.collection('comment').updateOne({ _id: id }, {
             $set: {
                 reported: false,
                 moderated: true,
