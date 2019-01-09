@@ -488,7 +488,6 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.post('/backoffice/advice/:id/update', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        console.log({ _id: id },)
         db.collection('comment').updateOne({ _id: id }, {
             $set: {
                 'reported': false,
