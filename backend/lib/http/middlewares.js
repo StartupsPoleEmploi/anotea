@@ -71,7 +71,6 @@ module.exports = (auth, logger, configuration) => {
                     }
 
                     logger.error(`Unable to read token from authorization header for request ${req.method}/${req.url} `, e);
-                    //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
                     throw Boom.unauthorized('Utilisateur non authentifié');
                 });
             };
