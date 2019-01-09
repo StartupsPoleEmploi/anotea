@@ -2,7 +2,7 @@ const express = require('express');
 const Joi = require('joi');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }) => {
+module.exports = ({ db, createJWTAuthMiddleware }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = createJWTAuthMiddleware('backoffice');
