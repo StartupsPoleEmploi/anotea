@@ -526,8 +526,8 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         res.status(200).send(inventory);
     });
 
-    router.get('/backoffice/advice/:id/resendForm', checkAuth, tryAndCatch(async (req, res) => {
-        let { sendTraineeFormEmail } = mailing;
+    router.get('/backoffice/advice/:id/resendEmail', checkAuth, tryAndCatch(async (req, res) => {
+        let { sendVotreAvisEmail } = mailing;
 
         const parameters = await Joi.validate(req.params, {
             id: Joi.string().required(),
@@ -549,11 +549,12 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
             throw Boom.notFound('Stagiaire introuvable');
         }
 
-        db.collection('comment').removeOne({ _id: new ObjectID(parameters.id) });
+        await Promise.all([
+            db.collection('comment').removeOne({ _id: new ObjectID(parameters.id) }),
+            sendTraineeFormEmail(trainee),
+        ]);
 
-        await sendTraineeFormEmail(trainee);
-
-        res.status(200).send({ 'message': 'trainee email resent' });
+        res.json({ 'message': 'trainee email resent' });
     }));
 
     return router;

@@ -6,7 +6,7 @@ const database = require('./common/components/database');
 const createMailer = require('./smtp/mailer.js');
 const sendForgottenPasswordEmail = require('./common/components/mailing/sendForgottenPasswordEmail.js');
 const sendOrganisationAccountEmail = require('./common/components/mailing/sendOrganisationAccountEmail.js');
-const sendTraineeFormEmail = require('./common/components/mailing/sendTraineeFormEmail');
+const sendVotreAvisEmail = require('./common/components/mailing/sendVotreAvisEmail');
 
 module.exports = async (options = {}) => {
 
@@ -26,7 +26,7 @@ module.exports = async (options = {}) => {
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
             sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
-            sendTraineeFormEmail: sendTraineeFormEmail(db, mailer),
+            sendVotreAvisEmail: sendVotreAvisEmail(db, mailer),
         }
     }, options || {});
 };
