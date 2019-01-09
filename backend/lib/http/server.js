@@ -95,6 +95,7 @@ module.exports = components => {
     app.use('/api', require('./routes/backoffice/financer')(httpComponents));
     app.use('/api', require('./routes/backoffice/dashboard')(httpComponents));
     app.use('/api', require('./routes/backoffice/stats')(httpComponents));
+    app.use('/api', require('./routes/backoffice/trainee')(httpComponents));
 
     // catch 404
     app.use(function(req, res) {
@@ -123,5 +124,5 @@ module.exports = components => {
         return res.status(error.output.statusCode).send(error.output.payload);
     });
 
-    return app
+    return app;
 };
