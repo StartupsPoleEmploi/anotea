@@ -12,7 +12,7 @@ const { transformObject } = require('../../../common/stream-utils');
 module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, mailing }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = createJWTAuthMiddleware('backoffice', 'moderator');
+    const checkAuth = createJWTAuthMiddleware('backoffice', 'moderateur');
     const pagination = configuration.api.pagination;
 
     const POLE_EMPLOI = '4';
@@ -488,7 +488,8 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     router.post('/backoffice/advice/:id/update', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, {
+        console.log({ _id: id },)
+        db.collection('comment').updateOne({ _id: id }, {
             $set: {
                 'reported': false,
                 'moderated': true,
@@ -502,7 +503,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
             if (err) {
                 logger.error(err);
                 res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.n === 1) {
+            } else if (result.modifiedCount === 1) {
                 saveEvent(id, 'publish', {
                     app: 'moderation',
                     user: 'admin',

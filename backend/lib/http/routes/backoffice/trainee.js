@@ -5,7 +5,7 @@ const tryAndCatch = require('../tryAndCatch');
 module.exports = ({ db, createJWTAuthMiddleware }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = createJWTAuthMiddleware('backoffice', 'moderator');
+    const checkAuth = createJWTAuthMiddleware('backoffice', 'moderateur');
 
     const PAGE_SIZE = 5;
     const POLE_EMPLOI = '4';
