@@ -66,10 +66,11 @@ module.exports = components => {
         }
     }));
 
-    let { createHMACAuthMiddleware, createJWTAuthMiddleware } = middlewares(auth, logger, configuration);
+    let { createHMACAuthMiddleware, createJWTAuthMiddleware, checkProfile } = middlewares(auth, logger, configuration);
     let httpComponents = Object.assign({}, components, {
         createHMACAuthMiddleware,
-        createJWTAuthMiddleware
+        createJWTAuthMiddleware,
+        checkProfile
     });
 
     //Public routes

@@ -2,14 +2,14 @@ const express = require('express');
 const tryAndCatch = require('../tryAndCatch');
 const Boom = require('boom');
 
-module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
+module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) => {
 
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = createJWTAuthMiddleware('backoffice', 'financer');
+    const checkauth = createJWTAuthMiddleware('backoffice');
     const POLE_EMPLOI = '4';
 
-    router.get('/backoffice/financeur/region/:idregion', async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion', checkauth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         if (req.params.idregion !== req.user.codeRegion) {
             throw Boom.forbidden('Action non autorisé');
@@ -26,9 +26,9 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         } else {
             res.send({ error: 404 });
         }
-    });
+    }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisations', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisations', checkauth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
@@ -62,7 +62,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         res.status(200).send(organisations);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/advices', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/advices', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
@@ -134,7 +134,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
@@ -207,7 +207,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
@@ -291,7 +291,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/places', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/places', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
@@ -317,7 +317,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         res.status(200).send(places);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
@@ -347,7 +347,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         res.status(200).send(trainings);
     }));
 
-    router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         let filter = '';
 
@@ -399,7 +399,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
 
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis/inventory', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis/inventory', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
@@ -429,7 +429,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         res.status(200).send(inventory);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices/inventory', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices/inventory', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
@@ -468,7 +468,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         res.status(200).send(inventory);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/inventory', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/inventory', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
         
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {

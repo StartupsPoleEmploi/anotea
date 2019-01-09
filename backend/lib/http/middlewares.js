@@ -47,7 +47,7 @@ module.exports = (auth, logger, configuration) => {
             };
         },
 
-        createJWTAuthMiddleware: (type, profile, options = {}) => {
+        createJWTAuthMiddleware: (type, options = {}) => {
             return (req, res, next) => {
                 let scheme = 'Bearer ';
                 if ((!req.headers.authorization || !req.headers.authorization.startsWith(scheme)) && !req.query.token) {
@@ -60,9 +60,6 @@ module.exports = (auth, logger, configuration) => {
                 return auth.checkJWT(type, token, options)
                 .then(decoded => {
                     req.user = decoded;
-                    if (profile !== null && req.user.profile !== profile) {
-                        throw Boom.forbidden('Action non autorisé');
-                    }
                     next();
                 })
                 .catch(e => {
@@ -73,6 +70,18 @@ module.exports = (auth, logger, configuration) => {
                     logger.error(`Unable to read token from authorization header for request ${req.method}/${req.url} `, e);
                     throw Boom.unauthorized('Utilisateur non authentifié');
                 });
+            };
+        },
+
+        checkProfile: profile => {
+            return (req, res, next) => {
+                if (req.user.profile !== profile) {
+                    console.log("oooooo", req.user.profile, profile)
+                    //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
+                    res.status(401).send({ error: true });
+                    return;
+                }
+                next();
             };
         }
     };

@@ -3,12 +3,11 @@ const Boom = require('boom');
 const tryAndCatch = require('../tryAndCatch');
 const { hashPassword, isPasswordStrongEnough } = require('../../../common/components/password');
 
-module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
+module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) => {
 
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuthOrganisme = createJWTAuthMiddleware('backoffice', 'organisme');
-    const checkAuthModerateur = createJWTAuthMiddleware('backoffice', 'moderateur');
+    const checkAuth = createJWTAuthMiddleware('backoffice');
 
     router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 
@@ -55,7 +54,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.get('/backoffice/organisation/:id/info', checkAuthModerateur, async (req, res) => {
+    router.get('/backoffice/organisation/:id/info', checkAuth, checkProfile('moderateur'), async (req, res) => {
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
 
@@ -82,7 +81,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         }
     });
 
-    router.get('/backoffice/organisation/:id/allAdvices', checkAuthOrganisme, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisation/:id/allAdvices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
         const projection = { token: 0 };
         let filter = { 'step': { $gte: 2 }, 'training.organisation.siret': req.params.id };
         if (req.query.filter) {
@@ -141,7 +140,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
 
     }));
 
-    router.get('/backoffice/organisation/:id/trainings', checkAuthOrganisme, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisation/:id/trainings', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
@@ -166,7 +165,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/advices', checkAuthOrganisme, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisation/:id/advices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
         const projection = { token: 0 };
         let filter = { 'step': { $gte: 2 }, 'training.organisation.siret': req.params.id };
 
@@ -235,7 +234,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         });
     }));
 
-    router.get('/backoffice/organisation/:id/training/:idTraining/sessions', checkAuthOrganisme, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisation/:id/training/:idTraining/sessions', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
@@ -288,7 +287,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/advices/inventory', checkAuthOrganisme, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisation/:id/advices/inventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
@@ -330,7 +329,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/allInventory', checkAuthOrganisme, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisation/:id/allInventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
             const filter = { 'training.organisation.siret': `${req.params.id}`, 'step': { $gte: 2 } };
@@ -366,7 +365,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/states', checkAuthOrganisme, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisation/:id/states', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
             const trainings = await db.collection('comment').aggregate([

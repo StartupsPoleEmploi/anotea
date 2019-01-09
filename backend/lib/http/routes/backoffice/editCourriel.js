@@ -3,19 +3,19 @@ const Boom = require('boom');
 const Joi = require('joi');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
+module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let checkAuth = createJWTAuthMiddleware('backoffice', 'moderateur');
+    let checkAuth = createJWTAuthMiddleware('backoffice');
     let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
 
     const getRemoteAddress = req => req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     const saveEvent = (id, type, source) => {
-        db.collection('events').save({ organisationId: id, date: new Date(), type: type, source: source });
+        db.collection('events').insertOne({ organisationId: id, date: new Date(), type: type, source: source });
     };
 
-    router.post('/backoffice/organisation/:id/editedCourriel', checkAuth, tryAndCatch(async (req, res) => {
+    router.post('/backoffice/organisation/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.body, {
             email: Joi.string().email().required(),
@@ -41,7 +41,7 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
         }
     }));
 
-    router.delete('/backoffice/organisation/:id/editedCourriel', checkAuth, tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/organisation/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
@@ -63,7 +63,7 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
         }
     }));
 
-    router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, tryAndCatch(async (req, res) => {
+    router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         const organismes = db.collection('organismes');

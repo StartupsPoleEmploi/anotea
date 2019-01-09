@@ -1,11 +1,11 @@
 const express = require('express');
 
-module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
+module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger }) => {
 
-    const checkAuth = createJWTAuthMiddleware('backoffice', 'moderateur');
+    const checkauth = createJWTAuthMiddleware('backoffice');
     const router = express.Router(); // eslint-disable-line new-cap
 
-    router.get('/backoffice/dashboard/advices', checkAuth, (req, res) => {
+    router.get('/backoffice/dashboard/advices', checkauth, checkProfile('moderateur'), (req, res) => {
         db.collection('comment').aggregate([
             {
                 $group: {
@@ -28,7 +28,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
         });
     });
 
-    router.get('/backoffice/dashboard/organisations', checkAuth, (req, res) => {
+    router.get('/backoffice/dashboard/organisations', checkauth, checkProfile('moderateur'), (req, res) => {
         db.collection('organismes').aggregate([
             {
                 $group: {
@@ -53,7 +53,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
         });
     });
 
-    router.get('/backoffice/dashboard/trainees', checkAuth, (req, res) => {
+    router.get('/backoffice/dashboard/trainees', checkauth, checkProfile('moderateur'), (req, res) => {
         db.collection('trainee').aggregate([
             {
                 $group: {

@@ -9,10 +9,10 @@ const ObjectID = require('mongodb').ObjectID;
 const Joi = require('joi');
 const { transformObject } = require('../../../common/stream-utils');
 
-module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, mailing }) => {
+module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configuration, mailer, mailing }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = createJWTAuthMiddleware('backoffice', 'moderateur');
+    const checkAuth = createJWTAuthMiddleware('backoffice');
     const pagination = configuration.api.pagination;
 
     const POLE_EMPLOI = '4';
@@ -32,17 +32,17 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     };
 
-    router.get('/backoffice/status', checkAuth, (req, res) => {
+    router.get('/backoffice/status', checkAuth, checkProfile('moderateur'), (req, res) => {
         res.send({ 'status': 'OK' });
     });
 
-    router.get('/backoffice/advices.json', checkAuth, async (req, res) => {
+    router.get('/backoffice/advices.json', checkAuth, checkProfile('moderateur'), async (req, res) => {
         let advices = await db.collection('comment').findOne({ step: { $gte: 2 } }, { token: 0 }).limit(10).toArray();
         res.send(advices);
     });
 
     // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
-    router.get('/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/avis.csv', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let query = {
             $or: [
                 { 'comment': { $exists: false } },
@@ -135,7 +135,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         .pipe(res);
     }));
 
-    router.get('/backoffice/advices/:codeRegion/', checkAuth, async (req, res) => {
+    router.get('/backoffice/advices/:codeRegion/', checkAuth, checkProfile('moderateur'), async (req, res) => {
         if (req.params.codeRegion !== req.user.codeRegion) {
             throw Boom.forbidden('Action non autorisé');
         }
@@ -187,11 +187,11 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
     });
 
     const saveEvent = function(id, type, source) {
-        db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
+        db.collection('events').insertOne({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
 
-    router.put('/backoffice/advice/:id/markAsRead', checkAuth, (req, res) => {
+    router.put('/backoffice/advice/:id/markAsRead', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, { $set: { read: true } }, (err, result) => {
             if (err) {
@@ -210,7 +210,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.put('/backoffice/advice/:id/markAsNotRead', checkAuth, (req, res) => {
+    router.put('/backoffice/advice/:id/markAsNotRead', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, { $set: { read: false } }, (err, result) => {
             if (err) {
@@ -229,7 +229,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.put('/backoffice/advice/:id/maskPseudo', checkAuth, (req, res) => {
+    router.put('/backoffice/advice/:id/maskPseudo', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, { $set: { pseudoMasked: true } }, (err, result) => {
             if (err) {
@@ -249,7 +249,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.put('/backoffice/advice/:id/unmaskPseudo', checkAuth, (req, res) => {
+    router.put('/backoffice/advice/:id/unmaskPseudo', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, { $set: { pseudoMasked: false } }, (err, result) => {
             if (err) {
@@ -269,7 +269,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.put('/backoffice/advice/:id/maskTitle', checkAuth, (req, res) => {
+    router.put('/backoffice/advice/:id/maskTitle', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, { $set: { titleMasked: true } }, (err, result) => {
             if (err) {
@@ -289,7 +289,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.put('/backoffice/advice/:id/unmaskTitle', checkAuth, (req, res) => {
+    router.put('/backoffice/advice/:id/unmaskTitle', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, { $set: { titleMasked: false } }, (err, result) => {
             if (err) {
@@ -309,7 +309,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.put('/backoffice/advice/:id/report', checkAuth, (req, res) => {
+    router.put('/backoffice/advice/:id/report', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, { $set: { reported: true } }, function(err, result) {
             if (err) {
@@ -328,7 +328,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.put('/backoffice/advice/:id/unreport', checkAuth, (req, res) => {
+    router.put('/backoffice/advice/:id/unreport', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, { $set: { reported: false, read: true } }, function(err, result) {
             if (err) {
@@ -347,7 +347,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.post('/backoffice/advice/:id/reject', checkAuth, tryAndCatch(async (req, res) => {
+    router.post('/backoffice/advice/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
 
         db.collection('comment').updateOne({ _id: id }, {
@@ -378,7 +378,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     }));
 
-    router.delete('/backoffice/advice/:id', checkAuth, tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/advice/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
 
         db.collection('comment').removeOne({ _id: id }, (err, result) => {
@@ -399,7 +399,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     }));
 
-    router.post('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
+    router.post('/backoffice/advice/:id/answer', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         const answer = req.body.answer;
         db.collection('comment').updateOne({ _id: id }, {
@@ -426,7 +426,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.delete('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
+    router.delete('/backoffice/advice/:id/answer', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, {
             $set: { answered: false },
@@ -448,7 +448,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.post('/backoffice/advice/:id/publish', checkAuth, (req, res) => {
+    router.post('/backoffice/advice/:id/publish', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, {
             $set: {
@@ -478,7 +478,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.post('/backoffice/advice/:id/update', checkAuth, (req, res) => {
+    router.post('/backoffice/advice/:id/update', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').updateOne({ _id: id }, {
             $set: {
@@ -508,7 +508,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         });
     });
 
-    router.get('/backoffice/advices/:codeRegion/inventory', checkAuth, async (req, res) => {
+    router.get('/backoffice/advices/:codeRegion/inventory', checkAuth, checkProfile('moderateur'), async (req, res) => {
         if (req.params.codeRegion !== req.user.codeRegion) {
             throw Boom.forbidden('Action non autorisé');
         }
@@ -526,7 +526,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         res.status(200).send(inventory);
     });
 
-    router.get('/backoffice/advice/:id/resendEmail', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/advice/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { sendVotreAvisEmail } = mailing;
 
         const parameters = await Joi.validate(req.params, {

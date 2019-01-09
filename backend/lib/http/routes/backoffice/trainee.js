@@ -2,15 +2,15 @@ const express = require('express');
 const Joi = require('joi');
 const tryAndCatch = require('../tryAndCatch');
 
-module.exports = ({ db, createJWTAuthMiddleware }) => {
+module.exports = ({ db, createJWTAuthMiddleware, checkProfile }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = createJWTAuthMiddleware('backoffice', 'moderateur');
+    const checkAuth = createJWTAuthMiddleware('backoffice');
 
     const PAGE_SIZE = 5;
     const POLE_EMPLOI = '4';
 
-    router.get('/backoffice/trainee/search', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/trainee/search', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const parameters = await Joi.validate(req.query, {
             query: Joi.string().required(),
             page: Joi.number().min(0)

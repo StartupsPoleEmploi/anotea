@@ -40,7 +40,7 @@ module.exports = ({ db, logger, mailer }) => {
             } else {
                 doc.tracking.lastRead = now;
             }
-            db.collection(collection).save(doc);
+            db.collection(collection).insertOne(doc);
         }
         // serving a white 1x1 GIF
         let buf = new Buffer(35);
