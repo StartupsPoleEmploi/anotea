@@ -5,9 +5,11 @@ const s = require('string');
 const tryAndCatch = require('../tryAndCatch');
 const { encodeStream } = require('iconv-lite');
 const Boom = require('boom');
+const ObjectID = require('mongodb').ObjectID;
+const Joi = require('joi');
 const { transformObject } = require('../../../common/stream-utils');
 
-module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }) => {
+module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, mailing }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = createJWTAuthMiddleware('backoffice');
@@ -523,6 +525,36 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
 
         res.status(200).send(inventory);
     });
+
+    router.get('/backoffice/advice/:id/resendForm', checkAuth, tryAndCatch(async (req, res) => {
+        let { sendTraineeFormEmail } = mailing;
+
+        const parameters = await Joi.validate(req.params, {
+            id: Joi.string().required(),
+        }, { abortEarly: false });
+
+        if (!ObjectID.isValid(parameters.id)) {
+            throw Boom.badRequest('Identifiant invalide');
+        }
+
+        let advice = await db.collection('comment').findOne({ _id: new ObjectID(parameters.id) });
+
+        if (!advice) {
+            throw Boom.notFound('Identifiant inconnu');
+        }
+
+        let trainee = await db.collection('trainee').findOne({ token: advice.token });
+
+        if (!trainee) {
+            throw Boom.notFound('Stagiaire introuvable');
+        }
+
+        db.collection('comment').removeOne({ _id: new ObjectID(parameters.id) });
+
+        await sendTraineeFormEmail(trainee);
+
+        res.status(200).send({ 'message': 'trainee email resent' });
+    }));
 
     return router;
 };
