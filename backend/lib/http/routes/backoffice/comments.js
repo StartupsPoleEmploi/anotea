@@ -12,7 +12,7 @@ const { transformObject } = require('../../../common/stream-utils');
 module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, mailing }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = createJWTAuthMiddleware('backoffice');
+    const checkAuth = createJWTAuthMiddleware('backoffice', 'moderator');
     const pagination = configuration.api.pagination;
 
     const POLE_EMPLOI = '4';
@@ -136,6 +136,10 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
     }));
 
     router.get('/backoffice/advices/:codeRegion/', checkAuth, async (req, res) => {
+        if (req.params.codeRegion !== req.user.codeRegion) {
+            throw Boom.forbidden('Action non autorisé');
+        }
+
         const projection = { token: 0 };
         let filter = { 'step': { $gte: 2 }, 'comment': { $ne: null }, 'codeRegion': `${req.params.codeRegion}` };
         if (req.query.filter) {
@@ -513,6 +517,10 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
     });
 
     router.get('/backoffice/advices/:codeRegion/inventory', checkAuth, async (req, res) => {
+        if (req.params.codeRegion !== req.user.codeRegion) {
+            throw Boom.forbidden('Action non autorisé');
+        }
+
         let inventory = {};
         const filter = { 'comment': { $ne: null }, 'step': { $gte: 2 }, 'codeRegion': `${req.params.codeRegion}` };
         const collection = await db.collection('comment');
@@ -551,7 +559,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
         await Promise.all([
             db.collection('comment').removeOne({ _id: new ObjectID(parameters.id) }),
-            sendTraineeFormEmail(trainee),
+            sendVotreAvisEmail(trainee),
         ]);
 
         res.json({ 'message': 'trainee email resent' });

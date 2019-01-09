@@ -6,7 +6,7 @@ const tryAndCatch = require('../tryAndCatch');
 module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let checkAuth = createJWTAuthMiddleware('backoffice');
+    let checkAuth = createJWTAuthMiddleware('backoffice', 'moderator');
     let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
 
     const getRemoteAddress = req => req.headers['x-forwarded-for'] || req.connection.remoteAddress;

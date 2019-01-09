@@ -10,7 +10,7 @@ module.exports = ({ db, createJWTAuthMiddleware, auth }) => {
     let router = express.Router(); // eslint-disable-line new-cap
     let collection = db.collection('organismes');
     let { findCodeRegionByName } = require('../../../common/components/regions')(db);
-    let checkAuth = createJWTAuthMiddleware('kairos', {
+    let checkAuth = createJWTAuthMiddleware('kairos', null, {
         externalToken: true,
         onInvalidToken: e => {
             let message = e.name === 'TokenExpiredError' ? 'Token expiré' : 'Token invalide';

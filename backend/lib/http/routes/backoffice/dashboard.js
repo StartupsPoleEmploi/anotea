@@ -1,8 +1,8 @@
 const express = require('express');
 
-module.exports = ({ db, createJWTAuthMiddleware }) => {
+module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
 
-    const checkAuth = createJWTAuthMiddleware('backoffice');
+    const checkAuth = createJWTAuthMiddleware('backoffice', 'moderator');
     const router = express.Router(); // eslint-disable-line new-cap
 
     router.get('/backoffice/dashboard/advices', checkAuth, (req, res) => {
