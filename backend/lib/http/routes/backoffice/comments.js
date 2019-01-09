@@ -363,7 +363,13 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer }
     }));
 
     router.delete('/backoffice/advice/:id', checkAuth, tryAndCatch(async (req, res) => {
+        if (req.profile !== 'moderateur') {
+            res.status(403).send({ 'error': 'Forbidden' });
+            return;
+        }
+
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+
         db.collection('comment').removeOne({ _id: id }, (err, result) => {
             if (err) {
                 logger.error(err);
