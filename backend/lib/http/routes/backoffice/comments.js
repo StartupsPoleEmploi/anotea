@@ -551,7 +551,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
         await Promise.all([
             db.collection('comment').removeOne({ _id: new ObjectID(parameters.id) }),
-            sendTraineeFormEmail(trainee),
+            sendVotreAvisEmail(trainee),
         ]);
 
         res.json({ 'message': 'trainee email resent' });
