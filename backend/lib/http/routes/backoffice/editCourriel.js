@@ -28,7 +28,7 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
         if (organisme) {
-            await db.collection('organismes').update({ _id: id }, { $set: { editedCourriel: parameters.email } });
+            await db.collection('organismes').updateOne({ _id: id }, { $set: { editedCourriel: parameters.email } });
             saveEvent(id, 'editEmail', {
                 app: 'moderation',
                 profile: 'moderateur',
@@ -50,7 +50,7 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
         if (organisme) {
-            await db.collection('organismes').update({ _id: id }, { $unset: { editedCourriel: '' } });
+            await db.collection('organismes').updateOne({ _id: id }, { $unset: { editedCourriel: '' } });
             saveEvent(id, 'deleteEmail', {
                 app: 'moderation',
                 profile: 'moderateur',

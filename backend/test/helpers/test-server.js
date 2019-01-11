@@ -24,10 +24,15 @@ module.exports = {
 
                     return response.body.access_token;
                 },
-                logAsOrganisme: async (app, courriel) => {
+                logAsOrganisme: async (app, courriel, id) => {
 
                     const organisme = newOrganismeAccount({
+                        _id: id,
+                        SIRET: id,
                         courriel,
+                        meta: {
+                            siretAsString: `${id}`
+                        },
                     });
 
                     await context.insertIntoDatabase('organismes', organisme);

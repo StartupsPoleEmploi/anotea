@@ -29,7 +29,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
     it('can not retrieve advices when authenticated as organisme', async () => {
 
         let app = await startServer();
-        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr');
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 11111111111111);
 
         let response = await request(app).get('/api/backoffice/advices/11?filter=all&order=moderation')
         .set('authorization', `Bearer ${token}`);

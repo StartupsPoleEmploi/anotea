@@ -136,7 +136,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
             codeRegion
         }));
 
-        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr');
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 11111111111111);
 
         let response = await request(app).get(`/api/backoffice/financeur/region/${codeRegion}/advices`)
         .set('authorization', `Bearer ${token}`);
