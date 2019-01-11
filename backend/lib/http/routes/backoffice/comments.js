@@ -37,7 +37,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
     });
 
     router.get('/backoffice/advices.json', checkAuth, checkProfile('moderateur'), async (req, res) => {
-        let advices = await db.collection('comment').findOne({ step: { $gte: 2 } }, { token: 0 }).limit(10).toArray();
+        let advices = await db.collection('comment').find({ step: { $gte: 2 } }, { token: 0 }).limit(10).toArray();
         res.send(advices);
     });
 

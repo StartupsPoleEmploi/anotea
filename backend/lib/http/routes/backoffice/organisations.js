@@ -9,6 +9,12 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
+    const checkOrganisme = req => {
+        if (req.params.id !== req.user.id) {
+            throw Boom.forbidden('Action non autorisé');
+        }
+    }
+
     router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 
         let organisme = await db.collection('organismes').findOne({ token: req.query.token });
@@ -84,9 +90,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
 
     router.get('/backoffice/organisation/:id/allAdvices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-        if (req.params.id !== req.user.id) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkOrganisme(req);
 
         const projection = { token: 0 };
         let filter = { 'step': { $gte: 2 }, 'training.organisation.siret': req.params.id };
@@ -148,9 +152,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
 
     router.get('/backoffice/organisation/:id/trainings', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-        if (req.params.id !== req.user.id) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkOrganisme(req);
 
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
 
@@ -178,9 +180,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
 
     router.get('/backoffice/organisation/:id/advices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-        if (req.params.id !== req.user.id) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkOrganisme(req);
 
         const projection = { token: 0 };
         let filter = { 'step': { $gte: 2 }, 'training.organisation.siret': req.params.id };
@@ -252,9 +252,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
 
     router.get('/backoffice/organisation/:id/training/:idTraining/sessions', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-        if (req.params.id !== req.user.id) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkOrganisme(req);
 
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
 
@@ -358,9 +356,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
 
     router.get('/backoffice/organisation/:id/allInventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-        if (req.params.id !== req.user.id) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkOrganisme(req);
 
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
@@ -399,9 +395,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
 
     router.get('/backoffice/organisation/:id/states', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-        if (req.params.id !== req.user.id) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkOrganisme(req);
 
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {

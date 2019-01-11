@@ -6,14 +6,25 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
 
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
-    const checkauth = createJWTAuthMiddleware('backoffice');
+    const checkAuth = createJWTAuthMiddleware('backoffice');
     const POLE_EMPLOI = '4';
 
-    router.get('/backoffice/financeur/region/:idregion', checkauth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-
+    const checkCodeRegion = req => {
         if (req.params.idregion !== req.user.codeRegion) {
             throw Boom.forbidden('Action non autorisé');
         }
+    };
+
+    const checkCodeRegionAndCodeFinanceur = req => {
+        if (req.params.idregion !== req.user.codeRegion ||
+            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
+            throw Boom.forbidden('Action non autorisé');
+        }
+    };
+
+    router.get('/backoffice/financeur/region/:idregion', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegion(req);
 
         let filter = { 'region_num': `${req.params.idregion}` };
         const region = await db.collection('departements').aggregate([
@@ -28,12 +39,9 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         }
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisations', checkauth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisations', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
@@ -62,12 +70,9 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(organisations);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/advices', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/advices', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkCodeRegionAndCodeFinanceur(req);
 
         const projection = { token: 0 };
 
@@ -134,12 +139,9 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkCodeRegionAndCodeFinanceur(req);
 
         const projection = { token: 0 };
         let filter = {
@@ -207,12 +209,9 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkCodeRegionAndCodeFinanceur(req);
 
         const projection = { token: 0 };
         let filter = {
@@ -291,12 +290,9 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/places', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/places', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
@@ -317,12 +313,9 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(places);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
@@ -347,7 +340,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(trainings);
     }));
 
-    router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         let filter = '';
 
@@ -399,12 +392,9 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
 
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis/inventory', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
@@ -429,12 +419,9 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(inventory);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices/inventory', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
@@ -468,12 +455,9 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(inventory);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/inventory', checkauth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
         
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = { 'step': { $gte: 2 }, 'codeRegion': `${req.params.idregion}` };
 
