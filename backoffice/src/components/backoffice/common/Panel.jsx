@@ -18,14 +18,10 @@ const Panel = ({ className, header, filters, results }) => {
 
             <div className="content">
                 <div className="container">
-                    <div className="sticky-top row justify-content-center">
-                        <div className="col-8 d-flex justify-content-center">
-                            <div className="filters">
-                                {filters}
-                            </div>
-                        </div>
+                    <div className="filters sticky-top nav-fill">
+                        {filters}
                     </div>
-                    <div className="results pt-4">
+                    <div className="results">
                         {results}
                     </div>
                 </div>
