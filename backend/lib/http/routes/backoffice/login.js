@@ -1,14 +1,12 @@
 const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
-const tryAndCatch = require('../tryAndCatch');
+const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 const { verifyPassword, getSHA256PasswordHashSync, hashPassword } = require('../../../common/components/password');
 
 module.exports = ({ db, auth, logger, configuration }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-
-    const getRemoteAddress = req => req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     const logLoginEvent = (req, profile, id) => {
         return db.collection('events').insertOne({
@@ -114,7 +112,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
             }
 
             let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
-            if (organisme !== null && await checkPassword(password, organisme.passwordHash)) {
+            if (organisme !== null ) {
                 await rehashPassword('organismes', organisme, password, 'passwordHash');
                 token = await handleOrganisme(req, res, organisme);
             }

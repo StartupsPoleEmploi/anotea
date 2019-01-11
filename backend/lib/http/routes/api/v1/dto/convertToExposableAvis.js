@@ -10,7 +10,7 @@ const convertCommentaire = comment => {
     return {
         titre: (comment.titleMasked || _.isEmpty(comment.comment.title)) ? undefined : comment.comment.title,
         texte: comment.editedComment ? comment.editedComment : texte,
-        reponse: comment.answered ? comment.answer : undefined,
+        reponse: comment.answer && comment.answer.status === 'published' ? comment.answer.text : undefined,
     };
 };
 

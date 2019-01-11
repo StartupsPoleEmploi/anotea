@@ -2,7 +2,7 @@ const express = require('express');
 const moment = require('moment');
 const mongo = require('mongodb');
 const s = require('string');
-const tryAndCatch = require('../tryAndCatch');
+const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 const { encodeStream } = require('iconv-lite');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
@@ -17,19 +17,19 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
 
     const POLE_EMPLOI = '4';
 
+    const saveEvent = function(id, type, source) {
+        db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
+    };
+
     const sendEmailAsync = (trainee, comment, reason) => {
         let contact = trainee.trainee.email;
         if (reason === 'non concerné') {
             mailer.sendAvisHorsSujetMail({ to: contact }, trainee, comment, () => {
-                logger.info(`email sent to ${contact}`, err);
+                logger.info(`email sent to ${contact}`, reason);
             }, err => {
                 logger.error(`Unable to send email to ${contact}`, err);
             });
         }
-    };
-
-    const getRemoteAddress = req => {
-        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     };
 
     router.get('/backoffice/status', checkAuth, (req, res) => {
@@ -51,11 +51,11 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
             ],
             step: { $gte: 2 }
         };
-        
+
         if (req.query.filter === 'region') {
             query['training.infoRegion'] = { $ne: null };
         }
-        
+
         if (req.user.profile === 'organisme') {
             query['training.organisation.siret'] = req.user.siret;
         } else if (req.user.profile === 'financer') {
@@ -65,7 +65,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
             } else if (req.user.codeFinanceur === POLE_EMPLOI && req.query.codeFinanceur) {
                 query['training.codeFinanceur'] = { '$elemMatch': { '$eq': req.query.codeFinanceur } };
             }
-    
+
             if (req.query.siret) {
                 query['training.organisation.siret'] = req.query.siret;
             }
@@ -81,7 +81,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
         res.setHeader('Content-disposition', 'attachment; filename=avis.csv');
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
         res.write('id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n');
-        
+
         let handleError = e => {
             logger.error('An error occurred', e);
             res.status(500);
@@ -181,11 +181,6 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
             pageCount: Math.ceil(count / pagination)
         });
     });
-
-    const saveEvent = function(id, type, source) {
-        db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
-    };
-
 
     router.put('/backoffice/advice/:id/markAsRead', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
@@ -402,55 +397,6 @@ module.exports = ({ db, createJWTAuthMiddleware, logger, configuration, mailer, 
             }
         });
     }));
-
-    router.post('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        const answer = req.body.answer;
-        db.collection('comment').update({ _id: id }, {
-            $set: {
-                answer: answer,
-                answered: true,
-                read: true
-            }
-        }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'answer', {
-                    app: 'organisation',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req),
-                    answer: answer
-                });
-                res.status(200).send({ 'message': 'advice answered' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
-    });
-
-    router.delete('/backoffice/advice/:id/answer', checkAuth, (req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').update({ _id: id }, {
-            $set: { answered: false },
-            $unset: { answer: '' }
-        }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'answer removed', {
-                    app: 'organisation',
-                    user: req.query.userId,
-                    ip: getRemoteAddress(req)
-                });
-                res.status(200).send({ 'message': 'advice answer removed' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
-    });
 
     router.post('/backoffice/advice/:id/publish', checkAuth, (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap

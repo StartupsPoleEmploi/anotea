@@ -6,7 +6,7 @@ const { paginationValidator, arrayOfValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const convertToExposableAction = require('./dto/convertToExposableAction');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
-const tryAndCatch = require('../../tryAndCatch');
+const { tryAndCatch } = require('../../routes-utils');
 
 module.exports = ({ db, createHMACAuthMiddleware }) => {
 
