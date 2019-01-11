@@ -37,7 +37,7 @@ export default class Edition extends React.Component {
 
                 <div className="mt-1 actions">
                     <button type="button" className="action btn btn-sm mr-2 action cancel" onClick={onClose}>
-                        <i className={`fa fa-times-circle`} /> Annuler
+                        <i className={`far fa-times-circle`} /> Annuler
                     </button>
 
                     <PublishButton

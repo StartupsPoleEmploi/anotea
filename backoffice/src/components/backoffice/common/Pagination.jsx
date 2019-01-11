@@ -80,4 +80,3 @@ export class PaginationStatus extends React.Component {
         );
     }
 }
-
