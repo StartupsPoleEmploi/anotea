@@ -27,10 +27,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.ok(result);
         assert.deepEqual(result.answer, {
             text: 'Voici notre réponse',
-            published: true,
-            rejected: false,
-            moderated: false,
-            reported: false
+            status: 'published',
         });
     });
 
@@ -41,10 +38,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let comment = newComment({
             answer: {
                 text: 'Voici notre réponse',
-                published: false,
-                rejected: false,
-                moderated: false,
-                reported: false
+                status: 'published',
             }
         });
         await insertIntoDatabase('comment', comment);

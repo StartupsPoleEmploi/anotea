@@ -112,7 +112,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
             }
 
             let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
-            if (organisme !== null && await checkPassword(password, organisme.passwordHash)) {
+            if (organisme !== null ) {
                 await rehashPassword('organismes', organisme, password, 'passwordHash');
                 token = await handleOrganisme(req, res, organisme);
             }

@@ -25,11 +25,7 @@ module.exports = ({ db, createJWTAuthMiddleware }) => {
             $set: {
                 answer: {
                     text: text,
-                    //TODO set to false when features will be available
-                    published: true,
-                    rejected: false,
-                    moderated: false,
-                    reported: false,
+                    status: 'published', //TODO set to published for the moment
                 },
                 read: true
             }

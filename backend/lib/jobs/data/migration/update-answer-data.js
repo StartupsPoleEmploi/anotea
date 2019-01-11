@@ -13,10 +13,7 @@ execute(async ({ db }) => {
         $unset: { answered: '' },
         $rename: { answer_renamed_temp: 'answer.text' },
         $set: {
-            'answer.published': true,
-            'answer.rejected': false,
-            'answer.moderated': true,
-            'answer.reported': false,
+            'answer.status': 'published',
         },
     });
 });

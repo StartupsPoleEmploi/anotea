@@ -77,7 +77,7 @@ describe(__filename, () => {
         let comment = newComment({
             answer: {
                 text: 'Voici notre réponse',
-                published: true,
+                status: 'published',
             },
         });
 
@@ -90,12 +90,12 @@ describe(__filename, () => {
         });
     });
 
-    it('should ignore réponse not yet published', async () => {
+    it('should ignore réponse not published', async () => {
 
         let comment = newComment({
             answer: {
                 text: 'Voici notre réponse',
-                published: false,
+                status: 'rejected',
             },
         });
 
