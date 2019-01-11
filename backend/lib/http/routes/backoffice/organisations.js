@@ -54,7 +54,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.get('/backoffice/organisation/:id/info', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.get('/backoffice/organisation/:id/info', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
 
@@ -79,7 +79,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         } else {
             res.status(404).send({ 'error': 'Not found' });
         }
-    });
+    }));
 
     router.get('/backoffice/organisation/:id/allAdvices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
         const projection = { token: 0 };

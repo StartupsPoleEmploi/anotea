@@ -100,7 +100,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
         });
     };
 
-    router.post('/backoffice/login', async (req, res) => {
+    router.post('/backoffice/login', tryAndCatch(async (req, res) => {
 
         let identifier = req.body.username.toLowerCase();
         let password = req.body.password;
@@ -136,7 +136,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
             return res.status(500).send({ error: true });
         }
 
-    });
+    }));
 
     router.get('/backoffice/login', tryAndCatch(async (req, res) => {
 
