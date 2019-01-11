@@ -3,17 +3,17 @@ const Boom = require('boom');
 const Joi = require('joi');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 
-module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
+module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
 
     const saveEvent = (id, type, source) => {
-        db.collection('events').save({ organisationId: id, date: new Date(), type: type, source: source });
+        db.collection('events').insertOne({ organisationId: id, date: new Date(), type: type, source: source });
     };
 
-    router.post('/backoffice/organisation/:id/editedCourriel', checkAuth, tryAndCatch(async (req, res) => {
+    router.post('/backoffice/organisation/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.body, {
             email: Joi.string().email().required(),
@@ -26,7 +26,7 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
         if (organisme) {
-            await db.collection('organismes').update({ _id: id }, { $set: { editedCourriel: parameters.email } });
+            await db.collection('organismes').updateOne({ _id: id }, { $set: { editedCourriel: parameters.email } });
             saveEvent(id, 'editEmail', {
                 app: 'moderation',
                 profile: 'moderateur',
@@ -39,7 +39,7 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
         }
     }));
 
-    router.delete('/backoffice/organisation/:id/editedCourriel', checkAuth, tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/organisation/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
@@ -48,7 +48,7 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
 
         let organisme = await db.collection('organismes').findOne({ _id: id });
         if (organisme) {
-            await db.collection('organismes').update({ _id: id }, { $unset: { editedCourriel: '' } });
+            await db.collection('organismes').updateOne({ _id: id }, { $unset: { editedCourriel: '' } });
             saveEvent(id, 'deleteEmail', {
                 app: 'moderation',
                 profile: 'moderateur',
@@ -61,7 +61,7 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware }) => {
         }
     }));
 
-    router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, tryAndCatch(async (req, res) => {
+    router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         const organismes = db.collection('organismes');

@@ -53,6 +53,7 @@ module.exports = (auth, logger, configuration) => {
                 if ((!req.headers.authorization || !req.headers.authorization.startsWith(scheme)) && !req.query.token) {
                     //FIXME we need to trap all error into an express middleware and log them
                     logger.error(`No authorization header found for request ${req.method}/${req.url}`);
+                    //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
                     res.status(401).send({ error: true });
                     return;
                 }
@@ -71,7 +72,19 @@ module.exports = (auth, logger, configuration) => {
                     logger.error(`Unable to read token from authorization header for request ${req.method}/${req.url} `, e);
                     //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
                     res.status(401).send({ error: true });
+                    return;
                 });
+            };
+        },
+
+        checkProfile: profile => {
+            return (req, res, next) => {
+                if (req.user.profile !== profile) {
+                    //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
+                    res.status(401).send({ error: true });
+                    return;
+                }
+                next();
             };
         }
     };

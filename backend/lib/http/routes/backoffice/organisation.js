@@ -3,11 +3,17 @@ const Boom = require('boom');
 const { tryAndCatch } = require('../routes-utils');
 const { hashPassword, isPasswordStrongEnough } = require('../../../common/components/password');
 
-module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
+module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) => {
 
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = createJWTAuthMiddleware('backoffice');
+
+    const checkOrganisme = req => {
+        if (req.params.id !== req.user.id) {
+            throw Boom.forbidden('Action non autorisé');
+        }
+    }
 
     router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 
@@ -32,7 +38,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         if (organisme) {
             if (!organisme.passwordHash) {
                 if (isPasswordStrongEnough(password)) {
-                    await db.collection('organismes').update({ token }, {
+                    await db.collection('organismes').updateOne({ token }, {
                         $set: {
                             'meta.rehashed': true,
                             'passwordHash': await hashPassword(password)
@@ -54,7 +60,8 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.get('/backoffice/organisation/:id/info', checkAuth, async (req, res) => {
+    router.get('/backoffice/organisation/:id/info', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+        
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
 
@@ -79,9 +86,12 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         } else {
             res.status(404).send({ 'error': 'Not found' });
         }
-    });
+    }));
 
-    router.get('/backoffice/organisation/:id/allAdvices', checkAuth, async (req, res) => {
+    router.get('/backoffice/organisation/:id/allAdvices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        checkOrganisme(req);
+
         const projection = { token: 0 };
         let filter = { 'step': { $gte: 2 }, 'training.organisation.siret': req.params.id };
         if (req.query.filter) {
@@ -137,9 +147,12 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             pageCount: Math.ceil(count / pagination)
         });
 
-    });
+    }));
 
-    router.get('/backoffice/organisation/:id/trainings', checkAuth, async (req, res) => {
+    router.get('/backoffice/organisation/:id/trainings', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        checkOrganisme(req);
+
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
@@ -162,9 +175,12 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         } else {
             res.status(404).send({ 'error': 'Not found' });
         }
-    });
+    }));
 
-    router.get('/backoffice/organisation/:id/advices', checkAuth, async (req, res) => {
+    router.get('/backoffice/organisation/:id/advices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        checkOrganisme(req);
+
         const projection = { token: 0 };
         let filter = { 'step': { $gte: 2 }, 'training.organisation.siret': req.params.id };
 
@@ -230,9 +246,12 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             page: page,
             pageCount: Math.ceil(count / pagination)
         });
-    });
+    }));
 
-    router.get('/backoffice/organisation/:id/training/:idTraining/sessions', checkAuth, async (req, res) => {
+    router.get('/backoffice/organisation/:id/training/:idTraining/sessions', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        checkOrganisme(req);
+
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
@@ -283,9 +302,15 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         } else {
             res.status(404).send({ 'error': 'Not found' });
         }
-    });
+    }));
 
-    router.get('/backoffice/organisation/:id/advices/inventory', checkAuth, async (req, res) => {
+    router.get('/backoffice/organisation/:id/advices/inventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+
+        if (req.params.id !== req.user.id) {
+            throw Boom.forbidden('Action non autorisé');
+        }
+
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
@@ -324,9 +349,12 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         } else {
             res.status(404).send({ 'error': 'Not found' });
         }
-    });
+    }));
 
-    router.get('/backoffice/organisation/:id/allInventory', checkAuth, async (req, res) => {
+    router.get('/backoffice/organisation/:id/allInventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        checkOrganisme(req);
+
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
             const filter = { 'training.organisation.siret': `${req.params.id}`, 'step': { $gte: 2 } };
@@ -359,9 +387,12 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         } else {
             res.status(404).send({ 'error': 'Not found' });
         }
-    });
+    }));
 
-    router.get('/backoffice/organisation/:id/states', checkAuth, async (req, res) => {
+    router.get('/backoffice/organisation/:id/states', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        checkOrganisme(req);
+
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
             const trainings = await db.collection('comment').aggregate([
@@ -415,7 +446,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         } else {
             res.status(404).send({ 'error': 'Not found' });
         }
-    });
+    }));
 
     return router;
 };

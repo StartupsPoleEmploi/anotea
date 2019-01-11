@@ -1,31 +1,47 @@
 const express = require('express');
+const { tryAndCatch } = require('../routes-utils');
+const Boom = require('boom');
 
-module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
+module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) => {
 
     const pagination = configuration.api.pagination;
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = createJWTAuthMiddleware('backoffice');
     const POLE_EMPLOI = '4';
 
-    router.get('/backoffice/financeur/region/:idregion', async (req, res) => {
+    const checkCodeRegion = req => {
+        if (req.params.idregion !== req.user.codeRegion) {
+            throw Boom.forbidden('Action non autorisé');
+        }
+    };
+
+    const checkCodeRegionAndCodeFinanceur = req => {
+        if (req.params.idregion !== req.user.codeRegion ||
+            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
+            throw Boom.forbidden('Action non autorisé');
+        }
+    };
+
+    router.get('/backoffice/financeur/region/:idregion', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegion(req);
 
         let filter = { 'region_num': `${req.params.idregion}` };
-        const region = await db.collection('departements')
-            .aggregate([
-                { $match: filter },
-                { $group: { _id: '$region_num', region: { $first: '$region' } } }])
-            .toArray();
+        const region = await db.collection('departements').aggregate([
+            { $match: filter },
+            { $group: { _id: '$region_num', region: { $first: '$region' } } }])
+        .toArray();
 
         if (region !== null) {
             res.status(200).send(region[0]);
         } else {
             res.send({ error: 404 });
         }
-    });
+    }));
 
-    //Liste des organismes financés par le financeur connecté et qui appartiennent à la même region qu'à celui là
-    //En utilisant le codeRegion du financeur
-    router.get('/backoffice/financeur/region/:idregion/organisations', async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisations', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
@@ -52,10 +68,11 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         .toArray();
 
         res.status(200).send(organisations);
-    });
+    }));
 
-    //Tous Les avis attachés à l'ENSEMBLE des organismes restitués par l'api : "/backoffice/financeur/region/:idregion/organisations"
-    router.get('/backoffice/financeur/region/:idregion/advices', async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/advices', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegionAndCodeFinanceur(req);
 
         const projection = { token: 0 };
 
@@ -120,10 +137,11 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             page: page,
             pageCount: Math.ceil(count / pagination)
         });
-    });
+    }));
 
-    //Les Avis pour un organisme choisi
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis', async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegionAndCodeFinanceur(req);
 
         const projection = { token: 0 };
         let filter = {
@@ -189,10 +207,11 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             page: page,
             pageCount: Math.ceil(count / pagination)
         });
-    });
+    }));
 
-    //Les avis pour un organisme et un lieu choisis
-    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices', checkAuth, async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegionAndCodeFinanceur(req);
 
         const projection = { token: 0 };
         let filter = {
@@ -269,10 +288,11 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             pageCount: Math.ceil(count / pagination)
 
         });
-    });
+    }));
 
-    //liste des lieux d'un organisme choisi
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/places', checkAuth, async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/places', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
@@ -291,9 +311,11 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             { $sort: { _id: 1 } }]).toArray();
 
         res.status(200).send(places);
-    });
+    }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
@@ -316,9 +338,9 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
             { $sort: { 'count': -1 } }]).toArray();
 
         res.status(200).send(trainings);
-    });
+    }));
 
-    router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, async (req, res) => {
+    router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
 
         let filter = '';
 
@@ -368,10 +390,11 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
 
         res.status(200).send(trainings);
 
-    });
+    }));
 
-    //inventory pour un organisme choisi
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis/inventory', checkAuth, async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
@@ -394,10 +417,11 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         inventory.all = await db.collection('comment').countDocuments(filter);
 
         res.status(200).send(inventory);
-    });
+    }));
 
-    //inventory pour un organisme et un lieu choisis
-    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices/inventory', checkAuth, async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
@@ -429,10 +453,11 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
         inventory.all = await db.collection('comment').countDocuments(filter);
         res.status(200).send(inventory);
-    });
+    }));
 
-    ////Inventory des avis attachés à l'ENSEMBLE des organismes restitués par l'api : "/backoffice/financeur/region/:idregion/organisations"
-    router.get('/backoffice/financeur/region/:idregion/inventory', checkAuth, async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+        
+        checkCodeRegionAndCodeFinanceur(req);
 
         let filter = { 'step': { $gte: 2 }, 'codeRegion': `${req.params.idregion}` };
 
@@ -451,7 +476,7 @@ module.exports = ({ db, createJWTAuthMiddleware, configuration }) => {
         filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
         inventory.all = await db.collection('comment').countDocuments(filter);
         res.status(200).send(inventory);
-    });
+    }));
 
     return router;
 };

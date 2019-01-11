@@ -126,7 +126,7 @@ module.exports = ({ db, logger, configuration }) => {
                 comment.accordEntreprise = false;
                 comment.step = 2;
                 await Promise.all([
-                    db.collection('comment').save(comment),
+                    db.collection('comment').insertOne(comment),
                     db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),
                 ]);
                 res.render('front/questionnaire-step2', { trainee: trainee });

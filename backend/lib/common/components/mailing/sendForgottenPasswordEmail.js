@@ -7,7 +7,7 @@ module.exports = (db, mailer) => {
         let contact = getContactEmail(organisme);
         let passwordToken = uuid.v4();
 
-        await db.collection('forgottenPasswordTokens').save({ token: passwordToken, id: organisme._id });
+        await db.collection('forgottenPasswordTokens').insertOne({ token: passwordToken, id: organisme._id });
         return new Promise((resolve, reject) => {
             mailer.sendOrganisationPasswordForgotten({ to: contact }, organisme, passwordToken,
                 async () => {
@@ -18,7 +18,7 @@ module.exports = (db, mailer) => {
                             mailErrorDetail: ''
                         }
                     });
-                    await db.collection('events').save({
+                    await db.collection('events').insertOne({
                         organisationId: organisme.id,
                         date: new Date(),
                         type: 'askNewPassword'

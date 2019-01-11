@@ -17,7 +17,7 @@ module.exports = (db, mailer) => {
                         },
                     });
 
-                    await db.collection('events').save({
+                    await db.collection('events').insertOne({
                         app: 'moderation',
                         profile: 'moderateur',
                         user: 'admin',
