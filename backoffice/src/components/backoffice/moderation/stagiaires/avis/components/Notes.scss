@@ -1,0 +1,39 @@
+@import '../../../../../../styles/variables';
+
+.Notes {
+
+  font-size: 0.7rem;
+
+  .card-body {
+    padding: 0.25rem;
+  }
+
+  .card-title {
+    margin-bottom: 0.1rem;
+    color: $color-grey-50;
+  }
+
+  .card-text {
+    font-weight: $font-weight-700;
+  }
+
+  .fa-star {
+    font-size: 0.8rem;
+    color: $color-yellow;
+  }
+
+  .action {
+    padding-left: 0;
+    font-size: 0.8rem;
+    color: $color-blue;
+    background-color: $color-white;
+    border: none;
+
+    &.active, &:hover, &:focus {
+      color: $color-blue;
+      background-color: $color-white;
+      border: none;
+      box-shadow: none;
+    }
+  }
+}

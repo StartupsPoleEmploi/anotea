@@ -27,6 +27,7 @@
     "react-intl": "2.7.2",
     "react-modal": "3.6.1",
     "react-paginate": "6.0.0",
+    "react-router-dom": "4.3.1",
     "react-scripts": "2.1.1",
     "react-select": "1.2.1",
     "react-virtualized-select": "3.1.3",

@@ -2,7 +2,7 @@ import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import Modal from 'react-modal';
 
-import Stars from '../common/Stars';
+import Stars from '../common/deprecated/Stars';
 
 import {
     getOrganisationStates

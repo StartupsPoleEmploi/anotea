@@ -1,0 +1,17 @@
+@import '../../../../../../styles/variables';
+
+.Organisme {
+  font-size: 1rem;
+  line-height: 1.4rem;
+  font-weight: $font-weight-400;
+  color: $color-grey-50;
+
+  .name {
+    font-size: 1rem;
+    font-weight: $font-weight-700;
+    color: $color-black;
+    text-decoration: underline;
+    margin-bottom: 0.3rem;
+  }
+}
+

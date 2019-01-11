@@ -1,0 +1,44 @@
+@import '../../../styles/variables';
+
+.Header {
+  background-color: $color-blue;
+  padding-top: 0.8em;
+  padding-bottom: 2em;
+
+  .nav {
+    margin-top: 7px;
+    font-weight: $font-weight-400;
+
+    .nav-link {
+      color: $color-grey-25;
+      padding-right: 1em;
+      opacity: 0.6;
+
+      &.active {
+        color: $color-white;
+        font-weight: $font-weight-700;
+        opacity: 1;
+      }
+
+      &:hover,
+      &:focus {
+        cursor: pointer;
+        color: $color-white;
+        font-weight: $font-weight-700;
+        opacity: 1;
+        transition: background 0.20s linear;
+      }
+    }
+  }
+
+  .logout {
+    margin-top: 1px;
+    border: 2px solid;
+    border-radius: 7px;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    font-weight: $font-weight-700;
+    letter-spacing: 1px;
+  }
+
+}

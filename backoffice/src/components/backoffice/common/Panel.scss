@@ -1,0 +1,60 @@
+@import '../../../styles/variables';
+
+.Panel {
+
+  height: 100%;
+
+  .container {
+    width: 80%;
+  }
+
+  .header {
+    background-color: #374EAA;
+    color: $color-white;
+
+    .title {
+      padding-top: 3rem;
+      padding-bottom: 0.5rem;
+      font-size: 1.75em;
+      font-weight: $font-weight-900;
+      line-height: 2rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: $color-grey-25;
+      font-size: 1rem;
+      line-height: 1.6rem;
+      font-weight: $font-weight-400;
+    }
+
+    margin-bottom:-22px;
+  }
+
+  .content {
+
+    .container {
+
+      .filters {
+        text-align: center;
+        padding-top: 0;
+        padding-left: 0;
+        border-radius: 7px;
+        box-shadow: $shadow;
+        font-size: 1rem;
+
+        input {
+          border: none;
+        }
+
+        button {
+          background-color: $color-grey-5;
+          color: $color-black;
+          font-weight: $font-weight-700;
+          border: none;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { rejectAvis } from '../../../../../../../lib/avisService';
+import './Button.scss';
+
+export default class RejectButton extends React.Component {
+
+    static propTypes = {
+        avis: PropTypes.object.isRequired,
+        onChange: PropTypes.func.isRequired,
+        buttonClassName: PropTypes.string.isRequired,
+    };
+
+    reject = async (avis, reason) => {
+        let updated = await rejectAvis(avis._id, reason);
+        this.props.onChange(updated);
+    };
+
+    render() {
+        let { avis } = this.props;
+
+        return (
+            <div className="RejectButton Button btn-group">
+                <button
+                    type="button"
+                    className={`btn btn-sm btn-danger dropdown-toggle ${this.props.buttonClassName}`}
+                    data-toggle="dropdown">
+                    <i className="far fa-times-circle" />
+                </button>
+                <div className="dropdown-menu">
+                    <h6 className="dropdown-header">Rejeter</h6>
+                    <a className="dropdown-item" onClick={() => this.reject(avis, 'injure')}>Injure</a>
+                    <div className="dropdown-divider" />
+                    <a className="dropdown-item" onClick={() => this.reject(avis, 'alerte')}>Alerte</a>
+                    <div className="dropdown-divider" />
+                    <a className="dropdown-item" onClick={() => this.reject(avis, 'non concerné')}>
+                        Non concerné
+                    </a>
+                </div>
+            </div>
+        );
+    }
+}

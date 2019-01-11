@@ -2,8 +2,8 @@ import React from 'react';
 import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
-import AdviceRates from '../common/AdviceRates';
-import Toolbar from '../common/Toolbar';
+import AdviceRates from '../common/deprecated/AdviceRates';
+import Toolbar from '../common/deprecated/Toolbar';
 import SearchForm from './searchForm';
 import EntitySearchForm from './entitySearchForm';
 import Graphes from './Graphes';
@@ -19,13 +19,13 @@ import {
     loadInventory
 } from '../../../lib/organisationService';
 import {
-    markAdviceAsRead,
-    markAdviceAsNotRead,
-    reportAdvice,
-    unreportAdvice,
-    answerAdvice,
-    removeAdviceAnswer
-} from '../../../lib/adviceService';
+    markAvisAsRead,
+    markAvisAsNotRead,
+    reportAvis,
+    unreportAvis,
+    answerAvis,
+    removeAvisAnswer
+} from '../../../lib/avisService';
 
 const DEFAULT_ORDER = 'moderation';
 const MAX_LENGTH = 200;
@@ -90,25 +90,25 @@ export default class OrganisationPanel extends React.Component {
     }
 
     handleReport = (id, evt) => {
-        reportAdvice(id, this.state.organisationId).then(result =>
+        reportAvis(id, this.state.organisationId).then(result =>
             this.doLoadAdvices()
         );
     };
 
     handleUnreport = (id, evt) => {
-        unreportAdvice(id, this.state.organisationId).then(result =>
+        unreportAvis(id, this.state.organisationId).then(result =>
             this.doLoadAdvices()
         );
     };
 
     handleMarkAsRead = (id, evt) => {
-        markAdviceAsRead(id, this.state.organisationId).then(result =>
+        markAvisAsRead(id, this.state.organisationId).then(result =>
             this.doLoadAdvices()
         );
     };
 
     handleMarkAsNotRead = (id, evt) => {
-        markAdviceAsNotRead(id, this.state.organisationId).then(result =>
+        markAvisAsNotRead(id, this.state.organisationId).then(result =>
             this.doLoadAdvices()
         );
     };
@@ -145,14 +145,14 @@ export default class OrganisationPanel extends React.Component {
 
     handleDoReply = (id, evt) => {
         const text = this.state.reply.text;
-        answerAdvice(id, text).then(result => {
+        answerAvis(id, text).then(result => {
             this.setState({ reply: { shown: false, text: '' } });
             this.doLoadAdvices();
         });
     };
 
     handleRemoveReply = (id, evt) => {
-        removeAdviceAnswer(id).then(result => {
+        removeAvisAnswer(id).then(result => {
             this.setState({ reply: { shown: false, text: '' } });
             this.doLoadAdvices();
         });
