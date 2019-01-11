@@ -92,7 +92,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
             return Promise.resolve(account);
         }
 
-        return db.collection(type).update({ _id: account._id }, {
+        return db.collection(type).updateOne({ _id: account._id }, {
             $set: {
                 'meta.rehashed': true,
                 [propertyName]: await hashPassword(password)
@@ -114,6 +114,7 @@ module.exports = ({ db, auth, logger, configuration }) => {
             }
 
             let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
+
             if (organisme !== null && await checkPassword(password, organisme.passwordHash)) {
                 await rehashPassword('organismes', organisme, password, 'passwordHash');
                 token = await handleOrganisme(req, res, organisme);
