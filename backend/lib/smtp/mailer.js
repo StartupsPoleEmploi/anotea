@@ -126,15 +126,15 @@ module.exports = function(db, logger, configuration) {
         getOrganisationPasswordForgottenLink: getOrganisationPasswordForgottenLink,
         sendNewCommentsNotification: async (mailOptions, data, successCallback, errorCallback) => {
 
-            let { organisme, comment } = data;
+            let { organisme, pickedComment } = data;
             getCarif(organisme.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
-                mailOptions.subject = `Pôle Emploi - Vous avez ${organisme.score.nb_avis} nouveaux avis stagiaires`;
+                mailOptions.subject = `Pôle Emploi - Vous avez ${data.nbUnreadComments} nouveaux avis stagiaires`;
                 const params = {
                     hostname: configuration.app.public_hostname,
                     trackingLink: getTrackingLink(organisme),
                     organisme: organisme,
-                    comment: comment ? comment.comment.text : null,
+                    comment: pickedComment ? pickedComment.comment.text : null,
                     contact: getContact(carif)
                 };
                 sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);

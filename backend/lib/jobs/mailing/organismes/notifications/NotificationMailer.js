@@ -46,7 +46,7 @@ class NotificationMailer {
                                 $expr: {
                                     $and: [
                                         { $ne: ['$comment', null] },
-                                        { $eq: ['$read', true] },
+                                        { $ne: ['$read', true] },
                                         { $eq: ['$published', true] },
                                         { $eq: ['$training.organisation.siret', '$$siret'] },
                                     ]
@@ -56,8 +56,8 @@ class NotificationMailer {
                         {
                             $group: {
                                 _id: null,
-                                comments: { $push: '$$ROOT' },
-                                nbReadComments: { $sum: 1 }
+                                pickedComment: { $first: '$$ROOT' },
+                                nbUnreadComments: { $sum: 1 }
                             }
                         },
                     ],
@@ -72,7 +72,7 @@ class NotificationMailer {
             },
             {
                 $match: {
-                    'status.nbReadComments': { $gte: 5 }
+                    'status.nbUnreadComments': { $gte: 5 }
                 }
             }
         ]);
@@ -86,11 +86,12 @@ class NotificationMailer {
         });
     }
 
-    async _sendEmail(organisme, comments) {
+    async _sendEmail(organisme, status) {
         return new Promise(async (resolve, reject) => {
             let data = {
                 organisme,
-                comment: comments[0],
+                pickedComment: status.pickedComment,
+                nbUnreadComments: status.nbUnreadComments
             };
             this.mailer.sendNewCommentsNotification({ to: getContactEmail(organisme) }, data, () => resolve(), err => reject(err));
         });
@@ -108,7 +109,7 @@ class NotificationMailer {
             let { organisme, status } = await cursor.next();
             try {
                 this.logger.info(`Sending email to ${organisme.courriel}`);
-                await this._sendEmail(organisme, status.comments);
+                await this._sendEmail(organisme, status);
                 await this._markEmailAsSent(organisme);
                 if (options.delay) {
                     await delay(options.delay);
