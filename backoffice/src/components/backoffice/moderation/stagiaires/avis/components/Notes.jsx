@@ -28,12 +28,10 @@ export default class Notes extends React.Component {
 
     createCard = (label, note) => {
         return (
-            <div className="card">
-                <div className="card-body">
-                    <div className="card-title">{label}</div>
-                    <div className="card-text">
-                        {note}/5 <i className="fas fa-star" />
-                    </div>
+            <div className="mx-3">
+                <div className="title">{label}</div>
+                <div className="text">
+                    {note}/5 <i className="fas fa-star" />
                 </div>
             </div>
         );
@@ -55,7 +53,7 @@ export default class Notes extends React.Component {
                     Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
                 </button>
                 {this.state.showDetails &&
-                <div className="card-group">
+                <div className="mx-0 d-flex justify-content-center details">
                     {this.createCard('Accueil', rates.accueil)}
                     {this.createCard('Contenu', rates.contenu_formation)}
                     {this.createCard('Formateurs', rates.equipe_formateurs)}
