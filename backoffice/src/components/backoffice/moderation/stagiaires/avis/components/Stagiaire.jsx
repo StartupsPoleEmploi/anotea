@@ -44,7 +44,6 @@ export default class Stagiaire extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        showStatus: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
         className: PropTypes.string.isRequired,
     };
@@ -74,9 +73,7 @@ export default class Stagiaire extends React.Component {
                     }
 
                     <span className="float-right d-none d-lg-block">
-                        {this.props.showStatus &&
                         <Status avis={avis} />
-                        }
                     </span>
                 </div>
 

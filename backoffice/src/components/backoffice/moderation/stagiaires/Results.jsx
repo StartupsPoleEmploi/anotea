@@ -52,7 +52,6 @@ export default class Results extends React.Component {
                                     <div className="col-sm-12">
                                         <Avis
                                             avis={avis}
-                                            showStatus={this.props.filter === 'all'}
                                             onChange={() => this.props.search({ silent: true })} />
                                     </div>
                                 </div>
