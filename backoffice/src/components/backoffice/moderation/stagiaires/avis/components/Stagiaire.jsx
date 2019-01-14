@@ -68,7 +68,7 @@ export default class Stagiaire extends React.Component {
                     </span>
 
                     {avis.pseudo &&
-                    <i className={`far ${avis.pseudoMasked ? 'fa-eye masked' : 'fa-eye-slash'} togglable mr-2`}
+                    <i className={`far ${avis.pseudoMasked ? 'fa-eye' : 'fa-eye-slash'} togglable mr-2`}
                        onClick={this.toggle} />
                     }
 

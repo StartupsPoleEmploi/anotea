@@ -27,7 +27,7 @@ export default class Titre extends React.Component {
         return (
             <div className={`Titre ${this.props.className}`}>
                 <span className={`mr-1 title ${avis.titleMasked ? 'masked' : ''}`}>{avis.comment.title}</span>
-                <i className={`far ${avis.titleMasked ? 'fa-eye masked' : 'fa-eye-slash'} toggable`} onClick={this.toggle} />
+                <i className={`far ${avis.titleMasked ? 'fa-eye' : 'fa-eye-slash'} toggable`} onClick={this.toggle} />
             </div>
         );
     }
