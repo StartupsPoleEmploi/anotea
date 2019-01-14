@@ -116,7 +116,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         });
     });
 
-    it('can retrieve advices when authenticated as organisme', async () => {
+    it('can retrieve avis when authenticated as organisme', async () => {
 
         let app = await startServer();
 
@@ -128,14 +128,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, { 
+        assert.deepEqual(response.body, {
             'advices': [],
             'page': 1,
             'pageCount': 0
         });
     });
 
-    it('can not retrieve advices when authenticated as financer', async () => {
+    it('can not retrieve avis when authenticated as financer', async () => {
 
         let app = await startServer();
 
@@ -159,7 +159,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepEqual(response.body, { error: true });
     });
 
-    it('can not retrieve advices from an organisme when authenticated as another organisme', async () => {
+    it('can not retrieve avis from an organisme when authenticated as another organisme', async () => {
 
         let app = await startServer();
 

@@ -5,15 +5,16 @@ const { hashPassword, isPasswordStrongEnough } = require('../../../common/compon
 
 module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) => {
 
-    const pagination = configuration.api.pagination;
-    const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = createJWTAuthMiddleware('backoffice');
+    let pagination = configuration.api.pagination;
+    let router = express.Router(); // eslint-disable-line new-cap
+    let checkAuth = createJWTAuthMiddleware('backoffice');
+    let allProfiles = checkProfile('moderateur', 'financer', 'organisme');
 
     const checkOrganisme = req => {
         if (req.params.id !== req.user.id) {
             throw Boom.forbidden('Action non autorisé');
         }
-    }
+    };
 
     router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 
@@ -60,8 +61,8 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.get('/backoffice/organisation/:id/info', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        
+    router.get('/backoffice/organisation/:id/info', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
+
         const organisation = await db.collection('organismes').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
 

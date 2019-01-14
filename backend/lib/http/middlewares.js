@@ -72,14 +72,13 @@ module.exports = (auth, logger, configuration) => {
                     logger.error(`Unable to read token from authorization header for request ${req.method}/${req.url} `, e);
                     //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
                     res.status(401).send({ error: true });
-                    return;
                 });
             };
         },
 
-        checkProfile: profile => {
+        checkProfile: (...profiles) => {
             return (req, res, next) => {
-                if (req.user.profile !== profile) {
+                if (!profiles.includes(req.user.profile)) {
                     //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
                     res.status(401).send({ error: true });
                     return;
