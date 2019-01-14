@@ -4,8 +4,8 @@ const path = require('path');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const synchronizeOrganismes = require('../../../../../lib/jobs/import/organismes/synchronizeOrganismes');
-const generateOrganismes = require('../../../../../lib/jobs/import/organismes/generateOrganismes');
+const synchronizeOrganismes = require('../../../../../src/jobs/import/organismes/synchronizeOrganismes');
+const generateOrganismes = require('../../../../../src/jobs/import/organismes/generateOrganismes');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertIntoDatabase, importIntercarif }) => {
 

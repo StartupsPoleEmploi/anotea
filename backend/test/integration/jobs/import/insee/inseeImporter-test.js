@@ -3,7 +3,7 @@ const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const doImport = require('../../../../../lib/jobs/import/insee/importer');
+const doImport = require('../../../../../src/jobs/import/insee/importer');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
