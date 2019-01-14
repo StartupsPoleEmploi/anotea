@@ -35,7 +35,7 @@ export default class Results extends React.Component {
     static propTypes = {
         results: PropTypes.object.isRequired,
         filter: PropTypes.string.isRequired,
-        search: PropTypes.func.isRequired,
+        onChange: PropTypes.func.isRequired,
     };
 
     render() {
@@ -50,7 +50,7 @@ export default class Results extends React.Component {
                             <div key={key}>
                                 <div className="row">
                                     <div className="col-sm-12">
-                                        <Avis avis={avis} onChange={() => this.props.search({ silent: true })} />
+                                        <Avis avis={avis} onChange={this.props.onChange} />
                                     </div>
                                 </div>
                             </div>
