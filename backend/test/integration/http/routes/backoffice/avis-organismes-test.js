@@ -3,12 +3,12 @@ const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
 const { newComment } = require('../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganisme, getTestDatabase }) => {
 
     it('can answer to a comment', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
         let comment = newComment();
         await insertIntoDatabase('comment', comment);
 
@@ -34,7 +34,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can delete an answer', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
         let comment = newComment({
             answer: {
                 text: 'Voici notre réponse',
@@ -61,7 +61,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('should reject invalid comment id', async () => {
 
         let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
 
         let response = await request(app)
         .post(`/api/backoffice/advice/12345/answer`)

@@ -4,10 +4,11 @@ const Boom = require('boom');
 
 module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) => {
 
-    const pagination = configuration.api.pagination;
-    const router = express.Router(); // eslint-disable-line new-cap
-    const checkAuth = createJWTAuthMiddleware('backoffice');
     const POLE_EMPLOI = '4';
+    let pagination = configuration.api.pagination;
+    let router = express.Router(); // eslint-disable-line new-cap
+    let checkAuth = createJWTAuthMiddleware('backoffice');
+    let allProfiles = checkProfile('moderateur', 'financer', 'organisme');
 
     const checkCodeRegion = req => {
         if (req.params.idregion !== req.user.codeRegion) {
@@ -22,7 +23,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         }
     };
 
-    router.get('/backoffice/financeur/region/:idregion', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 
         checkCodeRegion(req);
 
@@ -39,7 +40,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         }
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisations', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisations', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
@@ -456,7 +457,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
     }));
 
     router.get('/backoffice/financeur/region/:idregion/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
-        
+
         checkCodeRegionAndCodeFinanceur(req);
 
         let filter = { 'step': { $gte: 2 }, 'codeRegion': `${req.params.idregion}` };

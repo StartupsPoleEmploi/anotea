@@ -215,29 +215,6 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
             });
     }));
 
-    router.put('/backoffice/avis/:id/markAsNotRead', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { read: false } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'markAsNotRead', {
-                        app: 'organisation',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
-    }));
-
     router.put('/backoffice/avis/:id/maskPseudo', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
 
@@ -327,52 +304,6 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
                         profile: 'moderateur',
                         user: req.query.userId,
                         ip: req.connection.remoteAddress
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
-    }));
-
-    router.put('/backoffice/avis/:id/report', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { reported: true } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'report', {
-                        app: 'organisation',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
-    }));
-
-    router.put('/backoffice/avis/:id/unreport', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { reported: false, read: true } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'report', {
-                        app: 'organisation',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
                     });
                     res.json(result.value);
                 } else {
