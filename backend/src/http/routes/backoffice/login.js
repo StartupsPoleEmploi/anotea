@@ -2,11 +2,11 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
-const { verifyPassword, getSHA256PasswordHashSync, hashPassword } = require('../../../common/components/password');
 
-module.exports = ({ db, auth, logger, configuration }) => {
+module.exports = ({ db, auth, logger, configuration, password }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
+    let { verifyPassword, getSHA256PasswordHashSync, hashPassword } = password;
 
     const logLoginEvent = (req, profile, id) => {
         return db.collection('events').insertOne({
