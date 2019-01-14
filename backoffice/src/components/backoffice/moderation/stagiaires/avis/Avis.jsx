@@ -62,7 +62,7 @@ export default class Avis extends React.Component {
                                     }
                                 </div>
 
-                                <div className="mt-1">
+                                <div className="mt-2 d-none d-lg-block">
                                     <Notes avis={avis} />
                                 </div>
                             </div>

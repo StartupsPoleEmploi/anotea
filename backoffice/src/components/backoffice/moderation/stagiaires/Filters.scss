@@ -3,12 +3,12 @@
 .Filters {
   .nav {
     background: $color-white;
-    border-radius: 7px;
+    border-radius: 6px;
     z-index: 1000;
     font-weight: $font-weight-400;
 
     .nav-link {
-      padding: 10px 15px;;
+      padding: 0.875rem;
       color: $color-grey-50;
       font-size: 1rem;
 
@@ -23,7 +23,7 @@
         color: $color-black;
         background-color: $color-grey-5;
         font-weight: $font-weight-700;
-        transition: background 0.20s linear;
+        transition: background-color 0.2s linear;
       }
     }
 
@@ -31,8 +31,8 @@
       &:first-child {
         .nav-link {
           &.active, &:hover, &:focus {
-            border-bottom-left-radius: 7px;
-            border-top-left-radius: 7px;
+            border-bottom-left-radius: 6px;
+            border-top-left-radius: 6px;
           }
         }
       }
@@ -40,8 +40,8 @@
       &:last-child {
         .nav-link {
           &.active, &:hover, &:focus {
-            border-bottom-right-radius: 7px;
-            border-top-right-radius: 7px;
+            border-bottom-right-radius: 6px;
+            border-top-right-radius: 6px;
           }
         }
       }

@@ -24,7 +24,8 @@
   }
 
   .stars {
-    font-size: 0.8rem;
+    font-size: 1rem;
+    letter-spacing: 2px;
     color: $color-yellow;
 
     &.empty {
@@ -47,19 +48,19 @@
   .status {
     padding: 0.5rem;
     border-radius: 2rem;
-    font-size: 0.75rem;
-    font-weight: $font-weight-400;
+    font-size: 0.825rem;
+    font-weight: $font-weight-700;
 
     &.published {
       background-color: $color-white;
       color: $color-green;
-      border: 1px solid $color-green;
+      border: 2px solid $color-green;
     }
 
     &.rejected {
       background-color: $color-white;
       color: $color-red;
-      border: 1px solid $color-red;
+      border: 2px solid $color-red;
     }
   }
 }
