@@ -28,6 +28,13 @@
     }
 
     .nav-item {
+
+      .pastille {
+        color: $color-red;
+        font-size: 0.825rem;
+        vertical-align: top;
+      }
+
       &:first-child {
         .nav-link {
           &.active, &:hover, &:focus {

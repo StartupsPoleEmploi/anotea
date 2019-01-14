@@ -15,7 +15,6 @@ export default class Avis extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        showStatus: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -50,8 +49,7 @@ export default class Avis extends React.Component {
                                 <Stagiaire
                                     className="mb-3"
                                     avis={avis}
-                                    onChange={onChange}
-                                    showStatus={this.props.showStatus} />
+                                    onChange={onChange} />
 
                                 <Titre avis={avis} onChange={onChange} className="mb-1" />
 
@@ -78,7 +76,7 @@ export default class Avis extends React.Component {
                                     }
 
                                     {!avis.published &&
-                                    <PublishButton avis={avis} buttonClassName="button publish" onChange={onChange} />
+                                    <PublishButton buttonClassName="button publish" avis={avis} onChange={onChange} />
                                     }
                                 </div>
                             </div>

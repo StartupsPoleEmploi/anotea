@@ -370,14 +370,18 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
 
     router.post('/backoffice/avis/:id/publish', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        const answer = req.body.answer;
 
         db.collection('comment').findOneAndUpdate(
-            { _id: id }, {
+            { _id: id },
+            {
                 $set: {
-                    answer: answer,
-                    answered: true,
-                    read: true
+                    reported: false,
+                    moderated: true,
+                    published: true,
+                    rejected: false,
+                    rejectReason: null,
+                    qualification: req.body.qualification,
+                    lastModerationAction: new Date()
                 }
             },
             { returnOriginal: false },
@@ -386,11 +390,11 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
                     logger.error(err);
                     res.status(500).send({ 'error': 'An error occurs' });
                 } else if (result.value) {
-                    saveEvent(id, 'answer', {
-                        app: 'organisation',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req),
-                        answer: answer
+                    saveEvent(id, 'publish', {
+                        app: 'moderation',
+                        user: 'admin',
+                        profile: 'moderateur',
+                        ip: getRemoteAddress(req)
                     });
                     res.json(result.value);
                 } else {

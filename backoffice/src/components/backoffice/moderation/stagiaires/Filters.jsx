@@ -12,14 +12,14 @@ export default class Filters extends React.Component {
     };
 
     createFilters = (filter, label, options = {}) => {
-        let total = options.total ? (<span>({options.total})</span>) : <span />;
+        let pastille = options.total ? (<span className="badge badge-light pastille">{options.total}</span>) : <span />;
         return (
             <li className="nav-item">
                 <NavLink
                     className="nav-link"
                     activeClassName={this.props.current === filter ? 'active' : ''}
                     to={`/admin/moderation/stagiaires/${filter}`}>
-                    <span className="mr-1">{label} {total}</span>
+                    <span className="mr-1">{label} {pastille}</span>
                 </NavLink>
             </li>
         );

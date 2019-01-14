@@ -51,16 +51,18 @@ export default class ModerationPanel extends React.Component {
     }
 
     search = (options = {}) => {
-        this.setState(!options.silent ? { loading: true, inventory: {} } : {}, async () => {
-            let filter = options.filter || this.state.filter;
-            let page = options.page !== undefined ? options.page : this.state.results.page;
+        return new Promise(resolve => {
+            this.setState(!options.silent ? { loading: true, inventory: {} } : {}, async () => {
+                let filter = options.filter || this.state.filter;
+                let page = options.page !== undefined ? options.page : this.state.results.page;
 
-            let [inventory, results] = await Promise.all([
-                loadInventory(this.props.codeRegion), //FIXME return inventory and pagination as a meta data of avis results
-                loadAvis(filter, 'creation', this.props.codeRegion, page),
-            ]);
+                let [inventory, results] = await Promise.all([
+                    loadInventory(this.props.codeRegion), //FIXME return inventory and pagination as a meta data of avis results
+                    loadAvis(filter, 'creation', this.props.codeRegion, page),
+                ]);
 
-            this.setState({ results, inventory, filter, loading: false });
+                this.setState({ results, inventory, filter, loading: false }, () => resolve());
+            });
         });
     };
 
@@ -84,7 +86,7 @@ export default class ModerationPanel extends React.Component {
                         <Results
                             results={this.state.results}
                             filter={this.state.filter}
-                            search={this.search} />
+                            onChange={() => this.search({ silent: true })} />
 
                 }
             />

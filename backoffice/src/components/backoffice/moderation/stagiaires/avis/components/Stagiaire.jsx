@@ -44,7 +44,6 @@ export default class Stagiaire extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        showStatus: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
         className: PropTypes.string.isRequired,
     };
@@ -69,14 +68,12 @@ export default class Stagiaire extends React.Component {
                     </span>
 
                     {avis.pseudo &&
-                    <i className={`far ${avis.pseudoMasked ? 'fa-eye masked' : 'fa-eye-slash'} togglable mr-2`}
+                    <i className={`far ${avis.pseudoMasked ? 'fa-eye' : 'fa-eye-slash'} togglable mr-2`}
                        onClick={this.toggle} />
                     }
 
                     <span className="float-right d-none d-lg-block">
-                        {this.props.showStatus &&
                         <Status avis={avis} />
-                        }
                     </span>
                 </div>
 
