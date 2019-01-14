@@ -76,7 +76,7 @@ export default class Avis extends React.Component {
                                     }
 
                                     {!avis.published &&
-                                    <PublishButton avis={avis} buttonClassName="button publish" onChange={onChange} />
+                                    <PublishButton buttonClassName="button publish" avis={avis} onChange={onChange} />
                                     }
                                 </div>
                             </div>
