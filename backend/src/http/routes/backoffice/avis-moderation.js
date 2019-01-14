@@ -7,7 +7,7 @@ const { encodeStream } = require('iconv-lite');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const Joi = require('joi');
-const { transformObject } = require('../../../common/stream-utils');
+const { transformObject } = require('../../../common/utils/stream-utils');
 
 module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configuration, mailer, mailing }) => {
 

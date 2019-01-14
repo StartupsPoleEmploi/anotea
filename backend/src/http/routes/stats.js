@@ -3,7 +3,7 @@ const moment = require('moment');
 const { encodeStream } = require('iconv-lite');
 const Boom = require('boom');
 const { tryAndCatch } = require('./routes-utils');
-const { jsonStream, transformObject } = require('../../common/stream-utils');
+const { jsonStream, transformObject } = require('../../common/utils/stream-utils');
 
 const financeurs = {
     '0': 'Autre',
