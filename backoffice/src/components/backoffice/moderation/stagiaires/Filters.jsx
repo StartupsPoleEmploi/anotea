@@ -12,14 +12,14 @@ export default class Filters extends React.Component {
     };
 
     createFilters = (filter, label, options = {}) => {
-        let total = options.total ? (<span>({options.total})</span>) : <span />;
+        let pastille = options.notRead ? (<i className="fas fa-circle pastille"/>) : <span />;
         return (
             <li className="nav-item">
                 <NavLink
                     className="nav-link"
                     activeClassName={this.props.current === filter ? 'active' : ''}
                     to={`/admin/moderation/stagiaires/${filter}`}>
-                    <span className="mr-1">{label} {total}</span>
+                    <span className="mr-1">{label} {pastille}</span>
                 </NavLink>
             </li>
         );
@@ -29,7 +29,7 @@ export default class Filters extends React.Component {
         return (
             <div className="Filters">
                 <nav className="nav">
-                    {this.createFilters('toModerate', 'À modérer', { total: _.get(this.props.inventory, 'toModerate') })}
+                    {this.createFilters('toModerate', 'À modérer', { notRead: _.get(this.props.inventory, 'toModerate') })}
                     {this.createFilters('published', 'Publiés')}
                     {this.createFilters('rejected', 'Rejetés')}
                     {this.createFilters('reported', 'Signalés')}

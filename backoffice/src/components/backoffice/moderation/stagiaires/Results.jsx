@@ -50,9 +50,7 @@ export default class Results extends React.Component {
                             <div key={key}>
                                 <div className="row">
                                     <div className="col-sm-12">
-                                        <Avis
-                                            avis={avis}
-                                            onChange={() => this.props.search({ silent: true })} />
+                                        <Avis avis={avis} onChange={() => this.props.search({ silent: true })} />
                                     </div>
                                 </div>
                             </div>
