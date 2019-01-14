@@ -50,7 +50,10 @@ export default class Results extends React.Component {
                             <div key={key}>
                                 <div className="row">
                                     <div className="col-sm-12">
-                                        <Avis avis={avis} onChange={this.props.onChange} />
+                                        <Avis
+                                            avis={avis}
+                                            showStatus={this.props.filter === 'all'}
+                                            onChange={this.props.onChange} />
                                     </div>
                                 </div>
                             </div>

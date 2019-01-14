@@ -15,6 +15,7 @@ export default class Avis extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        showStatus: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -49,7 +50,8 @@ export default class Avis extends React.Component {
                                 <Stagiaire
                                     className="mb-3"
                                     avis={avis}
-                                    onChange={onChange} />
+                                    onChange={onChange}
+                                    showStatus={this.props.showStatus} />
 
                                 <Titre avis={avis} onChange={onChange} className="mb-1" />
 
