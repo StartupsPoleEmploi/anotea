@@ -98,6 +98,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await insertIntoDatabase('comment', newComment({
             _id: oid,
             pseudo: pseudo,
+            editedComment: {
+                text: 'Formation super géniale.',
+                date: new Date(),
+            }
         }, date));
 
         let response = await request(app).get(`/api/v1/avis/${oid.toString()}`);
@@ -109,7 +113,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             date: date.toJSON(),
             commentaire: {
                 titre: 'Génial',
-                texte: 'Super formation.',
+                texte: 'Formation super géniale.',
             },
             notes: {
                 accueil: 3,
