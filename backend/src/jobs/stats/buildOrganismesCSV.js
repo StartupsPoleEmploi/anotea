@@ -4,7 +4,7 @@
 const fs = require('fs');
 const { encodeStream } = require('iconv-lite');
 const path = require('path');
-const getContactEmail = require('../../common/components/getContactEmail');
+const getOrganismeEmail = require('../../common/utils/getOrganismeEmail');
 const { execute } = require('../job-utils');
 
 execute(async ({ logger, db, configuration }) => {
@@ -20,7 +20,7 @@ execute(async ({ logger, db, configuration }) => {
 
             db.collection('organismes').find({ codeRegion }).transformStream({
                 transform: organisme => {
-                    return `="${organisme.meta.siretAsString}";"${organisme.raisonSociale}";"${getContactEmail(organisme)}";"${organisme.meta.nbAvis || 0}"\n`;
+                    return `="${organisme.meta.siretAsString}";"${organisme.raisonSociale}";"${getOrganismeEmail(organisme)}";"${organisme.meta.nbAvis || 0}"\n`;
                 }
             })
             .on('data', () => total++)

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../helpers/test-database');
-const regions = require('../../../../lib/common/components/regions');
+const regions = require('../../../../src/common/components/regions');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
 

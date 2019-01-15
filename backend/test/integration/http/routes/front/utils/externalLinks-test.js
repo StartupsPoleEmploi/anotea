@@ -2,10 +2,10 @@ const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../../../helpers/test-database');
 const { newTrainee } = require('../../../../../helpers/data/dataset');
-const doImportRome = require('../../../../../../lib/jobs/import/rome/importer');
-const doImportINSEE = require('../../../../../../lib/jobs/import/insee/importer');
+const doImportRome = require('../../../../../../src/jobs/import/rome/importer');
+const doImportINSEE = require('../../../../../../src/jobs/import/insee/importer');
 const logger = require('../../../../../helpers/test-logger');
-const externalLinks = require('../../../../../../lib/http/routes/front/utils/externalLinks');
+const externalLinks = require('../../../../../../src/http/routes/front/utils/externalLinks');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
 

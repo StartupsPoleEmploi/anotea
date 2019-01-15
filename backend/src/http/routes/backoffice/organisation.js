@@ -1,13 +1,13 @@
 const express = require('express');
 const Boom = require('boom');
 const { tryAndCatch } = require('../routes-utils');
-const { hashPassword, isPasswordStrongEnough } = require('../../../common/components/password');
 
-module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) => {
+module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, password }) => {
 
     let pagination = configuration.api.pagination;
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = createJWTAuthMiddleware('backoffice');
+    let { hashPassword, isPasswordStrongEnough } = password;
     let allProfiles = checkProfile('moderateur', 'financer', 'organisme');
 
     const checkOrganisme = req => {

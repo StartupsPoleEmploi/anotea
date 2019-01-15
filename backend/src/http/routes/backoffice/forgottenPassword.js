@@ -1,11 +1,11 @@
 const express = require('express');
 const Boom = require('boom');
 const { tryAndCatch } = require('../routes-utils');
-const { hashPassword, isPasswordStrongEnough } = require('../../../common/components/password');
 
-module.exports = ({ db, mailing }) => {
+module.exports = ({ db, mailing, password }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
+    let { hashPassword, isPasswordStrongEnough } = password;
 
     router.put('/backoffice/askNewPassword', tryAndCatch(async (req, res) => {
 

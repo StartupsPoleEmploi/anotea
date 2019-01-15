@@ -1,6 +1,6 @@
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
-const convertToExposableAvis = require('../../../lib/http/routes/api/v1/dto/convertToExposableAvis');
+const convertToExposableAvis = require('../../../src/http/routes/api/v1/dto/convertToExposableAvis');
 const { newComment, randomize } = require('../../helpers/data/dataset');
 
 describe(__filename, () => {

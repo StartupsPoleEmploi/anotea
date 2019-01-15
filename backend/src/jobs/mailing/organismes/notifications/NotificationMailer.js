@@ -1,5 +1,5 @@
 const moment = require('moment');
-const getContactEmail = require('../../../../common/components/getContactEmail');
+const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 let { delay } = require('../../../job-utils');
 
 class NotificationMailer {
@@ -93,7 +93,7 @@ class NotificationMailer {
                 pickedComment: status.pickedComment,
                 nbUnreadComments: status.nbUnreadComments
             };
-            this.mailer.sendNewCommentsNotification({ to: getContactEmail(organisme) }, data, () => resolve(), err => reject(err));
+            this.mailer.sendNewCommentsNotification({ to: getOrganismeEmail(organisme) }, data, () => resolve(), err => reject(err));
         });
     }
 
