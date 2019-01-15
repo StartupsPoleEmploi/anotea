@@ -73,7 +73,7 @@ header .link a {
 }
 
 .logoAnotea {
-    height: 68px;
+    height: 120px;
 }
 
 .error-page {
@@ -82,9 +82,13 @@ header .link a {
 
 .servicePro {
     font-size: 14px;
-    margin-top: 38px;
+    top: 60px;
     margin-left: 500px;
     position: absolute;
+}
+
+.servicePro img {
+    vertical-align: middle;
 }
 
 .serviceProQuestionnaire {
