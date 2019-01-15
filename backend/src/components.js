@@ -1,5 +1,6 @@
 const config = require('config');
 const auth = require('./common/components/auth');
+const password = require('./common/components/password');
 const regions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
 const database = require('./common/components/database');
@@ -22,6 +23,7 @@ module.exports = async (options = {}) => {
         client,
         mailer,
         auth: auth(configuration),
+        password,
         regions: regions(db),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),

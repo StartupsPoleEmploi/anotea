@@ -1,4 +1,4 @@
-const getContactEmail = require('../../../../common/components/getContactEmail');
+const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 let { delay } = require('../../../job-utils');
 
 class AccountMailer {
@@ -12,7 +12,7 @@ class AccountMailer {
 
     _sendEmail(organisme) {
         return new Promise((resolve, reject) => {
-            this.mailer.sendOrganisationAccountLink({ to: getContactEmail(organisme) }, organisme,
+            this.mailer.sendOrganisationAccountLink({ to: getOrganismeEmail(organisme) }, organisme,
                 async () => {
                     await this._onSuccess(organisme);
                     return resolve();

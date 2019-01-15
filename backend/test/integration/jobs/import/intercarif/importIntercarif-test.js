@@ -2,7 +2,7 @@ const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../../helpers/test-database');
-const importIntercarif = require('../../../../../lib/jobs/import/intercarif/importIntercarif');
+const importIntercarif = require('../../../../../src/jobs/import/intercarif/importIntercarif');
 const logger = require('../../../../helpers/test-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {

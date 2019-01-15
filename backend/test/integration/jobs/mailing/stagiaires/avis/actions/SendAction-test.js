@@ -3,8 +3,8 @@ const configuration = require('config');
 const { withMongoDB } = require('../../../../../../helpers/test-database');
 const { newTrainee, randomize } = require('../../../../../../helpers/data/dataset');
 const logger = require('../../../../../../helpers/test-logger');
-const AvisMailer = require('../../../../../../../lib/jobs/mailing/stagiaires/avis/AvisMailer');
-const SendAction = require('../../../../../../../lib/jobs/mailing/stagiaires/avis/actions/SendAction');
+const AvisMailer = require('../../../../../../../src/jobs/mailing/stagiaires/avis/AvisMailer');
+const SendAction = require('../../../../../../../src/jobs/mailing/stagiaires/avis/actions/SendAction');
 const { successMailer } = require('../../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {

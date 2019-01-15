@@ -1,10 +1,10 @@
-const getContactEmail = require('../getContactEmail');
+const getOrganismeEmail = require('../../utils/getOrganismeEmail');
 const uuid = require('node-uuid');
 
 module.exports = (db, mailer) => {
 
     return async organisme => {
-        let contact = getContactEmail(organisme);
+        let contact = getOrganismeEmail(organisme);
         let passwordToken = uuid.v4();
 
         await db.collection('forgottenPasswordTokens').insertOne({ token: passwordToken, id: organisme._id });
