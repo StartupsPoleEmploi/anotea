@@ -173,7 +173,10 @@ describe(__filename, () => {
     it('should return editedComment when comment has been edited', async () => {
 
         let comment = newComment({
-            editedComment: 'Formation super géniale.',
+            editedComment: {
+                text: 'Formation super géniale.',
+                date: new Date(),
+            },
             comment: {
                 title: 'Génial',
                 text: 'Formation géniale.'
