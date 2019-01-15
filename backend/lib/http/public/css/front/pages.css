@@ -30,7 +30,7 @@ body {
 }
 
 .main a, .main h1 {
-    color: #FDB52C;
+    color: #F0801A;
 }
 
 .main h1, .main h2 {
@@ -54,7 +54,7 @@ body {
 
 .footer a {
     line-height: 70px;
-    color: #FDB52C;
+    color: #F0801A;
     padding: 0px 20px;
 }
 

@@ -50,7 +50,7 @@ header .link {
 	height: 64px;
 	width: 238px;
 	border-radius: 5px;
-    background-color: #FCB42B;
+    background-color: #F0801A;
     font-size: 16px;
     line-height: 24px;
     float: left;
@@ -105,7 +105,7 @@ section.questionnnaire {
 
 body>div>section>h2 {
     font-size: 20px;
-    color: #FCB42B;
+    color: #F0801A;
     text-align: center;
     font-weight: bold;
     font-size: 18px;
@@ -532,7 +532,7 @@ datalist {
 }
 
 .divPage3 a {
-    color: #FCB42B;
+    color: #F0801A;
     font-size: 16px;
     font-weight: bold;
     line-height: 24px;
