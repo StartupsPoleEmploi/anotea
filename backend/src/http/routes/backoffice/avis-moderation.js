@@ -8,6 +8,8 @@ const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 const { encodeStream } = require('iconv-lite');
 const { transformObject } = require('../../../common/utils/stream-utils');
+const AvisSearchBuilder = require('./utils/AvisSearchBuilder');
+const computeInventory = require('./utils/computeInventory');
 
 module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configuration, mailer, mailing }) => {
 
@@ -30,58 +32,6 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
                 logger.error(`Unable to send email to ${contact}`, err);
             });
         }
-    };
-
-    const searchStagiaires = (text, codeRegion) => {
-        return db.collection('trainee')
-        .find({
-            codeRegion,
-            'trainee.email': text
-        })
-        .project({ token: 1 })
-        .toArray();
-    };
-
-    const computeInventory = async query => {
-        let results = await db.collection('comment').aggregate([
-            {
-                $match: query
-            },
-            {
-                $group:
-                    {
-                        _id: null,
-                        reported: {
-                            $sum: {
-                                $cond: { if: { $eq: ['$reported', true] }, then: 1, else: 0 }
-                            }
-                        },
-                        rejected: {
-                            $sum: {
-                                $cond: { if: { $eq: ['$rejected', true] }, then: 1, else: 0 }
-                            }
-                        },
-                        published: {
-                            $sum: {
-                                $cond: { if: { $eq: ['$published', true] }, then: 1, else: 0 }
-                            }
-                        },
-                        toModerate: {
-                            $sum: {
-                                $cond: { if: { $ne: ['$moderated', true] }, then: 1, else: 0 }
-                            }
-                        },
-                        all: { $sum: 1 },
-                    }
-            },
-            {
-                $project: {
-                    _id: 0,
-                }
-            }
-        ]).toArray();
-
-        return results[0] || {};
     };
 
     router.get('/backoffice/status', checkAuth, checkProfile('moderateur'), (req, res) => {
@@ -189,57 +139,29 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
 
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
+        let codeRegion = req.user.codeRegion;
         let { filter, query, order, page } = await Joi.validate(req.query, {
-            filter: Joi.string(),
-            query: Joi.string(),
+            filter: Joi.string().default('all'),
+            query: Joi.string().allow('').default(''),
             order: Joi.string(),
             page: Joi.number().default(0),
         }, { abortEarly: false });
 
 
-        let projection = {};
-        let sort = order && order === 'moderation' ? { lastModerationAction: -1 } : { date: 1 };
-        let limit = itemsPerPage;
-        let skip = (page || 0) * limit;
-        let mongoQuery = {
-            step: { $gte: 2 },
-            comment: { $ne: null },
-            codeRegion: req.user.codeRegion,
-        };
-
+        let builder = new AvisSearchBuilder(db, codeRegion, itemsPerPage);
         if (query) {
-            let stagiaires = await searchStagiaires(query, req.user.codeRegion);
-            if (stagiaires.length > 0) {
-                mongoQuery.token = { $in: stagiaires.map(s => s.token) };
-            } else {
-                mongoQuery.$text = { $search: query };
-            }
-            projection = { score: { $meta: 'textScore' } };
-            sort = { score: { $meta: 'textScore' } };
+            let isEmail = query.indexOf('@') !== -1;
+            await (isEmail ? builder.withEmail(query) : builder.withFullText(query));
         }
+        builder.withFilter(filter);
+        builder.sortBy(order);
+        builder.page(page);
 
-        let filters = {};
-        if (filter === 'reported') {
-            filters.reported = true;
-        } else if (filter === 'rejected') {
-            filters.rejected = true;
-        } else if (filter === 'published') {
-            filters.published = true;
-        } else if (filter === 'toModerate') {
-            filters.moderated = { $ne: true };
-        }
-
-        let cursor = db.collection('comment')
-        .find(Object.assign({}, mongoQuery, filters))
-        .project(projection)
-        .sort(sort)
-        .skip(skip)
-        .limit(limit);
-
+        let cursor = builder.search();
         let [total, avis, inventory] = await Promise.all([
             cursor.count(),
             cursor.toArray(),
-            computeInventory(mongoQuery)
+            computeInventory(db, codeRegion),
         ]);
 
         res.send({

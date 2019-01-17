@@ -33,7 +33,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
             insertIntoDatabase('comment', newComment({
                 pseudo: 'Joe',
             })),
-            createIndexes('trainee', 'comment')
+            createIndexes('comment')
         ]);
 
         let response = await request(app)
@@ -57,7 +57,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
                     title: 'awesome',
                 },
             })),
-            createIndexes('trainee', 'comment')
+            createIndexes('comment')
         ]);
 
         let response = await request(app)
@@ -85,7 +85,6 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
                 pseudo: 'kikoo',
                 token: '12345',
             })),
-            createIndexes('trainee', 'comment')
         ]);
 
         let response = await request(app)
