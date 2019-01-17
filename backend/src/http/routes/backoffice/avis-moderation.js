@@ -2,18 +2,20 @@ const express = require('express');
 const moment = require('moment');
 const mongo = require('mongodb');
 const s = require('string');
-const { tryAndCatch } = require('../routes-utils');
-const { encodeStream } = require('iconv-lite');
+const Joi = require('joi');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
-const Joi = require('joi');
+const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
+const { encodeStream } = require('iconv-lite');
 const { transformObject } = require('../../../common/utils/stream-utils');
+const AvisSearchBuilder = require('./utils/AvisSearchBuilder');
+const computeInventory = require('./utils/computeInventory');
 
 module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configuration, mailer, mailing }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = createJWTAuthMiddleware('backoffice');
-    const pagination = configuration.api.pagination;
+    const itemsPerPage = configuration.api.pagination;
 
     const POLE_EMPLOI = '4';
 
@@ -30,10 +32,6 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
                 logger.error(`Unable to send email to ${contact}`, err);
             });
         }
-    };
-
-    const getRemoteAddress = req => {
-        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     };
 
     router.get('/backoffice/status', checkAuth, checkProfile('moderateur'), (req, res) => {
@@ -139,56 +137,45 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
         .pipe(res);
     }));
 
-    router.get('/backoffice/avis/:codeRegion/', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        if (req.params.codeRegion !== req.user.codeRegion) {
-            throw Boom.forbidden('Action non autorisé');
-        }
+    router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
-        const projection = { token: 0 };
-        let filter = { 'step': { $gte: 2 }, 'comment': { $ne: null }, 'codeRegion': `${req.params.codeRegion}` };
-        if (req.query.filter) {
-            if (req.query.filter === 'reported') {
-                filter.reported = true;
-            } else if (req.query.filter === 'rejected') {
-                filter.rejected = true;
-            } else if (req.query.filter === 'published') {
-                filter.published = true;
-            } else if (req.query.filter === 'toModerate') {
-                filter.moderated = { $ne: true };
-            }
-        }
+        let codeRegion = req.user.codeRegion;
+        let { filter, query, order, page } = await Joi.validate(req.query, {
+            filter: Joi.string().default('all'),
+            query: Joi.string().allow('').default(''),
+            order: Joi.string(),
+            page: Joi.number().default(0),
+        }, { abortEarly: false });
 
-        let order = { date: 1 };
-        if (req.query.order) {
-            if (req.query.order === 'moderation') {
-                order = { lastModerationAction: -1 };
-            }
-        }
-        let skip = 0;
-        let page = 1;
-        if (req.query.page) {
-            try {
-                page = parseInt(req.query.page);
-                if (page - 1) {
-                    skip = (page - 1) * pagination;
-                }
-            } catch (e) {
 
-            }
+        let builder = new AvisSearchBuilder(db, codeRegion, itemsPerPage);
+        if (query) {
+            let isEmail = query.indexOf('@') !== -1;
+            await (isEmail ? builder.withEmail(query) : builder.withFullText(query));
         }
-        const count = await db.collection('comment').countDocuments(filter);
-        if (count < skip) {
-            res.send({ error: 404 });
-            return;
-        }
-        const avis = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
+        builder.withFilter(filter);
+        builder.sortBy(order);
+        builder.page(page);
+
+        let cursor = builder.search();
+        let [total, avis, inventory] = await Promise.all([
+            cursor.count(),
+            cursor.toArray(),
+            computeInventory(db, codeRegion),
+        ]);
 
         res.send({
             avis: avis,
-            page: page,
-            pageCount: Math.ceil(count / pagination),
-            elementsPerPage: pagination,
-            elementsOnThisPage: avis.length,
+            meta: {
+                inventory,
+                pagination: {
+                    page: page,
+                    itemsPerPage,
+                    itemsOnThisPage: avis.length,
+                    totalItems: total,
+                    totalPages: Math.ceil(total / itemsPerPage),
+                }
+            }
         });
     }));
 
@@ -435,24 +422,6 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
                     res.status(404).send({ 'error': 'Not found' });
                 }
             });
-    });
-
-    router.get('/backoffice/avis/:codeRegion/inventory', checkAuth, checkProfile('moderateur'), async (req, res) => {
-        if (req.params.codeRegion !== req.user.codeRegion) {
-            throw Boom.forbidden('Action non autorisé');
-        }
-
-        let inventory = {};
-        const filter = { 'comment': { $ne: null }, 'step': { $gte: 2 }, 'codeRegion': `${req.params.codeRegion}` };
-        const collection = await db.collection('comment');
-
-        inventory.reported = await collection.countDocuments({ ...filter, reported: true });
-        inventory.toModerate = await collection.countDocuments({ ...filter, moderated: { $ne: true } });
-        inventory.rejected = await collection.countDocuments({ ...filter, rejected: true });
-        inventory.published = await collection.countDocuments({ ...filter, published: true });
-        inventory.all = await collection.countDocuments(filter);
-
-        res.status(200).send(inventory);
     });
 
     router.get('/backoffice/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {

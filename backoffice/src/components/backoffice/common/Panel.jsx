@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Panel.scss';
 
-const Panel = ({ className, header, filters, results }) => {
+const Panel = ({ className, header, toolbar, results }) => {
 
     return (
         <div className={`Panel ${className || ''} mb-0`}>
@@ -19,7 +19,7 @@ const Panel = ({ className, header, filters, results }) => {
             <div className="content">
                 <div className="container">
                     <div className="filters sticky-top nav-fill">
-                        {filters}
+                        {toolbar}
                     </div>
                     <div className="results">
                         {results}
@@ -31,9 +31,9 @@ const Panel = ({ className, header, filters, results }) => {
 };
 
 Panel.propTypes = {
-    header: PropTypes.array.isRequired,
-    filters: PropTypes.array.isRequired,
-    results: PropTypes.array.isRequired,
+    header: PropTypes.object.isRequired,
+    toolbar: PropTypes.object.isRequired,
+    results: PropTypes.object.isRequired,
     className: PropTypes.string,
 };
 

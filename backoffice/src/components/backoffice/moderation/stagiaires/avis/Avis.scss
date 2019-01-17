@@ -11,10 +11,10 @@
     border-bottom: 0.1rem solid $color-grey-5;
   }
 
-  .buttons {
+  .actions {
     text-align: right;
 
-    .button {
+    .action {
       margin-bottom: 0.7rem;
       padding: 0.3rem 0.9rem;
       border-radius: 0.2rem !important;
@@ -25,7 +25,7 @@
         border: 1px solid $color-blue-10;
         color: $color-blue;
 
-        &.active, &:hover, &:focus {
+        &:active, &:hover, &:focus {
           background-color: $color-blue-60;
           border: 1px solid $color-blue-60;
         }
@@ -47,7 +47,7 @@
         border: 1px solid $color-red-10;
         color: $color-red;
 
-        &.active, &:hover, &:focus {
+        &:active, &:hover, &:focus {
           background-color: $color-red-60;
           border: 1px solid $color-red-60;
         }

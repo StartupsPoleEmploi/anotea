@@ -17,14 +17,18 @@ export default class Header extends React.Component {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-2 pl-5">
-                            <img src={logo} className="logo" alt="logo" />
+                            <NavLink to="/admin">
+                                <img src={logo} className="logo" alt="logo" />
+                            </NavLink>
                         </div>
                         <div className="col-md-7">
                             <nav className="nav">
-                                <NavLink to="/admin/moderation/stagiaires" className="nav-link" activeClassName="active">
+                                <NavLink to="/admin/moderation/stagiaires/all" className="nav-link"
+                                         activeClassName="active">
                                     Stagiaires
                                 </NavLink>
-                                <NavLink to="/admin/moderation/organismes" className="nav-link" activeClassName="active">
+                                <NavLink to="/admin/moderation/organismes" className="nav-link"
+                                         activeClassName="active">
                                     Organismes de formation
                                 </NavLink>
                             </nav>

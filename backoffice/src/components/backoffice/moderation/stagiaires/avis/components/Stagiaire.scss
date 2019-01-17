@@ -62,6 +62,12 @@
       color: $color-red;
       border: 2px solid $color-red;
     }
+
+    &.toModerate {
+      background-color: $color-white;
+      color: $color-blue;
+      border: 2px solid $color-blue;
+    }
   }
 }
 

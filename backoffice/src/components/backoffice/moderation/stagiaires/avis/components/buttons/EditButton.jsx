@@ -10,13 +10,11 @@ export default class EditButton extends React.Component {
     };
 
     render() {
-        let { onClick } = this.props;
-
         return (
             <button
                 type="button"
-                className={`EditButton Button btn btn-sm btn-primary ${this.props.buttonClassName}`}
-                onClick={onClick}>
+                className={`EditButton Button btn ${this.props.buttonClassName}`}
+                onClick={this.props.onClick}>
                 <i className="fa fa-pencil-alt" />
             </button>
         );

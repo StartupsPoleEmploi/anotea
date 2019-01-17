@@ -45,7 +45,7 @@ export default class OrganismePanel extends React.PureComponent {
             header={
                 <h1 className="title">Gestion des organismes</h1>
             }
-            filters={
+            toolbar={
                 <div className="input-group">
                     <input
                         type="text"

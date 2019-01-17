@@ -30,7 +30,7 @@
       opacity: 0.6;
     }
 
-    margin-bottom:-22px;
+    margin-bottom: -22px;
   }
 
   .content {
@@ -47,14 +47,25 @@
         box-shadow: $shadow;
 
         input {
+          padding: 0.875rem;
           border: none;
+          box-shadow: none;
+        }
+
+        .input-group-text {
+          font-size: 1.2rem;
+          background-color: $color-white;
+          border: none;
+          border-radius: unset;
         }
 
         button {
+          padding: 0.875rem;
           background-color: $color-grey-5;
           color: $color-black;
           font-weight: $font-weight-700;
           border: none;
+          box-shadow: none;
         }
       }
 

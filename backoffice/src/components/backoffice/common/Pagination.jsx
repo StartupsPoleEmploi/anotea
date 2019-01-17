@@ -1,35 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
 import './Pagination.scss';
 
 export class Pagination extends React.Component {
 
     static propTypes = {
-        filter: PropTypes.string.isRequired,
         pagination: PropTypes.object.isRequired,
+        onClick: PropTypes.func.isRequired,
     };
 
     render() {
-        let { page, pageCount } = this.props.pagination;
-        let nextPage = page + 1;
-        let lastPage = pageCount - 1;
-        let isFirstPage = page === 1;
-        let isLastPage = page === lastPage;
-        let showPrevious = page > 2;
-        let getRoute = p => `/admin/moderation/stagiaires/${this.props.filter}${'/' + p || ''}`;
+        let currentPage = this.props.pagination.page + 1;
+        let totalPages = this.props.pagination.totalPages;
+        let nextPage = currentPage + 1;
+        let lastPage = totalPages;
+        let isFirstPage = currentPage === 1;
+        let isLastPage = currentPage === lastPage;
+        let showPrevious = currentPage > 2;
 
-        if (pageCount === 1) {
+        if (totalPages === 1) {
             return (<ul className="Pagination" />);
         }
 
         return (
             <ul className="Pagination pagination">
                 <li className={`page-item ${isFirstPage ? 'active' : ''}`}>
-                    <NavLink className="page-link" to={getRoute(1)}>1</NavLink>
+                    <a className="page-link" onClick={() => this.props.onClick(1)}>1</a>
                 </li>
                 {
-                    (pageCount > 5 && page > 3) &&
+                    (totalPages > 5 && currentPage > 3) &&
                     <li className="page-item disabled">
                         <a className="page-link" href="#">...</a>
                     </li>
@@ -37,29 +36,32 @@ export class Pagination extends React.Component {
                 {
                     showPrevious &&
                     <li className="page-item">
-                        <NavLink className="page-link" to={getRoute(page - 1)}>{page - 1}</NavLink>
+                        <a
+                            className="page-link"
+                            onClick={() => this.props.onClick(currentPage - 1)}>{currentPage - 1}
+                        </a>
                     </li>
                 }
                 {
                     (!isFirstPage && !isLastPage) &&
                     <li className="page-item active">
-                        <NavLink className="page-link" to={getRoute(page)}>{page}</NavLink>
+                        <a className="page-link" onClick={() => this.props.onClick(currentPage)}>{currentPage}</a>
                     </li>
                 }
                 {
-                    (nextPage !== lastPage) &&
+                    (nextPage < lastPage) &&
                     <li className="page-item">
-                        <NavLink className="page-link" to={getRoute(nextPage)}>{nextPage}</NavLink>
+                        <a className="page-link" onClick={() => this.props.onClick(nextPage)}>{nextPage}</a>
                     </li>
                 }
                 {
-                    (page < pageCount - 2) &&
+                    (currentPage < totalPages - 2) &&
                     <li className="page-item disabled">
                         <a className="page-link" href="#">...</a>
                     </li>
                 }
-                <li className="page-item">
-                    <NavLink className="page-link" to={getRoute(lastPage)}>{lastPage}</NavLink>
+                <li className={`page-item ${isLastPage && 'active'}`}>
+                    <a className="page-link" onClick={() => this.props.onClick(lastPage)}>{lastPage}</a>
                 </li>
             </ul>
         );
@@ -73,10 +75,9 @@ export class PaginationStatus extends React.Component {
     };
 
     render() {
-        let { elementsPerPage, elementsOnThisPage, pageCount } = this.props.pagination;
-        let total = elementsPerPage * pageCount;
+        let { totalItems, itemsOnThisPage } = this.props.pagination;
         return (
-            <span>{elementsOnThisPage} avis affiché(s) sur {total}</span>
+            <span>{itemsOnThisPage} avis affiché(s) sur {totalItems}</span>
         );
     }
 }
