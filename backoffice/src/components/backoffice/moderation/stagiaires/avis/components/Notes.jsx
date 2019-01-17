@@ -48,7 +48,7 @@ export default class Notes extends React.Component {
             <div className="Notes">
                 <button
                     type="button"
-                    className="btn btn-sm action"
+                    className="btn btn-sm"
                     onClick={this.toggleDetails}>
                     Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
                 </button>

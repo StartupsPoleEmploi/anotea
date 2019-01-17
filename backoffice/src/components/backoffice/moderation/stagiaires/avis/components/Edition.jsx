@@ -8,8 +8,8 @@ export default class Edition extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        onChange: PropTypes.object.isRequired,
-        onClose: PropTypes.object.isRequired,
+        onChange: PropTypes.func.isRequired,
+        onClose: PropTypes.func.isRequired,
     };
 
     constructor(props) {

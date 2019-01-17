@@ -1,10 +1,10 @@
 @import '../../../../styles/variables';
 
 .Filters {
+
   .nav {
     background: $color-white;
     border-radius: 6px;
-    z-index: 1000;
     font-weight: $font-weight-400;
 
     .nav-link {
@@ -29,10 +29,30 @@
 
     .nav-item {
 
+      &.disabled {
+        pointer-events: none;
+        color: $color-grey-5;
+        opacity: 0.2;
+      }
+
       .pastille {
         color: $color-red;
         font-size: 0.825rem;
         vertical-align: top;
+      }
+
+      .search {
+        border-left: 1px solid $color-grey-5;
+
+        .cancel {
+          margin-top: 10px;
+          margin-right: 10px;
+        }
+
+        button {
+          border-top-left-radius: unset;
+          border-bottom-left-radius: unset;
+        }
       }
 
       &:first-child {

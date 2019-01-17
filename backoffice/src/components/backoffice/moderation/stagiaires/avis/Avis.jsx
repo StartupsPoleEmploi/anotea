@@ -65,20 +65,24 @@ export default class Avis extends React.Component {
                                 <div className="mt-2 d-none d-lg-block">
                                     <Notes avis={avis} />
                                 </div>
+
+                                <div className="mt-2 d-none d-lg-block">
+
+                                </div>
                             </div>
 
-                            <div className="col-1 pr-0 buttons">
+                            <div className="col-1 pr-0 actions">
                                 <div className="btn-group-vertical">
                                     {avis.comment.text &&
-                                    <EditButton buttonClassName="button edit" onClick={this.toggleEdition} />
+                                    <EditButton buttonClassName="action edit" onClick={this.toggleEdition} />
                                     }
 
                                     {!avis.rejected &&
-                                    <RejectButton buttonClassName="button reject" avis={avis} onChange={onChange} />
+                                    <RejectButton buttonClassName="action reject" avis={avis} onChange={onChange} />
                                     }
 
                                     {!avis.published &&
-                                    <PublishButton buttonClassName="button publish" avis={avis} onChange={onChange} />
+                                    <PublishButton buttonClassName="action publish" avis={avis} onChange={onChange} />
                                     }
                                 </div>
                             </div>

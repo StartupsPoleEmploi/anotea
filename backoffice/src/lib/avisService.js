@@ -1,22 +1,11 @@
 import { _get, _post, _delete, _put } from '../utils/http-client';
 
-export const loadAvis = (filter, order, codeRegion, page) => {
-    let query = '';
-    if (filter) {
-        query = `?filter=${filter}&order=${order}`;
-    }
-    if (page !== null && page > 0) {
-        let prefix = '&';
-        if (query === '') {
-            prefix = '?';
-        }
-        query += `${prefix}page=${page}`;
-    }
-    return _get(`/backoffice/avis/${codeRegion}/${query}`);
-};
-
-export const loadInventory = codeRegion => {
-    return _get(`/backoffice/avis/${codeRegion}/inventory`);
+export const searchAvis = (options = {}) => {
+    let filter = options.filter || 'all';
+    let query = options.query ? `&query=${options.query}` : '';
+    let order = options.order || 'moderation';
+    let page = options.page ? options.page - 1 : 0;
+    return _get(`/backoffice/avis?filter=${filter}&page=${page}&order=${order}${query}`);
 };
 
 export const maskPseudo = id => {

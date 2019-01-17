@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import queryString from 'query-string';
 import fr from 'react-intl/locale-data/fr';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import jwtDecode from 'jwt-decode';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { removeToken, setToken } from './utils/token';
 import { getRegion } from './lib/financerService';
 import { subscribeToHttpEvent } from './utils/http-client';
 import DeprecatedHeader from './components/backoffice/common/deprecated/DeprecatedHeader';
-import Header from './components/backoffice/common/Header';
-import ModerationPanel from './components/backoffice/moderation/stagiaires/ModerationPanel';
-import OrganismePanel from './components/backoffice/moderation/organismes/OrganismePanel';
 import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel';
 import FinancerPanel from './components/backoffice/financer/FinancerPanel';
 import AccountActivation from './components/backoffice/organisation/AccountActivation';
 import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
+import ModerationRoutes from './components/backoffice/moderation/ModerationRoutes';
 import './utils/moment-fr';
 import './styles/anotea-deprecated.scss';
 import './styles/anotea.scss';
@@ -136,11 +134,6 @@ class App extends Component {
         history.pushState(null, "", location.href.split("?")[0])  // eslint-disable-line
     };
 
-    gotToPage = page => {
-        //FIXME we use this until we move to router v4
-        this.setState({ page });
-    };
-
     showUnauthenticatedPages = () => {
 
         //Use deprecated design
@@ -192,24 +185,7 @@ class App extends Component {
         if (this.state.profile === 'moderateur') {
             return (
                 <Router>
-                    <div className="anotea">
-                        <Header onLogout={this.handleLogout} onPageSelected={this.gotToPage} />
-                        <Switch>
-                            <Redirect exact from="/" to="/admin/moderation/stagiaires/all" />
-                            <Redirect exact from="/admin" to="/admin/moderation/stagiaires/all" />
-                            <Redirect exact from="/admin/moderation/stagiaires" to="/admin/moderation/stagiaires/all" />
-                        </Switch>
-                        <Route
-                            path="/admin/moderation/organismes"
-                            render={props => (
-                                <OrganismePanel {...props} codeRegion={this.state.codeRegion} />
-                            )} />
-                        <Route
-                            path="/admin/moderation/stagiaires/:filter/:page?"
-                            render={props => (
-                                <ModerationPanel {...props} id={this.state.id} codeRegion={this.state.codeRegion} />
-                            )} />
-                    </div>
+                    <ModerationRoutes logout={this.handleLogout} codeRegion={this.state.codeRegion} />
                 </Router>
             );
         }

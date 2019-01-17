@@ -32,8 +32,8 @@ const Status = ({ avis }) => {
                 <PrettyDate date={new Date(avis.lastModerationAction)} />
             </span>
         );
-    } else if (avis.reported) {
-        return (<span className="status badge badge-warning">Signalé</span>);
+    } else if (!avis.moderated) {
+        return (<span className="status badge badge-warning toModerate">A modérer</span>);
     }
     return (<span />);
 
@@ -63,7 +63,7 @@ export default class Stagiaire extends React.Component {
 
                 <div className="mb-1">
                     <Stars note={avis.rates.global} />
-                    <span className="by">par</span>
+                    <span className="by">par&nbsp;</span>
                     <span className={`pseudo mr-1 ${avis.pseudoMasked ? 'masked' : ''}`}>
                         {avis.pseudo ? avis.pseudo : 'anonyme'}
                     </span>
