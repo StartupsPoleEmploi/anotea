@@ -4,23 +4,28 @@
 const cli = require('commander');
 const { execute } = require('../../job-utils');
 const dropIndexes = require('./dropIndexes');
-const createIndexes = require('./createIndexes');
+const allIndexes = require('./allIndexes');
 const findUnusedIndexes = require('./findUnusedIndexes');
 
 cli.description('Manage indexes')
 .option('-f, --find', 'Find unused indexex')
-.option('-d, --drop', 'Drop indexes')
+.option('-d, --drop', 'Drop all indexesx')
 .parse(process.argv);
 
-execute(async ({ db }) => {
+execute(async ({ db, logger }) => {
 
     if (cli.find) {
         return await findUnusedIndexes(db);
     }
 
     if (cli.drop) {
-        return await dropIndexes(db);
+        logger.info('Dropping indexes....');
+        await dropIndexes(db);
     }
 
-    return createIndexes(db);
+    logger.info('Creating indexes....');
+    return Promise.all(Object.keys(allIndexes).map(key => {
+        logger.debug(`Creating indexes for collection ${key}....`);
+        return allIndexes[key](db);
+    }));
 });

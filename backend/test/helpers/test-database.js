@@ -1,6 +1,7 @@
 const path = require('path');
 const logger = require('./test-logger');
 const importIntercarif = require('../../src/jobs/import/intercarif/importIntercarif');
+const indexes = require('../../src/jobs/data/indexes/allIndexes');
 const { withComponents } = require('./test-components');
 
 module.exports = {
@@ -25,6 +26,12 @@ module.exports = {
             return callback(Object.assign({}, context, {
                 getTestDatabase,
                 insertIntoDatabase,
+                createIndexes: async (...collectionNames) => {
+                    let db = await getTestDatabase();
+                    return collectionNames.map(name => {
+                        return indexes[name](db);
+                    });
+                },
                 importIntercarif: async file => {
                     let intercarifFile = path.join(__dirname, 'data', 'intercarif-data-test.xml');
                     let db = await getTestDatabase();
@@ -79,7 +86,7 @@ module.exports = {
                     ]);
 
                     let db = await getTestDatabase();
-                    return db.collection('departements').createIndex({ region: 'text' });
+                    return indexes.departements(db);
                 },
                 insertRegions: async () => {
 
@@ -177,7 +184,7 @@ module.exports = {
                     ]);
 
                     let db = await getTestDatabase();
-                    return db.collection('departements').createIndex({ region: 'text' });
+                    return indexes.departements(db);
                 },
             }));
         });
