@@ -2,7 +2,7 @@
 'use strict';
 
 const { execute } = require('../../job-utils');
-const createIndexes = require('../indexes/createIndexes');
+const createIndexes = require('../indexes/allIndexes');
 
 execute(async ({ db }) => {
 
