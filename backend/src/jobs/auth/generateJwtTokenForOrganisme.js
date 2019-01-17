@@ -14,15 +14,19 @@ execute(async ({ db, auth, exit }) => {
         exit('Invalid arguments');
     }
 
-    let account = await db.collection('organismes').findOne({ 'meta.siretAsString': cli.siret });
+    let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': cli.siret });
     let data = {
-        sub: account.courriel,
-        profile: 'moderateur',
-        id: account._id,
-        codeRegion: account.codeRegion,
+        sub: organisme.courriel,
+        profile: 'organisme',
+        id: organisme._id,
+        codeRegion: organisme.codeRegion,
+        raisonSociale: organisme.raisonSociale,
+        siret: organisme.meta.siretAsString
     };
 
     let jwt = await auth.buildJWT('backoffice', data, { expiresIn: '1h' });
 
-    return auth.checkJWT('backoffice', jwt.access_token, { expiresIn: '1h' });
+    return {
+        token: `Bearer ${jwt.access_token}`,
+    };
 });
