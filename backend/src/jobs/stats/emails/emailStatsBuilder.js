@@ -28,7 +28,7 @@ module.exports = db => {
                 codeFinanceur: codeFinancerProject,
                 count: { '$sum': 1 },
                 emailOpen: {
-                    $cond: { $sum: { $cond: ['$tracking', 1, 0] } }
+                    $sum: { $cond: ['$tracking', 1, 0] }
                 },
                 advicesPublished: {
                     $filter: {
