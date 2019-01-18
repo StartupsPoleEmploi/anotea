@@ -34,15 +34,6 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
         }
     };
 
-    router.get('/backoffice/status', checkAuth, checkProfile('moderateur'), (req, res) => {
-        res.send({ 'status': 'OK' });
-    });
-
-    router.get('/backoffice/avis.json', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let advices = await db.collection('comment').find({ step: { $gte: 2 } }, { token: 0 }).limit(10).toArray();
-        res.send(advices);
-    }));
-
     // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
     router.get('/avis.csv', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let query = {
