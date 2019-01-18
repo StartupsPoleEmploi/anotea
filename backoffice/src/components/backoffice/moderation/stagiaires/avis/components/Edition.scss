@@ -1,45 +1,15 @@
 @import '../../../../../../styles/variables';
+@import './buttons/Button.scss';
 
 .Avis .Edition {
 
-  font-size: 0.9em;
-  position: relative;
-
-  .fa-star {
-    color: #F0801A;
-    font-size: 0.8em;
+  button.cancel {
+    @include edition-button($color-red);
   }
 
-  .actions {
-    text-align: right;
-
-    .action {
-      background-color: $color-white;
-      border: none;
-      font-size: 0.8rem;
-
-      &.cancel {
-        color: $color-red;
-
-        &.active, &:hover, &:focus {
-          background-color: $color-white;
-          border: none;
-          box-shadow: none;
-        }
-      }
-
-      &.publish {
-        color: $color-green;
-        background-color: $color-white;
-        border: none;
-
-        &.active, &:hover, &:focus {
-          background-color: $color-white;
-          border: none;
-          box-shadow: none;
-        }
-      }
-    }
+  button.publish {
+    margin-bottom: 0;
+    @include edition-button($color-green);
   }
 
 }

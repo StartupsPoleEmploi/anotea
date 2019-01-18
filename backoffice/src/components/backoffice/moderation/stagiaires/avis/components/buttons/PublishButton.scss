@@ -1,0 +1,13 @@
+@import '../../../../../../../styles/variables';
+@import './Button.scss';
+
+.Avis .PublishButton {
+
+  @include dropdown();
+
+  button {
+    @include action-button($color-green, $color-green-10, $color-green-60);
+  }
+
+}
+

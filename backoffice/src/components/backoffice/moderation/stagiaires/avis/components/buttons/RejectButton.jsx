@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { rejectAvis } from '../../../../../../../lib/avisService';
-import './Button.scss';
+import './RejectButton.scss';
 
 export default class RejectButton extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
-        buttonClassName: PropTypes.string.isRequired,
+        buttonClassName: PropTypes.string,
     };
 
     reject = async (avis, reason) => {
@@ -20,10 +20,10 @@ export default class RejectButton extends React.Component {
         let { avis } = this.props;
 
         return (
-            <div className="RejectButton Button btn-group">
+            <div className="RejectButton btn-group">
                 <button
                     type="button"
-                    className={`btn btn-sm btn-danger dropdown-toggle ${this.props.buttonClassName}`}
+                    className={`btn btn-sm dropdown-toggle ${this.props.buttonClassName || ''}`}
                     data-toggle="dropdown">
                     <i className="far fa-times-circle" />
                 </button>

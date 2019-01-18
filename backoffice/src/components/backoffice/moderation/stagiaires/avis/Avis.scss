@@ -10,49 +10,5 @@
     border-radius: unset;
     border-bottom: 0.1rem solid $color-grey-5;
   }
-
-  .actions {
-    text-align: right;
-
-    .action {
-      margin-bottom: 0.7rem;
-      padding: 0.3rem 0.9rem;
-      border-radius: 0.2rem !important;
-      font-size: 1.1rem;
-
-      &.edit {
-        background-color: $color-blue-10;
-        border: 1px solid $color-blue-10;
-        color: $color-blue;
-
-        &:active, &:hover, &:focus {
-          background-color: $color-blue-60;
-          border: 1px solid $color-blue-60;
-        }
-      }
-
-      &.publish {
-        background-color: $color-green-10;
-        border: 1px solid $color-green-10;
-        color: $color-green;
-
-        &.active, &:hover, &:focus {
-          background-color: $color-green-60;
-          border: 1px solid $color-green-60;
-        }
-      }
-
-      &.reject {
-        background-color: $color-red-10;
-        border: 1px solid $color-red-10;
-        color: $color-red;
-
-        &:active, &:hover, &:focus {
-          background-color: $color-red-60;
-          border: 1px solid $color-red-60;
-        }
-      }
-    }
-  }
 }
 
