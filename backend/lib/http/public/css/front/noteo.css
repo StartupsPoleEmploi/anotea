@@ -405,7 +405,7 @@ hr {
 }
 
 input {
-    font-size: 18px;
+    font-size: 1rem;
     padding: 10px 0px 10px 0px;
     display: block;
     width: 100%;
@@ -415,6 +415,16 @@ input {
 
 input:focus {
     outline: none;
+}
+
+textarea {
+    font-size: 1rem;
+    letter-spacing: 1px;
+    padding: 10px;
+    line-height: 1.5;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 1px #999;
 }
 
 
@@ -486,7 +496,7 @@ datalist {
 }
 
 .suivant2 {
-    background-color: #4d79ff;
+    background-color: #99b3ff;
     color: white;
     width: 210px;
     height: 40px;

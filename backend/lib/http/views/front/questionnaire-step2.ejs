@@ -18,24 +18,26 @@
             <img src="/img/logo_Anotea_Horizontal_baseline.png" alt="" class="logoAnotea">
         </header>
         <div class="formulaire">
-            <form action="/questionnaire/<%= trainee.token%>/step2" method="POST" autocomplete="off">
+            <form id="questionnaireForm" action="/questionnaire/<%= trainee.token%>/step2" method="POST" autocomplete="off">
                 <br>
                 <p class="titre">Commentez votre formation</p>
                 <br>
                 <br>
+
                 <div class="group">
-                    <input type="text" name="titreCommentaire" maxlength="50" class="champ2">
+                    <input id="titre" type="text" name="titreCommentaire" maxlength="50" class="required champ2">
                     <i class="material-icons" id="icon2">insert_comment</i>
                     <span class="highlight"></span>
                     <span class="bar"></span>
                     <label class="lb2" id="lb4">Titre de votre commentaire</label>
                 </div>
+
                 <div class="group">
                     <p style="color:#808080; font-size: 18px;">Votre commentaire</p>
-
-                    <textarea id="tag" type="text" name="commentaire" rows="6" maxlength="200" class="champ"></textarea>
+                    <textarea id="tag" type="text" name="commentaire" rows="7" maxlength="200" class="required champ"></textarea>
                     <p class="nombreCharactere"></p>
                 </div>
+
                 <div class="group" id="divPseudo">
                     <input type="text" name="pseudo" class="champ1" maxlength="50" id="inputPseudo">
                     <i class="material-icons" id="icon1">account_circle</i>
@@ -46,6 +48,7 @@
                     <i class="material-icons" id="iconClose">close</i>
                     <p class="manqueLePseudo"></p>
                 </div>
+
                 <div>
                     <p class="azerty">
                         <input id="box1" type="checkbox" name="accord" />
@@ -56,8 +59,9 @@
                         <label for="box1" id="autorisationEntreprise">J'autorise une entreprise à me contacter.</label>
                     </p>
                 </div>
+
                 <br>
-                <input type="submit" value="Envoyer" class="suivant2" title="Envoyer">
+                <input id="sendButon" disabled="disabled" type="submit" value="Envoyer" class="suivant2" title="Envoyer">
                 <br>
                 <br>
                 <br>
