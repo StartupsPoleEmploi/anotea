@@ -27,7 +27,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             ...(
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
-                        read: true,
+                        read: false,
                         published: true,
                         training: {
                             organisation: {
@@ -70,7 +70,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             ...(
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
-                        read: true,
+                        read: false,
                         published: true,
                         training: {
                             organisation: {
@@ -137,7 +137,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             ...(
                 _.range(2).map(() => {
                     return insertIntoDatabase('comment', newComment({
-                        read: true,
+                        read: false,
                         published: true,
                         training: {
                             organisation: {
