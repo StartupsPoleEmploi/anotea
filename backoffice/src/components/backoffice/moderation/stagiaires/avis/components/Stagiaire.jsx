@@ -18,6 +18,11 @@ const Stars = ({ note }) => {
 Stars.propTypes = { note: PropTypes.number.isRequired };
 
 const Status = ({ avis }) => {
+
+    if (!avis.comment) {
+        return (<span />);
+    }
+
     if (avis.published) {
         return (
             <span className="status badge badge-success published">

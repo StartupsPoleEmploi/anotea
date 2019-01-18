@@ -10,7 +10,7 @@ export default class Commentaire extends React.Component {
 
     render() {
         let avis = this.props.avis;
-        if (!avis.comment.text) {
+        if (!avis.comment || !avis.comment.text) {
             return (<span className="Commentaire empty">Le stagiaire n'a pas souhaité laisser de commentaire</span>);
         }
 

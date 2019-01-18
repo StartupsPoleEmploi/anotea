@@ -21,7 +21,7 @@ export default class Titre extends React.Component {
     render() {
         let avis = this.props.avis;
 
-        if (!avis.comment.title) {
+        if (!avis.comment || !avis.comment.title) {
             return <div className={`Titre empty ${this.props.className}`}>Aucun titre</div>;
         }
         return (

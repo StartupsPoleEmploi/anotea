@@ -1,17 +1,19 @@
 class AvisSearchBuilder {
 
-    constructor(db, codeRegion, itemsPerPage) {
+    constructor(db, itemsPerPage, codeRegion) {
         this.db = db;
-        this.codeRegion = codeRegion;
         this.limit = itemsPerPage;
         this.projection = {};
         this.sort = { date: 1 };
         this.skip = 0;
         this.query = {
             step: { $gte: 2 },
-            comment: { $ne: null },
             codeRegion: codeRegion,
         };
+    }
+
+    withComment() {
+        this.query.comment = { $ne: null };
     }
 
     withFilter(filter) {
@@ -24,6 +26,11 @@ class AvisSearchBuilder {
         } else if (filter === 'toModerate') {
             this.query.moderated = { $ne: true };
         }
+
+        if (filter !== 'all') {
+            this.withComment();
+        }
+        this.sort = filter === 'all' ? { date: -1 } : { lastModerationAction: 1 };
     }
 
     async withEmail(email) {
@@ -41,10 +48,6 @@ class AvisSearchBuilder {
         this.query.$text = { $search: query };
         this.projection = { score: { $meta: 'textScore' } };
         this.sort = { score: { $meta: 'textScore' } };
-    }
-
-    sortBy(sort) {
-        this.sort = sort === 'moderation' ? { lastModerationAction: -1 } : { date: 1 };
     }
 
     page(page) {
