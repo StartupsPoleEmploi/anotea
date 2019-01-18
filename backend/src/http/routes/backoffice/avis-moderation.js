@@ -170,29 +170,6 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
         });
     }));
 
-    router.put('/backoffice/avis/:id/markAsRead', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { read: true } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'markAsRead', {
-                        app: 'organisation',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
-    }));
-
     router.put('/backoffice/avis/:id/maskPseudo', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
 

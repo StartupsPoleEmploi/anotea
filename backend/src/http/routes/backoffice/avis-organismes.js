@@ -65,6 +65,30 @@ module.exports = ({ db, logger, createJWTAuthMiddleware, checkProfile }) => {
         }
     }));
 
+
+    router.put('/backoffice/avis/:id/markAsRead', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
+        const id = ObjectID(req.params.id); // eslint-disable-line new-cap
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            { $set: { read: true } },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value) {
+                    saveEvent(id, 'markAsRead', {
+                        app: 'organisation',
+                        user: req.query.userId,
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
+    }));
+
     router.put('/backoffice/avis/:id/markAsNotRead', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
         const id = ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').findOneAndUpdate(
