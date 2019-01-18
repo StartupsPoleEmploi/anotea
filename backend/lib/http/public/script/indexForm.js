@@ -56,3 +56,20 @@ $('[type*="radio"]').change(function () {
     }
   })
 })
+
+$('.required').bind('input propertychange',function() {
+    var titre = $('#titre').val();
+    var commentaire = $('#tag').val();
+
+    if (titre || commentaire) {
+        $('#sendButon').css({
+            backgroundColor: '#4d79ff',
+            fontSize: '20px',
+        }).removeAttr('disabled');
+    } else {
+        $('#sendButon').css({
+            backgroundColor: '#99b3ff',
+            fontSize: '20px',
+        }).attr('disabled', 'disabled');
+    }
+});
