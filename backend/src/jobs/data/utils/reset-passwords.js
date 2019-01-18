@@ -21,7 +21,10 @@ execute(async ({ db }) => {
             $set: { password: hash }
         }),
         db.collection('organismes').updateMany({ passwordHash: { $ne: null } }, {
-            $set: { passwordHash: hash }
+            $set: {
+                'meta.rehashed': true,
+                'passwordHash': hash,
+            }
         }),
     ]);
 });

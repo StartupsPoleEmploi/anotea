@@ -9,7 +9,7 @@ execute(async ({ db }) => {
         $rename: { answer: 'answer_renamed_temp' },
     });
 
-    await db.collection('comment').updateMany({ answer_renamed_temp: { $exists: true } }, {
+    return db.collection('comment').updateMany({ answer_renamed_temp: { $exists: true } }, {
         $unset: { answered: '' },
         $rename: { answer_renamed_temp: 'answer.text' },
         $set: {
