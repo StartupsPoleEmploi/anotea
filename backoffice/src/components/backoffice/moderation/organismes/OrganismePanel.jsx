@@ -46,21 +46,25 @@ export default class OrganismePanel extends React.PureComponent {
                 <h1 className="title">Gestion des organismes</h1>
             }
             toolbar={
-                <div className="input-group">
-                    <input
-                        type="text"
-                        className="searchField form-control"
-                        placeholder="SIRET"
-                        value={this.state.siret}
-                        onChange={e => this.setState({ siret: e.target.value })}
-                        onKeyPress={e => e.key === 'Enter' && this.searchOrganisation()} />
+                <nav className="nav">
+                    <li className="nav-item">
+                        <div className="input-group nav-search">
+                            <input
+                                type="text"
+                                className="searchField form-control"
+                                placeholder="SIRET"
+                                value={this.state.siret}
+                                onChange={e => this.setState({ siret: e.target.value })}
+                                onKeyPress={e => e.key === 'Enter' && this.searchOrganisation()} />
 
-                    <div className="input-group-append">
-                        <button className="btn btn-outline-primary" onClick={this.searchOrganisation}>
-                            <span className="fas fa-search" /> Chercher
-                        </button>
-                    </div>
-                </div>
+                            <div className="input-group-append">
+                                <button className="btn btn-outline-primary" onClick={this.searchOrganisation}>
+                                    <span className="fas fa-search" /> Chercher
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </nav>
             }
             results={
                 this.state.loading ?
