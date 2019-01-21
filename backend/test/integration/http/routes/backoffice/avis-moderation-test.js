@@ -1,5 +1,6 @@
 const request = require('supertest');
 const assert = require('assert');
+const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../helpers/test-server');
 const { newComment, newTrainee } = require('../../../../helpers/data/dataset');
 
@@ -179,7 +180,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         });
     });
 
-    it('should return inventory', async () => {
+    it('should return inventory in meta', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -200,6 +201,24 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
             published: 1,
             all: 2
         });
+    });
+
+    it.only('can update an avis', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/edit`)
+        .send({ text: 'New message' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.editedComment.text, 'New message');
     });
 
     it('can not search avis when not authenticated', async () => {

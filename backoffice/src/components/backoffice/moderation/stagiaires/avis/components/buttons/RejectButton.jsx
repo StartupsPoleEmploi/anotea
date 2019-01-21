@@ -16,6 +16,11 @@ export default class RejectButton extends React.Component {
         this.props.onChange(updated);
     };
 
+    getExtraClasses = () => {
+        let classes = this.props.buttonClassName || '';
+        return `${classes} ${this.props.avis.rejected ? 'disabled' : ''}`;
+    };
+
     render() {
         let { avis } = this.props;
 
@@ -23,7 +28,7 @@ export default class RejectButton extends React.Component {
             <div className="RejectButton btn-group">
                 <button
                     type="button"
-                    className={`btn btn-sm dropdown-toggle ${this.props.buttonClassName || ''}`}
+                    className={`btn btn-sm dropdown-toggle ${this.getExtraClasses()}`}
                     data-toggle="dropdown">
                     <i className="far fa-times-circle" />
                 </button>

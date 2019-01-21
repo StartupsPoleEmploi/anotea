@@ -257,17 +257,13 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
             });
     });
 
-    router.post('/backoffice/avis/:id/update', checkAuth, checkProfile('moderateur'), (req, res) => {
+    router.put('/backoffice/avis/:id/edit', checkAuth, checkProfile('moderateur'), (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+
         db.collection('comment').findOneAndUpdate(
             { _id: id },
             {
                 $set: {
-                    'reported': false,
-                    'moderated': true,
-                    'published': true,
-                    'rejected': false,
-                    'qualification': req.body.qualification,
                     'editedComment': { text: req.body.text, date: new Date() },
                     'lastModerationAction': new Date()
                 }

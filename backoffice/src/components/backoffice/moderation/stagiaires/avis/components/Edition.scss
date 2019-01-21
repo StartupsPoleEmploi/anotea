@@ -7,9 +7,13 @@
     @include edition-button($color-red);
   }
 
-  button.publish {
+  .publish {
     margin-bottom: 0;
-    @include edition-button($color-green);
+    @include dropdown();
+
+    button {
+      @include edition-button($color-green);
+    }
   }
 
 }
