@@ -12,7 +12,7 @@ module.exports = ({ db, logger, createJWTAuthMiddleware, checkProfile }) => {
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
-    router.post('/backoffice/advice/:id/answer', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.post('/backoffice/avis/:id/answer', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         if (!ObjectID.isValid(req.params.id)) {
             throw Boom.badRequest('Identifiant invalide');
@@ -27,7 +27,7 @@ module.exports = ({ db, logger, createJWTAuthMiddleware, checkProfile }) => {
                     text: text,
                     status: 'published', //TODO set to published for the moment
                 },
-                read: true
+                read: true,
             }
         });
 
@@ -44,7 +44,7 @@ module.exports = ({ db, logger, createJWTAuthMiddleware, checkProfile }) => {
         }
     }));
 
-    router.delete('/backoffice/advice/:id/answer', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/avis/:id/answer', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         if (!ObjectID.isValid(req.params.id)) {
             throw Boom.badRequest('Identifiant invalide');
