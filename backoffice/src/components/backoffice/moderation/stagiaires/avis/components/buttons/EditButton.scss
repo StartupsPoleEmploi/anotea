@@ -1,7 +1,6 @@
 @import '../../../../../../../styles/variables';
-@import './Button.scss';
+@import '../../../../../common/Button';
 
 .Avis .EditButton {
-  @include action-button($color-blue, $color-blue-10, $color-blue-60);
+  @include worflow-button($color-blue, $color-blue-10, $color-blue-60);
 }
-

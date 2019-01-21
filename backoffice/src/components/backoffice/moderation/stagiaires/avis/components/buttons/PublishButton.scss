@@ -1,12 +1,12 @@
 @import '../../../../../../../styles/variables';
-@import './Button.scss';
+@import '../../../../../common/Button';
 
 .Avis .PublishButton {
 
   @include dropdown();
 
   button {
-    @include action-button($color-green, $color-green-10, $color-green-60);
+    @include worflow-button($color-green, $color-green-10, $color-green-60);
   }
 
 }

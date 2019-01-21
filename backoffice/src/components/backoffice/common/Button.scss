@@ -1,6 +1,6 @@
-@import '../../../../../../../styles/variables';
+@import '../../../styles/variables';
 
-@mixin action-button($text-color, $background-color, $active-color) {
+@mixin worflow-button($text-color, $background-color, $active-color) {
   margin-bottom: 0.7rem;
   padding: 0.5rem 1rem;
   border-radius: 0.2rem !important;
