@@ -30,7 +30,7 @@ class AvisSearchBuilder {
         if (filter !== 'all') {
             this.withComment();
         }
-        this.sort = filter === 'all' ? { date: -1 } : { lastModerationAction: 1 };
+        this.sort = filter === 'all' ? { date: -1 } : { lastModerationAction: -1 };
     }
 
     async withEmail(email) {
