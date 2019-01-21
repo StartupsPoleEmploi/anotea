@@ -25,20 +25,20 @@ const Status = ({ avis }) => {
 
     if (avis.published) {
         return (
-            <span className="status badge badge-success published">
-                <span>Publié le </span>
-                <PrettyDate date={new Date(avis.lastModerationAction)} />
+            <span className="status published">
+                (<span>Publié le </span>
+                <PrettyDate date={new Date(avis.lastModerationAction)} />)
             </span>
         );
     } else if (avis.rejected) {
         return (
-            <span className="status badge badge-danger rejected">
-                <span>Rejeté le </span>
-                <PrettyDate date={new Date(avis.lastModerationAction)} />
+            <span className="status rejected">
+                (<span>Rejeté le </span>
+                <PrettyDate date={new Date(avis.lastModerationAction)} />)
             </span>
         );
     } else if (!avis.moderated) {
-        return (<span className="status badge badge-warning toModerate">A modérer</span>);
+        return (<span className="status toModerate">(&Agrave; modérer)</span>);
     }
     return (<span />);
 
@@ -77,15 +77,16 @@ export default class Stagiaire extends React.Component {
                     <i className={`far ${avis.pseudoMasked ? 'fa-eye' : 'fa-eye-slash'} togglable mr-2`}
                        onClick={this.toggle} />
                     }
-
-                    <span className="float-right d-none d-lg-block">
-                        {this.props.showStatus &&
-                        <Status avis={avis} />
-                        }
-                    </span>
                 </div>
 
-                <div className="creation">le <PrettyDate date={new Date(avis.date)} /></div>
+                <div className="creation">
+                    le <PrettyDate date={new Date(avis.date)} /> &nbsp;
+                    {
+                        this.props.showStatus && (avis.rejected || avis.published) &&
+                        <Status avis={avis} />
+                    }
+
+                </div>
             </div>
         );
     }
