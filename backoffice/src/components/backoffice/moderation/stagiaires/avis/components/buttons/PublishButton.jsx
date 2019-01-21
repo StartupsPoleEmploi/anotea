@@ -9,18 +9,18 @@ export default class PublishButton extends React.Component {
         avis: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
         buttonClassName: PropTypes.string,
-        label: PropTypes.string,
-        beforePublish: PropTypes.func,
     };
 
     publish = async qualification => {
         let { avis } = this.props;
 
-        if (this.props.beforePublish) {
-            await this.props.beforePublish(avis);
-        }
-        let updated = publishAvis(avis._id, qualification);
+        let updated = await publishAvis(avis._id, qualification);
         this.props.onChange(updated);
+    };
+
+    getExtraClasses = () => {
+        let classes = this.props.buttonClassName || '';
+        return `${classes} ${this.props.avis.published ? 'disabled' : ''}`;
     };
 
     render() {
@@ -29,9 +29,9 @@ export default class PublishButton extends React.Component {
             <div className="PublishButton btn-group">
                 <button
                     type="button"
-                    className={`btn btn-sm dropdown-toggle ${this.props.buttonClassName || ''}`}
+                    className={`btn btn-sm dropdown-toggle ${this.getExtraClasses()}`}
                     data-toggle="dropdown">
-                    <i className="far fa-check-circle" /> {this.props.label}
+                    <i className="far fa-check-circle" />
                 </button>
                 <div className="dropdown-menu">
                     <h6 className="dropdown-header">Valider et tagguer comme</h6>

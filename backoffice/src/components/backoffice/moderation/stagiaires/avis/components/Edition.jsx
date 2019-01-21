@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PublishButton from './buttons/PublishButton';
-import { editAvis } from '../../../../../../lib/avisService';
+import { editAvis, publishAvis } from '../../../../../../lib/avisService';
 import './Edition.scss';
 
 export default class Edition extends React.Component {
@@ -20,13 +19,14 @@ export default class Edition extends React.Component {
         };
     }
 
-    edit = async (avis, qualification) => {
-        return editAvis(avis._id, this.state.text, qualification);
+    publish = async (avis, qualification) => {
+        await editAvis(avis._id, this.state.text, qualification);
+        let updated = await publishAvis(avis._id, qualification);
+        this.props.onClose();
+        this.props.onChange(updated);
     };
 
     render() {
-        let { avis, onClose, onChange } = this.props;
-
         return (
             <div className="Edition">
                 <textarea
@@ -36,17 +36,25 @@ export default class Edition extends React.Component {
                     value={this.state.text} />
 
                 <div className="mt-1 pt-0 d-flex justify-content-end">
-                    <button type="button" className="cancel" onClick={onClose}>
+                    <button type="button" className="cancel" onClick={this.props.onClose}>
                         <i className={`far fa-times-circle`} /> Annuler
                     </button>
 
-                    <PublishButton
-                        avis={avis}
-                        onChange={avis => onClose() && onChange(avis)}
-                        label="Valider et Publier"
-                        buttonClassName="publish"
-                        beforePublish={this.edit}
-                    />
+                    <div className="btn-group publish">
+                        <button type="button" className={`dropdown-toggle`} data-toggle="dropdown">
+                            <i className="far fa-check-circle" /> Valider et Publier
+                        </button>
+                        <div className="dropdown-menu">
+                            <h6 className="dropdown-header">Valider et tagguer comme</h6>
+                            <a className="dropdown-item" onClick={() => this.publish('négatif')}>
+                                <i className="far fa-thumbs-down icon" /> Négatif
+                            </a>
+                            <div className="dropdown-divider" />
+                            <a className="dropdown-item" onClick={() => this.publish('positif')}>
+                                <i className="far fa-thumbs-up icon" /> Positif ou neutre
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
