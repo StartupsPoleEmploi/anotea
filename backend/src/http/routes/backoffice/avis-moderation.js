@@ -287,7 +287,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
             });
     });
 
-    router.get('/backoffice/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { sendVotreAvisEmail } = mailing;
 
         const parameters = await Joi.validate(req.params, {
@@ -310,10 +310,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
             throw Boom.notFound('Stagiaire introuvable');
         }
 
-        await Promise.all([
-            db.collection('comment').removeOne({ _id: new ObjectID(parameters.id) }),
-            sendVotreAvisEmail(trainee),
-        ]);
+        await sendVotreAvisEmail(trainee);
 
         res.json({ 'message': 'trainee email resent' });
     }));

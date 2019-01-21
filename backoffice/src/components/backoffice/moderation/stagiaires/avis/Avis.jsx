@@ -9,13 +9,15 @@ import RejectButton from './components/buttons/RejectButton';
 import EditButton from './components/buttons/EditButton';
 import Edition from './components/Edition';
 import Notes from './components/Notes';
+import ResendButton from './components/buttons/ResendButton';
+import DeleteButton from './components/buttons/DeleteButton';
 import './Avis.scss';
 
 export default class Avis extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        showStatus: PropTypes.bool,
+        options: PropTypes.object,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -51,7 +53,7 @@ export default class Avis extends React.Component {
                                     className="mb-3"
                                     avis={avis}
                                     onChange={onChange}
-                                    showStatus={this.props.showStatus} />
+                                    showStatus={this.props.options.showStatus} />
 
                                 <Titre avis={avis} onChange={onChange} className="mb-1" />
 
@@ -66,11 +68,7 @@ export default class Avis extends React.Component {
                                     <Notes avis={avis} />
                                 </div>
 
-                                <div className="mt-2 d-none d-lg-block">
-
-                                </div>
                             </div>
-
                             {
                                 avis.comment &&
                                 <div className="col-1 pr-0">
@@ -81,6 +79,18 @@ export default class Avis extends React.Component {
                                     </div>
                                 </div>
                             }
+                        </div>
+                        <div className="row justify-content-end stagiaire-actions">
+                            <div className="col-8 pr-0 mt-3 d-none d-lg-block">
+                                {
+                                    this.props.options.showDeleteButton &&
+                                    <DeleteButton avis={avis} onChange={onChange}/>
+                                }
+                                {
+                                    this.props.options.showResendButton &&
+                                    <ResendButton avis={avis} />
+                                }
+                            </div>
                         </div>
                     </div>
 

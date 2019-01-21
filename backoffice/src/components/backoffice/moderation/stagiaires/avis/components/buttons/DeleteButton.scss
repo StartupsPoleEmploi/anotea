@@ -1,0 +1,7 @@
+@import '../../../../../../../styles/variables';
+@import '../../../../../../../styles/button-mixins';
+
+.Avis .DeleteButton {
+  @include action-button($color-white, $color-red);
+}
+

@@ -95,10 +95,15 @@ class StagiairesPanel extends React.Component {
                                             <div className="col-sm-12">
                                                 <Avis
                                                     avis={avis}
-                                                    showStatus={parameters.filter === 'all'}
+                                                    options={{
+                                                        showStatus: parameters.filter === 'all',
+                                                        showResendButton: !!parameters.query,
+                                                        showDeleteButton: !!parameters.query,
+                                                    }}
                                                     onChange={() => {
                                                         this.search({ silent: true });
-                                                    }} />
+                                                    }}>
+                                                </Avis>
                                             </div>
                                         </div>
                                     );
