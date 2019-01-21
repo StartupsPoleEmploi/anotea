@@ -1,0 +1,12 @@
+@import '../../../../../../../styles/variables';
+@import './Button.scss';
+
+.Avis .RejectButton {
+
+  @include dropdown();
+
+  button {
+    @include action-button($color-red, $color-red-10, $color-red-60);
+  }
+}
+

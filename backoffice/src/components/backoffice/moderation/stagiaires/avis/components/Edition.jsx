@@ -35,16 +35,16 @@ export default class Edition extends React.Component {
                     onChange={e => this.setState({ text: e.target.value })}
                     value={this.state.text} />
 
-                <div className="mt-1 actions">
-                    <button type="button" className="action btn btn-sm mr-2 action cancel" onClick={onClose}>
+                <div className="mt-1 pt-0 d-flex justify-content-end">
+                    <button type="button" className="cancel" onClick={onClose}>
                         <i className={`far fa-times-circle`} /> Annuler
                     </button>
 
                     <PublishButton
-                        buttonClassName="action publish"
                         avis={avis}
                         onChange={avis => onClose() && onChange(avis)}
                         label="Valider et Publier"
+                        buttonClassName="publish"
                         beforePublish={this.update}
                     />
                 </div>
