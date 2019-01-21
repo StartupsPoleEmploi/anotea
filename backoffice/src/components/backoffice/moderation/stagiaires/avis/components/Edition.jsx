@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PublishButton from './buttons/PublishButton';
-import { updateAvis } from '../../../../../../lib/avisService';
+import { editAvis } from '../../../../../../lib/avisService';
 import './Edition.scss';
 
 export default class Edition extends React.Component {
@@ -20,8 +20,8 @@ export default class Edition extends React.Component {
         };
     }
 
-    update = async (avis, qualification) => {
-        return updateAvis(avis._id, this.state.text, qualification);
+    edit = async (avis, qualification) => {
+        return editAvis(avis._id, this.state.text, qualification);
     };
 
     render() {
@@ -45,7 +45,7 @@ export default class Edition extends React.Component {
                         onChange={avis => onClose() && onChange(avis)}
                         label="Valider et Publier"
                         buttonClassName="publish"
-                        beforePublish={this.update}
+                        beforePublish={this.edit}
                     />
                 </div>
             </div>
