@@ -18,7 +18,7 @@ const Panel = ({ className, header, toolbar, results }) => {
 
             <div className="content">
                 <div className="container">
-                    <div className="filters sticky-top nav-fill">
+                    <div className="toolbar sticky-top nav-fill">
                         {toolbar}
                     </div>
                     <div className="results">

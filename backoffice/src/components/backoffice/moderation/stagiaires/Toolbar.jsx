@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import './Toolbar.scss';
 
 export default class Toolbar extends React.Component {
 
@@ -18,7 +17,7 @@ export default class Toolbar extends React.Component {
         };
     }
 
-    createFilter = (filter, label, options = {}) => {
+    createTab = (filter, label, options = {}) => {
         let nbElements = _.get(this.props.inventory, filter);
         let searchMode = !!this.state.searchInputValue;
         let pastille = options.showPastille && !searchMode && nbElements > 0 ?
@@ -42,7 +41,7 @@ export default class Toolbar extends React.Component {
         let submit = () => this.props.onChange({ filter: 'all', query: this.state.searchInputValue });
 
         return (
-            <div className="d-flex align-items-center search">
+            <div className="d-flex align-items-center nav-search">
                 <div className="input-group">
                     <div className="input-group-prepend">
                         <div className="input-group-text"><i className="fas fa-search" /></div>
@@ -71,10 +70,8 @@ export default class Toolbar extends React.Component {
                     }
 
                 </div>
-                <button
-                    className="btn"
-                    type="search"
-                    onClick={() => submit()}>Rechercher
+                <button className="btn" type="search" onClick={() => submit()}>
+                    Rechercher
                 </button>
             </div>
         );
@@ -82,16 +79,14 @@ export default class Toolbar extends React.Component {
 
     render() {
         return (
-            <div className="Filters">
-                <nav className="nav">
-                    {this.createFilter('toModerate', 'À modérer', { showPastille: true })}
-                    {this.createFilter('published', 'Publiés')}
-                    {this.createFilter('rejected', 'Rejetés')}
-                    {this.createFilter('reported', 'Signalés', { showPastille: true })}
-                    {this.createFilter('all', 'Tous')}
-                    <li className="nav-item">{this.createSearchInput()}</li>
-                </nav>
-            </div>
+            <nav className="nav">
+                {this.createTab('toModerate', 'À modérer', { showPastille: true })}
+                {this.createTab('published', 'Publiés')}
+                {this.createTab('rejected', 'Rejetés')}
+                {this.createTab('reported', 'Signalés', { showPastille: true })}
+                {this.createTab('all', 'Tous')}
+                <li className="nav-item">{this.createSearchInput()}</li>
+            </nav>
         );
     }
 }
