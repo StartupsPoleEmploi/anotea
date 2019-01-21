@@ -37,21 +37,20 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { filter, query, order, page } = await Joi.validate(req.query, {
+        let { filter, query, page } = await Joi.validate(req.query, {
             filter: Joi.string().default('all'),
             query: Joi.string().allow('').default(''),
-            order: Joi.string(),
             page: Joi.number().default(0),
         }, { abortEarly: false });
 
 
-        let builder = new AvisSearchBuilder(db, codeRegion, itemsPerPage);
+        let builder = new AvisSearchBuilder(db, itemsPerPage, codeRegion);
+
         if (query) {
             let isEmail = query.indexOf('@') !== -1;
             await (isEmail ? builder.withEmail(query) : builder.withFullText(query));
         }
         builder.withFilter(filter);
-        builder.sortBy(order);
         builder.page(page);
 
         let cursor = builder.search();
