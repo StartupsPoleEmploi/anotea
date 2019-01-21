@@ -92,6 +92,7 @@ module.exports = components => {
     app.use('/api', require('./routes/backoffice/forgottenPassword')(httpComponents));
     app.use('/api', require('./routes/backoffice/avis-moderation')(httpComponents));
     app.use('/api', require('./routes/backoffice/avis-organismes')(httpComponents));
+    app.use('/api', require('./routes/backoffice/export')(httpComponents));
     app.use('/api', require('./routes/backoffice/organisation')(httpComponents));
     app.use('/api', require('./routes/backoffice/editCourriel')(httpComponents));
     app.use('/api', require('./routes/backoffice/financer')(httpComponents));
