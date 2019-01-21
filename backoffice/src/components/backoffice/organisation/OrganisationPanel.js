@@ -380,8 +380,7 @@ export default class OrganisationPanel extends React.Component {
                                                         <div className="actions">
                                                             <button className="btn btn-success btn-sm"
                                                                 onClick={this.handleDoReply.bind(this, advice._id)}>
-                                                                <span className="fas comment-alt"/> Valider
-                                                                la réponse
+                                                                <span className="fas comment-alt"/> Valider la réponse
                                                             </button>
                                                             {advice.answer &&
                                                             <button className="btn btn-danger btn-sm"

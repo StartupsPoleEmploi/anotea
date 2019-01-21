@@ -13,7 +13,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         await insertIntoDatabase('comment', comment);
 
         let response = await request(app)
-        .post(`/api/backoffice/advice/${comment._id}/answer`)
+        .post(`/api/backoffice/avis/${comment._id}/answer`)
         .set('authorization', `Bearer ${token}`)
         .send({ answer: 'Voici notre réponse' });
 
@@ -44,7 +44,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         await insertIntoDatabase('comment', comment);
 
         let response = await request(app)
-        .delete(`/api/backoffice/advice/${comment._id}/answer`)
+        .delete(`/api/backoffice/avis/${comment._id}/answer`)
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 200);
@@ -64,7 +64,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
 
         let response = await request(app)
-        .post(`/api/backoffice/advice/12345/answer`)
+        .post(`/api/backoffice/avis/12345/answer`)
         .set('authorization', `Bearer ${token}`)
         .send({ answer: 'Voici notre réponse' });
 
