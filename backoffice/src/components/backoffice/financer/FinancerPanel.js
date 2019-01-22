@@ -60,7 +60,8 @@ export default class FinancerPanel extends React.Component {
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
         codeFinanceur: PropTypes.string.isRequired,
-        profile: PropTypes.string.isRequired
+        profile: PropTypes.string.isRequired,
+        features: PropTypes.string.isRequired
     }
 
     constructor(props) {
@@ -377,7 +378,7 @@ export default class FinancerPanel extends React.Component {
         return (
             <div className="organisationPanel mainPanel">
 
-                <SideMenu onChangePage={this.handleChangePage} />
+                <SideMenu onChangePage={this.handleChangePage} features={this.props.features} />
 
                 {this.state.currentPage === 'stats' &&
                     <Dashboard codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} />

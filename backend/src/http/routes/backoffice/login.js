@@ -47,7 +47,8 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
             id: organisme.meta.siretAsString,
             codeRegion: organisme.codeRegion,
             raisonSociale: organisme.raisonSociale,
-            siret: organisme.meta.siretAsString
+            siret: organisme.meta.siretAsString,
+            features: organisme.features
         });
     };
 
@@ -75,7 +76,8 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
             profile: 'financer',
             id: financer._id,
             codeRegion: financer.codeRegion,
-            codeFinanceur: financer.codeFinanceur
+            codeFinanceur: financer.codeFinanceur,
+            features: financer.features
         });
     };
 

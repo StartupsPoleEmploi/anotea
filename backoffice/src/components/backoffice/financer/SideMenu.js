@@ -6,16 +6,24 @@ import './sideMenu.css';
 export default class SideMenu extends React.PureComponent {
 
     state = {
-        currentPage: 'advices'
+        currentPage: 'advices',
+        features: []
     }
 
     static propTypes = {
-        onChangePage: PropTypes.func.isRequired
+        onChangePage: PropTypes.func.isRequired,
+        features: PropTypes.string.isRequired
     }
 
     changePage = page => {
         this.setState({ currentPage: page });
         this.props.onChangePage(page);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.features) {
+            this.setState({ features: nextProps.features });
+        }
     }
 
     render() {
@@ -28,7 +36,9 @@ export default class SideMenu extends React.PureComponent {
                     </button>
                     <div className="dropdown-menu">
                         <button className={`"dropdown-item ${this.state.currentPage === 'advices' ? 'active' : ''}`} onClick={this.changePage.bind(this, 'advices')}>Avis</button>
-                        <button className={`"dropdown-item ${this.state.currentPage === 'stats' ? 'active' : ''}`} onClick={this.changePage.bind(this, 'stats')}>Statistiques</button>
+                        { this.state.features.includes('STATS_FINANCEUR') &&
+                            <button className={`"dropdown-item ${this.state.currentPage === 'stats' ? 'active' : ''}`} onClick={this.changePage.bind(this, 'stats')}>Statistiques</button>
+                        }
                     </div>
                 </div>
             </div>
