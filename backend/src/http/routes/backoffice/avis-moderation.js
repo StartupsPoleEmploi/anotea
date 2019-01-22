@@ -18,14 +18,12 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
     };
 
     const sendEmailAsync = (trainee, comment, reason) => {
-        let contact = trainee.trainee.email;
-        if (reason === 'non concerné') {
-            mailer.sendAvisHorsSujetMail({ to: contact }, trainee, comment, () => {
-                logger.info(`email sent to ${contact}`, reason);
-            }, err => {
-                logger.error(`Unable to send email to ${contact}`, err);
-            });
-        }
+      let contact = trainee.trainee.email;
+          mailer.sendInjureMail({ to: contact }, trainee, comment, () => {
+              logger.info(`email sent to ${contact} pour`, reason);
+          }, err => {
+              logger.error(`Unable to send email to ${contact}`, err);
+          });
     };
 
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
@@ -168,37 +166,54 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
 
     router.post('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+        const rejectReason = req.body.reason;
+        let comment = await db.collection('comment').findOne({ _id: id });
+        let trainee = await db.collection('trainee').findOne({ token: comment.token });
 
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            {
-                $set: {
-                    reported: false,
-                    moderated: true,
-                    rejected: true,
-                    published: false,
-                    rejectReason: req.body.reason,
-                    lastModerationAction: new Date()
-                }
-            },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    //sendEmailAsync(trainee, comment, reason);
-                    saveEvent(id, 'reject', {
-                        app: 'moderation',
-                        user: 'admin',
-                        profile: 'moderateur',
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
+        if (rejectReason !== 'injure') {
+            db.collection('comment').findOneAndUpdate(
+                { _id: id },
+                {
+                    $set: {
+                        reported: false,
+                        moderated: true,
+                        rejected: true,
+                        published: false,
+                        rejectReason: req.body.reason,
+                        lastModerationAction: new Date()
+                    }
+                },
+                { returnOriginal: false },
+                (err, result) => {
+                    if (err) {
+                        logger.error(err);
+                        res.status(500).send({ 'error': 'An error occurs' });
+                    } else if (result.value) {
+                        saveEvent(id, 'reject', {
+                            app: 'moderation',
+                            user: 'admin',
+                            profile: 'moderateur',
+                            ip: getRemoteAddress(req)
+                        });
+                        res.json(result.value);
+                    } else {
+                        res.status(404).send({ 'error': 'Not found' });
+                    }
+                });
+        } else if (rejectReason === 'injure') {
+            sendEmailAsync(trainee, comment, rejectReason);
+            db.collection('comment').deleteOne(
+                { _id: id },
+                (err) => {
+                    if (err) {
+                        logger.error(err);
+                        res.status(500).send({ 'error': 'An error occurs' });
+                    } else {
+                        res.status(404).send({ 'error': 'Not found' });
+                    }
+                });
+        }
+
     }));
 
     router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
