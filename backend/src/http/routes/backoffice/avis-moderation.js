@@ -18,11 +18,11 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
     };
 
     const sendEmailAsync = (trainee, comment, reason) => {
-      let contact = trainee.trainee.email;
-          mailer.sendInjureMail({ to: contact }, trainee, comment, () => {
-              logger.info(`email sent to ${contact} pour`, reason);
+      let stagiaireEmail = trainee.trainee.email;
+          mailer.sendInjureMail({ to: stagiaireEmail }, trainee, comment, () => {
+              logger.info(`email sent to ${stagiaireEmail} pour`, reason);
           }, err => {
-              logger.error(`Unable to send email to ${contact}`, err);
+              logger.error(`Unable to send email to ${stagiaireEmail}`, err);
           });
     };
 
@@ -205,9 +205,17 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
             db.collection('comment').deleteOne(
                 { _id: id },
                 (err) => {
-                    if (err) {
+                    if (err, result) {
                         logger.error(err);
                         res.status(500).send({ 'error': 'An error occurs' });
+                      } else if (result.value) {
+                          saveEvent(id, 'delete', {
+                              app: 'moderation',
+                              user: 'admin',
+                              profile: 'moderateur',
+                              ip: getRemoteAddress(req)
+                          });
+                          res.status(200).send({ 'message': 'advice deleted' });
                     } else {
                         res.status(404).send({ 'error': 'Not found' });
                     }
