@@ -82,7 +82,7 @@ export default class Stagiaire extends React.Component {
                 <div className="creation">
                     le <PrettyDate date={new Date(avis.date)} /> &nbsp;
                     {
-                        this.props.showStatus && (avis.rejected || avis.published) &&
+                        this.props.showStatus &&
                         <Status avis={avis} />
                     }
 

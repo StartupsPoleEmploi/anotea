@@ -7,7 +7,7 @@ import Loader from '../../common/Loader';
 import Panel from '../../common/Panel';
 import Summary from './Summary';
 import { Pagination } from '../../common/Pagination';
-import Avis from './avis';
+import Avis from './avis/Avis';
 
 class StagiairesPanel extends React.Component {
 

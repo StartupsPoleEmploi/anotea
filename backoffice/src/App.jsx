@@ -16,8 +16,7 @@ import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerationRoutes from './components/backoffice/moderation/ModerationRoutes';
 import './utils/moment-fr';
-import './styles/anotea-deprecated.scss';
-import './styles/anotea.scss';
+import './App.scss';
 
 addLocaleData([...fr]);
 
