@@ -14,9 +14,4 @@ execute(async ({ db }) => {
     await db.collection('comment').updateMany({ 'comment': null }, {
         $unset: { 'comment': 1 },
     });
-
-    //Downgrade invalid steps
-    await db.collection('comment').updateMany({ 'step': 3, 'comment': { $exists: false } }, {
-        $set: { 'step': 2 },
-    });
 });
