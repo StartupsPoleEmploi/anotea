@@ -19,9 +19,9 @@ export default class Edition extends React.Component {
         };
     }
 
-    publish = async (avis, qualification) => {
-        await editAvis(avis._id, this.state.text, qualification);
-        let updated = await publishAvis(avis._id, qualification);
+    publish = async (qualification) => {
+        await editAvis(this.props.avis._id, this.state.text);
+        let updated = await publishAvis(this.props.avis._id, qualification);
         this.props.onClose();
         this.props.onChange(updated);
     };
