@@ -62,9 +62,8 @@ export const removeAvisAnswer = id => {
     return _delete(`/backoffice/avis/${id}/answer`);
 };
 
-export const editAvis = (id, text, qualification) => {
+export const editAvis = (id, text) => {
     return _put(`/backoffice/avis/${id}/edit`, {
         text,
-        qualification
     });
 };
