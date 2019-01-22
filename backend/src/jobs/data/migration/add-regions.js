@@ -2,7 +2,6 @@
 'use strict';
 
 const { execute } = require('../../job-utils');
-const createIndexes = require('../indexes/allIndexes');
 
 execute(async ({ db }) => {
 
@@ -10,7 +9,7 @@ execute(async ({ db }) => {
 
     await regions.remove({});
 
-    await Promise.all([
+    return Promise.all([
         regions.insertOne({ codeINSEE: '2', codeRegion: '13', nom: 'Martinique' }),
         regions.insertOne({ codeINSEE: '3', codeRegion: '9', nom: 'Guyane' }),
         regions.insertOne({ codeINSEE: '4', codeRegion: '12', nom: 'La Réunion' }),
@@ -29,6 +28,4 @@ execute(async ({ db }) => {
         regions.insertOne({ codeINSEE: '76', codeRegion: '16', nom: 'Occitanie' }),
         regions.insertOne({ codeINSEE: '44', codeRegion: '7', nom: 'Grand-Est' }),
     ]);
-
-    return createIndexes(db);
 });
