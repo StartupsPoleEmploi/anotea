@@ -170,58 +170,44 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
         let comment = await db.collection('comment').findOne({ _id: id });
         let trainee = await db.collection('trainee').findOne({ token: comment.token });
 
-        if (rejectReason !== 'injure') {
-            db.collection('comment').findOneAndUpdate(
-                { _id: id },
-                {
-                    $set: {
-                        reported: false,
-                        moderated: true,
-                        rejected: true,
-                        published: false,
-                        rejectReason: req.body.reason,
-                        lastModerationAction: new Date()
-                    }
-                },
-                { returnOriginal: false },
-                (err, result) => {
-                    if (err) {
-                        logger.error(err);
-                        res.status(500).send({ 'error': 'An error occurs' });
-                    } else if (result.value) {
-                        saveEvent(id, 'reject', {
-                            app: 'moderation',
-                            user: 'admin',
-                            profile: 'moderateur',
-                            ip: getRemoteAddress(req)
-                        });
-                        res.json(result.value);
-                    } else {
-                        res.status(404).send({ 'error': 'Not found' });
-                    }
-                });
-        } else if (rejectReason === 'injure') {
-            sendEmailAsync(trainee, comment, rejectReason);
-            db.collection('comment').deleteOne(
-                { _id: id },
-                (err) => {
-                    if (err, result) {
-                        logger.error(err);
-                        res.status(500).send({ 'error': 'An error occurs' });
-                      } else if (result.value) {
-                          saveEvent(id, 'delete', {
-                              app: 'moderation',
-                              user: 'admin',
-                              profile: 'moderateur',
-                              ip: getRemoteAddress(req)
-                          });
-                          res.status(200).send({ 'message': 'advice deleted' });
-                    } else {
-                        res.status(404).send({ 'error': 'Not found' });
-                    }
-                });
-        }
-
+        db.collection('comment').findOneAndUpdate(
+            { _id: id },
+            {
+                $set: {
+                    reported: false,
+                    moderated: true,
+                    rejected: true,
+                    published: false,
+                    rejectReason: req.body.reason,
+                    lastModerationAction: new Date()
+                }
+            },
+            { returnOriginal: false },
+            (err, result) => {
+                if (err) {
+                    logger.error(err);
+                    res.status(500).send({ 'error': 'An error occurs' });
+                } else if (result.value && rejectReason !== 'injure') {
+                    saveEvent(id, 'reject', {
+                        app: 'moderation',
+                        user: 'admin',
+                        profile: 'moderateur',
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else if (result.value && rejectReason === 'injure') {
+                  sendEmailAsync(trainee, comment, rejectReason);
+                    saveEvent(id, 'delete', {
+                        app: 'moderation',
+                        user: 'admin',
+                        profile: 'moderateur',
+                        ip: getRemoteAddress(req)
+                    });
+                    res.json(result.value);
+                } else {
+                    res.status(404).send({ 'error': 'Not found' });
+                }
+            });
     }));
 
     router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
