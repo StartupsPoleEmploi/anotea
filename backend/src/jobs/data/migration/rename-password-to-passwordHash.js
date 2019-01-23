@@ -5,7 +5,7 @@ const { execute } = require('../../job-utils');
 
 execute(async ({ db }) => {
     await db.collection('financeur').updateMany({}, {
-        $rename: { passwordprofile: 'passwordHash' },
+        $rename: { password: 'passwordHash' },
     });
 
     await db.collection('moderator').updateMany({}, {
