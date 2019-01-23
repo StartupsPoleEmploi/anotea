@@ -6,7 +6,7 @@ const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 module.exports = ({ db, auth, logger, configuration, password }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    let { verifyPassword, getSHA256PasswordHashSync, hashPassword } = password;
+    let { checkPassword, hashPassword } = password;
 
     const logLoginEvent = (req, profile, id) => {
         return db.collection('events').insertOne({
@@ -81,11 +81,6 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         });
     };
 
-    const checkPassword = async (password, hash) => {
-        let legacyHash = getSHA256PasswordHashSync(password, configuration);
-        return await verifyPassword(password, hash) || await verifyPassword(legacyHash, hash);
-    };
-
     const rehashPassword = async (type, account, password, propertyName = 'password') => {
 
         if (account.meta && account.meta.rehashed) {
@@ -108,20 +103,20 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
 
         try {
             const moderator = await db.collection('moderator').findOne({ courriel: identifier });
-            if (moderator !== null && await checkPassword(password, moderator.password)) {
+            if (moderator !== null && await checkPassword(password, moderator.password, configuration)) {
                 await rehashPassword('moderator', moderator, password);
                 token = await handleModerator(req, res, moderator);
             }
 
             let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
 
-            if (organisme !== null && await checkPassword(password, organisme.passwordHash)) {
+            if (organisme !== null && await checkPassword(password, organisme.passwordHash, configuration)) {
                 await rehashPassword('organismes', organisme, password, 'passwordHash');
                 token = await handleOrganisme(req, res, organisme);
             }
 
             const financer = await db.collection('financer').findOne({ courriel: identifier });
-            if (financer !== null && await checkPassword(password, financer.password)) {
+            if (financer !== null && await checkPassword(password, financer.password, configuration)) {
                 await rehashPassword('financer', financer, password);
                 token = await handleFinancer(req, res, financer);
             }
