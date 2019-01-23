@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChangePassword } from './ChangePassword';
-import Panel from '../Panel';
+import Panel from '../common/Panel';
 
 export class MyAccount extends React.Component {
 

@@ -5,7 +5,7 @@ import Header from '../common/Header';
 import queryString from 'query-string';
 import OrganismePanel from './organismes/OrganismePanel';
 import StagiairesPanel from './stagiaires/StagiairesPanel';
-import { MyAccount } from '../common/account/MyAccount';
+import { MyAccount } from '../account/MyAccount';
 
 export default class ModerationRoutes extends React.Component {
 
