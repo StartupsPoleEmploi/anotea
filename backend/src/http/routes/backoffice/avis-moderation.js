@@ -197,7 +197,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
                     res.json(result.value);
                 } else if (result.value && rejectReason === 'injure') {
                   sendEmailAsync(trainee, comment, rejectReason);
-                    saveEvent(id, 'delete', {
+                    saveEvent(id, 'reject', {
                         app: 'moderation',
                         user: 'admin',
                         profile: 'moderateur',
