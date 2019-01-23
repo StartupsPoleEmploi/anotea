@@ -203,7 +203,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         });
     });
 
-    it.only('can update an avis', async () => {
+    it('can update an avis', async () => {
 
         let app = await startServer();
         const id = new ObjectID();
