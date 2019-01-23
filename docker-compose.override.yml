@@ -4,9 +4,11 @@ services:
   mongodb:
     image: mongo:4.0.4-xenial
     container_name: anotea_mongodb
+    command: --wiredTigerCacheSizeGB 1
     volumes:
       - ./.data/mongodb/db:/data/db
       - ./.data/mongodb/config:/data/configdb
+      - ./.data/backups/mongodb:/data/backups
 
   smtp:
     image: mailhog/mailhog

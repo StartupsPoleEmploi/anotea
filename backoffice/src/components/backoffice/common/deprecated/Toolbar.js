@@ -10,7 +10,7 @@ export default class Toolbar extends React.PureComponent {
     };
 
     getUrl = () => {
-        const publicUrl = process.env.PUBLIC_URL || 'http://localhost:8080';
+        const publicUrl = process.env.PUBLIC_URL ? '' : 'http://localhost:8080';
         let filters = this.props.exportFilters !== undefined ? this.props.exportFilters : '';
         return `${publicUrl}/api/backoffice/export/avis.csv${filters}&token=${getToken()}`;
     };
