@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
-const { execute } = require('../../job-utils');
-
-execute(async ({ db }) => {
-    await db.collection('financer').updateMany({}, {
-        $rename: { password: 'passwordHash' },
-    });
-
-    await db.collection('moderator').updateMany({}, {
-        $rename: { password: 'passwordHash' },
-    });
-});
+module.exports = db => {
+    return Promise.all([
+        db.collection('financer').updateMany({}, {
+            $rename: { password: 'passwordHash' },
+        }),
+        db.collection('moderator').updateMany({}, {
+            $rename: { password: 'passwordHash' },
+        }),
+    ]);
+};
