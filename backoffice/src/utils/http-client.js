@@ -2,13 +2,20 @@
 import { getToken } from '../utils/token';
 import EventEmitter from 'events';
 
+class HTTPError extends Error {
+    constructor(message, json) {
+        super(message);
+        this.json = json;
+    }
+}
+
 const baseUrl = '/api';
 const emitter = new EventEmitter();
 const handleResponse = (path, response) => {
     let statusCode = response.status;
     if (statusCode >= 400 && statusCode < 600) {
         emitter.emit('http:error', response);
-        throw new Error(`Server returned ${statusCode} when requesting resource ${path}`);
+        throw new HTTPError(`Server returned ${statusCode} when requesting resource ${path}`, response.json());
     }
     return response.json();
 };
