@@ -28,13 +28,18 @@
   background-color: $background-color;
   border-color: $background-color;
   border-radius: 5px;
-  padding: 0.875rem;
+  font-size: 0.875rem;
+  padding: 0.5rem;
   color: $text-color;
   text-transform: uppercase;
   letter-spacing: 1px;
 
   .icon {
     padding-right: 0.4rem;
+  }
+
+  &:focus {
+    outline: 0;
   }
 }
 

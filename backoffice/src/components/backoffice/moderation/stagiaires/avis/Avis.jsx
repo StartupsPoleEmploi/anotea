@@ -81,15 +81,17 @@ export default class Avis extends React.Component {
                             }
                         </div>
                         <div className="row justify-content-end stagiaire-actions">
-                            <div className="col-8 pr-0 mt-3 d-none d-lg-block">
-                                {
-                                    this.props.options.showDeleteButton &&
-                                    <DeleteButton avis={avis} onChange={onChange}/>
-                                }
-                                {
-                                    this.props.options.showResendButton &&
-                                    <ResendButton avis={avis} />
-                                }
+                            <div className="col-8 pr-0 mt-3 d-flex justify-content-end">
+                                <div className="d-none d-lg-block">
+                                    {
+                                        this.props.options.showDeleteButton &&
+                                        <DeleteButton avis={avis} onChange={onChange} />
+                                    }
+                                    {
+                                        this.props.options.showResendButton &&
+                                        <ResendButton avis={avis} />
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>

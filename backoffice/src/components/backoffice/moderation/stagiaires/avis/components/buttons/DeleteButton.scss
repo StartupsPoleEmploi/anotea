@@ -2,6 +2,8 @@
 @import '../../../../../../../styles/button-mixins';
 
 .Avis .DeleteButton {
-  @include action-button($color-white, $color-red);
+  button {
+    @include action-button($color-white, $color-red);
+  }
 }
 

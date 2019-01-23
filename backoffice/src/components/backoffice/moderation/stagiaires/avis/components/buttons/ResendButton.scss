@@ -2,6 +2,9 @@
 @import '../../../../../../../styles/button-mixins';
 
 .Avis .ResendButton {
-  @include action-button($color-white, $color-blue);
+  button {
+    @include action-button($color-white, $color-blue);
+  }
+
 }
 
