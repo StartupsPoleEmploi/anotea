@@ -1,5 +1,4 @@
 const express = require('express');
-const Boom = require('boom');
 const { ObjectID } = require('mongodb');
 const { tryAndCatch } = require('../routes-utils');
 
@@ -15,10 +14,8 @@ module.exports = ({ db, password, configuration }) => {
         let profile = req.body.profile;
 
         let collection = '';
-        let passwordKey = 'password';
         if (profile === 'organisme') {
             collection = 'organismes';
-            passwordKey = 'passwordHash';
         } else if (profile === 'financer') {
             collection = 'financer';
             id = new ObjectID(id);
@@ -29,14 +26,14 @@ module.exports = ({ db, password, configuration }) => {
 
         try {
             let user = await db.collection(collection).findOne({ _id: id });
-            if (user && await checkPassword(actualPassword, user[passwordKey], configuration)) {
+            if (user && await checkPassword(actualPassword, user.passwordHash, configuration)) {
 
                 if (isPasswordStrongEnough(password)) {
                     let passwordHash = await hashPassword(password);
                     await db.collection(collection).updateOne({ _id: id }, {
                         $set: {
                             'meta.rehashed': true,
-                            [passwordKey]: passwordHash,
+                            'passwordHash': passwordHash,
                         }
                     });
 
