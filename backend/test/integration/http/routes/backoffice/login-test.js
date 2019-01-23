@@ -96,7 +96,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let app = await startServer();
         await insertIntoDatabase('moderator', newModerateurAccount({
             //old sha256 password hash + bcrypt
-            password: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG'
+            passwordHash: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG'
         }));
 
         let response = await request(app)
@@ -111,7 +111,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let app = await startServer();
         let account = newModerateurAccount({
             //old sha256 password hash + bcrypt
-            password: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG',
+            passwordHash: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG',
             meta: {
                 rehashed: false,
             },
