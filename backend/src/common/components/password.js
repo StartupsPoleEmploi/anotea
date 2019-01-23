@@ -3,20 +3,24 @@ const bcrypt = require('bcryptjs');
 
 const ROUNDS = 10;
 
+const getSHA256PasswordHashSync = (password, configuration) => {
+    return crypto.createHmac('sha256', configuration.security.secret)
+    .update(password)
+    .digest('hex');
+};
+
+const verifyPassword = (password, hash) => {
+    return bcrypt.compare(password, hash);
+};
+
 module.exports = {
     getAlgorithm: () => `$2a$${ROUNDS}$`,
     hashPassword: async password => {
         let salt = await bcrypt.genSalt(ROUNDS);
         return bcrypt.hash(password, salt);
     },
-    verifyPassword: (password, hash) => {
-        return bcrypt.compare(password, hash);
-    },
-    getSHA256PasswordHashSync: (password, configuration) => {
-        return crypto.createHmac('sha256', configuration.security.secret)
-        .update(password)
-        .digest('hex');
-    },
+    verifyPassword: verifyPassword,
+    getSHA256PasswordHashSync: getSHA256PasswordHashSync,
     isPasswordStrongEnough: password => {
         if (password === null || password === undefined || password === '') {
             return false;
@@ -33,4 +37,8 @@ module.exports = {
         }
         return false;
     },
+    checkPassword: async (password, hash, configuration) => {
+        let legacyHash = getSHA256PasswordHashSync(password, configuration);
+        return await verifyPassword(password, hash) || await verifyPassword(legacyHash, hash);
+    }
 };
