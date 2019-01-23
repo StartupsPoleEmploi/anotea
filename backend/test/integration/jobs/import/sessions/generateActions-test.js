@@ -1,9 +1,9 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
-const generateActions = require('../../../../../lib/jobs/import/sessions/generateActions');
+const generateActions = require('../../../../../src/jobs/import/sessions/generateActions');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, insertRegions }) => {
 
     it('should generate actions from sessions', async () => {
 
@@ -27,10 +27,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
+            insertRegions(),
             insertIntoDatabase('sessionsReconciliees', {
                 _id: 'F_XX_XX|AC_XX_XXXXXX',
                 numero: 'SE_XXXXXX',
                 region: '11',
+                code_financeurs: ['2'],
                 avis: [comment],
                 score: {
                     nb_avis: 1,
@@ -71,6 +73,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
             region: '11',
+            code_financeurs: ['2'],
             avis: [comment],
             score: {
                 nb_avis: 1,

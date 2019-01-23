@@ -10,13 +10,24 @@ const MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet'
 
 const options = {
     fill: false,
-    spanGaps: false,
+    spanGaps: true,
     backgroundColor: 'rgba(75,192,192,0.4)',
     pointBorderColor: 'rgba(75,192,192,1)',
     borderColor: 'rgba(75,192,192,1)',
     pointHoverBackgroundColor: 'rgba(75,192,192,1)',
     pointHoverBorderColor: 'rgba(220,220,220,1)'
 };
+
+const chartOptions = {
+    scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true,
+                min: 0
+            }
+        }]
+    }
+}
 
 export default class Graph extends React.Component {
 
@@ -48,7 +59,14 @@ export default class Graph extends React.Component {
                 Object.assign({ label: 'Nombre d\'avis avec commentaires', data: graphData.map(item => item.countAdvicesWithComments) }, options),
                 Object.assign({ label: 'Nombre de commentaires positifs ou neutres', data: graphData.map(item => item.countAdvicesPositif) }, options),
                 Object.assign({ label: 'Nombre de commentaires négatifs', data: graphData.map(item => item.countAdvicesNegatif) }, options),
-                Object.assign({ label: 'Nombre de commentaires rejetés', data: graphData.map(item => item.countAdvicesRejected) }, options)
+                Object.assign({ label: 'Nombre de commentaires rejetés', data: graphData.map(item => item.countAdvicesRejected) }, options),
+                Object.assign({ label: 'Nombre de sessions diffusées', data: graphData.map(item => item.countSession) }, options),
+                Object.assign({ label: 'Nombre de sessions avec avis', data: graphData.map(item => item.countSessionWithAdvices) }, options),
+                Object.assign({ label: 'Nombre de sessions avec avis', data: graphData.map(item => item.countSessionWithAdvices) }, options),
+                Object.assign({ label: 'Nombre de sessions avec au moins trois avis', data: graphData.map(item => item.countSessionHavingMoreThanTwoAdvices) }, options),
+                Object.assign({ label: 'Nombre d\'organismes de formation', data: graphData.map(item => item.countOrganisme) }, options),
+                Object.assign({ label: 'Nombre d\'organismes de formation avec au moins un avis', data: graphData.map(item => item.countOrganismeWithMorethanOneAdvice) }, options),
+                Object.assign({ label: 'Nombre d\'organismes de formation connectés dans les trois derniers mois', data: graphData.map(item => item.countOrganismeLogin) }, options)
             ];
 
             this.setState({
@@ -83,7 +101,7 @@ export default class Graph extends React.Component {
         return (
             <div>
                 { this.state.isEmpty &&
-                    <Line data={this.state.graphData} />
+                    <Line data={this.state.graphData} options={chartOptions} />
                 }
             </div>
         );

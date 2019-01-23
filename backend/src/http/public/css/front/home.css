@@ -1,0 +1,525 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    font-family: Raleway;
+    font-weight: normal;
+}
+
+.login {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    width: auto;
+    padding: 0;
+    font-weight: bold;
+}
+
+.login > * {
+    display: inline-block;
+    height: 40px;
+}
+
+.login .button {
+    display: inline-block;
+    position: relative;
+    margin: 0px;
+    height: 30px;
+    padding-top: 15px;
+    top: -10px;
+    border-radius: 10px;
+    color: white;
+    background-color: #F0801A;
+    box-shadow: none;
+    border: none;
+    font-weight: bold;
+    width: 120px;
+    font-size: 0.8em;
+    margin-left: 20px;
+    text-decoration:none;
+    text-align: center;
+}
+
+h1 {
+    display: inline;
+}
+
+.logo {
+    display: block;
+    margin: 0 auto;
+    height: 100px;
+}
+
+.video {
+    width: 100%;
+    background-color: #D8D8D8;
+    margin-top: 15px;
+}
+
+.title {
+    color: #F0801A;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+    margin: auto;
+}
+
+.content-how {
+    text-align: center;
+    padding-top: 15px;
+}
+
+.content-how .nav {
+    display: none;
+    margin: auto;
+    margin-top: 20px;
+    width: 90px;
+}
+
+.content-how .nav a {
+    background-color: #F0801A;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 0px 10px 5px 10px;
+    font-size: 2em;
+}
+
+.content-how ul {
+    list-style: none;
+    text-align: center;
+    padding: 0px;
+    margin: auto;
+}
+
+.content-how li {
+    display: inline-block;
+    vertical-align:top;
+    margin-right: 55px;
+    margin-left: 55px;
+    width: 200px;
+    margin-top: 20px;
+}
+
+.content-how li span {
+    margin-top: 5px;
+    color: #F0801A;
+    font-size: 18px;
+    line-height: 21px;
+    text-align: center;
+    display: block;
+}
+
+.confiance {
+    text-align: center;
+    margin-top: 85px;
+    background-color: #E1E2E4;
+    padding-bottom: 10px;
+}
+
+.confiance h1 {
+    text-align: center;
+    color: #373B46;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-top: 12px;
+}
+
+.confiance .triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 20px 27px 0 27px;
+    border-color: #ffffff transparent transparent transparent;
+}
+
+.confiance p {
+    color: #373B46;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 21px;
+    text-align: center;
+}
+
+.logos {
+    width: 500px;
+    margin: auto;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+.logos .circle.first {
+    margin-right: 120px;
+}
+
+.logos .circle {
+    vertical-align: top;
+    display:  inline-block;
+    background-color: white;
+    border-radius: 92px;
+    width: 184px;
+    height: 184px;
+}
+.logos .circle img {
+    width: 115px;
+    display: inline;
+    padding: 35px;
+}
+
+.services {
+    text-align: center;
+    background-color: #9FD6FD;
+    padding-bottom: 40px;
+}
+
+.services .triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 20px 27px 0 27px;
+    border-color: #E1E2E4 transparent transparent transparent;
+}
+
+.services h1 {
+    color: #0F4F7D;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.services .imgContainer {
+    height: 75px;
+}
+
+.services img {
+    margin: auto;
+    position: relative;
+    top: -38px;
+}
+
+.services h2 {
+    color: #0F4F7D;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 29px;
+    text-align: center;
+    margin-top: -30px;
+    margin-bottom: 0px;
+}
+
+.services hr {
+    border-top: 1px solid #0F4F7D;
+    width: 90%;
+}
+
+.services ul {
+    margin: auto;
+    padding: 0px;
+    margin-top: 60px;
+}
+
+.services li {
+    display: inline-block;
+    background-color: white;
+    border-radius: 5px;
+    color: #10517E;
+    font-size: 16px;
+    text-align: center;
+    vertical-align: top;
+}
+
+.services li.last {
+    margin-right: 0;
+}
+
+.services p {
+    padding: 0px 10px 0px 10px;
+}
+
+.retrouver {
+    text-align: center;
+    padding-bottom: 10px;
+    background-color: #F0801A;
+}
+
+.retrouver h1 {
+    color: #FFFFFF;
+    font-weight: 500;
+    text-align: center;
+}
+
+.retrouver .triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 20px 27px 0 27px;
+    border-color: #9FD6FD transparent transparent transparent;
+}
+
+.retrouver .circle.lbf img {
+    padding-left: 23px;
+    padding-top: 42px;
+}
+
+.donnees {
+    text-align: center;
+    background-color: #E1E2E4;
+    padding-bottom: 20px;
+}
+
+.donnees h1 {
+    color: #373B46;
+    font-weight: bold;
+    text-align: center;
+}
+
+.donnees .triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 20px 27px 0 27px;
+    border-color: #F0801A transparent transparent transparent;
+}
+
+.donnees ul {
+    list-style: none;
+    text-align: center;
+    width: 1030px;
+    margin: auto;
+    padding:0px;
+    padding-top: 20px;
+}
+
+.donnees li {
+    display: inline-block;
+    vertical-align:top;
+    width: 265px;
+    margin-right: 75px;
+    margin-top: 20px;
+}
+
+.donnees li.last {
+    margin-right: 0;
+}
+
+.donnees li span {
+    color: #373B46;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19px;
+    text-align: center;
+    display: block;
+}
+
+.donnees li img {
+    margin-bottom: 30px;
+}
+
+.donnees .imgContainer {
+    height: 110px;
+}
+
+.question {
+    background-color: #373B46;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.question .triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 20px 27px 0 27px;
+    border-color: #E1E2E4 transparent transparent transparent;
+}
+.question h1 {
+    color: #FFFFFF;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 55px;
+    text-align: center;
+    margin-bottom: 25px
+}
+
+.question a {
+    height: 27px;
+    background: #F0801A;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 27px;
+    text-align: center;
+    padding: 5px 10px 5px 10px;
+    text-decoration: none;
+    border-radius: 10px;
+}
+
+.footer {
+    height: 70px;
+    background-color: #1a1b1c;
+    text-align: center;
+}
+
+.footer a {
+    line-height: 70px;
+    color: #F0801A;
+    padding: 0px 20px;
+}
+
+.footer a:hover {
+    text-decoration: none;
+}
+
+#cookie-bar-prompt-content {
+    display: none;
+}
+
+.triangle {
+    margin: 0 auto;
+    margin-bottom: 15px;
+}
+
+@media (min-width: 1024px) {
+    .title, .confiance h1, .services h1 , .retrouver h1, .donnees h1 {
+        font-size: 42px;
+    }
+
+    .video {
+        height: 546px;
+    }
+
+    .content-how ul {
+        width: 1000px;
+    }
+
+    .services ul {
+        width: 972px;
+    }
+
+    .services li {
+        width: 281px;
+        margin-right: 60px;
+        height: 350px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .title, .confiance h1, .services h1 , .retrouver h1, .donnees h1 {
+        font-size: 38px;
+    }
+
+    .video {
+        height: 415px;
+    }
+
+    .content-how ul {
+        width: 700px; 
+    }
+
+    .services ul {
+        width: 724px;
+    }
+
+    .services li {
+        width: 215px;
+        margin-right: 35px;
+        height: 455px;
+    }
+
+    .donnees ul {
+        width: 700px;
+    }
+
+    .donnees li {
+        width: 200px;
+        margin-right: 40px;
+    }
+}
+
+@media (max-width: 740px) {
+    .title, .confiance h1, .services h1 , .retrouver h1, .donnees h1 {
+        font-size: 30px;
+    }
+
+    .video {
+        height: 180px;
+    }
+
+    .content-how ul {
+        width: 320px;
+    }
+
+    .services {
+        padding-bottom: 0px;
+    }
+
+    .services ul {
+        width: 215px;
+    }
+
+    .services li {
+        width: 215px;
+        margin-right: 35px;
+        height: inherit;
+        margin-bottom: 60px;
+    }
+
+    .confiance p {
+        padding: 0px 15px 0px 15px;
+    }
+
+    .retrouver .logos .circle.first {
+        margin-right: 20px;
+    }
+
+    .logos .circle {
+        width: 130px;
+        height: 130px;
+    }
+
+    .logos {
+        width: 295px;
+    }
+
+    .logos .circle img {
+        width: 70px;
+        padding: 32px;
+    }
+
+    .retrouver .logos .circle.lbf img {
+        padding-left: 25px;
+        padding-top: 32px;
+    }
+
+    .logos .circle.first {
+        margin-right: 30px;
+    }
+
+    .donnees ul {
+        width: 200px;
+    }
+
+    .donnees li {
+        margin-bottom: 30px;
+    }
+
+    .donnees .imgContainer {
+        height: inherit;
+        padding-bottom: 10px;
+    }
+
+    .donnees li img {
+        margin-bottom: 0px;
+    }
+
+    .content-how li {
+        height: 180px;
+    }
+
+    .content-how li.hide {
+        display: none;
+    }
+
+    .content-how .nav {
+        display: inherit;
+    }
+}

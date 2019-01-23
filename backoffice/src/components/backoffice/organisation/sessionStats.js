@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Stars from '../common/Stars';
+import Stars from '../common/deprecated/Stars';
 
 export default class SessionStats extends React.Component {
 

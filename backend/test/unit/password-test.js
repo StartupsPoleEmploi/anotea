@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { isPasswordStrongEnough, hashPassword, verifyPassword, getAlgorithm } = require('../../lib/common/components/password.js');
+const { isPasswordStrongEnough, hashPassword, verifyPassword, getAlgorithm } = require('../../src/common/components/password.js');
 
 describe('Password', function() {
 

@@ -2,8 +2,8 @@ import React from 'react';
 import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
-import AdviceRates from '../common/AdviceRates';
-import Toolbar from '../common/Toolbar';
+import AdviceRates from '../common/deprecated/AdviceRates';
+import Toolbar from '../common/deprecated/Toolbar';
 import SearchForm from './searchForm';
 import EntitySearchForm from './entitySearchForm';
 import Graphes from './Graphes';
@@ -19,13 +19,13 @@ import {
     loadInventory
 } from '../../../lib/organisationService';
 import {
-    markAdviceAsRead,
-    markAdviceAsNotRead,
-    reportAdvice,
-    unreportAdvice,
-    answerAdvice,
-    removeAdviceAnswer
-} from '../../../lib/adviceService';
+    markAvisAsRead,
+    markAvisAsNotRead,
+    reportAvis,
+    unreportAvis,
+    answerAvis,
+    removeAvisAnswer
+} from '../../../lib/avisService';
 
 const DEFAULT_ORDER = 'moderation';
 const MAX_LENGTH = 200;
@@ -90,25 +90,25 @@ export default class OrganisationPanel extends React.Component {
     }
 
     handleReport = (id, evt) => {
-        reportAdvice(id, this.state.organisationId).then(result =>
+        reportAvis(id, this.state.organisationId).then(result =>
             this.doLoadAdvices()
         );
     };
 
     handleUnreport = (id, evt) => {
-        unreportAdvice(id, this.state.organisationId).then(result =>
+        unreportAvis(id, this.state.organisationId).then(result =>
             this.doLoadAdvices()
         );
     };
 
     handleMarkAsRead = (id, evt) => {
-        markAdviceAsRead(id, this.state.organisationId).then(result =>
+        markAvisAsRead(id, this.state.organisationId).then(result =>
             this.doLoadAdvices()
         );
     };
 
     handleMarkAsNotRead = (id, evt) => {
-        markAdviceAsNotRead(id, this.state.organisationId).then(result =>
+        markAvisAsNotRead(id, this.state.organisationId).then(result =>
             this.doLoadAdvices()
         );
     };
@@ -120,7 +120,7 @@ export default class OrganisationPanel extends React.Component {
                     reply: {
                         shown: true,
                         id: id,
-                        text: advice.answer !== undefined ? advice.answer : ''
+                        text: advice.answer !== undefined ? advice.answer.text : ''
                     }
                 });
             }
@@ -145,14 +145,14 @@ export default class OrganisationPanel extends React.Component {
 
     handleDoReply = (id, evt) => {
         const text = this.state.reply.text;
-        answerAdvice(id, text).then(result => {
+        answerAvis(id, text).then(result => {
             this.setState({ reply: { shown: false, text: '' } });
             this.doLoadAdvices();
         });
     };
 
     handleRemoveReply = (id, evt) => {
-        removeAdviceAnswer(id).then(result => {
+        removeAvisAnswer(id).then(result => {
             this.setState({ reply: { shown: false, text: '' } });
             this.doLoadAdvices();
         });
@@ -334,7 +334,7 @@ export default class OrganisationPanel extends React.Component {
                             </li>
                         </ul>
 
-                        <Toolbar orderBy={this.orderBy} />
+                        <Toolbar profile={this.props.profile} />
 
                         <div className="advices">
                             {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}
@@ -380,10 +380,9 @@ export default class OrganisationPanel extends React.Component {
                                                         <div className="actions">
                                                             <button className="btn btn-success btn-sm"
                                                                 onClick={this.handleDoReply.bind(this, advice._id)}>
-                                                                <span className="fas comment-alt"/> Valider
-                                                                la réponse
+                                                                <span className="fas comment-alt"/> Valider la réponse
                                                             </button>
-                                                            {advice.answered &&
+                                                            {advice.answer &&
                                                             <button className="btn btn-danger btn-sm"
                                                                 onClick={this.handleRemoveReply.bind(this, advice._id)}>
                                                                 <span className="fas fa-trash"/> &Ocirc;ter
@@ -398,7 +397,7 @@ export default class OrganisationPanel extends React.Component {
                                                     {(advice.answer && !this.state.reply.shown) &&
                                                     <div className="answer">
                                                         <h4>Votre réponse</h4>
-                                                        <p>{advice.answer}</p>
+                                                        <p>{advice.answer.text}</p>
                                                     </div>
                                                     }
                                                     {!(this.state.reply.shown === true && this.state.reply.id === advice._id) &&
@@ -417,7 +416,7 @@ export default class OrganisationPanel extends React.Component {
                                                         <button className="btn btn-success btn-sm"
                                                             onClick={this.handleReply.bind(this, advice._id)}
                                                             title="votre réponse à avis sera publiée sur les sites partenaires et accessible aux futurs stagiaires potentiels">
-                                                            <span className="fas fa-comment-alt"/> {advice.answered ? 'Modifier la réponse' : 'Répondre'}
+                                                            <span className="fas fa-comment-alt"/> {advice.answer ? 'Modifier la réponse' : 'Répondre'}
                                                         </button>}
                                                         {(this.state.tab !== 'reported' && advice.reported !== true) &&
                                                         <button className="btn btn-danger btn-sm"

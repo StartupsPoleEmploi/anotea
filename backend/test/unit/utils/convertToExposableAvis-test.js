@@ -1,6 +1,6 @@
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
-const convertToExposableAvis = require('../../../lib/http/routes/api/v1/dto/convertToExposableAvis');
+const convertToExposableAvis = require('../../../src/http/routes/api/v1/dto/convertToExposableAvis');
 const { newComment, randomize } = require('../../helpers/data/dataset');
 
 describe(__filename, () => {
@@ -75,8 +75,10 @@ describe(__filename, () => {
     it('should map avis with réponse', async () => {
 
         let comment = newComment({
-            answer: 'Voici notre réponse',
-            answered: true,
+            answer: {
+                text: 'Voici notre réponse',
+                status: 'published',
+            },
         });
 
         let data = convertToExposableAvis(comment);
@@ -85,6 +87,24 @@ describe(__filename, () => {
             titre: 'Génial',
             texte: 'Super formation.',
             reponse: 'Voici notre réponse',
+        });
+    });
+
+    it('should ignore réponse not published', async () => {
+
+        let comment = newComment({
+            answer: {
+                text: 'Voici notre réponse',
+                status: 'rejected',
+            },
+        });
+
+        let data = convertToExposableAvis(comment);
+
+        assert.deepEqual(data.commentaire, {
+            titre: 'Génial',
+            texte: 'Super formation.',
+            reponse: undefined,
         });
     });
 

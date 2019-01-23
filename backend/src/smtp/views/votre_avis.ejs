@@ -1,0 +1,120 @@
+<html>
+	<head>
+		<title>Votre avis nous intéresse</title>
+		<meta name="viewport" content="width=device-width">
+		<style>
+			body {
+				font-size:1em;
+			}
+			
+			body td {
+				padding:2em;
+				width: 33%;
+			}
+
+			.banner {
+				height: 193px;
+			}
+
+			.icons-mobile {
+				display: none;
+			}
+			
+			.icons td {
+				padding: 0px 0px 5px 20px;
+			}
+
+			.labels td {
+				padding: 0px 0px 20px 20px;
+			}
+			@media only screen and (max-width: 596px) {
+				body {
+					width:100%;
+					font-size:1em;
+				}
+				body td {
+					padding:.5em;
+					width: 33%;
+				}
+				.labels, .icons {
+					display: none;
+				}
+				.icons-mobile {
+					display: inherit;
+					background: white;
+    				width: 760px;
+    				padding: 20px 0px 50px 0px;
+				}
+			}
+		</style>
+	</head>
+	<body style="background-color:#ebebeb;font-size:1.3em">
+		<div style="display:none">
+			<p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
+			<p>Vous avez suivi la formation de <strong>&laquo;&nbsp;<%= trainee.training.title %>&nbsp;&raquo;</strong> du <%= moment(trainee.training.startDate).format('DD/MM/YYYY') %> au <%= moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %> à <%= trainee.training.organisation.label %>.</p>
+		</div>
+		<center>
+			<table height="100%" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
+				<tr>
+					<td colspan="3" valign="middle" align="center" style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;">
+						Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
+					</td>
+				</tr>
+				<tr>
+					<td  style="padding:2em" align="left" valign="middle"><img src="<%= hostname %>/img/email/logo_Anotea_Vertical_baseline2.png" alt=""/></td>
+					<td  style="padding:2em" colspan="2" align="right" valign="middle">
+						Propulsé par &nbsp;
+						<img src="<%= hostname %>/img/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" style="vertical-align: middle;" /> 
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" style="padding:0em 2em">
+						<p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
+						<p>Vous avez suivi la formation de <strong>&laquo;&nbsp;<%= trainee.training.title %>&nbsp;&raquo;</strong> du <%= moment(trainee.training.startDate).format('DD/MM/YYYY') %> au <%= moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %> à <%= trainee.training.organisation.label %>.</p>
+						<p>Aidez les futurs stagiaires à choisir leur formation en donnant votre avis ! <br /> Cet avis est totalement anonyme.</p>
+					</td>
+				</tr>
+				<td colspan="3" style="text-align:center;padding:2em;padding-top: 60px;">
+					<a href="<%= formLink %>" target="_blank" style="text-decoration: none; background-color: #FDB429; line-height: 2em; border-radius: 9px; padding: 0.6em; color: white; display: block; margin: auto; font-size: 30px; width:90%;">
+						<strong style="color: white">Cliquez ici pour donner votre avis</strong>
+						<br />
+						<img style="width: 30px; margin: 5px;" src="<%= hostname %>/img/email/white-star-icon.png" alt="white-star-icon"/>
+						<img style="width: 30px; margin: 5px;" src="<%= hostname %>/img/email/white-star-icon.png" alt="white-star-icon"/>
+						<img style="width: 30px; margin: 5px;" src="<%= hostname %>/img/email/white-star-icon.png" alt="white-star-icon"/>
+						<img style="width: 30px; margin: 5px;" src="<%= hostname %>/img/email/white-star-icon.png" alt="white-star-icon"/>
+						<img style="width: 30px; margin: 5px;" src="<%= hostname %>/img/email/white-star-icon.png" alt="white-star-icon"/>
+					</a>
+				</td>
+				</tr>
+				<tr class="icons">
+					<td align="center"><a href="<%= formLink %>" target="_blank"><img src="<%= hostname %>/img/email/01.jpg" alt="0" border="0"/></a></td>
+					<td align="center"><a href="<%= formLink %>" target="_blank"><img src="<%= hostname %>/img/email/02.jpg" alt="0" border="0"/></a></td>
+					<td align="center"><a href="<%= formLink %>" target="_blank"><img src="<%= hostname %>/img/email/03.jpg" alt="0" border="0"/></a></td>
+				</tr>
+				<tr class="labels">
+					<td style="text-align:center">Notez et commentez la formation que vous venez de suivre</td>
+					<td style="text-align:center">Vos avis seront publiés sur La Bonne Formation<% if (!carifNameHidden) { %> et <%= carifName %><% } %></td>
+					<td style="text-align:center">Vous pourrez répondre aux questions des futur-e-s stagiaires</td>
+				</tr>
+				</table>
+					<div class="icons-mobile">
+						<div align="center"><a href="<%= formLink %>" target="_blank"><img src="/img/email/01.jpg" alt="0" border="0"/></a></div>
+						<div style="text-align:center;padding-bottom: 20px;">Notez et commentez la formation que vous venez de suivre</div>
+						<div align="center"><a href="<%= formLink %>" target="_blank"><img src="/img/email/02.jpg" alt="0" border="0"/></a></div>
+						<div style="text-align:center;padding-bottom: 20px;">Vos avis seront publiés sur La Bonne Formation<% if (!carifNameHidden) { %> et <%= carifName %><% } %></div>
+						<div align="center"><a href="<%= formLink %>" target="_blank"><img src="/img/email/03.jpg" alt="0" border="0"/></a></div>
+						<div style="text-align:center">Vous pourrez répondre aux questions des futur-e-s stagiaires</div>
+					</div>
+				<table  width="760px" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
+				<tr>
+					<td colspan="3" align="center" style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
+						<%- include('./legal/mentions.ejs'); %>
+
+						<p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous pouvez vous désinscrire</a>.</p>
+					</td>
+				</tr>
+			</table>
+		</center>
+		<img src="<%= trackingLink %>" />
+	</body>
+</html>

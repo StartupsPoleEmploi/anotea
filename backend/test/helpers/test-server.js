@@ -1,8 +1,8 @@
 const request = require('supertest');
 const assert = require('assert');
-const server = require('../../lib/http/server');
+const server = require('../../src/http/server');
 const { withMongoDB } = require('./test-database');
-const { newModerateurAccount } = require('./data/dataset');
+const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('./data/dataset');
 
 module.exports = {
     withServer: callback => {
@@ -15,6 +15,40 @@ module.exports = {
 
                     await context.insertIntoDatabase('moderator', newModerateurAccount({
                         courriel,
+                    }));
+
+                    let response = await request(app)
+                    .post('/api/backoffice/login')
+                    .send({ username: courriel, password: 'password' });
+                    assert.equal(response.statusCode, 200);
+
+                    return response.body.access_token;
+                },
+                logAsOrganisme: async (app, courriel, id) => {
+
+                    const organisme = newOrganismeAccount({
+                        _id: id,
+                        SIRET: id,
+                        courriel,
+                        meta: {
+                            siretAsString: `${id}`
+                        },
+                    });
+
+                    await context.insertIntoDatabase('organismes', organisme);
+
+                    let response = await request(app)
+                    .post('/api/backoffice/login')
+                    .send({ username: organisme.meta.siretAsString, password: 'password' });
+                    assert.equal(response.statusCode, 200);
+
+                    return response.body.access_token;
+                },
+                logAsFinancer: async (app, courriel, codeFinanceur) => {
+
+                    await context.insertIntoDatabase('financer', newFinancerAccount({
+                        courriel,
+                        codeFinanceur: `${codeFinanceur}`
                     }));
 
                     let response = await request(app)

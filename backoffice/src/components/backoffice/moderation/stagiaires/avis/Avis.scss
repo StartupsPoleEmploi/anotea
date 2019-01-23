@@ -1,0 +1,14 @@
+@import '../../../../../styles/variables';
+
+.Avis {
+  min-height: 10rem;
+
+  &.card {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: unset;
+    border-bottom: 0.1rem solid $color-grey-5;
+  }
+}
+

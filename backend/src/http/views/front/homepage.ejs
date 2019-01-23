@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="google-site-verification" content="<%= data.googleSiteVerification %>" />
+        <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+        <link rel="icon" type="image/png" href="/img/favicon_noteo.ico" />
+        <link rel="stylesheet" type="text/css" href="/css/front/home.css" media="all">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
+        <script type="text/javascript" src="//cdn.jsdelivr.net/cookie-bar/1/cookiebar-latest.min.js?forceLang=fr&privacyPage=cgu"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function() {
+                var current = 0;
+                var count = $('.content-how ul li').length;
+                $('#goNext').click(function() {
+                    if(current < count-1) {
+                        current++;
+                    }
+                    $('.content-how ul li').addClass("hide");
+                    $($('.content-how ul li')[current]).removeClass("hide");
+                })
+                $('#goPrev').click(function() {
+                    if(current > 0) {
+                        current--;
+                    }
+                    $('.content-how ul li').addClass("hide");
+                    $($('.content-how ul li')[current]).removeClass("hide");
+                })
+
+                setTimeout(function(e) {
+                    $('#cookie-bar-prompt-button').click(function(e) {
+                        document.location='/cgu';
+                        e.preventDefault();
+                    })
+                },200)
+            });
+        </script>
+    </head>
+
+    <body>
+        <img class="logo" src="/img/logo_Anotea_Horizontal_baseline2.png" />
+        <div class="login">
+            <div>
+                Accéder à votre espace <br/>
+                organisme de formation
+            </div>
+            <a class="button" href="/admin">Connexion</a>
+        </div>
+        <div class="video">
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/YaQmZpbjmj4?rel=0" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="content-how">
+            <h1 class="title">Comment ça marche ?</h1>
+            <ul>
+                <li>
+                    <img class="logo" src="/img/home/1.png" />
+                    <span><strong>Le stagiaire finit<br />sa formation</strong></span>
+                </li>
+                <li class="hide">
+                    <img class="logo" src="/img/home/2.jpg" />
+                    <span><strong>Il reçoit un email</strong><br />l’invitant à<br /><strong>donner son avis</strong></span>
+                </li>
+                <li class="hide">
+                    <img class="logo" src="/img/home/3.png" />
+                    <span>Il remplit <strong><br />le questionnaire (6 questions)</strong></span>
+                </li>
+                <li class="hide">
+                    <img class="logo" src="/img/home/4.jpg" />
+                    <span>Les avis sont publiés<br />sur<strong> La Bonne Formation</strong><br />et <strong>défi métiers</strong></span>
+                </li>
+                <li class="hide">
+                    <img class="logo" src="/img/home/5.jpg" />
+                    <span>Les futurs stagiaires<br />peuvent<strong> contacter<br />l’auteur du commentaire</strong></span>
+                </li>
+                <li class="hide last">
+                    <img class="logo" src="/img/home/6.jpg" />
+                    <span>Les organismes de formation<br />peuvent <strong>répondre<br />aux commentaires</strong></span>
+                </li>
+            </ul>
+            <div class="nav">
+                <a href="#" id="goPrev"><</a>
+                <a href="#" id="goNext">></a>
+            </div>
+        </div>
+
+        <div class="confiance">
+            <div class="triangle"></div>
+            <h1>Des tiers de confiance</h1>
+
+                <div class="logos">
+                    <div class="circle first">
+                        <img src="/img/pe.jpg" />
+                    </div>
+                    <div class="circle">
+                        <img src="/img/home/idf.png" />
+                    </div>
+                </div>
+
+                <p>Anotéa est un service lancé par <strong>Pôle emploi</strong>, en étroite collaboration avec la <strong>région Île-de-France.</strong>  <br/>
+                <strong>Ces tiers s’assurent que les avis recueillis sont ceux d’anciens stagiaires</strong></p>
+
+                <p>Seules <strong>les personnes ayant effectivement effectué la formation reçoivent un questionnaire</strong> à compléter. <br />
+                 Vous êtes donc certains que <strong>les avis que vous consultez sont fiables</strong></p>
+
+        </div>
+
+        <div class="services">
+            <div class="triangle"></div>
+            <h1>Un service indispensable</h1>
+            <ul>
+                <li>
+                    <div class="imgContainer"><img src="/img/home/noun_12736_cc.png" /></div>
+                    <h2>Pour les futurs<br />stagiaires</h2>
+                    <hr />
+                    <p>Il permet d’obtenir des informations sur la<br /><strong>qualité des formations grâce<br />aux anciens stagiaires.</strong></p>
+                    <p>Prochainement le service leur permettra d'<strong>entrer en contact avec les stagiaires ayant<br />déposé un avis.</strong></p>
+                </li>
+                <li>
+                    <div class="imgContainer"><img src="/img/home/batiment.png" /></div>
+                    <h2>Pour les organismes<br />de formation</h2>
+                    <hr />
+                    <p>Anotea permet aux organismes de <strong>prendre en compte les retours des stagiaires</strong> pour améliorer leur formation</p>
+                    <p>Les <strong>organismes de formation</strong> ont la possibilité de <strong>publier une réponse à un avis émis</strong>.</p>
+                </li>
+                <li class="last">
+                    <div class="imgContainer"><img src="/img/home/argent.png" /></div>
+                    <h2>Pour les financeurs<br />de formation</h2>
+                    <hr />
+                    <p>Anotea est un outil<br />permettant de <strong>mieux orienter<br />les politiques d'achat des financeurs de formation .</strong></p>
+                    <p><strong>Les organismes financeurs</strong><br />pourront par exemple diligenter<br /><strong>des contrôles auprès des<br />formations</strong> qui auraient reçu de<br />mauvais avis</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="retrouver">
+            <div class="triangle"></div>
+            <h1>Retrouvez <strong>les notes et les avis</strong></h1>
+                <div class="logos">
+                    <div class="circle first lbf">
+                        <a href="https://labonneformation.pole-emploi.fr"><img src="/img/lbf.png" /></a>
+                    </div>
+                    <div class="circle">
+                        <a href="https://www.defi-metiers.fr"><img src="/img/home/defi-metiers.jpg" /></a>
+                    </div>
+                </div>
+        </div>
+
+        <div class="donnees">
+            <div class="triangle"></div>
+            <h1>Les données personnelles</h1>
+                <ul>
+                <li>
+                    <div class="imgContainer"><img src="/img/home/masque.png" /></div>
+                    <span>Les <strong>résultats du questionnaire sont anonymes</strong> et l'<strong>identité des stagiaires n'est communiqué à personne.</strong></span>
+                </li>
+                <li>
+                    <div class="imgContainer"><img  src="/img/home/note.png" /></div>
+                    <span>Le <strong>traitement des données</strong> à caractère personnel <strong>se limite aux seuls besoins du présent service</strong> et fait l'objet d'une <strong>déclaration auprès du CNIL</strong></span>
+                </li>
+                <li class="last">
+                    <div class="imgContainer"><img src="/img/home/corbeille.png" /></div>
+                    <span><strong>Les données</strong> des personnes ayant donné leur accord pour être contactées <strong>sont conservées pour une durée maximum de 3 ans.</strong></span>
+                </li>
+            </ul>
+        </div>
+        <div class="question">
+            <div class="triangle"></div>
+            <h1>Une question ? Un doute ?</h1>
+            <p><a href="mailto:anotea@pole-emploi.fr">Contactez-nous</a></p>
+        </div>
+        <%- include('../../views/front/footer.ejs'); %>
+        <%- include('../../views/analyticsTrackers.ejs'); %>
+    </body>
+</html>

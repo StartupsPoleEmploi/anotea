@@ -1,0 +1,145 @@
+@import '../../../styles/variables';
+
+.Panel {
+
+  height: 100%;
+
+  .container {
+    width: 80%;
+  }
+
+  .header {
+    background-color: #374EAA;
+    color: $color-white;
+
+    .title {
+      padding-top: 3rem;
+      padding-bottom: 0.5rem;
+      font-size: 2em;
+      font-weight: $font-weight-900;
+      line-height: 2rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: $font-weight-400;
+      line-height: 1.6rem;
+      color: $color-white;
+      opacity: 0.6;
+    }
+
+    margin-bottom: -22px;
+  }
+
+  .content {
+
+    .container {
+
+      .toolbar {
+        padding-top: 0;
+        padding-left: 0;
+        text-align: center;
+        font-size: 1rem;
+        border: 1px solid $color-grey-5;
+        border-radius: 8px;
+        box-shadow: $shadow;
+
+        .nav {
+          background: $color-white;
+          border-radius: 6px;
+          font-weight: $font-weight-400;
+
+          .nav-item {
+            border-right: 1px solid $color-grey-5;
+
+            &:first-child {
+              .nav-link {
+                &.active, &:hover, &:focus {
+                  border-bottom-left-radius: 6px;
+                  border-top-left-radius: 6px;
+                }
+              }
+            }
+
+            &:last-child {
+              .nav-link {
+                &.active, &:hover, &:focus {
+                  border-bottom-right-radius: 6px;
+                  border-top-right-radius: 6px;
+                }
+              }
+            }
+
+            &.disabled {
+              pointer-events: none;
+              color: $color-grey-5;
+              opacity: 0.2;
+            }
+
+            .pastille {
+              color: $color-red;
+              font-size: 0.825rem;
+              vertical-align: top;
+            }
+
+            .nav-link {
+              color: $color-grey-50;
+              font-size: 1rem;
+
+              &.active {
+                color: $color-black;
+                background-color: $color-grey-5;
+                font-weight: $font-weight-700;
+              }
+
+              &:hover, &:focus {
+                cursor: pointer;
+                color: $color-black;
+                background-color: $color-grey-5;
+                font-weight: $font-weight-700;
+                transition: background-color 0.2s linear;
+              }
+            }
+
+            .nav-search {
+
+              .input-group-text {
+                font-size: 1.2rem;
+                background-color: $color-white;
+                border: none;
+                border-radius: unset;
+              }
+
+              input {
+                border: none;
+                box-shadow: none;
+              }
+
+              button {
+                background-color: $color-grey-5;
+                color: $color-black;
+                font-weight: $font-weight-700;
+                border: none;
+                box-shadow: none;
+                border-top-left-radius: unset;
+                border-bottom-left-radius: unset;
+                padding: 0.5rem;
+              }
+
+              .cancel {
+                margin-top: 10px;
+                margin-right: 10px;
+              }
+            }
+          }
+        }
+      }
+
+      .results {
+        padding-top: 4rem;
+      }
+    }
+  }
+}

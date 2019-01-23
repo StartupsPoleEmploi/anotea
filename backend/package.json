@@ -49,6 +49,7 @@
     "mobile-detect": "1.4.3",
     "moment": "2.22.2",
     "mongodb": "3.1.10",
+    "node-mailjet": "3.3.1",
     "node-uuid": "1.4.8",
     "nodemailer": "4.7.0",
     "stream-transform": "1.0.8",

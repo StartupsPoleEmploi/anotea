@@ -1,0 +1,6 @@
+@import '../../../../../../../styles/variables';
+@import '../../../../../../../styles/button-mixins';
+
+.Avis .EditButton {
+  @include worflow-button($color-blue, $color-blue-10, $color-blue-60);
+}

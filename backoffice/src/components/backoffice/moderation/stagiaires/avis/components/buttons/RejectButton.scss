@@ -1,0 +1,12 @@
+@import '../../../../../../../styles/variables';
+@import '../../../../../../../styles/button-mixins';
+
+.Avis .RejectButton {
+
+  @include dropdown();
+
+  button {
+    @include worflow-button($color-red, $color-red-10, $color-red-60);
+  }
+}
+

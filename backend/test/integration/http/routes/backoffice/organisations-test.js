@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
 const { newOrganismeAccount, randomize } = require('../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase, logAsFinancer, logAsOrganisme }) => {
 
     it('can get organisation by activation token', async () => {
 
@@ -113,6 +113,78 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             statusCode: 400,
             error: 'Bad Request',
             message: 'Numéro de token invalide'
+        });
+    });
+
+    it('can retrieve avis when authenticated as organisme', async () => {
+
+        let app = await startServer();
+
+        let id = 22222222222222;
+
+        let token = await logAsOrganisme(app, 'edited@pole-emploi.fr', id);
+
+        let response = await request(app).get(`/api/backoffice/organisation/${id}/allAdvices`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body, {
+            'advices': [],
+            'page': 1,
+            'pageCount': 0
+        });
+    });
+
+    it('can not retrieve avis when authenticated as financer', async () => {
+
+        let app = await startServer();
+
+        let id = 33333333333333;
+
+        await insertIntoDatabase('organismes', newOrganismeAccount({
+            _id: id,
+            SIRET: id,
+            editedCourriel: 'edited@pole-emploi.fr',
+            meta: {
+                siretAsString: `${id}`
+            },
+        }));
+
+        let token = await logAsFinancer(app, 'financer@pole-emploi.fr', '2');
+
+        let response = await request(app).get(`/api/backoffice/organisation/${id}/allAdvices`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 401);
+        assert.deepEqual(response.body, { error: true });
+    });
+
+    it('can not retrieve avis from an organisme when authenticated as another organisme', async () => {
+
+        let app = await startServer();
+
+        let id = 44444444444444;
+        let courriel = 'edited@pole-emploi.fr';
+
+        await insertIntoDatabase('organismes', newOrganismeAccount({
+            _id: id,
+            SIRET: id,
+            courriel,
+            meta: {
+                siretAsString: `${id}`
+            }
+        }));
+
+        let token = await logAsOrganisme(app, courriel, 55555555555555);
+
+        let response = await request(app).get(`/api/backoffice/organisation/${id}/allAdvices`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 403);
+        assert.deepEqual(response.body, {
+            'error': 'Forbidden',
+            'message': 'Action non autorisé',
+            'statusCode': 403
         });
     });
 

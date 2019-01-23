@@ -5,7 +5,7 @@ const assert = require('assert');
 const configuration = require('config');
 const { withServer } = require('../../../helpers/test-server');
 const { newOrganismeAccount, randomSIRET } = require('../../../helpers/data/dataset');
-const auth = require('../../../../lib/common/components/auth');
+const auth = require('../../../../src/common/components/auth');
 
 describe(__filename, withServer(({ startServer, insertDepartements, insertIntoDatabase, getTestDatabase }) => {
 
@@ -123,6 +123,7 @@ describe(__filename, withServer(({ startServer, insertDepartements, insertIntoDa
             profile: 'organisme',
             raisonSociale: 'Pole Emploi Formation',
             sub: siret,
+            siret: siret,
             codeRegion: '11',
         });
     });

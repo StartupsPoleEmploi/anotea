@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+        <link rel="stylesheet" type="text/css" href="/css/front/noteo.css" media="all">
+        <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
+    </head>
+    <body>
+        <div>
+            <header>
+                <img src="/img/logo_Anotea_Horizontal_baseline2.png" alt="" class="logoAnotea" />
+            </header>
+
+            <section>
+                <h2 class="badWord">
+                    <% if (reason == 'already sent') { %>
+                        Vous avez déjà partagé votre avis. Merci.
+                    <% } %>
+
+                    <% if (reason == 'badwords') { %>
+                        Votre commentaire contient des propos injurieux ou des liens externes. Il ne peut donc pas être validé. Merci de revoir vos propos.
+
+                        <input type="submit" value="Retour" class="retour" title="Retour" onclick="window.history.back()" >
+                    <% } %>
+
+                    <% if (reason == 'bad data') { %>
+                        Votre formulaire contient des données erronées. Merci de le rectifier.
+
+                        <input type="submit" value="Retour" class="retour" title="Retour" onclick="window.location.href='/questionnaire/<%= trainee.token%>'" >
+                    <% } %>
+
+                    <% if (reason == 'alphanum') { %>
+                        Votre pseudo ne doit contenir que des chiffres et des lettres. Merci de le rectifier.
+
+                        <input type="submit" value="Retour" class="retour" title="Retour" onclick="window.history.back()" >
+                    <% } %>
+                </h2>
+            </section>
+            <footer>
+                    <div class="serviceProQuestionnaire">
+                            <p>Service propulsé par</p>
+                                <img src="/img/poleemploi.png" alt="" class="logoPE" />
+                                <img src="/img/regions/logo-questionnaire/region-<%=trainee.codeRegion%>.png" alt="" class="logoRegion">
+                            </div>
+            </footer>
+        </div>
+        <%- include('../analyticsTrackers'); %>
+        <script>
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'form',
+          eventAction: 'refus',
+          eventLabel: 'Refus'
+        });
+        </script>
+    </body>
+</html>

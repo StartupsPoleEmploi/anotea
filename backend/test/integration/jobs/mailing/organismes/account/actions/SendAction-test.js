@@ -3,8 +3,8 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../../../helpers/test-database');
 const { newOrganismeAccount } = require('../../../../../../helpers/data/dataset');
 const logger = require('../../../../../../helpers/test-logger');
-const AccountMailer = require('../../../../../../../lib/jobs/mailing/organismes/account/AccountMailer');
-const SendAction = require('../../../../../../../lib/jobs/mailing/organismes/account/actions/SendAction');
+const AccountMailer = require('../../../../../../../src/jobs/mailing/organismes/account/AccountMailer');
+const SendAction = require('../../../../../../../src/jobs/mailing/organismes/account/actions/SendAction');
 const { successMailer } = require('../../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {

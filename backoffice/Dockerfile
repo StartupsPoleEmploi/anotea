@@ -1,14 +1,32 @@
-FROM node:10.14.1-stretch as builder
+FROM nginx:latest
 
-#Install and cache node_modules waiting for npm 6.1.1 to be able to use npm ci instead of npm install
+RUN apt-get update \
+    && apt-get install -y curl \
+    && apt-get -y autoclean
+
+#Install nodejs
+ENV NVM_VERSION v0.34.0
+ENV NODE_VERSION 10.14.1
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+RUN mkdir $NVM_DIR \
+    && curl -o- https://raw.githubusercontent.com/creationix/nvm/$NVM_VERSION/install.sh | bash
+
+RUN echo "source $NVM_DIR/nvm.sh && \
+    nvm install $NODE_VERSION && \
+    nvm alias default $NODE_VERSION && \
+    nvm use default" | bash
+
+#Build project
 COPY package.json package-lock.json /tmp/
 RUN cd /tmp && npm ci && mkdir -p /opt/anotea/backoffice && mv /tmp/node_modules /opt/anotea/backoffice/
-
 COPY ./ /opt/anotea/backoffice
-
 WORKDIR /opt/anotea/backoffice
-RUN npm run build
+RUN npm run build \
+    &&  mv build/* /usr/share/nginx/html
 
-FROM nginx:latest
+COPY misc/nginx/default.conf /etc/nginx/conf.d/default.conf
+
 WORKDIR /usr/share/nginx/html
-COPY --from=builder /opt/anotea/backoffice/build .
