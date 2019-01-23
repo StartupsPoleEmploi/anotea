@@ -35,18 +35,20 @@ export class ChangePassword extends React.Component {
 
     update = () => {
         updatePassword(this.state.actualPassword, this.state.newPassword, sessionStorage.userId, sessionStorage.userProfile).then(result => {
-            if (result.error === undefined) {
-                this.setState({ success: true });
-            } else {
-                this.setState({
-                    serverSideError: result.error,
-                    actualPassword: '',
-                    newPassword: '',
-                    confirmPassword: ''
-                });
-            }
+            this.setState({ success: true });
             setTimeout(() => {
                 this.setState({ success: false, serverSideError: null });
+            }, 5000);
+        }).catch(async e => {
+            let json = await e.json;
+            this.setState({
+                serverSideError: json.error,
+                actualPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            });
+            setTimeout(() => {
+                this.setState({ serverSideError: null });
             }, 5000);
         });
     }
