@@ -2,8 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { rejectAvis } from '../../../../../../../lib/avisService';
 import './RejectButton.scss';
+import InjureTagModal from '../InjureTagModal';
 
 export default class RejectButton extends React.Component {
+
+    state = {
+        modalIsOpen: false,
+    };
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
@@ -14,6 +19,17 @@ export default class RejectButton extends React.Component {
     reject = async (avis, reason) => {
         let updated = await rejectAvis(avis._id, reason);
         this.props.onChange(updated);
+        if (reason === 'injure') {
+            this.openModal();
+        }
+    };
+
+    openModal = () => {
+        this.setState({ modalIsOpen: true });
+    };
+
+    closeModal = () => {
+        this.setState({ modalIsOpen: false });
     };
 
     getExtraClasses = () => {
@@ -41,6 +57,7 @@ export default class RejectButton extends React.Component {
                     <a className="dropdown-item" onClick={() => this.reject(avis, 'non concerné')}>
                         Non concerné
                     </a>
+                    <InjureTagModal modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal}/>
                 </div>
             </div>
         );
