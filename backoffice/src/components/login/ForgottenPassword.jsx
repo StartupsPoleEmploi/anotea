@@ -73,13 +73,13 @@ export default class ForgottenPassword extends React.Component {
                     <div className="block col-md-4">
                         <h4>Récupération du mot de passe</h4>
                         {this.state.error &&
-                        <div className="alert alert-danger">Cette adresse email est inconnue.</div>}
+                        <div className="alert alert-danger">Cet identifiant est inconnu.</div>}
 
                         <input type="text"
                             id="username"
                             value={this.state.username}
                             className="form-control input-sm"
-                            placeholder="Numéro de SIRET"
+                            placeholder="Numéro de SIRET ou identifiant"
                             onChange={this.handleUsernameChange}
                             onKeyPress={this.handleKeyPress} />
 
@@ -96,7 +96,7 @@ export default class ForgottenPassword extends React.Component {
                         <p>Vous allez pouvoir recréer un mot de passe qui vous permettra d'accéder à votre espace
                             Anotéa.</p>
 
-                        <p>Il vous suffit simplement de saisir le numéro de SIRET de votre organisme et de cliquer sur
+                        <p>Il vous suffit simplement de saisir le numéro de SIRET de votre organisme ou identifiant et de cliquer sur
                             le bouton «Envoyer».</p>
                         <p>Vous recevrez très rapidement un e-mail qui vous permettra de créer un nouveau mot de passe
                             afin d'accéder à votre espace en toute sécurité.</p>
