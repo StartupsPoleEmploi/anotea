@@ -200,8 +200,8 @@ module.exports = function(db, logger, configuration) {
             const cc = configuration.smtp.import_error_cc;
             sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
         },
-        sendAvisHorsSujetMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
-            mailOptions.subject = `Rejet de votre avis sur votre formation`;
+        sendInjureMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
+            mailOptions.subject = `Rejet de votre avis sur votre formation ${trainee.training.title} à ${trainee.training.organisation.name}`;
 
             const consultationLink = getConsultationLink(trainee);
             const unsubscribeLink = getUnsubscribeLink(trainee);
@@ -220,7 +220,7 @@ module.exports = function(db, logger, configuration) {
                     carifEmail: mailOptions.from,
                     moment: moment
                 };
-                sendMail('avis_hors_sujet', params, mailOptions, successCallback, errorCallback);
+                sendMail('avis_injure', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);
         }
     };

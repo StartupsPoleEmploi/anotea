@@ -1,0 +1,15 @@
+Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
+
+Nous n’avons pas pu prendre en compte votre avis car il comporte des propos à caractère injurieux ou diffamatoire.
+
+Nous vous invitons à laisser un nouvel avis ici <%= formLink %> pour éclairer les futurs stagiaires :
+
+dites ce que vous avez aimé et moins aimé
+partagez votre expérience
+dites ce que vous auriez aimé savoir avant de choisir cette formation
+
+
+Nous vous remercions de votre compréhension,
+L’Equipe Anotéa
+
+<%- include('./legal/mentions.txt'); %>
