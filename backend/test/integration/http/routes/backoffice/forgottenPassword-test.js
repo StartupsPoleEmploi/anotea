@@ -77,8 +77,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             },
         }));
         await insertIntoDatabase('forgottenPasswordTokens', newForgottenPasswordToken({
+            creationDate: new Date(),
             id: 11111111111111,
             token,
+            profile: 'organisme'
         }));
 
         let response = await request(app)
@@ -122,8 +124,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             courriel,
         }));
         await insertIntoDatabase('forgottenPasswordTokens', newForgottenPasswordToken({
-            id: id,
+            creationDate: new Date(),
+            id,
             token,
+            profile: 'organisme'
         }));
 
         let response = await request(app)
