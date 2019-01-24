@@ -86,6 +86,7 @@ module.exports = {
     misc: db => {
         return Promise.all([
             db.collection('forgottenPasswordTokens').createIndex({ 'token': 1 }),
+            db.collection('forgottenPasswordTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 172800 }),
             db.collection('invalidAuthTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 86400 }),
             db.collection('financer').createIndex({ 'courriel': 1 }),
             db.collection('moderator').createIndex({ 'courriel': 1 }),

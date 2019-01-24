@@ -123,7 +123,7 @@ module.exports = function(db, logger, configuration) {
         getConsultationLink: getConsultationLink,
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
-        getOrganisationPasswordForgottenLink: getOrganisationPasswordForgottenLink,
+        getPasswordForgottenLink: getPasswordForgottenLink,
         sendNewCommentsNotification: async (mailOptions, data, successCallback, errorCallback) => {
 
             let { organisme, pickedComment } = data;

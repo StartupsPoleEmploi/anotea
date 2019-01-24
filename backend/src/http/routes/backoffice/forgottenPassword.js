@@ -1,7 +1,7 @@
 const express = require('express');
 const Boom = require('boom');
 const { tryAndCatch } = require('../routes-utils');
-const getOrganismeEmail = require('../../utils/getOrganismeEmail');
+const getOrganismeEmail = require('../../../common/utils/getOrganismeEmail');
 
 module.exports = ({ db, mailing, password }) => {
 

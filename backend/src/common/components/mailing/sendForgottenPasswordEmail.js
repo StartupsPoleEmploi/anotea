@@ -10,7 +10,8 @@ module.exports = (db, mailer) => {
     return async (_id, contact, collectionName, codeRegion) => {
         let passwordToken = uuid.v4();
 
-        await db.collection('forgottenPasswordTokens').insertOne({ token: passwordToken, id: _id, profile: profile[collectionName] });
+        await db.collection('forgottenPasswordTokens').removeOne({ id: _id, profile: profile[collectionName] });
+        await db.collection('forgottenPasswordTokens').insertOne({ creationDate: new Date(), token: passwordToken, id: _id, profile: profile[collectionName] });
         return new Promise((resolve, reject) => {
             mailer.sendPasswordForgotten({ to: contact }, codeRegion, passwordToken,
                 async () => {
