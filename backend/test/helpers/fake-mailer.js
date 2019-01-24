@@ -14,7 +14,7 @@ module.exports = () => {
         getOrganisationPasswordForgottenLink: (...args) => registerCall(args),
         sendNewCommentsNotification: (...args) => registerCall(args),
         sendOrganisationAccountLink: (...args) => registerCall(args),
-        sendOrganisationPasswordForgotten: (...args) => registerCall(args),
+        sendPasswordForgotten: (...args) => registerCall(args),
         sendVotreAvisMail: (...args) => registerCall(args),
         sendMalformedImport: (...args) => registerCall(args),
         sendAvisHorsSujetMail: (...args) => registerCall(args),

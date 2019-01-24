@@ -1,17 +1,21 @@
-const getOrganismeEmail = require('../../utils/getOrganismeEmail');
 const uuid = require('node-uuid');
 
 module.exports = (db, mailer) => {
 
-    return async organisme => {
-        let contact = getOrganismeEmail(organisme);
+    const profile = [];
+    profile['organismes'] = 'organisme';
+    profile['financer'] = 'financer';
+    profile['moderator'] = 'moderateur';
+
+    return async (_id, contact, collectionName, codeRegion) => {
         let passwordToken = uuid.v4();
 
-        await db.collection('forgottenPasswordTokens').insertOne({ token: passwordToken, id: organisme._id });
+        await db.collection('forgottenPasswordTokens').removeOne({ id: _id, profile: profile[collectionName] });
+        await db.collection('forgottenPasswordTokens').insertOne({ creationDate: new Date(), token: passwordToken, id: _id, profile: profile[collectionName] });
         return new Promise((resolve, reject) => {
-            mailer.sendOrganisationPasswordForgotten({ to: contact }, organisme, passwordToken,
+            mailer.sendPasswordForgotten({ to: contact }, codeRegion, passwordToken,
                 async () => {
-                    await db.collection('organismes').update({ _id: organisme._id }, {
+                    await db.collection('organismes').update({ _id }, {
                         $set: { mailSentDate: new Date() },
                         $unset: {
                             mailError: '',
@@ -19,14 +23,15 @@ module.exports = (db, mailer) => {
                         }
                     });
                     await db.collection('events').insertOne({
-                        organisationId: organisme.id,
+                        id: _id,
+                        profile: profile[collectionName],
                         date: new Date(),
                         type: 'askNewPassword'
                     });
                     resolve();
                 },
                 async err => {
-                    await db.collection('organismes').update({ _id: organisme._id }, {
+                    await db.collection(collectionName).update({ _id }, {
                         $set: {
                             mailError: 'smtpError',
                             mailErrorDetail: err
