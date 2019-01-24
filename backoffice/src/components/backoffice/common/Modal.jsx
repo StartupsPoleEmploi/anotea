@@ -23,7 +23,6 @@ export default class Modal extends React.Component {
         body.classList.add('modal-open');
         body.style.paddingRight = '15px';
 
-     componentWillUnmount() {
         this.triggerTransition();
     }
 
