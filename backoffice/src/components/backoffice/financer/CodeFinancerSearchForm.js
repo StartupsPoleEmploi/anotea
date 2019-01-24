@@ -16,9 +16,10 @@ export default class OrganisationSearchForm extends React.PureComponent {
     render() {
         const { currentFinancer, financers } = this.props;
         const options = financers.map(financer => ({
-            label: financer.title + ` (` + financer._id + `)`,
+            label: financer.title,
             id: financer._id,
         }));
+
         return (
             <h2 className="subtitle">
                 {currentFinancer &&
@@ -26,7 +27,6 @@ export default class OrganisationSearchForm extends React.PureComponent {
                     <strong>Code financeur : {' '}
                         {currentFinancer.title}{' '}
                     </strong>
-                    <small>({currentFinancer._id})</small>
                     <button type="button" className="close" aria-label="Close" onClick={this.unsetFinancer}>
                         <span aria-hidden="true">&times;</span>
                     </button>

@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import fr from 'react-intl/locale-data/fr';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import jwtDecode from 'jwt-decode';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { removeToken, setToken } from './utils/token';
 import { getRegion } from './lib/financerService';
 import { subscribeToHttpEvent } from './utils/http-client';
@@ -15,6 +15,7 @@ import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerationRoutes from './components/backoffice/moderation/ModerationRoutes';
+import { MyAccount } from './components/backoffice/account/MyAccount';
 import './utils/moment-fr';
 import './App.scss';
 
@@ -141,41 +142,43 @@ class App extends Component {
         let showLoginWithAccessToken = !this.state.loggedIn && this.state.action === 'loginWithAccessToken';
 
         return (
-            <div className="anotea-deprecated App">
-                <DeprecatedHeader
-                    handleLogout={this.handleLogout}
-                    loggedIn={this.state.loggedIn}
-                    profile={this.state.profile}
-                    raisonSociale={this.state.raisonSociale}
-                    codeFinanceur={this.state.codeFinanceur}
-                    codeRegion={this.state.codeRegion}
-                    region={this.state.region} />
+            <Router>
+                <div className="anotea-deprecated App">
+                    <DeprecatedHeader
+                        handleLogout={this.handleLogout}
+                        loggedIn={this.state.loggedIn}
+                        profile={this.state.profile}
+                        raisonSociale={this.state.raisonSociale}
+                        codeFinanceur={this.state.codeFinanceur}
+                        codeRegion={this.state.codeRegion}
+                        region={this.state.region} />
 
-                {this.state.action === 'creation' &&
-                <AccountActivation
-                    handleForgottenPassword={this.handleForgottenPassword}
-                    token={this.state.token}
-                    onError={this.handleError} onSuccess={this.handleLogout} />}
+                    {this.state.action === 'creation' &&
+                    <AccountActivation
+                        handleForgottenPassword={this.handleForgottenPassword}
+                        token={this.state.token}
+                        onError={this.handleError} onSuccess={this.handleLogout} />}
 
-                {this.state.forgottenPassword &&
-                <ForgottenPassword
-                    passwordLost={this.state.action === 'passwordLost'}
-                    token={this.state.token}
-                    onError={this.handleError}
-                    onSuccess={this.handleLogout} />}
+                    {this.state.forgottenPassword &&
+                    <ForgottenPassword
+                        passwordLost={this.state.action === 'passwordLost'}
+                        token={this.state.token}
+                        onError={this.handleError}
+                        onSuccess={this.handleLogout} />}
 
-                {showLoginWithAccessToken &&
-                <LoginWithAccessToken
-                    access_token={this.state.access_token}
-                    handleLoggedIn={this.handleLoggedIn}
-                    handleLogout={this.handleLogout} />}
+                    {showLoginWithAccessToken &&
+                    <LoginWithAccessToken
+                        access_token={this.state.access_token}
+                        handleLoggedIn={this.handleLoggedIn}
+                        handleLogout={this.handleLogout} />}
 
-                {showLoginForm &&
-                <LoginForm
-                    handleForgottenPassword={this.handleForgottenPassword}
-                    handleLoggedIn={this.handleLoggedIn} />
-                }
-            </div>
+                    {showLoginForm &&
+                    <LoginForm
+                        handleForgottenPassword={this.handleForgottenPassword}
+                        handleLoggedIn={this.handleLoggedIn} />
+                    }
+                </div>
+            </Router>
         );
     };
 
@@ -191,35 +194,50 @@ class App extends Component {
 
         //Use deprecated design
         return (
-            <div className="anotea-deprecated App">
-                <DeprecatedHeader
-                    handleLogout={this.handleLogout}
-                    loggedIn={this.state.loggedIn}
-                    profile={this.state.profile}
-                    raisonSociale={this.state.raisonSociale}
-                    codeFinanceur={this.state.codeFinanceur}
-                    codeRegion={this.state.codeRegion}
-                    region={this.state.region} />
+            <Router>
+                <div>
+                    <div className="anotea-deprecated App">
+                        <DeprecatedHeader
+                            handleLogout={this.handleLogout}
+                            loggedIn={this.state.loggedIn}
+                            profile={this.state.profile}
+                            raisonSociale={this.state.raisonSociale}
+                            codeFinanceur={this.state.codeFinanceur}
+                            codeRegion={this.state.codeRegion}
+                            region={this.state.region} />
 
-                <div className="main">
-                    {this.state.profile === 'organisme' &&
-                    <OrganisationPanel
-                        profile={this.state.profile}
-                        id={this.state.id}
-                        codeRegion={this.state.codeRegion}
-                        features={this.state.features} />
-                    }
+                        <Switch>
+                            <Redirect exact from="/" to="/admin" />
+                        </Switch>
 
-                    {this.state.profile === 'financer' &&
-                    <FinancerPanel
-                        profile={this.state.profile}
-                        id={this.state.id}
-                        codeRegion={this.state.codeRegion}
-                        codeFinanceur={this.state.codeFinanceur}
-                        features={this.state.features} />
-                    }
+                        <Route
+                            path="/mon-compte"
+                            render={props => (<MyAccount {...props} />)} />
+
+                        <Route
+                            path="/admin"
+                            render={props => (
+                                <div className="main">
+                                    {this.state.profile === 'organisme' &&
+                                        <OrganisationPanel
+                                            profile={this.state.profile}
+                                            id={this.state.id}
+                                            codeRegion={this.state.codeRegion}
+                                            features={this.state.features} />
+                                    }
+
+                                    {this.state.profile === 'financer' &&
+                                        <FinancerPanel
+                                            profile={this.state.profile}
+                                            id={this.state.id}
+                                            codeRegion={this.state.codeRegion}
+                                            codeFinanceur={this.state.codeFinanceur}
+                                            features={this.state.features} />
+                                    }
+                                </div>)} />
+                    </div>
                 </div>
-            </div>
+            </Router>
         );
     };
 

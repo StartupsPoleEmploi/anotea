@@ -4,3 +4,16 @@
     font-size: 16px;
     line-height: 24px;
 }
+
+
+.App-header .account-link {
+    color: white;
+    padding: 0px 15px;
+    position: absolute;
+    right: 165px;
+    top: 20px;
+}
+
+.App-header a, .App-header a:hover {
+    color: white;
+}

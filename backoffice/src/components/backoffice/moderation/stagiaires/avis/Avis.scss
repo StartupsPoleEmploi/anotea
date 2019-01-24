@@ -10,5 +10,11 @@
     border-radius: unset;
     border-bottom: 0.1rem solid $color-grey-5;
   }
+
+  .stagiaire-actions {
+    span:first-child {
+      margin-right: 1rem;
+    }
+  }
 }
 

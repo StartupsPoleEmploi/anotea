@@ -1,51 +1,51 @@
 @import '../../../styles/variables';
 @import '../../../styles/button-mixins';
 
- .Modal {
+.Modal {
   display: inline-block;
 
-   .modal-backdrop {
+  .modal-backdrop {
     &.show {
       opacity: 0.2;
     }
   }
 
-   .modal {
+  .modal {
     top: 5rem;
     display: block;
 
-     .modal-dialog {
+    .modal-dialog {
       max-width: 550px;
 
-       .modal-content {
+      .modal-content {
         border: none;
         box-shadow: $shadow;
 
-         .modal-header {
+        .modal-header {
           padding-bottom: 0;
           border-bottom: none;
 
-           .modal-title {
+          .modal-title {
             font-size: 1.1rem;
             font-weight: $font-weight-700;
           }
         }
 
-         .modal-body {
+        .modal-body {
           padding-bottom: 0;
         }
 
-         .modal-footer {
+        .modal-footer {
           padding-top: 0;
           border-top: none;
 
-           button.cancel {
+          button.cancel {
             @include action-button($color-red, $color-white);
             border: none;
             text-transform: unset;
           }
 
-           button.confirm {
+          button.confirm {
             @include action-button($color-blue, $color-blue-10);
           }
         }

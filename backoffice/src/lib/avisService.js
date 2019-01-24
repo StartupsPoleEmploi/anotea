@@ -67,3 +67,11 @@ export const editAvis = (id, text) => {
         text,
     });
 };
+
+export const resendEmail = id => {
+    return _put(`/backoffice/avis/${id}/resendEmail`);
+};
+
+export const deleteAvis = id => {
+    return _delete(`/backoffice/avis/${id}`);
+};

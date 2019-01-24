@@ -1,6 +1,7 @@
 import React from 'react';
 import Logout from './Logout';
 import './header.css';
+import { NavLink } from 'react-router-dom';
 
 let DeprecatedHeader = props => {
 
@@ -26,15 +27,26 @@ let DeprecatedHeader = props => {
 
     return (
         <div className="App-header">
+            <NavLink to="/">
             <img src={`${process.env.PUBLIC_URL}/images/logo.png`} className="App-logo" alt="logo" />
             {props.profile === 'organisme' ? <h5 className="label h5">{props.raisonSociale}</h5> :
                 props.profile === 'financer' ?
                     <h1>Espace Financeur {getLabel(props.codeFinanceur)} {props.region}</h1> :
                     <h1>Espace Anotea</h1>
             }
+            </NavLink>
             {props.profile === 'organisme' && <a className="helpLink float-right"
-                                                 href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide</a>}
-            {props.loggedIn && <Logout handleLogout={props.handleLogout} />}
+                href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide</a>}
+
+            {props.loggedIn &&
+                <div>
+                    <NavLink to="/mon-compte" className="account-link"
+                        activeClassName="active">
+                        <span className="fas fa-cog" />
+                    </NavLink>
+                    <Logout handleLogout={props.handleLogout} />
+                </div>
+            }
         </div>
     );
 };

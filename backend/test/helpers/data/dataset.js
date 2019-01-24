@@ -161,7 +161,7 @@ module.exports = {
     newModerateurAccount: custom => {
         return _.merge({
             courriel: 'admin@pole-emploi.fr',
-            password: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             codeRegion: '11'
         }, custom);
     },
@@ -205,7 +205,7 @@ module.exports = {
     newFinancerAccount: custom => {
         return _.merge({
             courriel: 'contact@financer.fr',
-            password: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             codeRegion: '11',
             raisonSociale: 'Conseil Regional',
             codeFinanceur: '2'

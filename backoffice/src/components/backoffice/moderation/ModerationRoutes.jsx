@@ -5,6 +5,7 @@ import Header from '../common/Header';
 import queryString from 'query-string';
 import OrganismePanel from './organismes/OrganismePanel';
 import StagiairesPanel from './stagiaires/StagiairesPanel';
+import { MyAccount } from '../account/MyAccount';
 
 export default class ModerationRoutes extends React.Component {
 
@@ -20,8 +21,10 @@ export default class ModerationRoutes extends React.Component {
                 <Switch>
                     <Redirect exact from="/" to="/admin/moderation/stagiaires/all" />
                     <Redirect exact from="/admin" to="/admin/moderation/stagiaires/all" />
-
                 </Switch>
+                <Route
+                    path="/mon-compte"
+                    render={props => (<MyAccount {...props} />)} />
                 <Route
                     path="/admin/moderation/organismes"
                     render={props => (<OrganismePanel {...props} codeRegion={this.props.codeRegion} />)} />

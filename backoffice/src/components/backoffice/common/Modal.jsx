@@ -2,45 +2,46 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Modal.scss';
 
- export default class Modal extends React.Component {
+export default class Modal extends React.Component {
 
-     static propTypes = {
+    static propTypes = {
         title: PropTypes.string.isRequired,
         text: PropTypes.object.isRequired,
         onClose: PropTypes.func.isRequired,
         onConfirmed: PropTypes.func.isRequired,
     };
 
-     constructor(props) {
+    constructor(props) {
         super(props);
         this.state = {
             showTransition: false,
         };
     }
 
-     componentDidMount() {
+    componentDidMount() {
         let body = document.getElementsByTagName('body')[0];
         body.classList.add('modal-open');
         body.style.paddingRight = '15px';
 
-         this.triggerTransition();
+     componentWillUnmount() {
+        this.triggerTransition();
     }
 
-     componentWillUnmount() {
+    componentWillUnmount() {
         let body = document.getElementsByTagName('body')[0];
         body.classList.remove('modal-open');
         body.style.paddingRight = null;
     }
 
-     triggerTransition() {
+    triggerTransition() {
         setTimeout(() => this.setState({ showTransition: true }), 5);
     }
 
-     render() {
+    render() {
         let { title, text, onClose, onConfirmed } = this.props;
         let transitionClass = this.state.showTransition ? 'show' : '';
 
-         return (
+        return (
             <div className="Modal">
                 <div className={`modal-backdrop fade ${transitionClass}`} />
                 <div className={`modal fade ${transitionClass}`} tabIndex="-1" role="dialog">
