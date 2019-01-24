@@ -2,6 +2,7 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
+const getOrganismeEmail = require('../../utils/getOrganismeEmail');
 
 module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
 
@@ -73,7 +74,7 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
         let organisme = await organismes.findOne({ _id: id });
         if (organisme) {
             if (organisme.passwordHash) {
-                await sendForgottenPasswordEmail(organisme);
+                await sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), 'organismes', organisme.codeRegion);
             } else {
                 await sendOrganisationAccountEmail(organisme, { ip: getRemoteAddress(req) });
             }
