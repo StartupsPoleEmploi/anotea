@@ -13,24 +13,19 @@ module.exports = ({ db, password, configuration }) => {
         let id = req.body.id;
         let profile = req.body.profile;
 
-        let collection = '';
-        if (profile === 'organisme') {
-            collection = 'organismes';
-        } else if (profile === 'financer') {
-            collection = 'financer';
+        if (profile === 'financeur') {
             id = new ObjectID(id);
         } else if (profile === 'moderateur') {
-            collection = 'moderator';
             id = new ObjectID(id);
         }
 
         try {
-            let user = await db.collection(collection).findOne({ _id: id });
-            if (user && await checkPassword(actualPassword, user.passwordHash, configuration)) {
+            let account = await db.collection('account').findOne({ _id: id });
+            if (account && await checkPassword(actualPassword, account.passwordHash, configuration)) {
 
                 if (isPasswordStrongEnough(password)) {
                     let passwordHash = await hashPassword(password);
-                    await db.collection(collection).updateOne({ _id: id }, {
+                    await db.collection('account').updateOne({ _id: id }, {
                         $set: {
                             'meta.rehashed': true,
                             'passwordHash': passwordHash,

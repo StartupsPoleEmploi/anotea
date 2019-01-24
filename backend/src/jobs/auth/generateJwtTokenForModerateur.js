@@ -15,7 +15,7 @@ execute(async ({ db, auth, exit }) => {
     }
 
     let courriel = cli.courriel;
-    let moderateur = await db.collection('moderator').findOne({ 'courriel': courriel });
+    let moderateur = await db.collection('account').findOne({ 'courriel': courriel });
     let data = {
         sub: courriel,
         profile: 'moderateur',

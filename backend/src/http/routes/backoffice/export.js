@@ -30,7 +30,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
 
         if (req.user.profile === 'organisme') {
             query['training.organisation.siret'] = req.user.siret;
-        } else if (req.user.profile === 'financer') {
+        } else if (req.user.profile === 'financeur') {
             query['codeRegion'] = req.user.codeRegion;
             if (req.user.codeFinanceur !== POLE_EMPLOI) {
                 query['training.codeFinanceur'] = { '$elemMatch': { '$eq': req.user.codeFinanceur } };

@@ -28,7 +28,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepEqual(response.body, { 'status': 'OK' });
 
         let db = await getTestDatabase();
-        let res = await db.collection('organismes').findOne({ _id: id });
+        let res = await db.collection('account').findOne({ _id: id });
         assert.deepEqual(res.editedCourriel, 'edited@pole-emploi.fr');
     });
 
@@ -55,7 +55,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepEqual(response.body, { 'status': 'OK' });
 
         let db = await getTestDatabase();
-        let res = await db.collection('organismes').findOne({ _id: id });
+        let res = await db.collection('account').findOne({ _id: id });
         assert.ok(!res.editedCourriel);
     });
 }));

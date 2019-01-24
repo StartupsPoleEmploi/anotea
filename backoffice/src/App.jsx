@@ -226,7 +226,7 @@ class App extends Component {
                                             features={this.state.features} />
                                     }
 
-                                    {this.state.profile === 'financer' &&
+                                    {this.state.profile === 'financeur' &&
                                         <FinancerPanel
                                             profile={this.state.profile}
                                             id={this.state.id}

@@ -18,7 +18,7 @@ execute(async ({ logger, db, configuration }) => {
 
             output.write(`Siret;Raison sociale;Email;Nombre Avis\n`);
 
-            db.collection('organismes').find({ codeRegion }).transformStream({
+            db.collection('account').find({ profile: 'organisme', codeRegion }).transformStream({
                 transform: organisme => {
                     return `="${organisme.meta.siretAsString}";"${organisme.raisonSociale}";"${getOrganismeEmail(organisme)}";"${organisme.meta.nbAvis || 0}"\n`;
                 }

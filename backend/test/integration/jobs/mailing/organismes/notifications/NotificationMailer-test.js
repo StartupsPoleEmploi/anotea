@@ -56,7 +56,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepEqual(spy, [{
             to: 'new@organisme.fr'
         }]);
-        let organisme = await db.collection('organismes').findOne({ _id: 31705038300064 });
+        let organisme = await db.collection('account').findOne({ _id: 31705038300064 });
         assert.ok(organisme.newCommentsNotificationEmailSentDate);
     });
 
@@ -100,7 +100,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepEqual(spy, [{
             to: 'new@organisme.fr'
         }]);
-        let organisme = await db.collection('organismes').findOne({ _id: 31705038300064 });
+        let organisme = await db.collection('account').findOne({ _id: 31705038300064 });
         assert.ok(moment(organisme.newCommentsNotificationEmailSentDate).isAfter(newCommentsNotificationEmailSentDate));
     });
 

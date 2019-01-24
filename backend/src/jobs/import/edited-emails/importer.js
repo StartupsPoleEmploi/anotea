@@ -20,11 +20,11 @@ module.exports = function(db, logger, configuration, mailer) {
         let updated = 0;
 
         let transformer = transform(async (record, callback) => {
-            let organisation = await db.collection('organismes').findOne({ courriel: record[0] });
+            let organisation = await db.collection('account').findOne({ courriel: record[0] });
 
             if (organisation !== null) {
                 found++;
-                db.collection('organismes').update({ courriel: organisation.courriel }, { $set: { editedCourriel: record[1] } }, {}, (err, count) => {
+                db.collection('account').update({ courriel: organisation.courriel }, { $set: { editedCourriel: record[1] } }, {}, (err, count) => {
                     if (err) {
                         logger.error(err);
                     } else {

@@ -1,6 +1,6 @@
 module.exports = async (db, logger) => {
 
-    let cursor = db.collection('organismes').find();
+    let cursor = db.collection('account').find();
     const computeScore = async siret => {
         let results = await db.collection('comment').aggregate([
             {
@@ -59,7 +59,7 @@ module.exports = async (db, logger) => {
         const organisme = await cursor.next();
         try {
             stats.total++;
-            await db.collection('organismes')
+            await db.collection('account')
             .updateOne({ _id: organisme._id }, {
                 $set: {
                     score: await computeScore(organisme.meta.siretAsString),

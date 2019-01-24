@@ -50,7 +50,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let stats = await computeScore(db, logger);
 
-        let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('account').findOne({ SIRET: 22222222222222 });
         assert.deepEqual(stats, {
             total: 1,
             updated: 1,
@@ -101,7 +101,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await computeScore(db, logger);
 
-        let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('account').findOne({ SIRET: 22222222222222 });
         assert.deepEqual(doc.score, {
             nb_avis: 3,
             notes: {
@@ -131,7 +131,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await computeScore(db, logger);
 
-        let doc = await db.collection('organismes').findOne({ SIRET: 44444444444444 });
+        let doc = await db.collection('account').findOne({ SIRET: 44444444444444 });
         assert.deepEqual(doc.score, {
             nb_avis: 0,
         });

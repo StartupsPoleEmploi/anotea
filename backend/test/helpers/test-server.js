@@ -13,7 +13,7 @@ module.exports = {
                 },
                 logAsModerateur: async (app, courriel) => {
 
-                    await context.insertIntoDatabase('moderator', newModerateurAccount({
+                    await context.insertIntoDatabase('account', newModerateurAccount({
                         courriel,
                     }));
 
@@ -46,7 +46,7 @@ module.exports = {
                 },
                 logAsFinancer: async (app, courriel, codeFinanceur) => {
 
-                    await context.insertIntoDatabase('financer', newFinancerAccount({
+                    await context.insertIntoDatabase('account', newFinancerAccount({
                         courriel,
                         codeFinanceur: `${codeFinanceur}`
                     }));

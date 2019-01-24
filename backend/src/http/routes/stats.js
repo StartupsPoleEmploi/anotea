@@ -137,12 +137,12 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
     const computeOrganismesStats = async (regionName, codeRegion) => {
 
-        let organismes = db.collection('organismes');
+        let organismes = db.collection('account');
 
         let [nbOrganimes, nbOrganismesAvecAvis, nbOrganismesActifs] = await Promise.all([
-            organismes.countDocuments({ 'codeRegion': codeRegion }),
-            organismes.countDocuments({ 'score.nb_avis': { $gte: 1 }, 'codeRegion': codeRegion }),
-            organismes.countDocuments({ 'passwordHash': { $ne: null }, 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'profile': 'organisme', 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'profile': 'organisme', 'score.nb_avis': { $gte: 1 }, 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'profile': 'organisme', 'passwordHash': { $ne: null }, 'codeRegion': codeRegion }),
         ]);
 
         return {

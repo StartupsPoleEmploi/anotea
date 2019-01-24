@@ -30,7 +30,7 @@ let DeprecatedHeader = props => {
             <NavLink to="/">
             <img src={`${process.env.PUBLIC_URL}/images/logo.png`} className="App-logo" alt="logo" />
             {props.profile === 'organisme' ? <h5 className="label h5">{props.raisonSociale}</h5> :
-                props.profile === 'financer' ?
+                props.profile === 'financeur' ?
                     <h1>Espace Financeur {getLabel(props.codeFinanceur)} {props.region}</h1> :
                     <h1>Espace Anotea</h1>
             }

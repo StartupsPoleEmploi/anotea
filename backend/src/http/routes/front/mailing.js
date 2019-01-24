@@ -53,7 +53,7 @@ module.exports = ({ db, logger, mailer }) => {
         if (trainee !== null) {
             trackRouteHandler('trainee', trainee, true, res);
         } else {
-            const organisme = await db.collection('organismes').findOne({ token: req.params.token });
+            const organisme = await db.collection('account').findOne({ token: req.params.token });
             if (organisme !== null) {
                 trackRouteHandler('organismes', organisme, true, res);
             } else {

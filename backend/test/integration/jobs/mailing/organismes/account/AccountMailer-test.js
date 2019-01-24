@@ -68,7 +68,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await accountMailer.sendEmails(dummyAction);
 
-        let organisme = await db.collection('organismes').findOne({ courriel: 'new@organisme.fr' });
+        let organisme = await db.collection('account').findOne({ courriel: 'new@organisme.fr' });
         assert.ok(organisme.mailSentDate);
         assert.deepEqual(organisme.resend, false);
         assert.deepEqual(organisme.mailError, undefined);
@@ -87,7 +87,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await accountMailer.sendEmails(dummyAction);
 
-        let organisme = await db.collection('organismes').findOne({ courriel: 'new@organisme.fr' });
+        let organisme = await db.collection('account').findOne({ courriel: 'new@organisme.fr' });
         assert.deepEqual(organisme.resend, true);
     });
 
@@ -102,7 +102,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             await accountMailer.sendEmails(dummyAction);
             assert.fail();
         } catch (e) {
-            let organisme = await db.collection('organismes').findOne({ courriel: 'new@organisme.fr' });
+            let organisme = await db.collection('account').findOne({ courriel: 'new@organisme.fr' });
             assert.deepEqual(organisme.mailError, 'smtpError');
             assert.deepEqual(organisme.mailErrorDetail, 'timeout');
         }

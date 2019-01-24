@@ -19,7 +19,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         await generateOrganismes(db, logger, csvFile);
         await synchronizeOrganismes(db, logger);
 
-        let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('account').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
         assert.deepEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
@@ -72,7 +72,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         await generateOrganismes(db, logger, csvFile);
         await synchronizeOrganismes(db, logger);
 
-        let doc = await db.collection('organismes').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('account').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.updateDate);
         assert.deepEqual(_.omit(doc, ['updateDate']), {
             _id: 22222222222222,
@@ -122,7 +122,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         await generateOrganismes(db, logger, csvFile);
         await synchronizeOrganismes(db, logger);
 
-        let doc = await db.collection('organismes').findOne({ SIRET: 11111111111111 });
+        let doc = await db.collection('account').findOne({ SIRET: 11111111111111 });
         assert.ok(doc);
     });
 
@@ -134,7 +134,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         await generateOrganismes(db, logger, csvFile);
         await synchronizeOrganismes(db, logger);
 
-        let doc = await db.collection('organismes').findOne({ SIRET: 33333333333333 });
+        let doc = await db.collection('account').findOne({ SIRET: 33333333333333 });
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
         assert.deepEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {

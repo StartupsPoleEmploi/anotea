@@ -162,7 +162,8 @@ module.exports = {
         return _.merge({
             courriel: 'admin@pole-emploi.fr',
             passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
-            codeRegion: '11'
+            codeRegion: '11',
+            profile: 'moderateur'
         }, custom);
     },
     newOrganismeAccount: custom => {
@@ -200,6 +201,7 @@ module.exports = {
             meta: {
                 siretAsString: '6080274100045',
             },
+            profile: 'organisme'
         }, custom);
     },
     newFinancerAccount: custom => {
@@ -208,7 +210,8 @@ module.exports = {
             passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             codeRegion: '11',
             raisonSociale: 'Conseil Regional',
-            codeFinanceur: '2'
+            codeFinanceur: '2',
+            profile: 'financeur'
         }, custom);
     },
     newForgottenPasswordToken: custom => {

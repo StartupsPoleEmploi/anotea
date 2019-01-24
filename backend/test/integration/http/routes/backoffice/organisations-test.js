@@ -75,7 +75,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         //should flag account as rehashed
         let db = await getTestDatabase();
-        let res = await db.collection('organismes').findOne({ _id: 11111111111111 });
+        let res = await db.collection('account').findOne({ _id: 11111111111111 });
         assert.ok(res.meta);
         assert.ok(res.meta.rehashed);
     });
