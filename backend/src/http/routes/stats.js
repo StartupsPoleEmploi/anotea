@@ -137,7 +137,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
     const computeOrganismesStats = async (regionName, codeRegion) => {
 
-        let organismes = db.collection('account');
+        let organismes = db.collection('accounts');
 
         let [nbOrganimes, nbOrganismesAvecAvis, nbOrganismesActifs] = await Promise.all([
             organismes.countDocuments({ 'profile': 'organisme', 'codeRegion': codeRegion }),

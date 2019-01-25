@@ -11,7 +11,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         let id = 11111111111111;
 
-        await insertIntoDatabase('account', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             _id: id,
             SIRET: id,
             meta: {
@@ -28,7 +28,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepEqual(response.body, { 'status': 'OK' });
 
         let db = await getTestDatabase();
-        let res = await db.collection('account').findOne({ _id: id });
+        let res = await db.collection('accounts').findOne({ _id: id });
         assert.deepEqual(res.editedCourriel, 'edited@pole-emploi.fr');
     });
 
@@ -38,7 +38,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         let id = 11111111111111;
 
-        await insertIntoDatabase('account', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             _id: id,
             SIRET: id,
             editedCourriel: 'edited@pole-emploi.fr',
@@ -55,7 +55,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepEqual(response.body, { 'status': 'OK' });
 
         let db = await getTestDatabase();
-        let res = await db.collection('account').findOne({ _id: id });
+        let res = await db.collection('accounts').findOne({ _id: id });
         assert.ok(!res.editedCourriel);
     });
 }));

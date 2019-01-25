@@ -13,7 +13,7 @@ module.exports = {
                 },
                 logAsModerateur: async (app, courriel) => {
 
-                    await context.insertIntoDatabase('account', newModerateurAccount({
+                    await context.insertIntoDatabase('accounts', newModerateurAccount({
                         courriel,
                     }));
 
@@ -35,7 +35,7 @@ module.exports = {
                         },
                     });
 
-                    await context.insertIntoDatabase('account', organisme);
+                    await context.insertIntoDatabase('accounts', organisme);
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
@@ -46,7 +46,7 @@ module.exports = {
                 },
                 logAsFinancer: async (app, courriel, codeFinanceur) => {
 
-                    await context.insertIntoDatabase('account', newFinancerAccount({
+                    await context.insertIntoDatabase('accounts', newFinancerAccount({
                         courriel,
                         codeFinanceur: `${codeFinanceur}`
                     }));

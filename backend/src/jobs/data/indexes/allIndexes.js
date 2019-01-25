@@ -51,16 +51,16 @@ module.exports = {
             db.collection('regions').createIndex({ 'codeRegion': 1 }),
         ]);
     },
-    account: db => {
+    accounts: db => {
         return Promise.all([
-            db.collection('account').createIndex({ 'numero': 1 }),
-            db.collection('account').createIndex({ 'SIRET': 1 }),
-            db.collection('account').createIndex({ 'score.nb_avis': 1 }),
-            db.collection('account').createIndex({ 'lieux_de_formation.adresse.code_postal': 1 }),
-            db.collection('account').createIndex({ 'lieux_de_formation.adresse.region': 1 }),
-            db.collection('account').createIndex({ 'codeRegion': 1 }),
-            db.collection('account').createIndex({ 'courriel': 1 }),
-            db.collection('account').createIndex({ 'profile': 1 })
+            db.collection('accounts').createIndex({ 'numero': 1 }),
+            db.collection('accounts').createIndex({ 'SIRET': 1 }),
+            db.collection('accounts').createIndex({ 'score.nb_avis': 1 }),
+            db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.code_postal': 1 }),
+            db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.region': 1 }),
+            db.collection('accounts').createIndex({ 'codeRegion': 1 }),
+            db.collection('accounts').createIndex({ 'courriel': 1 }),
+            db.collection('accounts').createIndex({ 'profile': 1 })
         ]);
     },
     sessionsReconciliees: db => {

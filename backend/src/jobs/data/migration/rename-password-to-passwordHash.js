@@ -3,7 +3,7 @@
 
 module.exports = db => {
     return Promise.all([
-        db.collection('account').updateMany({}, {
+        db.collection('accounts').updateMany({}, {
             $rename: { password: 'passwordHash' },
         })
     ]);

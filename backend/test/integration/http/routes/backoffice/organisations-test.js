@@ -9,7 +9,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let token = randomize('token');
-        await insertIntoDatabase('account', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             _id: 11111111111111,
             SIRET: 11111111111111,
             token,
@@ -49,7 +49,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let token = randomize('token');
-        await insertIntoDatabase('account', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             _id: 11111111111111,
             SIRET: 11111111111111,
             token,
@@ -75,7 +75,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         //should flag account as rehashed
         let db = await getTestDatabase();
-        let res = await db.collection('account').findOne({ _id: 11111111111111 });
+        let res = await db.collection('accounts').findOne({ _id: 11111111111111 });
         assert.ok(res.meta);
         assert.ok(res.meta.rehashed);
     });
@@ -84,7 +84,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let token = randomize('token');
-        await insertIntoDatabase('account', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             token,
             passwordHash: null,
         }));
@@ -141,7 +141,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let id = 33333333333333;
 
-        await insertIntoDatabase('account', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             _id: id,
             SIRET: id,
             editedCourriel: 'edited@pole-emploi.fr',
@@ -170,7 +170,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let id = 44444444444444;
         let courriel = 'edited@pole-emploi.fr';
 
-        await insertIntoDatabase('account', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             _id: id,
             SIRET: id,
             courriel,

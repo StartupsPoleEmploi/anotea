@@ -18,7 +18,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, pa
 
     router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 
-        let organisme = await db.collection('account').findOne({ token: req.query.token });
+        let organisme = await db.collection('accounts').findOne({ token: req.query.token });
         if (organisme) {
             if (!organisme.passwordHash) {
                 delete organisme._id;
@@ -35,11 +35,11 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, pa
         const token = req.body.token;
         const password = req.body.password;
 
-        let organisme = await db.collection('account').findOne({ token });
+        let organisme = await db.collection('accounts').findOne({ token });
         if (organisme) {
             if (!organisme.passwordHash) {
                 if (isPasswordStrongEnough(password)) {
-                    await db.collection('account').updateOne({ token }, {
+                    await db.collection('accounts').updateOne({ token }, {
                         $set: {
                             'meta.rehashed': true,
                             'passwordHash': await hashPassword(password)
@@ -63,7 +63,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, pa
 
     router.get('/backoffice/organisation/:id/info', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 
-        const organisation = await db.collection('account').findOne({ _id: parseInt(req.params.id) });
+        const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
 
             organisation.accountCreated = !!organisation.passwordHash;
@@ -154,7 +154,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, pa
 
         checkOrganisme(req);
 
-        const organisation = await db.collection('account').findOne({ _id: parseInt(req.params.id) });
+        const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
             let filter = { $or: [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }] };
@@ -253,7 +253,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, pa
 
         checkOrganisme(req);
 
-        const organisation = await db.collection('account').findOne({ _id: parseInt(req.params.id) });
+        const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
             let filter = '';
@@ -312,7 +312,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, pa
             throw Boom.forbidden('Action non autorisé');
         }
 
-        const organisation = await db.collection('account').findOne({ _id: parseInt(req.params.id) });
+        const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
             const filter = { 'training.organisation.siret': `${req.params.id}`, 'step': { $gte: 2 } };
@@ -356,7 +356,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, pa
 
         checkOrganisme(req);
 
-        const organisation = await db.collection('account').findOne({ _id: parseInt(req.params.id) });
+        const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
             const filter = { 'training.organisation.siret': `${req.params.id}`, 'step': { $gte: 2 } };
 
@@ -394,7 +394,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, pa
 
         checkOrganisme(req);
 
-        const organisation = await db.collection('account').findOne({ _id: parseInt(req.params.id) });
+        const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
             const trainings = await db.collection('comment').aggregate([
                 {

@@ -37,7 +37,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     }));
                 })
             ),
-            insertIntoDatabase('account', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
@@ -56,7 +56,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepEqual(spy, [{
             to: 'new@organisme.fr'
         }]);
-        let organisme = await db.collection('account').findOne({ _id: 31705038300064 });
+        let organisme = await db.collection('accounts').findOne({ _id: 31705038300064 });
         assert.ok(organisme.newCommentsNotificationEmailSentDate);
     });
 
@@ -80,7 +80,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     }));
                 })
             ),
-            insertIntoDatabase('account', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
@@ -100,7 +100,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepEqual(spy, [{
             to: 'new@organisme.fr'
         }]);
-        let organisme = await db.collection('account').findOne({ _id: 31705038300064 });
+        let organisme = await db.collection('accounts').findOne({ _id: 31705038300064 });
         assert.ok(moment(organisme.newCommentsNotificationEmailSentDate).isAfter(newCommentsNotificationEmailSentDate));
     });
 
@@ -110,7 +110,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let notificationMailer = new NotificationMailer(db, logger, configuration, fakeMailer(spy));
         await Promise.all([
-            insertIntoDatabase('account', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
@@ -147,7 +147,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     }));
                 })
             ),
-            insertIntoDatabase('account', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
@@ -184,7 +184,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     }));
                 })
             ),
-            insertIntoDatabase('account', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 newCommentsNotificationEmailSentDate: moment().subtract('3', 'days'),

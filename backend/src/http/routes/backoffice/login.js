@@ -75,7 +75,7 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
             return Promise.resolve(account);
         }
 
-        return db.collection('account').updateOne({ _id: account._id }, {
+        return db.collection('accounts').updateOne({ _id: account._id }, {
             $set: {
                 'meta.rehashed': true,
                 'passwordHash': await hashPassword(password)
@@ -90,13 +90,13 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         let token;
 
         try {
-            const user = await db.collection('account').findOne({ courriel: identifier });
-            if (user !== null && await checkPassword(password, user.passwordHash, configuration)) {
-                await rehashPassword(user, password);
-                token = await handleAccount(req, res, user);
+            const account = await db.collection('accounts').findOne({ courriel: identifier });
+            if (account !== null && await checkPassword(password, account.passwordHash, configuration)) {
+                await rehashPassword(account, password);
+                token = await handleAccount(req, res, account);
             }
 
-            let organisme = await db.collection('account').findOne({ 'meta.siretAsString': identifier });
+            let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': identifier });
             if (organisme !== null && await checkPassword(password, organisme.passwordHash, configuration)) {
                 await rehashPassword(organisme, password);
                 token = await handleOrganisme(req, res, organisme);
@@ -126,7 +126,7 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
             throw Boom.badRequest('Token invalide', e);
         }
 
-        let organisme = await db.collection('account').findOne({
+        let organisme = await db.collection('accounts').findOne({
             'meta.siretAsString': user.sub,
         });
 

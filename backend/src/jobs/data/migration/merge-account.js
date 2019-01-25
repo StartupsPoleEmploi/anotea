@@ -6,8 +6,8 @@ module.exports = async db => {
     await db.collection('forgottenPasswordTokens').removeMany({});
     await db.collection('invalidAuthTokens').removeMany({});
 
-    await db.collection('organismes').rename('account');
-    await db.collection('account').updateMany({}, {
+    await db.collection('organismes').rename('accounts');
+    await db.collection('accounts').updateMany({}, {
         $set: { profile: 'organisme' },
     });
 
@@ -16,7 +16,7 @@ module.exports = async db => {
     financers.forEach(financer => {
         delete financer._id;
         financer.profile = 'financeur';
-        db.collection('account').insertOne(financer);
+        db.collection('accounts').insertOne(financer);
     });
 
     let moderators = await db.collection('moderator').find().toArray();
@@ -24,6 +24,6 @@ module.exports = async db => {
     moderators.forEach(moderator => {
         delete moderator._id;
         moderator.profile = 'moderateur';
-        db.collection('account').insertOne(moderator);
+        db.collection('accounts').insertOne(moderator);
     });
 };

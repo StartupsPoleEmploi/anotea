@@ -20,12 +20,12 @@ module.exports = ({ db, password, configuration }) => {
         }
 
         try {
-            let account = await db.collection('account').findOne({ _id: id });
+            let account = await db.collection('accounts').findOne({ _id: id });
             if (account && await checkPassword(actualPassword, account.passwordHash, configuration)) {
 
                 if (isPasswordStrongEnough(password)) {
                     let passwordHash = await hashPassword(password);
-                    await db.collection('account').updateOne({ _id: id }, {
+                    await db.collection('accounts').updateOne({ _id: id }, {
                         $set: {
                             'meta.rehashed': true,
                             'passwordHash': passwordHash,

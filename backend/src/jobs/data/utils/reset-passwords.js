@@ -14,7 +14,7 @@ execute(async ({ db }) => {
     let hash = await hashPassword(password);
 
     return Promise.all([
-        db.collection('account').updateMany({ passwordHash: { $ne: null } }, {
+        db.collection('accounts').updateMany({ passwordHash: { $ne: null } }, {
             $set: {
                 'meta.rehashed': true,
                 'passwordHash': hash,

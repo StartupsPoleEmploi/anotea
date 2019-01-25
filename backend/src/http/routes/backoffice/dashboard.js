@@ -29,7 +29,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger }) => {
     });
 
     router.get('/backoffice/dashboard/organisations', checkAuth, checkProfile('moderateur'), (req, res) => {
-        db.collection('account').aggregate([
+        db.collection('accounts').aggregate([
             {
                 $match: {
                     profile: 'organisme'

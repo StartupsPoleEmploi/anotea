@@ -6,7 +6,7 @@ module.exports = (db, mailer) => {
         return new Promise((resolve, reject) => {
             mailer.sendOrganisationAccountLink({ to: getOrganismeEmail(organisme) }, organisme,
                 async () => {
-                    await db.collection('account').update({ '_id': organisme._id }, {
+                    await db.collection('accounts').update({ '_id': organisme._id }, {
                         $set: {
                             mailSentDate: new Date(),
                             resent: true

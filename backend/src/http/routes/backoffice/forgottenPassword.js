@@ -12,13 +12,13 @@ module.exports = ({ db, mailing, password }) => {
 
         const identifier = req.body.username;
 
-        let organisme = await db.collection('account').findOne({ 'meta.siretAsString': identifier });
+        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': identifier });
         if (organisme) {
             await mailing.sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), 'organismes', organisme.codeRegion);
             return res.json({ 'message': 'mail sent' });
         }
 
-        let account = await db.collection('account').findOne({ courriel: identifier });
+        let account = await db.collection('accounts').findOne({ courriel: identifier });
         if (account) {
             await mailing.sendForgottenPasswordEmail(account._id, account.courriel, account.codeRegion);
             return res.json({ 'message': 'mail sent' });
@@ -46,14 +46,14 @@ module.exports = ({ db, mailing, password }) => {
             let forgottenPasswordToken = await db.collection('forgottenPasswordTokens').findOne({ token });
             if (forgottenPasswordToken) {
 
-                let account = await db.collection('account').findOne({ _id: forgottenPasswordToken.id });
+                let account = await db.collection('accounts').findOne({ _id: forgottenPasswordToken.id });
 
                 if (account) {
                     if (isPasswordStrongEnough(password)) {
                         let passwordHash = await hashPassword(password);
                         await Promise.all([
                             db.collection('forgottenPasswordTokens').remove({ token }),
-                            db.collection('account').updateOne({ _id: account._id }, {
+                            db.collection('accounts').updateOne({ _id: account._id }, {
                                 $set: {
                                     'meta.rehashed': true,
                                     'passwordHash': passwordHash,

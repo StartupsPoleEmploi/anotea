@@ -39,7 +39,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('account', _.omit(newOrganismeAccount({
+            insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
                 meta: {
@@ -50,7 +50,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let stats = await computeScore(db, logger);
 
-        let doc = await db.collection('account').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.deepEqual(stats, {
             total: 1,
             updated: 1,
@@ -74,7 +74,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('account', _.omit(newOrganismeAccount({
+            insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
                 meta: {
@@ -101,7 +101,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await computeScore(db, logger);
 
-        let doc = await db.collection('account').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.deepEqual(doc.score, {
             nb_avis: 3,
             notes: {
@@ -120,7 +120,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('account', _.omit(newOrganismeAccount({
+            insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
                 _id: 44444444444444,
                 SIRET: 44444444444444,
                 meta: {
@@ -131,7 +131,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await computeScore(db, logger);
 
-        let doc = await db.collection('account').findOne({ SIRET: 44444444444444 });
+        let doc = await db.collection('accounts').findOne({ SIRET: 44444444444444 });
         assert.deepEqual(doc.score, {
             nb_avis: 0,
         });
