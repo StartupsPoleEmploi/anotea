@@ -19,7 +19,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let siret = '22222222222222';
-        await insertIntoDatabase('organismes', buildOrganismeAccount(siret));
+        await insertIntoDatabase('account', buildOrganismeAccount(siret));
 
         let response = await request(app).get(`/api/v1/organismes-formateurs/${siret}`);
 
@@ -71,8 +71,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
-            insertIntoDatabase('organismes', buildOrganismeAccount('22222222222222')),
+            insertIntoDatabase('account', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('account', buildOrganismeAccount('22222222222222')),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs');
@@ -87,9 +87,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
-            insertIntoDatabase('organismes', buildOrganismeAccount('22222222222222')),
-            insertIntoDatabase('organismes', buildOrganismeAccount('33333333333333')),
+            insertIntoDatabase('account', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('account', buildOrganismeAccount('22222222222222')),
+            insertIntoDatabase('account', buildOrganismeAccount('33333333333333')),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?id=11111111111111,22222222222222`);
@@ -105,9 +105,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 11111111111111, numero: 'OF_XX1' })),
-            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 22222222222222, numero: 'OF_XX2' })),
-            insertIntoDatabase('organismes', newOrganismeAccount({ _id: 33333333333333, numero: 'OF_XX3' })),
+            insertIntoDatabase('account', newOrganismeAccount({ _id: 11111111111111, numero: 'OF_XX1' })),
+            insertIntoDatabase('account', newOrganismeAccount({ _id: 22222222222222, numero: 'OF_XX2' })),
+            insertIntoDatabase('account', newOrganismeAccount({ _id: 33333333333333, numero: 'OF_XX3' })),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?numero=OF_XX1,OF_XX2`);
@@ -123,9 +123,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
-            insertIntoDatabase('organismes', buildOrganismeAccount('22222222222222')),
-            insertIntoDatabase('organismes', buildOrganismeAccount('33333333333333')),
+            insertIntoDatabase('account', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('account', buildOrganismeAccount('22222222222222')),
+            insertIntoDatabase('account', buildOrganismeAccount('33333333333333')),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?siret=11111111111111,22222222222222`);
@@ -141,13 +141,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: '11111111111111',
                 score: {
                     nb_avis: 1,
                 }
             })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: '22222222222222',
                 score: {
                     nb_avis: 0,
@@ -167,7 +167,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: '11111111111111',
                 lieux_de_formation: [
                     {
@@ -179,7 +179,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     }
                 ],
             })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: '22222222222222',
                 lieux_de_formation: [
                     {
@@ -206,7 +206,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: '11111111111111',
                 lieux_de_formation: [
                     {
@@ -218,7 +218,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     }
                 ],
             })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: '22222222222222',
                 lieux_de_formation: [
                     {
@@ -244,9 +244,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
-            insertIntoDatabase('organismes', buildOrganismeAccount('22222222222222')),
-            insertIntoDatabase('organismes', buildOrganismeAccount('33333333333333')),
+            insertIntoDatabase('account', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('account', buildOrganismeAccount('22222222222222')),
+            insertIntoDatabase('account', buildOrganismeAccount('33333333333333')),
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?page=0&items_par_page=1`);
@@ -269,7 +269,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('account', buildOrganismeAccount('11111111111111')),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs?fields=-lieux_de_formation');
@@ -283,7 +283,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('organismes', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('account', buildOrganismeAccount('11111111111111')),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs?fields=lieux_de_formation');

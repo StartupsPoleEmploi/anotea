@@ -39,7 +39,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('organismes', _.omit(newOrganismeAccount({
+            insertIntoDatabase('account', _.omit(newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
                 meta: {
@@ -74,7 +74,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('organismes', _.omit(newOrganismeAccount({
+            insertIntoDatabase('account', _.omit(newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
                 meta: {
@@ -120,7 +120,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('organismes', _.omit(newOrganismeAccount({
+            insertIntoDatabase('account', _.omit(newOrganismeAccount({
                 _id: 44444444444444,
                 SIRET: 44444444444444,
                 meta: {

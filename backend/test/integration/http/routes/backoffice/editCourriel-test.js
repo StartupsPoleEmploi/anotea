@@ -11,7 +11,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         let id = 11111111111111;
 
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('account', newOrganismeAccount({
             _id: id,
             SIRET: id,
             meta: {
@@ -38,7 +38,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
         let id = 11111111111111;
 
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('account', newOrganismeAccount({
             _id: id,
             SIRET: id,
             editedCourriel: 'edited@pole-emploi.fr',

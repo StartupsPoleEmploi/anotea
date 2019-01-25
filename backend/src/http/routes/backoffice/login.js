@@ -35,6 +35,7 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
             profile: user.profile,
             id: user._id,
             codeRegion: user.codeRegion,
+            codeFinanceur: user.codeFinanceur,
             features: user.features
         });
     };

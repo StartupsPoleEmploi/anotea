@@ -9,7 +9,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 courriel: 'contactus@poleemploi-formation.fr',
                 meta: {
                     siretAsString: '6080274100045'
@@ -69,7 +69,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let token = randomize('token');
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('account', newOrganismeAccount({
             _id: 11111111111111,
             SIRET: 11111111111111,
             meta: {
@@ -119,7 +119,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let id = randomize('id');
         let courriel = `${randomize('contact')}@sociale.fr`;
         let token = randomize('token');
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('account', newOrganismeAccount({
             _id: id,
             courriel,
         }));

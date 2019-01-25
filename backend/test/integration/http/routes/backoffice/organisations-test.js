@@ -9,7 +9,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let token = randomize('token');
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('account', newOrganismeAccount({
             _id: 11111111111111,
             SIRET: 11111111111111,
             token,
@@ -49,7 +49,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let token = randomize('token');
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('account', newOrganismeAccount({
             _id: 11111111111111,
             SIRET: 11111111111111,
             token,
@@ -84,7 +84,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let token = randomize('token');
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('account', newOrganismeAccount({
             token,
             passwordHash: null,
         }));
@@ -141,7 +141,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let id = 33333333333333;
 
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('account', newOrganismeAccount({
             _id: id,
             SIRET: id,
             editedCourriel: 'edited@pole-emploi.fr',
@@ -155,8 +155,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app).get(`/api/backoffice/organisation/${id}/allAdvices`)
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 401);
-        assert.deepEqual(response.body, { error: true });
+        assert.equal(response.statusCode, 403);
+        assert.deepEqual(response.body, {
+            'error': 'Forbidden',
+            'message': 'Action non autorisé',
+            'statusCode': 403
+        });
     });
 
     it('can not retrieve avis from an organisme when authenticated as another organisme', async () => {
@@ -166,7 +170,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let id = 44444444444444;
         let courriel = 'edited@pole-emploi.fr';
 
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('account', newOrganismeAccount({
             _id: id,
             SIRET: id,
             courriel,

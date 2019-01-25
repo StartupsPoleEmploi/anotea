@@ -54,7 +54,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         await Promise.all([
             importIntercarif(),
             insertDepartements(),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
                 raisonSociale: 'Formateur',
@@ -79,6 +79,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
             SIRET: 22222222222222,
             raisonSociale: 'Formateur',
             passwordHash: 'hash',
+            profile: 'organisme',
             token: 'token',
             creationDate: new Date('2016-11-10T17:41:03.308Z'),
             mailSentDate: new Date('2018-09-12T15:21:28.083Z'),

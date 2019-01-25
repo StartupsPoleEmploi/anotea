@@ -35,7 +35,7 @@ module.exports = {
                         },
                     });
 
-                    await context.insertIntoDatabase('organismes', organisme);
+                    await context.insertIntoDatabase('account', organisme);
 
                     let response = await request(app)
                     .post('/api/backoffice/login')

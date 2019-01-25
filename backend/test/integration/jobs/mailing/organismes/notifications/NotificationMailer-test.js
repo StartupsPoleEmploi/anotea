@@ -37,7 +37,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     }));
                 })
             ),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
@@ -80,7 +80,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     }));
                 })
             ),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
@@ -110,7 +110,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let notificationMailer = new NotificationMailer(db, logger, configuration, fakeMailer(spy));
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
@@ -147,7 +147,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     }));
                 })
             ),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
@@ -184,7 +184,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     }));
                 })
             ),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('account', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 newCommentsNotificationEmailSentDate: moment().subtract('3', 'days'),
