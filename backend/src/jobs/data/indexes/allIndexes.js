@@ -69,6 +69,7 @@ module.exports = {
         return Promise.all([
             db.collection('sessionsReconciliees').createIndex({ 'numero': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'region': 1 }),
+            db.collection('sessionsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
         ]);
     },
@@ -76,6 +77,7 @@ module.exports = {
         return Promise.all([
             db.collection('actionsReconciliees').createIndex({ 'numero': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'region': 1 }),
+            db.collection('actionsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
         ]);
     },
@@ -96,6 +98,7 @@ module.exports = {
             db.collection('moderator').createIndex({ 'courriel': 1 }),
             db.collection('mailStats').createIndex({ 'token': 1 }),
             db.collection('kairos_organismes').createIndex({ 'siret': 1 }),
+            db.collection('intercarif').createIndex({ 'actions.lieu_de_formation.coordonnees.adresse.region': 1 }),
         ]);
     },
 };
