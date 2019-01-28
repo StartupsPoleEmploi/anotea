@@ -116,14 +116,14 @@ module.exports = ({ db, configuration, logger, regions }) => {
         });
     };
 
-    const computeSessionStats = async (regionName, codeINSEE) => {
+    const computeSessionStats = async (regionName, codeRegions) => {
 
         let sessionsReconciliees = db.collection('sessionsReconciliees');
 
         let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis] = await Promise.all([
-            sessionsReconciliees.countDocuments({ region: codeINSEE }),
-            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 1 } }),
-            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 3 } })
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 3 } })
         ]);
 
         return {
@@ -157,9 +157,10 @@ module.exports = ({ db, configuration, logger, regions }) => {
     router.get('/stats/sessions.:format', tryAndCatch(async (req, res) => {
 
         let sessions = await Promise.all(configuration.app.active_regions.map(async ar => {
-            let { nom, codeINSEE } = await findRegionByCodeRegion(ar.code_region);
-            return computeSessionStats(nom, codeINSEE);
+            return computeSessionStats(ar.name, [ar.code_region]);
         }));
+
+        sessions.push(await computeSessionStats('Toutes', configuration.app.active_regions.map(ar => ar.code_region)));
 
         res.json(sessions);
     }));
