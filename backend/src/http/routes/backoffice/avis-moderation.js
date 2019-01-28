@@ -319,7 +319,11 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
             throw Boom.notFound('Stagiaire introuvable');
         }
 
-        await sendVotreAvisEmail(trainee);
+        await Promise.all([
+            db.collection('comment').removeOne({ _id: new ObjectID(parameters.id) }),
+            sendVotreAvisEmail(trainee),
+        ]);
+
 
         res.json({ 'message': 'trainee email resent' });
     }));

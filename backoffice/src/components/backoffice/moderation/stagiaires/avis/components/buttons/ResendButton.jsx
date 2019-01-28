@@ -29,8 +29,10 @@ export default class ResendButton extends React.Component {
     getModal = () => {
         return (
             <Modal
-                title="Renvoyer le questionnaire"
-                text={<span>Cette action entrainera l&apos;envoi d&apos;un email au stagiaire</span>}
+                title="Renvoyer le questionnaire au stagiaire"
+                text={<span>
+                    Cette action entrainera la suppression de l&apos;avis déposé, <b>confirmez-vous votre demande ?</b>
+                </span>}
                 onConfirmed={this.handleResend}
                 onClose={this.handleCancel} />
         );
