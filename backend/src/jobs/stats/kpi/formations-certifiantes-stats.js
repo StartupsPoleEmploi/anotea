@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const { execute } = require('../job-utils');
+const { execute } = require('../../job-utils');
 
 execute(async ({ db }) => {
     let [nbFormations, nbFormationsCertifiantes, nbSessions, nbSessionsCertifiantes, nbSessionsCertifiantesAvecAvis] =
@@ -24,14 +24,15 @@ execute(async ({ db }) => {
 
     let pourcentageDeSessionsCertifiantesAvecAvis = Math.ceil((nbSessionsCertifiantesAvecAvis * 100) / nbSessionsCertifiantes);
     return {
-        message: `Pour les régions ouvertes, il y a en tout ${nbSessions} sessions actives dont ${nbSessionsCertifiantes} sessions qui sont certifiantes. Parmi ces sessions certifiantes, il y a ${nbSessionsCertifiantesAvecAvis} sessions qui ont des avis (soit ${pourcentageDeSessionsCertifiantesAvecAvis}%).`,
         intercarif: {
             nbFormations,
-            pourcentageDeFormationsCertifiantes: Math.ceil((nbFormationsCertifiantes * 100) / nbFormations),
+            formationsCertifiantes: `${Math.ceil((nbFormationsCertifiantes * 100) / nbFormations)}`,
         },
         anotea: {
             nbSessions,
-            pourcentageDeSessionsCertifiantesAvecAvis: pourcentageDeSessionsCertifiantesAvecAvis,
+            nbSessionsCertifiantes,
+            nbSessionsCertifiantesAvecAvis,
+            sessionsCertifiantesAvecAvis: `${pourcentageDeSessionsCertifiantesAvecAvis}%`,
         },
     };
 });
