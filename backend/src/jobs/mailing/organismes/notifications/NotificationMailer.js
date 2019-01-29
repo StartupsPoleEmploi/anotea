@@ -43,13 +43,11 @@ class NotificationMailer {
                     pipeline: [
                         {
                             $match: {
+                                comment: { $ne: null },
+                                read: false,
+                                published: true,
                                 $expr: {
-                                    $and: [
-                                        { $ne: ['$comment', null] },
-                                        { $ne: ['$read', true] },
-                                        { $eq: ['$published', true] },
-                                        { $eq: ['$training.organisation.siret', '$$siret'] },
-                                    ]
+                                    $eq: ['$training.organisation.siret', '$$siret'],
                                 },
                             }
                         },
