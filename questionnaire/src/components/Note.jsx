@@ -13,8 +13,10 @@ class Note extends Component {
     render() {
     return (
       <div>
-          <span className="title">{this.props.title}</span>
-          <span className="description">{this.props.description}</span>
+        <span className="title">{this.props.title}</span>
+        <span className="description">{this.props.description}</span>
+      
+        
       </div>
     );
   }

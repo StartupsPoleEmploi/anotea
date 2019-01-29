@@ -17,7 +17,7 @@ class App extends Component {
 
         <Commentaire />
 
-        <Footer />
+        <Footer codeRegion="11" />
       </div>
     );
   }
