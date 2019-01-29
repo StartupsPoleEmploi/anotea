@@ -31,16 +31,13 @@ module.exports = ({ db, logger, mailer }) => {
     });
 
     const trackRouteHandler = (collection, doc, found, response) => {
-        const now = new Date();
         if (found) {
-            if (doc.tracking === undefined) {
-                doc.tracking = {
-                    firstRead: now
-                };
-            } else {
-                doc.tracking.lastRead = now;
-            }
-            db.collection(collection).insertOne(doc);
+            let trackingFieldName = doc.tracking ? 'lastRead' : 'firstRead';
+            db.collection(collection).updateOne({ _id: doc._id }, {
+                $set: {
+                    [`tracking.${trackingFieldName}`]: new Date()
+                }
+            });
         }
         // serving a white 1x1 GIF
         let buf = new Buffer(35);
