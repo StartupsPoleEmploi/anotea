@@ -5,7 +5,7 @@ import './Modal.scss';
 export default class Modal extends React.Component {
 
     static propTypes = {
-        title: PropTypes.object.isRequired,
+        title: PropTypes.string.isRequired,
         text: PropTypes.object.isRequired,
         onClose: PropTypes.func.isRequired,
         onConfirmed: PropTypes.func.isRequired,
