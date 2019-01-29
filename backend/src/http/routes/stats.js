@@ -116,22 +116,45 @@ module.exports = ({ db, configuration, logger, regions }) => {
         });
     };
 
-    const computeSessionStats = async (regionName, codeINSEE) => {
+    const computeSessionStats = async (regionName, codeRegions) => {
 
         let sessionsReconciliees = db.collection('sessionsReconciliees');
 
-        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis] = await Promise.all([
-            sessionsReconciliees.countDocuments({ region: codeINSEE }),
-            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 1 } }),
-            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 3 } })
+        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis, nbAvis, restituables] = await Promise.all([
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 3 } }),
+            db.collection('comment').countDocuments({ codeRegion: { $in: codeRegions }, step: { $gte: 2 } }),
+            db.collection('sessionsReconciliees').aggregate([
+                {
+                    $match: {
+                        code_region: { $in: codeRegions },
+                    }
+                },
+                {
+                    $unwind: '$avis'
+                },
+                {
+                    $group: {
+                        _id: '$avis._id',
+                    }
+                },
+                {
+                    $count: 'nbAvisRestituables'
+                }
+            ]).toArray()
         ]);
 
         return {
             region: regionName,
-            nbSessions,
-            nbSessionsAvecAuMoinsUnAvis,
-            pourcentageDeSessionsAvecAuMoinsUnAvis: Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions),
-            pourcentageDeSessionsAvecAuMoinsTroisAvis: Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbSessions)
+            sessionsAvecAuMoinsUnAvis: `${Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions)}%`,
+            sessionsAvecAuMoinsTroisAvis: `${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbSessions)}%`,
+            avisRestituables: restituables.length > 0 ? `${Math.ceil((restituables[0].nbAvisRestituables * 100) / nbAvis)}%` : 0,
+            meta: {
+                nbSessions,
+                nbSessionsAvecAuMoinsUnAvis,
+                nbAvis,
+            },
         };
     };
 
@@ -147,19 +170,22 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
         return {
             region: regionName,
-            nbOrganimes,
-            nbOrganismesActifs,
-            nbOrganismesAvecAvis,
-            pourcentageOrganismesAvecAuMoinsUnAvis: Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes),
+            organismesAvecAuMoinsUnAvis: `${Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes)}%`,
+            meta: {
+                nbOrganimes,
+                nbOrganismesActifs,
+                nbOrganismesAvecAvis,
+            }
         };
     };
 
     router.get('/stats/sessions.:format', tryAndCatch(async (req, res) => {
 
         let sessions = await Promise.all(configuration.app.active_regions.map(async ar => {
-            let { nom, codeINSEE } = await findRegionByCodeRegion(ar.code_region);
-            return computeSessionStats(nom, codeINSEE);
+            return computeSessionStats(ar.name, [ar.code_region]);
         }));
+
+        sessions.push(await computeSessionStats('Toutes', configuration.app.active_regions.map(ar => ar.code_region)));
 
         res.json(sessions);
     }));
