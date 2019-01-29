@@ -9,7 +9,7 @@ class Notes extends Component {
   items = [
       {
           title: 'Accueil',
-          description: 'Voici la moyenne des notes que vous avez données.'
+          description: 'Réunions d\'information collective et entretiens à l\'entrée en formation.'
       },
       {
         title: 'Contenu de la formation',
