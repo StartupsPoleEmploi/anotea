@@ -1,5 +1,9 @@
 @import '../styles/variables';
 
+.stars {
+    height: 50px;
+}
+
 .far.fa-star {
     color: $color-black;
 }
@@ -7,4 +11,33 @@
 .fas.fa-star {
     color: $color-yellow;
     cursor: pointer;
+}
+
+.tooltipBlock {
+    height: 20px;
+}
+
+.starBlock {
+    display: inline;
+    position: relative;
+}
+
+.tooltip {
+    border-radius: 2px;
+    background-color: #24303A;
+    color: #FFFFFF;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+    font-weight: normal;
+    padding: 3px;
+    margin: auto;
+}
+
+.tooltip.inactive {
+    display: none;
+}
+
+.tooltip.active {
+    display: inline-block;
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import './stars.scss';
 
 const MAX_STARS = 5;
+const tooltipLabels = ['Pas du tout satisfait', 'Pas satisfait', 'Moyennement satisfait', 'Satisfait', 'Très satisfait'];
 
 export default class Stars extends React.PureComponent {
 
@@ -16,8 +17,8 @@ export default class Stars extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state.starArray = new Array(MAX_STARS)
-        .fill('star', 0, this.state.value)
-        .fill('star_empty', this.state.value, MAX_STARS);
+            .fill('star', 0, this.state.value)
+            .fill('star_empty', this.state.value, MAX_STARS);
     }
 
     updateHoverState = value => {
@@ -39,16 +40,22 @@ export default class Stars extends React.PureComponent {
     render() {
         return (
             <div className="stars">
+                <div className="tooltipBlock">
+                    <span className={`tooltip ${(this.state.hover !== null || this.state.selected !== null) ? 'active' : 'inactive'}`}>
+                        {tooltipLabels[this.state.hover !== null ? this.state.hover - 1 : this.state.selected - 1]}
+                    </span>
+                </div>
                 {
                     this.state.starArray.map((star, index) =>
-                        <span
-                            key={index}
-                            className={`${(this.state.hover <= index && this.state.selected <= index) ? 'far fa-star' : 'fas fa-star'}`}
-                            style={{ width: '18px' }}
-                            onMouseOver={this.updateHoverState.bind(this, index)}
-                            onMouseOut={this.removeHoverState}
-                            onClick={this.select.bind(this, index)}
-                        />
+                        <div className="starBlock" key={index}>
+                            <span
+                                className={`star ${(this.state.hover <= index && this.state.selected <= index) ? 'far fa-star' : 'fas fa-star'}`}
+                                style={{ width: '18px' }}
+                                onMouseOver={this.updateHoverState.bind(this, index)}
+                                onMouseOut={this.removeHoverState}
+                                onClick={this.select.bind(this, index)}
+                            />
+                        </div>
                     )
                 }
             </div>
