@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Stars from './Stars';
+
 import './note.scss';
 
 class Note extends Component {
@@ -16,6 +18,7 @@ class Note extends Component {
       <div className={`note ${this.props.parity}`}>
         <span className="title">{this.props.title}</span>
         <span className="description">{this.props.description}</span>
+        <Stars />
       </div>
     );
   }

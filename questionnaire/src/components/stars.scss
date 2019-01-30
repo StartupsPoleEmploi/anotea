@@ -1,0 +1,10 @@
+@import '../styles/variables';
+
+.far.fa-star {
+    color: $color-black;
+}
+
+.fas.fa-star {
+    color: $color-yellow;
+    cursor: pointer;
+}
