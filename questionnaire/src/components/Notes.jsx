@@ -30,8 +30,8 @@ class Notes extends Component {
   ]
 
   getItems = () => {
-    return this.items.map(item => 
-        <Note title={item.title} description={item.description} />
+    return this.items.map((item, index) => 
+        <Note title={item.title} description={item.description} parity={index % 2 === 0 ? 'even' : 'odd'} />
     );
   }
 
