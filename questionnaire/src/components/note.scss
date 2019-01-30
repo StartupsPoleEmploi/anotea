@@ -1,3 +1,14 @@
+.note {
+	width: 500px;
+	height: 93px;
+	margin: 0px;
+	padding: 7px;
+}
+
+.note.even {
+	background-color: #F4F4F5;
+}
+
 .title {
 	height: 22px;
 	width: 307px;
@@ -6,7 +17,7 @@
 	font-size: 18px;
 	font-weight: 900;
     line-height: 22px;
-    display: block;
+	display: block;
 }
 
 .description {
