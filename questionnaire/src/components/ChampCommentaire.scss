@@ -35,6 +35,7 @@
   height: 34px;
   width: 468px;
   @extend .textarea;
+  display: block;
 }
 
 .textarea_commentaire {
