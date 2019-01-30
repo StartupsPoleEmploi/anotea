@@ -8,17 +8,17 @@ class Commentaire extends Component {
   items = [
       {
           title: 'Votre commentaire',
-          placeholder: 'Votre commentaire',
+          placeholder: 'Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois.',
           type: 'commentaire',
       },
       {
         title: 'Titre du commentaire',
-        placeholder: 'Titre du commentaire',
+        placeholder: 'Le titre permet d’avoir un résumé de votre expérience de la formation.',
         type: 'titre'
       },
       {
         title: 'Pseudo',
-        placeholder: 'Pseudo',
+        placeholder: 'Choisissez votre pseudo afin de préserver votre anonymat.',
         type: 'pseudo'
       },
   ]
