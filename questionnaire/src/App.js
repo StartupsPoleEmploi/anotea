@@ -5,6 +5,7 @@ import Notes from './components/Notes';
 import Commentaire from './components/Commentaire';
 import Footer from './components/Footer';
 import Autorisations from './components/Autorisations';
+import SendButton from './components/SendButton';
 
 import './App.css';
 
@@ -19,6 +20,8 @@ class App extends Component {
         <Commentaire />
 
         <Autorisations />
+
+        <SendButton />
 
         <Footer codeRegion="11" />
       </div>
