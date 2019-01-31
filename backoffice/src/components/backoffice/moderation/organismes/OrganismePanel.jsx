@@ -47,21 +47,24 @@ export default class OrganismePanel extends React.PureComponent {
             }
             toolbar={
                 <nav className="nav">
-                    <li className="nav-item">
-                        <div className="input-group nav-search">
-                            <input
-                                type="text"
-                                className="searchField form-control"
-                                placeholder="SIRET"
-                                value={this.state.siret}
-                                onChange={e => this.setState({ siret: e.target.value })}
-                                onKeyPress={e => e.key === 'Enter' && this.searchOrganisation()} />
+                    <li className="nav-item nav-search">
+                        <div className="d-flex align-items-center">
+                            <div className="input-group active">
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text"><i className="fas fa-search" /></div>
+                                </div>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="SIRET"
+                                    value={this.state.siret}
+                                    onChange={e => this.setState({ siret: e.target.value })}
+                                    onKeyPress={e => e.key === 'Enter' && this.searchOrganisation()} />
 
-                            <div className="input-group-append">
-                                <button className="btn btn-outline-primary" onClick={this.searchOrganisation}>
-                                    <span className="fas fa-search" /> Chercher
-                                </button>
                             </div>
+                            <button className="btn active" onClick={this.searchOrganisation}>
+                                Rechercher
+                            </button>
                         </div>
                     </li>
                 </nav>
