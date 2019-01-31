@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './notes.scss';
 
 import Note from './Note';
+import NoteMoyenne from './NoteMoyenne';
 
 class Notes extends Component {
 
@@ -30,17 +31,19 @@ class Notes extends Component {
   ]
 
   getItems = () => {
-    return this.items.map((item, index) => 
-        <Note title={item.title} description={item.description} parity={index % 2 === 0 ? 'even' : 'odd'} />
+    return this.items.map((item, index) =>
+        <Note key={index} title={item.title} description={item.description} parity={index % 2 === 0 ? 'even' : 'odd'} />
     );
   }
 
   render() {
     return (
-      <div>
-          <h3>Notes</h3>
+        <div>
+            <h3>Notes</h3>
 
-          { this.getItems() }
+            { this.getItems() }
+
+            <NoteMoyenne />
         </div>
     );
   }

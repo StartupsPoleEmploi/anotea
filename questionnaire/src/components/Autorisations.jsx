@@ -22,8 +22,8 @@ class Autorisations extends Component {
   render() {
     return (
       <div className="autorisations">
-        {this.state.items.map(item =>
-          <div className={`item${ item.id }`}>
+        {this.state.items.map((item, index) =>
+          <div className={`item${ item.id }`} key={index}>
               <input type="checkbox" className={`input_${ item.type }`}/>
               <span className={`span_${ item.type }`}>{item.description}</span>
           </div>

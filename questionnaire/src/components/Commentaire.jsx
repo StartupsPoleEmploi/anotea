@@ -24,8 +24,8 @@ class Commentaire extends Component {
   ]
 
   getItems = () => {
-    return this.items.map(item =>
-        <ChampCommentaire titre={item.title} placeholder={item.placeholder} type={item.type}/>
+    return this.items.map((item, index) =>
+        <ChampCommentaire key={index} titre={item.title} placeholder={item.placeholder} type={item.type}/>
     );
   }
 
