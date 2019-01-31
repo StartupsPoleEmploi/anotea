@@ -31,7 +31,7 @@ class Commentaire extends Component {
 
   render() {
     return (
-      <div>
+      <div className="commentaire">
           <h3>Commentaire (optionnel)</h3>
           { this.getItems() }
       </div>

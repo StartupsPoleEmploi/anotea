@@ -73,7 +73,7 @@ class Notes extends Component {
 
         return (
             <div>
-                <h3 className="notes_title">Notes</h3>
+                <h3 className="notes">Notes</h3>
                 {!resultat ?
                     <NoteMoyenne averageScore={this.state.averageScore}/>
                 :

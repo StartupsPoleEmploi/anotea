@@ -8,12 +8,12 @@ class Autorisations extends Component {
     items : [
         {
             id: 1,
-            type: 'accord',
+            type: 'accord_entreprise',
             description: `J'autorise une entreprise à me contacter.`
         },
         {
           id: 2,
-          type: 'accord_entreprise',
+          type: 'accord',
           description: `J'autorise les futur(e)s stagiaires à me questionner sur cette formation.`
         },
     ]
