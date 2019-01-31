@@ -11,7 +11,7 @@ class NoteMoyenne extends Component {
       <div className="note odd">
         <span className="title">Note moyenne</span>
         <span className="description">Voici la moyenne des notes que vous avez données.</span>
-        <span className="score">3,5</span>
+        <span className="score">{this.props.averageScore}</span>
         <Stars />
       </div>
     );

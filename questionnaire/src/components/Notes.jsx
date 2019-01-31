@@ -68,11 +68,17 @@ class Notes extends Component {
     }
 
     render() {
+      const notesValue = this.state.notes.map( index => index.value);
+      const resultat = notesValue.includes(null)
+
         return (
             <div>
-                <h3>Notes</h3>
-                { this.state.averageScore }
-                {this.getItems()}
+                <h3 className="notes_title">Notes</h3>
+                {!resultat ?
+                    <NoteMoyenne averageScore={this.state.averageScore}/>
+                :
+                    this.getItems()
+                }
             </div>
         );
     }

@@ -1,7 +1,10 @@
 @import '../styles/variables';
 
 .stars {
-    height: 50px;
+    height: 20px;
+    width: 130px;
+    margin-left: 390px;
+    margin-top: -60px;
 }
 
 .far.fa-star {
@@ -20,6 +23,7 @@
 .starBlock {
     display: inline;
     position: relative;
+    margin-left: 3px;
 }
 
 .tooltip {
