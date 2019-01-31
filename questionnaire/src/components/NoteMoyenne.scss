@@ -7,7 +7,9 @@
 	font-weight: 900;
 	line-height: 39px;
 	text-align: center;
-  margin-left: 92px;
+  margin-left: 390px;
+  display: block;
+  margin-top: 0px;
 }
 
 .description {
@@ -29,4 +31,34 @@
 	font-size: 18px;
 	font-weight: 900;
 	line-height: 22px;
+}
+
+.note_details_title {
+	height: 21px;
+	width: 284.93px;
+	color: #24303A;
+	font-family: Lato;
+	font-size: 16px;
+	line-height: 19px;
+  display: block;
+  padding-left: 13px;
+  padding-top: 8px;
+}
+
+.note_details {
+  	width: 514px;
+  	height: 37px;
+  	margin: 0px;
+    background-color: #F4F4F5;
+    display: block;
+    margin: 0px;
+}
+
+.arrow {
+	box-sizing: border-box;
+	height: 6px;
+	width: 11.29px;
+	border: 3px solid #24303A;
+  display: block;
+  margin-left: 479px;
 }
