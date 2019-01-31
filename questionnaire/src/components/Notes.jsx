@@ -4,46 +4,77 @@ import './notes.scss';
 
 import Note from './Note';
 
+const items = [{
+    title: 'Accueil',
+    description: 'Réunions d\'information collective et entretiens à l\'entrée en formation.'
+}, {
+    title: 'Contenu de la formation',
+    description: 'Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique.'
+}, {
+    title: 'Équipe de formateurs',
+    description: 'Prise en compte du besoin des stagiaires.'
+}, {
+    title: 'Moyens matériels mis à disposition',
+    description: 'Salles de cours, documentation, plateaux techniques, équipement informatique.'
+}, {
+    title: 'Accompagnement',
+    description: 'Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises.'
+}];
+
 class Notes extends Component {
 
-  items = [
-      {
-          title: 'Accueil',
-          description: 'Réunions d\'information collective et entretiens à l\'entrée en formation.'
-      },
-      {
-        title: 'Contenu de la formation',
-        description: 'Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique.'
-      },
-      {
-        title: 'Équipe de formateurs',
-        description: 'Prise en compte du besoin des stagiaires.'
-      },
-      {
-        title: 'Moyens matériels mis à disposition',
-        description: 'Salles de cours, documentation, plateaux techniques, équipement informatique.'
-      },
-      {
-        title: 'Accompagnement',
-        description: 'Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises.'
-      }
-  ]
+    state = {
+        averageScore: null,
+        notes: []
+    }
 
-  getItems = () => {
-    return this.items.map((item, index) => 
-        <Note title={item.title} description={item.description} parity={index % 2 === 0 ? 'even' : 'odd'} />
-    );
-  }
+    constructor(props) {
+        super(props);
+        for (let i = 0; i <= 4; i++) {
+            this.state.notes.push({ index: i, value: null });
+        }
+    }
 
-  render() {
-    return (
-      <div>
-          <h3>Notes</h3>
+    onSelect = (index, value) => {
+        value++;
+        let total = null;
+        let count = 0;
+        let notes = this.state.notes.map(item => {
+            if (item.index === index) {
+                item.value = value;
+            }
+            if (item.value !== null) {
+                total += item.value;
+                count++;
+            }
+            return item;
+        });
+        let average = null;
+        if (total !== null) {
+            average = (parseFloat(total) / parseFloat(count)).toFixed(1);
+            average = String(average).replace('.', ',');
+        }
+        this.setState({
+            notes: notes,
+            averageScore: average
+        });
+    }
 
-          { this.getItems() }
-        </div>
-    );
-  }
+    getItems = () => {
+        return items.map((item, index) =>
+            <Note key={index} index={index} title={item.title} description={item.description} parity={index % 2 === 0 ? 'even' : 'odd'} onSelect={this.onSelect} />
+        );
+    }
+
+    render() {
+        return (
+            <div>
+                <h3>Notes</h3>
+                { this.state.averageScore }
+                {this.getItems()}
+            </div>
+        );
+    }
 }
 
 export default Notes;

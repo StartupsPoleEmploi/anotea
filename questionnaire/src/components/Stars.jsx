@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import './stars.scss';
 
 const MAX_STARS = 5;
@@ -13,6 +15,11 @@ export default class Stars extends React.PureComponent {
         hover: null,
         selected: null
     }
+
+    static propTypes = {
+        onSelect: PropTypes.func.isRequired,
+        index: PropTypes.number.isRequired
+    };
 
     constructor(props) {
         super(props);
@@ -30,6 +37,7 @@ export default class Stars extends React.PureComponent {
             this.setState({ selected: null });
         } else {
             this.setState({ selected: value + 1 });
+            this.props.onSelect(this.props.index, value);
         }
     }
 
