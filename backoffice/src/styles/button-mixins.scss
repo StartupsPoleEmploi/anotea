@@ -33,6 +33,7 @@
   color: $text-color;
   text-transform: uppercase;
   letter-spacing: 1px;
+  cursor: pointer;
 
   .icon {
     padding-right: 0.4rem;
@@ -48,6 +49,7 @@
   font-size: 0.8rem;
   background-color: $color-white;
   border: none;
+  cursor: pointer;
 
   &:focus {
     outline: 0;
@@ -61,22 +63,27 @@
 }
 
 @mixin dropdown() {
-  .dropdown-menu {
 
+  .dropdown-menu {
     box-shadow: $shadow;
     background-color: $color-grey-5;
-    font-size: 0.8rem !important;
+    font-size: 0.875rem !important;
+    padding: 0.5rem 0 0.1rem 0;
 
     .dropdown-item {
       background-color: $color-white;
       cursor: pointer;
       color: $color-grey-50;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
+      padding: 0.5rem;
 
       &:hover {
         color: $color-black;
       }
+
+      .icon {
+        padding-right: 0.2rem;
+      }
+
     }
 
     .dropdown-divider {
@@ -91,6 +98,7 @@
       padding-right: 0.5rem;
       color: $color-black;
       text-transform: uppercase;
+      text-align: center;
       font-size: 0.6rem !important;
       font-weight: $font-weight-700;
     }

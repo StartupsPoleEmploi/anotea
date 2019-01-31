@@ -52,7 +52,6 @@
           font-weight: $font-weight-400;
 
           .nav-item {
-            border-right: 1px solid $color-grey-5;
 
             &:first-child {
               .nav-link {
@@ -87,6 +86,7 @@
             .nav-link {
               color: $color-grey-50;
               font-size: 1rem;
+              padding: 0.5rem 1rem 0.4rem 1rem;
 
               &.active {
                 color: $color-black;
@@ -105,16 +105,26 @@
 
             .nav-search {
 
-              .input-group-text {
-                font-size: 1.2rem;
-                background-color: $color-white;
-                border: none;
-                border-radius: unset;
-              }
+              .input-group {
+                background-color: $color-grey-5;
 
-              input {
-                border: none;
-                box-shadow: none;
+                .input-group-text {
+                  font-size: 1.2rem;
+                  border: none;
+                  border-radius: unset;
+                  background-color: $color-grey-5;
+                }
+
+                input {
+                  background-color: $color-grey-5;
+                  border: none;
+                  box-shadow: none;
+                }
+
+                .cancel {
+                  margin-top: 10px;
+                  margin-right: 10px;
+                }
               }
 
               button {
@@ -125,12 +135,7 @@
                 box-shadow: none;
                 border-top-left-radius: unset;
                 border-bottom-left-radius: unset;
-                padding: 0.5rem;
-              }
-
-              .cancel {
-                margin-top: 10px;
-                margin-right: 10px;
+                padding-bottom: 0.5rem;
               }
             }
           }

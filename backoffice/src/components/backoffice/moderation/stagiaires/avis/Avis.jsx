@@ -9,15 +9,13 @@ import RejectButton from './components/buttons/RejectButton';
 import EditButton from './components/buttons/EditButton';
 import Edition from './components/Edition';
 import Notes from './components/Notes';
-import ResendButton from './components/buttons/ResendButton';
-import DeleteButton from './components/buttons/DeleteButton';
 import './Avis.scss';
 
 export default class Avis extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        options: PropTypes.object,
+        showStatus: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -53,7 +51,7 @@ export default class Avis extends React.Component {
                                     className="mb-3"
                                     avis={avis}
                                     onChange={onChange}
-                                    showStatus={this.props.options.showStatus} />
+                                    showStatus={this.props.showStatus} />
 
                                 <Titre avis={avis} onChange={onChange} className="mb-1" />
 
@@ -73,26 +71,12 @@ export default class Avis extends React.Component {
                                 avis.comment &&
                                 <div className="col-1 pr-0">
                                     <div className="btn-group-vertical">
-                                        <EditButton onClick={this.toggleEdition} />
+                                        <EditButton avis={avis} onChange={onChange} onEdit={this.toggleEdition} />
                                         <PublishButton avis={avis} onChange={onChange} />
                                         <RejectButton avis={avis} onChange={onChange} />
                                     </div>
                                 </div>
                             }
-                        </div>
-                        <div className="row justify-content-end stagiaire-actions">
-                            <div className="col-8 pr-0 mt-3 d-flex justify-content-end">
-                                <div className="d-none d-lg-block">
-                                    {
-                                        this.props.options.showDeleteButton &&
-                                        <DeleteButton avis={avis} onChange={onChange} />
-                                    }
-                                    {
-                                        this.props.options.showResendButton &&
-                                        <ResendButton avis={avis} />
-                                    }
-                                </div>
-                            </div>
                         </div>
                     </div>
 

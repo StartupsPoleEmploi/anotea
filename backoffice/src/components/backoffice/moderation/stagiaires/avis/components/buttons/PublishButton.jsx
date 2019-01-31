@@ -29,11 +29,11 @@ export default class PublishButton extends React.Component {
             <div className="PublishButton btn-group">
                 <button
                     type="button"
-                    className={`btn btn-sm dropdown-toggle ${this.getExtraClasses()}`}
+                    className={`btn dropdown-toggle ${this.getExtraClasses()}`}
                     data-toggle="dropdown">
                     <i className="far fa-check-circle" />
                 </button>
-                <div className="dropdown-menu">
+                <div className="dropdown-menu dropdown-menu-right">
                     <h6 className="dropdown-header">Valider et tagguer comme</h6>
                     <a className="dropdown-item" onClick={() => this.publish('négatif')}>
                         <i className="far fa-thumbs-down icon" /> Négatif
