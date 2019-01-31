@@ -11,19 +11,19 @@ module.exports = async db => {
         $set: { profile: 'organisme' },
     });
 
-    let financers = await db.collection('financer').find().toArray();
-
-    financers.forEach(financer => {
+    let cursor = db.collection('financer').find();
+    while (await cursor.hasNext()) {
+        const financer = await cursor.next();
         delete financer._id;
         financer.profile = 'financeur';
-        db.collection('accounts').insertOne(financer);
-    });
+        await db.collection('accounts').insertOne(financer);
+    }
 
-    let moderators = await db.collection('moderator').find().toArray();
-
-    moderators.forEach(moderator => {
+    cursor = db.collection('moderator').find();
+    while (await cursor.hasNext()) {
+        const moderator = await cursor.next();
         delete moderator._id;
         moderator.profile = 'moderateur';
-        db.collection('accounts').insertOne(moderator);
-    });
+        await db.collection('accounts').insertOne(moderator);
+    }
 };
