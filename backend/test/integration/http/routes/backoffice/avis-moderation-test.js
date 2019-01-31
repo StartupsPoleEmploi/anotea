@@ -238,8 +238,12 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         let response = await request(app).get('/api/backoffice/avis?filter=all')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 401);
-        assert.deepEqual(response.body, { error: true });
+        assert.equal(response.statusCode, 403);
+        assert.deepEqual(response.body, {
+            'error': 'Forbidden',
+            'message': 'Action non autorisé',
+            'statusCode': 403
+        });
     });
 
     it('can not search advices when authenticated as financer', async () => {
@@ -251,7 +255,11 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         let response = await request(app).get('/api/backoffice/avis?filter=all')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 401);
-        assert.deepEqual(response.body, { error: true });
+        assert.equal(response.statusCode, 403);
+        assert.deepEqual(response.body, {
+            'error': 'Forbidden',
+            'message': 'Action non autorisé',
+            'statusCode': 403
+        });
     });
 }));

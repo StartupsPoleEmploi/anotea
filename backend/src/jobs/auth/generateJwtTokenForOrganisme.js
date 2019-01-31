@@ -14,7 +14,7 @@ execute(async ({ db, auth, exit }) => {
         exit('Invalid arguments');
     }
 
-    let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': cli.siret });
+    let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': cli.siret, 'profile': 'organisme' });
     let data = {
         sub: organisme.courriel,
         profile: 'organisme',

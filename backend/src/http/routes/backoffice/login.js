@@ -28,14 +28,15 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         });
     };
 
-    const handleModerator = async (req, res, moderator) => {
-        logLoginEvent(req, 'moderateur', moderator._id);
+    const handleAccount = async (req, res, user) => {
+        logLoginEvent(req, user.profile, user._id);
         return await auth.buildJWT('backoffice', {
             sub: req.body.username,
-            profile: 'moderateur',
-            id: moderator._id,
-            codeRegion: moderator.codeRegion,
-            features: moderator.features
+            profile: user.profile,
+            id: user._id,
+            codeRegion: user.codeRegion,
+            codeFinanceur: user.codeFinanceur,
+            features: user.features
         });
     };
 
@@ -67,27 +68,14 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         });
         return count > 0;
     };
-
-    const handleFinancer = async (req, res, financer) => {
-        let profile = 'financer';
-        logLoginEvent(req, profile, financer._id);
-        return await auth.buildJWT('backoffice', {
-            sub: req.body.username,
-            profile: 'financer',
-            id: financer._id,
-            codeRegion: financer.codeRegion,
-            codeFinanceur: financer.codeFinanceur,
-            features: financer.features
-        });
-    };
   
-    const rehashPassword = async (type, account, password) => {
+    const rehashPassword = async (account, password) => {
 
         if (account.meta && account.meta.rehashed) {
             return Promise.resolve(account);
         }
 
-        return db.collection(type).updateOne({ _id: account._id }, {
+        return db.collection('accounts').updateOne({ _id: account._id }, {
             $set: {
                 'meta.rehashed': true,
                 'passwordHash': await hashPassword(password)
@@ -102,24 +90,16 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         let token;
 
         try {
-            const moderator = await db.collection('moderator').findOne({ courriel: identifier });
-          
-            if (moderator !== null && await checkPassword(password, moderator.passwordHash, configuration)) {
-                await rehashPassword('moderator', moderator, password);
-                token = await handleModerator(req, res, moderator);
+            const account = await db.collection('accounts').findOne({ courriel: identifier });
+            if (account !== null && await checkPassword(password, account.passwordHash, configuration)) {
+                await rehashPassword(account, password);
+                token = await handleAccount(req, res, account);
             }
 
-            let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
-
+            let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': identifier });
             if (organisme !== null && await checkPassword(password, organisme.passwordHash, configuration)) {
-                await rehashPassword('organismes', organisme, password);
+                await rehashPassword(organisme, password);
                 token = await handleOrganisme(req, res, organisme);
-            }
-
-            const financer = await db.collection('financer').findOne({ courriel: identifier });
-            if (financer !== null && await checkPassword(password, financer.passwordHash, configuration)) {
-                await rehashPassword('financer', financer, password);
-                token = await handleFinancer(req, res, financer);
             }
 
             if (token) {
@@ -146,7 +126,7 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
             throw Boom.badRequest('Token invalide', e);
         }
 
-        let organisme = await db.collection('organismes').findOne({
+        let organisme = await db.collection('accounts').findOne({
             'meta.siretAsString': user.sub,
         });
 

@@ -19,7 +19,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let id = 31705038300064;
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: id,
                 SIRET: id,
                 courriel: 'new@organisme.fr',
@@ -46,7 +46,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let emailsSent = [];
         let db = await getTestDatabase();
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
-        await insertIntoDatabase('organismes', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
+        await insertIntoDatabase('accounts', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
 
         let results = await accountMailer.sendEmails(dummyAction);
 
@@ -61,14 +61,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let emailsSent = [];
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             courriel: 'new@organisme.fr',
             mailSentDate: null
         }));
 
         await accountMailer.sendEmails(dummyAction);
 
-        let organisme = await db.collection('organismes').findOne({ courriel: 'new@organisme.fr' });
+        let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
         assert.ok(organisme.mailSentDate);
         assert.deepEqual(organisme.resend, false);
         assert.deepEqual(organisme.mailError, undefined);
@@ -80,14 +80,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let emailsSent = [];
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             courriel: 'new@organisme.fr',
             mailSentDate: new Date()
         }));
 
         await accountMailer.sendEmails(dummyAction);
 
-        let organisme = await db.collection('organismes').findOne({ courriel: 'new@organisme.fr' });
+        let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
         assert.deepEqual(organisme.resend, true);
     });
 
@@ -96,13 +96,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let db = await getTestDatabase();
         let accountMailer = new AccountMailer(db, logger, configuration, errorMailer());
-        await insertIntoDatabase('organismes', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
+        await insertIntoDatabase('accounts', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
 
         try {
             await accountMailer.sendEmails(dummyAction);
             assert.fail();
         } catch (e) {
-            let organisme = await db.collection('organismes').findOne({ courriel: 'new@organisme.fr' });
+            let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
             assert.deepEqual(organisme.mailError, 'smtpError');
             assert.deepEqual(organisme.mailErrorDetail, 'timeout');
         }

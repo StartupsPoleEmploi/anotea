@@ -71,7 +71,7 @@ describe(__filename, withServer(({ startServer, insertDepartements, insertIntoDa
         .send(createPayload(siret));
 
         assert.equal(response.statusCode, 200);
-        let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': siret });
+        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': siret });
         assert.deepEqual(_.omit(organisme, ['token', 'creationDate']), {
             _id: parseInt(siret),
             SIRET: parseInt(siret),

@@ -55,14 +55,16 @@ module.exports = {
             db.collection('regions').createIndex({ 'codeRegion': 1 }),
         ]);
     },
-    organismes: db => {
+    accounts: db => {
         return Promise.all([
-            db.collection('organismes').createIndex({ 'numero': 1 }),
-            db.collection('organismes').createIndex({ 'SIRET': 1 }),
-            db.collection('organismes').createIndex({ 'score.nb_avis': 1 }),
-            db.collection('organismes').createIndex({ 'lieux_de_formation.adresse.code_postal': 1 }),
-            db.collection('organismes').createIndex({ 'lieux_de_formation.adresse.region': 1 }),
-            db.collection('organismes').createIndex({ 'codeRegion': 1 }),
+            db.collection('accounts').createIndex({ 'numero': 1 }),
+            db.collection('accounts').createIndex({ 'SIRET': 1 }),
+            db.collection('accounts').createIndex({ 'score.nb_avis': 1 }),
+            db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.code_postal': 1 }),
+            db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.region': 1 }),
+            db.collection('accounts').createIndex({ 'codeRegion': 1 }),
+            db.collection('accounts').createIndex({ 'courriel': 1 }),
+            db.collection('accounts').createIndex({ 'profile': 1 })
         ]);
     },
     sessionsReconciliees: db => {
@@ -94,8 +96,6 @@ module.exports = {
             db.collection('forgottenPasswordTokens').createIndex({ 'token': 1 }),
             db.collection('forgottenPasswordTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 172800 }),
             db.collection('invalidAuthTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 86400 }),
-            db.collection('financer').createIndex({ 'courriel': 1 }),
-            db.collection('moderator').createIndex({ 'courriel': 1 }),
             db.collection('mailStats').createIndex({ 'token': 1 }),
             db.collection('kairos_organismes').createIndex({ 'siret': 1 }),
             db.collection('intercarif').createIndex({ 'actions.lieu_de_formation.coordonnees.adresse.region': 1 }),

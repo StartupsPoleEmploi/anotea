@@ -80,7 +80,11 @@ module.exports = (auth, logger, configuration) => {
             return (req, res, next) => {
                 if (!profiles.includes(req.user.profile)) {
                     //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
-                    res.status(401).send({ error: true });
+                    res.status(403).send({
+                        'error': 'Forbidden',
+                        'message': 'Action non autorisé',
+                        'statusCode': 403
+                    });
                     return;
                 }
                 next();

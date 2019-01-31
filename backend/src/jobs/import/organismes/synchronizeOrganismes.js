@@ -80,7 +80,7 @@ module.exports = async (db, logger) => {
             try {
                 let organisme = await buildOrganismeFromIntercarif(data);
 
-                let results = await db.collection('organismes')
+                let results = await db.collection('accounts')
                 .updateOne(
                     { _id: organisme._id },
                     {
@@ -120,10 +120,10 @@ module.exports = async (db, logger) => {
             const data = await cursor.next();
             try {
                 let organisme = await buildOrganismeFromKairos(data);
-                let count = await db.collection('organismes').countDocuments({ _id: organisme._id });
+                let count = await db.collection('accounts').countDocuments({ _id: organisme._id });
 
                 if (count === 0) {
-                    await db.collection('organismes').insertOne(organisme);
+                    await db.collection('accounts').insertOne(organisme);
                     stats.created++;
                     stats.total++;
                 }

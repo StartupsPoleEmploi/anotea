@@ -8,7 +8,7 @@ const { tryAndCatch } = require('../routes-utils');
 module.exports = ({ db, createJWTAuthMiddleware, auth }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let collection = db.collection('organismes');
+    let collection = db.collection('accounts');
     let { findCodeRegionByName } = require('../../../common/components/regions')(db);
     let checkAuth = createJWTAuthMiddleware('kairos', {
         externalToken: true,
@@ -52,7 +52,7 @@ module.exports = ({ db, createJWTAuthMiddleware, auth }) => {
 
         if (!organisme) {
             organisme = await buildAccount(parameters);
-            await collection.insert(organisme);
+            await collection.insertOne(organisme);
         }
 
         let token = await auth.buildJWT('backoffice', {

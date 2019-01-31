@@ -24,7 +24,7 @@ class AccountMailer {
     }
 
     _onSuccess(organisme) {
-        return this.db.collection('organismes').updateOne({ '_id': organisme._id }, {
+        return this.db.collection('accounts').updateOne({ '_id': organisme._id }, {
             $set: {
                 mailSentDate: new Date(),
                 resend: !!organisme.mailSentDate,
@@ -37,7 +37,7 @@ class AccountMailer {
     }
 
     _onError(error, organisme) {
-        return this.db.collection('organismes').updateOne({ '_id': organisme._id }, {
+        return this.db.collection('accounts').updateOne({ '_id': organisme._id }, {
             $set: {
                 mailError: 'smtpError',
                 mailErrorDetail: error.message
@@ -47,7 +47,7 @@ class AccountMailer {
 
     async sendEmails(action, options = {}) {
         let total = 0;
-        let cursor = await this.db.collection('organismes').find(action.getQuery());
+        let cursor = await this.db.collection('accounts').find(action.getQuery());
         if (options.limit) {
             cursor.limit(options.limit);
         }
@@ -74,7 +74,7 @@ class AccountMailer {
     }
 
     async sendEmailBySiret(siret) {
-        let organisme = await this.db.collection('organismes').findOne({ 'meta.siretAsString': siret });
+        let organisme = await this.db.collection('accounts').findOne({ 'meta.siretAsString': siret });
         try {
             await this._sendEmail(organisme);
         } catch (e) {

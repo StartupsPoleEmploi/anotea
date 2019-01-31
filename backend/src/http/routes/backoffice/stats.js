@@ -6,7 +6,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile }) => {
     const router = express.Router(); // eslint-disable-line new-cap
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
-    router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         let codeFinanceur = req.query.codeFinanceur;
 

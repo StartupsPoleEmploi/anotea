@@ -22,7 +22,7 @@ export default class Toolbar extends React.PureComponent {
         return (
             <div className="toolbar">
                 {
-                    (profile === 'organisme' || profile === 'financer') &&
+                    (profile === 'organisme' || profile === 'financeur') &&
                     <div className="pull-left">
                         <a className="btn btn-success btn-sm" href={this.getUrl()}>
                             <span className="fas fa-file-export" /> Exporter vers Excel

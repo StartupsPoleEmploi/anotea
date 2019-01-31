@@ -11,7 +11,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let codeRegion = 11;
 
-        await insertIntoDatabase('financer', newFinancerAccount({
+        await insertIntoDatabase('accounts', newFinancerAccount({
             codeRegion
         }));
 
@@ -35,7 +35,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let codeRegion = 11;
         let codeFinanceur = '5';
 
-        await insertIntoDatabase('financer', newFinancerAccount({
+        await insertIntoDatabase('accounts', newFinancerAccount({
             codeRegion,
             codeFinanceur
         }));
@@ -59,7 +59,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let codeRegion = 17;
 
-        await insertIntoDatabase('financer', newFinancerAccount({
+        await insertIntoDatabase('accounts', newFinancerAccount({
             codeRegion
         }));
 
@@ -83,7 +83,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let codeRegion = 11;
         let codeFinanceur = '5';
 
-        await insertIntoDatabase('financer', newFinancerAccount({
+        await insertIntoDatabase('accounts', newFinancerAccount({
             codeRegion,
             codeFinanceur
         }));
@@ -108,7 +108,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let codeRegion = 17;
         let codeFinanceur = '5';
 
-        await insertIntoDatabase('financer', newFinancerAccount({
+        await insertIntoDatabase('accounts', newFinancerAccount({
             codeRegion,
             codeFinanceur
         }));
@@ -132,7 +132,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let codeRegion = 11;
 
-        await insertIntoDatabase('financer', newFinancerAccount({
+        await insertIntoDatabase('accounts', newFinancerAccount({
             codeRegion
         }));
 
@@ -141,8 +141,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let response = await request(app).get(`/api/backoffice/financeur/region/${codeRegion}/advices`)
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 401);
-        assert.deepEqual(response.body, { error: true });
+        assert.equal(response.statusCode, 403);
+        assert.deepEqual(response.body, {
+            'error': 'Forbidden',
+            'message': 'Action non autorisé',
+            'statusCode': 403
+        });
     });
 
 }));

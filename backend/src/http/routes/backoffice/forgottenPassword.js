@@ -12,21 +12,15 @@ module.exports = ({ db, mailing, password }) => {
 
         const identifier = req.body.username;
 
-        let organisme = await db.collection('organismes').findOne({ 'meta.siretAsString': identifier });
+        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': identifier });
         if (organisme) {
             await mailing.sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), 'organismes', organisme.codeRegion);
             return res.json({ 'message': 'mail sent' });
         }
 
-        let moderator = await db.collection('moderator').findOne({ courriel: identifier });
-        if (moderator) {
-            await mailing.sendForgottenPasswordEmail(moderator._id, moderator.courriel, 'moderator', moderator.codeRegion);
-            return res.json({ 'message': 'mail sent' });
-        }
-
-        let financer = await db.collection('financer').findOne({ courriel: identifier });
-        if (financer) {
-            await mailing.sendForgottenPasswordEmail(financer._id, financer.courriel, 'financer', financer.codeRegion);
+        let account = await db.collection('accounts').findOne({ courriel: identifier });
+        if (account) {
+            await mailing.sendForgottenPasswordEmail(account._id, account.courriel, account.codeRegion);
             return res.json({ 'message': 'mail sent' });
         }
 
@@ -52,19 +46,14 @@ module.exports = ({ db, mailing, password }) => {
             let forgottenPasswordToken = await db.collection('forgottenPasswordTokens').findOne({ token });
             if (forgottenPasswordToken) {
 
-                const collectionName = [];
-                collectionName['organisme'] = 'organismes';
-                collectionName['financer'] = 'financer';
-                collectionName['moderateur'] = 'moderator';
+                let account = await db.collection('accounts').findOne({ _id: forgottenPasswordToken.id });
 
-                let user = await db.collection(collectionName[forgottenPasswordToken.profile]).findOne({ _id: forgottenPasswordToken.id });
-
-                if (user) {
+                if (account) {
                     if (isPasswordStrongEnough(password)) {
                         let passwordHash = await hashPassword(password);
                         await Promise.all([
                             db.collection('forgottenPasswordTokens').remove({ token }),
-                            db.collection(collectionName[forgottenPasswordToken.profile]).updateOne({ _id: user._id }, {
+                            db.collection('accounts').updateOne({ _id: account._id }, {
                                 $set: {
                                     'meta.rehashed': true,
                                     'passwordHash': passwordHash,
@@ -74,7 +63,7 @@ module.exports = ({ db, mailing, password }) => {
 
                         return res.status(201).json({
                             message: 'Account successfully updated',
-                            userInfo: { username: user.courriel, profile: forgottenPasswordToken.profile, id: user._id }
+                            userInfo: { username: account.courriel, profile: forgottenPasswordToken.profile, id: account._id }
                         });
 
                     } else {
