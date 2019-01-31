@@ -17,24 +17,33 @@ export default class RejectButton extends React.Component {
     };
 
     reject = async (avis, reason) => {
+        let message = {
+            title: 'Avis rejeté pour injure',
+            text: (<span>L&apos;avis a bien été <b>rejeté</b>, un email a été adressé au stagiaire.</span>)
+        };
         this.setState({ showModal: false });
         let updated = await rejectAvis(avis._id, reason);
-        this.props.onChange(updated);
+        this.props.onChange(updated, { message });
     };
 
-     handleCancel = () => {
+    handleCancel = () => {
         this.setState({ showModal: false });
     };
 
-     getModal = () => {
+    getModal = () => {
+
+        let message = {
+            title: 'Rejeter cet avis pour injure',
+            text: (
+                <span>
+                Le rejet pour Injure entraîne l&apos;envoi d&apos;un mail automatique au stagiaire pour l&apos;informer que le <b>commentaire ne sera pas publié</b>. Il est invité à <b>laisser un nouvel avis</b>. Confirmez-vous cette demande ?
+                </span>
+            )
+        };
+
         return (
             <Modal
-                title="Rejeter cet avis pour injure"
-                text={
-                    <span>
-                        Le rejet pour Injure entraîne l'envoi d'un mail automatique au stagiaire pour l'informer que le <b>commentaire ne sera pas publié</b>. Il est invité à <b>laisser un nouvel avis</b>. Confirmez-vous cette demande ?
-                    </span>
-                }
+                message={message}
                 onConfirmed={() => this.reject(this.props.avis, 'injure')}
                 onClose={this.handleCancel} />
         );
@@ -53,11 +62,11 @@ export default class RejectButton extends React.Component {
                 {this.state.showModal && this.getModal()}
                 <button
                     type="button"
-                    className={`btn btn-sm dropdown-toggle ${this.getExtraClasses()}`}
+                    className={`btn dropdown-toggle ${this.getExtraClasses()}`}
                     data-toggle="dropdown">
                     <i className="far fa-times-circle" />
                 </button>
-                <div className="dropdown-menu">
+                <div className="dropdown-menu dropdown-menu-right">
                     <h6 className="dropdown-header">Rejeter</h6>
                     <a className="dropdown-item" onClick={() => this.setState({ showModal: true })}>Injure</a>
                     <div className="dropdown-divider" />

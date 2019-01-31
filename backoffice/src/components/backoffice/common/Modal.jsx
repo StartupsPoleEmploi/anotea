@@ -5,8 +5,7 @@ import './Modal.scss';
 export default class Modal extends React.Component {
 
     static propTypes = {
-        title: PropTypes.string.isRequired,
-        text: PropTypes.object.isRequired,
+        message: PropTypes.object.isRequired,
         onClose: PropTypes.func.isRequired,
         onConfirmed: PropTypes.func.isRequired,
     };
@@ -37,7 +36,7 @@ export default class Modal extends React.Component {
     }
 
     render() {
-        let { title, text, onClose, onConfirmed } = this.props;
+        let { message, onClose, onConfirmed } = this.props;
         let transitionClass = this.state.showTransition ? 'show' : '';
 
         return (
@@ -47,10 +46,10 @@ export default class Modal extends React.Component {
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">{title}</h5>
+                                <h5 className="modal-title">{message.title}</h5>
                             </div>
                             <div className="modal-body">
-                                <p>{text}</p>
+                                <p>{message.text}</p>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="cancel" onClick={onClose}>
