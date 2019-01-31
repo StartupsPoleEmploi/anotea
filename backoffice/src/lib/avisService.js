@@ -25,7 +25,7 @@ export const unmaskTitle = id => {
 };
 
 export const rejectAvis = (id, reason) => {
-    return _post(`/backoffice/avis/${id}/reject`, {
+    return _put(`/backoffice/avis/${id}/reject`, {
         reason: reason
     });
 };
