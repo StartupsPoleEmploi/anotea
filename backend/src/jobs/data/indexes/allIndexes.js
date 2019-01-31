@@ -14,12 +14,16 @@ module.exports = {
             db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
             db.collection('trainee').createIndex({ 'codeRegion': 1 }),
             db.collection('trainee').createIndex({ 'token': 1 }),
+            db.collection('trainee').createIndex({ 'trainee.email': 1 }),
+            //Used during import of stagiaires
+            db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.infoCarif.numeroSession': 1 }),
         ]);
     },
     comment: db => {
         return Promise.all([
             db.collection('comment').createIndex({ 'step': 1 }),
             db.collection('comment').createIndex({ 'formacode': 1 }),
+            db.collection('comment').createIndex({ 'idSession': 1 }),
             db.collection('comment').createIndex({ 'lastModerationAction': 1 }),
             db.collection('comment').createIndex({ 'token': 1 }),
             db.collection('comment').createIndex({ 'codeRegion': 1 }),
@@ -90,7 +94,8 @@ module.exports = {
             db.collection('forgottenPasswordTokens').createIndex({ 'token': 1 }),
             db.collection('forgottenPasswordTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 172800 }),
             db.collection('invalidAuthTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 86400 }),
-            db.collection('mailStats').createIndex({ 'token': 1 })
+            db.collection('mailStats').createIndex({ 'token': 1 }),
+            db.collection('kairos_organismes').createIndex({ 'siret': 1 }),
         ]);
     },
 };
