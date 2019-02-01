@@ -17,13 +17,13 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
-    const sendEmailAsync = (trainee, comment, reason) => {
-      let stagiaireEmail = trainee.trainee.email;
-          mailer.sendInjureMail({ to: stagiaireEmail }, trainee, comment, () => {
-              logger.info(`email sent to ${stagiaireEmail} pour`, reason);
-          }, err => {
-              logger.error(`Unable to send email to ${stagiaireEmail}`, err);
-          });
+    const sendInjureEmailAsync = (trainee, comment, reason) => {
+        let email = trainee.trainee.email;
+        mailer.sendInjureMail({ to: email }, trainee, comment, () => {
+            logger.info(`email sent to ${email} pour`, reason);
+        }, err => {
+            logger.error(`Unable to send email to ${email}`, err);
+        });
     };
 
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
@@ -164,7 +164,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
             });
     }));
 
-    router.post('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
         const rejectReason = req.body.reason;
         let comment = await db.collection('comment').findOne({ _id: id });
@@ -187,22 +187,19 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configura
                 if (err) {
                     logger.error(err);
                     res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value && rejectReason !== 'injure') {
+                } else if (result.value) {
+
+                    if (rejectReason === 'injure') {
+                        sendInjureEmailAsync(trainee, comment, rejectReason);
+                    }
+
                     saveEvent(id, 'reject', {
                         app: 'moderation',
                         user: 'admin',
                         profile: 'moderateur',
                         ip: getRemoteAddress(req)
                     });
-                    res.json(result.value);
-                } else if (result.value && rejectReason === 'injure') {
-                  sendEmailAsync(trainee, comment, rejectReason);
-                    saveEvent(id, 'reject', {
-                        app: 'moderation',
-                        user: 'admin',
-                        profile: 'moderateur',
-                        ip: getRemoteAddress(req)
-                    });
+
                     res.json(result.value);
                 } else {
                     res.status(404).send({ 'error': 'Not found' });

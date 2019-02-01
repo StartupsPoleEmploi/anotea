@@ -1,14 +1,14 @@
 <html>
     <head>
-        <title>Votre avis a été supprimé</title>
+        <title>Rejet de votre avis sur votre formation</title>
         <meta name="viewport" content="width=device-width">
         <style>
             body {
-                font-size:1em;
+                font-size: 1em;
             }
 
             body td {
-                padding:2em;
+                padding: 2em;
                 width: 33%;
             }
 
@@ -27,18 +27,22 @@
             .labels td {
                 padding: 0px 0px 20px 20px;
             }
+
             @media only screen and (max-width: 596px) {
                 body {
-                    width:100%;
-                    font-size:1em;
+                    width: 100%;
+                    font-size: 1em;
                 }
+
                 body td {
-                    padding:.5em;
+                    padding: .5em;
                     width: 33%;
                 }
+
                 .labels, .icons {
                     display: none;
                 }
+
                 .icons-mobile {
                     display: inherit;
                     background: white;
@@ -49,37 +53,23 @@
         </style>
     </head>
     <body style="background-color:#ebebeb;font-size:1.3em">
-        <div style="display:none">
-            <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
-        </div>
         <center>
-            <table height="100%" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
+            <table height="100%" cellspacing="0" cellpadding="0" border="0"
+                   style="font-family:Arial; background-color:white; font-size:1em;">
                 <tr>
-                    <td colspan="3" valign="middle" align="center" style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;">
-                        Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td  style="padding:2em" align="left" valign="middle"><img src="<%= hostname %>/img/email/logo_Anotea_Vertical_baseline2.png" alt=""/></td>
-                    <td  style="padding:2em" colspan="2" align="right" valign="middle">
+                    <td style="padding:2em" align="left" valign="middle"><img
+                                src="<%= hostname %>/img/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
+                    <td style="padding:2em" colspan="2" align="right" valign="middle">
                         Propulsé par &nbsp;
-                        <img src="<%= hostname %>/img/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" style="vertical-align: middle;" />
+                        <img src="<%= hostname %>/img/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt=""
+                             style="vertical-align: middle;" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="3" style="padding:0em 2em">
                         <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
-                        <p>Nous n’avons pas pu prendre en compte votre avis car il comporte des propos à caractère injurieux ou diffamatoire.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="padding:0em 2em">
-                        <p>Nous vous invitons à <a href="<%= formLink %>" target="_blank"><img alt="laisser un nouvel avis ici" border="0"/></a> pour éclairer les futurs stagiaires :</p>
-                        <ul>
-                            <li>dites ce que vous avez aimé et moins aimé.</li>
-                            <li>partagez votre expérience.</li>
-                            <li>dites ce que vous auriez aimé savoir avant de choisir cette formation.</li>
-                        </ul>
+                        <p>Nous n’avons pas pu prendre en compte votre avis car il comporte des propos à caractère injurieux ou diffamatoire, seules les notes seront publiées sur une formation similaire.
+                        </p>
                     </td>
                 </tr>
                 <tr>
@@ -88,12 +78,15 @@
                     </td>
                 </tr>
             </table>
-            <table  width="760px" cellspacing="0" cellpadding="0" border="0" style="font-family:Arial; background-color:white; font-size:1em;">
+            <table width="760px" cellspacing="0" cellpadding="0" border="0"
+                   style="font-family:Arial; background-color:white; font-size:1em;">
                 <tr>
-                    <td colspan="3" align="center" style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
+                    <td colspan="3" align="center"
+                        style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
                         <%- include('./legal/mentions.ejs'); %>
 
-                        <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous pouvez vous désinscrire</a>.</p>
+                        <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
+                                pouvez vous désinscrire</a>.</p>
                     </td>
                 </tr>
             </table>

@@ -36,7 +36,7 @@ export default class RejectButton extends React.Component {
             title: 'Rejeter cet avis pour injure',
             text: (
                 <span>
-                Le rejet pour Injure entraîne l&apos;envoi d&apos;un mail automatique au stagiaire pour l&apos;informer que le <b>commentaire ne sera pas publié</b>. Il est invité à <b>laisser un nouvel avis</b>. Confirmez-vous cette demande ?
+                    Le <b>rejet pour injure</b> entraîne <b>l&apos;envoi d&apos;un email</b> automatique au stagiaire pour l&apos;informer que le <b>commentaire ne sera pas publié</b>. Confirmez-vous cette demande ?
                 </span>
             )
         };

@@ -221,6 +221,24 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.deepEqual(response.body.editedComment.text, 'New message');
     });
 
+    it('can reject an avis', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/reject`)
+        .send({ reason: 'alerte' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.rejected, true);
+    });
+
     it('can not search avis when not authenticated', async () => {
 
         let app = await startServer();
