@@ -3,9 +3,10 @@ const ObjectID = require('mongodb').ObjectID;
 const Boom = require('boom');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 
-module.exports = ({ db, logger, createJWTAuthMiddleware, checkProfile }) => {
+module.exports = ({ db, logger, middlewares }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
+    let { createJWTAuthMiddleware, checkProfile } = middlewares;
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
     const saveEvent = (id, type, source) => {

@@ -8,10 +8,11 @@ const convertToExposableAction = require('./dto/convertToExposableAction');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
 const { tryAndCatch } = require('../../routes-utils');
 
-module.exports = ({ db, createHMACAuthMiddleware }) => {
+module.exports = ({ db, middlewares }) => {
 
     let router = express.Router();// eslint-disable-line new-cap
     let collection = db.collection('actionsReconciliees');
+    let { createHMACAuthMiddleware } = middlewares;
     let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
     router.get('/v1/actions', checkAuth, tryAndCatch(async (req, res) => {

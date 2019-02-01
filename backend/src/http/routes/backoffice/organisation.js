@@ -2,10 +2,11 @@ const express = require('express');
 const Boom = require('boom');
 const { tryAndCatch } = require('../routes-utils');
 
-module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration, password }) => {
+module.exports = ({ db, configuration, password, middlewares }) => {
 
     let pagination = configuration.api.pagination;
     let router = express.Router(); // eslint-disable-line new-cap
+    let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let { hashPassword, isPasswordStrongEnough } = password;
     let allProfiles = checkProfile('moderateur', 'financeur', 'organisme');

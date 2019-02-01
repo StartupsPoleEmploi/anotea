@@ -4,9 +4,10 @@ const Joi = require('joi');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 const getOrganismeEmail = require('../../../common/utils/getOrganismeEmail');
 
-module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
+module.exports = ({ db, mailing, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
+    let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
 
