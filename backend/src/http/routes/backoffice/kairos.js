@@ -5,11 +5,12 @@ const Joi = require('joi');
 const configuration = require('config');
 const { tryAndCatch } = require('../routes-utils');
 
-module.exports = ({ db, createJWTAuthMiddleware, auth }) => {
+module.exports = ({ db, auth, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let collection = db.collection('accounts');
     let { findCodeRegionByName } = require('../../../common/components/regions')(db);
+    let { createJWTAuthMiddleware } = middlewares;
     let checkAuth = createJWTAuthMiddleware('kairos', {
         externalToken: true,
         onInvalidToken: e => {

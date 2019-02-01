@@ -66,11 +66,8 @@ module.exports = components => {
         }
     }));
 
-    let { createHMACAuthMiddleware, createJWTAuthMiddleware, checkProfile } = middlewares(auth, logger, configuration);
     let httpComponents = Object.assign({}, components, {
-        createHMACAuthMiddleware,
-        createJWTAuthMiddleware,
-        checkProfile
+        middlewares: middlewares(auth, logger, configuration),
     });
 
     //Public routes
@@ -99,7 +96,7 @@ module.exports = components => {
     app.use('/api', require('./routes/backoffice/dashboard')(httpComponents));
     app.use('/api', require('./routes/backoffice/stats')(httpComponents));
     app.use('/api', require('./routes/backoffice/account')(httpComponents));
-    
+
     // catch 404
     app.use(function(req, res) {
         res.status(404);

@@ -7,9 +7,10 @@ const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 const AvisSearchBuilder = require('./utils/AvisSearchBuilder');
 const computeInventory = require('./utils/computeInventory');
 
-module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger, configuration, mailer, mailing }) => {
+module.exports = ({ db, middlewares, logger, configuration, mailer, mailing }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
+    let { createJWTAuthMiddleware, checkProfile } = middlewares;
     const checkAuth = createJWTAuthMiddleware('backoffice');
     const itemsPerPage = configuration.api.pagination;
 

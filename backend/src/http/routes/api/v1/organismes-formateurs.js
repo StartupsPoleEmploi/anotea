@@ -8,10 +8,11 @@ const buildProjection = require('./utils/buildProjection');
 const convertToExposableOrganismeFomateur = require('./dto/convertToExposableOrganismeFomateur');
 const convertToExposablePagination = require('./dto/convertToExposablePagination');
 
-module.exports = ({ db, createHMACAuthMiddleware }) => {
+module.exports = ({ db, middlewares }) => {
 
     let router = express.Router();// eslint-disable-line new-cap
     let collection = db.collection('accounts');
+    let { createHMACAuthMiddleware } = middlewares;
     let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
     router.get('/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {
