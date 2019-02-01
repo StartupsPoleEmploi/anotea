@@ -8,7 +8,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
     let pagination = configuration.api.pagination;
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let allProfiles = checkProfile('moderateur', 'financer', 'organisme');
+    let allProfiles = checkProfile('moderateur', 'financeur', 'organisme');
 
     const checkCodeRegion = req => {
         if (req.params.idregion !== req.user.codeRegion) {
