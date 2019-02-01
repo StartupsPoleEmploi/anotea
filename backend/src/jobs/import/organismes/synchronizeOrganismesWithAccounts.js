@@ -71,7 +71,7 @@ module.exports = async (db, logger) => {
         };
     };
 
-    const synchronizeOrganismes = async (sourceCollectionName, stats) => {
+    const synchronizeOrganismesWithAccounts = async (sourceCollectionName, stats) => {
 
         let cursor = db.collection(sourceCollectionName).find();
 
@@ -134,8 +134,8 @@ module.exports = async (db, logger) => {
         }
     };
 
-    await synchronizeOrganismes('intercarif_organismes_responsables', stats);
-    await synchronizeOrganismes('intercarif_organismes_formateurs', stats);
+    await synchronizeOrganismesWithAccounts('intercarif_organismes_responsables', stats);
+    await synchronizeOrganismesWithAccounts('intercarif_organismes_formateurs', stats);
     await addMissingOrganismesFromKairos(stats);
 
     return stats.invalid === 0 ? Promise.resolve(stats) : Promise.reject(stats);

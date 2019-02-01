@@ -4,8 +4,9 @@ const path = require('path');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const synchronizeOrganismes = require('../../../../../src/jobs/import/organismes/synchronizeOrganismes');
-const generateOrganismes = require('../../../../../src/jobs/import/organismes/generateOrganismes');
+const synchronizeOrganismesWithAccounts = require('../../../../../src/jobs/import/organismes/synchronizeOrganismesWithAccounts');
+const generateOrganismesFromIntercarif = require('../../../../../src/jobs/import/organismes/generateOrganismesFromIntercarif');
+const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/generateOrganismesFromKairos');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertIntoDatabase, importIntercarif }) => {
 
@@ -16,8 +17,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         let db = await getTestDatabase();
         await Promise.all([importIntercarif(), insertDepartements()]);
 
-        await generateOrganismes(db, logger, csvFile);
-        await synchronizeOrganismes(db, logger);
+        await generateOrganismesFromIntercarif(db, logger);
+        await generateOrganismesFromKairos(db, logger, csvFile);
+        await synchronizeOrganismesWithAccounts(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.creationDate);
@@ -69,8 +71,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
             })),
         ]);
 
-        await generateOrganismes(db, logger, csvFile);
-        await synchronizeOrganismes(db, logger);
+        await generateOrganismesFromIntercarif(db, logger);
+        await generateOrganismesFromKairos(db, logger, csvFile);
+        await synchronizeOrganismesWithAccounts(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.updateDate);
@@ -120,8 +123,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         let db = await getTestDatabase();
         await Promise.all([importIntercarif(), insertDepartements()]);
 
-        await generateOrganismes(db, logger, csvFile);
-        await synchronizeOrganismes(db, logger);
+        await generateOrganismesFromIntercarif(db, logger);
+        await generateOrganismesFromKairos(db, logger, csvFile);
+        await synchronizeOrganismesWithAccounts(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 11111111111111 });
         assert.ok(doc);
@@ -132,8 +136,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         let db = await getTestDatabase();
         await Promise.all([importIntercarif(), insertDepartements()]);
 
-        await generateOrganismes(db, logger, csvFile);
-        await synchronizeOrganismes(db, logger);
+        await generateOrganismesFromIntercarif(db, logger);
+        await generateOrganismesFromKairos(db, logger, csvFile);
+        await synchronizeOrganismesWithAccounts(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 33333333333333 });
         assert.ok(doc.creationDate);

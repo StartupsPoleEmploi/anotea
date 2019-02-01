@@ -1,8 +1,8 @@
 const fs = require('fs');
 const parse = require('csv-parse');
 const moment = require('moment');
-const { transformObject } = require('../../../../common/utils/stream-utils');
-const regions = require('../../../../common/components/regions');
+const { transformObject } = require('../../../common/utils/stream-utils');
+const regions = require('../../../common/components/regions');
 
 const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
 
@@ -76,5 +76,3 @@ module.exports = async (db, logger, file) => {
     });
 
 };
-
-
