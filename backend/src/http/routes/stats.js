@@ -33,12 +33,13 @@ module.exports = ({ db, configuration, logger, regions }) => {
     const router = express.Router(); // eslint-disable-line new-cap
     const { findRegionByCodeRegion } = regions;
 
-    const computeMailingStats = async codeRegion => {
+    const computeMailingStats = async (codeRegion, codeFinanceur) => {
 
         const docs = await db.collection('trainee').aggregate([
             {
                 $match: {
                     ...(codeRegion ? { codeRegion: codeRegion } : {}),
+                    ...(codeFinanceur ? { 'training.codeFinanceur': { $elemMatch: { $eq: codeFinanceur } } } : {})
                 }
             },
             {
@@ -202,7 +203,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
     router.get('/stats/mailing.:format', async (req, res) => {
 
-        let data = await computeMailingStats(req.query.codeRegion);
+        let data = await computeMailingStats(req.query.codeRegion, req.query.codeFinanceur);
         if (req.params.format === 'json' || !req.params.format) {
             res.send(data);
         } else if (req.params.format === 'csv') {
