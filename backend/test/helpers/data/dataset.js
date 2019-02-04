@@ -69,18 +69,6 @@ let newComment = (custom, date = getDateInThePast()) => {
         lastModerationAction: date,
         read: true,
         importDate: date,
-        trainee: {
-            name: 'Dupont',
-            firstName: 'Henri',
-            mailDomain: 'free.fr',
-            email: 'henri@email.fr',
-            phoneNumbers: [
-                '0123456789',
-                'NULL'
-            ],
-            emailValid: true,
-            dnIndividuNational: '1111111111'
-        },
         unsubscribe: false,
         mailSent: true,
         mailSentDate: date,
@@ -221,11 +209,23 @@ module.exports = {
         }, custom, { test: true });
     },
     newComment: newComment,
-    newSession: custom => {
+    newSession: (custom = {}) => {
+
+        let avis = custom.avis ? custom.avis : [newComment()];
+        let numeroFormation = 'F_XX_XX';
+        let numeroAction = 'AC_XX_XXXXXX';
+        let numeroSession = 'SE_XXXXXX';
+
+        if (custom._id) {
+            [numeroFormation, numeroAction, numeroSession] = custom._id.split('|');
+        }
+
         return _.merge({
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
-            numero: 'SE_XXXXXX',
-            avis: !custom.avis ? [newComment()] : null,
+            numero: numeroSession,
+            region: '11',
+            code_region: '11',
+            avis: avis,
             score: {
                 nb_avis: 1,
                 notes: {
@@ -237,10 +237,38 @@ module.exports = {
                     global: 4
                 }
             },
+            formation: {
+                numero: numeroFormation,
+                intitule: 'Titre professionnel plaquiste',
+                domaine_formation: {
+                    formacodes: [
+                        '31801'
+                    ]
+                },
+                certifications: [
+                    '55518'
+                ],
+                action: {
+                    numero: numeroAction,
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                        ville: 'Paris'
+                    },
+                    organisme_financeurs: [
+                        '2'
+                    ],
+                    organisme_formateur: {
+                        raison_sociale: 'Anotea Formation Paris',
+                        siret: '22222222222222',
+                        numero: 'OF_XXX'
+                    }
+                }
+            },
             meta: {
+                source: 'intercarif',
                 reconciliation: {
-                    organisme_formateur: '11111111111111',
-                    lieu_de_formation: '49000',
+                    organisme_formateur: '22222222222222',
+                    lieu_de_formation: '75019',
                     certifinfos: [
                         '55518'
                     ],
@@ -248,21 +276,24 @@ module.exports = {
                         '31801'
                     ]
                 },
-                source: {
-                    type: 'intercarif',
-                    numero_formation: 'F_XX_XX',
-                    numero_action: 'AC_XX_XXXXXX',
-                    numero_session: 'SE_XXXXXX',
-                }
             }
         }, custom, { test: true });
     },
     newAction: custom => {
+
+        let numeroFormation = 'F_XX_XX';
+        let numeroAction = 'AC_XX_XXXXXX';
+        let avis = custom.avis ? custom.avis : [newComment()];
+
+        if (custom._id) {
+            [numeroFormation, numeroAction] = custom._id.split('|');
+        }
+
         return _.merge({
             _id: 'F_XX_XX|AC_XX_XXXXXX',
-            numero: 'AC_XX_XXXXXX',
+            numero: numeroAction,
             region: '11',
-            avis: !custom.avis ? [newComment()] : null,
+            avis: avis,
             score: {
                 nb_avis: 1,
                 notes: {
@@ -274,7 +305,30 @@ module.exports = {
                     global: 4
                 }
             },
+            organisme_financeurs: ['2'],
+            organisme_formateur: {
+                raison_sociale: 'Anotea Formation Paris',
+                siret: '22222222222222',
+                numero: 'OF_XXX'
+            },
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
+            },
+            formation: {
+                numero: numeroFormation,
+                intitule: 'Titre professionnel plaquiste',
+                domaine_formation: {
+                    formacodes: [
+                        '31801'
+                    ]
+                },
+                certifications: [
+                    '55518'
+                ],
+            },
             meta: {
+                source: 'intercarif',
                 reconciliation: {
                     organisme_formateur: '11111111111111',
                     lieu_de_formation: '49000',
@@ -285,11 +339,6 @@ module.exports = {
                         '31801'
                     ]
                 },
-                source: {
-                    type: 'intercarif',
-                    numero_formation: 'F_XX_XX',
-                    numero_action: 'AC_XX_XXXXXX',
-                }
             }
         }, custom, { test: true });
     },
