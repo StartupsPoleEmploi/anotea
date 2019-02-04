@@ -4,7 +4,7 @@ const { IdNotFoundError } = require('./../errors');
 module.exports = (db, logger, mailer) => {
 
     const saveEvent = function(id, type, source) {
-        db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
+        db.collection('events').insertOne({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
     const sendInjureEmailAsync = (trainee, comment, reason) => {
