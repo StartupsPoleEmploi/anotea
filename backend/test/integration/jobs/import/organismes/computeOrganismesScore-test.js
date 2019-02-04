@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newOrganismeAccount, newComment } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const computeScore = require('../../../../../src/jobs/import/organismes/computeScore');
+const computeOrganismesScore = require('../../../../../src/jobs/import/organismes/computeOrganismesScore');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
@@ -48,7 +48,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })), ['score']),
         ]);
 
-        let stats = await computeScore(db, logger);
+        let stats = await computeOrganismesScore(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.deepEqual(stats, {
@@ -99,7 +99,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        await computeScore(db, logger);
+        await computeOrganismesScore(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.deepEqual(doc.score, {
@@ -129,7 +129,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })), ['score']),
         ]);
 
-        await computeScore(db, logger);
+        await computeOrganismesScore(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 44444444444444 });
         assert.deepEqual(doc.score, {

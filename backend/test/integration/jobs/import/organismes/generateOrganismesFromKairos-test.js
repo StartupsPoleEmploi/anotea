@@ -1,19 +1,19 @@
 const assert = require('assert');
 const path = require('path');
 const _ = require('lodash');
-const { withMongoDB } = require('../../../../../helpers/test-database');
-const logger = require('../../../../../helpers/test-logger');
-const generateOrganismesKairos = require('../../../../../../src/jobs/import/organismes/generators/generateOrganismesKairos');
+const { withMongoDB } = require('../../../../helpers/test-database');
+const logger = require('../../../../helpers/test-logger');
+const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/generateOrganismesFromKairos');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
 
     it('should create collection with organismes from CSV file', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../../helpers/data', 'kairos-organismes.csv');
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
         await insertDepartements();
 
-        let stats = await generateOrganismesKairos(db, logger, csvFile);
+        let stats = await generateOrganismesFromKairos(db, logger, csvFile);
 
         assert.deepEqual(stats, {
             inserted: 3,

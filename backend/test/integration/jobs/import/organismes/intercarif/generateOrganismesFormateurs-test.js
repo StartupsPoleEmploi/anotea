@@ -2,7 +2,7 @@ const assert = require('assert');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../../../helpers/test-database');
 const { newOrganismeResponsable } = require('../../../../../helpers/data/dataset');
-const generateOrganismesFormateurs = require('../../../../../../src/jobs/import/organismes/generators/generateOrganismesFormateurs');
+const generateOrganismesFormateurs = require('../../../../../../src/jobs/import/organismes/intercarif/generateOrganismesFormateurs');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
