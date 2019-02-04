@@ -1,29 +1,35 @@
 .note {
-	width: 500px;
+	width: 514px;
 	height: 93px;
 	margin: 0px;
-    padding: 7px;
-    
-    .note.even {
-        background-color: #F4F4F5;
-    }
-    
-    .title {
-        height: 22px;
-        width: 307px;
-        color: #24303A;
-        font-size: 18px;
-        font-weight: 900;
-        line-height: 22px;
-        display: block;
-    }
-    
-    .description {
-        height: 34px;
-        width: 311px;
-        opacity: 0.6;
-        color: #11181E;
-        font-size: 14px;
-        line-height: 17px;
-    }
+
+	.title {
+		height: 19px;
+		width: 255px;
+		color: #24303A;
+		font-size: 16px;
+		font-weight: 900;
+	    line-height: 19px;
+		display: block;
+		padding-top: 16px;
+		display: block;
+		padding-left: 16px;
+	}
+
+	.description {
+		display: block;
+		height: 35px;
+		width: 304px;
+		opacity: 0.6;
+		color: #11181E;
+		font-size: 14px;
+		line-height: 17px;
+		padding-top: 4px;
+		padding-left: 16px;
+	}
+
+}
+
+.even {
+	background-color: #F4F4F5;
 }

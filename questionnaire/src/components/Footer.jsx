@@ -14,7 +14,7 @@ class Footer extends Component {
         return (
             <div className="footer">
                 <span className="propulsed">Service propulsé par</span>
-                <img className="logoPE" src='/img/poleemploi.png' alt='logo Pôle Emploi' />
+                <img className="logoPE" src="/img/poleemploi.png" alt="logo Pôle Emploi" />
                 <img className="logoRegion" src={`/img/regions/logo-questionnaire/region-${this.props.codeRegion}.png`} alt='logo région' />
             </div>
         );

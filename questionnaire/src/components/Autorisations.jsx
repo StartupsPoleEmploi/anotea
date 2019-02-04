@@ -8,12 +8,12 @@ class Autorisations extends Component {
         items: [
             {
                 id: 1,
-                type: 'accord',
+                type: 'accord_entreprise',
                 description: `J'autorise une entreprise à me contacter.`
             },
             {
                 id: 2,
-                type: 'accord_entreprise',
+                type: 'accord',
                 description: `J'autorise les futur(e)s stagiaires à me questionner sur cette formation.`
             },
         ]
@@ -23,7 +23,7 @@ class Autorisations extends Component {
         return (
             <div className="autorisations">
                 {this.state.items.map((item, index) =>
-                    <div key={index} className={`item${item.id}`}>
+                    <div className={`item${item.id}`} key={index}>
                         <input type="checkbox" className={`input_${item.type}`} />
                         <span className={`span_${item.type}`}>{item.description}</span>
                     </div>

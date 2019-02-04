@@ -24,8 +24,8 @@ export default class Stars extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state.starArray = new Array(MAX_STARS)
-            .fill('star', 0, this.state.value)
-            .fill('star_empty', this.state.value, MAX_STARS);
+        .fill('star', 0, this.state.value)
+        .fill('star_empty', this.state.value, MAX_STARS);
     }
 
     updateHoverState = value => {

@@ -5,7 +5,7 @@ import './SendButton.scss';
 class SendButton extends Component {
     render() {
         return (
-            <button className="sendButton" type="button">
+            <button className="send-button" type="button">
                 <span className="strong">ENVOYER</span>
             </button>
         );

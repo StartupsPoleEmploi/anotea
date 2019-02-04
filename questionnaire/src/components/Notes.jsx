@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './notes.scss';
 
 import Note from './Note';
+import NoteMoyenne from './NoteMoyenne';
 
 const items = [{
     title: 'Accueil',
@@ -67,11 +68,17 @@ class Notes extends Component {
     }
 
     render() {
+        const notesValue = this.state.notes.map(index => index.value);
+        const resultat = notesValue.includes(null);
+
         return (
-            <div className="notes">
-                <h3>Notes</h3>
-                { this.state.averageScore }
-                {this.getItems()}
+            <div>
+                <h3 className="notes">Notes</h3>
+                {!resultat ?
+                    <NoteMoyenne averageScore={this.state.averageScore} />
+                    :
+                    this.getItems()
+                }
             </div>
         );
     }
