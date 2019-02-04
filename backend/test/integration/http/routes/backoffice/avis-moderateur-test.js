@@ -4,7 +4,7 @@ const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../helpers/test-server');
 const { newComment, newTrainee } = require('../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme, logAsFinancer, insertIntoDatabase, createIndexes }) => {
+describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme, logAsFinancer, insertIntoDatabase, createIndexes, getTestDatabase }) => {
 
     it('can search all avis with filter', async () => {
 
@@ -203,7 +203,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         });
     });
 
-    it('can update an avis', async () => {
+    it('can edit an avis', async () => {
 
         let app = await startServer();
         const id = new ObjectID();
@@ -219,6 +219,30 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
 
         assert.equal(response.statusCode, 200);
         assert.deepEqual(response.body.editedComment.text, 'New message');
+        assert.ok(response.body.lastModerationAction);
+    });
+
+    it('can publish an avis', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/publish`)
+        .send({ qualification: 'positif' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.moderated, true);
+        assert.deepEqual(response.body.published, true);
+        assert.deepEqual(response.body.reported, false);
+        assert.deepEqual(response.body.rejectReason, null);
+        assert.deepEqual(response.body.qualification, 'positif');
+        assert.ok(response.body.lastModerationAction);
     });
 
     it('can reject an avis', async () => {
@@ -236,7 +260,46 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.moderated, true);
+        assert.deepEqual(response.body.published, false);
         assert.deepEqual(response.body.rejected, true);
+        assert.deepEqual(response.body.reported, false);
+        assert.deepEqual(response.body.rejectReason, 'alerte');
+        assert.ok(response.body.lastModerationAction);
+    });
+
+    it('can delete an avis', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .delete(`/api/backoffice/avis/${id}`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        let db = await getTestDatabase();
+        let count = await db.collection('comment').countDocuments({ _id: id });
+        assert.equal(count, 0);
+    });
+
+    it('can not reject unknown avis', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${new ObjectID()}/reject`)
+        .send({ reason: 'alerte' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 404);
     });
 
     it('can not search avis when not authenticated', async () => {

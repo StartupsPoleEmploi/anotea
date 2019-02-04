@@ -87,7 +87,7 @@ module.exports = components => {
     //Routes used by backoffice applications
     app.use('/api', require('./routes/backoffice/login')(httpComponents));
     app.use('/api', require('./routes/backoffice/forgottenPassword')(httpComponents));
-    app.use('/api', require('./routes/backoffice/avis-moderation')(httpComponents));
+    app.use('/api', require('./routes/backoffice/avis-moderateur')(httpComponents));
     app.use('/api', require('./routes/backoffice/avis-organismes')(httpComponents));
     app.use('/api', require('./routes/backoffice/export')(httpComponents));
     app.use('/api', require('./routes/backoffice/organisation')(httpComponents));
@@ -116,8 +116,8 @@ module.exports = components => {
                 error.output.payload.details = rawError.details;
             } else {
                 error = Boom.boomify(rawError, {
-                    statusCode: 500,
-                    message: 'Une erreur est survenue'
+                    statusCode: rawError.status || 500,
+                    message: rawError.message || 'Une erreur est survenue',
                 });
             }
         }

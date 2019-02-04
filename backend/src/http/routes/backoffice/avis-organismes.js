@@ -1,9 +1,10 @@
 const express = require('express');
 const ObjectID = require('mongodb').ObjectID;
 const Boom = require('boom');
+const Joi = require('joi');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 
-module.exports = ({ db, logger, middlewares }) => {
+module.exports = ({ db, logger, middlewares, moderation }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -113,27 +114,13 @@ module.exports = ({ db, logger, middlewares }) => {
             });
     }));
 
-    router.put('/backoffice/avis/:id/report', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
-        const id = ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { reported: true } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'report', {
-                        app: 'organisation',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
+    router.put('/backoffice/avis/:id/report', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+
+        let avis = await moderation.report(id, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
     }));
 
     router.put('/backoffice/avis/:id/unreport', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {

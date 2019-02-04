@@ -3,6 +3,7 @@ const auth = require('./common/components/auth');
 const password = require('./common/components/password');
 const regions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
+const moderation = require('./common/components/moderation');
 const database = require('./common/components/database');
 const createMailer = require('./smtp/mailer.js');
 const sendForgottenPasswordEmail = require('./common/components/mailing/sendForgottenPasswordEmail.js');
@@ -25,6 +26,7 @@ module.exports = async (options = {}) => {
         auth: auth(configuration),
         password,
         regions: regions(db),
+        moderation: moderation(db, logger, mailer),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
             sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),

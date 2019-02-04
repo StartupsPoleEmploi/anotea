@@ -47,7 +47,7 @@ export const unreportAvis = (id, userId) => {
 };
 
 export const publishAvis = (id, qualification) => {
-    return _post(`/backoffice/avis/${id}/publish`, {
+    return _put(`/backoffice/avis/${id}/publish`, {
         qualification: qualification
     });
 };

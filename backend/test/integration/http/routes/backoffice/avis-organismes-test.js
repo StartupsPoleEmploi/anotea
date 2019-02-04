@@ -58,6 +58,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         assert.deepEqual(result.answer, undefined);
     });
 
+    it('can report an avis', async () => {
+
+        let app = await startServer();
+        const comment = newComment();
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/report`)
+        .send({ reason: 'alerte' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.reported, true);
+    });
+
     it('should reject invalid comment id', async () => {
 
         let app = await startServer();
