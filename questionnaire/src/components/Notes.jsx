@@ -68,7 +68,7 @@ class Notes extends Component {
 
     render() {
         return (
-            <div>
+            <div className="notes">
                 <h3>Notes</h3>
                 { this.state.averageScore }
                 {this.getItems()}

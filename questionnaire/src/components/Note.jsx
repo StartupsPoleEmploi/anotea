@@ -15,15 +15,15 @@ class Note extends Component {
         index: PropTypes.number.isRequired
     };
 
-  render() {
-    return (
-      <div className={`note ${this.props.parity}`}>
-        <span className="title">{this.props.title}</span>
-        <span className="description">{this.props.description}</span>
-        <Stars onSelect={this.props.onSelect} index={this.props.index} />
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className={`note ${this.props.parity}`}>
+                <span className="title">{this.props.title}</span>
+                <span className="description">{this.props.description}</span>
+                <Stars onSelect={this.props.onSelect} index={this.props.index} />
+            </div>
+        );
+    }
 }
 
 export default Note;

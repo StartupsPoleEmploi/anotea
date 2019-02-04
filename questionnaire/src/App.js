@@ -7,26 +7,26 @@ import Footer from './components/Footer';
 import Autorisations from './components/Autorisations';
 import SendButton from './components/SendButton';
 
-import './App.css';
+import './App.scss';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <Header />
+    render() {
+        return (
+            <div className="App">
+                <Header />
 
-        <Notes />
+                <Notes />
 
-        <Commentaire />
+                <Commentaire />
 
-        <Autorisations />
+                <Autorisations />
 
-        <SendButton />
+                <SendButton />
 
-        <Footer codeRegion="11" />
-      </div>
-    );
-  }
+                <Footer codeRegion="11" />
+            </div>
+        );
+    }
 }
 
 export default App;

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "anotea",
+  "name": "Anotea : l'advisor de la formation ! Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
   "icons": [
     {
       "src": "favicon.ico",
