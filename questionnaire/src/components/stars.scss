@@ -5,26 +5,6 @@
     width: 130px;
     margin-left: 390px;
     margin-top: -60px;
-}
-
-.far.fa-star {
-    color: $color-black;
-}
-
-.fas.fa-star {
-    color: $color-yellow;
-    cursor: pointer;
-}
-
-.tooltipBlock {
-    height: 20px;
-}
-
-.starBlock {
-    display: inline;
-    position: relative;
-    margin-left: 3px;
-}
 
     .far.fa-star {
         color: $color-black;
@@ -42,6 +22,7 @@
     .starBlock {
         display: inline;
         position: relative;
+        margin-left: 3px;
     }
     
     .tooltip {
@@ -64,14 +45,4 @@
         display: inline-block;
     }
 }
-<<<<<<< HEAD
-=======
 
-.tooltip.inactive {
-    display: none;
-}
-
-.tooltip.active {
-    display: inline-block;
-}
->>>>>>> e7e18dd80028128559d499a1643295f7e81fe141
