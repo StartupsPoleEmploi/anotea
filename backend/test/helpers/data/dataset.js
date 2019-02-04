@@ -239,7 +239,7 @@ module.exports = {
             },
             formation: {
                 numero: numeroFormation,
-                intitule: 'Titre professionnel plaquiste',
+                intitule: 'Développeur web',
                 domaine_formation: {
                     formacodes: [
                         '31801'
@@ -317,7 +317,7 @@ module.exports = {
             },
             formation: {
                 numero: numeroFormation,
-                intitule: 'Titre professionnel plaquiste',
+                intitule: 'Développeur web',
                 domaine_formation: {
                     formacodes: [
                         '31801'

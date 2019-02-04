@@ -42,10 +42,10 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                     'F1604'
                 ]
             },
-            intitule_formation: 'Titre professionnel plaquiste',
-            objectif_formation: ' L\'objectif est d\'obtenir la qualification de plaquiste, pour un accès à l\'emploi.',
+            intitule_formation: 'Développeur web',
+            objectif_formation: 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
             resultats_attendus: '-',
-            contenu_formation: ' Réaliser l\'aménagement de locaux en produits à base de plaques de plâtre de technicité courante Réaliser l\'aménagement de locaux recevant du public en plaques de plâtre de technicité particulière. Spécialisation : réaliser des ouvrages d\'isolation acoustique, thermique et de protection incendie.',
+            contenu_formation: 'Réaliser le développement d\'application web.',
             certifiante: '1',
             contact_formation: {
                 coordonnefs: {

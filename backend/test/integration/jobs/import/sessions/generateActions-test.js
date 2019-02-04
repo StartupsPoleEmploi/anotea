@@ -65,7 +65,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             },
             formation: {
                 numero: 'F_XX_XX',
-                intitule: 'Titre professionnel plaquiste',
+                intitule: 'Développeur web',
                 domaine_formation: {
                     formacodes: [
                         '31801'
