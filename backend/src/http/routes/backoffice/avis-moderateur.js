@@ -7,7 +7,7 @@ const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 const AvisSearchBuilder = require('./utils/AvisSearchBuilder');
 const computeInventory = require('./utils/computeInventory');
 
-module.exports = ({ db, middlewares, logger, configuration, mailer, mailing }) => {
+module.exports = ({ db, middlewares, logger, configuration, moderation, mailing }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -16,15 +16,6 @@ module.exports = ({ db, middlewares, logger, configuration, mailer, mailing }) =
 
     const saveEvent = function(id, type, source) {
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
-    };
-
-    const sendInjureEmailAsync = (trainee, comment, reason) => {
-        let email = trainee.trainee.email;
-        mailer.sendInjureMail({ to: email }, trainee, comment, () => {
-            logger.info(`email sent to ${email} pour`, reason);
-        }, err => {
-            logger.error(`Unable to send email to ${email}`, err);
-        });
     };
 
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
@@ -166,132 +157,43 @@ module.exports = ({ db, middlewares, logger, configuration, mailer, mailing }) =
     }));
 
     router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        const rejectReason = req.body.reason;
-        let comment = await db.collection('comment').findOne({ _id: id });
-        let trainee = await db.collection('trainee').findOne({ token: comment.token });
 
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            {
-                $set: {
-                    reported: false,
-                    moderated: true,
-                    rejected: true,
-                    published: false,
-                    rejectReason: req.body.reason,
-                    lastModerationAction: new Date()
-                }
-            },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
+        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+        const { reason } = await Joi.validate(req.body, { reason: Joi.string().required() }, { abortEarly: false });
 
-                    if (rejectReason === 'injure') {
-                        sendInjureEmailAsync(trainee, comment, rejectReason);
-                    }
+        let avis = await moderation.reject(id, reason, { sendEmail: true, event: { origin: getRemoteAddress(req) } });
 
-                    saveEvent(id, 'reject', {
-                        app: 'moderation',
-                        user: 'admin',
-                        profile: 'moderateur',
-                        ip: getRemoteAddress(req)
-                    });
-
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
+        return res.json(avis);
     }));
 
     router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
 
-        db.collection('comment').removeOne({ _id: id }, (err, result) => {
-            if (err) {
-                logger.error(err);
-                res.status(500).send({ 'error': 'An error occurs' });
-            } else if (result.result.n === 1) {
-                saveEvent(id, 'delete', {
-                    app: 'moderation',
-                    profile: 'moderateur',
-                    user: req.query.userId,
-                    ip: req.connection.remoteAddress
-                });
-                res.status(200).send({ 'message': 'advice deleted' });
-            } else {
-                res.status(404).send({ 'error': 'Not found' });
-            }
-        });
+        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+
+        await moderation.delete(id, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json({ 'message': 'avis deleted' });
     }));
 
-    router.post('/backoffice/avis/:id/publish', checkAuth, checkProfile('moderateur'), (req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+    router.put('/backoffice/avis/:id/publish', checkAuth, checkProfile('moderateur'), async (req, res) => {
 
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            {
-                $set: {
-                    reported: false,
-                    moderated: true,
-                    published: true,
-                    rejected: false,
-                    rejectReason: null,
-                    qualification: req.body.qualification,
-                    lastModerationAction: new Date()
-                }
-            },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'publish', {
-                        app: 'moderation',
-                        user: 'admin',
-                        profile: 'moderateur',
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
+        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+        const { qualification } = await Joi.validate(req.body, { qualification: Joi.string().required() }, { abortEarly: false });
+
+        let avis = await moderation.publish(id, qualification, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
     });
 
-    router.put('/backoffice/avis/:id/edit', checkAuth, checkProfile('moderateur'), (req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+    router.put('/backoffice/avis/:id/edit', checkAuth, checkProfile('moderateur'), async (req, res) => {
 
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            {
-                $set: {
-                    'editedComment': { text: req.body.text, date: new Date() },
-                    'lastModerationAction': new Date()
-                }
-            },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'publish', {
-                        app: 'moderation',
-                        user: 'admin',
-                        profile: 'moderateur',
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
+        const { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
+        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+
+        let avis = await moderation.edit(id, text, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
+
     });
 
     router.put('/backoffice/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
