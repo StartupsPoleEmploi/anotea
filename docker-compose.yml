@@ -13,12 +13,21 @@ services:
     depends_on:
       - backend
       - backoffice
+      - questionnaire
 
   backoffice:
     image: anotea_backoffice
     container_name: anotea_backoffice
     build:
       context: backoffice
+    depends_on:
+      - backend
+
+  questionnaire:
+    image: anotea_questionnaire
+    container_name: anotea_questionnaire
+    build:
+      context: questionnaire
     depends_on:
       - backend
 
