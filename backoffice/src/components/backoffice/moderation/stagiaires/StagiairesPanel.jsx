@@ -106,7 +106,8 @@ class StagiairesPanel extends React.Component {
                                                 <Avis
                                                     avis={avis}
                                                     showStatus={parameters.filter === 'all'}
-                                                    onChange={(avis, { message }) => {
+                                                    onChange={(avis, options = {}) => {
+                                                        let { message } = options;
                                                         if (message) {
                                                             this.setState({ message });
                                                         }
