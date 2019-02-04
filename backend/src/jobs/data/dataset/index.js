@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+const cli = require('commander');
 const path = require('path');
 const { execute } = require('../../job-utils');
 const createIndexes = require('../indexes/createIndexes');
@@ -14,11 +15,21 @@ const generateOrganismesFromIntercarif = require('../../import/organismes/genera
 const synchronizeOrganismesWithAccounts = require('../../import/organismes/synchronizeOrganismesWithAccounts');
 const computeOrganismesScore = require('../../import/organismes/computeOrganismesScore');
 
-execute(async ({ db, logger, moderation }) => {
+cli.description('Inject dataset')
+.option('-d, --drop', 'Drop database')
+.option('-p, --password [password]', 'Password for injected accounts')
+.parse(process.argv);
 
-    let password = process.argv[2];
+execute(async ({ db, logger, moderation, exit }) => {
 
-    await db.dropDatabase();
+    if (!cli.password) {
+        exit('Invalid arguments');
+    }
+
+    if (cli.drop) {
+        logger.info('Dropping database....');
+        await db.dropDatabase();
+    }
 
     await Promise.all([
         createIndexes(db),
@@ -34,7 +45,7 @@ execute(async ({ db, logger, moderation }) => {
     await synchronizeOrganismesWithAccounts(db, logger);
     await computeOrganismesScore(db, logger);
 
-    await createAccounts(db, password);
+    await createAccounts(db, cli.password);
 
     await createAvis(db, moderation);
 
