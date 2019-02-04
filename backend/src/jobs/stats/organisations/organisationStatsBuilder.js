@@ -15,7 +15,7 @@ module.exports = db => {
             $lookup: {
                 from: 'events',
                 localField: 'meta.siretAsString',
-                foreignField: 'source.id',
+                foreignField: 'source.user',
                 as: 'events',
             }
         },
@@ -23,7 +23,7 @@ module.exports = db => {
             $project: {
                 codeRegion: '$codeRegion',
                 passwordHash: '$passwordHash',
-                nbAvis: '$meta.nbAvis',
+                nbAvis: '$score.nb_avis',
                 login: {
                     $filter: {
                         input: '$events',
