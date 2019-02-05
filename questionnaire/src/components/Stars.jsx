@@ -66,8 +66,6 @@ export default class Stars extends React.PureComponent {
     }
 
     getStar = index => {
-
-
         if (this.state.value % 1 !== 0 && this.state.selected === index) {
             return 'fas fa-star-half-alt';
         } else if (this.state.hover <= index && this.state.selected <= index) {
@@ -75,14 +73,6 @@ export default class Stars extends React.PureComponent {
         } else {
             return 'fas fa-star';
         }
-
-        /*if (this.state.hover <= index && this.state.selected <= index) {
-            return 'far fa-star';
-        } else if (this.state.selected < index) {
-            return 'fas fa-star';
-        } else {
-            return 'fas fa-star-half-alt';
-        }*/
     }
 
     render() {
