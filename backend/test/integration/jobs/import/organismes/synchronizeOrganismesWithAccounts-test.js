@@ -30,6 +30,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
             courriel: 'anotea.pe+paris@gmail.com',
             courriels: ['anotea.pe+paris@gmail.com'],
             sources: ['intercarif'],
+            profile: 'organisme',
             codeRegion: '1',
             kairosCourriel: 'contact+kairos@formation.fr',
             numero: 'OF_XXX',
