@@ -4,15 +4,15 @@
 const cli = require('commander');
 const path = require('path');
 const { execute } = require('../../job-utils');
-const createIndexes = require('../../data/indexes/createIndexes');
+const createIndexes = require('../indexes/createIndexes');
 const createAccounts = require('./createAccounts');
 const createRegionalData = require('./createRegionalData');
-const importIntercarif = require('../intercarif/importIntercarif');
-const generateSessions = require('../sessions/generateSessions');
-const generateActions = require('../sessions/generateActions');
-const generateOrganismesFromIntercarif = require('../organismes/generateOrganismesFromIntercarif');
-const synchronizeOrganismesWithAccounts = require('../organismes/synchronizeOrganismesWithAccounts');
-const computeOrganismesScore = require('../organismes/computeOrganismesScore');
+const importIntercarif = require('../../import/intercarif/importIntercarif');
+const generateSessions = require('../../import/sessions/generateSessions');
+const generateActions = require('../../import/sessions/generateActions');
+const generateOrganismesFromIntercarif = require('../../import/organismes/generateOrganismesFromIntercarif');
+const synchronizeOrganismesWithAccounts = require('../../import/organismes/synchronizeOrganismesWithAccounts');
+const computeOrganismesScore = require('../../import/organismes/computeOrganismesScore');
 const createAvis = require('./createAvis');
 
 cli.description('Inject dataset')
