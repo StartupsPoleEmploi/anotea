@@ -13,7 +13,7 @@ location /admin  {
 }
 
 
-location /questionnaire  {
+location /questionnaire_v2  {
 
     resolver 127.0.0.11 ipv6=off;
     limit_req zone=flood burst=100 nodelay;
