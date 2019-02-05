@@ -80,7 +80,7 @@
           },
           "organismes": {
             "accounts": true,
-            "notifications": false
+            "notifications": true
           }
         }
       }
