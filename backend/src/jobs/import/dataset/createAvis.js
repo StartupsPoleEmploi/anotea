@@ -1,17 +1,48 @@
 const moment = require('moment');
+const _ = require('lodash');
 const faker = require('faker');
 const uuid = require('uuid');
-const _ = require('lodash');
 
 faker.locale = 'fr';
 
-const createAvis = session => {
+const createStagiaire = avis => {
+
+    let getDateInThePast = () => moment().subtract('100', 'days').toDate();
+
+    let email = faker.internet.email();
+    return {
+        campaign: 'dataset',
+        importDate: getDateInThePast(),
+        trainee: {
+            name: faker.name.lastName(),
+            firstName: faker.name.firstName(),
+            mailDomain: email.split('@')[1],
+            email: email,
+            phoneNumbers: [faker.phone.phoneNumber('06########')],
+            emailValid: true,
+            dnIndividuNational: faker.phone.phoneNumber('##########')
+        },
+        training: avis.training,
+        unsubscribe: false,
+        mailSent: true,
+        token: uuid.v4(),
+        mailSentDate: getDateInThePast(),
+        tracking: {
+            firstRead: getDateInThePast(),
+            lastRead: getDateInThePast()
+        },
+        codeRegion: '11',
+        avisCreated: true,
+    };
+};
+
+const buildAvis = (session, custom) => {
 
     let randomize = value => `${value}-${uuid.v4()}`;
     let getDateInThePast = () => moment().subtract('100', 'days').toDate();
     let formation = session.formation;
 
-    return {
+    return Object.assign({
         token: randomize('token'),
         campaign: 'dataset',
         formacode: formation.domaine_formation.formacodes[0],
@@ -67,41 +98,56 @@ const createAvis = session => {
         tracking: {
             firstRead: getDateInThePast(),
         },
-    };
+    }, custom);
 };
 
-module.exports = async (db, moderation) => {
+module.exports = async (db, moderation, options = {}) => {
+
+    let promises = [];
+    let generate = number => _.range(number).map(() => ({}));
 
     let session = await db.collection('sessionsReconciliees').findOne();
-    let promises = [];
 
     promises.push(
-        ..._.range(250).map(() => {
-            return db.collection('comment').insertOne(createAvis(session));
-        })
-    );
-
-    promises.push(
-        ..._.range(5).map(() => {
-            let avis = createAvis(session);
-            return db.collection('comment').insertOne(avis)
+        ...(options.published || generate(10)).map(custom => {
+            let avis = buildAvis(session, custom);
+            return Promise.all([
+                db.collection('trainee').insertOne(createStagiaire(avis)),
+                db.collection('comment').insertOne(avis),
+            ])
             .then(() => moderation.publish(avis._id, 'positif'));
         })
     );
 
     promises.push(
-        ..._.range(5).map(() => {
-            let avis = createAvis(session);
-            return db.collection('comment').insertOne(avis)
+        ...(options.rejected || generate(10)).map(custom => {
+            let avis = buildAvis(session, custom);
+            return Promise.all([
+                db.collection('trainee').insertOne(createStagiaire(avis)),
+                db.collection('comment').insertOne(avis),
+            ])
             .then(() => moderation.reject(avis._id, 'alerte'));
         })
     );
 
     promises.push(
-        ..._.range(5).map(() => {
-            let avis = createAvis(session);
-            return db.collection('comment').insertOne(avis)
+        ...(options.reported || generate(10)).map(custom => {
+            let avis = buildAvis(session, custom);
+            return Promise.all([
+                db.collection('trainee').insertOne(createStagiaire(avis)),
+                db.collection('comment').insertOne(avis),
+            ])
             .then(() => moderation.report(avis._id));
+        })
+    );
+
+    promises.push(
+        ...(options.toModerate || generate(200)).map(custom => {
+            let avis = buildAvis(session, custom);
+            return Promise.all([
+                db.collection('trainee').insertOne(createStagiaire(avis)),
+                db.collection('comment').insertOne(avis),
+            ]);
         })
     );
 

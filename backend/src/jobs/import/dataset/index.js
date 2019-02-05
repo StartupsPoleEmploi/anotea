@@ -4,18 +4,19 @@
 const cli = require('commander');
 const path = require('path');
 const { execute } = require('../../job-utils');
-const createIndexes = require('../indexes/createIndexes');
+const createIndexes = require('../../data/indexes/createIndexes');
 const createAccounts = require('./createAccounts');
-const createAvis = require('./createAvis');
 const createRegionalData = require('./createRegionalData');
-const importIntercarif = require('../../import/intercarif/importIntercarif');
-const generateSessions = require('../../import/sessions/generateSessions');
-const generateActions = require('../../import/sessions/generateActions');
-const generateOrganismesFromIntercarif = require('../../import/organismes/generateOrganismesFromIntercarif');
-const synchronizeOrganismesWithAccounts = require('../../import/organismes/synchronizeOrganismesWithAccounts');
-const computeOrganismesScore = require('../../import/organismes/computeOrganismesScore');
+const importIntercarif = require('../intercarif/importIntercarif');
+const generateSessions = require('../sessions/generateSessions');
+const generateActions = require('../sessions/generateActions');
+const generateOrganismesFromIntercarif = require('../organismes/generateOrganismesFromIntercarif');
+const synchronizeOrganismesWithAccounts = require('../organismes/synchronizeOrganismesWithAccounts');
+const computeOrganismesScore = require('../organismes/computeOrganismesScore');
+const createAvis = require('./createAvis');
 
 cli.description('Inject dataset')
+.option('-a, --avis [avis]', 'Path to file with commentaires')
 .option('-d, --drop', 'Drop database')
 .option('-p, --password [password]', 'Password for injected accounts')
 .parse(process.argv);
@@ -47,7 +48,7 @@ execute(async ({ db, logger, moderation, exit }) => {
 
     await createAccounts(db, cli.password);
 
-    await createAvis(db, moderation);
+    await createAvis(db, moderation, cli.avis ? require(cli.avis) : {});
 
     return { dataset: 'ready' };
 });
