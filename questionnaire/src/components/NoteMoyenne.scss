@@ -3,40 +3,52 @@
 	height: 113px;
 	margin: 0px;
 
-	.title {
-	    height: 22px;
-		width: 307px;
-		color: #24303A;
-		font-size: 18px;
-		font-weight: 900;
-		line-height: 22px;
-		display: block;
-		margin-left: 16px;
-		padding-top: 16px;
-	}
+    .label {
+        width: 70%;
+        display: inline-block;
+        height: 100px;
+        .title {
+            height: 22px;
+            color: #24303A;
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 22px;
+            display: block;
+            margin-left: 16px;
+            padding-top: 16px;
+        }
 
-	.description {
-	    height: 34px;
-	    width: 311px;
-		opacity: 0.6;
-		color: #11181E;
-		font-size: 14px;
-		line-height: 17px;
-	    margin-left: 16px;
-	}
+        .description {
+            height: 34px;
+            opacity: 0.6;
+            color: #11181E;
+            font-size: 14px;
+            line-height: 17px;
+            margin-left: 16px;
+        }    
+    }
 
 	.score {
-		height: 39px;
-		width: 69px;
 		color: #24303A;
-		font-size: 32px;
-		font-weight: 900;
 		line-height: 39px;
 		text-align: center;
-	    margin-left: 390px;
-	    display: block;
-	    margin-top: 0px;
-	}
+	    display: inline-block;
+        margin-top: 0px;
+        position: relative;
+        top: -14px;
+        left: 65px;
+        
+        .averageScore {
+            font-size: 32px;
+            font-weight: 900;
+        }
+    }
+    
+    .stars {
+        position: relative;
+        top: -15px;
+        left: 30px;
+    }
 
 	.note-details {
 		width: 514px;
@@ -53,7 +65,7 @@
 				font-size: 16px;
 				line-height: 19px;
 			    display: block;
-			    padding-left: 13px;
+			    padding-left: 16px;
 				padding-top: 8px;
 			}
 

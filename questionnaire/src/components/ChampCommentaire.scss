@@ -26,13 +26,21 @@
 
   .textarea {
     border-radius: 5px;
+    border: none;
+    resize: none;
     background-color: #F4F4F5;
     margin-left: 25px;
     margin-top: 16px;
+    padding-left: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .textarea_pseudo, .textarea_titre {
+    height: 55px;
   }
 
   .textarea_pseudo {
-    height: 34px;
     width: 468px;
     @extend .textarea;
     display: block;
@@ -45,7 +53,6 @@
   }
 
   .textarea_titre {
-  	height: 34px;
     width: 468px;
     @extend .textarea;
   }
@@ -56,9 +63,6 @@
     font-size: 14px;
     font-style: italic;
     line-height: 21px;
-    padding-left: 8px;
-    padding-top: 8px;
-    padding-bottom: 8px;
   }
 
   .textarea_titre::placeholder {
