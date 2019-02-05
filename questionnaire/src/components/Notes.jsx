@@ -37,7 +37,9 @@ class Notes extends Component {
     }
 
     onSelect = (index, value) => {
-        value++;
+        if (value !== null) {
+            value++;
+        }
         let total = null;
         let count = 0;
         let notes = this.state.notes.map(item => {
@@ -52,8 +54,7 @@ class Notes extends Component {
         });
         let average = null;
         if (total !== null) {
-            average = (parseFloat(total) / parseFloat(count)).toFixed(1);
-            average = String(average).replace('.', ',');
+            average = (parseFloat(total) / parseFloat(count));
         }
         this.setState({
             notes: notes,
@@ -68,15 +69,11 @@ class Notes extends Component {
     }
 
     render() {
-        const notesValue = this.state.notes.map(index => index.value);
-        const resultat = notesValue.includes(null);
-
         return (
             <div>
                 <h3 className="notes">Notes</h3>
-                {!resultat ?
-                    <NoteMoyenne averageScore={this.state.averageScore} />
-                    :
+                <NoteMoyenne averageScore={this.state.averageScore} />
+                {
                     this.getItems()
                 }
             </div>

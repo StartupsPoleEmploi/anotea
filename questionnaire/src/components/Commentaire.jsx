@@ -32,7 +32,7 @@ class Commentaire extends Component {
     render() {
         return (
             <div className="commentaire">
-                <h3>Commentaire (optionnel)</h3>
+                <h3>Commentaire <span className="description">(optionnel)</span></h3>
                 {this.getItems()}
             </div>
         );

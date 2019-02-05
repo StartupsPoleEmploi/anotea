@@ -17,27 +17,47 @@ export default class Stars extends React.PureComponent {
     }
 
     static propTypes = {
-        onSelect: PropTypes.func.isRequired,
-        index: PropTypes.number.isRequired
+        onSelect: PropTypes.func,
+        index: PropTypes.number,
+        readonly: PropTypes.bool,
+        value: PropTypes.number,
+        starsStyle: PropTypes.string
     };
 
     constructor(props) {
         super(props);
+        this.state.readonly = props.readonly;
+
+        if (props.value) {
+            this.state.value = Math.round(props.value);
+            this.state.selected = Math.round(props.value);
+        }
+
         this.state.starArray = new Array(MAX_STARS)
-        .fill('star', 0, this.state.value)
-        .fill('star_empty', this.state.value, MAX_STARS);
+        .fill('star', 0, MAX_STARS);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.value) {
+            this.setState({ value: nextProps.value, selected: Math.round(nextProps.value) });
+        }
     }
 
     updateHoverState = value => {
-        this.setState({ hover: value + 1 });
+        if (!this.state.readonly) {
+            this.setState({ hover: value + 1 });
+        }
     }
 
     select = value => {
-        if (this.state.selected === value + 1) {
-            this.setState({ selected: null });
-        } else {
-            this.setState({ selected: value + 1 });
-            this.props.onSelect(this.props.index, value);
+        if (!this.state.readonly) {
+            if (this.state.selected === value + 1) {
+                this.setState({ selected: null });
+                this.props.onSelect(this.props.index, null);
+            } else {
+                this.setState({ selected: value + 1 });
+                this.props.onSelect(this.props.index, value);
+            }
         }
     }
 
@@ -45,11 +65,21 @@ export default class Stars extends React.PureComponent {
         this.setState({ hover: null });
     }
 
+    getStar = index => {
+        if (this.state.value % 1 !== 0 && this.state.selected === index) {
+            return 'fas fa-star-half-alt';
+        } else if (this.state.hover <= index && this.state.selected <= index) {
+            return 'far fa-star';
+        } else {
+            return 'fas fa-star';
+        }
+    }
+
     render() {
         return (
-            <div className="stars">
+            <div className={`stars ${this.state.readonly ? 'readonly' : ''}`}>
                 <div className="tooltipBlock">
-                    <span className={`tooltip ${(this.state.hover !== null || this.state.selected !== null) ? 'active' : 'inactive'}`}>
+                    <span className={`tooltip ${(this.state.hover !== null || this.state.selected !== null) && !this.state.readonly ? 'active' : 'inactive'}`}>
                         {tooltipLabels[this.state.hover !== null ? this.state.hover - 1 : this.state.selected - 1]}
                     </span>
                 </div>
@@ -57,8 +87,8 @@ export default class Stars extends React.PureComponent {
                     this.state.starArray.map((star, index) =>
                         <div className="starBlock" key={index}>
                             <span
-                                className={`star ${(this.state.hover <= index && this.state.selected <= index) ? 'far fa-star' : 'fas fa-star'}`}
-                                style={{ width: '18px' }}
+                                className={`star ${this.getStar(index)}`}
+                                style={this.props.starsStyle ? this.props.starsStyle : { width: '18px' }}
                                 onMouseOver={this.updateHoverState.bind(this, index)}
                                 onMouseOut={this.removeHoverState}
                                 onClick={this.select.bind(this, index)}

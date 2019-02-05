@@ -10,7 +10,7 @@
         color: $color-black;
     }
     
-    .fas.fa-star {
+    .fas.fa-star, .fas.fa-star-half-alt {
         color: $color-yellow;
         cursor: pointer;
     }
@@ -46,3 +46,8 @@
     }
 }
 
+.stars.readonly {
+    .fas.fa-star {
+        cursor: inherit;
+    }
+}
