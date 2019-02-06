@@ -353,9 +353,9 @@ export default class FinancerPanel extends React.Component {
     };
 
     getExportFilters = () => {
-        let str = '';
+        let str = `?status=${this.state.tab}`;
         if (this.state.currentFinancer) {
-            str = `?codeFinanceur=${this.state.currentFinancer._id}`;
+            str = `&codeFinanceur=${this.state.currentFinancer._id}`;
         }
         if (this.state.training) {
             if (this.state.training.currentOrganisation) {
@@ -368,6 +368,7 @@ export default class FinancerPanel extends React.Component {
                 str += `&trainingId=${this.state.trainingId}`;
             }
         }
+
         return str;
     }
 
