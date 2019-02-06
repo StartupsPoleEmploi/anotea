@@ -4,7 +4,6 @@ const Joi = require('joi');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
-const AvisSearchBuilder = require('./utils/AvisSearchBuilder');
 const computeInventory = require('./utils/computeInventory');
 
 module.exports = ({ db, middlewares, logger, configuration, moderation, mailing }) => {
@@ -27,17 +26,20 @@ module.exports = ({ db, middlewares, logger, configuration, moderation, mailing 
             page: Joi.number().default(0),
         }, { abortEarly: false });
 
+        let cursor = db.collection('comment')
+        .find({
+            step: { $gte: 2 },
+            codeRegion: codeRegion,
+            ...(filter !== 'all' ? { comment: { $ne: null } } : {}),
+            ...(filter === 'reported' ? { reported: true } : {}),
+            ...(filter === 'rejected' ? { rejected: true } : {}),
+            ...(filter === 'published' ? { published: true } : {}),
+            ...(filter === 'moderated' ? { moderated: { $ne: true } } : {}),
+        })
+        .sort(filter === 'all' ? { date: -1 } : { lastModerationAction: -1 })
+        .skip((page || 0) * itemsPerPage)
+        .limit(itemsPerPage);
 
-        let builder = new AvisSearchBuilder(db, itemsPerPage, codeRegion);
-
-        if (query) {
-            let isEmail = query.indexOf('@') !== -1;
-            await (isEmail ? builder.withEmail(query) : builder.withFullText(query));
-        }
-        builder.withFilter(filter);
-        builder.page(page);
-
-        let cursor = builder.search();
         let [total, avis, inventory] = await Promise.all([
             cursor.count(),
             cursor.toArray(),
