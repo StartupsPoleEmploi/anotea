@@ -90,6 +90,7 @@ module.exports = async (db, logger) => {
                             sources: organisme.sources[0],
                         },
                         $set: {
+                            profile: 'organisme',
                             numero: organisme.numero,
                             lieux_de_formation: organisme.lieux_de_formation,
                             updateDate: new Date(),

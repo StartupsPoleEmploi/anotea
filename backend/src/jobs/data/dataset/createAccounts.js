@@ -1,8 +1,6 @@
-const { hashPassword } = require('../../../common/components/password');
+module.exports = db => {
 
-module.exports = async (db, password) => {
-
-    await Promise.all([
+    return Promise.all([
         db.collection('accounts').insertOne({
             profile: 'financeur',
             courriel: 'cr',
@@ -18,11 +16,4 @@ module.exports = async (db, password) => {
             ],
         }),
     ]);
-
-    return db.collection('accounts').updateMany({}, {
-        $set: {
-            'meta.rehashed': true,
-            'passwordHash': await hashPassword(password),
-        }
-    });
 };

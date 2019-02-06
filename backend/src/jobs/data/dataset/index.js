@@ -4,15 +4,16 @@
 const cli = require('commander');
 const path = require('path');
 const { execute } = require('../../job-utils');
-const createIndexes = require('../../data/indexes/createIndexes');
+const createIndexes = require('../indexes/createIndexes');
 const createAccounts = require('./createAccounts');
 const createRegionalData = require('./createRegionalData');
-const importIntercarif = require('../intercarif/importIntercarif');
-const generateSessions = require('../sessions/generateSessions');
-const generateActions = require('../sessions/generateActions');
-const generateOrganismesFromIntercarif = require('../organismes/generateOrganismesFromIntercarif');
-const synchronizeOrganismesWithAccounts = require('../organismes/synchronizeOrganismesWithAccounts');
-const computeOrganismesScore = require('../organismes/computeOrganismesScore');
+const importIntercarif = require('../../import/intercarif/importIntercarif');
+const generateSessions = require('../../import/sessions/generateSessions');
+const generateActions = require('../../import/sessions/generateActions');
+const generateOrganismesFromIntercarif = require('../../import/organismes/generateOrganismesFromIntercarif');
+const synchronizeOrganismesWithAccounts = require('../../import/organismes/synchronizeOrganismesWithAccounts');
+const computeOrganismesScore = require('../../import/organismes/computeOrganismesScore');
+const resetPasswords = require('../reset-passwords/resetPasswords');
 const createAvis = require('./createAvis');
 
 cli.description('Inject dataset')
@@ -21,11 +22,7 @@ cli.description('Inject dataset')
 .option('-p, --password [password]', 'Password for injected accounts')
 .parse(process.argv);
 
-execute(async ({ db, logger, moderation, exit }) => {
-
-    if (!cli.password) {
-        exit('Invalid arguments');
-    }
+execute(async ({ db, logger, moderation }) => {
 
     if (cli.drop) {
         logger.info('Dropping database....');
@@ -46,7 +43,8 @@ execute(async ({ db, logger, moderation, exit }) => {
     await synchronizeOrganismesWithAccounts(db, logger);
     await computeOrganismesScore(db, logger);
 
-    await createAccounts(db, cli.password);
+    await createAccounts(db);
+    await resetPasswords(db, cli.password || 'password', { force: true });
 
     await createAvis(db, moderation, cli.avis ? require(cli.avis) : {});
 
