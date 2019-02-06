@@ -24,6 +24,22 @@ module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
             step: { $gte: 2 }
         };
 
+        if (req.query.status === 'reported') {
+            query['reported'] = true;
+        }
+
+        if (req.query.status === 'commented') {
+            query['$and'] = [
+                { 'comment': { $ne: null } },
+                {
+                    $or: [
+                        { 'comment.title': { $ne: '' } },
+                        { 'comment.text': { $ne: '' } }
+                    ]
+                }
+            ];
+        }
+
         if (req.query.filter === 'region') {
             query['training.infoRegion'] = { $ne: null };
         }
