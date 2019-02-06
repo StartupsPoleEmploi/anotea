@@ -17,19 +17,36 @@ module.exports = ({ db, middlewares, logger, configuration, moderation, mailing 
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
+    const getStagiaire = async stagiaire => {
+
+        if (!stagiaire) {
+            return null;
+        }
+
+        return db.collection('trainee').findOne({
+            $or: [
+                { 'trainee.email': stagiaire },
+                { 'trainee.dnIndividuNational': stagiaire }
+            ]
+        });
+    };
+
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { filter, query, page } = await Joi.validate(req.query, {
+        let { filter, stagiaire: query, page } = await Joi.validate(req.query, {
             filter: Joi.string().default('all'),
-            query: Joi.string().allow('').default(''),
+            stagiaire: Joi.string().allow('').default(''),
             page: Joi.number().default(0),
         }, { abortEarly: false });
+
+        let stagiaire = await getStagiaire(query);
 
         let cursor = db.collection('comment')
         .find({
             step: { $gte: 2 },
             codeRegion: codeRegion,
+            ...(stagiaire ? { token: stagiaire.token } : {}),
             ...(filter !== 'all' ? { comment: { $ne: null } } : {}),
             ...(filter === 'reported' ? { reported: true } : {}),
             ...(filter === 'rejected' ? { rejected: true } : {}),
@@ -56,7 +73,13 @@ module.exports = ({ db, middlewares, logger, configuration, moderation, mailing 
                     itemsOnThisPage: avis.length,
                     totalItems: total,
                     totalPages: Math.ceil(total / itemsPerPage),
-                }
+                },
+                ...(stagiaire ? {
+                    stagiaire: {
+                        email: stagiaire.trainee.email,
+                        dnIndividuNational: stagiaire.trainee.dnIndividuNational,
+                    }
+                } : {})
             }
         });
     }));

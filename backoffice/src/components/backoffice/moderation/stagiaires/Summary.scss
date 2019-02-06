@@ -8,8 +8,16 @@
   text-align: center;
   position: relative;
 
-  .suffix {
+  .filter {
     font-weight: $font-weight-700;
+  }
+
+  .identifiant {
+    font-size: 0.875rem;
+    color: $color-grey-50;
+    line-height: 1.5em;
+    margin-top: 0.5rem;
+    opacity: 0.75;
   }
 
   .status {
@@ -20,5 +28,6 @@
     position: absolute;
     right: 0;
     top: 0;
+    opacity: 0.75;
   }
 }
