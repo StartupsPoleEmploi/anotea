@@ -11,7 +11,10 @@ module.exports = ({ db, middlewares }) => {
 
         let codeFinanceur = req.query.codeFinanceur;
 
-        let match = { '_id.codeRegion': req.params.idregion, '_id.year': parseInt(req.params.year) };
+        let match = { '_id.codeRegion': req.params.idregion };
+        if (req.params.year !== 'TOTAL') {
+            match = Object.assign(match, { '_id.year': parseInt(req.params.year) });
+        }
         let mailStatsCollection;
         let sessionsStatsCollection;
         if (codeFinanceur) {
@@ -89,7 +92,10 @@ module.exports = ({ db, middlewares }) => {
 
         let codeFinanceur = req.query.codeFinanceur;
 
-        let match = { '_id.codeRegion': req.params.idregion, '_id.year': parseInt(req.params.year) };
+        let match = { '_id.codeRegion': req.params.idregion };
+        if (req.params.year !== 'TOTAL') {
+            match = Object.assign(match, { '_id.year': parseInt(req.params.year) });
+        }
         let mailStatsCollection;
         let sessionsStatsCollection;
         if (codeFinanceur) {

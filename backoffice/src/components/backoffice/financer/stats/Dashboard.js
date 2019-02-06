@@ -12,6 +12,7 @@ export default class DashBoard extends React.Component {
 
     state = {
         type: 0,
+        index: 0,
         year: CURRENT_YEAR
     }
 
@@ -26,31 +27,39 @@ export default class DashBoard extends React.Component {
         this.state.today = moment().format('DD MMMM YYYY');
     }
 
-    onChangeType = type => this.setState({ type: type });
+    onChangeType = (type, index) => this.setState({ type: type, index: index });
 
     getTitle = () => {
-        return `Statistiques au ${this.state.year === CURRENT_YEAR ? this.state.today : `31 décembre ${this.state.year}`}`;
+        if (this.state.year !== 'TOTAL') {
+            return `Statistiques ${this.state.year} : cumul au ${this.state.year === CURRENT_YEAR ? moment().format('DD/MM/YY') : '31/12/' + this.state.year}`;
+        } else {
+            return 'Statistiques cumulées';
+        }
     }
 
-    goToYear = cursor => {
-        this.setState({ year: this.state.year + cursor });
+    goToNextYear = () => {
+        this.setState({ year: this.state.year === CURRENT_YEAR ? 'TOTAL' : this.state.year + 1 });
+    }
+
+    goToPreviousYear = () => {
+        this.setState({ year: this.state.year === 'TOTAL' ? CURRENT_YEAR : this.state.year - 1 });
     }
 
     render() {
         return (
             <div>
                 <h2>
-                    <i className="fas fa-chevron-left goToYear" onClick={this.goToYear.bind(this, -1)} />
+                    <i className="fas fa-chevron-left goToYear" onClick={this.goToPreviousYear} />
                     
                     {this.getTitle()}
 
-                    { this.state.year < CURRENT_YEAR &&
-                        <i className="fas fa-chevron-right goToYear" onClick={this.goToYear.bind(this, 1)} />
+                    { this.state.year !== 'TOTAL' &&
+                        <i className="fas fa-chevron-right goToYear" onClick={this.goToNextYear} />
                     }
                 </h2>
                 <div className="row">
                     <div className="col-md-6">
-                        <Table codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} changeType={this.onChangeType} type={this.state.type} year={this.state.year} />
+                        <Table codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} changeType={this.onChangeType} type={this.state.type} index={this.state.index} year={this.state.year} />
                     </div>
                     <div className="col-md-6">
                         <Graph codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} type={this.state.type} year={this.state.year} />

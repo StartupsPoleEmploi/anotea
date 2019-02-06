@@ -17,7 +17,8 @@ export default class Graph extends React.Component {
         codeFinanceur: PropTypes.string.isRequired,
         changeType: PropTypes.func.isRequired,
         type: PropTypes.number.isRequired,
-        year: PropTypes.number.isRequired
+        year: PropTypes.number.isRequired,
+        index: PropTypes.number.isRequired
     }
 
     constructor(props) {
@@ -33,7 +34,12 @@ export default class Graph extends React.Component {
 
     updateDashboard = props => {
         getDashboardData(props.codeRegion, props.year, props.codeFinanceur === '4' ? 'all' : props.codeFinanceur).then(dashboardData => {
-            this.setState({ dashboardData: dashboardData, tableContent: [
+
+            let accumulator = Object.values(dashboardData).reduce((accumulator, value) => {
+                return accumulator + value;
+            }, 0);
+
+            this.setState({ isEmpty: accumulator === 0, dashboardData: dashboardData, tableContent: [
                 {
                     type: 0,
                     label: 'Nombre de mails envoyés',
@@ -43,6 +49,11 @@ export default class Graph extends React.Component {
                     type: 1,
                     label: 'Taux d\'ouverture des mails',
                     value: this.getRate(dashboardData.countEmailOpen, dashboardData.count)
+                },
+                {
+                    type: 2,
+                    label: 'Nombre d\'avis déposés',
+                    value: dashboardData.countAdvicesPublished
                 },
                 {
                     type: 2,
@@ -102,7 +113,7 @@ export default class Graph extends React.Component {
                 {
                     type: 13,
                     label: 'Taux d\'organismes de formation connectés dans les trois derniers mois',
-                    value: this.getRate(dashboardData.countOrganismeLogin, dashboardData.countOrganisme)
+                    value: this.getRate(dashboardData.countOrganismeLogin, dashboardData.countOrganismeWithMorethanOneAdvice)
                 }
             ] });
         });
@@ -113,21 +124,23 @@ export default class Graph extends React.Component {
         return isNaN(value / total) ? '-' : result;
     }
 
+    isEmpty = () => Object.keys(this.state.dashboardData).length === 0 || this.state.isEmpty;
+
     render() {
         return (
             <div>
-                { Object.keys(this.state.dashboardData).length === 0 &&
+                { this.isEmpty() &&
                     <div className="alert alert-warning">
                         Pas de statistiques pour cette période.
                     </div>
                 }
 
-                { Object.keys(this.state.dashboardData).length > 0 &&
+                { !this.isEmpty() &&
                     <table className="table table-striped">
                         <tbody>
-                            {this.state.tableContent.map(content =>
-                                <tr key={content.type} className={this.props.type === content.type ? 'selected' : ''}>
-                                    <td onClick={this.props.changeType.bind(this, content.type)}>{content.label}</td>
+                            {this.state.tableContent.map((content, index) =>
+                                <tr key={index} className={this.props.index === index ? 'selected' : ''}>
+                                    <td onClick={this.props.changeType.bind(this, content.type, index)}>{content.label}</td>
                                     <td className="value">{content.value}</td>
                                 </tr>
                             )}
