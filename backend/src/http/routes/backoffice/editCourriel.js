@@ -66,16 +66,14 @@ module.exports = ({ db, mailing, middlewares }) => {
     router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
-        const organismes = db.collection('accounts');
-
         if (isNaN(id)) {
             throw Boom.badRequest('Bad request');
         }
 
-        let organisme = await organismes.findOne({ _id: id, profile: 'organisme' });
+        let organisme = await db.collection('accounts').findOne({ _id: id, profile: 'organisme' });
         if (organisme) {
             if (organisme.passwordHash) {
-                await sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), 'organismes', organisme.codeRegion);
+                await sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), organisme.codeRegion);
             } else {
                 await sendOrganisationAccountEmail(organisme, { ip: getRemoteAddress(req) });
             }
