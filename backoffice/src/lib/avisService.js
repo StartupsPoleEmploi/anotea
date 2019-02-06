@@ -2,10 +2,10 @@ import { _get, _post, _delete, _put } from '../utils/http-client';
 
 export const searchAvis = (options = {}) => {
     let filter = options.filter || 'all';
-    let query = options.query || '';
+    let stagiaire = options.stagiaire || '';
     let page = options.page ? options.page - 1 : 0;
 
-    return _get(`/backoffice/avis?filter=${filter}&page=${page}&query=${query}`);
+    return _get(`/backoffice/avis?filter=${filter}&page=${page}&stagiaire=${stagiaire}`);
 };
 
 export const maskPseudo = id => {

@@ -13,7 +13,7 @@ export default class Toolbar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchInputValue: this.props.parameters.query || '',
+            searchInputValue: this.props.parameters.stagiaire || '',
         };
     }
 
@@ -38,7 +38,7 @@ export default class Toolbar extends React.Component {
 
     createSearchInput = () => {
 
-        let submit = () => this.props.onChange({ filter: 'all', query: this.state.searchInputValue });
+        let submit = () => this.props.onChange({ filter: 'all', stagiaire: this.state.searchInputValue });
 
         return (
             <div className="d-flex align-items-center">
@@ -50,8 +50,8 @@ export default class Toolbar extends React.Component {
                     <input
                         className="form-control"
                         type="search"
-                        placeholder="Rechercher un avis..."
-                        aria-label="Rechercher un avis..."
+                        placeholder="Rechercher un stagiaire..."
+                        aria-label="Rechercher un stagiaire..."
                         value={this.state.searchInputValue}
                         onKeyPress={e => {
                             if (e.key === 'Enter') {

@@ -35,15 +35,15 @@ export default class ModerationRoutes extends React.Component {
                         let parameters = {
                             filter: props.match.params.filter,
                             page: props.match.params.page,
-                            query: queryString.parse(props.location.search).query
+                            stagiaire: queryString.parse(props.location.search).stagiaire
                         };
 
                         return <StagiairesPanel
                             codeRegion={this.props.codeRegion}
                             parameters={parameters}
                             onChange={params => {
-                                let query = params.query ? `?query=${params.query}` : '';
-                                props.history.push(`/admin/moderation/stagiaires/${params.filter}/${params.page || 1}${query}`);
+                                let stagiaire = params.stagiaire ? `?stagiaire=${params.stagiaire}` : '';
+                                props.history.push(`/admin/moderation/stagiaires/${params.filter}/${params.page || 1}${stagiaire}`);
                             }} />;
                     }} />
             </div>
