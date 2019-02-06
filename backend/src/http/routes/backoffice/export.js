@@ -55,7 +55,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
             }
 
             if (req.query.siret) {
-                query['training.organisation.siret'] = req.query.siret;
+                query['training.organisation.siret'] = { '$regex': `${req.query.siret}` };
             }
             if (req.query.postalCode) {
                 query['training.place.postalCode'] = req.query.postalCode;
