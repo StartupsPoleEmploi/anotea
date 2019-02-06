@@ -14,7 +14,7 @@
   ],
   "homepage": "https://anotea.pole-emploi.fr/questionnaire_v2",
   "dependencies": {
-    "node-sass": "4.11.0",
+    "node-sass-chokidar": "1.3.4",
     "react": "16.7.0",
     "react-dom": "16.7.0",
     "react-scripts": "2.1.3"
