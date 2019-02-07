@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export default class Toolbar extends React.Component {
 
     static propTypes = {
-        parameters: PropTypes.object.isRequired,
+        query: PropTypes.object.isRequired,
         inventory: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
     };
@@ -13,7 +13,7 @@ export default class Toolbar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchInputValue: this.props.parameters.stagiaire || '',
+            searchInputValue: this.props.query.stagiaire || '',
         };
     }
 
@@ -24,7 +24,7 @@ export default class Toolbar extends React.Component {
             <span className="badge badge-light pastille">{nbElements}</span> :
             <span />;
 
-        let isActive = !searchMode && this.props.parameters.filter === filter;
+        let isActive = !searchMode && this.props.query.filter === filter;
         return (
             <li className={`nav-item ${searchMode && 'disabled'} ${isActive ? 'active' : ''}`}>
                 <a
@@ -60,13 +60,12 @@ export default class Toolbar extends React.Component {
                         }}
                         onChange={e => this.setState({ searchInputValue: e.target.value })} />
 
-                    {
-                        this.state.searchInputValue &&
-                        <i
-                            className="far fa-times-circle cancel"
-                            onClick={() => {
-                                this.setState({ searchInputValue: '' }, () => submit());
-                            }} />
+                    {this.state.searchInputValue &&
+                    <i
+                        className="far fa-times-circle cancel"
+                        onClick={() => {
+                            this.setState({ searchInputValue: '' }, () => submit());
+                        }} />
                     }
 
                 </div>

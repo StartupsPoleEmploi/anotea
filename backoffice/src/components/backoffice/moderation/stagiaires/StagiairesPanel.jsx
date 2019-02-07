@@ -14,7 +14,7 @@ class StagiairesPanel extends React.Component {
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
-        parameters: PropTypes.object.isRequired,
+        query: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -50,7 +50,7 @@ class StagiairesPanel extends React.Component {
     }
 
     componentDidUpdate(previous) {
-        if (this.props.parameters !== previous.parameters) {
+        if (this.props.query !== previous.query) {
             this.search();
         }
     }
@@ -58,7 +58,7 @@ class StagiairesPanel extends React.Component {
     search = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let results = await searchAvis(this.props.parameters);
+                let results = await searchAvis(this.props.query);
                 this.setState({ results, loading: false }, () => {
                     if (options.goToTop) {
                         window.scrollTo(0, 0);
@@ -70,7 +70,7 @@ class StagiairesPanel extends React.Component {
     };
 
     render() {
-        let parameters = this.props.parameters;
+        let query = this.props.query;
 
         return (
             <Panel
@@ -84,7 +84,7 @@ class StagiairesPanel extends React.Component {
                     </div>}
                 toolbar={
                     <Toolbar
-                        parameters={parameters}
+                        query={query}
                         inventory={this.state.results.meta.inventory}
                         onChange={this.props.onChange}
                     />
@@ -93,7 +93,7 @@ class StagiairesPanel extends React.Component {
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
-                            <Summary parameters={parameters} results={this.state.results} />
+                            <Summary query={query} results={this.state.results} />
                             {this.state.message &&
                             <Message message={this.state.message} onClose={() => this.setState({ message: null })} />
                             }
@@ -105,7 +105,7 @@ class StagiairesPanel extends React.Component {
                                             <div className="col-sm-12">
                                                 <Avis
                                                     avis={avis}
-                                                    showStatus={['all', 'rejected'].includes(parameters.filter)}
+                                                    showStatus={['all', 'rejected'].includes(query.filter)}
                                                     onChange={(avis, options = {}) => {
                                                         let { message } = options;
                                                         if (message) {
@@ -126,9 +126,9 @@ class StagiairesPanel extends React.Component {
                                         pagination={this.state.results.meta.pagination}
                                         onClick={page => {
                                             this.props.onChange({
-                                                filter: parameters.filter,
+                                                filter: query.filter,
                                                 page,
-                                                stagiaire: parameters.stagiaire,
+                                                stagiaire: query.stagiaire,
                                             });
                                         }} />
                                 </div>

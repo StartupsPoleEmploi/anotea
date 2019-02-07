@@ -32,7 +32,7 @@ export default class ModerationRoutes extends React.Component {
                     path="/admin/moderation/stagiaires/:filter/:page?"
                     render={props => {
 
-                        let parameters = {
+                        let query = {
                             filter: props.match.params.filter,
                             page: props.match.params.page,
                             stagiaire: queryString.parse(props.location.search).stagiaire
@@ -40,7 +40,7 @@ export default class ModerationRoutes extends React.Component {
 
                         return <StagiairesPanel
                             codeRegion={this.props.codeRegion}
-                            parameters={parameters}
+                            query={query}
                             onChange={params => {
                                 let stagiaire = params.stagiaire ? `?stagiaire=${params.stagiaire}` : '';
                                 props.history.push(`/admin/moderation/stagiaires/${params.filter}/${params.page || 1}${stagiaire}`);
