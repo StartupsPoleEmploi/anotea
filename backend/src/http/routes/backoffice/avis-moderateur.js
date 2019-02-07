@@ -84,101 +84,24 @@ module.exports = ({ db, middlewares, logger, configuration, moderation, mailing 
         });
     }));
 
-    router.put('/backoffice/avis/:id/maskPseudo', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
+    router.put('/backoffice/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { pseudoMasked: true } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'maskPseudo', {
-                        app: 'moderation',
-                        profile: 'moderateur',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
+        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+        const { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
+
+        let avis = await moderation.maskPseudo(id, mask, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
     }));
 
-    router.put('/backoffice/avis/:id/unmaskPseudo', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { pseudoMasked: false } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'maskPseudo', {
-                        app: 'moderation',
-                        profile: 'moderateur',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
-    }));
+    router.put('/backoffice/avis/:id/title', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
-    router.put('/backoffice/avis/:id/maskTitle', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { titleMasked: true } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'maskTitle', {
-                        app: 'moderation',
-                        profile: 'moderateur',
-                        user: req.query.userId,
-                        ip: req.connection.remoteAddress
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
-    }));
+        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+        const { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
 
-    router.put('/backoffice/avis/:id/unmaskTitle', checkAuth, checkProfile('moderateur'), tryAndCatch((req, res) => {
-        const id = mongo.ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { titleMasked: false } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'maskTitle', {
-                        app: 'moderation',
-                        profile: 'moderateur',
-                        user: req.query.userId,
-                        ip: req.connection.remoteAddress
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
+        let avis = await moderation.maskTitle(id, mask, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
     }));
 
     router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
