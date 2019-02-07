@@ -15,14 +15,24 @@ const synchronizeOrganismesWithAccounts = require('../../import/organismes/synch
 const computeOrganismesScore = require('../../import/organismes/computeOrganismesScore');
 const resetPasswords = require('../reset-passwords/resetPasswords');
 const createAvis = require('./createAvis');
+const dumpAvis = require('./dumpAvis');
 
 cli.description('Inject dataset')
-.option('-a, --avis [avis]', 'Path to file with commentaires')
 .option('-d, --drop', 'Drop database')
 .option('-p, --password [password]', 'Password for injected accounts')
+.option('--dump [dump]', 'Absolute path to the dumped file')
+.option('--generate', 'Generate a avis.json and exit')
 .parse(process.argv);
 
-execute(async ({ db, logger, moderation }) => {
+execute(async ({ db, logger, moderation, exit }) => {
+
+    if (cli.generate) {
+        if (!cli.dump) {
+            exit('You must specified a dump file');
+        }
+        logger.info('Dumping avis from database....');
+        return dumpAvis(db, cli.dump);
+    }
 
     if (cli.drop) {
         logger.info('Dropping database....');
@@ -46,7 +56,7 @@ execute(async ({ db, logger, moderation }) => {
     await createAccounts(db);
     await resetPasswords(db, cli.password || 'password', { force: true });
 
-    await createAvis(db, moderation, cli.avis ? require(cli.avis) : {});
+    await createAvis(db, moderation, cli.dump ? require(cli.dump) : {});
 
     return { dataset: 'ready' };
 });

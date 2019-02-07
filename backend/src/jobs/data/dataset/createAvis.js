@@ -42,7 +42,7 @@ const buildAvis = (session, custom) => {
     let getDateInThePast = () => moment().subtract('100', 'days').toDate();
     let formation = session.formation;
 
-    return Object.assign({
+    return _.merge({
         token: randomize('token'),
         campaign: 'dataset',
         formacode: formation.domaine_formation.formacodes[0],
