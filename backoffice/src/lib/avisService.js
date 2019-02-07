@@ -8,26 +8,16 @@ export const searchAvis = (options = {}) => {
     return _get(`/backoffice/avis?filter=${filter}&page=${page}&stagiaire=${stagiaire}`);
 };
 
-export const maskPseudo = id => {
-    return _put(`/backoffice/avis/${id}/maskPseudo`);
+export const maskPseudo = (id, mask) => {
+    return _put(`/backoffice/avis/${id}/pseudo`, { mask });
 };
 
-export const unmaskPseudo = id => {
-    return _put(`/backoffice/avis/${id}/unmaskPseudo`);
-};
-
-export const maskTitle = id => {
-    return _put(`/backoffice/avis/${id}/maskTitle`);
-};
-
-export const unmaskTitle = id => {
-    return _put(`/backoffice/avis/${id}/unmaskTitle`);
+export const maskTitle = (id, mask) => {
+    return _put(`/backoffice/avis/${id}/title`, { mask });
 };
 
 export const rejectAvis = (id, reason) => {
-    return _put(`/backoffice/avis/${id}/reject`, {
-        reason: reason
-    });
+    return _put(`/backoffice/avis/${id}/reject`, { reason });
 };
 
 export const markAvisAsRead = (id, userId) => {

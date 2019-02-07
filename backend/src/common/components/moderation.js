@@ -158,5 +158,51 @@ module.exports = (db, logger, mailer) => {
                 ...(options.events || {}),
             });
         },
+        maskPseudo: async (id, mask, options) => {
+
+            let oid = new ObjectID(id);
+
+            let result = await db.collection('comment').findOneAndUpdate(
+                { _id: oid },
+                { $set: { pseudoMasked: mask } },
+                { returnOriginal: false },
+            );
+
+            if (!result.value) {
+                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+            }
+
+            saveEvent(id, 'maskPseudo', {
+                app: 'moderation',
+                user: 'admin',
+                profile: 'moderateur',
+                ...(options.events || {}),
+            });
+
+            return result.value;
+        },
+        maskTitle: async (id, mask, options) => {
+
+            let oid = new ObjectID(id);
+
+            let result = await db.collection('comment').findOneAndUpdate(
+                { _id: oid },
+                { $set: { titleMasked: mask } },
+                { returnOriginal: false },
+            );
+
+            if (!result.value) {
+                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+            }
+
+            saveEvent(id, 'maskTitle', {
+                app: 'moderation',
+                user: 'admin',
+                profile: 'moderateur',
+                ...(options.events || {}),
+            });
+
+            return result.value;
+        },
     };
 };

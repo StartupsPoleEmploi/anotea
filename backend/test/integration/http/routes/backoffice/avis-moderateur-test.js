@@ -270,6 +270,78 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.equal(count, 0);
     });
 
+    it('can mask pseudo', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/pseudo`)
+        .send({ mask: true })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.pseudoMasked, true);
+    });
+
+    it('can unmask pseudo', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/pseudo`)
+        .send({ mask: false })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.pseudoMasked, false);
+    });
+
+    it('can mask title', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/title`)
+        .send({ mask: true })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.titleMasked, true);
+    });
+
+    it('can unmask title', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/title`)
+        .send({ mask: false })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.deepEqual(response.body.titleMasked, false);
+    });
+
     it('can not reject unknown avis', async () => {
 
         let app = await startServer();
