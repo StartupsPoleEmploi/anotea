@@ -3,24 +3,51 @@ module.exports = db => {
         {
             $group: {
                 _id: '$formation.action.numero',
-                session: { $first: '$$ROOT' },
+                formation: { $first: '$formation' },
+                region: { $first: '$region' },
+                code_region: { $first: '$code_region' },
+                meta: { $first: '$meta' },
+                avis: { $push: '$avis' },
+                accueil: { $avg: '$score.notes.accueil' },
+                contenu_formation: { $avg: '$score.notes.contenu_formation' },
+                equipe_formateurs: { $avg: '$score.notes.equipe_formateurs' },
+                moyen_materiel: { $avg: '$score.notes.moyen_materiel' },
+                accompagnement: { $avg: '$score.notes.accompagnement' },
+                global: { $avg: '$score.notes.global' },
             }
         },
         // Convert session into action
         {
             $replaceRoot: {
                 newRoot: {
-                    _id: { $concat: ['$session.formation.numero', '|', '$_id'] },
-                    numero: '$_id',
-                    region: '$session.region',
-                    code_region: '$session.code_region',
-                    avis: '$session.avis',
-                    score: '$session.score',
-                    formation: '$session.formation',
-                    meta: '$session.meta',
+                    _id: { $concat: ['$formation.numero', '|', '$formation.action.numero'] },
+                    numero: '$formation.action.numero',
+                    region: '$region',
+                    code_region: '$code_region',
+                    avis: {
+                        $reduce: {
+                            input: '$avis',
+                            initialValue: [],
+                            in: { $setUnion: ['$$value', '$$this'] }
+                        }
+                    },
+                    score: {
+                        nb_avis: { $size: '$avis' },
+                        notes: {
+                            accueil: '$accueil',
+                            contenu_formation: '$contenu_formation',
+                            equipe_formateurs: '$equipe_formateurs',
+                            moyen_materiel: '$moyen_materiel',
+                            accompagnement: '$accompagnement',
+                            global: '$global'
+                        }
+                    },
+                    formation: '$formation',
+                    meta: '$meta',
                 },
             },
         },
+        // Remove action property from formation
         {
             $replaceRoot: {
                 newRoot: {

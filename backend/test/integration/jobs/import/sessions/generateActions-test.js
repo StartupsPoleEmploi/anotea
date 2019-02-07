@@ -9,7 +9,25 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let db = await getTestDatabase();
         let date = new Date();
-        let comment = newComment({
+        let duplicatedAvis = newComment({
+            pseudo: 'robert',
+            formacode: '31801',
+            training: {
+                formacode: '31801',
+                certifInfo: {
+                    id: '55518',
+                },
+                organisation: {
+                    siret: '22222222222222',
+                },
+                place: {
+                    postalCode: '75019',
+                },
+            }
+        }, date);
+
+        let uniqueAvis = newComment({
+            pseudo: 'john',
             formacode: '31801',
             training: {
                 formacode: '31801',
@@ -29,28 +47,55 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertRegions(),
             insertIntoDatabase('sessionsReconciliees', newSession({
-                avis: [comment],
+                _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1',
+                avis: [duplicatedAvis],
+                score: {
+                    nb_avis: 1,
+                    notes: {
+                        accueil: 5,
+                        contenu_formation: 5,
+                        equipe_formateurs: 5,
+                        moyen_materiel: 5,
+                        accompagnement: 5,
+                        global: 5,
+                    }
+                },
+            })),
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX2',
+                avis: [duplicatedAvis, uniqueAvis],
+                score: {
+                    nb_avis: 1,
+                    notes: {
+                        accueil: 1,
+                        contenu_formation: 1,
+                        equipe_formateurs: 1,
+                        moyen_materiel: 1,
+                        accompagnement: 1,
+                        global: 1,
+                    }
+                },
             })),
         ]);
 
         await generateActions(db);
 
         let action = await db.collection('actionsReconciliees').findOne();
-        assert.deepEqual(action, {
+        assert.deepStrictEqual(action, {
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
             region: '11',
             code_region: '11',
-            avis: [comment],
+            avis: [duplicatedAvis, uniqueAvis],
             score: {
-                nb_avis: 1,
+                nb_avis: 2,
                 notes: {
-                    accueil: 4,
-                    contenu_formation: 4,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 4,
-                    accompagnement: 4,
-                    global: 4
+                    accueil: 3,
+                    contenu_formation: 3,
+                    equipe_formateurs: 3,
+                    moyen_materiel: 3,
+                    accompagnement: 3,
+                    global: 3,
                 }
             },
             organisme_financeurs: ['2'],
