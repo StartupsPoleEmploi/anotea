@@ -1,6 +1,6 @@
 .note-moyenne {
 	width: 514px;
-	height: 113px;
+	height: 73px;
 	margin: 0px;
 
     .label {
@@ -49,33 +49,4 @@
         top: -15px;
         left: 30px;
     }
-
-	.note-details {
-		width: 514px;
-	  	height: 37px;
-	  	margin: 0px;
-	    background-color: #F4F4F5;
-	    display: block;
-	    margin-top: 15px;
-
-			.label {
-				height: 21px;
-				width: 284.93px;
-				color: #24303A;
-				font-size: 16px;
-				line-height: 19px;
-			    display: block;
-			    padding-left: 16px;
-				padding-top: 8px;
-			}
-
-			.arrow {
-				box-sizing: border-box;
-				height: 6px;
-				width: 11.29px;
-				border: 3px solid #24303A;
-			    display: block;
-			    margin-left: 479px;
-			}
-	}
 }

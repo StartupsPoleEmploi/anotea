@@ -4,6 +4,7 @@ import './notes.scss';
 
 import Note from './Note';
 import NoteMoyenne from './NoteMoyenne';
+import FoldButton from './FoldButton';
 
 const items = [{
     title: 'Accueil',
@@ -26,7 +27,8 @@ class Notes extends Component {
 
     state = {
         averageScore: null,
-        notes: []
+        notes: [],
+        folded: false
     }
 
     constructor(props) {
@@ -68,12 +70,21 @@ class Notes extends Component {
         );
     }
 
+
+    fold = () => this.setState({ folded: true });
+
+    unfold = () => this.setState({ folded: false });
+
     render() {
         return (
-            <div>
-                <h3 className="notes">Notes</h3>
+            <div className="notes">
+                <h3>Notes</h3>
                 <NoteMoyenne averageScore={this.state.averageScore} />
-                {
+                <div className="note-details">
+                    <span className="label">Détails des notes</span>
+                    <FoldButton onFold={this.fold} onUnfold={this.unfold} />
+                </div>
+                { !this.state.folded &&
                     this.getItems()
                 }
             </div>

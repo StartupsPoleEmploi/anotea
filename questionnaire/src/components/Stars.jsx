@@ -88,7 +88,7 @@ export default class Stars extends React.PureComponent {
                         <div className="starBlock" key={index}>
                             <span
                                 className={`star ${this.getStar(index)}`}
-                                style={this.props.starsStyle ? this.props.starsStyle : { width: '18px' }}
+                                style={this.props.starsStyle ? this.props.starsStyle : { width: '20px' }}
                                 onMouseOver={this.updateHoverState.bind(this, index)}
                                 onMouseOut={this.removeHoverState}
                                 onClick={this.select.bind(this, index)}

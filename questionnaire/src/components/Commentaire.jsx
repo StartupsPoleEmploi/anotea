@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import './Commentaire.scss';
+import './commentaire.scss';
 import ChampCommentaire from './ChampCommentaire';
 
 class Commentaire extends Component {
