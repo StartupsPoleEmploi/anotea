@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import './notes.scss';
 
@@ -38,6 +39,10 @@ class Notes extends Component {
         }
     }
 
+    static propTypes = {
+        setValid: PropTypes.func.isRequired
+    }
+
     onSelect = (index, value) => {
         if (value !== null) {
             value++;
@@ -62,6 +67,12 @@ class Notes extends Component {
             notes: notes,
             averageScore: average
         });
+
+        let countNotes = this.state.notes.reduce((accumulator, note) => {
+            return accumulator + (note.value === null ? 0 : 1);
+        }, 0);
+
+        this.props.setValid(countNotes === 5);
     }
 
     getItems = () => {
