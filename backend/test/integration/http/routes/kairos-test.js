@@ -79,10 +79,8 @@ describe(__filename, withServer(({ startServer, insertDepartements, insertIntoDa
             courriel: 'contact@organisme.fr',
             courriels: ['contact@organisme.fr'],
             kairosCourriel: 'contact@organisme.fr',
-            sources: [
-                'kairos',
-                'sso'
-            ],
+            sources: ['kairos', 'sso'],
+            profile: 'organisme',
             codeRegion: '11',
             numero: null,
             lieux_de_formation: [],

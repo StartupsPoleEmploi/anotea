@@ -32,6 +32,7 @@ module.exports = async (db, logger) => {
             creationDate: new Date(),
             codeRegion: codeRegion,
             sources: ['intercarif'],
+            profile: 'organisme',
             numero: data.numero,
             lieux_de_formation: data.lieux_de_formation ? data.lieux_de_formation : [],
             meta: {
@@ -63,6 +64,7 @@ module.exports = async (db, logger) => {
             creationDate: new Date(),
             codeRegion: data.codeRegion,
             sources: ['kairos'],
+            profile: 'organisme',
             numero: null,
             lieux_de_formation: [],
             meta: {
@@ -84,7 +86,7 @@ module.exports = async (db, logger) => {
                 .updateOne(
                     { _id: organisme._id },
                     {
-                        $setOnInsert: _.omit(organisme, ['courriels', 'sources', 'numero', 'lieux_de_formation']),
+                        $setOnInsert: _.omit(organisme, ['courriels', 'sources', 'numero', 'lieux_de_formation', 'profile']),
                         $addToSet: {
                             courriels: organisme.courriel,
                             sources: organisme.sources[0],
