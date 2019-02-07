@@ -1,7 +1,6 @@
 
 location /admin  {
 
-    resolver 127.0.0.11 ipv6=off;
     limit_req zone=flood burst=100 nodelay;
 
     proxy_pass http://backoffice/;
@@ -15,7 +14,6 @@ location /admin  {
 
 location /questionnaire_v2  {
 
-    resolver 127.0.0.11 ipv6=off;
     limit_req zone=flood burst=100 nodelay;
 
     proxy_pass http://questionnaire/;
@@ -28,7 +26,6 @@ location /questionnaire_v2  {
 
 location / {
 
-    resolver 127.0.0.11 ipv6=off;
     limit_req zone=flood burst=100 nodelay;
 
     proxy_pass http://backend:8080;
