@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import './notes.scss';
 
 import Note from './Note';
 import NoteMoyenne from './NoteMoyenne';
+import FoldButton from './FoldButton';
 
 const items = [{
     title: 'Accueil',
@@ -26,7 +28,8 @@ class Notes extends Component {
 
     state = {
         averageScore: null,
-        notes: []
+        notes: [],
+        folded: false
     }
 
     constructor(props) {
@@ -34,6 +37,10 @@ class Notes extends Component {
         for (let i = 0; i <= 4; i++) {
             this.state.notes.push({ index: i, value: null });
         }
+    }
+
+    static propTypes = {
+        setValid: PropTypes.func.isRequired
     }
 
     onSelect = (index, value) => {
@@ -60,6 +67,12 @@ class Notes extends Component {
             notes: notes,
             averageScore: average
         });
+
+        let countNotes = this.state.notes.reduce((accumulator, note) => {
+            return accumulator + (note.value === null ? 0 : 1);
+        }, 0);
+
+        this.props.setValid(countNotes === 5);
     }
 
     getItems = () => {
@@ -68,12 +81,21 @@ class Notes extends Component {
         );
     }
 
+
+    fold = () => this.setState({ folded: true });
+
+    unfold = () => this.setState({ folded: false });
+
     render() {
         return (
-            <div>
-                <h3 className="notes">Notes</h3>
+            <div className="notes">
+                <h3>Notes</h3>
                 <NoteMoyenne averageScore={this.state.averageScore} />
-                {
+                <div className="note-details">
+                    <span className="label">Détails des notes</span>
+                    <FoldButton onFold={this.fold} onUnfold={this.unfold} />
+                </div>
+                { !this.state.folded &&
                     this.getItems()
                 }
             </div>

@@ -10,18 +10,31 @@ import SendButton from './components/SendButton';
 import './App.scss';
 
 class App extends Component {
+
+    state = {
+        isValid: false
+    }
+
+    setValid = valid => {
+        this.setState({ isValid: valid });
+    }
+
+    onSend = () => {
+        // TODO
+    }
+
     render() {
         return (
             <div className="App">
                 <Header />
 
-                <Notes />
+                <Notes setValid={this.setValid}/>
 
                 <Commentaire />
 
                 <Autorisations />
 
-                <SendButton />
+                <SendButton enabled={this.state.isValid} onSend={this.onSend} />
 
                 <Footer codeRegion="11" />
             </div>

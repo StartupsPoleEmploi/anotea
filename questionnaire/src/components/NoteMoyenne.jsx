@@ -26,10 +26,6 @@ class NoteMoyenne extends Component {
                     <span className="averageScore">{this.props.averageScore ? this.formattedScore(this.props.averageScore) : '-'}</span><span className="total">/ 5</span>
                 </div>
                 <Stars value={this.roundHalf(this.props.averageScore)} readonly={true} starsStyle={{ fontSize: '10px' }} />
-                <div className="note-details">
-                    <span className="label">Détails des notes</span>
-                    <span className="arrow"></span>
-                </div>
             </div>
         );
     }
