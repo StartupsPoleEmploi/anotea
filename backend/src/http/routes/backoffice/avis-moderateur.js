@@ -1,21 +1,16 @@
 const express = require('express');
-const mongo = require('mongodb');
 const Joi = require('joi');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
 const computeInventory = require('./utils/computeInventory');
 
-module.exports = ({ db, middlewares, logger, configuration, moderation, mailing }) => {
+module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     const checkAuth = createJWTAuthMiddleware('backoffice');
     const itemsPerPage = configuration.api.pagination;
-
-    const saveEvent = function(id, type, source) {
-        db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
-    };
 
     const getStagiaire = async stagiaire => {
 
@@ -34,19 +29,19 @@ module.exports = ({ db, middlewares, logger, configuration, moderation, mailing 
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { filter, stagiaire: query, page } = await Joi.validate(req.query, {
+        let { filter, stagiaire: search, page } = await Joi.validate(req.query, {
             filter: Joi.string().default('all'),
             stagiaire: Joi.string().allow('').default(''),
             page: Joi.number().default(0),
         }, { abortEarly: false });
 
-        let stagiaire = await getStagiaire(query);
+        let stagiaire = await getStagiaire(search);
 
         let cursor = db.collection('comment')
         .find({
             step: { $gte: 2 },
             codeRegion: codeRegion,
-            ...(stagiaire ? { token: stagiaire.token } : {}),
+            ...(search ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
             ...(filter !== 'all' ? { comment: { $ne: null } } : {}),
             ...(filter === 'reported' ? { reported: true } : {}),
             ...(filter === 'rejected' ? { rejected: true } : {}),
