@@ -1,5 +1,7 @@
 .send-button {
 
+    display: inline;
+
     button {
         height: 43px;
         width: 128px;
@@ -7,14 +9,13 @@
         background-color: #EBEDF6;
         border: 0px;
         margin-top: 33px;
-        position: relative;
         left:40%;
 	    color: #384EAA;
 	    font-size: 16px;
 	    font-weight: bold;
 	    letter-spacing: 2px;
         line-height: 19px;
-        text-transform: capitalize;
+        text-transform: uppercase;
         cursor: pointer;
     }
 

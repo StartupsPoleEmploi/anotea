@@ -8,6 +8,7 @@ class FoldButton extends Component {
     state = {
         folded: false
     }
+    
     static propTypes = {
         onFold: PropTypes.func.isRequired,
         onUnfold: PropTypes.func.isRequired

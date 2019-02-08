@@ -28,25 +28,17 @@
         }    
     }
 
-	.score {
-		color: #24303A;
-		line-height: 39px;
-		text-align: center;
-	    display: inline-block;
-        margin-top: 0px;
+    .score {
         position: relative;
         top: -14px;
         left: 65px;
-        
-        .averageScore {
-            font-size: 32px;
-            font-weight: 900;
-        }
     }
-    
+
     .stars {
+        height: 20px;
+        width: 130px;
+        margin-left: 390px;
         position: relative;
-        top: -15px;
         left: 30px;
     }
 }
