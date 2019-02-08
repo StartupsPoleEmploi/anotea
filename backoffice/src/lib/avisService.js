@@ -43,7 +43,7 @@ export const publishAvis = (id, qualification) => {
 };
 
 export const answerAvis = (id, answer) => {
-    return _post(`/backoffice/avis/${id}/answer`, {
+    return _put(`/backoffice/avis/${id}/answer`, {
         answer: answer
     });
 };

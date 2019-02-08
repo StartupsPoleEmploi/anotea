@@ -1,8 +1,9 @@
 const express = require('express');
 const ObjectID = require('mongodb').ObjectID;
-const Boom = require('boom');
 const Joi = require('joi');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
+const { IdNotFoundError } = require('./../../../common/errors');
+const { objectId } = require('./../../../common/validators');
 
 module.exports = ({ db, logger, middlewares, moderation }) => {
 
@@ -14,57 +15,61 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
-    router.post('/backoffice/avis/:id/answer', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/answer', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-        if (!ObjectID.isValid(req.params.id)) {
-            throw Boom.badRequest('Identifiant invalide');
+        const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+        const { answer: text } = await Joi.validate(req.body, { answer: Joi.string().required() }, { abortEarly: false });
+
+        let result = await db.collection('comment').findOneAndUpdate(
+            { _id: new ObjectID(id) },
+            {
+                $set: {
+                    answer: {
+                        text: text,
+                        date: new Date(),
+                        status: 'published', //TODO set to published for the moment
+                    },
+                    read: true,
+                }
+            },
+            { returnOriginal: false }
+        );
+
+        if (!result.value) {
+            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
         }
 
-        let text = req.body.answer;
-        const id = ObjectID(req.params.id); // eslint-disable-line new-cap
-
-        let results = await db.collection('comment').update({ _id: id }, {
-            $set: {
-                answer: {
-                    text: text,
-                    status: 'published', //TODO set to published for the moment
-                },
-                read: true,
-            }
+        saveEvent(id, 'answer', {
+            app: 'organisation',
+            user: req.query.userId,
+            ip: getRemoteAddress(req),
+            answer: text
         });
-
-        if (results.result.n === 1) {
-            saveEvent(id, 'answer', {
-                app: 'organisation',
-                user: req.query.userId,
-                ip: getRemoteAddress(req),
-                answer: text
-            });
-            return res.json({ 'message': 'advice answered' });
-        } else {
-            throw Boom.notFound('Identifiant inconnu');
-        }
+        return res.json(result.value);
     }));
 
     router.delete('/backoffice/avis/:id/answer', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-        if (!ObjectID.isValid(req.params.id)) {
-            throw Boom.badRequest('Identifiant invalide');
+        const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+
+        let result = await db.collection('comment').findOneAndUpdate(
+            { _id: new ObjectID(id) },
+            { $unset: { answer: '' } },
+            { returnOriginal: false }
+        );
+
+        if (!result.value) {
+            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
         }
 
-        let id = ObjectID(req.params.id); // eslint-disable-line new-cap
+        saveEvent(id, 'answer removed', {
+            app: 'organisation',
+            user: req.query.userId,
+            ip: getRemoteAddress(req)
+        });
 
-        let results = await db.collection('comment').update({ _id: id }, { $unset: { answer: '' } });
-        if (results.result.n === 1) {
-            saveEvent(id, 'answer removed', {
-                app: 'organisation',
-                user: req.query.userId,
-                ip: getRemoteAddress(req)
-            });
-            res.json({ 'message': 'advice answer removed' });
-        } else {
-            throw Boom.notFound('Identifiant inconnu');
-        }
+        res.json(result);
+
     }));
 
 
