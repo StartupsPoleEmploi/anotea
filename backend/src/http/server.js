@@ -8,7 +8,7 @@ const middlewares = require('./middlewares');
 
 module.exports = components => {
 
-    let { logger, configuration, auth } = components;
+    let { logger, configuration, sentry, auth } = components;
 
     let app = express();
 
@@ -115,10 +115,15 @@ module.exports = components => {
                 error = Boom.badRequest('Erreur de validation');
                 error.output.payload.details = rawError.details;
             } else {
+
                 error = Boom.boomify(rawError, {
                     statusCode: rawError.status || 500,
                     message: rawError.message || 'Une erreur est survenue',
                 });
+
+                if (error.statusCode > 404) {
+                    sentry.sendError(rawError);
+                }
             }
         }
         return res.status(error.output.statusCode).send(error.output.payload);

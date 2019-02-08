@@ -55,6 +55,7 @@
     "node-mailjet": "3.3.1",
     "node-uuid": "1.4.8",
     "nodemailer": "4.7.0",
+    "raven": "2.6.4",
     "stream-transform": "1.0.8",
     "string": "3.3.3",
     "swagger-ui-express": "4.0.1",
