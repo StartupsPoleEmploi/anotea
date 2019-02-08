@@ -51,7 +51,6 @@ export default class Stagiaire extends React.Component {
         avis: PropTypes.object.isRequired,
         showStatus: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
-        className: PropTypes.string.isRequired,
     };
 
     toggle = async () => {
@@ -64,9 +63,8 @@ export default class Stagiaire extends React.Component {
         let avis = this.props.avis;
 
         return (
-            <div className={`Stagiaire ${this.props.className}`}>
-
-                <div className="mb-1">
+            <div className="Stagiaire">
+                <div>
                     <Stars note={avis.rates.global} />
                     <span className="by">par&nbsp;</span>
                     <span className={`pseudo mr-1 ${avis.pseudoMasked ? 'masked' : ''}`}>
@@ -85,7 +83,6 @@ export default class Stagiaire extends React.Component {
                         this.props.showStatus &&
                         <Status avis={avis} />
                     }
-
                 </div>
             </div>
         );

@@ -8,7 +8,6 @@ export default class Titre extends React.Component {
     static propTypes = {
         avis: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
-        className: PropTypes.string.isRequired,
     };
 
 
@@ -22,10 +21,10 @@ export default class Titre extends React.Component {
         let avis = this.props.avis;
 
         if (!avis.comment || !avis.comment.title) {
-            return <div className={`Titre empty ${this.props.className}`}>Aucun titre</div>;
+            return <div className="Titre empty">Aucun titre</div>;
         }
         return (
-            <div className={`Titre ${this.props.className}`}>
+            <div className="Titre">
                 <span className={`mr-1 title ${avis.titleMasked ? 'masked' : ''}`}>{avis.comment.title}</span>
                 <i className={`far ${avis.titleMasked ? 'fa-eye' : 'fa-eye-slash'} toggable`} onClick={this.toggle} />
             </div>
