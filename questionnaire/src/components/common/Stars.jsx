@@ -66,12 +66,21 @@ export default class Stars extends React.PureComponent {
     }
 
     getStar = index => {
-        if (this.state.value % 1 !== 0 && this.state.selected === index) {
-            return 'fas fa-star-half-alt';
-        } else if (this.state.hover <= index && this.state.selected <= index) {
-            return 'far fa-star';
+        if (this.state.value % 1 !== 0) {
+            if (this.state.selected === index + 1) {
+                return 'fas fa-star-half-alt';
+            } else if (this.state.selected - 1 > index) {
+                return 'fas fa-star';
+            } else {
+                return 'far fa-star';
+            }
         } else {
-            return 'fas fa-star';
+            // eslint-disable-next-line no-lonely-if
+            if (this.state.hover <= index && this.state.selected <= index) {
+                return 'far fa-star';
+            } else {
+                return 'fas fa-star';
+            }
         }
     }
 

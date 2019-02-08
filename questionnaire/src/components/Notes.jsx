@@ -57,7 +57,7 @@ class Notes extends Component {
             return accumulator + (note.value === null ? 0 : 1);
         }, 0);
 
-        this.props.setValid(countNotes === 5, this.state.averageScore, this.state.notes);
+        this.props.setValid(countNotes === 5, average, this.state.notes);
     }
 
     getItems = () => {
