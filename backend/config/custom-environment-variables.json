@@ -23,25 +23,20 @@
     }
   },
   "log": {
+    "level": "ANOTEA_LOG_LEVEL",
     "console": {
       "json": {
         "__name": "ANOTEA_LOG_CONSOLE_JSON",
         "__format": "json"
       }
-    },
-    "file": {
-      "enabled": {
-        "__name": "ANOTEA_LOG_FILE_ENABLED",
-        "__format": "json"
-      }
-    },
-    "sentry": {
-      "enabled": {
-        "__name": "ANOTEA_LOG_SENTRY_ENABLED",
-        "__format": "json"
-      },
-      "DSN": "ANOTEA_LOG_SENTRY_DSN"
     }
+  },
+  "sentry": {
+    "enabled": {
+      "__name": "ANOTEA_SENTRY_ENABLED",
+      "__format": "json"
+    },
+    "DSN": "ANOTEA_LOG_SENTRY_DSN"
   },
   "smtp": {
     "host": "ANOTEA_SMTP_HOST",
