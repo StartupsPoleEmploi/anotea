@@ -150,6 +150,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
             courriel: 'contact+kairos@formation.fr',
             courriels: ['contact+kairos@formation.fr'],
             sources: ['kairos'],
+            profile: 'organisme',
             codeRegion: '10',
             kairosCourriel: 'contact+kairos@formation.fr',
             numero: null,

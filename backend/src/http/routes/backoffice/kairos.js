@@ -27,6 +27,7 @@ module.exports = ({ db, auth, middlewares }) => {
             courriel: data.courriel,
             courriels: [data.courriel],
             kairosCourriel: data.courriel,
+            profile: 'organisme',
             token: uuid.v4(),
             creationDate: new Date(),
             sources: ['kairos', 'sso'],
