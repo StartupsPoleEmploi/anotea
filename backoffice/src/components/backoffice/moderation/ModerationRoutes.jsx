@@ -14,6 +14,14 @@ export default class ModerationRoutes extends React.Component {
         logout: PropTypes.func.isRequired,
     };
 
+    getQueryFromUrl = routeProps => {
+        return {
+            filter: routeProps.match.params.filter,
+            page: routeProps.match.params.page,
+            search: queryString.parse(routeProps.location.search).search,
+        };
+    };
+
     render() {
         return (
             <div className="anotea">
@@ -24,26 +32,23 @@ export default class ModerationRoutes extends React.Component {
                 </Switch>
                 <Route
                     path="/mon-compte"
-                    render={props => (<MyAccount {...props} />)} />
+                    render={() => <MyAccount />} />
                 <Route
                     path="/admin/moderation/organismes"
-                    render={props => (<OrganismePanel {...props} codeRegion={this.props.codeRegion} />)} />
+                    render={() => <OrganismePanel codeRegion={this.props.codeRegion} />} />
                 <Route
                     path="/admin/moderation/stagiaires/:filter/:page?"
                     render={props => {
 
-                        let query = {
-                            filter: props.match.params.filter,
-                            page: props.match.params.page,
-                            stagiaire: queryString.parse(props.location.search).stagiaire
-                        };
-
+                        let query = this.getQueryFromUrl(props);
                         return <StagiairesPanel
                             codeRegion={this.props.codeRegion}
                             query={query}
-                            onChange={params => {
-                                let stagiaire = params.stagiaire ? `?stagiaire=${params.stagiaire}` : '';
-                                props.history.push(`/admin/moderation/stagiaires/${params.filter}/${params.page || 1}${stagiaire}`);
+                            onNewQuery={options => {
+                                let newQuery = Object.assign({ page: 1 }, query, options);
+
+                                props.history.push(`/admin/moderation/stagiaires/${newQuery.filter}/${newQuery.page}` +
+                                    (newQuery.search ? `?search=${newQuery.search}` : ''));
                             }} />;
                     }} />
             </div>

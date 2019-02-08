@@ -6,12 +6,12 @@ import './Summary.scss';
 export default class Summary extends React.Component {
 
     static propTypes = {
-        query: PropTypes.object.isRequired,
+        filter: PropTypes.string.isRequired,
         results: PropTypes.object.isRequired,
     };
 
     render() {
-        let { filter } = this.props.query;
+        let { filter } = this.props.filter;
         let { pagination, stagiaire } = this.props.results.meta;
         let suffixMapper = {
             'all': '',

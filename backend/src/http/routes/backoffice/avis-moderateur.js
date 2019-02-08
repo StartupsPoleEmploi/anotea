@@ -29,9 +29,9 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { filter, stagiaire: search, page } = await Joi.validate(req.query, {
+        let { filter, search, page } = await Joi.validate(req.query, {
             filter: Joi.string().default('all'),
-            stagiaire: Joi.string().allow('').default(''),
+            search: Joi.string().allow('').default(''),
             page: Joi.number().default(0),
         }, { abortEarly: false });
 

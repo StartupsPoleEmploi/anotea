@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 export default class Toolbar extends React.Component {
 
     static propTypes = {
-        query: PropTypes.object.isRequired,
+        filter: PropTypes.string.isRequired,
+        search: PropTypes.string,
         inventory: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
     };
@@ -13,7 +14,7 @@ export default class Toolbar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchInputValue: this.props.query.stagiaire || '',
+            searchInputValue: this.props.search || '',
         };
     }
 
@@ -24,7 +25,7 @@ export default class Toolbar extends React.Component {
             <span className="badge badge-light pastille">{nbElements}</span> :
             <span />;
 
-        let isActive = !searchMode && this.props.query.filter === filter;
+        let isActive = !searchMode && this.props.filter === filter;
         return (
             <li className={`nav-item ${searchMode && 'disabled'} ${isActive ? 'active' : ''}`}>
                 <a
@@ -38,7 +39,7 @@ export default class Toolbar extends React.Component {
 
     createSearchInput = () => {
 
-        let submit = () => this.props.onChange({ filter: 'all', stagiaire: this.state.searchInputValue });
+        let submit = () => this.props.onChange({ filter: 'all', search: this.state.searchInputValue });
 
         return (
             <div className="d-flex align-items-center">
@@ -69,8 +70,10 @@ export default class Toolbar extends React.Component {
                     }
 
                 </div>
-                <button className={`btn ${this.state.searchInputValue ? 'active' : ''}`} type="search"
-                        onClick={() => submit()}>
+                <button
+                    className={`btn ${this.state.searchInputValue ? 'active' : ''}`}
+                    type="search"
+                    onClick={() => submit()}>
                     Rechercher
                 </button>
             </div>

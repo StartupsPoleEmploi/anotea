@@ -15,7 +15,7 @@ class StagiairesPanel extends React.Component {
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
         query: PropTypes.object.isRequired,
-        onChange: PropTypes.func.isRequired,
+        onNewQuery: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -70,7 +70,7 @@ class StagiairesPanel extends React.Component {
     };
 
     render() {
-        let query = this.props.query;
+        let { filter, search } = this.props.query;
 
         return (
             <Panel
@@ -81,19 +81,21 @@ class StagiairesPanel extends React.Component {
                             C&apos;est ici que vous retrouverez tous les avis stagiaire à modérer.
                             Vous pouvez également supprimer ou modifier un avis sur demande d&apos;un stagiaire.
                         </p>
-                    </div>}
+                    </div>
+                }
                 toolbar={
                     <Toolbar
-                        query={query}
+                        filter={filter}
+                        search={search}
                         inventory={this.state.results.meta.inventory}
-                        onChange={this.props.onChange}
+                        onChange={this.props.onNewQuery}
                     />
                 }
                 results={
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
-                            <Summary query={query} results={this.state.results} />
+                            <Summary filter={filter} results={this.state.results} />
                             {this.state.message &&
                             <Message message={this.state.message} onClose={() => this.setState({ message: null })} />
                             }
@@ -105,7 +107,7 @@ class StagiairesPanel extends React.Component {
                                             <div className="col-sm-12">
                                                 <Avis
                                                     avis={avis}
-                                                    showStatus={['all', 'rejected'].includes(query.filter)}
+                                                    showStatus={['all', 'rejected'].includes(filter)}
                                                     onChange={(avis, options = {}) => {
                                                         let { message } = options;
                                                         if (message) {
@@ -124,13 +126,7 @@ class StagiairesPanel extends React.Component {
                                 <div className="col-4 d-flex justify-content-center">
                                     <Pagination
                                         pagination={this.state.results.meta.pagination}
-                                        onClick={page => {
-                                            this.props.onChange({
-                                                filter: query.filter,
-                                                page,
-                                                stagiaire: query.stagiaire,
-                                            });
-                                        }} />
+                                        onClick={page => this.props.onNewQuery({ page })} />
                                 </div>
                             </div>
                             }
