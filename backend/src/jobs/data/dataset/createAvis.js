@@ -25,7 +25,7 @@ const createStagiaire = avis => {
         training: avis.training,
         unsubscribe: false,
         mailSent: true,
-        token: uuid.v4(),
+        token: avis.token,
         mailSentDate: getDateInThePast(),
         tracking: {
             firstRead: getDateInThePast(),

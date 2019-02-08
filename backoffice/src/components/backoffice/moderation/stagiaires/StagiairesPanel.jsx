@@ -127,8 +127,8 @@ class StagiairesPanel extends React.Component {
                                         onClick={page => {
                                             this.props.onChange({
                                                 filter: parameters.filter,
-                                                query: parameters.query,
                                                 page,
+                                                stagiaire: parameters.stagiaire,
                                             });
                                         }} />
                                 </div>
