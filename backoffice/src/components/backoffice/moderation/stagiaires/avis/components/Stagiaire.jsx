@@ -77,7 +77,7 @@ export default class Stagiaire extends React.Component {
                     }
                 </div>
 
-                <div className="creation">
+                <div className="date">
                     le <PrettyDate date={new Date(avis.date)} /> &nbsp;
                     {
                         this.props.showStatus &&

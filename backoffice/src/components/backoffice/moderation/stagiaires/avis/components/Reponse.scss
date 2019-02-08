@@ -2,15 +2,21 @@
 
 .Reponse {
 
+  font-size: 1rem;
   border: 1px solid $color-grey-5;
   border-radius: 5px;
   box-shadow: $shadow;
   padding: 1rem 0.875rem;
 
   .title {
-    font-size: 1rem;
     font-weight: $font-weight-700;
     margin-bottom: 0.5rem;
+  }
+
+  .date {
+    font-size: 0.875rem;
+    line-height: 1rem;
+    color: $color-grey-50;
   }
 
 }
