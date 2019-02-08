@@ -5,7 +5,7 @@ import { searchAvis } from '../../../../lib/avisService';
 import Toolbar from './Toolbar';
 import Loader from '../../common/Loader';
 import Panel from '../../common/Panel';
-import Summary from './Summary';
+import Description from './Description';
 import { Pagination } from '../../common/Pagination';
 import Avis from './avis/Avis';
 import Message from '../../common/Message';
@@ -95,7 +95,7 @@ class StagiairesPanel extends React.Component {
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
-                            <Summary filter={filter} results={this.state.results} />
+                            <Description filter={filter} results={this.state.results} />
                             {this.state.message &&
                             <Message message={this.state.message} onClose={() => this.setState({ message: null })} />
                             }
@@ -109,7 +109,7 @@ class StagiairesPanel extends React.Component {
                                                     avis={avis}
                                                     options={{
                                                         showStatus: ['all', 'rejected'].includes(filter),
-                                                        showReponse: true,
+                                                        showReponse: false,
                                                     }}
                                                     onChange={(avis, options = {}) => {
                                                         let { message } = options;

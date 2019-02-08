@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { PaginationStatus } from '../../common/Pagination';
-import './Summary.scss';
+import './Description.scss';
 
-export default class Summary extends React.Component {
+export default class Description extends React.Component {
 
     static propTypes = {
         filter: PropTypes.string.isRequired,

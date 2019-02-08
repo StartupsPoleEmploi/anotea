@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Header from '../common/Header';
 import queryString from 'query-string';
@@ -45,7 +46,7 @@ export default class ModerationRoutes extends React.Component {
                             codeRegion={this.props.codeRegion}
                             query={query}
                             onNewQuery={options => {
-                                let newQuery = Object.assign({ page: 1 }, query, options);
+                                let newQuery = _.merge({ page: 1 }, query, options);
 
                                 props.history.push(`/admin/moderation/stagiaires/${newQuery.filter}/${newQuery.page}` +
                                     (newQuery.search ? `?search=${newQuery.search}` : ''));

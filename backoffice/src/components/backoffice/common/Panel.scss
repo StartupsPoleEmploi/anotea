@@ -103,13 +103,13 @@
 
             &.nav-search {
 
-              background-color: $color-grey-5;
+              background-color: $color-white;
               border-bottom-right-radius: 6px;
               border-top-right-radius: 6px;
 
               .input-group {
                 opacity: 0.6;
-                background-color: $color-grey-5;
+                background-color: $color-white;
 
                 &.active {
                   opacity: 1;
@@ -119,11 +119,11 @@
                   font-size: 1.2rem;
                   border: none;
                   border-radius: unset;
-                  background-color: $color-grey-5;
+                  background-color: $color-white;
                 }
 
                 input {
-                  background-color: $color-grey-5;
+                  background-color: $color-white;
                   border: none;
                   box-shadow: none;
                 }
@@ -140,7 +140,7 @@
                 border-top-left-radius: unset;
                 border-bottom-left-radius: unset;
                 padding-bottom: 0.5rem;
-                background-color: $color-grey-5;
+                background-color: $color-white;
                 color: $color-black;
                 font-weight: $font-weight-700;
                 text-transform: uppercase;
@@ -154,10 +154,6 @@
             }
           }
         }
-      }
-
-      .results {
-        padding-top: 4rem;
       }
     }
   }

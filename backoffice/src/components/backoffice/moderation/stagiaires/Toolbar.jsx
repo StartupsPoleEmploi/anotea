@@ -51,8 +51,8 @@ export default class Toolbar extends React.Component {
                     <input
                         className="form-control"
                         type="search"
-                        placeholder="Rechercher un stagiaire..."
-                        aria-label="Rechercher un stagiaire..."
+                        placeholder="Rechercher un stagiaire"
+                        aria-label="Rechercher un stagiaire"
                         value={this.state.searchInputValue}
                         onKeyPress={e => {
                             if (e.key === 'Enter') {

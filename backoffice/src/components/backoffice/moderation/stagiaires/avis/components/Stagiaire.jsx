@@ -7,12 +7,7 @@ import './Stagiaire.scss';
 
 const Stars = ({ note }) => {
     return _.range(0, 5).map((v, index) => {
-        return (
-            <span
-                key={index}
-                className={`stars fa fa-star ${index > note && 'empty'}`}
-            />
-        );
+        return <span key={index} className={`stars fa fa-star ${index > note && 'empty'}`} />;
     });
 };
 Stars.propTypes = { note: PropTypes.number.isRequired };
@@ -50,6 +45,7 @@ export default class Stagiaire extends React.Component {
     static propTypes = {
         avis: PropTypes.object.isRequired,
         showStatus: PropTypes.bool,
+        disabled: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -60,7 +56,7 @@ export default class Stagiaire extends React.Component {
     };
 
     render() {
-        let avis = this.props.avis;
+        let { avis, disabled, showStatus } = this.props;
 
         return (
             <div className="Stagiaire">
@@ -71,7 +67,7 @@ export default class Stagiaire extends React.Component {
                         {avis.pseudo ? avis.pseudo : 'anonyme'}
                     </span>
 
-                    {avis.pseudo &&
+                    {!disabled && avis.pseudo &&
                     <i className={`far ${avis.pseudoMasked ? 'fa-eye' : 'fa-eye-slash'} togglable mr-2`}
                        onClick={this.toggle} />
                     }
@@ -79,9 +75,8 @@ export default class Stagiaire extends React.Component {
 
                 <div className="date">
                     le <PrettyDate date={new Date(avis.date)} /> &nbsp;
-                    {
-                        this.props.showStatus &&
-                        <Status avis={avis} />
+                    {!disabled && showStatus &&
+                    <Status avis={avis} />
                     }
                 </div>
             </div>

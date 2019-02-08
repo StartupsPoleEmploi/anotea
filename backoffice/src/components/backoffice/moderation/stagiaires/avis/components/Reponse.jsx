@@ -14,10 +14,10 @@ export default class Reponse extends React.Component {
 
         return (
             <div className="Reponse">
-                <div>
-                    <span className="title">Réponse de l&apos;organisme</span>
+                <div className="title">
+                    <span>Réponse de l&apos;organisme</span>
                     {reponse.date &&
-                    <span className="date float-right"><PrettyDate date={new Date(reponse.date)} /></span>
+                    <span className="date float-right">le <PrettyDate date={new Date(reponse.date)} /></span>
                     }
                 </div>
                 <p>{reponse.text}</p>
