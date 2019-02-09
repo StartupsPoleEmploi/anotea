@@ -24,11 +24,9 @@
   },
   "log": {
     "level": "ANOTEA_LOG_LEVEL",
-    "console": {
-      "json": {
-        "__name": "ANOTEA_LOG_CONSOLE_JSON",
-        "__format": "json"
-      }
+    "json": {
+      "__name": "ANOTEA_LOG_JSON",
+      "__format": "json"
     }
   },
   "sentry": {

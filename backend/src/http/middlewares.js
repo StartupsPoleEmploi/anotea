@@ -75,7 +75,6 @@ module.exports = (auth, logger, configuration) => {
                 });
             };
         },
-
         checkProfile: (...profiles) => {
             return (req, res, next) => {
                 if (!profiles.includes(req.user.profile)) {
@@ -89,7 +88,7 @@ module.exports = (auth, logger, configuration) => {
                 }
                 next();
             };
-        }
+        },
     };
 };
 

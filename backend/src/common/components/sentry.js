@@ -2,10 +2,10 @@ const Raven = require('raven');
 
 module.exports = (logger, configuration) => {
 
-    let isEnabled = configuration.log.sentry.enabled;
+    let isEnabled = configuration.sentry.enabled;
 
     if (isEnabled) {
-        Raven.config(configuration.log.sentry.DSN).install();
+        Raven.config(configuration.sentry.DSN).install();
     }
 
     return {

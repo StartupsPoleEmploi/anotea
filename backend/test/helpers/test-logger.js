@@ -1,10 +1,8 @@
 const createLogger = require('../../src/common/components/logger');
 
-module.exports = createLogger({
+module.exports = createLogger('anotea-test', {
     log: {
         level: process.env.ANOTEA_LOG_LEVEL || 'fatal',
-        console: {
-            json: false,
-        }
+        json: false,
     }
 });

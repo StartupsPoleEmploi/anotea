@@ -1,7 +1,7 @@
 const PrettyStream = require('bunyan-prettystream');
 const bunyan = require('bunyan');
 
-module.exports = configuration => {
+module.exports = (name, configuration) => {
 
     const prettyStream = () => {
         let pretty = new PrettyStream();
@@ -23,8 +23,8 @@ module.exports = configuration => {
 
 
     return bunyan.createLogger({
-        name: 'anotea',
+        name,
         serializers: bunyan.stdSerializers,
-        streams: [configuration.log.console.json ? jsonStream() : prettyStream()],
+        streams: [configuration.log.json ? jsonStream() : prettyStream()],
     });
 };
