@@ -3,26 +3,11 @@ import PropTypes from 'prop-types';
 
 import './notes.scss';
 
-import Note from './Note';
+import Note from './common/Note';
 import NoteMoyenne from './NoteMoyenne';
-import FoldButton from './FoldButton';
+import FoldButton from './common/FoldButton';
 
-const items = [{
-    title: 'Accueil',
-    description: 'Réunions d\'information collective et entretiens à l\'entrée en formation.'
-}, {
-    title: 'Contenu de la formation',
-    description: 'Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique.'
-}, {
-    title: 'Équipe de formateurs',
-    description: 'Prise en compte du besoin des stagiaires.'
-}, {
-    title: 'Moyens matériels mis à disposition',
-    description: 'Salles de cours, documentation, plateaux techniques, équipement informatique.'
-}, {
-    title: 'Accompagnement',
-    description: 'Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises.'
-}];
+import items from '../data.json';
 
 class Notes extends Component {
 
@@ -72,7 +57,7 @@ class Notes extends Component {
             return accumulator + (note.value === null ? 0 : 1);
         }, 0);
 
-        this.props.setValid(countNotes === 5);
+        this.props.setValid(countNotes === 5, average, this.state.notes);
     }
 
     getItems = () => {

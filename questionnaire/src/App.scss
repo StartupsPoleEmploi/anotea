@@ -1,6 +1,18 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
 .App {
   margin: auto;
   width: 624px;
+
+  .send-button {
+    button {
+        position: relative;
+    }
+}
 }
 
 body {

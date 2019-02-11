@@ -1,11 +1,6 @@
-@import '../styles/variables';
+@import '../../styles/variables';
 
 .stars {
-    height: 20px;
-    width: 130px;
-    margin-left: 390px;
-    margin-top: -60px;
-
     .far.fa-star {
         color: $color-black;
     }
