@@ -12,6 +12,8 @@ import SummaryModal from './SummaryModal';
 
 import PropTypes from 'prop-types';
 
+import { getTraineeInfo } from '../lib/traineeService';
+
 class Questionnaire extends Component {
 
     state = {
@@ -23,7 +25,8 @@ class Questionnaire extends Component {
             titre: '',
             commentaire: ''
         },
-        pseudo: ''
+        pseudo: '',
+        trainee: null
     }
 
     static propTypes = {
@@ -33,6 +36,13 @@ class Questionnaire extends Component {
     constructor(props) {
         super(props);
         this.state.token = props.match.params.token;
+        getTraineeInfo(this.state.token).then(result => {
+            if (result.error) {
+                // TODO : : already sent
+            } else {
+                this.setState({ trainee: result.trainee });
+            }
+        });
     }
 
     setValid = (valid, averageScore, notes) => {
@@ -58,7 +68,7 @@ class Questionnaire extends Component {
     render() {
         return (
             <div className="questionnaire">
-                <Header />
+                <Header trainee={this.state.trainee} />
 
                 <Notes setValid={this.setValid} />
 

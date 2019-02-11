@@ -80,7 +80,7 @@ module.exports = components => {
     app.use('/api', require('./routes/stats')(httpComponents));
     app.use('/api', require('./routes/backoffice/kairos')(httpComponents));
 
-    //Pubic routes with server-side rendering (ie. questionary)
+    //Pubic routes with server-side rendering
     app.use('/', require('./routes/front/front')(httpComponents));
     app.use('/', require('./routes/front/mailing')(httpComponents));
 
@@ -96,6 +96,7 @@ module.exports = components => {
     app.use('/api', require('./routes/backoffice/dashboard')(httpComponents));
     app.use('/api', require('./routes/backoffice/stats')(httpComponents));
     app.use('/api', require('./routes/backoffice/account')(httpComponents));
+    app.use('/api', require('./routes/front/questionnaire')(httpComponents));
 
     // catch 404
     app.use(function(req, res) {

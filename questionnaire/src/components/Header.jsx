@@ -1,17 +1,29 @@
 import React, { Component } from 'react';
 
+import PropTypes from 'prop-types';
+
+import moment from 'moment';
+
 import './header.scss';
 
 class Header extends Component {
 
+    static propTypes = {
+        trainee: PropTypes.object
+    };
+
     render() {
         return (
             <div className="header">
-                <img className="logo" src={`${process.env.PUBLIC_URL}/images/logo.png`} alt="logo Anotéa" />
-                <h1>Notez et commentez votre formation</h1>
-                <h2><strong>Compétences de base Professionnelles</strong> | 09/07/2018 au 31/12/2018
-                GRETA DE L'ESSONNE - Épinay-sous-Sénart
-                </h2>
+                { this.props.trainee &&
+                    <div>
+                        <img className="logo" src={`${process.env.PUBLIC_URL}/images/logo.png`} alt="logo Anotéa" />
+                        <h1>Notez et commentez votre formation</h1>
+                        <h2><strong>{this.props.trainee.training.title}</strong> | {moment(this.props.trainee.training.startDate).format('DD/MM/YYYY')} au  {moment(this.props.trainee.training.scheduledEndDate).format('DD/MM/YYYY')}
+                            <p>{this.props.trainee.training.organisation.name} - {this.props.trainee.training.place.city}</p>
+                        </h2>
+                    </div>
+                }
             </div>
         );
     }
