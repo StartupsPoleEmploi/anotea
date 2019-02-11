@@ -4,7 +4,7 @@ const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
 const { newComment } = require('../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganisme, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganisme }) => {
 
     it('can answer to a comment', async () => {
 

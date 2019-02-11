@@ -204,5 +204,59 @@ module.exports = (db, logger, mailer) => {
 
             return result.value;
         },
+        publishReponse: async (id, options) => {
+            let oid = new ObjectID(id);
+
+            let result = await db.collection('comment').findOneAndUpdate(
+                { _id: oid },
+                {
+                    $set: {
+                        'answer.status': 'published',
+                        'answer.lastModerationAction': new Date(),
+                    }
+                },
+                { returnOriginal: false },
+            );
+
+            if (!result.value) {
+                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+            }
+
+            saveEvent(id, 'publishReponse', {
+                app: 'moderation',
+                user: 'admin',
+                profile: 'moderateur',
+                ...(options.events || {}),
+            });
+
+            return result.value;
+        },
+        rejectReponse: async (id, options) => {
+            let oid = new ObjectID(id);
+
+            let result = await db.collection('comment').findOneAndUpdate(
+                { _id: oid },
+                {
+                    $set: {
+                        'answer.status': 'rejected',
+                        'answer.lastModerationAction': new Date(),
+                    }
+                },
+                { returnOriginal: false },
+            );
+
+            if (!result.value) {
+                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+            }
+
+            saveEvent(id, 'rejectReponse', {
+                app: 'moderation',
+                user: 'admin',
+                profile: 'moderateur',
+                ...(options.events || {}),
+            });
+
+            return result.value;
+        },
     };
 };

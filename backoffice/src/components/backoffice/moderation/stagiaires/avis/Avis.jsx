@@ -4,13 +4,15 @@ import Stagiaire from './components/Stagiaire';
 import Titre from './components/Titre';
 import Commentaire from './components/Commentaire';
 import Organisme from './components/Organisme';
+import Edition from './components/Edition';
+import Notes from './components/Notes';
+import Reponse from './components/Reponse';
+import PublishReponseButton from './components/buttons/PublishReponseButton';
+import RejectReponseButton from './components/buttons/RejectReponseButton';
 import PublishButton from './components/buttons/PublishButton';
 import RejectButton from './components/buttons/RejectButton';
 import EditButton from './components/buttons/EditButton';
-import Edition from './components/Edition';
-import Notes from './components/Notes';
 import './Avis.scss';
-import Reponse from './components/Reponse';
 
 export default class Avis extends React.Component {
 
@@ -38,7 +40,7 @@ export default class Avis extends React.Component {
         let disabled = options.showReponse;
 
         return (
-            <div className="Avis mb-2">
+            <div className="Avis py-3">
                 <div className="row">
                     <div className="col-4 py-3 d-none d-sm-block">
                         <Organisme avis={avis} />
@@ -83,14 +85,14 @@ export default class Avis extends React.Component {
                 </div>
                 {
                     options.showReponse && avis.answer &&
-                    <div className="row mt-3 pb-3">
+                    <div className="row pb-3">
                         <div className="offset-4 col-7 px-0 py-3 ">
                             <Reponse reponse={avis.answer} />
                         </div>
                         <div className="col-1 py-3 text-right">
                             <div className="btn-group-vertical">
-                                <PublishButton avis={avis} onChange={onChange} />
-                                <RejectButton avis={avis} onChange={onChange} />
+                                <PublishReponseButton avis={avis} onChange={onChange} />
+                                <RejectReponseButton avis={avis} onChange={onChange} />
                             </div>
                         </div>
                     </div>

@@ -6,7 +6,7 @@ export default class Toolbar extends React.Component {
 
     static propTypes = {
         filter: PropTypes.string.isRequired,
-        search: PropTypes.string,
+        stagiaire: PropTypes.string,
         inventory: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
     };
@@ -14,7 +14,7 @@ export default class Toolbar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchInputValue: this.props.search || '',
+            searchInputValue: this.props.stagiaire || '',
         };
     }
 
@@ -39,7 +39,7 @@ export default class Toolbar extends React.Component {
 
     createSearchInput = () => {
 
-        let submit = () => this.props.onChange({ filter: 'all', search: this.state.searchInputValue });
+        let submit = () => this.props.onChange({ filter: 'all', stagiaire: this.state.searchInputValue });
 
         return (
             <div className="d-flex align-items-center">

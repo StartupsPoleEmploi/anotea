@@ -1,4 +1,5 @@
 const express = require('express');
+const _ = require('lodash');
 const Joi = require('joi');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
@@ -30,19 +31,20 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { filter, search, page } = await Joi.validate(req.query, {
+        let { filter, stagiaire: stagiareSearch, reponse, page } = await Joi.validate(req.query, {
             filter: Joi.string().default('all'),
-            search: Joi.string().allow('').default(''),
-            page: Joi.number().default(0),
+            stagiaire: Joi.string().allow('').default(''),
+            reponse: Joi.boolean(),
+            page: Joi.number().min(0).default(0),
         }, { abortEarly: false });
 
-        let stagiaire = await getStagiaire(search);
-
+        let stagiaire = await getStagiaire(stagiareSearch);
         let cursor = db.collection('comment')
         .find({
             step: { $gte: 2 },
             codeRegion: codeRegion,
-            ...(search ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
+            ...(reponse ? { answer: { $exists: true } } : {}),
+            ...(stagiareSearch ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
             ...(filter !== 'all' ? { comment: { $ne: null } } : {}),
             ...(filter === 'reported' ? { reported: true } : {}),
             ...(filter === 'rejected' ? { rejected: true } : {}),
@@ -135,6 +137,26 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
         let avis = await moderation.edit(id, text, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
+
+    });
+
+    router.put('/backoffice/avis/:id/publishReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
+
+        const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+
+        let avis = await moderation.publishReponse(id, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
+
+    });
+
+    router.put('/backoffice/avis/:id/rejectReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
+
+        const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+
+        let avis = await moderation.rejectReponse(id, { event: { origin: getRemoteAddress(req) } });
 
         return res.json(avis);
 

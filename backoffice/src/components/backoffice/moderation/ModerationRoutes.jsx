@@ -16,10 +16,11 @@ export default class ModerationRoutes extends React.Component {
     };
 
     getQueryFromUrl = routeProps => {
+        let qs = queryString.parse(routeProps.location.search);
         return {
             filter: routeProps.match.params.filter,
             page: routeProps.match.params.page,
-            search: queryString.parse(routeProps.location.search).search,
+            stagiaire: qs.stagiaire,
         };
     };
 
@@ -49,7 +50,7 @@ export default class ModerationRoutes extends React.Component {
                                 let newQuery = _.merge({ page: 1 }, query, options);
 
                                 props.history.push(`/admin/moderation/stagiaires/${newQuery.filter}/${newQuery.page}` +
-                                    (newQuery.search ? `?search=${newQuery.search}` : ''));
+                                    (newQuery.stagiaire ? `&stagiaire=${newQuery.stagiaire}` : ''));
                             }} />;
                     }} />
             </div>

@@ -86,7 +86,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis?search=robert@domaine.com')
+        .get('/api/backoffice/avis?stagiaire=robert@domaine.com')
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 200);
@@ -106,7 +106,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis?search=unknown@domaine.com')
+        .get('/api/backoffice/avis?stagiaire=unknown@domaine.com')
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 200);
@@ -132,7 +132,29 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis?search=1234567890')
+        .get('/api/backoffice/avis?stagiaire=1234567890')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.equal(response.statusCode, 200);
+        assert.ok(response.body.avis);
+        assert.deepEqual(response.body.avis.length, 1);
+    });
+
+    it('can search all avis with reponse', async () => {
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment()),
+            insertIntoDatabase('comment', newComment({
+                answer: {
+                    text: 'Voici notre réponse',
+                    status: 'published',
+                },
+            })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?reponse=true')
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 200);
@@ -177,6 +199,43 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
             totalPages: 2
         });
     });
+
+    it('can publish reponse', async () => {
+
+        let app = await startServer();
+        let comment = newComment();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/publishReponse`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.answer.lastModerationAction);
+        assert.deepStrictEqual(response.body.answer.status, 'published');
+    });
+
+    it('can reject reponse', async () => {
+
+        let app = await startServer();
+        let comment = newComment();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/rejectReponse`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.answer.lastModerationAction);
+        assert.deepStrictEqual(response.body.answer.status, 'rejected');
+    });
+
 
     it('should return inventory in meta', async () => {
 

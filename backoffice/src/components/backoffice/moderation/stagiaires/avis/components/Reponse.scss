@@ -18,8 +18,24 @@
     .date {
       font-weight: $font-weight-400;
       font-size: 0.875rem;
-      line-height: 1rem;
       color: $color-grey-50;
+    }
+  }
+
+  .status {
+
+    font-size: 0.875rem;
+
+    &.published {
+      color: $color-green;
+    }
+
+    &.rejected {
+      color: $color-red;
+    }
+
+    &.toModerate {
+      color: $color-blue;
     }
   }
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { searchAvis } from '../../../../lib/avisService';
 import Toolbar from './Toolbar';
 import Loader from '../../common/Loader';
@@ -58,7 +57,7 @@ class StagiairesPanel extends React.Component {
     search = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let results = await searchAvis(this.props.query);
+                let results = await searchAvis(Object.assign({ reponse: true }, this.props.query));
                 this.setState({ results, loading: false }, () => {
                     if (options.goToTop) {
                         window.scrollTo(0, 0);
@@ -70,7 +69,7 @@ class StagiairesPanel extends React.Component {
     };
 
     render() {
-        let { filter, search } = this.props.query;
+        let { filter, stagiaire } = this.props.query;
 
         return (
             <Panel
@@ -86,7 +85,7 @@ class StagiairesPanel extends React.Component {
                 toolbar={
                     <Toolbar
                         filter={filter}
-                        search={search}
+                        stagiaire={stagiaire}
                         inventory={this.state.results.meta.inventory}
                         onChange={this.props.onNewQuery}
                     />
@@ -109,7 +108,7 @@ class StagiairesPanel extends React.Component {
                                                     avis={avis}
                                                     options={{
                                                         showStatus: ['all', 'rejected'].includes(filter),
-                                                        showReponse: false,
+                                                        showReponse: true,
                                                     }}
                                                     onChange={(avis, options = {}) => {
                                                         let { message } = options;
@@ -141,4 +140,4 @@ class StagiairesPanel extends React.Component {
     }
 }
 
-export default withRouter(StagiairesPanel);
+export default StagiairesPanel;
