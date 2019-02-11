@@ -51,7 +51,9 @@ class Commentaire extends Component {
         return (
             <div className="commentaire">
                 <h3>Commentaire <span className="description">(optionnel)</span></h3>
-                {this.getItems()}
+                <div className="frame">
+                    {this.getItems()}
+                </div>
             </div>
         );
     }

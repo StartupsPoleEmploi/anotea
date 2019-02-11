@@ -51,7 +51,9 @@ class App extends Component {
 
                 <Notes setValid={this.setValid}/>
 
-                <Commentaire onChange={this.updateCommentaire} />
+                { this.state.isValid &&
+                    <Commentaire onChange={this.updateCommentaire} />
+                }
 
                 <Autorisations />
 
