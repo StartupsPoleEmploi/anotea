@@ -46,7 +46,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
             ...(filter === 'reported' ? { reported: true } : {}),
             ...(filter === 'rejected' ? { rejected: true } : {}),
             ...(filter === 'published' ? { published: true } : {}),
-            ...(filter === 'moderated' ? { moderated: { $ne: true } } : {}),
+            ...(filter === 'toModerate' ? { moderated: { $ne: true } } : {}),
         })
         .sort(filter === 'all' ? { date: -1 } : { lastModerationAction: -1 })
         .skip((page || 0) * itemsPerPage)
