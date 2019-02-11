@@ -49,13 +49,12 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
     it('when filter!=all should return avis with commentaires)', async () => {
 
         let app = await startServer();
-        let avisWithoutComment = insertIntoDatabase('comment', newComment());
-        let [token] = await Promise.all([
+        let [token, avisWithoutComment] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment()),
             insertIntoDatabase('comment', newComment({
                 rejected: true,
             })),
-            avisWithoutComment,
         ]);
 
         delete avisWithoutComment.comment;
