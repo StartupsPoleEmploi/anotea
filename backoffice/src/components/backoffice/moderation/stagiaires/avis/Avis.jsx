@@ -66,16 +66,12 @@ export default class Avis extends React.Component {
                                     <Notes avis={avis} />
                                 </div>
 
-                                <div className="mt-2 d-none d-lg-block">
-
-                                </div>
                             </div>
-
                             {
                                 avis.comment &&
                                 <div className="col-1 pr-0">
                                     <div className="btn-group-vertical">
-                                        <EditButton onClick={this.toggleEdition} />
+                                        <EditButton avis={avis} onChange={onChange} onEdit={this.toggleEdition} />
                                         <PublishButton avis={avis} onChange={onChange} />
                                         <RejectButton avis={avis} onChange={onChange} />
                                     </div>

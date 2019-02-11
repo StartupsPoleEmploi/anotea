@@ -8,6 +8,7 @@ import Panel from '../../common/Panel';
 import Summary from './Summary';
 import { Pagination } from '../../common/Pagination';
 import Avis from './avis/Avis';
+import Message from '../../common/Message';
 
 class StagiairesPanel extends React.Component {
 
@@ -21,6 +22,7 @@ class StagiairesPanel extends React.Component {
         super(props);
         this.state = {
             loading: false,
+            message: null,
             results: {
                 avis: [],
                 meta: {
@@ -57,7 +59,12 @@ class StagiairesPanel extends React.Component {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
                 let results = await searchAvis(this.props.parameters);
-                this.setState({ results, loading: false }, () => resolve());
+                this.setState({ results, loading: false }, () => {
+                    if (options.goToTop) {
+                        window.scrollTo(0, 0);
+                    }
+                    return resolve();
+                });
             });
         });
     };
@@ -87,6 +94,9 @@ class StagiairesPanel extends React.Component {
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
                             <Summary parameters={parameters} results={this.state.results} />
+                            {this.state.message &&
+                            <Message message={this.state.message} onClose={() => this.setState({ message: null })} />
+                            }
                             {
                                 this.state.results.avis
                                 .map((avis, key) => {
@@ -95,10 +105,15 @@ class StagiairesPanel extends React.Component {
                                             <div className="col-sm-12">
                                                 <Avis
                                                     avis={avis}
-                                                    showStatus={parameters.filter === 'all'}
-                                                    onChange={() => {
-                                                        this.search({ silent: true });
-                                                    }} />
+                                                    showStatus={['all', 'rejected'].includes(parameters.filter)}
+                                                    onChange={(avis, options = {}) => {
+                                                        let { message } = options;
+                                                        if (message) {
+                                                            this.setState({ message });
+                                                        }
+                                                        this.search({ silent: true, goToTop: !!message });
+                                                    }}>
+                                                </Avis>
                                             </div>
                                         </div>
                                     );
@@ -112,8 +127,8 @@ class StagiairesPanel extends React.Component {
                                         onClick={page => {
                                             this.props.onChange({
                                                 filter: parameters.filter,
-                                                query: parameters.query,
                                                 page,
+                                                stagiaire: parameters.stagiaire,
                                             });
                                         }} />
                                 </div>

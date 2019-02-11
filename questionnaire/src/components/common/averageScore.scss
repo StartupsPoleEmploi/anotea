@@ -1,0 +1,20 @@
+.average-score {
+    display: inline;
+
+    .score {
+		color: #24303A;
+		line-height: 39px;
+		text-align: center;
+	    display: inline-block;
+        margin-top: 0px;
+        
+        .averageScore {
+            font-size: 32px;
+            font-weight: 900;
+        }
+    }
+
+    .tooltipBlock {
+        display: none;
+    }
+}

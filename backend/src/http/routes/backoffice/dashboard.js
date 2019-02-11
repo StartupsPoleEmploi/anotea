@@ -1,7 +1,8 @@
 const express = require('express');
 
-module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger }) => {
+module.exports = ({ db, middlewares, logger }) => {
 
+    let { createJWTAuthMiddleware, checkProfile } = middlewares;
     const checkAuth = createJWTAuthMiddleware('backoffice');
     const router = express.Router(); // eslint-disable-line new-cap
 
@@ -29,7 +30,12 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, logger }) => {
     });
 
     router.get('/backoffice/dashboard/organisations', checkAuth, checkProfile('moderateur'), (req, res) => {
-        db.collection('organismes').aggregate([
+        db.collection('accounts').aggregate([
+            {
+                $match: {
+                    profile: 'organisme'
+                }
+            },
             {
                 $group: {
                     _id: null,

@@ -11,7 +11,7 @@ execute(async ({ logger, db, configuration }) => {
 
     logger.info('Fix id for log in events');
 
-    let organismes = await db.collection('organismes').find().toArray();
+    let organismes = await db.collection('accounts').find({ profile: 'organisme' }).toArray();
 
     organismes.forEach(organisme => {
         let emails = [];

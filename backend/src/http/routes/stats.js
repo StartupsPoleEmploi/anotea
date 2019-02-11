@@ -33,12 +33,13 @@ module.exports = ({ db, configuration, logger, regions }) => {
     const router = express.Router(); // eslint-disable-line new-cap
     const { findRegionByCodeRegion } = regions;
 
-    const computeMailingStats = async codeRegion => {
+    const computeMailingStats = async (codeRegion, codeFinanceur) => {
 
         const docs = await db.collection('trainee').aggregate([
             {
                 $match: {
                     ...(codeRegion ? { codeRegion: codeRegion } : {}),
+                    ...(codeFinanceur ? { 'training.codeFinanceur': { $elemMatch: { $eq: codeFinanceur } } } : {})
                 }
             },
             {
@@ -116,50 +117,76 @@ module.exports = ({ db, configuration, logger, regions }) => {
         });
     };
 
-    const computeSessionStats = async (regionName, codeINSEE) => {
+    const computeSessionStats = async (regionName, codeRegions) => {
 
         let sessionsReconciliees = db.collection('sessionsReconciliees');
 
-        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis] = await Promise.all([
-            sessionsReconciliees.countDocuments({ region: codeINSEE }),
-            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 1 } }),
-            sessionsReconciliees.countDocuments({ 'region': codeINSEE, 'score.nb_avis': { $gte: 3 } })
+        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis, nbAvis, restituables] = await Promise.all([
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 3 } }),
+            db.collection('comment').countDocuments({ codeRegion: { $in: codeRegions }, step: { $gte: 2 } }),
+            db.collection('sessionsReconciliees').aggregate([
+                {
+                    $match: {
+                        code_region: { $in: codeRegions },
+                    }
+                },
+                {
+                    $unwind: '$avis'
+                },
+                {
+                    $group: {
+                        _id: '$avis._id',
+                    }
+                },
+                {
+                    $count: 'nbAvisRestituables'
+                }
+            ]).toArray()
         ]);
 
         return {
             region: regionName,
-            nbSessions,
-            nbSessionsAvecAuMoinsUnAvis,
-            pourcentageDeSessionsAvecAuMoinsUnAvis: Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions),
-            pourcentageDeSessionsAvecAuMoinsTroisAvis: Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbSessions)
+            sessionsAvecAuMoinsUnAvis: `${Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions)}%`,
+            sessionsAvecAuMoinsTroisAvis: `${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbSessions)}%`,
+            avisRestituables: restituables.length > 0 ? `${Math.ceil((restituables[0].nbAvisRestituables * 100) / nbAvis)}%` : 0,
+            meta: {
+                nbSessions,
+                nbSessionsAvecAuMoinsUnAvis,
+                nbAvis,
+            },
         };
     };
 
     const computeOrganismesStats = async (regionName, codeRegion) => {
 
-        let organismes = db.collection('organismes');
+        let organismes = db.collection('accounts');
 
         let [nbOrganimes, nbOrganismesAvecAvis, nbOrganismesActifs] = await Promise.all([
-            organismes.countDocuments({ 'codeRegion': codeRegion }),
-            organismes.countDocuments({ 'score.nb_avis': { $gte: 1 }, 'codeRegion': codeRegion }),
-            organismes.countDocuments({ 'passwordHash': { $ne: null }, 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'profile': 'organisme', 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'profile': 'organisme', 'score.nb_avis': { $gte: 1 }, 'codeRegion': codeRegion }),
+            organismes.countDocuments({ 'profile': 'organisme', 'passwordHash': { $ne: null }, 'codeRegion': codeRegion }),
         ]);
 
         return {
             region: regionName,
-            nbOrganimes,
-            nbOrganismesActifs,
-            nbOrganismesAvecAvis,
-            pourcentageOrganismesAvecAuMoinsUnAvis: Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes),
+            organismesAvecAuMoinsUnAvis: `${Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes)}%`,
+            meta: {
+                nbOrganimes,
+                nbOrganismesActifs,
+                nbOrganismesAvecAvis,
+            }
         };
     };
 
     router.get('/stats/sessions.:format', tryAndCatch(async (req, res) => {
 
         let sessions = await Promise.all(configuration.app.active_regions.map(async ar => {
-            let { nom, codeINSEE } = await findRegionByCodeRegion(ar.code_region);
-            return computeSessionStats(nom, codeINSEE);
+            return computeSessionStats(ar.name, [ar.code_region]);
         }));
+
+        sessions.push(await computeSessionStats('Toutes', configuration.app.active_regions.map(ar => ar.code_region)));
 
         res.json(sessions);
     }));
@@ -176,7 +203,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
     router.get('/stats/mailing.:format', async (req, res) => {
 
-        let data = await computeMailingStats(req.query.codeRegion);
+        let data = await computeMailingStats(req.query.codeRegion, req.query.codeFinanceur);
         if (req.params.format === 'json' || !req.params.format) {
             res.send(data);
         } else if (req.params.format === 'csv') {

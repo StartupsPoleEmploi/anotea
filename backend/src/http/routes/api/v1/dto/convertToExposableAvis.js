@@ -32,6 +32,7 @@ module.exports = comment => {
             global: rates.global,
         },
         formation: {
+            numero: training.idFormation,
             intitule: training.title,
             domaine_formation: {
                 formacodes: [comment.formacode],

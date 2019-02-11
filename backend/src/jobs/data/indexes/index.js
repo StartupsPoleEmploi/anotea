@@ -4,7 +4,7 @@
 const cli = require('commander');
 const { execute } = require('../../job-utils');
 const dropIndexes = require('./dropIndexes');
-const allIndexes = require('./allIndexes');
+const createIndexes = require('./createIndexes');
 const findUnusedIndexes = require('./findUnusedIndexes');
 
 cli.description('Manage indexes')
@@ -24,8 +24,5 @@ execute(async ({ db, logger }) => {
     }
 
     logger.info('Creating indexes....');
-    return Promise.all(Object.keys(allIndexes).map(key => {
-        logger.debug(`Creating indexes for collection ${key}....`);
-        return allIndexes[key](db);
-    }));
+    return createIndexes(db);
 });

@@ -41,6 +41,7 @@
     "express": "4.16.4",
     "express-rate-limit": "3.3.2",
     "express-session": "1.15.6",
+    "faker": "4.1.0",
     "iconv-lite": "0.4.24",
     "joi": "14.3.0",
     "jsonwebtoken": "8.4.0",

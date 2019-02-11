@@ -2,10 +2,12 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
+const getOrganismeEmail = require('../../../common/utils/getOrganismeEmail');
 
-module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
+module.exports = ({ db, mailing, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
+    let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
 
@@ -24,9 +26,9 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
             throw Boom.badRequest('Bad request');
         }
 
-        let organisme = await db.collection('organismes').findOne({ _id: id });
+        let organisme = await db.collection('accounts').findOne({ _id: id });
         if (organisme) {
-            await db.collection('organismes').updateOne({ _id: id }, { $set: { editedCourriel: parameters.email } });
+            await db.collection('accounts').updateOne({ _id: id }, { $set: { editedCourriel: parameters.email } });
             saveEvent(id, 'editEmail', {
                 app: 'moderation',
                 profile: 'moderateur',
@@ -46,9 +48,9 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
             throw Boom.badRequest('Bad request');
         }
 
-        let organisme = await db.collection('organismes').findOne({ _id: id });
+        let organisme = await db.collection('accounts').findOne({ _id: id });
         if (organisme) {
-            await db.collection('organismes').updateOne({ _id: id }, { $unset: { editedCourriel: '' } });
+            await db.collection('accounts').updateOne({ _id: id }, { $unset: { editedCourriel: '' } });
             saveEvent(id, 'deleteEmail', {
                 app: 'moderation',
                 profile: 'moderateur',
@@ -64,16 +66,14 @@ module.exports = ({ db, mailing, createJWTAuthMiddleware, checkProfile }) => {
     router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
-        const organismes = db.collection('organismes');
-
         if (isNaN(id)) {
             throw Boom.badRequest('Bad request');
         }
 
-        let organisme = await organismes.findOne({ _id: id });
+        let organisme = await db.collection('accounts').findOne({ _id: id, profile: 'organisme' });
         if (organisme) {
             if (organisme.passwordHash) {
-                await sendForgottenPasswordEmail(organisme);
+                await sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), organisme.codeRegion);
             } else {
                 await sendOrganisationAccountEmail(organisme, { ip: getRemoteAddress(req) });
             }

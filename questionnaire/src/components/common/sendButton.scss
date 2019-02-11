@@ -1,0 +1,26 @@
+.send-button {
+
+    text-align: center;
+    width: 514px;
+
+    button {
+        height: 43px;
+        width: 128px;
+        border-radius: 5px;
+        background-color: #EBEDF6;
+        border: 0px;
+        margin-top: 33px;
+	    color: #384EAA;
+	    font-size: 16px;
+	    font-weight: bold;
+	    letter-spacing: 2px;
+        line-height: 19px;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+
+    button[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}

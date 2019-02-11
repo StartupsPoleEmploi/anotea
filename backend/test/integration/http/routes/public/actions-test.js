@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
@@ -6,24 +5,6 @@ const ObjectID = require('mongodb').ObjectID;
 const { newComment, randomize, newFormation, newAction } = require('../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
-
-    const buildNewAction = (id, data) => {
-
-        let [numeroFormation, numeroAction] = id.split('|');
-
-        return newAction(_.merge({
-            _id: id,
-            numero: numeroAction,
-            region: '11',
-            meta: {
-                source: {
-                    type: 'intercarif',
-                    numero_formation: numeroFormation,
-                    numero_action: numeroAction,
-                }
-            }
-        }, data));
-    };
 
     it('can return action by id', async () => {
 
@@ -34,7 +15,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let commentId = new ObjectID();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('actionsReconciliees', buildNewAction(actionId, {
+            insertIntoDatabase('actionsReconciliees', newAction({
+                _id: actionId,
+                numero: '14_SE_0000109418',
+                region: '11',
                 avis: [
                     newComment({
                         _id: commentId,
@@ -109,6 +93,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 },
                 formation: {
                     intitule: 'Développeur',
+                    numero: '14_AF_0000010729',
                     domaine_formation: {
                         formacodes: [
                             '22252'
@@ -164,8 +149,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109418')),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109417')),
+            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
+            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109417' })),
         ]);
 
         let response = await request(app).get('/api/v1/actions');
@@ -183,9 +168,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let secondActionId = '14_AF_0000010729|14_SE_0000109417';
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('actionsReconciliees', buildNewAction(firstActionId)),
-            insertIntoDatabase('actionsReconciliees', buildNewAction(secondActionId)),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109416')),
+            insertIntoDatabase('actionsReconciliees', newAction({ _id: firstActionId })),
+            insertIntoDatabase('actionsReconciliees', newAction({ _id: secondActionId })),
+            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109416' })),
         ]);
 
         let response = await request(app).get(`/api/v1/actions?id=${firstActionId},${secondActionId}`);
@@ -201,10 +186,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109418', {
+            insertIntoDatabase('actionsReconciliees', newAction({
+                _id: '14_AF_0000010729|14_SE_0000109418',
                 region: '11'
             })),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109419', {
+            insertIntoDatabase('actionsReconciliees', newAction({
+                _id: '14_AF_0000010729|14_SE_0000109419',
                 region: '24'
             })),
         ]);
@@ -221,10 +208,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109418', {
+            insertIntoDatabase('actionsReconciliees', newAction({
+                _id: '14_AF_0000010729|14_SE_0000109418',
                 numero: '14_SE_0000109418'
             })),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109419', {
+            insertIntoDatabase('actionsReconciliees', newAction({
+                _id: '14_AF_0000010729|14_SE_0000109419',
                 numero: '14_SE_0000109419'
             })),
         ]);
@@ -241,12 +230,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109418', {
+            insertIntoDatabase('actionsReconciliees', newAction({
+                _id: '14_AF_0000010729|14_SE_0000109418',
                 score: {
                     nb_avis: 1,
                 }
             })),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109419', {
+            insertIntoDatabase('actionsReconciliees', newAction({
+                _id: '14_AF_0000010729|14_SE_0000109419',
                 score: {
                     nb_avis: 0,
                 },
@@ -265,8 +256,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109418')),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109419')),
+            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
+            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109419' })),
         ]);
 
         let response = await request(app).get(`/api/v1/actions?page=0&items_par_page=1`);
@@ -290,7 +281,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109418')),
+            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
         ]);
 
         let response = await request(app).get('/api/v1/actions?fields=score');
@@ -305,7 +296,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('actionsReconciliees', buildNewAction('14_AF_0000010729|14_SE_0000109418')),
+            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
         ]);
 
         let response = await request(app).get('/api/v1/actions?fields=-avis');

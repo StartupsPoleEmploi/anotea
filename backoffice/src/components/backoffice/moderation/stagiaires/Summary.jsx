@@ -11,8 +11,8 @@ export default class Summary extends React.Component {
     };
 
     render() {
-        let { query, filter } = this.props.parameters;
-        let { pagination } = this.props.results.meta;
+        let { filter } = this.props.parameters;
+        let { pagination, stagiaire } = this.props.results.meta;
         let suffixMapper = {
             'all': '',
             'published': 'publiés',
@@ -21,7 +21,6 @@ export default class Summary extends React.Component {
             'toModerate': 'à modérer',
         };
 
-
         if (pagination.totalItems === 0) {
             return (<p className="Description">Pas d&apos;avis pour le moment</p>);
         }
@@ -29,7 +28,10 @@ export default class Summary extends React.Component {
         return (
             <p className="Description">
                 <span className="name">Liste des avis</span>
-                <span className="suffix"> {query ? ` pour la recherche "${query}"` : suffixMapper[filter]}</span>
+                <span className="filter"> {stagiaire ? stagiaire.email : suffixMapper[filter]}</span>
+                {stagiaire &&
+                <div className="identifiant">Identifiant: {stagiaire.dnIndividuNational}</div>
+                }
                 <span className="status d-none d-sm-block">
                     <PaginationStatus pagination={pagination} />
                 </span>

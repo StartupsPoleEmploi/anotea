@@ -40,6 +40,11 @@ module.exports = db => {
                                     { $eq: ['$$advice.published', true] },
                                     { $eq: ['$$advice.step', 3] }
                                 ]
+                            }, {
+                                $and: [
+                                    [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 0, 1],
+                                    { $eq: ['$$advice.step', 3] }
+                                ]
                             }, { $eq: ['$$advice.step', 2] }]
                         }
                     }
@@ -49,8 +54,8 @@ module.exports = db => {
                         as: 'advice',
                         cond: {
                             $and: [
-                                { $eq: ['$$advice.published', true] },
-                                { $eq: ['$$advice.step', 3] }
+                                [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 1, 0],
+                                { $eq: ['$$advice.published', true] }
                             ]
                         }
                     }
@@ -60,11 +65,21 @@ module.exports = db => {
                         input: '$advices',
                         as: 'advice',
                         cond: {
-                            $and: [
-                                { $eq: ['$$advice.published', true] },
-                                { $eq: ['$$advice.step', 3] },
-                                { $eq: ['$$advice.qualification', 'positif'] },
-                            ]
+                            $or: [
+                                {
+                                    $and: [
+                                        { $eq: ['$$advice.published', true] },
+                                        { $eq: ['$$advice.step', 3] },
+                                        { $eq: ['$$advice.qualification', 'positif'] },
+                                    ]
+                                },
+                                {
+                                    $and: [
+                                        { $eq: ['$$advice.published', true] },
+                                        { $eq: ['$$advice.step', 3] },
+                                        { $eq: ['$$advice.qualification', 'neutre'] },
+                                    ]
+                                }]
                         }
                     }
                 },

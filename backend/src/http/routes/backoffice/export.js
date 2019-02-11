@@ -6,10 +6,11 @@ const { tryAndCatch } = require('../routes-utils');
 const { encodeStream } = require('iconv-lite');
 const { transformObject } = require('../../../common/utils/stream-utils');
 
-module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
+module.exports = ({ db, middlewares, logger }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const POLE_EMPLOI = '4';
+    let { createJWTAuthMiddleware } = middlewares;
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
     // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
@@ -46,7 +47,7 @@ module.exports = ({ db, createJWTAuthMiddleware, logger }) => {
 
         if (req.user.profile === 'organisme') {
             query['training.organisation.siret'] = req.user.siret;
-        } else if (req.user.profile === 'financer') {
+        } else if (req.user.profile === 'financeur') {
             query['codeRegion'] = req.user.codeRegion;
             if (req.user.codeFinanceur !== POLE_EMPLOI) {
                 query['training.codeFinanceur'] = { '$elemMatch': { '$eq': req.user.codeFinanceur } };

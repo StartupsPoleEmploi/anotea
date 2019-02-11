@@ -1,16 +1,20 @@
 const express = require('express');
 const { tryAndCatch } = require('../routes-utils');
 
-module.exports = ({ db, createJWTAuthMiddleware, checkProfile }) => {
+module.exports = ({ db, middlewares }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
+    let { createJWTAuthMiddleware, checkProfile } = middlewares;
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
-    router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         let codeFinanceur = req.query.codeFinanceur;
 
-        let match = { '_id.codeRegion': req.params.idregion, '_id.year': parseInt(req.params.year) };
+        let match = { '_id.codeRegion': req.params.idregion };
+        if (req.params.year !== 'TOTAL') {
+            match = Object.assign(match, { '_id.year': parseInt(req.params.year) });
+        }
         let mailStatsCollection;
         let sessionsStatsCollection;
         if (codeFinanceur) {
@@ -88,7 +92,10 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile }) => {
 
         let codeFinanceur = req.query.codeFinanceur;
 
-        let match = { '_id.codeRegion': req.params.idregion, '_id.year': parseInt(req.params.year) };
+        let match = { '_id.codeRegion': req.params.idregion };
+        if (req.params.year !== 'TOTAL') {
+            match = Object.assign(match, { '_id.year': parseInt(req.params.year) });
+        }
         let mailStatsCollection;
         let sessionsStatsCollection;
         if (codeFinanceur) {

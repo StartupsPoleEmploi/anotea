@@ -48,28 +48,38 @@
 
         .nav {
           background: $color-white;
-          border-radius: 6px;
           font-weight: $font-weight-400;
+          border-radius: 6px;
 
           .nav-item {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
             border-right: 1px solid $color-grey-5;
 
+            &.active {
+              border: 1px solid $color-grey-25;
+              color: $color-black;
+              background-color: $color-grey-5;
+              font-weight: $font-weight-700;
+            }
+
+            &:hover, &:focus {
+              cursor: pointer;
+              color: $color-black;
+              background-color: $color-grey-5;
+              font-weight: $font-weight-700;
+              transition: background-color 0.2s linear;
+            }
+
             &:first-child {
-              .nav-link {
-                &.active, &:hover, &:focus {
-                  border-bottom-left-radius: 6px;
-                  border-top-left-radius: 6px;
-                }
-              }
+              border-bottom-left-radius: 6px;
+              border-top-left-radius: 6px;
             }
 
             &:last-child {
-              .nav-link {
-                &.active, &:hover, &:focus {
-                  border-bottom-right-radius: 6px;
-                  border-top-right-radius: 6px;
-                }
-              }
+              border-right: unset;
+              border-bottom-right-radius: 6px;
+              border-top-right-radius: 6px;
             }
 
             &.disabled {
@@ -87,50 +97,59 @@
             .nav-link {
               color: $color-grey-50;
               font-size: 1rem;
+              padding: 0.5rem 1rem 0.4rem 1rem;
 
-              &.active {
-                color: $color-black;
-                background-color: $color-grey-5;
-                font-weight: $font-weight-700;
-              }
-
-              &:hover, &:focus {
-                cursor: pointer;
-                color: $color-black;
-                background-color: $color-grey-5;
-                font-weight: $font-weight-700;
-                transition: background-color 0.2s linear;
-              }
             }
 
-            .nav-search {
+            &.nav-search {
 
-              .input-group-text {
-                font-size: 1.2rem;
-                background-color: $color-white;
-                border: none;
-                border-radius: unset;
-              }
+              background-color: $color-grey-5;
+              border-bottom-right-radius: 6px;
+              border-top-right-radius: 6px;
 
-              input {
-                border: none;
-                box-shadow: none;
+              .input-group {
+                opacity: 0.6;
+                background-color: $color-grey-5;
+
+                &.active {
+                  opacity: 1;
+                }
+
+                .input-group-text {
+                  font-size: 1.2rem;
+                  border: none;
+                  border-radius: unset;
+                  background-color: $color-grey-5;
+                }
+
+                input {
+                  background-color: $color-grey-5;
+                  border: none;
+                  box-shadow: none;
+                }
+
+                .cancel {
+                  margin-top: 10px;
+                  margin-right: 10px;
+                }
               }
 
               button {
-                background-color: $color-grey-5;
-                color: $color-black;
-                font-weight: $font-weight-700;
                 border: none;
                 box-shadow: none;
                 border-top-left-radius: unset;
                 border-bottom-left-radius: unset;
-                padding: 0.5rem;
-              }
+                padding-bottom: 0.5rem;
+                background-color: $color-grey-5;
+                color: $color-black;
+                font-weight: $font-weight-700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                opacity: 0.6;
 
-              .cancel {
-                margin-top: 10px;
-                margin-right: 10px;
+                &.active {
+                  opacity: 1;
+                }
               }
             }
           }

@@ -15,10 +15,11 @@ class NotificationMailer {
         this.logger.info('Searching organismes with at least 5 non read comments...');
         let delay = this.configuration.smtp.organisme.notificationsRelaunchDelay;
 
-        return this.db.collection('organismes')
+        return this.db.collection('accounts')
         .aggregate([
             {
                 $match: {
+                    'profile': 'organisme',
                     'passwordHash': { $ne: null },
                     ...(codeRegions ? { 'codeRegion': { $in: codeRegions } } : {}),
                     '$or': [
@@ -77,7 +78,7 @@ class NotificationMailer {
     }
 
     _markEmailAsSent(organisme) {
-        return this.db.collection('organismes').updateOne({ _id: organisme._id }, {
+        return this.db.collection('accounts').updateOne({ _id: organisme._id }, {
             $set: {
                 newCommentsNotificationEmailSentDate: new Date(),
             }

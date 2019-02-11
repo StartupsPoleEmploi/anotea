@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { maskTitle, unmaskTitle } from '../../../../../../lib/avisService';
+import { maskTitle } from '../../../../../../lib/avisService';
 import './Titre.scss';
 
 export default class Titre extends React.Component {
@@ -14,7 +14,7 @@ export default class Titre extends React.Component {
 
     toggle = async () => {
         let avis = this.props.avis;
-        let updated = await (avis.titleMasked ? unmaskTitle(avis._id) : maskTitle(avis._id));
+        let updated = await maskTitle(avis._id, !avis.titleMasked);
         this.props.onChange(updated);
     };
 

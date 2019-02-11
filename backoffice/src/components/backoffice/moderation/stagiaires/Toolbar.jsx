@@ -13,22 +13,22 @@ export default class Toolbar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchInputValue: this.props.parameters.query || '',
+            searchInputValue: this.props.parameters.stagiaire || '',
         };
     }
 
     createTab = (filter, label, options = {}) => {
         let nbElements = _.get(this.props.inventory, filter);
         let searchMode = !!this.state.searchInputValue;
-        let pastille = options.showPastille && !searchMode && nbElements > 0 ?
+        let pastille = options.showPastille && nbElements > 0 ?
             <span className="badge badge-light pastille">{nbElements}</span> :
             <span />;
 
         let isActive = !searchMode && this.props.parameters.filter === filter;
         return (
-            <li className={`nav-item ${searchMode && 'disabled'}`}>
+            <li className={`nav-item ${searchMode && 'disabled'} ${isActive ? 'active' : ''}`}>
                 <a
-                    className={`nav-link ${isActive ? 'active' : ''}`}
+                    className={`nav-link`}
                     onClick={() => this.props.onChange({ filter })}>
                     <span className="mr-1">{label} {pastille}</span>
                 </a>
@@ -38,11 +38,11 @@ export default class Toolbar extends React.Component {
 
     createSearchInput = () => {
 
-        let submit = () => this.props.onChange({ filter: 'all', query: this.state.searchInputValue });
+        let submit = () => this.props.onChange({ filter: 'all', stagiaire: this.state.searchInputValue });
 
         return (
-            <div className="d-flex align-items-center nav-search">
-                <div className="input-group">
+            <div className="d-flex align-items-center">
+                <div className={`input-group ${this.state.searchInputValue ? 'active' : ''}`}>
                     <div className="input-group-prepend">
                         <div className="input-group-text"><i className="fas fa-search" /></div>
                     </div>
@@ -50,8 +50,8 @@ export default class Toolbar extends React.Component {
                     <input
                         className="form-control"
                         type="search"
-                        placeholder="..."
-                        aria-label="Rechercher un avis..."
+                        placeholder="Rechercher un stagiaire..."
+                        aria-label="Rechercher un stagiaire..."
                         value={this.state.searchInputValue}
                         onKeyPress={e => {
                             if (e.key === 'Enter') {
@@ -70,7 +70,8 @@ export default class Toolbar extends React.Component {
                     }
 
                 </div>
-                <button className="btn" type="search" onClick={() => submit()}>
+                <button className={`btn ${this.state.searchInputValue ? 'active' : ''}`} type="search"
+                        onClick={() => submit()}>
                     Rechercher
                 </button>
             </div>
@@ -85,7 +86,7 @@ export default class Toolbar extends React.Component {
                 {this.createTab('rejected', 'Rejetés')}
                 {this.createTab('reported', 'Signalés', { showPastille: true })}
                 {this.createTab('all', 'Tous')}
-                <li className="nav-item">{this.createSearchInput()}</li>
+                <li className="nav-item nav-search">{this.createSearchInput()}</li>
             </nav>
         );
     }

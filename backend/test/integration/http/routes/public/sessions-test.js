@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
@@ -6,25 +5,6 @@ const ObjectID = require('mongodb').ObjectID;
 const { newComment, randomize, newFormation, newSession } = require('../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
-
-    const buildNewSession = (id, data) => {
-
-        let [numeroFormation, numeroAction, numeroSession] = id.split('|');
-
-        return newSession(_.merge({
-            _id: id,
-            numero: numeroSession,
-            region: '11',
-            meta: {
-                source: {
-                    type: 'intercarif',
-                    numero_formation: numeroFormation,
-                    numero_action: numeroAction,
-                    numero_session: numeroSession,
-                }
-            }
-        }, data));
-    };
 
     it('can return session by id', async () => {
 
@@ -35,7 +15,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let commentId = new ObjectID();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession(sessionId, {
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: sessionId,
+                numero: 'SE_0000109418',
+                region: '11',
                 avis: [
                     newComment({
                         _id: commentId,
@@ -83,8 +66,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 reconciliation: {
                     certifinfos: ['55518'],
                     formacodes: ['31801'],
-                    lieu_de_formation: '49000',
-                    organisme_formateur: '11111111111111',
+                    lieu_de_formation: '75019',
+                    organisme_formateur: '22222222222222',
                 },
                 source: {
                     numero_formation: '14_AF_0000010729',
@@ -110,6 +93,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     global: 2
                 },
                 formation: {
+                    numero: '14_AF_0000010729',
                     intitule: 'Développeur',
                     domaine_formation: {
                         formacodes: [
@@ -153,7 +137,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let sessionId = '14_AF_0000010729|14_SE_0000109418|SE_0000109418';
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession(sessionId, {
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: sessionId,
+                numero: 'SE_0000109418',
+                region: '11',
                 avis: [
                     newComment({
                         rejected: true,
@@ -192,8 +179,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109411')),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109412')),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411' })),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109412' })),
         ]);
 
         let response = await request(app).get('/api/v1/sessions');
@@ -211,9 +198,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let secondSessionId = '14_AF_0000010729|14_SE_0000109418|SE_0000109412';
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession(firstSessionId)),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession(secondSessionId)),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_000010456')),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: firstSessionId })),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: secondSessionId })),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_000010456' })),
         ]);
 
         let response = await request(app).get(`/api/v1/sessions?id=${firstSessionId},${secondSessionId}`);
@@ -229,10 +216,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109411', {
-                region: '11'
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411',
+                region: '11',
             })),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109413', {
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109413',
                 region: '24'
             })),
         ]);
@@ -249,10 +238,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109411', {
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411',
                 numero: 'SE_XXXXX1'
             })),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109413', {
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109413',
                 numero: 'SE_XXXXX3'
             })),
         ]);
@@ -269,12 +260,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109411', {
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411',
                 score: {
                     nb_avis: 1,
                 },
             })),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109413', {
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109413',
                 score: {
                     nb_avis: 0,
                 },
@@ -293,8 +286,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109411')),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_0000109412')),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411' })),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109412' })),
         ]);
 
         let response = await request(app).get(`/api/v1/sessions?page=0&items_par_page=1`);
@@ -341,13 +334,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('can search though all sessions with projection', async () => {
+    it('can search though all sessions with projection (inclusion)', async () => {
 
         let app = await startServer();
 
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_000010456')),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_000010456' })),
         ]);
 
         let response = await request(app).get('/api/v1/sessions?fields=score');
@@ -356,13 +349,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepEqual(Object.keys(response.body.sessions[0]), ['id', 'score']);
     });
 
-    it('can search though all sessions with -projection', async () => {
+    it('can search though all sessions with projection (exclusion)', async () => {
 
         let app = await startServer();
 
         await Promise.all([
             insertIntoDatabase('intercarif', newFormation()),
-            insertIntoDatabase('sessionsReconciliees', buildNewSession('14_AF_0000010729|14_SE_0000109418|SE_000010456')),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_000010456' })),
         ]);
 
         let response = await request(app).get('/api/v1/sessions?fields=-avis');

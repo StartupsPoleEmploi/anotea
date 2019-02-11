@@ -34,6 +34,10 @@ export default class Header extends React.Component {
                             </nav>
                         </div>
                         <div className="col-md-3 text-right pr-5">
+                            <NavLink to="/mon-compte" className="account-link"
+                                activeClassName="active">
+                                <span className="fas fa-cog" />
+                            </NavLink>
                             <button onClick={this.props.onLogout} className="logout btn btn-outline-light">
                                 <span>SE DECONNECTER</span>
                             </button>

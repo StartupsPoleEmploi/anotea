@@ -17,7 +17,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         let action = new SendAction(configuration);
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: id,
                 SIRET: id,
                 courriel: 'new@organisme.fr',
@@ -29,7 +29,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 mailSentDate: null,
                 sources: ['intercarif'],
             })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111,
                 SIRET: 11111111111,
                 courriel: 'not-sent@organisme.fr',
@@ -55,7 +55,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let db = await getTestDatabase();
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111,
                 SIRET: 11111111111,
                 courriel: 'not-sent@organisme.fr',

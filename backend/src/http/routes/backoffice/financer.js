@@ -2,13 +2,14 @@ const express = require('express');
 const { tryAndCatch } = require('../routes-utils');
 const Boom = require('boom');
 
-module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) => {
+module.exports = ({ db, middlewares, configuration }) => {
 
     const POLE_EMPLOI = '4';
     let pagination = configuration.api.pagination;
     let router = express.Router(); // eslint-disable-line new-cap
+    let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let allProfiles = checkProfile('moderateur', 'financer', 'organisme');
+    let allProfiles = checkProfile('moderateur', 'financeur', 'organisme');
 
     const checkCodeRegion = req => {
         if (req.params.idregion !== req.user.codeRegion) {
@@ -71,7 +72,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(organisations);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/advices', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/advices', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
@@ -140,7 +141,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
@@ -210,7 +211,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
@@ -291,7 +292,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/places', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/places', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
@@ -314,7 +315,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(places);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
@@ -341,7 +342,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(trainings);
     }));
 
-    router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         let filter = '';
 
@@ -393,7 +394,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
 
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/avis/inventory', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
@@ -420,7 +421,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(inventory);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_lieu/:siren/advices/inventory', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
@@ -456,7 +457,7 @@ module.exports = ({ db, createJWTAuthMiddleware, checkProfile, configuration }) 
         res.status(200).send(inventory);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/inventory', checkAuth, checkProfile('financer'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/inventory', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 

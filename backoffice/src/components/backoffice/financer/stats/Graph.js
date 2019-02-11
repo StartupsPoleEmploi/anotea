@@ -51,6 +51,10 @@ export default class Graph extends React.Component {
 
     loadData = (codeRegion, year, codeFinanceur, type) => {
         getGraphData(codeRegion, year, codeFinanceur === '4' ? 'all' : codeFinanceur).then(graphData => {
+   
+            let accumulator = graphData.reduce((accumulator, item) => {
+                return accumulator + item.count;
+            }, 0);
 
             const allData = [
                 Object.assign({ label: 'Nombre de mails envoyés', data: graphData.map(item => item.count) }, options),
@@ -77,7 +81,7 @@ export default class Graph extends React.Component {
                         allData[type]
                     ]
                 },
-                isEmpty: graphData.length > 0
+                isEmpty: graphData.length === 0 || accumulator === 0
             });
         });
     }
@@ -100,7 +104,7 @@ export default class Graph extends React.Component {
     render() {
         return (
             <div>
-                { this.state.isEmpty &&
+                { !this.state.isEmpty &&
                     <Line data={this.state.graphData} options={chartOptions} />
                 }
             </div>

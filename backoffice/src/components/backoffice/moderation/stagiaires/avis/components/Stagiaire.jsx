@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import PrettyDate from '../../../../common/PrettyDate';
-import { maskPseudo, unmaskPseudo } from '../../../../../../lib/avisService';
+import { maskPseudo } from '../../../../../../lib/avisService';
 import './Stagiaire.scss';
 
 const Stars = ({ note }) => {
@@ -34,7 +34,7 @@ const Status = ({ avis }) => {
         return (
             <span className="status rejected">
                 (<span>Rejeté le </span>
-                <PrettyDate date={new Date(avis.lastModerationAction)} />)
+                <PrettyDate date={new Date(avis.lastModerationAction)} /> pour « <b>{avis.rejectReason}</b> »)
             </span>
         );
     } else if (!avis.moderated) {
@@ -56,7 +56,7 @@ export default class Stagiaire extends React.Component {
 
     toggle = async () => {
         let avis = this.props.avis;
-        let updated = await (avis.pseudoMasked ? unmaskPseudo(avis._id) : maskPseudo(avis._id));
+        let updated = await maskPseudo(avis._id, !avis.pseudoMasked);
         this.props.onChange(updated);
     };
 

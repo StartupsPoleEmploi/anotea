@@ -17,7 +17,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         let action = new ResendAction(configuration);
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
@@ -28,7 +28,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 mailSentDate: moment().subtract('40', 'days').toDate(),
                 sources: ['intercarif'],
             })),
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111,
                 SIRET: 11111111111,
                 courriel: 'not-sent@organisme.fr',
@@ -54,7 +54,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         let action = new ResendAction(configuration);
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111,
                 SIRET: 11111111111,
                 courriel: 'not-sent@organisme.fr',
@@ -79,7 +79,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         let action = new ResendAction(configuration);
         await Promise.all([
-            insertIntoDatabase('organismes', newOrganismeAccount({
+            insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 31705038300064,
                 SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',

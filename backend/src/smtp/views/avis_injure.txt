@@ -1,0 +1,8 @@
+Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
+
+Nous n’avons pas pu prendre en compte votre avis car il comporte des propos à caractère injurieux ou diffamatoire, seules les notes seront publiées sur une formation similaire.
+
+Nous vous remercions de votre compréhension,
+L’Equipe Anotéa
+
+<%- include('./legal/mentions.txt'); %>

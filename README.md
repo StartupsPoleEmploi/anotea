@@ -47,6 +47,17 @@ Cette commande va construire et démarrer plusieurs containers :
 
 L'application est accessible à l'url `http://localhost`
 
+## Jeu de données
+
+Il est possible de créer un jeu de données en local au moyen de la commande suivante:
+
+```
+node src/jobs/data/dataset
+```
+
+Ce script va générer des comptes et des avis.
+Il est ensuite possible de se connecter à l'url `http://localhost` avec le login moderateur@pole-emploi.fr et le mot de passe  password
+
 ### Configurer un environnement
 
 #### Surcharge

@@ -10,7 +10,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
     it('can login as moderator', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('moderator', newModerateurAccount());
+        await insertIntoDatabase('accounts', newModerateurAccount());
 
         let response = await request(app)
         .post('/api/backoffice/login')
@@ -35,7 +35,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
     it('can login as organisme', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('organismes', newOrganismeAccount({
+        await insertIntoDatabase('accounts', newOrganismeAccount({
             meta: {
                 siretAsString: '6080274100045'
             }
@@ -66,7 +66,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
     it('can login as financer', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('financer', newFinancerAccount({
+        await insertIntoDatabase('accounts', newFinancerAccount({
             courriel: 'contact@financer.fr',
         }));
 
@@ -84,7 +84,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.ok(decodedToken.iat);
         assert.ok(decodedToken.exp);
         assert.deepEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
-            profile: 'financer',
+            profile: 'financeur',
             codeRegion: '11',
             codeFinanceur: '2',
             sub: 'contact@financer.fr'
@@ -94,9 +94,9 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
     it('can login with a legacy password', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('moderator', newModerateurAccount({
+        await insertIntoDatabase('accounts', newModerateurAccount({
             //old sha256 password hash + bcrypt
-            password: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG'
+            passwordHash: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG'
         }));
 
         let response = await request(app)
@@ -111,12 +111,12 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let app = await startServer();
         let account = newModerateurAccount({
             //old sha256 password hash + bcrypt
-            password: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG',
+            passwordHash: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG',
             meta: {
                 rehashed: false,
             },
         });
-        await insertIntoDatabase('moderator', account);
+        await insertIntoDatabase('accounts', account);
 
         let response = await request(app)
         .post('/api/backoffice/login')
@@ -124,7 +124,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.equal(response.statusCode, 200);
 
         let db = await getTestDatabase();
-        let res = await db.collection('moderator').findOne({ _id: account._id });
+        let res = await db.collection('accounts').findOne({ _id: account._id });
         assert.ok(res.meta);
         assert.ok(res.meta.rehashed);
 
@@ -139,7 +139,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
     it('should reject login when credentials are invalid', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('moderator', newModerateurAccount());
+        await insertIntoDatabase('accounts', newModerateurAccount());
 
         let response = await request(app)
         .post('/api/backoffice/login')

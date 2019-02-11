@@ -66,11 +66,8 @@ module.exports = components => {
         }
     }));
 
-    let { createHMACAuthMiddleware, createJWTAuthMiddleware, checkProfile } = middlewares(auth, logger, configuration);
     let httpComponents = Object.assign({}, components, {
-        createHMACAuthMiddleware,
-        createJWTAuthMiddleware,
-        checkProfile
+        middlewares: middlewares(auth, logger, configuration),
     });
 
     //Public routes
@@ -90,7 +87,7 @@ module.exports = components => {
     //Routes used by backoffice applications
     app.use('/api', require('./routes/backoffice/login')(httpComponents));
     app.use('/api', require('./routes/backoffice/forgottenPassword')(httpComponents));
-    app.use('/api', require('./routes/backoffice/avis-moderation')(httpComponents));
+    app.use('/api', require('./routes/backoffice/avis-moderateur')(httpComponents));
     app.use('/api', require('./routes/backoffice/avis-organismes')(httpComponents));
     app.use('/api', require('./routes/backoffice/export')(httpComponents));
     app.use('/api', require('./routes/backoffice/organisation')(httpComponents));
@@ -98,6 +95,7 @@ module.exports = components => {
     app.use('/api', require('./routes/backoffice/financer')(httpComponents));
     app.use('/api', require('./routes/backoffice/dashboard')(httpComponents));
     app.use('/api', require('./routes/backoffice/stats')(httpComponents));
+    app.use('/api', require('./routes/backoffice/account')(httpComponents));
 
     // catch 404
     app.use(function(req, res) {
@@ -118,8 +116,8 @@ module.exports = components => {
                 error.output.payload.details = rawError.details;
             } else {
                 error = Boom.boomify(rawError, {
-                    statusCode: 500,
-                    message: 'Une erreur est survenue'
+                    statusCode: rawError.status || 500,
+                    message: rawError.message || 'Une erreur est survenue',
                 });
             }
         }

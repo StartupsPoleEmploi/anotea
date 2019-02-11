@@ -2,32 +2,22 @@ import { _get, _post, _delete, _put } from '../utils/http-client';
 
 export const searchAvis = (options = {}) => {
     let filter = options.filter || 'all';
-    let query = options.query || '';
+    let stagiaire = options.stagiaire || '';
     let page = options.page ? options.page - 1 : 0;
 
-    return _get(`/backoffice/avis?filter=${filter}&page=${page}&query=${query}`);
+    return _get(`/backoffice/avis?filter=${filter}&page=${page}&stagiaire=${stagiaire}`);
 };
 
-export const maskPseudo = id => {
-    return _put(`/backoffice/avis/${id}/maskPseudo`);
+export const maskPseudo = (id, mask) => {
+    return _put(`/backoffice/avis/${id}/pseudo`, { mask });
 };
 
-export const unmaskPseudo = id => {
-    return _put(`/backoffice/avis/${id}/unmaskPseudo`);
-};
-
-export const maskTitle = id => {
-    return _put(`/backoffice/avis/${id}/maskTitle`);
-};
-
-export const unmaskTitle = id => {
-    return _put(`/backoffice/avis/${id}/unmaskTitle`);
+export const maskTitle = (id, mask) => {
+    return _put(`/backoffice/avis/${id}/title`, { mask });
 };
 
 export const rejectAvis = (id, reason) => {
-    return _post(`/backoffice/avis/${id}/reject`, {
-        reason: reason
-    });
+    return _put(`/backoffice/avis/${id}/reject`, { reason });
 };
 
 export const markAvisAsRead = (id, userId) => {
@@ -47,7 +37,7 @@ export const unreportAvis = (id, userId) => {
 };
 
 export const publishAvis = (id, qualification) => {
-    return _post(`/backoffice/avis/${id}/publish`, {
+    return _put(`/backoffice/avis/${id}/publish`, {
         qualification: qualification
     });
 };
@@ -66,4 +56,12 @@ export const editAvis = (id, text) => {
     return _put(`/backoffice/avis/${id}/edit`, {
         text,
     });
+};
+
+export const resendEmail = id => {
+    return _put(`/backoffice/avis/${id}/resendEmail`);
+};
+
+export const deleteAvis = id => {
+    return _delete(`/backoffice/avis/${id}`);
 };

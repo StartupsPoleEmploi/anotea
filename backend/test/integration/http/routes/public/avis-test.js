@@ -44,6 +44,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 global: 2
             },
             formation: {
+                numero: '14_AF_0000011111',
                 intitule: 'Développeur',
                 domaine_formation: {
                     formacodes: [
@@ -124,6 +125,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 global: 2
             },
             formation: {
+                numero: '14_AF_0000011111',
                 intitule: 'Développeur',
                 domaine_formation: {
                     formacodes: [

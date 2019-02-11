@@ -10,7 +10,7 @@ module.exports = {
         return activeRegions.filter(region => _.get(region.mailing, path) === true).map(region => region.code_region);
     },
     capitalizeFirstLetter: string => string.charAt(0).toUpperCase() + string.slice(1),
-    execute: async callback => {
+    execute: async job => {
 
         process.on('unhandledRejection', e => console.log(e));
         process.on('uncaughtException', e => console.log(e));
@@ -31,7 +31,7 @@ module.exports = {
 
         try {
             let launchTime = new Date().getTime();
-            let results = await callback(jobComponents);
+            let results = await job(jobComponents);
 
             let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
             logger.info(`Completed in ${duration}`);

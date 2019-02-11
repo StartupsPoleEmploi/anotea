@@ -6,15 +6,16 @@ module.exports = db => {
         const today = new Date();
         const THREE_MONTHS_AGO = moment().subtract('3', 'months').toDate();
 
-        const stats = await db.collection('organismes').aggregate([{
+        const stats = await db.collection('accounts').aggregate([{
             $match: {
+                'profile': 'organisme',
                 'codeRegion': { $ne: null }
             }
         }, {
             $lookup: {
                 from: 'events',
                 localField: 'meta.siretAsString',
-                foreignField: 'source.id',
+                foreignField: 'source.user',
                 as: 'events',
             }
         },
@@ -22,7 +23,7 @@ module.exports = db => {
             $project: {
                 codeRegion: '$codeRegion',
                 passwordHash: '$passwordHash',
-                nbAvis: '$meta.nbAvis',
+                nbAvis: '$score.nb_avis',
                 login: {
                     $filter: {
                         input: '$events',

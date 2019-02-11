@@ -46,7 +46,7 @@ module.exports = function(db, logger, configuration) {
         return `${configuration.app.public_hostname}/admin?action=creation&token=${organisation.token}`;
     };
 
-    const getOrganisationPasswordForgottenLink = token => {
+    const getPasswordForgottenLink = token => {
         return `${configuration.app.public_hostname}/admin?action=passwordLost&token=${token}`;
     };
 
@@ -123,7 +123,7 @@ module.exports = function(db, logger, configuration) {
         getConsultationLink: getConsultationLink,
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
-        getOrganisationPasswordForgottenLink: getOrganisationPasswordForgottenLink,
+        getPasswordForgottenLink: getPasswordForgottenLink,
         sendNewCommentsNotification: async (mailOptions, data, successCallback, errorCallback) => {
 
             let { organisme, pickedComment } = data;
@@ -157,14 +157,14 @@ module.exports = function(db, logger, configuration) {
                 sendMail('organisation_password', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);
         },
-        sendOrganisationPasswordForgotten: async (mailOptions, organisation, passwordToken, successCallback, errorCallback) => {
+        sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, successCallback, errorCallback) => {
             mailOptions.subject = 'Votre compte Anotéa : Demande de renouvellement de mot de passe';
 
-            const link = getOrganisationPasswordForgottenLink(passwordToken);
-            getCarif(organisation.codeRegion, carif => {
+            const link = getPasswordForgottenLink(passwordToken);
+            getCarif(codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
-                const params = { link: link, hostname: configuration.app.public_hostname, organisation: organisation };
-                sendMail('organisation_password_forgotten', params, mailOptions, successCallback, errorCallback);
+                const params = { link: link, hostname: configuration.app.public_hostname, codeRegion: codeRegion };
+                sendMail('password_forgotten', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);
         },
         sendVotreAvisMail: async (mailOptions, trainee, successCallback, errorCallback) => {
@@ -200,8 +200,8 @@ module.exports = function(db, logger, configuration) {
             const cc = configuration.smtp.import_error_cc;
             sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
         },
-        sendAvisHorsSujetMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
-            mailOptions.subject = `Rejet de votre avis sur votre formation`;
+        sendInjureMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
+            mailOptions.subject = `Rejet de votre avis sur votre formation ${trainee.training.title} à ${trainee.training.organisation.name}`;
 
             const consultationLink = getConsultationLink(trainee);
             const unsubscribeLink = getUnsubscribeLink(trainee);
@@ -220,7 +220,7 @@ module.exports = function(db, logger, configuration) {
                     carifEmail: mailOptions.from,
                     moment: moment
                 };
-                sendMail('avis_hors_sujet', params, mailOptions, successCallback, errorCallback);
+                sendMail('avis_injure', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);
         }
     };
