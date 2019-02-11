@@ -11,8 +11,20 @@ class FoldButton extends Component {
     
     static propTypes = {
         onFold: PropTypes.func.isRequired,
-        onUnfold: PropTypes.func.isRequired
+        onUnfold: PropTypes.func.isRequired,
+        folded: PropTypes.bool
     };
+
+    constructor(props) {
+        super(props);
+        this.state.folded = props.folded === true;
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.folded) {
+            this.setState({ folded: nextProps.folded });
+        }
+    }
 
     click = () => {
         let folded = !this.state.folded;

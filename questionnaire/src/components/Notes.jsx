@@ -58,6 +58,9 @@ class Notes extends Component {
         }, 0);
 
         this.props.setValid(countNotes === 5, average, this.state.notes);
+        if (countNotes === 5) {
+            this.fold();
+        }
     }
 
     getItems = () => {
@@ -78,7 +81,7 @@ class Notes extends Component {
                 <NoteMoyenne averageScore={this.state.averageScore} />
                 <div className="note-details">
                     <span className="label">Détails des notes</span>
-                    <FoldButton onFold={this.fold} onUnfold={this.unfold} />
+                    <FoldButton onFold={this.fold} onUnfold={this.unfold} folded={this.state.folded} />
                 </div>
                 { !this.state.folded &&
                     this.getItems()

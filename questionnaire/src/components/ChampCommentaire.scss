@@ -29,11 +29,12 @@
     border: none;
     resize: none;
     background-color: #F4F4F5;
-    margin-left: 25px;
+    margin-left: 15px;
     margin-top: 16px;
     padding-left: 8px;
     padding-top: 8px;
     padding-bottom: 8px;
+    width: 473px;
   }
 
   .textarea_pseudo, .textarea_titre {
@@ -41,19 +42,16 @@
   }
 
   .textarea_pseudo {
-    width: 468px;
     @extend .textarea;
     display: block;
   }
 
   .textarea_commentaire {
   	height: 79px;
-  	width: 468px;
   	@extend .textarea;
   }
 
   .textarea_titre {
-    width: 468px;
     @extend .textarea;
   }
 

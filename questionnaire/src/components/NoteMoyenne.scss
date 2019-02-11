@@ -1,7 +1,12 @@
+@import '../styles/variables';
+
 .note-moyenne {
-	width: 514px;
+	width: 512px;
 	height: 73px;
-	margin: 0px;
+    margin: 0px;
+    
+    border-right: 1px solid $color-grey-5;
+    border-left: 1px solid $color-grey-5;
 
     .label {
         width: 70%;
@@ -9,7 +14,7 @@
         height: 100px;
         .title {
             height: 22px;
-            color: #24303A;
+            color: $color-black;
             font-size: 18px;
             font-weight: 900;
             line-height: 22px;
@@ -21,7 +26,7 @@
         .description {
             height: 34px;
             opacity: 0.6;
-            color: #11181E;
+            color: $color-dark;
             font-size: 14px;
             line-height: 17px;
             margin-left: 16px;
