@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { searchAvis } from '../../../../lib/avisService';
+import { searchAvis } from '../../../../../lib/avisService';
 import Toolbar from './Toolbar';
-import Loader from '../../common/Loader';
-import Panel from '../../common/Panel';
+import Loader from '../../../common/Loader';
+import Panel from '../../../common/Panel';
 import Description from './Description';
-import { Pagination } from '../../common/Pagination';
-import Avis from './avis/Avis';
-import Message from '../../common/Message';
+import { Pagination } from '../../../common/Pagination';
+import Avis from '../../components/avis/Avis';
+import Message from '../../../common/Message';
 
-class StagiairesPanel extends React.Component {
+class AvisPanel extends React.Component {
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
@@ -140,4 +140,4 @@ class StagiairesPanel extends React.Component {
     }
 }
 
-export default StagiairesPanel;
+export default AvisPanel;

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PaginationStatus } from '../../common/Pagination';
+import { PaginationStatus } from '../../../common/Pagination';
 import './Description.scss';
 
 export default class Description extends React.Component {

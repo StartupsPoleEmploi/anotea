@@ -23,7 +23,7 @@ export default class Header extends React.Component {
                         </div>
                         <div className="col-md-7">
                             <nav className="nav">
-                                <NavLink to="/admin/moderation/stagiaires/all" className="nav-link"
+                                <NavLink to="/admin/moderation/avis/all" className="nav-link"
                                          activeClassName="active">
                                     Avis stagiaires
                                 </NavLink>

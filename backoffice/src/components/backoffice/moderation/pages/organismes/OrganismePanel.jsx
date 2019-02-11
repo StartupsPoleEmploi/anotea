@@ -1,8 +1,8 @@
 import React from 'react';
-import { getOrganisationInfo } from '../../../../lib/organisationService';
+import { getOrganisationInfo } from '../../../../../lib/organisationService';
 import OrganismeCard from './OrganismeCard';
-import Loader from '../../common/Loader';
-import Panel from '../../common/Panel';
+import Loader from '../../../common/Loader';
+import Panel from '../../../common/Panel';
 
 export default class OrganismePanel extends React.PureComponent {
 

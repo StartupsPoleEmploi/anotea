@@ -4,8 +4,8 @@ import _ from 'lodash';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Header from '../common/Header';
 import queryString from 'query-string';
-import OrganismePanel from './organismes/OrganismePanel';
-import StagiairesPanel from './stagiaires/StagiairesPanel';
+import OrganismePanel from './pages/organismes/OrganismePanel';
+import AvisPanel from './pages/avis/AvisPanel';
 import { MyAccount } from '../account/MyAccount';
 
 export default class ModerationRoutes extends React.Component {
@@ -29,8 +29,8 @@ export default class ModerationRoutes extends React.Component {
             <div className="anotea">
                 <Header onLogout={this.props.logout} />
                 <Switch>
-                    <Redirect exact from="/" to="/admin/moderation/stagiaires/all" />
-                    <Redirect exact from="/admin" to="/admin/moderation/stagiaires/all" />
+                    <Redirect exact from="/" to="/admin/moderation/avis/all" />
+                    <Redirect exact from="/admin" to="/admin/moderation/avis/all" />
                 </Switch>
                 <Route
                     path="/mon-compte"
@@ -39,17 +39,17 @@ export default class ModerationRoutes extends React.Component {
                     path="/admin/moderation/organismes"
                     render={() => <OrganismePanel codeRegion={this.props.codeRegion} />} />
                 <Route
-                    path="/admin/moderation/stagiaires/:filter/:page?"
+                    path="/admin/moderation/avis/:filter/:page?"
                     render={props => {
 
                         let query = this.getQueryFromUrl(props);
-                        return <StagiairesPanel
+                        return <AvisPanel
                             codeRegion={this.props.codeRegion}
                             query={query}
                             onNewQuery={options => {
                                 let newQuery = _.merge({ page: 1 }, query, options);
 
-                                props.history.push(`/admin/moderation/stagiaires/${newQuery.filter}/${newQuery.page}` +
+                                props.history.push(`/admin/moderation/avis/${newQuery.filter}/${newQuery.page}` +
                                     (newQuery.stagiaire ? `&stagiaire=${newQuery.stagiaire}` : ''));
                             }} />;
                     }} />
