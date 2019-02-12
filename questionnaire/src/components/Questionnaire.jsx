@@ -1,0 +1,105 @@
+import React, { Component } from 'react';
+
+import './questionnaire.scss';
+
+import Header from './Header';
+import Notes from './Notes';
+import Commentaire from './Commentaire';
+import Footer from './Footer';
+import Autorisations from './Autorisations';
+import SendButton from './common/SendButton';
+import SummaryModal from './SummaryModal';
+import ErrorPanel from './ErrorPanel';
+
+import PropTypes from 'prop-types';
+
+import { getTraineeInfo } from '../lib/traineeService';
+
+class Questionnaire extends Component {
+
+    state = {
+        isValid: false,
+        modalOpen: false,
+        averageScore: null,
+        notes: [],
+        commentaire: {
+            titre: '',
+            commentaire: ''
+        },
+        pseudo: '',
+        trainee: null
+    }
+
+    static propTypes = {
+        match: PropTypes.object.isRequired
+    }
+    
+    constructor(props) {
+        super(props);
+        this.state.token = props.match.params.token;
+        this.loadInfo(this.state.token);
+    }
+
+    loadInfo = async token => {
+        let info = await getTraineeInfo(token);
+        if (info.error) {
+            this.setState({ error: info.reason });
+        } else {
+            this.setState({ trainee: info.trainee });
+        }
+    }
+
+    setValid = (valid, averageScore, notes) => {
+        this.setState({ isValid: valid, averageScore, notes });
+    }
+
+    openModal = () => {
+        this.setState({ modalOpen: true });
+    }
+
+    closeModal = () => {
+        this.setState({ modalOpen: false });
+    }
+
+    submit = () => {
+
+    }
+
+    updateCommentaire = commentaire => {
+        this.setState({ commentaire: commentaire.commentaire, pseudo: commentaire.pseudo });
+    }
+
+    render() {
+        return (
+            <div className="questionnaire">
+                { !this.state.error && this.state.trainee &&
+                    <div>
+                        <Header trainee={this.state.trainee} />
+
+                        <Notes setValid={this.setValid} />
+
+                        {this.state.isValid &&
+                            <Commentaire onChange={this.updateCommentaire} />
+                        }
+
+                        <Autorisations />
+
+                        <SendButton enabled={this.state.isValid} onSend={this.openModal} />
+
+                        <Footer codeRegion={this.state.trainee.codeRegion} />
+                    </div>
+                }
+
+                {this.state.modalOpen &&
+                    <SummaryModal closeModal={this.closeModal} score={this.state.averageScore} notes={this.state.notes} commentaire={this.state.commentaire} pseudo={this.state.pseudo} submit={this.submit} />
+                }
+
+                { this.state.error &&
+                    <ErrorPanel error={this.state.error} />
+                }
+            </div>
+        );
+    }
+}
+
+export default Questionnaire;
