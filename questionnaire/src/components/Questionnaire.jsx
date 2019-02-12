@@ -36,13 +36,12 @@ class Questionnaire extends Component {
     constructor(props) {
         super(props);
         this.state.token = props.match.params.token;
-        getTraineeInfo(this.state.token).then(result => {
-            if (result.error) {
-                // TODO : : already sent
-            } else {
-                this.setState({ trainee: result.trainee });
-            }
-        });
+        this.loadInfo(this.state.token);
+    }
+
+    loadInfo = async token => {
+        let info = await getTraineeInfo(token);
+        this.setState({ trainee: info.trainee });
     }
 
     setValid = (valid, averageScore, notes) => {
