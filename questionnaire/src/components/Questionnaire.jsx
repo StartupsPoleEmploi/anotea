@@ -72,7 +72,7 @@ class Questionnaire extends Component {
     render() {
         return (
             <div className="questionnaire">
-                { !this.state.error &&
+                { !this.state.error && this.state.trainee &&
                     <div>
                         <Header trainee={this.state.trainee} />
 
@@ -86,7 +86,7 @@ class Questionnaire extends Component {
 
                         <SendButton enabled={this.state.isValid} onSend={this.openModal} />
 
-                        <Footer codeRegion="11" />
+                        <Footer codeRegion={this.state.trainee.codeRegion} />
                     </div>
                 }
 
