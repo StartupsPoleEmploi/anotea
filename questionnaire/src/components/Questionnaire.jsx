@@ -27,7 +27,9 @@ class Questionnaire extends Component {
             commentaire: ''
         },
         pseudo: '',
-        trainee: null
+        trainee: null,
+        accord: false,
+        accordEntreprise: false
     }
 
     static propTypes = {
@@ -69,6 +71,10 @@ class Questionnaire extends Component {
         this.setState({ commentaire: commentaire.commentaire, pseudo: commentaire.pseudo });
     }
 
+    updateAccord = ({accord, accordEntreprise }) => {
+        this.setState({ accord, accordEntreprise });
+    }
+
     render() {
         return (
             <div className="questionnaire">
@@ -82,7 +88,7 @@ class Questionnaire extends Component {
                             <Commentaire onChange={this.updateCommentaire} />
                         }
 
-                        <Autorisations />
+                        <Autorisations onChange={this.updateAccord}/>
 
                         <SendButton enabled={this.state.isValid} onSend={this.openModal} />
 
