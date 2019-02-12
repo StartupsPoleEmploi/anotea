@@ -9,6 +9,7 @@ import Footer from './Footer';
 import Autorisations from './Autorisations';
 import SendButton from './common/SendButton';
 import SummaryModal from './SummaryModal';
+import ErrorPanel from './ErrorPanel';
 
 import PropTypes from 'prop-types';
 
@@ -41,7 +42,11 @@ class Questionnaire extends Component {
 
     loadInfo = async token => {
         let info = await getTraineeInfo(token);
-        this.setState({ trainee: info.trainee });
+        if (info.error) {
+            this.setState({ error: info.reason });
+        } else {
+            this.setState({ trainee: info.trainee });
+        }
     }
 
     setValid = (valid, averageScore, notes) => {
@@ -67,23 +72,31 @@ class Questionnaire extends Component {
     render() {
         return (
             <div className="questionnaire">
-                <Header trainee={this.state.trainee} />
+                { !this.state.error &&
+                    <div>
+                        <Header trainee={this.state.trainee} />
 
-                <Notes setValid={this.setValid} />
+                        <Notes setValid={this.setValid} />
 
-                {this.state.isValid &&
-                    <Commentaire onChange={this.updateCommentaire} />
+                        {this.state.isValid &&
+                            <Commentaire onChange={this.updateCommentaire} />
+                        }
+
+                        <Autorisations />
+
+                        <SendButton enabled={this.state.isValid} onSend={this.openModal} />
+
+                        <Footer codeRegion="11" />
+                    </div>
                 }
-
-                <Autorisations />
-
-                <SendButton enabled={this.state.isValid} onSend={this.openModal} />
 
                 {this.state.modalOpen &&
                     <SummaryModal closeModal={this.closeModal} score={this.state.averageScore} notes={this.state.notes} commentaire={this.state.commentaire} pseudo={this.state.pseudo} submit={this.submit} />
                 }
 
-                <Footer codeRegion="11" />
+                { this.state.error &&
+                    <ErrorPanel error={this.state.error} />
+                }
             </div>
         );
     }

@@ -52,25 +52,10 @@ module.exports = ({ db, logger, configuration }) => {
         });
 
         if (!comment) {
-            comment = {
-                date: new Date(),
-                token: req.params.token,
-                campaign: trainee.campaign,
-                formacode: trainee.training.formacode,
-                idSession: trainee.training.idSession,
-                training: trainee.training,
-                step: 1,
-                codeRegion: trainee.codeRegion
-            };
-
-            db.collection('comment').insertOne(comment).catch(e => logger.error(e));
-        }
-
-        // we let user change it's advice if last step not validated
-        if (comment && comment.step === 3) {
-            res.send({ error: true, reason: 'already sent', trainee: trainee });
-        } else {
+            db.collection('trainee').updateOne({ token: req.params.token }, { $set: { 'tracking.click': new Date() } });
             res.send({ trainee: trainee });
+        } else {
+            res.send({ error: true, reason: 'already sent', trainee: trainee });
         }
     });
 
