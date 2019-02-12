@@ -13,7 +13,6 @@
     color: $color-white;
 
     .title {
-      padding-top: 3rem;
       padding-bottom: 0.5rem;
       font-size: 2em;
       font-weight: $font-weight-900;
@@ -38,8 +37,8 @@
     .container {
 
       .toolbar {
-        padding-top: 0;
-        padding-left: 0;
+        margin-left: 15px;
+        margin-right: 15px;
         text-align: center;
         font-size: 1rem;
         border: 1px solid $color-grey-5;
@@ -80,18 +79,6 @@
               border-right: unset;
               border-bottom-right-radius: 6px;
               border-top-right-radius: 6px;
-            }
-
-            &.disabled {
-              pointer-events: none;
-              color: $color-grey-5;
-              opacity: 0.2;
-            }
-
-            .pastille {
-              color: $color-red;
-              font-size: 0.825rem;
-              vertical-align: top;
             }
 
             .nav-link {
@@ -154,6 +141,11 @@
             }
           }
         }
+      }
+
+      .results {
+        margin-left: 15px;
+        margin-right: 15px;
       }
     }
   }

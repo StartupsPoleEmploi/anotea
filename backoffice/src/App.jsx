@@ -14,7 +14,7 @@ import AccountActivation from './components/backoffice/organisation/AccountActiv
 import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
-import ModerationRoutes from './components/backoffice/moderation/ModerationRoutes';
+import { ModerationRoutes } from './components/backoffice/moderation/ModerationRoutes';
 import { MyAccount } from './components/backoffice/account/MyAccount';
 import './utils/moment-fr';
 import './App.scss';
@@ -219,20 +219,20 @@ class App extends Component {
                             render={props => (
                                 <div className="main">
                                     {this.state.profile === 'organisme' &&
-                                        <OrganisationPanel
-                                            profile={this.state.profile}
-                                            id={this.state.id}
-                                            codeRegion={this.state.codeRegion}
-                                            features={this.state.features} />
+                                    <OrganisationPanel
+                                        profile={this.state.profile}
+                                        id={this.state.id}
+                                        codeRegion={this.state.codeRegion}
+                                        features={this.state.features} />
                                     }
 
                                     {this.state.profile === 'financeur' &&
-                                        <FinancerPanel
-                                            profile={this.state.profile}
-                                            id={this.state.id}
-                                            codeRegion={this.state.codeRegion}
-                                            codeFinanceur={this.state.codeFinanceur}
-                                            features={this.state.features} />
+                                    <FinancerPanel
+                                        profile={this.state.profile}
+                                        id={this.state.id}
+                                        codeRegion={this.state.codeRegion}
+                                        codeFinanceur={this.state.codeFinanceur}
+                                        features={this.state.features} />
                                     }
                                 </div>)} />
                     </div>

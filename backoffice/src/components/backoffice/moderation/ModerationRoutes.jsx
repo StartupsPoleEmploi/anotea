@@ -4,11 +4,17 @@ import _ from 'lodash';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Header from '../common/Header';
 import queryString from 'query-string';
-import OrganismePanel from './pages/organismes/OrganismePanel';
-import AvisPanel from './pages/avis/AvisPanel';
+import OrganismePanel from './panels/organismes/OrganismePanel';
+import AvisStagiairesPanel from './panels/AvisStagiairesPanel';
+import AvisReponsesPanel from './panels/AvisReponsesPanel';
 import { MyAccount } from '../account/MyAccount';
 
-export default class ModerationRoutes extends React.Component {
+export const routes = {
+    stagiaires: '/admin/moderation/avis/stagiaires?page=0&status=none',
+    reponses: '/admin/moderation/avis/reponses?page=0&reponseStatus=none',
+};
+
+export class ModerationRoutes extends React.Component {
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
@@ -16,12 +22,7 @@ export default class ModerationRoutes extends React.Component {
     };
 
     getQueryFromUrl = routeProps => {
-        let qs = queryString.parse(routeProps.location.search);
-        return {
-            filter: routeProps.match.params.filter,
-            page: routeProps.match.params.page,
-            stagiaire: qs.stagiaire,
-        };
+        return queryString.parse(routeProps.location.search);
     };
 
     render() {
@@ -29,8 +30,8 @@ export default class ModerationRoutes extends React.Component {
             <div className="anotea">
                 <Header onLogout={this.props.logout} />
                 <Switch>
-                    <Redirect exact from="/" to="/admin/moderation/avis/all" />
-                    <Redirect exact from="/admin" to="/admin/moderation/avis/all" />
+                    <Redirect exact from="/" to={routes.stagiaires} />
+                    <Redirect exact from="/admin" to={routes.reponses} />
                 </Switch>
                 <Route
                     path="/mon-compte"
@@ -39,18 +40,27 @@ export default class ModerationRoutes extends React.Component {
                     path="/admin/moderation/organismes"
                     render={() => <OrganismePanel codeRegion={this.props.codeRegion} />} />
                 <Route
-                    path="/admin/moderation/avis/:filter/:page?"
+                    path="/admin/moderation/avis/stagiaires"
                     render={props => {
-
-                        let query = this.getQueryFromUrl(props);
-                        return <AvisPanel
+                        return <AvisStagiairesPanel
                             codeRegion={this.props.codeRegion}
-                            query={query}
+                            query={this.getQueryFromUrl(props)}
                             onNewQuery={options => {
-                                let newQuery = _.merge({ page: 1 }, query, options);
-
-                                props.history.push(`/admin/moderation/avis/${newQuery.filter}/${newQuery.page}` +
-                                    (newQuery.stagiaire ? `&stagiaire=${newQuery.stagiaire}` : ''));
+                                let newQuery = _.merge({ page: 0 }, options);
+                                let parameters = queryString.stringify(newQuery);
+                                props.history.push(`/admin/moderation/avis/stagiaires?${parameters}`);
+                            }} />;
+                    }} />
+                <Route
+                    path="/admin/moderation/avis/reponses"
+                    render={props => {
+                        return <AvisReponsesPanel
+                            codeRegion={this.props.codeRegion}
+                            query={this.getQueryFromUrl(props)}
+                            onNewQuery={options => {
+                                let newQuery = _.merge({ page: 0 }, options);
+                                let parameters = queryString.stringify(newQuery);
+                                props.history.push(`/admin/moderation/avis/reponses?${parameters}`);
                             }} />;
                     }} />
             </div>

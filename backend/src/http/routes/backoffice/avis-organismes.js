@@ -27,7 +27,7 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
                     answer: {
                         text: text,
                         date: new Date(),
-                        status: 'published', //TODO set to published for the moment
+                        status: 'none',
                     },
                     read: true,
                 }

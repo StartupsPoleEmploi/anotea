@@ -1,11 +1,12 @@
-import { _get, _delete, _put } from '../utils/http-client';
+import { _delete, _get, _put } from '../utils/http-client';
 import queryString from 'query-string';
 
 export const searchAvis = (options = {}) => {
-    options.page = options.page ? options.page - 1 : 0;
-    let params = queryString.stringify(options);
+    return _get(`/backoffice/avis?${queryString.stringify(options)}`);
+};
 
-    return _get(`/backoffice/avis?${params}`);
+export const searchAvisWithReponse = (options = {}) => {
+    return _get(`/backoffice/avisWithReponse?${queryString.stringify(options)}`);
 };
 
 export const maskPseudo = (id, mask) => {

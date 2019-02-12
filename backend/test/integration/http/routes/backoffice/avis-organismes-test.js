@@ -22,7 +22,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         assert.ok(response.body.answer.date);
         assert.deepStrictEqual(_.omit(response.body.answer, ['date']), {
             text: 'Voici notre réponse',
-            status: 'published',
+            status: 'none',
         });
     });
 

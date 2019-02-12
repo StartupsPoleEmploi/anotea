@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Stagiaire from './components/Stagiaire';
-import Titre from './components/Titre';
-import Commentaire from './components/Commentaire';
-import Organisme from './components/Organisme';
-import Edition from './components/Edition';
-import Notes from './components/Notes';
-import Reponse from './components/Reponse';
-import PublishReponseButton from './components/buttons/PublishReponseButton';
-import RejectReponseButton from './components/buttons/RejectReponseButton';
-import PublishButton from './components/buttons/PublishButton';
-import RejectButton from './components/buttons/RejectButton';
-import EditButton from './components/buttons/EditButton';
-import './Avis.scss';
+import Stagiaire from './Stagiaire';
+import Titre from './Titre';
+import Commentaire from './Commentaire';
+import Organisme from './Organisme';
+import Edition from './Edition';
+import Notes from './Notes';
+import Reponse from './Reponse';
+import PublishReponseButton from './buttons/PublishReponseButton';
+import RejectReponseButton from './buttons/RejectReponseButton';
+import PublishButton from './buttons/PublishButton';
+import RejectButton from './buttons/RejectButton';
+import EditButton from './buttons/EditButton';
+import './index.scss';
 
 export default class Avis extends React.Component {
 
@@ -74,7 +74,7 @@ export default class Avis extends React.Component {
                     </div>
                     {
                         !disabled && avis.comment &&
-                        <div className="col-1 py-3 text-right">
+                        <div className="col-1 py-3 pl-0 text-right">
                             <div className="btn-group-vertical">
                                 <EditButton avis={avis} onChange={onChange} onEdit={this.toggleEdition} />
                                 <PublishButton avis={avis} onChange={onChange} />
@@ -87,9 +87,9 @@ export default class Avis extends React.Component {
                     options.showReponse && avis.answer &&
                     <div className="row pb-3">
                         <div className="offset-4 col-7 px-0 py-3 ">
-                            <Reponse reponse={avis.answer} />
+                            <Reponse avis={avis} />
                         </div>
-                        <div className="col-1 py-3 text-right">
+                        <div className="col-1 py-3">
                             <div className="btn-group-vertical">
                                 <PublishReponseButton avis={avis} onChange={onChange} />
                                 <RejectReponseButton avis={avis} onChange={onChange} />

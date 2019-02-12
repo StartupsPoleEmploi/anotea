@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { rejectAvis } from '../../../../../../../lib/avisService';
-import './RejectButton.scss';
 import Modal from '../../../../../common/Modal';
+import './RejectButton.scss';
 
 export default class RejectButton extends React.Component {
 

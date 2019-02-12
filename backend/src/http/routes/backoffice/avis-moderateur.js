@@ -1,18 +1,17 @@
 const express = require('express');
-const _ = require('lodash');
 const Joi = require('joi');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
-const computeInventory = require('./utils/computeInventory');
+const moderationStats = require('./utils/moderationStats');
 const { objectId } = require('./../../../common/validators');
 
 module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
-    const router = express.Router(); // eslint-disable-line new-cap
+    let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
-    const checkAuth = createJWTAuthMiddleware('backoffice');
-    const itemsPerPage = configuration.api.pagination;
+    let checkAuth = createJWTAuthMiddleware('backoffice');
+    let itemsPerPage = configuration.api.pagination;
 
     const getStagiaire = async stagiaire => {
 
@@ -31,40 +30,42 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
     router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { filter, stagiaire: stagiareSearch, reponse, page } = await Joi.validate(req.query, {
-            filter: Joi.string().default('all'),
+        let { computeStats } = moderationStats(db, codeRegion);
+        let { status, reponseStatus, stagiaire: filter, page } = await Joi.validate(req.query, {
+            status: Joi.string(),
+            reponseStatus: Joi.string(),
             stagiaire: Joi.string().allow('').default(''),
-            reponse: Joi.boolean(),
             page: Joi.number().min(0).default(0),
         }, { abortEarly: false });
 
-        let stagiaire = await getStagiaire(stagiareSearch);
+        let stagiaire = await getStagiaire(filter);
         let cursor = db.collection('comment')
         .find({
             step: { $gte: 2 },
             codeRegion: codeRegion,
-            ...(reponse ? { answer: { $exists: true } } : {}),
-            ...(stagiareSearch ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
-            ...(filter !== 'all' ? { comment: { $ne: null } } : {}),
-            ...(filter === 'reported' ? { reported: true } : {}),
-            ...(filter === 'rejected' ? { rejected: true } : {}),
-            ...(filter === 'published' ? { published: true } : {}),
-            ...(filter === 'toModerate' ? { moderated: { $ne: true } } : {}),
+            ...(status !== 'all' ? { comment: { $ne: null } } : {}),
+            ...(status === 'rejected' ? { rejected: true } : {}),
+            ...(status === 'published' ? { published: true } : {}),
+            ...(status === 'reported' ? { reported: true } : {}),
+            ...(status === 'none' ? { moderated: { $ne: true } } : {}),
+            ...(reponseStatus ? { answer: { $exists: true } } : {}),
+            ...(reponseStatus && reponseStatus !== 'all' ? { 'answer.status': reponseStatus } : {}),
+            ...(filter ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
         })
-        .sort(filter === 'all' ? { date: -1 } : { lastModerationAction: -1 })
+        .sort(status === 'all' ? { date: -1 } : { lastModerationAction: -1 })
         .skip((page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 
-        let [total, avis, inventory] = await Promise.all([
+        let [total, avis, stats] = await Promise.all([
             cursor.count(),
             cursor.toArray(),
-            computeInventory(db, codeRegion),
+            computeStats(db, codeRegion),
         ]);
 
         res.send({
             avis: avis,
             meta: {
-                inventory,
+                stats: stats,
                 pagination: {
                     page: page,
                     itemsPerPage,
@@ -72,12 +73,12 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
                     totalItems: total,
                     totalPages: Math.ceil(total / itemsPerPage),
                 },
-                ...(stagiaire ? {
+                ...(!stagiaire ? {} : {
                     stagiaire: {
                         email: stagiaire.trainee.email,
                         dnIndividuNational: stagiaire.trainee.dnIndividuNational,
                     }
-                } : {})
+                })
             }
         });
     }));

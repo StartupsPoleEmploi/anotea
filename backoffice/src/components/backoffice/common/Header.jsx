@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import logo from './Header.svg';
 import './Header.scss';
 import { NavLink } from 'react-router-dom';
-
+import { routes } from '../moderation/ModerationRoutes';
 
 export default class Header extends React.Component {
 
@@ -23,19 +23,22 @@ export default class Header extends React.Component {
                         </div>
                         <div className="col-md-7">
                             <nav className="nav">
-                                <NavLink to="/admin/moderation/avis/all" className="nav-link"
-                                         activeClassName="active">
+                                <NavLink to={routes.stagiaires} className="nav-link" activeClassName="active">
                                     Avis stagiaires
+                                </NavLink>
+                                <NavLink to={routes.reponses} className="nav-link"
+                                         activeClassName="active">
+                                    Réponses des organismes
                                 </NavLink>
                                 <NavLink to="/admin/moderation/organismes" className="nav-link"
                                          activeClassName="active">
-                                    Réponses des organimes
+                                    Liste des organimes
                                 </NavLink>
                             </nav>
                         </div>
                         <div className="col-md-3 text-right pr-5">
                             <NavLink to="/mon-compte" className="account-link"
-                                activeClassName="active">
+                                     activeClassName="active">
                                 <span className="fas fa-cog" />
                             </NavLink>
                             <button onClick={this.props.onLogout} className="logout btn btn-outline-light">
