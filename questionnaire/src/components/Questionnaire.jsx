@@ -38,14 +38,13 @@ class Questionnaire extends Component {
     static propTypes = {
         token: PropTypes.string.isRequired,
         showRemerciements: PropTypes.func.isRequired,
-        setToken: PropTypes.func.isRequired
+        setTrainee: PropTypes.func.isRequired
     }
     
     constructor(props) {
         super(props);
         this.state.token = props.token;
         this.loadInfo(this.state.token);
-        this.props.setToken(this.state.token);
     }
 
     loadInfo = async token => {
@@ -54,6 +53,7 @@ class Questionnaire extends Component {
             this.setState({ error: info.reason });
         } else {
             this.setState({ trainee: info.trainee });
+            this.props.setTrainee(info.trainee);
         }
     }
 
@@ -117,7 +117,7 @@ class Questionnaire extends Component {
 
                         <SendButton enabled={this.state.isValid} onSend={this.openModal} />
 
-                        { this.state.formError === 'bad data' &&
+                        { this.state.formError === 'bad data' &&
                             <ErrorAlert />
                         }
 

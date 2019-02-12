@@ -16,7 +16,7 @@ import './App.scss';
 class App extends Component {
 
     state = {
-        token: null,
+        trainee: null,
         infosRegion: null
     }
 
@@ -24,27 +24,22 @@ class App extends Component {
         this.setState({ infosRegion, toRemerciements: true });
     }
 
-    setToken = token => this.setState({ token });
+    setTrainee = trainee => this.setState({ trainee });
 
     render() {
-
-        if (this.state.toRemerciements === true) {
-            return (
-                <Router>
-                    <Redirect to={`/${this.state.token}/remerciements`} />
-                </Router>
-            );
-        }
-
         return (
             <Router>
-                <Switch>
-                    <Route path="/:token" exact render={props => (<Questionnaire token={props.match.params.token} setToken={this.setToken} showRemerciements={this.showRemerciements} />)} />
-                    <Route path="/:token/remerciements" exact render={state => (<Remerciements {...state} />)} />
-                    <Route component={NoMatch} />
-                </Switch>
+                <div>
+                    {this.state.toRemerciements === true &&
+                        <Redirect to={`/${this.state.trainee.token}/remerciements`} />
+                    }
 
-
+                    <Switch>
+                        <Route path="/:token" exact render={props => (<Questionnaire token={props.match.params.token} setTrainee={this.setTrainee} showRemerciements={this.showRemerciements} />)} />
+                        <Route path="/:token/remerciements" exact render={() => (<Remerciements trainee={this.state.trainee} infosRegion={this.state.infosRegion} />)} />
+                        <Route component={NoMatch} />
+                    </Switch>
+                </div>
             </Router>
         );
     }
