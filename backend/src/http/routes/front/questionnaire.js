@@ -49,16 +49,14 @@ module.exports = ({ db, logger, configuration }) => {
             contenu_formation: rateRule,
             equipe_formateurs: rateRule,
             moyen_materiel: rateRule,
-            accompagnement: rateRule,
-            global: rateRule,
+            accompagnement: rateRule
         });
         let rates = {
             accueil: body.avis_accueil,
             contenu_formation: body.avis_contenu_formation,
             equipe_formateurs: body.avis_equipe_formateurs,
             moyen_materiel: body.avis_moyen_materiel,
-            accompagnement: body.avis_accompagnement,
-            global: body.avis_global
+            accompagnement: body.avis_accompagnement
         };
 
         return Joi.validate(rates, schema);
@@ -69,8 +67,8 @@ module.exports = ({ db, logger, configuration }) => {
         avis.rates = notes;
 
         let pseudo = sanitize(body.pseudo);
-        let commentTxt = sanitize(body.commentaire);
-        let commentTitle = sanitize(body.titreCommentaire);
+        let commentTxt = sanitize(body.commentaire.commentaire);
+        let commentTitle = sanitize(body.commentaire.titre);
 
         if (s(pseudo.replace(/ /g, '')).isAlphaNumeric()) {
             avis.pseudo = pseudo;
@@ -80,8 +78,8 @@ module.exports = ({ db, logger, configuration }) => {
                     text: commentTxt
                 };
             }
-            avis.accord = body.accord === 'on';
-            avis.accordEntreprise = body.accordEntreprise === 'on';
+            avis.accord = body.accord;
+            avis.accordEntreprise = body.accordEntreprise;
 
             let pseudoOK = badwords.isGood(pseudo);
             let commentOK = badwords.isGood(commentTxt);
@@ -115,7 +113,7 @@ module.exports = ({ db, logger, configuration }) => {
         };
     };
 
-    router.get('/questionnaire/:token/start', getTraineeFromToken, saveDeviceData, async (req, res) => {
+    router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, async (req, res) => {
 
         let trainee = req.trainee;
         let comment = await db.collection('comment').findOne({
@@ -144,19 +142,35 @@ module.exports = ({ db, logger, configuration }) => {
         if (comment !== null) {
             res.send({ error: true, reason: 'already sent', trainee: trainee });
         } else {
-            let resultNotes = validateNotes(req.body);
-            if (resultNotes.error === null) {
-                let resultAvis = validateAvis(resultNotes.value, req.body);
-                if (resultAvis.error === null) {
-                    await Promise.all([
-                        db.collection('comment').saveOne(resultAvis.avis),
-                        db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),
-                    ]);
-                    let infos = await getInfosRegion(trainee);
-                    res.send(infos);
+            try {
+                let resultNotes = validateNotes(req.body);
+                if (resultNotes.error === null) {
+                    let resultAvis = validateAvis(resultNotes.value, req.body);
+                    if (resultAvis.error === null) {
+                        let avis = {
+                            date: new Date(),
+                            token: req.params.token,
+                            campaign: trainee.campaign,
+                            formacode: trainee.training.formacode,
+                            idSession: trainee.training.idSession,
+                            training: trainee.training,
+                            codeRegion: trainee.codeRegion
+                        };
+                        Object.assign(avis, resultAvis.avis);
+                        await Promise.all([
+                            db.collection('comment').insertOne(avis),
+                            db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),
+                        ]);
+                        let infos = await getInfosRegion(trainee);
+                        res.send({ error: false, infos });
+                    } else {
+                        res.send({ error: true, reason: resultAvis.error });
+                    }
                 } else {
-                    res.send({ error: true, reason: resultAvis.error });
+                    res.send({ error: true, reason: 'bad data' });
                 }
+            } catch (e) {
+                res.send({ error: true, reason: 'bad data' });
             }
         }
     });

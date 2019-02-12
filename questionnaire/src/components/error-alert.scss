@@ -1,0 +1,11 @@
+
+@import '../styles/variables';
+
+.error-alert {
+	color: $color-red;
+	font-size: 14px;
+	line-height: 17px;
+    text-align: center;
+    width: 514px;
+    margin-top: 20px;
+}
