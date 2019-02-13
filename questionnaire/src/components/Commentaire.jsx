@@ -38,7 +38,7 @@ class Commentaire extends Component {
         let state = this.state;
         state[e.target.name] = e.target.value;
         this.setState(state);
-        this.props.onChange({ commentaire: { titre: state.titre, commentaire: state.commentaire }, pseudo: state.pseudo });
+        this.props.onChange({ commentaire: { titre: state.titre, texte: state.commentaire }, pseudo: state.pseudo });
     }
 
     getItems = () => {

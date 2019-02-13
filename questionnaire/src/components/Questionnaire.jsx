@@ -25,7 +25,7 @@ class Questionnaire extends Component {
         notes: [],
         commentaire: {
             titre: '',
-            commentaire: ''
+            texte: ''
         },
         pseudo: '',
         stagiaire: null,
@@ -93,7 +93,7 @@ class Questionnaire extends Component {
     }
 
     updateCommentaire = commentaire => {
-        this.setState({ commentaire: commentaire.commentaire, pseudo: commentaire.pseudo });
+        this.setState({ commentaire: commentaire.texte, pseudo: commentaire.pseudo });
     }
 
     updateAccord = ({accord, accordEntreprise }) => {

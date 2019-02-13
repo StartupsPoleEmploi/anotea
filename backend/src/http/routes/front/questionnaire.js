@@ -67,7 +67,7 @@ module.exports = ({ db, logger, configuration }) => {
         avis.rates = notes;
 
         let pseudo = sanitize(body.pseudo);
-        let commentTxt = sanitize(body.commentaire.commentaire);
+        let commentTxt = sanitize(body.commentaire.texte);
         let commentTitle = sanitize(body.commentaire.titre);
 
         if (s(pseudo.replace(/ /g, '')).isAlphaNumeric()) {
