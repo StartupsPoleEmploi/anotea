@@ -68,7 +68,7 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         });
         return count > 0;
     };
-  
+
     const rehashPassword = async (account, password) => {
 
         if (account.meta && account.meta.rehashed) {
@@ -90,16 +90,19 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         let token;
 
         try {
-            const account = await db.collection('accounts').findOne({ courriel: identifier });
+            let account = await db.collection('accounts').findOne({ courriel: identifier });
             if (account !== null && await checkPassword(password, account.passwordHash, configuration)) {
                 await rehashPassword(account, password);
                 token = await handleAccount(req, res, account);
             }
 
-            let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': identifier });
-            if (organisme !== null && await checkPassword(password, organisme.passwordHash, configuration)) {
-                await rehashPassword(organisme, password);
-                token = await handleOrganisme(req, res, organisme);
+            account = await db.collection('accounts').findOne({
+                'meta.siretAsString': identifier,
+                'passwordHash': { $exists: true },
+            });
+            if (account !== null && await checkPassword(password, account.passwordHash, configuration)) {
+                await rehashPassword(account, password);
+                token = await handleOrganisme(req, res, account);
             }
 
             if (token) {

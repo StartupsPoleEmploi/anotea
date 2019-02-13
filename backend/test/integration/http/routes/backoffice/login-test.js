@@ -16,16 +16,16 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         .post('/api/backoffice/login')
         .send({ username: 'admin@pole-emploi.fr', password: 'password' });
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
 
         let body = response.body;
-        assert.equal(body.token_type, 'bearer');
+        assert.strictEqual(body.token_type, 'bearer');
         assert.ok(body.access_token);
 
         let decodedToken = JWT.decode(body.access_token);
         assert.ok(decodedToken.iat);
         assert.ok(decodedToken.exp);
-        assert.deepEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
+        assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             codeRegion: '11',
             profile: 'moderateur',
             sub: 'admin@pole-emploi.fr',
@@ -45,16 +45,16 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         .post('/api/backoffice/login')
         .send({ username: '6080274100045', password: 'password' });
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
 
         let body = response.body;
-        assert.equal(body.token_type, 'bearer');
+        assert.strictEqual(body.token_type, 'bearer');
         assert.ok(body.access_token);
 
         let decodedToken = JWT.decode(body.access_token);
         assert.ok(decodedToken.iat);
         assert.ok(decodedToken.exp);
-        assert.deepEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
+        assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             profile: 'organisme',
             raisonSociale: 'Pole Emploi Formation',
             siret: '6080274100045',
@@ -63,7 +63,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         });
     });
 
-    it('can login as financer', async () => {
+    it('can login as financeur', async () => {
 
         let app = await startServer();
         await insertIntoDatabase('accounts', newFinancerAccount({
@@ -74,16 +74,16 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         .post('/api/backoffice/login')
         .send({ username: 'contact@financer.fr', password: 'password' });
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
 
         let body = response.body;
-        assert.equal(body.token_type, 'bearer');
+        assert.strictEqual(body.token_type, 'bearer');
         assert.ok(body.access_token);
 
         let decodedToken = JWT.decode(body.access_token);
         assert.ok(decodedToken.iat);
         assert.ok(decodedToken.exp);
-        assert.deepEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
+        assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             profile: 'financeur',
             codeRegion: '11',
             codeFinanceur: '2',
@@ -103,7 +103,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         .post('/api/backoffice/login')
         .send({ username: 'admin@pole-emploi.fr', password: 'password' });
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
     });
 
     it('should rehash password', async () => {
@@ -121,7 +121,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let response = await request(app)
         .post('/api/backoffice/login')
         .send({ username: 'admin@pole-emploi.fr', password: 'password' });
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
 
         let db = await getTestDatabase();
         let res = await db.collection('accounts').findOne({ _id: account._id });
@@ -132,7 +132,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         response = await request(app)
         .post('/api/backoffice/login')
         .send({ username: 'admin@pole-emploi.fr', password: 'password' });
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
     });
 
 
@@ -145,10 +145,33 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         .post('/api/backoffice/login')
         .send({ username: 'invalid@email.fr', password: 'password' });
 
-        assert.equal(response.statusCode, 400);
+        assert.strictEqual(response.statusCode, 400);
 
         let body = response.body;
-        assert.deepEqual(body, {
+        assert.deepStrictEqual(body, {
+            error: true
+        });
+    });
+
+    it('should reject login when organisme account has not been created', async () => {
+
+        let app = await startServer();
+        let account = newOrganismeAccount({
+            meta: {
+                siretAsString: '6080274100045'
+            },
+        });
+        delete account.passwordHash;
+        await insertIntoDatabase('accounts', account);
+
+        let response = await request(app)
+        .post('/api/backoffice/login')
+        .send({ username: '6080274100045', password: 'password' });
+
+        assert.strictEqual(response.statusCode, 400);
+
+        let body = response.body;
+        assert.deepStrictEqual(body, {
             error: true
         });
     });
@@ -172,12 +195,12 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let response = await request(app)
         .get(`/api/backoffice/login?access_token=${authUrl.split('access_token=')[1]}`);
 
-        assert.deepEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.statusCode, 200);
         assert.ok(response.body.access_token);
         let event = await db.collection('events').findOne({ type: 'login-access-token' });
         assert.ok(event.date);
         assert.ok(event.source.ip);
-        assert.deepEqual(event.source.siret, '22222222222222');
+        assert.deepStrictEqual(event.source.siret, '22222222222222');
     });
 
 
@@ -188,8 +211,8 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let response = await request(app)
         .get('/api/backoffice/login?access_token=INVALID');
 
-        assert.equal(response.statusCode, 400);
-        assert.deepEqual(response.body.message, 'Token invalide');
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body.message, 'Token invalide');
     });
 
     it('can not access a ressource with invalid token', async () => {
@@ -200,6 +223,6 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         .get('/api/backoffice/organisation/111111111111/info')
         .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiZmluYW.INVALID');
 
-        assert.equal(response.statusCode, 401);
+        assert.strictEqual(response.statusCode, 401);
     });
 }));
