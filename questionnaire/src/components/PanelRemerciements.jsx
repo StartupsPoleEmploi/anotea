@@ -8,7 +8,7 @@ class PanelRemerciements extends Component {
 
     static propTypes = {
         infosRegion: PropTypes.object.isRequired,
-        token: PropTypes.string.isRequired
+        stagiaire: PropTypes.object.isRequired
     };
 
     render() {
@@ -21,13 +21,13 @@ class PanelRemerciements extends Component {
 
                     <div className="links">
                         <div className="link">
-                            <a className="btn" href={`/link/${this.props.token}?goto=lbb`} target="_blank" rel="noopener noreferrer"><strong>Les entreprises qui recrutent</strong> dans votre secteur</a>
+                            <a className="btn" href={`/link/${this.props.stagiaire.token}?goto=lbb`} target="_blank" rel="noopener noreferrer"><strong>Les entreprises qui recrutent</strong> dans votre secteur</a>
                         </div>
                         <div className="link">
-                            <a className="btn" href={`/link/${this.props.token}?goto=pe`} target="_blank" rel="noopener noreferrer"><strong>Les offres d’emploi</strong> en lien avec votre formation</a>
+                            <a className="btn" href={`/link/${this.props.stagiaire.token}?goto=pe`} target="_blank" rel="noopener noreferrer"><strong>Les offres d’emploi</strong> en lien avec votre formation</a>
                         </div>
                         <div className="link">
-                            <a className="btn" href={`/link/${this.props.token}?goto=clara`} target="_blank" rel="noopener noreferrer"><strong>Les aides au retour à l’emploi</strong> avec l’outil Clara</a>
+                            <a className="btn" href={`/link/${this.props.stagiaire.token}?goto=clara`} target="_blank" rel="noopener noreferrer"><strong>Les aides au retour à l’emploi</strong> avec l’outil Clara</a>
                         </div>
                         <div className="clear"></div>
                     </div>
@@ -42,7 +42,7 @@ class PanelRemerciements extends Component {
                         <div className="imgLien">
                             <a className="textimage" href="https://labonneformation.pole-emploi.fr/" title="Visiter labonneformation.fr" target="_blank" rel="noopener noreferrer"><img src="/img/labonneformation.png" alt="" /> </a>
                             { this.props.infosRegion.carifLinkEnabled &&
-                                <a className="textimage" href="<%= carifURL %>" target="_blank"><img src="/img/regions/logo-questionnaire/carif-<%=trainee.codeRegion%>.png" alt="" /> </a>
+                                <a className="textimage" href={this.props.infosRegion.carifURL} target="_blank" rel="noopener noreferrer"><img src={`/img/regions/logo-questionnaire/carif-${this.props.stagiaire.codeRegion}.png`} alt="" /> </a>
                             }
                         </div>
                     </blockquote>

@@ -11,20 +11,20 @@ import PanelRemerciements from './PanelRemerciements';
 class Remerciements extends Component {
 
     static propTypes = {
-        trainee: PropTypes.object.isRequired,
+        stagiaire: PropTypes.object.isRequired,
         infosRegion: PropTypes.object.isRequired
     };
 
     render() {
         return (
             <div className="remerciements">
-                { this.props.trainee &&
+                { this.props.stagiaire &&
                     <div>
-                        <Header trainee={this.props.trainee} />
+                        <Header stagiaire={this.props.stagiaire} />
 
-                        <PanelRemerciements infosRegion={this.props.infosRegion} trainee={this.props.trainee} />
+                        <PanelRemerciements infosRegion={this.props.infosRegion} stagiaire={this.props.stagiaire} />
 
-                        <Footer codeRegion={this.props.trainee.codeRegion} />
+                        <Footer codeRegion={this.props.stagiaire.codeRegion} />
                     </div>
                 }
             </div>

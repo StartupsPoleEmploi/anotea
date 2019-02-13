@@ -14,7 +14,7 @@ import ErrorAlert from './ErrorAlert';
 
 import PropTypes from 'prop-types';
 
-import { getTraineeInfo, submitAvis } from '../lib/traineeService';
+import { getStagiaireInfo, submitAvis } from '../lib/stagiaireService';
 
 class Questionnaire extends Component {
 
@@ -28,7 +28,7 @@ class Questionnaire extends Component {
             commentaire: ''
         },
         pseudo: '',
-        trainee: null,
+        stagiaire: null,
         accord: false,
         accordEntreprise: false,
         error: null,
@@ -38,7 +38,7 @@ class Questionnaire extends Component {
     static propTypes = {
         token: PropTypes.string.isRequired,
         showRemerciements: PropTypes.func.isRequired,
-        setTrainee: PropTypes.func.isRequired
+        setStagiaire: PropTypes.func.isRequired
     }
     
     constructor(props) {
@@ -48,12 +48,12 @@ class Questionnaire extends Component {
     }
 
     loadInfo = async token => {
-        let info = await getTraineeInfo(token);
+        let info = await getStagiaireInfo(token);
         if (info.error) {
             this.setState({ error: info.reason });
         } else {
-            this.setState({ trainee: info.trainee });
-            this.props.setTrainee(info.trainee);
+            this.setState({ stagiaire: info.trainee });
+            this.props.setStagiaire(info.trainee);
         }
     }
 
@@ -103,9 +103,9 @@ class Questionnaire extends Component {
     render() {
         return (
             <div className="questionnaire">
-                { !this.state.error && this.state.trainee &&
+                { !this.state.error && this.state.stagiaire &&
                     <div>
-                        <Header trainee={this.state.trainee} />
+                        <Header stagiaire={this.state.stagiaire} />
 
                         <Notes setValid={this.setValid} />
 
@@ -121,7 +121,7 @@ class Questionnaire extends Component {
                             <ErrorAlert />
                         }
 
-                        <Footer codeRegion={this.state.trainee.codeRegion} />
+                        <Footer codeRegion={this.state.stagiaire.codeRegion} />
                     </div>
                 }
 
