@@ -8,7 +8,7 @@ export default class OrganismePanel extends React.PureComponent {
 
     state = {
         siret: '',
-        message: false,
+        message: null,
         loading: false,
         organisme: null
     };
@@ -23,9 +23,9 @@ export default class OrganismePanel extends React.PureComponent {
         this.setState({ message: null });
     };
 
-    searchOrganisation = async () => {
+    searchOrganisation = async (options = {}) => {
 
-        this.setState({ loading: true, organisme: null, message: false }, async () => {
+        this.setState({ organisme: null, ...(options.silent ? {} : { message: null, loading: true }) }, async () => {
             try {
                 let organisme = await getOrganisationInfo(this.state.siret);
                 this.setState({ organisme: organisme, loading: false });
@@ -86,7 +86,7 @@ export default class OrganismePanel extends React.PureComponent {
                                     <p className="description">Résultats de la recherche</p>
                                     <OrganismeCard
                                         organisme={this.state.organisme}
-                                        reloadOrganisation={this.searchOrganisation}
+                                        reloadOrganisation={() => this.searchOrganisation({ silent: true })}
                                         showMessage={this.showMessage}
                                     />
                                 </div>
