@@ -9,7 +9,12 @@ class Commentaire extends Component {
     state = {
         titre: '',
         texte: '',
-        pseudo: ''
+        pseudo: '',
+        badwords: {
+            titre: false,
+            texte: false,
+            pseudo: false
+        }
     }
 
     items = [
@@ -34,11 +39,12 @@ class Commentaire extends Component {
         onChange: PropTypes.func.isRequired
     };
 
-    onChange = e => {
+    onChange = (name, value, containsBadwords) => {
         let state = this.state;
-        state[e.target.name] = e.target.value;
+        state[name] = value;
+        state.badwords = Object.assign(this.state.badwords, { [name]: containsBadwords });
         this.setState(state);
-        this.props.onChange({ commentaire: { titre: state.titre, texte: state.texte }, pseudo: state.pseudo });
+        this.props.onChange({ commentaire: { titre: state.titre, texte: state.texte }, pseudo: state.pseudo }, state.badwords);
     }
 
     getItems = () => {

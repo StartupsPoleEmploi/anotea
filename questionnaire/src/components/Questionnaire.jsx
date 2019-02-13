@@ -27,6 +27,7 @@ class Questionnaire extends Component {
             titre: '',
             texte: ''
         },
+        badwords: false,
         pseudo: '',
         stagiaire: null,
         accord: false,
@@ -102,8 +103,8 @@ class Questionnaire extends Component {
         this.closeModal();
     }
 
-    updateCommentaire = commentaire => {
-        this.setState({ commentaire: commentaire.commentaire, pseudo: commentaire.pseudo });
+    updateCommentaire = (commentaire, badwords) => {
+        this.setState({ commentaire: commentaire.commentaire, pseudo: commentaire.pseudo, badwords: badwords.titre || badwords.texte || badwords.pseudo });
     }
 
     updateAccord = ({accord, accordEntreprise }) => {
@@ -125,7 +126,7 @@ class Questionnaire extends Component {
 
                         <Autorisations onChange={this.updateAccord}/>
 
-                        <SendButton enabled={this.state.isValid} onSend={this.openModal} />
+                        <SendButton enabled={this.state.isValid && !this.state.badwords} onSend={this.openModal} />
 
                         { this.state.formError === 'bad data' &&
                             <ErrorAlert />

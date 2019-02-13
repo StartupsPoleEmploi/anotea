@@ -98,4 +98,17 @@
     .remaining.no {
         color: $color-red;
     }
+
+    textarea.badwords {
+        border: solid 1px $color-red;
+        color: $color-red;
+    }
+
+    .alert.badwords {
+        color: $color-red;
+        font-size: 12px;
+        font-style: italic;
+        font-weight: bold;
+        line-height: 16px;
+    }
 }

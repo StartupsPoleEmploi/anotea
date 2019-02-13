@@ -131,6 +131,10 @@ module.exports = ({ db, logger, configuration }) => {
         };
     };
 
+    router.get('/questionnaire/checkBadwords', tryAndCatch(async (req, res) => {
+        res.send({ isGood: badwords.isGood(req.query.sentence) });
+    }));
+
     router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
 
         let trainee = req.trainee;
@@ -182,13 +186,12 @@ module.exports = ({ db, logger, configuration }) => {
                         let infos = await getInfosRegion(trainee);
                         res.send({ error: false, infos });
                     } else {
-                        res.send({ error: true, reason: resultAvis.error });
+                        throw new BadDataError('badwords');
                     }
                 } else {
                     throw new BadDataError();
                 }
             } catch (e) {
-                console.log(e)
                 throw new BadDataError();
             }
         }
