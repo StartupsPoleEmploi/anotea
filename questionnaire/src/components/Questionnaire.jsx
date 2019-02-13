@@ -48,12 +48,17 @@ class Questionnaire extends Component {
     }
 
     loadInfo = async token => {
-        let info = await getStagiaireInfo(token);
-        if (info.error) {
-            this.setState({ error: info.reason });
-        } else {
+        try {
+            let info = await getStagiaireInfo(token);
             this.setState({ stagiaire: info.trainee });
             this.props.setStagiaire(info.trainee);
+        } catch (ex) {
+            let error = await ex.json;
+            if (error.statusCode === 423) {
+                this.setState({ error: 'already sent' });
+            } else {
+                this.setState({ error: 'error' });
+            }
         }
     }
 
@@ -82,11 +87,16 @@ class Questionnaire extends Component {
             accordEntreprise: this.state.accordEntreprise
         };
 
-        let response = await submitAvis(this.state.token, avis);
-        if (response.error) {
-            this.setState({ formError: response.reason });
-        } else {
+        try {
+            let response = await submitAvis(this.state.token, avis);
             this.props.showRemerciements(response.infos);
+        } catch (ex) {
+            let error = await ex.json;
+            if (error.statusCode === 400) {
+                this.setState({ formError: 'bad data' });
+            } else {
+                this.setState({ error: 'error' });
+            }
         }
 
         this.closeModal();

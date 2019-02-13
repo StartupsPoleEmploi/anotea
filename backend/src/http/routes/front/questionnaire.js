@@ -5,6 +5,8 @@ const Joi = require('joi');
 const s = require('string');
 const externalLinks = require('./utils/externalLinks');
 const { sanitize } = require('./utils/userInput');
+const { tryAndCatch } = require('../routes-utils');
+const { AlreadySentError, BadDataError } = require('./../../../common/errors');
 
 module.exports = ({ db, logger, configuration }) => {
 
@@ -113,7 +115,7 @@ module.exports = ({ db, logger, configuration }) => {
         };
     };
 
-    router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, async (req, res) => {
+    router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
 
         let trainee = req.trainee;
         let comment = await db.collection('comment').findOne({
@@ -126,11 +128,11 @@ module.exports = ({ db, logger, configuration }) => {
             db.collection('trainee').updateOne({ token: req.params.token }, { $set: { 'tracking.click': new Date() } });
             res.send({ trainee: trainee });
         } else {
-            res.send({ error: true, reason: 'already sent' });
+            throw new AlreadySentError();
         }
-    });
+    }));
 
-    router.post('/questionnaire/:token', getTraineeFromToken, async (req, res) => {
+    router.post('/questionnaire/:token', getTraineeFromToken, tryAndCatch(async (req, res) => {
 
         let trainee = req.trainee;
         let comment = await db.collection('comment').findOne({
@@ -140,7 +142,7 @@ module.exports = ({ db, logger, configuration }) => {
         });
 
         if (comment !== null) {
-            res.send({ error: true, reason: 'already sent', trainee: trainee });
+            throw new AlreadySentError();
         } else {
             try {
                 let resultNotes = validateNotes(req.body);
@@ -167,13 +169,13 @@ module.exports = ({ db, logger, configuration }) => {
                         res.send({ error: true, reason: resultAvis.error });
                     }
                 } else {
-                    res.send({ error: true, reason: 'bad data' });
+                    throw new BadDataError();
                 }
             } catch (e) {
-                res.send({ error: true, reason: 'bad data' });
+                throw new BadDataError();
             }
         }
-    });
+    }));
 
     return router;
 };
