@@ -82,4 +82,20 @@
   	width: 451.22px;
   	@extend .placeholder;
   }
+
+    .remaining {
+        font-size: 12px;
+        font-style: italic;
+        line-height: 18px;
+        text-align: right;
+        padding: 5px 20px;
+    }
+
+    .remaining.yes {
+        color: $color-black;
+    }
+
+    .remaining.no {
+        color: $color-red;
+    }
 }
