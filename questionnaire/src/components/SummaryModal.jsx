@@ -46,7 +46,7 @@ class SummaryModal extends Component {
                 <h2>Confirmer l&apos;envoi de l&apos;avis ?</h2>
 
                 <div className="summary container">
-                    <div className="header row">
+                    <div className="header-summary row">
                         <div className="col-sm-2">
                             <AverageScore score={this.props.score} />
                             <span>par <strong>{this.props.pseudo !== '' ? this.props.pseudo : 'anonyme'}</strong></span>
@@ -72,7 +72,7 @@ class SummaryModal extends Component {
                         {
                             items.map((item, index) => {
                                 return (
-                                    <li className={`col-sm ${index % 2 === 0 ? 'even' : 'odd'}`} key={index}>
+                                    <li className={`col-sm-2 ${index % 2 === 0 ? 'even' : 'odd'}`} key={index}>
                                         <h3>{item.title}</h3>
                                         <span>{this.props.notes[index].value}/5 <i className="fas fa-star" /></span>
                                     </li>
