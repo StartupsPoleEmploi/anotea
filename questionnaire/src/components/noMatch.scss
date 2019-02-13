@@ -1,8 +1,10 @@
+@import '../styles/variables';
+
 .no-match {
-    color: #8E9093;
+    color: $color-grey-50;
     max-width: 760px;
     margin: auto;
-    background-color: white;
+    background-color: $color-white;
     padding: 20px;
 
     .error-page {
@@ -30,7 +32,7 @@
 
     section.error-page h2 {
         font-size: 20px;
-        color: rgb(77, 122, 219);
+        color: $color-blue;
         text-align: center;
         font-weight: bold;
     }

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import './questionnaire.scss';
 
-import Header from './Header';
 import Notes from './Notes';
 import Commentaire from './Commentaire';
 import Footer from './Footer';
@@ -11,6 +10,7 @@ import SendButton from './common/SendButton';
 import SummaryModal from './SummaryModal';
 import ErrorPanel from './ErrorPanel';
 import ErrorAlert from './ErrorAlert';
+import Header from './Header';
 
 import PropTypes from 'prop-types';
 
