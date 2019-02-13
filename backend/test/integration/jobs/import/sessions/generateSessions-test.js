@@ -110,6 +110,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             numero: 'SE_XXXXXX',
             region: '11',
             code_region: '11',
+            avis: [],
             score: {
                 nb_avis: 0
             },
@@ -413,7 +414,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
-        assert.equal(session.avis, undefined);
+        assert.deepStrictEqual(session.avis, []);
     });
 
     it('should reconcile rejected comment', async () => {

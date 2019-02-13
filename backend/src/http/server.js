@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const _ = require('lodash');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const RateLimit = require('express-rate-limit');
@@ -22,9 +23,10 @@ module.exports = components => {
                 ...(error ? { error } : {}),
                 request: {
                     uri: (req.baseUrl || '') + (req.url || '-'),
+                    parameters: _.omit(req.query, ['access_token']),
                     method: req.method,
                     headers: req.headers,
-                    body: req.body
+                    body: _.omit(req.body, ['password'])
                 },
                 response: {
                     statusCode: res.statusCode,
