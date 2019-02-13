@@ -8,15 +8,37 @@ const middlewares = require('./middlewares');
 
 module.exports = components => {
 
-    let { logger, configuration, auth } = components;
-
     let app = express();
+    let { logger, configuration, sentry, auth } = components;
+    let httpComponents = Object.assign({}, components, {
+        middlewares: middlewares(auth, logger, configuration),
+    });
 
+    let logMiddleware = (req, res, next) => {
+        res.on('finish', () => {
+            let error = req.err;
+            logger.info({
+                type: 'http',
+                ...(error ? { error } : {}),
+                request: {
+                    uri: (req.baseUrl || '') + (req.url || '-'),
+                    method: req.method,
+                    headers: req.headers,
+                    body: req.body
+                },
+                response: {
+                    statusCode: res.statusCode,
+                },
+            }, `Http Request ${error ? 'KO' : 'OK'}`);
+        });
+
+        next();
+    };
+
+    app.use(logMiddleware);
     app.use(cookieParser(configuration.security.secret));
     app.use(express.static(path.join(__dirname, '/public')));
-    app.use(bodyParser.urlencoded({
-        extended: true
-    }));
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json({
         verify: (req, res, buf, encoding) => {
             if (buf && buf.length) {
@@ -66,10 +88,6 @@ module.exports = components => {
         }
     }));
 
-    let httpComponents = Object.assign({}, components, {
-        middlewares: middlewares(auth, logger, configuration),
-    });
-
     //Public routes
     app.use('/api', require('./routes/swagger')(httpComponents));
     app.use('/api', require('./routes/api/v1/ping')(httpComponents));
@@ -103,15 +121,13 @@ module.exports = components => {
         res.render('errors/404');
     });
 
-    // eslint-disable-next-line no-unused-vars
-    app.use((rawError, req, res, next) => {
+    //Error middleware
+    app.use((rawError, req, res, next) => { // eslint-disable-line no-unused-vars
 
-        logger.error(rawError);
-
-        let error = rawError;
+        let error = req.err = rawError;
         if (!rawError.isBoom) {
             if (rawError.name === 'ValidationError') {
-                //This is a joi error
+                //This is a joi validatin error
                 error = Boom.badRequest('Erreur de validation');
                 error.output.payload.details = rawError.details;
             } else {
@@ -119,6 +135,10 @@ module.exports = components => {
                     statusCode: rawError.status || 500,
                     message: rawError.message || 'Une erreur est survenue',
                 });
+
+                if (error.statusCode > 404) {
+                    sentry.sendError(rawError);
+                }
             }
         }
         return res.status(error.output.statusCode).send(error.output.payload);

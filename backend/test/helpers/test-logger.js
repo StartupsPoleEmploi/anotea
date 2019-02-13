@@ -1,12 +1,8 @@
-const winston = require('winston');
+const createLogger = require('../../src/common/components/logger');
 
-module.exports = new winston.Logger({
-    transports: [
-        new winston.transports.Console({
-            name: 'console',
-            colorize: true,
-            timestamp: true,
-            level: process.env.ANOTEA_LOG_LEVEL || 'fatal'
-        }),
-    ]
+module.exports = createLogger('anotea-test', {
+    log: {
+        level: process.env.ANOTEA_LOG_LEVEL || 'fatal',
+        json: false,
+    }
 });
