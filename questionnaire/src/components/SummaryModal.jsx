@@ -54,15 +54,15 @@ class SummaryModal extends Component {
                         
 
                         <div className="col-sm-8">
-                            { (this.props.commentaire.titre !== '' || this.props.commentaire.commentaire !== '') && 
+                            { (this.props.commentaire.titre !== '' || this.props.commentaire.texte !== '') && 
                                 <div>
                                     <h3>{this.props.commentaire.titre}</h3>
                                     <p>
-                                        {this.props.commentaire.commentaire}
+                                        {this.props.commentaire.texte}
                                     </p>
                                 </div>
                             }
-                            { this.props.commentaire.titre === '' && this.props.commentaire.commentaire === '' && 
+                            { this.props.commentaire.titre === '' && this.props.commentaire.texte === '' && 
                                 <span>Si vous souhaitez écrire un commentaire, cliquer sur annuler.</span>
                             }
                         </div>

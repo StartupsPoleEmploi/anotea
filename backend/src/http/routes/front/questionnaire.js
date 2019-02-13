@@ -64,28 +64,44 @@ module.exports = ({ db, logger, configuration }) => {
         return Joi.validate(rates, schema);
     };
 
-    const validateAvis = (notes, body) => {
+    const sanitizeBody = body => {
+
+        let sanitizedBody = Object.assign({}, body);
+
+        sanitizedBody.pseudo = sanitize(body.pseudo);
+        sanitizedBody.texte = sanitize(body.commentaire.texte);
+        sanitizedBody.titre = sanitize(body.commentaire.titre);
+
+        return sanitizedBody;
+    };
+
+    const buildAvis = (notes, body) => {
         let avis = {};
         avis.rates = notes;
 
-        let pseudo = sanitize(body.pseudo);
-        let commentTxt = sanitize(body.commentaire.texte);
-        let commentTitle = sanitize(body.commentaire.titre);
+        avis.pseudo = body.pseudo.replace(/ /g, '');
 
-        if (s(pseudo.replace(/ /g, '')).isAlphaNumeric()) {
-            avis.pseudo = pseudo;
-            if (commentTitle !== '' || commentTxt !== '') {
-                avis.comment = {
-                    title: commentTitle,
-                    text: commentTxt
-                };
-            }
-            avis.accord = body.accord;
-            avis.accordEntreprise = body.accordEntreprise;
+        let commentTxt = body.commentaire.texte;
+        let commentTitle = body.commentaire.titre;
 
-            let pseudoOK = badwords.isGood(pseudo);
-            let commentOK = badwords.isGood(commentTxt);
-            let commentTitleOK = badwords.isGood(commentTitle);
+        if (commentTitle !== '' || commentTxt !== '') {
+            avis.comment = {
+                title: commentTitle,
+                text: commentTxt
+            };
+        }
+
+        avis.accord = body.accord;
+        avis.accordEntreprise = body.accordEntreprise;
+
+        return avis;
+    };
+
+    const validateAvis = avis => {
+        if (s(avis.pseudo).isAlphaNumeric()) {
+            let pseudoOK = badwords.isGood(avis.pseudo);
+            let commentOK = avis.comment ? badwords.isGood(avis.comment.text) : true;
+            let commentTitleOK = avis.comment ? badwords.isGood(avis.comment.title) : true;
 
             if (pseudoOK && commentOK && commentTitleOK) {
                 return { error: null, avis };
@@ -147,7 +163,7 @@ module.exports = ({ db, logger, configuration }) => {
             try {
                 let resultNotes = validateNotes(req.body);
                 if (resultNotes.error === null) {
-                    let resultAvis = validateAvis(resultNotes.value, req.body);
+                    let resultAvis = validateAvis(buildAvis(resultNotes.value, sanitizeBody(req.body)));
                     if (resultAvis.error === null) {
                         let avis = {
                             date: new Date(),
@@ -172,6 +188,7 @@ module.exports = ({ db, logger, configuration }) => {
                     throw new BadDataError();
                 }
             } catch (e) {
+                console.log(e)
                 throw new BadDataError();
             }
         }

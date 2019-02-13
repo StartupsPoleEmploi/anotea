@@ -8,7 +8,7 @@ class Commentaire extends Component {
 
     state = {
         titre: '',
-        commentaire: '',
+        texte: '',
         pseudo: ''
     }
 
@@ -16,7 +16,7 @@ class Commentaire extends Component {
         {
             title: 'Votre commentaire',
             placeholder: 'Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois.',
-            name: 'commentaire',
+            name: 'texte',
         },
         {
             title: 'Titre du commentaire',
@@ -38,7 +38,7 @@ class Commentaire extends Component {
         let state = this.state;
         state[e.target.name] = e.target.value;
         this.setState(state);
-        this.props.onChange({ commentaire: { titre: state.titre, texte: state.commentaire }, pseudo: state.pseudo });
+        this.props.onChange({ commentaire: { titre: state.titre, texte: state.texte }, pseudo: state.pseudo });
     }
 
     getItems = () => {

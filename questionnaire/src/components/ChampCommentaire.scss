@@ -9,7 +9,7 @@
     padding-top: 16px;
   }
 
-  .title_commentaire {
+  .title_texte {
   	@extend .title;
     display: block;
   }
@@ -46,7 +46,7 @@
     display: block;
   }
 
-  .textarea_commentaire {
+  .textarea_texte {
   	height: 79px;
   	@extend .textarea;
   }
