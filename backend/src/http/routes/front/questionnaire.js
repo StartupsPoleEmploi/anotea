@@ -98,6 +98,10 @@ module.exports = ({ db, logger, configuration }) => {
     };
 
     const validateAvis = avis => {
+        if (avis.pseudo.length > 200 || avis.comment.title.length > 200 || avis.text.length > 200) {
+            return { error: 'too long' };
+        }
+
         if (s(avis.pseudo).isAlphaNumeric()) {
             let pseudoOK = badwords.isGood(avis.pseudo);
             let commentOK = avis.comment ? badwords.isGood(avis.comment.text) : true;
@@ -186,7 +190,7 @@ module.exports = ({ db, logger, configuration }) => {
                         let infos = await getInfosRegion(trainee);
                         res.send({ error: false, infos });
                     } else {
-                        throw new BadDataError('badwords');
+                        throw new BadDataError();
                     }
                 } else {
                     throw new BadDataError();
