@@ -32,14 +32,22 @@ module.exports = db => {
                         }
                     },
                     score: {
-                        nb_avis: { $size: '$avis' },
-                        notes: {
-                            accueil: '$accueil',
-                            contenu_formation: '$contenu_formation',
-                            equipe_formateurs: '$equipe_formateurs',
-                            moyen_materiel: '$moyen_materiel',
-                            accompagnement: '$accompagnement',
-                            global: '$global'
+                        $cond: {
+                            if: {
+                                $eq: ['$accueil', null]
+                            },
+                            then: { nb_avis: 0 },
+                            else: {
+                                nb_avis: { $size: '$avis' },
+                                notes: {
+                                    accueil: '$accueil',
+                                    contenu_formation: '$contenu_formation',
+                                    equipe_formateurs: '$equipe_formateurs',
+                                    moyen_materiel: '$moyen_materiel',
+                                    accompagnement: '$accompagnement',
+                                    global: '$global'
+                                }
+                            }
                         }
                     },
                     formation: '$formation',

@@ -128,7 +128,7 @@ module.exports = db => {
                     numero: '$numero_session',
                     region: '$region',
                     code_region: '$regions.codeRegion',
-                    avis: '$reconciliation.comments',
+                    avis: { $ifNull: ['$reconciliation.comments', []] },
                     score: '$reconciliation.score',
                     formation: {
                         numero: '$numero_formation',
