@@ -15,8 +15,8 @@ class PanelRemerciements extends Component {
         return (
             <div className="panel-remerciements">
                 { this.props.infosRegion.showLinks &&
-                <div>
-                    <h1>Et après la formation ?</h1>
+                <div className="links-block">
+                    <h1>Et après la formation...</h1>
                     <p>Vous avez <strong>mis votre CV à jour</strong> ? Nous pouvons vous aider à <strong>trouver un emploi</strong> !</p>
 
                     <div className="links">
@@ -33,19 +33,16 @@ class PanelRemerciements extends Component {
                     </div>
                 </div>
                 }
-                <section className="divPage3">
+                <section className="merci">
                     <h2>Merci d'avoir particip&eacute;</h2>
-                    <blockquote>
-                        <p className="txtPage3">Vos notes et commentaires seront publi&eacute;s sur les futures formations similaires &agrave; votre session de formation, sur nos sites partenaires ci-dessous.</p>
-                    </blockquote>
-                    <blockquote className="remerciements">
-                        <div className="imgLien">
-                            <a className="textimage" href="https://labonneformation.pole-emploi.fr/" title="Visiter labonneformation.fr" target="_blank" rel="noopener noreferrer"><img src="/img/labonneformation.png" alt="" /> </a>
-                            { this.props.infosRegion.carifLinkEnabled &&
-                                <a className="textimage" href={this.props.infosRegion.carifURL} target="_blank" rel="noopener noreferrer"><img src={`/img/regions/logo-questionnaire/carif-${this.props.stagiaire.codeRegion}.png`} alt="" /> </a>
-                            }
-                        </div>
-                    </blockquote>
+                    <p>Vos notes et commentaires seront publi&eacute;s sur les futures formations similaires &agrave; votre session de formation, sur nos sites partenaires ci-dessous.</p>
+
+                    <div className="liens">
+                        {this.props.infosRegion.carifLinkEnabled &&
+                            <a className="textimage" href={this.props.infosRegion.carifURL} target="_blank" rel="noopener noreferrer"><img src={`/img/regions/logo-questionnaire/carif-${this.props.stagiaire.codeRegion}.png`} alt="" /> </a>
+                        }
+                        <a className="textimage" href="https://labonneformation.pole-emploi.fr/" title="Visiter labonneformation.fr" target="_blank" rel="noopener noreferrer"><img src="/img/labonneformation.jpg" alt="" /> </a>
+                    </div>
                 </section>
             </div>
         );

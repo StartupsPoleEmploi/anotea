@@ -256,8 +256,9 @@ h1 {
 }
 
 .retrouver .circle.lbf img {
-    padding-left: 23px;
-    padding-top: 42px;
+    padding-left: 17px;
+    padding-top: 63px;
+    width: 150px;
 }
 
 .donnees {

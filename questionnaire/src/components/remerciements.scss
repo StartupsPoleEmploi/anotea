@@ -1,5 +1,12 @@
 .remerciements {
-    margin: auto;
-    width: 624px;
+    width: 100%;
 
+    .header, .footer {
+        width: fit-content;
+        margin: auto;
+    }
+
+    .footer {
+        margin-top: 2em;
+    }
 }
