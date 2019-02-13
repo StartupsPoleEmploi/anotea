@@ -103,8 +103,6 @@ class Questionnaire extends Component {
     }
 
     updateCommentaire = commentaire => {
-        let texte = commentaire.texte;
-        console.log(commentaire)
         this.setState({ commentaire: commentaire.commentaire, pseudo: commentaire.pseudo });
     }
 
