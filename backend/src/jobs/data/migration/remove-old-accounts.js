@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-module.exports = async db => {
-    await db.collection('moderator').drop();
-    await db.collection('financer').drop();
+module.exports = db => {
+    return Promise.all([
+        db.collection('moderator').drop(),
+        db.collection('financer').drop(),
+    ]);
 };

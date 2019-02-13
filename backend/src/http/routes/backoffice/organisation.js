@@ -107,7 +107,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                 filter.published = { $eq: true };
                 filter.reported = { $ne: true };
             } else if (req.query.filter === 'answered') {
-                filter.answer = { $exists: true };
+                filter.reponse = { $exists: true };
             } else if (req.query.filter === 'all') {
                 filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
             }
@@ -206,7 +206,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                 filter.published = { $eq: true };
                 filter.reported = { $ne: true };
             } else if (req.query.filter === 'answered') {
-                filter.answer = { $exists: true };
+                filter.reponse = { $exists: true };
             } else if (req.query.filter === 'all') {
                 filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
             }
@@ -342,7 +342,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
             inventory.reported = await db.collection('comment').countDocuments({ ...filter, reported: true });
             inventory.answered = await db.collection('comment').countDocuments({
                 ...filter,
-                answer: { $exists: true },
+                reponse: { $exists: true },
             });
 
             filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
@@ -380,7 +380,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
 
             inventory.answered = await db.collection('comment').countDocuments({
                 ...filter,
-                answer: { $exists: true },
+                reponse: { $exists: true },
             });
 
             filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];

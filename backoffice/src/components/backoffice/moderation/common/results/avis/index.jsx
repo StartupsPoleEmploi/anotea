@@ -84,7 +84,7 @@ export default class Avis extends React.Component {
                     }
                 </div>
                 {
-                    options.showReponse && avis.answer &&
+                    options.showReponse && avis.reponse &&
                     <div className="row pb-3">
                         <div className="offset-4 col-7 px-0 py-3 ">
                             <Reponse avis={avis} />

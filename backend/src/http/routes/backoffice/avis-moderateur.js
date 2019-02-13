@@ -48,8 +48,8 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
             ...(status === 'published' ? { published: true } : {}),
             ...(status === 'reported' ? { reported: true } : {}),
             ...(status === 'none' ? { moderated: { $ne: true } } : {}),
-            ...(reponseStatus ? { answer: { $exists: true } } : {}),
-            ...(reponseStatus && reponseStatus !== 'all' ? { 'answer.status': reponseStatus } : {}),
+            ...(reponseStatus ? { reponse: { $exists: true } } : {}),
+            ...(reponseStatus && reponseStatus !== 'all' ? { 'reponse.status': reponseStatus } : {}),
             ...(filter ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
         })
         .sort(status === 'all' ? { date: -1 } : { lastModerationAction: -1 })

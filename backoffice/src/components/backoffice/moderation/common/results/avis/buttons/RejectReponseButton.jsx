@@ -18,7 +18,7 @@ export default class RejectReponseButton extends React.Component {
     };
 
     getDisableClass = () => {
-        return this.props.avis.answer.status === 'rejected' ? 'disabled' : '';
+        return this.props.avis.reponse.status === 'rejected' ? 'disabled' : '';
     };
 
     render() {

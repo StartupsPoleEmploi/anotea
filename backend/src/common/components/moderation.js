@@ -124,7 +124,13 @@ module.exports = (db, logger, mailer) => {
 
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: oid },
-                { $set: { reported: true } },
+                {
+                    $set: {
+                        reported: true,
+                        rejected: false,
+                        published: false,
+                    }
+                },
                 { returnOriginal: false },
             );
 
@@ -211,8 +217,8 @@ module.exports = (db, logger, mailer) => {
                 { _id: oid },
                 {
                     $set: {
-                        'answer.status': 'published',
-                        'answer.lastModerationAction': new Date(),
+                        'reponse.status': 'published',
+                        'reponse.lastModerationAction': new Date(),
                     }
                 },
                 { returnOriginal: false },
@@ -238,8 +244,8 @@ module.exports = (db, logger, mailer) => {
                 { _id: oid },
                 {
                     $set: {
-                        'answer.status': 'rejected',
-                        'answer.lastModerationAction': new Date(),
+                        'reponse.status': 'rejected',
+                        'reponse.lastModerationAction': new Date(),
                     }
                 },
                 { returnOriginal: false },
