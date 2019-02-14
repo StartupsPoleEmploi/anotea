@@ -1,10 +1,12 @@
+@import '../styles/variables';
+
 .footer {
     margin: 200px 0px 40px 0px;
 
     .propulsed {
         height: 17px;
         width: 125px;
-        color: #24303A;
+        color: $color-black;
         font-size: 14px;
         line-height: 17px;
     }

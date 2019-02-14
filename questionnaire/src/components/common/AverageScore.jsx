@@ -5,11 +5,10 @@ import Stars from './Stars';
 
 import './averageScore.scss';
 
-class SendButton extends Component {
+class AverageScore extends Component {
 
     static propTypes = {
-        score: PropTypes.number.isRequired,
-        addClassName: PropTypes.string
+        score: PropTypes.number.isRequired
     };
 
     roundHalf = num => Math.round(num * 2) / 2;
@@ -18,7 +17,7 @@ class SendButton extends Component {
 
     render() {
         return (
-            <div className={`average-score ${this.props.addClassName}`}>
+            <div className={`average-score`}>
                 <div className="score">
                     <span className="averageScore">{this.props.score ? this.formattedScore(this.props.score) : '-'}</span><span className="total">/ 5</span>
                 </div>
@@ -28,4 +27,4 @@ class SendButton extends Component {
     }
 }
 
-export default SendButton;
+export default AverageScore;

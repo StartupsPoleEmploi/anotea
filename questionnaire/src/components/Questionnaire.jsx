@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import './questionnaire.scss';
 
-import Header from './Header';
 import Notes from './Notes';
 import Commentaire from './Commentaire';
 import Footer from './Footer';
@@ -10,10 +9,12 @@ import Autorisations from './Autorisations';
 import SendButton from './common/SendButton';
 import SummaryModal from './SummaryModal';
 import ErrorPanel from './ErrorPanel';
+import ErrorAlert from './ErrorAlert';
+import Header from './Header';
 
 import PropTypes from 'prop-types';
 
-import { getTraineeInfo } from '../lib/traineeService';
+import { getStagiaireInfo, submitAvis } from '../lib/stagiaireService';
 
 class Questionnaire extends Component {
 
@@ -24,28 +25,41 @@ class Questionnaire extends Component {
         notes: [],
         commentaire: {
             titre: '',
-            commentaire: ''
+            texte: ''
         },
+        badwords: false,
         pseudo: '',
-        trainee: null
+        stagiaire: null,
+        accord: false,
+        accordEntreprise: false,
+        error: null,
+        formError: null
     }
 
     static propTypes = {
-        match: PropTypes.object.isRequired
+        token: PropTypes.string.isRequired,
+        showRemerciements: PropTypes.func.isRequired,
+        setStagiaire: PropTypes.func.isRequired
     }
     
     constructor(props) {
         super(props);
-        this.state.token = props.match.params.token;
+        this.state.token = props.token;
         this.loadInfo(this.state.token);
     }
 
     loadInfo = async token => {
-        let info = await getTraineeInfo(token);
-        if (info.error) {
-            this.setState({ error: info.reason });
-        } else {
-            this.setState({ trainee: info.trainee });
+        try {
+            let info = await getStagiaireInfo(token);
+            this.setState({ stagiaire: info.trainee });
+            this.props.setStagiaire(info.trainee);
+        } catch (ex) {
+            let error = await ex.json;
+            if (error.statusCode === 423) {
+                this.setState({ error: 'already sent' });
+            } else {
+                this.setState({ error: 'error' });
+            }
         }
     }
 
@@ -61,20 +75,48 @@ class Questionnaire extends Component {
         this.setState({ modalOpen: false });
     }
 
-    submit = () => {
+    submit = async () => {
+        let avis = {
+            avis_accueil: this.state.notes[0].value,
+            avis_contenu_formation: this.state.notes[1].value,
+            avis_equipe_formateurs: this.state.notes[2].value,
+            avis_moyen_materiel: this.state.notes[3].value,
+            avis_accompagnement: this.state.notes[4].value,
+            pseudo: this.state.pseudo,
+            commentaire: this.state.commentaire,
+            accord: this.state.accord,
+            accordEntreprise: this.state.accordEntreprise
+        };
 
+        try {
+            let response = await submitAvis(this.state.token, avis);
+            this.props.showRemerciements(response.infos);
+        } catch (ex) {
+            let error = await ex.json;
+            if (error.statusCode === 400) {
+                this.setState({ formError: 'bad data' });
+            } else {
+                this.setState({ error: 'error' });
+            }
+        }
+
+        this.closeModal();
     }
 
-    updateCommentaire = commentaire => {
-        this.setState({ commentaire: commentaire.commentaire, pseudo: commentaire.pseudo });
+    updateCommentaire = (commentaire, badwords) => {
+        this.setState({ commentaire: commentaire.commentaire, pseudo: commentaire.pseudo, badwords: badwords.titre || badwords.texte || badwords.pseudo });
+    }
+
+    updateAccord = ({accord, accordEntreprise }) => {
+        this.setState({ accord, accordEntreprise });
     }
 
     render() {
         return (
             <div className="questionnaire">
-                { !this.state.error && this.state.trainee &&
+                { !this.state.error && this.state.stagiaire &&
                     <div>
-                        <Header trainee={this.state.trainee} />
+                        <Header stagiaire={this.state.stagiaire} />
 
                         <Notes setValid={this.setValid} />
 
@@ -82,11 +124,15 @@ class Questionnaire extends Component {
                             <Commentaire onChange={this.updateCommentaire} />
                         }
 
-                        <Autorisations />
+                        <Autorisations onChange={this.updateAccord}/>
 
-                        <SendButton enabled={this.state.isValid} onSend={this.openModal} />
+                        <SendButton enabled={this.state.isValid && !this.state.badwords} onSend={this.openModal} />
 
-                        <Footer codeRegion={this.state.trainee.codeRegion} />
+                        { this.state.formError === 'bad data' &&
+                            <ErrorAlert />
+                        }
+
+                        <Footer codeRegion={this.state.stagiaire.codeRegion} />
                     </div>
                 }
 

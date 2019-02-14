@@ -1,15 +1,17 @@
+@import '../styles/variables';
+
 .champ-commentaire {
   .title {
     height: 19px;
   	width: 243.87px;
-  	color: #24303A;
+  	color: $color-black;
   	font-size: 16px;
   	line-height: 19px;
     padding-left: 16px;
     padding-top: 16px;
   }
 
-  .title_commentaire {
+  .title_texte {
   	@extend .title;
     display: block;
   }
@@ -28,7 +30,7 @@
     border-radius: 5px;
     border: none;
     resize: none;
-    background-color: #F4F4F5;
+    background-color: $color-grey-5;
     margin-left: 15px;
     margin-top: 16px;
     padding-left: 8px;
@@ -46,7 +48,7 @@
     display: block;
   }
 
-  .textarea_commentaire {
+  .textarea_texte {
   	height: 79px;
   	@extend .textarea;
   }
@@ -57,7 +59,7 @@
 
   .placeholder {
     opacity: 0.6;
-    color: #24303A;
+    color: $color-black;
     font-size: 14px;
     font-style: italic;
     line-height: 21px;
@@ -80,4 +82,33 @@
   	width: 451.22px;
   	@extend .placeholder;
   }
+
+    .remaining {
+        font-size: 12px;
+        font-style: italic;
+        line-height: 18px;
+        text-align: right;
+        padding: 5px 20px;
+    }
+
+    .remaining.yes {
+        color: $color-black;
+    }
+
+    .remaining.no {
+        color: $color-red;
+    }
+
+    textarea.badwords {
+        border: solid 1px $color-red;
+        color: $color-red;
+    }
+
+    .alert.badwords {
+        color: $color-red;
+        font-size: 12px;
+        font-style: italic;
+        font-weight: bold;
+        line-height: 16px;
+    }
 }

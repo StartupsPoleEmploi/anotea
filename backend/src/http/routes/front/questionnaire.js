@@ -5,6 +5,8 @@ const Joi = require('joi');
 const s = require('string');
 const externalLinks = require('./utils/externalLinks');
 const { sanitize } = require('./utils/userInput');
+const { tryAndCatch } = require('../routes-utils');
+const { AlreadySentError, BadDataError } = require('./../../../common/errors');
 
 module.exports = ({ db, logger, configuration }) => {
 
@@ -49,43 +51,61 @@ module.exports = ({ db, logger, configuration }) => {
             contenu_formation: rateRule,
             equipe_formateurs: rateRule,
             moyen_materiel: rateRule,
-            accompagnement: rateRule,
-            global: rateRule,
+            accompagnement: rateRule
         });
         let rates = {
             accueil: body.avis_accueil,
             contenu_formation: body.avis_contenu_formation,
             equipe_formateurs: body.avis_equipe_formateurs,
             moyen_materiel: body.avis_moyen_materiel,
-            accompagnement: body.avis_accompagnement,
-            global: body.avis_global
+            accompagnement: body.avis_accompagnement
         };
 
         return Joi.validate(rates, schema);
     };
 
-    const validateAvis = (notes, body) => {
+    const sanitizeBody = body => {
+
+        let sanitizedBody = Object.assign({}, body);
+
+        sanitizedBody.pseudo = sanitize(body.pseudo);
+        sanitizedBody.texte = sanitize(body.commentaire.texte);
+        sanitizedBody.titre = sanitize(body.commentaire.titre);
+
+        return sanitizedBody;
+    };
+
+    const buildAvis = (notes, body) => {
         let avis = {};
         avis.rates = notes;
 
-        let pseudo = sanitize(body.pseudo);
-        let commentTxt = sanitize(body.commentaire);
-        let commentTitle = sanitize(body.titreCommentaire);
+        avis.pseudo = body.pseudo.replace(/ /g, '');
 
-        if (s(pseudo.replace(/ /g, '')).isAlphaNumeric()) {
-            avis.pseudo = pseudo;
-            if (commentTitle !== '' || commentTxt !== '') {
-                avis.comment = {
-                    title: commentTitle,
-                    text: commentTxt
-                };
-            }
-            avis.accord = body.accord === 'on';
-            avis.accordEntreprise = body.accordEntreprise === 'on';
+        let commentTxt = body.commentaire.texte;
+        let commentTitle = body.commentaire.titre;
 
-            let pseudoOK = badwords.isGood(pseudo);
-            let commentOK = badwords.isGood(commentTxt);
-            let commentTitleOK = badwords.isGood(commentTitle);
+        if (commentTitle !== '' || commentTxt !== '') {
+            avis.comment = {
+                title: commentTitle,
+                text: commentTxt
+            };
+        }
+
+        avis.accord = body.accord;
+        avis.accordEntreprise = body.accordEntreprise;
+
+        return avis;
+    };
+
+    const validateAvis = avis => {
+        if (avis.pseudo.length > 200 || avis.comment.title.length > 200 || avis.text.length > 200) {
+            return { error: 'too long' };
+        }
+
+        if (s(avis.pseudo).isAlphaNumeric()) {
+            let pseudoOK = badwords.isGood(avis.pseudo);
+            let commentOK = avis.comment ? badwords.isGood(avis.comment.text) : true;
+            let commentTitleOK = avis.comment ? badwords.isGood(avis.comment.title) : true;
 
             if (pseudoOK && commentOK && commentTitleOK) {
                 return { error: null, avis };
@@ -115,7 +135,11 @@ module.exports = ({ db, logger, configuration }) => {
         };
     };
 
-    router.get('/questionnaire/:token/start', getTraineeFromToken, saveDeviceData, async (req, res) => {
+    router.get('/questionnaire/checkBadwords', tryAndCatch(async (req, res) => {
+        res.send({ isGood: badwords.isGood(req.query.sentence) });
+    }));
+
+    router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
 
         let trainee = req.trainee;
         let comment = await db.collection('comment').findOne({
@@ -128,11 +152,11 @@ module.exports = ({ db, logger, configuration }) => {
             db.collection('trainee').updateOne({ token: req.params.token }, { $set: { 'tracking.click': new Date() } });
             res.send({ trainee: trainee });
         } else {
-            res.send({ error: true, reason: 'already sent' });
+            throw new AlreadySentError();
         }
-    });
+    }));
 
-    router.post('/questionnaire/:token', getTraineeFromToken, async (req, res) => {
+    router.post('/questionnaire/:token', getTraineeFromToken, tryAndCatch(async (req, res) => {
 
         let trainee = req.trainee;
         let comment = await db.collection('comment').findOne({
@@ -142,24 +166,40 @@ module.exports = ({ db, logger, configuration }) => {
         });
 
         if (comment !== null) {
-            res.send({ error: true, reason: 'already sent', trainee: trainee });
+            throw new AlreadySentError();
         } else {
-            let resultNotes = validateNotes(req.body);
-            if (resultNotes.error === null) {
-                let resultAvis = validateAvis(resultNotes.value, req.body);
-                if (resultAvis.error === null) {
-                    await Promise.all([
-                        db.collection('comment').saveOne(resultAvis.avis),
-                        db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),
-                    ]);
-                    let infos = await getInfosRegion(trainee);
-                    res.send(infos);
+            try {
+                let resultNotes = validateNotes(req.body);
+                if (resultNotes.error === null) {
+                    let resultAvis = validateAvis(buildAvis(resultNotes.value, sanitizeBody(req.body)));
+                    if (resultAvis.error === null) {
+                        let avis = {
+                            date: new Date(),
+                            token: req.params.token,
+                            campaign: trainee.campaign,
+                            formacode: trainee.training.formacode,
+                            idSession: trainee.training.idSession,
+                            training: trainee.training,
+                            codeRegion: trainee.codeRegion
+                        };
+                        Object.assign(avis, resultAvis.avis);
+                        await Promise.all([
+                            db.collection('comment').insertOne(avis),
+                            db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),
+                        ]);
+                        let infos = await getInfosRegion(trainee);
+                        res.send({ error: false, infos });
+                    } else {
+                        throw new BadDataError();
+                    }
                 } else {
-                    res.send({ error: true, reason: resultAvis.error });
+                    throw new BadDataError();
                 }
+            } catch (e) {
+                throw new BadDataError();
             }
         }
-    });
+    }));
 
     return router;
 };
