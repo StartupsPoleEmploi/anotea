@@ -37,7 +37,7 @@ class Autorisations extends Component {
             <div className="autorisations">
                 {this.state.items.map((item, index) =>
                     <div className={`item${item.id}`} key={index}>
-                        <input type="checkbox" name={item.name} className={`input_${item.name}`} onChange={this.onChange} />
+                        <input type="checkbox" name={item.name} className="input-accord" onChange={this.onChange} />
                         {item.description}
                     </div>
                 )}
