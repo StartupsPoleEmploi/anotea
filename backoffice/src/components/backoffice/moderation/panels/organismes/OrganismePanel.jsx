@@ -1,5 +1,5 @@
 import React from 'react';
-import { getOrganisationInfo } from '../../../../../lib/organisationService';
+import { getOrganisationInfo } from '../../../organisation/service/organismeService';
 import OrganismeCard from './OrganismeCard';
 import Loader from '../../../common/Loader';
 import Panel from '../../../common/Panel';

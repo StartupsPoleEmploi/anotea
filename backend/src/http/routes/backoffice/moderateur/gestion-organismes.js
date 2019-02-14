@@ -15,7 +15,7 @@ module.exports = ({ db, mailing, middlewares }) => {
         db.collection('events').insertOne({ organisationId: id, date: new Date(), type: type, source: source });
     };
 
-    router.post('/backoffice/organisation/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.post('/backoffice/moderateur/organismes/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.body, {
             email: Joi.string().email().required(),
@@ -41,7 +41,7 @@ module.exports = ({ db, mailing, middlewares }) => {
         }
     }));
 
-    router.delete('/backoffice/organisation/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/moderateur/organismes/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {
@@ -63,7 +63,7 @@ module.exports = ({ db, mailing, middlewares }) => {
         }
     }));
 
-    router.post('/backoffice/organisation/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.post('/backoffice/moderateur/organismes/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const id = parseInt(req.params.id);
 
         if (isNaN(id)) {

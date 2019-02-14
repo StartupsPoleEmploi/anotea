@@ -15,7 +15,7 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
-    router.put('/backoffice/avis/:id/addReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/organisme/avis/:id/addReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
@@ -48,7 +48,7 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
         return res.json(result.value);
     }));
 
-    router.put('/backoffice/avis/:id/removeReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/organisme/avis/:id/removeReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
@@ -73,7 +73,7 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
     }));
 
 
-    router.put('/backoffice/avis/:id/markAsRead', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
+    router.put('/backoffice/organisme/avis/:id/markAsRead', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
         const id = ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').findOneAndUpdate(
             { _id: id },
@@ -96,7 +96,7 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
             });
     }));
 
-    router.put('/backoffice/avis/:id/markAsNotRead', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
+    router.put('/backoffice/organisme/avis/:id/markAsNotRead', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
         const id = ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').findOneAndUpdate(
             { _id: id },
@@ -119,7 +119,7 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
             });
     }));
 
-    router.put('/backoffice/avis/:id/report', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/organisme/avis/:id/report', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
 
@@ -128,7 +128,7 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
         return res.json(avis);
     }));
 
-    router.put('/backoffice/avis/:id/unreport', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
+    router.put('/backoffice/organisme/avis/:id/unreport', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
         const id = ObjectID(req.params.id); // eslint-disable-line new-cap
         db.collection('comment').findOneAndUpdate(
             { _id: id },

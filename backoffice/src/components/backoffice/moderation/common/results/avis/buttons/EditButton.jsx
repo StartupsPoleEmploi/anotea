@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './EditButton.scss';
-import { deleteAvis, resendEmail } from '../../../../../../../lib/avisService';
+import { deleteAvis, resendEmail } from '../../../../service/moderationService';
 import Modal from '../../../../../common/Modal';
 
 export default class EditButton extends React.Component {

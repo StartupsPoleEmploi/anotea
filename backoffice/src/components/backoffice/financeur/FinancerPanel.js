@@ -17,7 +17,7 @@ import {
     getAdvices,
     getOrganisations,
     loadInventoryASelectedOrganisation
-} from '../../../lib/financerService';
+} from './service/financeurService';
 import PropTypes from 'prop-types';
 import Dashboard from './stats/Dashboard';
 import SideMenu from './SideMenu';
@@ -438,7 +438,7 @@ export default class FinancerPanel extends React.Component {
                                                     <i className="avatar glyphicon glyphicon-user" />
                                                     {advice.pseudo}
                                                     {!advice.pseudo && <em>anonyme</em>} -&nbsp;
-        
+
                                                     {advice.date &&
                                                         <FormattedDate
                                                             value={new Date(advice.date)}

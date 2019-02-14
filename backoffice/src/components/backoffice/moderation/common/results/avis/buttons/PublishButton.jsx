@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { publishAvis } from '../../../../../../../lib/avisService';
+import { publishAvis } from '../../../../service/moderationService';
 import './PublishButton.scss';
 
 export default class PublishButton extends React.Component {

@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import PrettyDate from '../../../../common/PrettyDate';
-import { maskPseudo } from '../../../../../../lib/avisService';
+import { maskPseudo } from '../../../service/moderationService';
 import './Stagiaire.scss';
 
 const Stars = ({ note }) => {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { login } from '../../lib/loginService';
+import { login } from '../backoffice/account/service/loginService';
 
 export default class LoginForm extends React.Component {
 

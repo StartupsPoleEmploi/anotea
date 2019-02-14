@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { editAvis, publishAvis } from '../../../../../../lib/avisService';
+import { editAvis, publishAvis } from '../../../service/moderationService';
 import './Edition.scss';
 
 export default class Edition extends React.Component {

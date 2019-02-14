@@ -27,7 +27,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         });
     };
 
-    router.get('/backoffice/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/moderateur/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
         let { computeStats } = moderationStats(db, codeRegion);
@@ -84,7 +84,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         });
     }));
 
-    router.put('/backoffice/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/moderateur/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
@@ -94,7 +94,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         return res.json(avis);
     }));
 
-    router.put('/backoffice/avis/:id/title', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/moderateur/avis/:id/title', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
@@ -104,7 +104,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         return res.json(avis);
     }));
 
-    router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/moderateur/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { reason } = await Joi.validate(req.body, { reason: Joi.string().required() }, { abortEarly: false });
@@ -114,7 +114,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         return res.json(avis);
     }));
 
-    router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/moderateur/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
@@ -123,7 +123,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         return res.json({ 'message': 'avis deleted' });
     }));
 
-    router.put('/backoffice/avis/:id/publish', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.put('/backoffice/moderateur/avis/:id/publish', checkAuth, checkProfile('moderateur'), async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { qualification } = await Joi.validate(req.body, { qualification: Joi.string().required() }, { abortEarly: false });
@@ -133,7 +133,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         return res.json(avis);
     });
 
-    router.put('/backoffice/avis/:id/edit', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.put('/backoffice/moderateur/avis/:id/edit', checkAuth, checkProfile('moderateur'), async (req, res) => {
 
         const { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -144,7 +144,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
     });
 
-    router.put('/backoffice/avis/:id/publishReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.put('/backoffice/moderateur/avis/:id/publishReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
@@ -154,7 +154,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
     });
 
-    router.put('/backoffice/avis/:id/rejectReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.put('/backoffice/moderateur/avis/:id/rejectReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
@@ -164,7 +164,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
     });
 
-    router.put('/backoffice/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/moderateur/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { sendVotreAvisEmail } = mailing;
 
         const parameters = await Joi.validate(req.params, {

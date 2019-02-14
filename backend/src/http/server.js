@@ -110,7 +110,7 @@ module.exports = components => {
     app.use('/api', require('./routes/backoffice/moderateur/moderation')(httpComponents));
     app.use('/api', require('./routes/backoffice/organismes/consultation')(httpComponents));
     app.use('/api', require('./routes/backoffice/export')(httpComponents));
-    app.use('/api', require('./routes/backoffice/organismes/organisation')(httpComponents));
+    app.use('/api', require('./routes/backoffice/organismes/organisme')(httpComponents));
     app.use('/api', require('./routes/backoffice/moderateur/gestion-organismes')(httpComponents));
     app.use('/api', require('./routes/backoffice/financeur/financeur')(httpComponents));
     app.use('/api', require('./routes/backoffice/stats')(httpComponents));

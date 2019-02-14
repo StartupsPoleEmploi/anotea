@@ -17,7 +17,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         }
     };
 
-    router.get('/backoffice/organisation/getActivationAccountStatus', tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/getActivationAccountStatus', tryAndCatch(async (req, res) => {
 
         let organisme = await db.collection('accounts').findOne({ token: req.query.token });
         if (organisme) {
@@ -32,7 +32,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.post('/backoffice/organisation/activateAccount', tryAndCatch(async (req, res) => {
+    router.post('/backoffice/organisme/activateAccount', tryAndCatch(async (req, res) => {
         const token = req.body.token;
         const password = req.body.password;
 
@@ -62,7 +62,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.get('/backoffice/organisation/:id/info', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/:id/info', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 
         const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
@@ -90,7 +90,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/allAdvices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/:id/allAdvices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         checkOrganisme(req);
 
@@ -151,7 +151,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
 
     }));
 
-    router.get('/backoffice/organisation/:id/trainings', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/:id/trainings', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         checkOrganisme(req);
 
@@ -179,7 +179,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/advices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/:id/advices', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         checkOrganisme(req);
 
@@ -250,7 +250,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         });
     }));
 
-    router.get('/backoffice/organisation/:id/training/:idTraining/sessions', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/:id/training/:idTraining/sessions', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         checkOrganisme(req);
 
@@ -306,7 +306,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/advices/inventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/:id/advices/inventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
 
         if (req.params.id !== req.user.id) {
@@ -353,7 +353,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/allInventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/:id/allInventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         checkOrganisme(req);
 
@@ -391,7 +391,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         }
     }));
 
-    router.get('/backoffice/organisation/:id/states', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/:id/states', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         checkOrganisme(req);
 
