@@ -9,7 +9,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./.data/nginx:/var/log/nginx:rw
+      - ./.log/nginx:/log:rw
     depends_on:
       - backend
       - backoffice
@@ -36,6 +36,8 @@ services:
     container_name: anotea_backend
     build:
       context: backend
+    volumes:
+      - ./.log/backend:/log:rw
     environment:
       - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
       - ANOTEA_SMTP_HOST=smtp
