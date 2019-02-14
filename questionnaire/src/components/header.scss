@@ -3,6 +3,7 @@
 .header {
     left: -50px;
     position: relative;
+    text-align: center;
 
 	.logo {
 	    left: 670px;
@@ -11,20 +12,15 @@
 	}
 
 	h1 {
-		height: 39px;
-		width: 624px;
 		color: $color-blue;
-		font-size: 32px;
+		font-size: 2em;
 		font-weight: 900;
-		line-height: 39px;
-		text-align: center;
 	}
 
 	h2 {
 	    width: 621px;
 	    color: $color-black;
-	    font-size: 16px;
+	    font-size: 1em;
 	    line-height: 24px;
-	    text-align: center;
 	}
 }
