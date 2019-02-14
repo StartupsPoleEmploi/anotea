@@ -10,7 +10,7 @@
     .summary {
         height: 160px;
         border: 1px solid $color-grey-25;
-        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+        box-shadow: $shadow;
         border-radius: 5px;
         width: auto;
 
@@ -38,7 +38,7 @@
                 h3 {
                     margin: 0px;
                     font-weight: normal;
-                    font-size: 1em;
+                    font-size: 1rem;
                     text-overflow: ellipsis;
                     text-overflow: fade(10px);
                     text-overflow: fade(5%);
@@ -50,7 +50,7 @@
 
                 span {
                     font-weight: bold;
-                    font-size: 14px;
+                    font-size: 1rem;
 
                     .fas.fa-star {
                         color: $color-yellow;

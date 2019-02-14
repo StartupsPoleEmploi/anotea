@@ -98,7 +98,7 @@ module.exports = ({ db, logger, configuration }) => {
     };
 
     const validateAvis = avis => {
-        if (avis.pseudo.length > 200 || avis.comment.title.length > 200 || avis.text.length > 200) {
+        if (avis.pseudo.length > 200 || (avis.comment !== undefined && (avis.comment.title.length > 200 || avis.comment.text.length > 200))) {
             return { error: 'too long' };
         }
 

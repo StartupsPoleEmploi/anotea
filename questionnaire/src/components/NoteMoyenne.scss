@@ -12,24 +12,21 @@
         width: 70%;
         display: inline-block;
         height: 100px;
+        margin-left: 16px;
+        
         .title {
-            height: 22px;
             color: $color-black;
             font-size: 18px;
             font-weight: 900;
             line-height: 22px;
             display: block;
-            margin-left: 16px;
             padding-top: 16px;
         }
 
         .description {
-            height: 34px;
             opacity: 0.6;
             color: $color-dark;
             font-size: 14px;
-            line-height: 17px;
-            margin-left: 16px;
         }    
     }
 

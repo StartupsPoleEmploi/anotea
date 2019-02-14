@@ -2,10 +2,8 @@
 
 .champ-commentaire {
   .title {
-    height: 19px;
-  	width: 243.87px;
   	color: $color-black;
-  	font-size: 16px;
+  	font-size: 1rem;
   	line-height: 19px;
     padding-left: 16px;
     padding-top: 16px;
@@ -30,6 +28,7 @@
     border-radius: 5px;
     border: none;
     resize: none;
+    outline: none;
     background-color: $color-grey-5;
     margin-left: 15px;
     margin-top: 16px;
@@ -60,33 +59,18 @@
   .placeholder {
     opacity: 0.6;
     color: $color-black;
-    font-size: 14px;
+    font-size: 0.9rem;
     font-style: italic;
     line-height: 21px;
   }
 
-  .textarea_titre::placeholder {
-    height: 18px;
-  	max-width: 450.22px;
+  .textarea_titre::placeholder, .textarea_texte::placeholder, .textarea_pseudo::placeholder {
     @extend .placeholder;
   }
 
-  .textarea_commentaire::placeholder {
-    height: 63px;
-  	max-width: 451.22px;
-  	@extend .placeholder;
-  }
-
-  .textarea_pseudo::placeholder {
-    height: 18px;
-  	width: 451.22px;
-  	@extend .placeholder;
-  }
-
     .remaining {
-        font-size: 12px;
+        font-size: 0.75rem;
         font-style: italic;
-        line-height: 18px;
         text-align: right;
         padding: 5px 20px;
     }
@@ -106,7 +90,7 @@
 
     .alert.badwords {
         color: $color-red;
-        font-size: 12px;
+        font-size: 0.7rem;
         font-style: italic;
         font-weight: bold;
         line-height: 16px;

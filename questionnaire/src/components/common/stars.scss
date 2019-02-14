@@ -10,21 +10,22 @@
         cursor: pointer;
     }
     
-    .tooltipBlock {
+    .tooltip-block {
         height: 20px;
+        margin-bottom: 5px;
     }
     
-    .starBlock {
+    .star-block {
         display: inline;
         position: relative;
         margin-left: 3px;
     }
     
-    .tooltip {
+    .star-tooltip {
         border-radius: 2px;
-        background-color: #24303A;
-        color: #FFFFFF;
-        font-size: 12px;
+        background-color: $color-black;
+        color: $color-white;
+        font-size: 0.75rem;
         line-height: 12px;
         text-align: center;
         font-weight: normal;
@@ -32,11 +33,11 @@
         margin: auto;
     }
     
-    .tooltip.inactive {
+    .star-tooltip.inactive {
         display: none;
     }
     
-    .tooltip.active {
+    .star-tooltip.active {
         display: inline-block;
     }
 }

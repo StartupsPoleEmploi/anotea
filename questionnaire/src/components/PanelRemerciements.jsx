@@ -14,7 +14,7 @@ class PanelRemerciements extends Component {
     render() {
         return (
             <div className="panel-remerciements">
-                { this.props.infosRegion.showLinks &&
+                { !this.props.infosRegion.showLinks &&
                 <div className="links-block">
                     <h1>Et après la formation...</h1>
                     <p>Vous avez <strong>mis votre CV à jour</strong> ? Nous pouvons vous aider à <strong>trouver un emploi</strong> !</p>

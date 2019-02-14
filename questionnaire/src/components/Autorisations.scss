@@ -4,40 +4,29 @@
 
     padding: 5px 20px 10px 30px;
 
-    .input_accord {
-        height: 14px;
-          width: 14px;
-          border: 1px solid $color-grey-25;
-          border-radius: 5px;
-          background-color: $color-grey-5;
-          box-shadow: inset 0 1px 4px 0 rgba(17,24,30,0.15);
-      }
-      
-      .input_accord_entreprise {
+    .input-accord {
         height: 14px;
         width: 14px;
         border: 1px solid $color-grey-25;
         border-radius: 5px;
         background-color: $color-grey-5;
-        box-shadow: inset 0 1px 4px 0 rgba(17,24,30,0.15);
-      }
+        box-shadow: $shadow-light;
+    }
       
-      span {
-        height: 17px;
+    span {
         width: 250px;
         color: $color-black;
-        font-size: 14px;
-        line-height: 17px;
+        font-size: 0.9rem;
         margin-left: 8px;
-      }
+    }
       
-      .autorisations {
+    .autorisations {
         margin-top: 32px;
         margin-left: 26px;
         display: block;
-      }
+    }
       
-      .item2 {
+    .item2 {
         padding-top: 16px;
-      }      
+    }      
 }

@@ -1,6 +1,9 @@
+@import '../styles/variables';
+
 .header {
     left: -50px;
     position: relative;
+    text-align: center;
 
 	.logo {
 	    left: 670px;
@@ -9,20 +12,15 @@
 	}
 
 	h1 {
-		height: 39px;
-		width: 624px;
-		color: #384EAA;
-		font-size: 32px;
+		color: $color-blue;
+		font-size: 2rem;
 		font-weight: 900;
-		line-height: 39px;
-		text-align: center;
 	}
 
 	h2 {
 	    width: 621px;
-	    color: #24303A;
-	    font-size: 16px;
+	    color: $color-black;
+	    font-size: 1rem;
 	    line-height: 24px;
-	    text-align: center;
 	}
 }
