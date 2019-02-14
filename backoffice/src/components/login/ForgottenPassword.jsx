@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { askNewPassword, updatePassword, checkIfPasswordTokenExists } from '../../lib/forgottenPasswordService';
+import { askNewPassword, updatePassword, checkIfPasswordTokenExists } from '../backoffice/account/service/forgottenPasswordService';
 import { isPasswordStrongEnough, checkConfirm, passwordIsOK } from '../../utils/validation';
 
 export default class ForgottenPassword extends React.Component {

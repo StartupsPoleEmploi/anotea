@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { searchAvis } from '../../../../lib/avisService';
+import { searchAvis } from '../service/moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/Panel';
 import ReponseResultsSummary from '../common/results/summary/ReponseResultsSummary';

@@ -6,7 +6,7 @@ import Stars from '../common/deprecated/Stars';
 
 import {
     getOrganisationStates
-} from '../../../lib/organisationService';
+} from './service/organismeService';
 
 const labels = ['Pas du tout satisfait (%)', 'Pas satisfait (%)', 'Moyennement satisfait (%)', 'Satisfait (%)', 'Très satisfait (%)'];
 const backgroundColor = [

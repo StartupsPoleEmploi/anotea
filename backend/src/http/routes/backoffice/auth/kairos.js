@@ -3,13 +3,13 @@ const Boom = require('boom');
 const uuid = require('node-uuid');
 const Joi = require('joi');
 const configuration = require('config');
-const { tryAndCatch } = require('../routes-utils');
+const { tryAndCatch } = require('../../routes-utils');
 
 module.exports = ({ db, auth, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let collection = db.collection('accounts');
-    let { findCodeRegionByName } = require('../../../common/components/regions')(db);
+    let { findCodeRegionByName } = require('../../../../common/components/regions')(db);
     let { createJWTAuthMiddleware } = middlewares;
     let checkAuth = createJWTAuthMiddleware('kairos', {
         externalToken: true,

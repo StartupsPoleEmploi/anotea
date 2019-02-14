@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-import { getOrganisationLieuTrainings, getOrganisationLieuTrainingSessions } from '../../../lib/financerService';
+import { getOrganisationLieuTrainings, getOrganisationLieuTrainingSessions } from './service/financeurService';
 
 export default class TrainingSearchForm extends React.PureComponent {
 

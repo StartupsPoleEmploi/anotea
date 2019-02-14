@@ -98,24 +98,23 @@ module.exports = components => {
     app.use('/api', require('./routes/api/v1/actions')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs')(httpComponents));
     app.use('/api', require('./routes/stats')(httpComponents));
-    app.use('/api', require('./routes/backoffice/kairos')(httpComponents));
+    app.use('/api', require('./routes/backoffice/auth/kairos')(httpComponents));
 
     //Pubic routes with server-side rendering
     app.use('/', require('./routes/front/front')(httpComponents));
     app.use('/', require('./routes/front/mailing')(httpComponents));
 
     //Routes used by backoffice applications
-    app.use('/api', require('./routes/backoffice/login')(httpComponents));
-    app.use('/api', require('./routes/backoffice/forgottenPassword')(httpComponents));
-    app.use('/api', require('./routes/backoffice/avis-moderateur')(httpComponents));
-    app.use('/api', require('./routes/backoffice/avis-organismes')(httpComponents));
+    app.use('/api', require('./routes/backoffice/auth/login')(httpComponents));
+    app.use('/api', require('./routes/backoffice/auth/forgottenPassword')(httpComponents));
+    app.use('/api', require('./routes/backoffice/moderateur/moderation')(httpComponents));
+    app.use('/api', require('./routes/backoffice/organismes/consultation')(httpComponents));
     app.use('/api', require('./routes/backoffice/export')(httpComponents));
-    app.use('/api', require('./routes/backoffice/organisation')(httpComponents));
-    app.use('/api', require('./routes/backoffice/editCourriel')(httpComponents));
-    app.use('/api', require('./routes/backoffice/financer')(httpComponents));
-    app.use('/api', require('./routes/backoffice/dashboard')(httpComponents));
+    app.use('/api', require('./routes/backoffice/organismes/organisme')(httpComponents));
+    app.use('/api', require('./routes/backoffice/moderateur/gestion-organismes')(httpComponents));
+    app.use('/api', require('./routes/backoffice/financeur/financeur')(httpComponents));
     app.use('/api', require('./routes/backoffice/stats')(httpComponents));
-    app.use('/api', require('./routes/backoffice/account')(httpComponents));
+    app.use('/api', require('./routes/backoffice/auth/account')(httpComponents));
     app.use('/api', require('./routes/front/questionnaire')(httpComponents));
 
     // catch 404

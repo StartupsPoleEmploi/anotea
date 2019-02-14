@@ -20,7 +20,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .get(`/api/backoffice/organisation/getActivationAccountStatus?token=${token}`);
+        .get(`/api/backoffice/organisme/getActivationAccountStatus?token=${token}`);
 
         assert.equal(response.statusCode, 200);
         assert.deepEqual(response.body, {
@@ -34,7 +34,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
 
         let response = await request(app)
-        .get(`/api/backoffice/organisation/getActivationAccountStatus?token=INVALID`);
+        .get(`/api/backoffice/organisme/getActivationAccountStatus?token=INVALID`);
 
         assert.equal(response.statusCode, 400);
         assert.deepEqual(response.body, {
@@ -60,7 +60,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .post('/api/backoffice/organisation/activateAccount')
+        .post('/api/backoffice/organisme/activateAccount')
         .send({ token, password: 'Anotea2018!' });
 
         assert.equal(response.statusCode, 201);
@@ -90,7 +90,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .post('/api/backoffice/organisation/activateAccount')
+        .post('/api/backoffice/organisme/activateAccount')
         .send({ token, password: 'INVALID' });
 
         assert.equal(response.statusCode, 400);
@@ -105,7 +105,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let response = await request(app)
-        .post('/api/backoffice/organisation/activateAccount')
+        .post('/api/backoffice/organisme/activateAccount')
         .send({ token: 'INVALID' });
 
         assert.equal(response.statusCode, 400);
@@ -124,7 +124,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let token = await logAsOrganisme(app, 'edited@pole-emploi.fr', id);
 
-        let response = await request(app).get(`/api/backoffice/organisation/${id}/allAdvices`)
+        let response = await request(app).get(`/api/backoffice/organisme/${id}/allAdvices`)
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 200);
@@ -152,7 +152,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let token = await logAsFinancer(app, 'financer@pole-emploi.fr', '2');
 
-        let response = await request(app).get(`/api/backoffice/organisation/${id}/allAdvices`)
+        let response = await request(app).get(`/api/backoffice/organisme/${id}/allAdvices`)
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 403);
@@ -181,7 +181,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let token = await logAsOrganisme(app, courriel, 55555555555555);
 
-        let response = await request(app).get(`/api/backoffice/organisation/${id}/allAdvices`)
+        let response = await request(app).get(`/api/backoffice/organisme/${id}/allAdvices`)
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 403);

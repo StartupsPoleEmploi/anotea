@@ -1,7 +1,7 @@
 const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
-const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
+const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
 
 module.exports = ({ db, auth, logger, configuration, password }) => {
 

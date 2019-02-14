@@ -20,7 +20,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .post(`/api/backoffice/organisation/${id}/editedCourriel`)
+        .post(`/api/backoffice/moderateur/organismes/${id}/editedCourriel`)
         .set('authorization', `Bearer ${token}`)
         .send({ email: 'edited@pole-emploi.fr' });
 
@@ -48,7 +48,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .delete(`/api/backoffice/organisation/${id}/editedCourriel`)
+        .delete(`/api/backoffice/moderateur/organismes/${id}/editedCourriel`)
         .set('authorization', `Bearer ${token}`);
 
         assert.equal(response.statusCode, 200);

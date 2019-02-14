@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getActivationAccountStatus, activateAccount } from '../../../lib/organisationService';
+import { getActivationAccountStatus, activateAccount } from './service/organismeService';
 import { isPasswordStrongEnough, checkConfirm, passwordIsOK } from '../../../utils/validation';
 
 export default class AccountActivation extends React.Component {

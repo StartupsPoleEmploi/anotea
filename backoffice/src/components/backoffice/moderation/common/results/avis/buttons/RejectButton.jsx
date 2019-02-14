@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { rejectAvis } from '../../../../../../../lib/avisService';
+import { rejectAvis } from '../../../../service/moderationService';
 import Modal from '../../../../../common/Modal';
 import './RejectButton.scss';
 

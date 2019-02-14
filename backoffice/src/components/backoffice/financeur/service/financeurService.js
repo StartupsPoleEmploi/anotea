@@ -1,4 +1,4 @@
-import { _get } from '../utils/http-client';
+import { _get } from '../../../../utils/http-client';
 
 export const getOrganisations = (idregion, codeFinanceur) => {
     let query = '';
