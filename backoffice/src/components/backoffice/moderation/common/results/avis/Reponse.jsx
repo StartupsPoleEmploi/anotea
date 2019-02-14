@@ -5,17 +5,17 @@ import PrettyDate from '../../../../common/PrettyDate';
 
 const Status = ({ avis }) => {
 
-    switch (avis.answer.status) {
+    switch (avis.reponse.status) {
         case 'published':
             return (
                 <span className="status published">
-                    (<span>Publié le </span> <PrettyDate date={new Date(avis.answer.lastModerationAction)} />)
+                    (<span>Publié le </span> <PrettyDate date={new Date(avis.reponse.lastStatusUpdate)} />)
                 </span>
             );
         case 'rejected':
             return (
                 <span className="status rejected">
-                    (<span>Rejeté le </span> <PrettyDate date={new Date(avis.answer.lastModerationAction)} />)
+                    (<span>Rejeté le </span> <PrettyDate date={new Date(avis.reponse.lastStatusUpdate)} />)
                 </span>
             );
         default:
@@ -38,14 +38,14 @@ export default class Reponse extends React.Component {
             <div className="Reponse">
                 <div className="title">
                     <span>Réponse de l&apos;organisme </span>
-                    {avis.answer.lastModerationAction &&
+                    {avis.reponse.lastStatusUpdate &&
                     <Status avis={avis} />
                     }
-                    {avis.answer.date &&
-                    <span className="date float-right">le <PrettyDate date={new Date(avis.answer.date)} /></span>
+                    {avis.reponse.date &&
+                    <span className="date float-right">le <PrettyDate date={new Date(avis.reponse.date)} /></span>
                     }
                 </div>
-                <p>{avis.answer.text}</p>
+                <p>{avis.reponse.text}</p>
             </div>
         );
     }

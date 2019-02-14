@@ -9,12 +9,7 @@ import AvisStagiairesPanel from './panels/AvisStagiairesPanel';
 import AvisReponsesPanel from './panels/AvisReponsesPanel';
 import { MyAccount } from '../account/MyAccount';
 
-export const routes = {
-    stagiaires: '/admin/moderation/avis/stagiaires?page=0&status=none',
-    reponses: '/admin/moderation/avis/reponses?page=0&reponseStatus=none',
-};
-
-export class ModerationRoutes extends React.Component {
+export default class ModerationRoutes extends React.Component {
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
@@ -30,8 +25,16 @@ export class ModerationRoutes extends React.Component {
             <div className="anotea">
                 <Header onLogout={this.props.logout} />
                 <Switch>
-                    <Redirect exact from="/" to={routes.stagiaires} />
-                    <Redirect exact from="/admin" to={routes.reponses} />
+                    <Redirect exact from="/" to="/admin/moderation/avis/stagiaires" />
+                    <Redirect exact from="/admin" to="/admin/moderation/avis/stagiaires" />
+                    <Redirect
+                        exact
+                        from="/admin/moderation/avis/stagiaires"
+                        to="/admin/moderation/avis/stagiaires?page=0&status=none" />
+                    <Redirect
+                        exact
+                        from="/admin/moderation/avis/reponses"
+                        to="/admin/moderation/avis/reponses?page=0&reponseStatus=none" />
                 </Switch>
                 <Route
                     path="/mon-compte"

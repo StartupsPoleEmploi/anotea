@@ -13,19 +13,19 @@ module.exports = (db, codeRegion) => {
                     $group:
                         {
                             _id: null,
-                            aggStatusNone: {
+                            sumStatusNone: {
                                 $sum: {
                                     $cond: { if: { $ne: ['$moderated', true] }, then: 1, else: 0 }
                                 }
                             },
-                            aggStatusReported: {
+                            summStatusReported: {
                                 $sum: {
                                     $cond: { if: { $eq: ['$reported', true] }, then: 1, else: 0 }
                                 }
                             },
-                            aggReponseStatusNone: {
+                            sumReponseStatusNone: {
                                 $sum: {
-                                    $cond: { if: { $eq: ['$answer.status', 'none'] }, then: 1, else: 0 }
+                                    $cond: { if: { $eq: ['$reponse.status', 'none'] }, then: 1, else: 0 }
                                 }
                             },
                         }
@@ -34,11 +34,11 @@ module.exports = (db, codeRegion) => {
                     $project: {
                         _id: 0,
                         status: {
-                            none: '$aggStatusNone',
-                            reported: '$aggStatusReported',
+                            none: '$sumStatusNone',
+                            reported: '$summStatusReported',
                         },
                         reponseStatus: {
-                            none: '$aggReponseStatusNone',
+                            none: '$sumReponseStatusNone',
                         }
                     }
                 }

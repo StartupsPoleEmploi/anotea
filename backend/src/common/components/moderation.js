@@ -31,7 +31,7 @@ module.exports = (db, logger, mailer) => {
                         rejected: false,
                         rejectReason: null,
                         qualification: qualification,
-                        lastModerationAction: new Date()
+                        lastStatusUpdate: new Date()
                     }
                 },
                 { returnOriginal: false }
@@ -65,7 +65,7 @@ module.exports = (db, logger, mailer) => {
                         rejected: true,
                         published: false,
                         rejectReason: reason,
-                        lastModerationAction: new Date()
+                        lastStatusUpdate: new Date()
                     }
                 },
                 { returnOriginal: false }
@@ -99,7 +99,7 @@ module.exports = (db, logger, mailer) => {
                 {
                     $set: {
                         editedComment: { text: text, date: new Date() },
-                        lastModerationAction: new Date()
+                        lastStatusUpdate: new Date()
                     }
                 },
                 { returnOriginal: false }
@@ -124,7 +124,14 @@ module.exports = (db, logger, mailer) => {
 
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: oid },
-                { $set: { reported: true } },
+                {
+                    $set: {
+                        reported: true,
+                        rejected: false,
+                        published: false,
+                        lastStatusUpdate: new Date(),
+                    }
+                },
                 { returnOriginal: false },
             );
 
@@ -211,8 +218,8 @@ module.exports = (db, logger, mailer) => {
                 { _id: oid },
                 {
                     $set: {
-                        'answer.status': 'published',
-                        'answer.lastModerationAction': new Date(),
+                        'reponse.status': 'published',
+                        'reponse.lastStatusUpdate': new Date(),
                     }
                 },
                 { returnOriginal: false },
@@ -238,8 +245,8 @@ module.exports = (db, logger, mailer) => {
                 { _id: oid },
                 {
                     $set: {
-                        'answer.status': 'rejected',
-                        'answer.lastModerationAction': new Date(),
+                        'reponse.status': 'rejected',
+                        'reponse.lastStatusUpdate': new Date(),
                     }
                 },
                 { returnOriginal: false },

@@ -23,8 +23,8 @@ import {
     markAvisAsNotRead,
     reportAvis,
     unreportAvis,
-    answerAvis,
-    removeAvisAnswer
+    addReponse,
+    removeReponse
 } from '../../../lib/avisService';
 
 const DEFAULT_ORDER = 'moderation';
@@ -120,7 +120,7 @@ export default class OrganisationPanel extends React.Component {
                     reply: {
                         shown: true,
                         id: id,
-                        text: advice.answer !== undefined ? advice.answer.text : ''
+                        text: advice.reponse !== undefined ? advice.reponse.text : ''
                     }
                 });
             }
@@ -145,14 +145,14 @@ export default class OrganisationPanel extends React.Component {
 
     handleDoReply = (id, evt) => {
         const text = this.state.reply.text;
-        answerAvis(id, text).then(result => {
+        addReponse(id, text).then(result => {
             this.setState({ reply: { shown: false, text: '' } });
             this.doLoadAdvices();
         });
     };
 
     handleRemoveReply = (id, evt) => {
-        removeAvisAnswer(id).then(result => {
+        removeReponse(id).then(result => {
             this.setState({ reply: { shown: false, text: '' } });
             this.doLoadAdvices();
         });
@@ -382,7 +382,7 @@ export default class OrganisationPanel extends React.Component {
                                                                 onClick={this.handleDoReply.bind(this, advice._id)}>
                                                                 <span className="fas comment-alt"/> Valider la réponse
                                                             </button>
-                                                            {advice.answer &&
+                                                            {advice.reponse &&
                                                             <button className="btn btn-danger btn-sm"
                                                                 onClick={this.handleRemoveReply.bind(this, advice._id)}>
                                                                 <span className="fas fa-trash"/> &Ocirc;ter
@@ -394,10 +394,10 @@ export default class OrganisationPanel extends React.Component {
                                                         </div>
                                                     </div>
                                                     }
-                                                    {(advice.answer && !this.state.reply.shown) &&
+                                                    {(advice.reponse && !this.state.reply.shown) &&
                                                     <div className="answer">
                                                         <h4>Votre réponse</h4>
-                                                        <p>{advice.answer.text}</p>
+                                                        <p>{advice.reponse.text}</p>
                                                     </div>
                                                     }
                                                     {!(this.state.reply.shown === true && this.state.reply.id === advice._id) &&
@@ -416,7 +416,7 @@ export default class OrganisationPanel extends React.Component {
                                                         <button className="btn btn-success btn-sm"
                                                             onClick={this.handleReply.bind(this, advice._id)}
                                                             title="votre réponse à avis sera publiée sur les sites partenaires et accessible aux futurs stagiaires potentiels">
-                                                            <span className="fas fa-comment-alt"/> {advice.answer ? 'Modifier la réponse' : 'Répondre'}
+                                                            <span className="fas fa-comment-alt"/> {advice.reponse ? 'Modifier la réponse' : 'Répondre'}
                                                         </button>}
                                                         {(this.state.tab !== 'reported' && advice.reported !== true) &&
                                                         <button className="btn btn-danger btn-sm"

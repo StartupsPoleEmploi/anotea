@@ -70,29 +70,29 @@ export default class AvisReponsesPanel extends React.Component {
                     <nav className="nav">
                         <ToolbarTab
                             label="À modérer"
-                            onClick={() => onNewQuery({ reponseStatus: 'none' })}
+                            onClick={() => onNewQuery({ reponseStatus: 'none', sortBy: 'reponse.lastStatusUpdate' })}
                             isActive={() => query.reponseStatus === 'none'}
                             getNbElements={() => _.get(results.meta.stats, 'reponseStatus.none')} />
 
                         <ToolbarTab
                             label="Publiés"
-                            onClick={() => onNewQuery({ reponseStatus: 'published' })}
+                            onClick={() => onNewQuery({ reponseStatus: 'published', sortBy: 'reponse.lastStatusUpdate' })}
                             isActive={() => query.reponseStatus === 'published'} />
 
                         <ToolbarTab
                             label="Rejetés"
-                            onClick={() => onNewQuery({ reponseStatus: 'rejected' })}
+                            onClick={() => onNewQuery({ reponseStatus: 'rejected', sortBy: 'reponse.lastStatusUpdate' })}
                             isActive={() => query.reponseStatus === 'rejected'} />
 
                         <ToolbarTab
                             label="Signalés"
-                            onClick={() => onNewQuery({ status: 'reported' })}
+                            onClick={() => onNewQuery({ status: 'reported', sortBy: 'lastStatusUpdate' })}
                             isActive={() => query.status === 'reported'}
                             getNbElements={() => _.get(results.meta.stats, 'status.reported')} />
 
                         <ToolbarTab
                             label="Tous"
-                            onClick={() => onNewQuery({ reponseStatus: 'all' })}
+                            onClick={() => onNewQuery({ reponseStatus: 'all', sortBy: 'date' })}
                             isActive={() => query.reponseStatus === 'all'} />
                     </nav>
                 }

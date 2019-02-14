@@ -18,7 +18,7 @@ export default class PublishReponseButton extends React.Component {
     };
 
     getDisableClass = () => {
-        return this.props.avis.answer.status === 'published' ? 'disabled' : '';
+        return this.props.avis.reponse.status === 'published' ? 'disabled' : '';
     };
 
     render() {

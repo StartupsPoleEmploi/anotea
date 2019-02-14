@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import logo from './Header.svg';
 import './Header.scss';
 import { NavLink } from 'react-router-dom';
-import { routes } from '../moderation/ModerationRoutes';
 
 export default class Header extends React.Component {
 
@@ -23,16 +22,17 @@ export default class Header extends React.Component {
                         </div>
                         <div className="col-md-7">
                             <nav className="nav">
-                                <NavLink to={routes.stagiaires} className="nav-link" activeClassName="active">
+                                <NavLink to="/admin/moderation/avis/stagiaires" className="nav-link" activeClassName="active">
                                     Avis stagiaires
                                 </NavLink>
-                                <NavLink to={routes.reponses} className="nav-link"
-                                         activeClassName="active">
+                                <NavLink to="/admin/moderation/avis/reponses" className="nav-link" activeClassName="active">
                                     Réponses des organismes
                                 </NavLink>
-                                <NavLink to="/admin/moderation/organismes" className="nav-link"
-                                         activeClassName="active">
-                                    Liste des organimes
+                                <NavLink
+                                    to="/admin/moderation/organismes"
+                                    className="nav-link"
+                                    activeClassName="active">
+                                    Gestion des organimes
                                 </NavLink>
                             </nav>
                         </div>

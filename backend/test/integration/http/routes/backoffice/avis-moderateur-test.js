@@ -197,13 +197,13 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
                 reported: true,
             })),
             insertIntoDatabase('comment', newComment({
-                answer: {
+                reponse: {
                     text: 'Voici notre réponse',
                     status: 'published',
                 },
             })),
             insertIntoDatabase('comment', newComment({
-                answer: {
+                reponse: {
                     text: 'Voici notre réponse',
                     status: 'rejected',
                 },
@@ -233,8 +233,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.ok(response.body.answer.lastModerationAction);
-        assert.deepStrictEqual(response.body.answer.status, 'published');
+        assert.ok(response.body.reponse.lastStatusUpdate);
+        assert.deepStrictEqual(response.body.reponse.status, 'published');
     });
 
     it('can reject reponse', async () => {
@@ -251,8 +251,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.ok(response.body.answer.lastModerationAction);
-        assert.deepStrictEqual(response.body.answer.status, 'rejected');
+        assert.ok(response.body.reponse.lastStatusUpdate);
+        assert.deepStrictEqual(response.body.reponse.status, 'rejected');
     });
 
 
@@ -272,7 +272,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.editedComment.text, 'New message');
-        assert.ok(response.body.lastModerationAction);
+        assert.ok(response.body.lastStatusUpdate);
     });
 
     it('can publish an avis', async () => {
@@ -295,7 +295,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.deepStrictEqual(response.body.reported, false);
         assert.deepStrictEqual(response.body.rejectReason, null);
         assert.deepStrictEqual(response.body.qualification, 'positif');
-        assert.ok(response.body.lastModerationAction);
+        assert.ok(response.body.lastStatusUpdate);
     });
 
     it('can reject an avis', async () => {
@@ -318,7 +318,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.deepStrictEqual(response.body.rejected, true);
         assert.deepStrictEqual(response.body.reported, false);
         assert.deepStrictEqual(response.body.rejectReason, 'alerte');
-        assert.ok(response.body.lastModerationAction);
+        assert.ok(response.body.lastStatusUpdate);
     });
 
     it('can delete an avis', async () => {

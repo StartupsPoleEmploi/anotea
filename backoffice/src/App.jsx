@@ -14,7 +14,7 @@ import AccountActivation from './components/backoffice/organisation/AccountActiv
 import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
-import { ModerationRoutes } from './components/backoffice/moderation/ModerationRoutes';
+import ModerationRoutes from './components/backoffice/moderation/ModerationRoutes';
 import { MyAccount } from './components/backoffice/account/MyAccount';
 import './utils/moment-fr';
 import './App.scss';

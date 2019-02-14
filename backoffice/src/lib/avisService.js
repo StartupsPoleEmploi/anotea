@@ -5,10 +5,6 @@ export const searchAvis = (options = {}) => {
     return _get(`/backoffice/avis?${queryString.stringify(options)}`);
 };
 
-export const searchAvisWithReponse = (options = {}) => {
-    return _get(`/backoffice/avisWithReponse?${queryString.stringify(options)}`);
-};
-
 export const maskPseudo = (id, mask) => {
     return _put(`/backoffice/avis/${id}/pseudo`, { mask });
 };
@@ -49,12 +45,12 @@ export const rejectReponse = id => {
     return _put(`/backoffice/avis/${id}/rejectReponse`);
 };
 
-export const answerAvis = (id, answer) => {
-    return _put(`/backoffice/avis/${id}/reponse`, { answer });
+export const addReponse = (id, text) => {
+    return _put(`/backoffice/avis/${id}/addReponse`, { text });
 };
 
-export const removeAvisAnswer = id => {
-    return _delete(`/backoffice/avis/${id}/reponse`);
+export const removeReponse = id => {
+    return _put(`/backoffice/avis/${id}/removeReponse`);
 };
 
 export const editAvis = (id, text) => {

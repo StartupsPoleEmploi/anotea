@@ -15,16 +15,16 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
         db.collection('events').save({ adviceId: id, date: new Date(), type: type, source: source });
     };
 
-    router.put('/backoffice/avis/:id/answer', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/addReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
-        const { answer: text } = await Joi.validate(req.body, { answer: Joi.string().required() }, { abortEarly: false });
+        const { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
 
         let result = await db.collection('comment').findOneAndUpdate(
             { _id: new ObjectID(id) },
             {
                 $set: {
-                    answer: {
+                    reponse: {
                         text: text,
                         date: new Date(),
                         status: 'none',
@@ -39,22 +39,22 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
             throw new IdNotFoundError(`Avis with identifier ${id} not found`);
         }
 
-        saveEvent(id, 'answer', {
+        saveEvent(id, 'reponse', {
             app: 'organisation',
             user: req.query.userId,
             ip: getRemoteAddress(req),
-            answer: text
+            reponse: text
         });
         return res.json(result.value);
     }));
 
-    router.delete('/backoffice/avis/:id/answer', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/removeReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
         let result = await db.collection('comment').findOneAndUpdate(
             { _id: new ObjectID(id) },
-            { $unset: { answer: '' } },
+            { $unset: { reponse: '' } },
             { returnOriginal: false }
         );
 
@@ -62,7 +62,7 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
             throw new IdNotFoundError(`Avis with identifier ${id} not found`);
         }
 
-        saveEvent(id, 'answer removed', {
+        saveEvent(id, 'reponse removed', {
             app: 'organisation',
             user: req.query.userId,
             ip: getRemoteAddress(req)

@@ -6,7 +6,7 @@ const { newComment } = require('../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganisme }) => {
 
-    it('can answer to a comment', async () => {
+    it('can reply to a comment', async () => {
 
         let app = await startServer();
         let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
@@ -14,24 +14,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         await insertIntoDatabase('comment', comment);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/answer`)
+        .put(`/api/backoffice/avis/${comment._id}/addReponse`)
         .set('authorization', `Bearer ${token}`)
-        .send({ answer: 'Voici notre réponse' });
+        .send({ text: 'Voici notre réponse' });
 
         assert.strictEqual(response.statusCode, 200);
-        assert.ok(response.body.answer.date);
-        assert.deepStrictEqual(_.omit(response.body.answer, ['date']), {
+        assert.ok(response.body.reponse.date);
+        assert.deepStrictEqual(_.omit(response.body.reponse, ['date']), {
             text: 'Voici notre réponse',
             status: 'none',
         });
     });
 
-    it('can delete an answer', async () => {
+    it('can delete an reponse', async () => {
 
         let app = await startServer();
         let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
         let comment = newComment({
-            answer: {
+            reponse: {
                 text: 'Voici notre réponse',
                 status: 'published',
             }
@@ -39,14 +39,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         await insertIntoDatabase('comment', comment);
 
         let response = await request(app)
-        .delete(`/api/backoffice/avis/${comment._id}/answer`)
+        .put(`/api/backoffice/avis/${comment._id}/removeReponse`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.answer, undefined);
+        assert.deepStrictEqual(response.body.reponse, undefined);
     });
 
-    it('can report an avis', async () => {
+    it('can report an commentaire', async () => {
 
         let app = await startServer();
         const comment = newComment();
@@ -70,9 +70,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/INVALID/answer`)
+        .put(`/api/backoffice/avis/INVALID/addReponse`)
         .set('authorization', `Bearer ${token}`)
-        .send({ answer: 'Voici notre réponse' });
+        .send({ reponse: 'Voici notre réponse' });
 
         assert.strictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.body, {
