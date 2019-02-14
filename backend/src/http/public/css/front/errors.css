@@ -46,19 +46,6 @@ header {
     vertical-align: middle;
 }
 
-.serviceProQuestionnaire {
-    margin-left:25%;
-    margin-top: 10px;
-}
-
-.logoRegion {
-    width: 140px;
-}
-
-section.questionnnaire {
-    margin-top: 60px;
-}
-
 body > div > section > h2 {
     font-size: 20px;
     color: #F0801A;
