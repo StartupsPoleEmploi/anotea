@@ -1,5 +1,4 @@
 const uuid = require('node-uuid');
-const ObjectID = require('mongodb').ObjectID;
 
 module.exports = (db, mailer) => {
 
@@ -19,7 +18,7 @@ module.exports = (db, mailer) => {
             id: _id,
             profile: account.profile
         });
-        
+
         return new Promise((resolve, reject) => {
             mailer.sendPasswordForgotten({ to: contact }, codeRegion, passwordToken,
                 async () => {

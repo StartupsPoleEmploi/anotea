@@ -137,11 +137,11 @@ module.exports = components => {
                     statusCode: rawError.status || 500,
                     message: rawError.message || 'Une erreur est survenue',
                 });
-
-                if (error.statusCode > 404) {
-                    sentry.sendError(rawError);
-                }
             }
+        }
+
+        if (error.output.statusCode > 404) {
+            sentry.sendError(rawError);
         }
         return res.status(error.output.statusCode).send(error.output.payload);
     });
