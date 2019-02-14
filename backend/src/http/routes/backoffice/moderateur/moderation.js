@@ -2,9 +2,9 @@ const express = require('express');
 const Joi = require('joi');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
-const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
+const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
 const moderationStats = require('./utils/moderationStats');
-const { objectId } = require('./../../../common/validators');
+const { objectId } = require('../../../../common/validators');
 
 module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 

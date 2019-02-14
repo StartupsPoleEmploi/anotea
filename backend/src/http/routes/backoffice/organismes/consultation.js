@@ -1,9 +1,9 @@
 const express = require('express');
 const ObjectID = require('mongodb').ObjectID;
 const Joi = require('joi');
-const { tryAndCatch, getRemoteAddress } = require('../routes-utils');
-const { IdNotFoundError } = require('./../../../common/errors');
-const { objectId } = require('./../../../common/validators');
+const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
+const { IdNotFoundError } = require('../../../../common/errors');
+const { objectId } = require('../../../../common/validators');
 
 module.exports = ({ db, logger, middlewares, moderation }) => {
 
