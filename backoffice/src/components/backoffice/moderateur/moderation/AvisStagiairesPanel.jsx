@@ -4,8 +4,8 @@ import _ from 'lodash';
 import { searchAvis } from '../service/moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/Panel';
-import AvisResultsSummary from '../common/results/summary/AvisResultsSummary';
-import AvisResults from '../common/results/AvisResults';
+import AvisResultsSummary from './common/summary/AvisResultsSummary';
+import AvisResults from './common/AvisResults';
 import ToolbarTab from '../common/ToolbarTab';
 import SearchInputTab from '../common/SearchInputTab';
 

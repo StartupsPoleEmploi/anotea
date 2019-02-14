@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { resendEmailAccount, updateEditedCourriel, deleteEditedCourriel } from '../../service/gestionOrganismesService';
+import { resendEmailAccount, updateEditedCourriel, deleteEditedCourriel } from '../service/gestionOrganismesService';
 
 export default class OrganismeCard extends React.PureComponent {
 
