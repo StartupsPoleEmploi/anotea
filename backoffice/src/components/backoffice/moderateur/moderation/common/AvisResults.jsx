@@ -29,8 +29,7 @@ export default class AvisResults extends React.Component {
                 <Message message={this.state.message} onClose={() => this.setState({ message: null })} />
                 }
                 {
-                    results.avis
-                    .map((avis, key) => {
+                    results.avis.map((avis, key) => {
                         return (
                             <div key={key} className="row">
                                 <div className="col-sm-12">

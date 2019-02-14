@@ -16,7 +16,7 @@
       padding-bottom: 0.5rem;
       font-size: 2em;
       font-weight: $font-weight-900;
-      line-height: 2rem;
+      line-height: 2.5rem;
       text-align: center;
     }
 
@@ -84,6 +84,8 @@
             .nav-link {
               color: $color-grey-50;
               font-size: 1rem;
+              letter-spacing: 0.3px;
+              line-height: 1.187rem;
               padding: 0.5rem 1rem 0.4rem 1rem;
 
             }

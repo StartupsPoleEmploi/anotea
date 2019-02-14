@@ -1,0 +1,16 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/button-mixins';
+
+.Organisme .Edition {
+
+  button.cancel {
+    @include action-button($color-red, $color-white);
+    border: none;
+    text-transform: unset;
+  }
+
+  button.confirm {
+    @include action-button($color-blue, $color-blue-10);
+  }
+
+}
