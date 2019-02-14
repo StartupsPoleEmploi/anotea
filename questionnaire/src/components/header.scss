@@ -1,3 +1,5 @@
+@import '../styles/variables';
+
 .header {
     left: -50px;
     position: relative;
@@ -11,7 +13,7 @@
 	h1 {
 		height: 39px;
 		width: 624px;
-		color: #384EAA;
+		color: $color-blue;
 		font-size: 32px;
 		font-weight: 900;
 		line-height: 39px;
@@ -20,7 +22,7 @@
 
 	h2 {
 	    width: 621px;
-	    color: #24303A;
+	    color: $color-black;
 	    font-size: 16px;
 	    line-height: 24px;
 	    text-align: center;

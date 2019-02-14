@@ -1,3 +1,5 @@
+@import '../../styles/variables';
+
 .send-button {
 
     text-align: center;
@@ -7,10 +9,10 @@
         height: 43px;
         width: 128px;
         border-radius: 5px;
-        background-color: #EBEDF6;
+        background-color: $color-blue-10;
         border: 0px;
         margin-top: 33px;
-	    color: #384EAA;
+	    color: $color-blue;
 	    font-size: 16px;
 	    font-weight: bold;
 	    letter-spacing: 2px;

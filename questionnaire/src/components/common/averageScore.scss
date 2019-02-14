@@ -1,8 +1,10 @@
+@import '../../styles/variables';
+
 .average-score {
     display: inline;
 
     .score {
-		color: #24303A;
+		color: $color-black;
 		line-height: 39px;
 		text-align: center;
 	    display: inline-block;
