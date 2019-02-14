@@ -13,7 +13,6 @@
     color: $color-white;
 
     .title {
-      padding-top: 3rem;
       padding-bottom: 0.5rem;
       font-size: 2em;
       font-weight: $font-weight-900;
@@ -38,8 +37,8 @@
     .container {
 
       .toolbar {
-        padding-top: 0;
-        padding-left: 0;
+        margin-left: 15px;
+        margin-right: 15px;
         text-align: center;
         font-size: 1rem;
         border: 1px solid $color-grey-5;
@@ -54,7 +53,7 @@
           .nav-item {
             padding-top: 0.25rem;
             padding-bottom: 0.25rem;
-            border-right: 1px solid $color-grey-5;
+            border-right: 2px solid $color-grey-5;
 
             &.active {
               border: 1px solid $color-grey-25;
@@ -82,18 +81,6 @@
               border-top-right-radius: 6px;
             }
 
-            &.disabled {
-              pointer-events: none;
-              color: $color-grey-5;
-              opacity: 0.2;
-            }
-
-            .pastille {
-              color: $color-red;
-              font-size: 0.825rem;
-              vertical-align: top;
-            }
-
             .nav-link {
               color: $color-grey-50;
               font-size: 1rem;
@@ -103,13 +90,13 @@
 
             &.nav-search {
 
-              background-color: $color-grey-5;
+              background-color: $color-white;
               border-bottom-right-radius: 6px;
               border-top-right-radius: 6px;
 
               .input-group {
                 opacity: 0.6;
-                background-color: $color-grey-5;
+                background-color: $color-white;
 
                 &.active {
                   opacity: 1;
@@ -119,11 +106,11 @@
                   font-size: 1.2rem;
                   border: none;
                   border-radius: unset;
-                  background-color: $color-grey-5;
+                  background-color: $color-white;
                 }
 
                 input {
-                  background-color: $color-grey-5;
+                  background-color: $color-white;
                   border: none;
                   box-shadow: none;
                 }
@@ -140,7 +127,7 @@
                 border-top-left-radius: unset;
                 border-bottom-left-radius: unset;
                 padding-bottom: 0.5rem;
-                background-color: $color-grey-5;
+                background-color: $color-white;
                 color: $color-black;
                 font-weight: $font-weight-700;
                 text-transform: uppercase;
@@ -157,7 +144,8 @@
       }
 
       .results {
-        padding-top: 4rem;
+        margin-left: 15px;
+        margin-right: 15px;
       }
     }
   }

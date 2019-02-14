@@ -45,13 +45,13 @@ export class Pagination extends React.Component {
                 {
                     (!isFirstPage && !isLastPage) &&
                     <li className="page-item active">
-                        <a className="page-link" onClick={() => this.props.onClick(currentPage)}>{currentPage}</a>
+                        <a className="page-link" onClick={() => this.props.onClick(currentPage - 1)}>{currentPage}</a>
                     </li>
                 }
                 {
                     (nextPage < lastPage) &&
                     <li className="page-item">
-                        <a className="page-link" onClick={() => this.props.onClick(nextPage)}>{nextPage}</a>
+                        <a className="page-link" onClick={() => this.props.onClick(nextPage - 1)}>{nextPage}</a>
                     </li>
                 }
                 {
@@ -61,14 +61,14 @@ export class Pagination extends React.Component {
                     </li>
                 }
                 <li className={`page-item ${isLastPage && 'active'}`}>
-                    <a className="page-link" onClick={() => this.props.onClick(lastPage)}>{lastPage}</a>
+                    <a className="page-link" onClick={() => this.props.onClick(lastPage - 1)}>{lastPage}</a>
                 </li>
             </ul>
         );
     }
 }
 
-export class PaginationStatus extends React.Component {
+export class PaginationSummary extends React.Component {
 
     static propTypes = {
         pagination: PropTypes.object.isRequired,

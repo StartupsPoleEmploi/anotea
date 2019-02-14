@@ -24,8 +24,8 @@
   }
 
   .stars {
-    font-size: 1rem;
-    letter-spacing: 2px;
+    font-size: 0.875rem;
+    letter-spacing: 5px;
     color: $color-yellow;
 
     &.empty {
@@ -39,7 +39,7 @@
     color: $color-grey-50;
   }
 
-  .creation {
+  .date {
     font-size: 0.75rem;
     line-height: 1rem;
     color: $color-grey-50;

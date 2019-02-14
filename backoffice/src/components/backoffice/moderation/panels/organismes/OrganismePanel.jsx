@@ -1,8 +1,8 @@
 import React from 'react';
-import { getOrganisationInfo } from '../../../../lib/organisationService';
+import { getOrganisationInfo } from '../../../../../lib/organisationService';
 import OrganismeCard from './OrganismeCard';
-import Loader from '../../common/Loader';
-import Panel from '../../common/Panel';
+import Loader from '../../../common/Loader';
+import Panel from '../../../common/Panel';
 
 export default class OrganismePanel extends React.PureComponent {
 
@@ -43,7 +43,13 @@ export default class OrganismePanel extends React.PureComponent {
 
         return <Panel
             header={
-                <h1 className="title">Gestion des organismes</h1>
+                <div>
+                    <h1 className="title">Gestion des organismes</h1>
+                    <p className="subtitle">
+                        Ici, vous trouverez les réponses des organismes de formation adressées aux stagiaires.
+                        Vous pouvez également consulter les informations d&apos;un organisme en effectuant une recherche
+                    </p>
+                </div>
             }
             toolbar={
                 <nav className="nav">

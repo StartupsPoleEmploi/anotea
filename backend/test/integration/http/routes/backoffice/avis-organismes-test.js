@@ -1,9 +1,10 @@
+const _ = require('lodash');
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
 const { newComment } = require('../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganisme, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganisme }) => {
 
     it('can answer to a comment', async () => {
 
@@ -13,21 +14,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         await insertIntoDatabase('comment', comment);
 
         let response = await request(app)
-        .post(`/api/backoffice/avis/${comment._id}/answer`)
+        .put(`/api/backoffice/avis/${comment._id}/answer`)
         .set('authorization', `Bearer ${token}`)
         .send({ answer: 'Voici notre réponse' });
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, {
-            message: 'advice answered',
-        });
-
-        let db = await getTestDatabase();
-        let result = await db.collection('comment').findOne({ _id: comment._id });
-        assert.ok(result);
-        assert.deepEqual(result.answer, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.answer.date);
+        assert.deepStrictEqual(_.omit(response.body.answer, ['date']), {
             text: 'Voici notre réponse',
-            status: 'published',
+            status: 'none',
         });
     });
 
@@ -47,15 +42,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .delete(`/api/backoffice/avis/${comment._id}/answer`)
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, {
-            message: 'advice answer removed',
-        });
-
-        let db = await getTestDatabase();
-        let result = await db.collection('comment').findOne({ _id: comment._id });
-        assert.ok(result);
-        assert.deepEqual(result.answer, undefined);
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.answer, undefined);
     });
 
     it('can report an avis', async () => {
@@ -72,8 +60,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .send({ reason: 'alerte' })
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.reported, true);
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.reported, true);
     });
 
     it('should reject invalid comment id', async () => {
@@ -82,15 +70,31 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
 
         let response = await request(app)
-        .post(`/api/backoffice/avis/12345/answer`)
+        .put(`/api/backoffice/avis/INVALID/answer`)
         .set('authorization', `Bearer ${token}`)
         .send({ answer: 'Voici notre réponse' });
 
-        assert.equal(response.statusCode, 400);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
             statusCode: 400,
             error: 'Bad Request',
-            message: 'Identifiant invalide'
+            message: 'Erreur de validation',
+            details: [
+                {
+                    message: '"id" with value "INVALID" fails to match the Identifiant invalide pattern',
+                    path: [
+                        'id'
+                    ],
+                    type: 'string.regex.name',
+                    context: {
+                        name: 'Identifiant invalide',
+                        pattern: {},
+                        value: 'INVALID',
+                        key: 'id',
+                        label: 'id'
+                    }
+                }
+            ]
         });
     });
 

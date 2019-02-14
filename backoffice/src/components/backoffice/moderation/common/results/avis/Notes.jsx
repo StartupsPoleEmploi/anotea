@@ -17,6 +17,7 @@ export default class Notes extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        disabled: PropTypes.bool,
     };
 
     constructor(props) {
@@ -42,23 +43,27 @@ export default class Notes extends React.Component {
     };
 
     render() {
-        let { rates } = this.props.avis;
+        let { avis, disabled } = this.props;
+        let buttonText = (
+            <span className="text">
+                Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
+            </span>
+        );
+
+        if (disabled) {
+            return <div className="Notes">{buttonText}</div>;
+        }
 
         return (
             <div className="Notes">
-                <button
-                    type="button"
-                    className="btn btn-sm"
-                    onClick={this.toggleDetails}>
-                    Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
-                </button>
+                <button type="button" className="btn" onClick={this.toggleDetails}>{buttonText}</button>
                 {this.state.showDetails &&
                 <div className="mx-0 d-flex justify-content-center details">
-                    {this.createCard('Accueil', rates.accueil)}
-                    {this.createCard('Contenu', rates.contenu_formation)}
-                    {this.createCard('Formateurs', rates.equipe_formateurs)}
-                    {this.createCard('Moyens', rates.moyen_materiel)}
-                    {this.createCard('Accompagnement', rates.accompagnement)}
+                    {this.createCard('Accueil', avis.rates.accueil)}
+                    {this.createCard('Contenu', avis.rates.contenu_formation)}
+                    {this.createCard('Formateurs', avis.rates.equipe_formateurs)}
+                    {this.createCard('Moyens', avis.rates.moyen_materiel)}
+                    {this.createCard('Accompagnement', avis.rates.accompagnement)}
                 </div>
                 }
             </div>

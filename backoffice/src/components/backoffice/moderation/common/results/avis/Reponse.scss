@@ -1,0 +1,42 @@
+@import '../../../../../../styles/variables';
+
+.Reponse {
+
+  font-size: 1rem;
+  border: 1px solid $color-grey-5;
+  border-radius: 5px;
+  box-shadow: $shadow;
+  padding: 1rem 1.5rem;
+
+  .title {
+    margin-bottom: 0.5rem;
+
+    &:first-child {
+      font-weight: $font-weight-700;
+    }
+
+    .date {
+      font-weight: $font-weight-400;
+      font-size: 0.875rem;
+      color: $color-grey-50;
+    }
+  }
+
+  .status {
+
+    font-size: 0.875rem;
+
+    &.published {
+      color: $color-green;
+    }
+
+    &.rejected {
+      color: $color-red;
+    }
+
+    &.toModerate {
+      color: $color-blue;
+    }
+  }
+}
+

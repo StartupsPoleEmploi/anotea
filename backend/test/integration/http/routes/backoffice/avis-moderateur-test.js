@@ -4,7 +4,7 @@ const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../helpers/test-server');
 const { newComment, newTrainee } = require('../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme, logAsFinancer, insertIntoDatabase, createIndexes, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme, logAsFinancer, insertIntoDatabase, getTestDatabase }) => {
 
     it('can search all avis with filter', async () => {
 
@@ -12,20 +12,31 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment({
+                moderated: false,
                 pseudo: 'joe'
             })),
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis?filter=all')
+        .get('/api/backoffice/avis?status=all')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.meta.stats, {
+            status: {
+                none: 1,
+                reported: 0
+            },
+            reponseStatus: {
+                none: 0
+            }
+        });
+
     });
 
-    it('when filter=all should return all avis (with and without commentaires)', async () => {
+    it('can search avis with status=all (return avis with and without commentaires)', async () => {
 
         let app = await startServer();
         let avisWithoutComment = insertIntoDatabase('comment', newComment());
@@ -38,15 +49,15 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         delete avisWithoutComment.comment;
 
         let response = await request(app)
-        .get('/api/backoffice/avis?filter=all')
+        .get('/api/backoffice/avis?status=all')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepEqual(response.body.avis.length, 2);
+        assert.deepStrictEqual(response.body.avis.length, 2);
     });
 
-    it('when filter!=all should return avis with commentaires)', async () => {
+    it('can search avis with filter!=all (should return avis with commentaires)', async () => {
 
         let app = await startServer();
         let [token, avisWithoutComment] = await Promise.all([
@@ -60,15 +71,15 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         delete avisWithoutComment.comment;
 
         let response = await request(app)
-        .get('/api/backoffice/avis?filter=rejected')
+        .get('/api/backoffice/avis?status=rejected')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis.length, 1);
     });
 
-    it('can search all avis with email', async () => {
+    it('can search all avis with stagiaire email', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
@@ -89,10 +100,10 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .get('/api/backoffice/avis?stagiaire=robert@domaine.com')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepEqual(response.body.avis.length, 1);
-        assert.deepEqual(response.body.meta.stagiaire, {
+        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.meta.stagiaire, {
             email: 'robert@domaine.com',
             dnIndividuNational: '1111111111'
         });
@@ -109,9 +120,9 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .get('/api/backoffice/avis?stagiaire=unknown@domaine.com')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepEqual(response.body.avis.length, 0);
+        assert.deepStrictEqual(response.body.avis.length, 0);
     });
 
     it('can search all avis with identifiant', async () => {
@@ -135,9 +146,9 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .get('/api/backoffice/avis?stagiaire=1234567890')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis.length, 1);
     });
 
     it('can search all avis with pagination', async () => {
@@ -154,10 +165,10 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .get('/api/backoffice/avis?page=0')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepEqual(response.body.avis.length, 2);
-        assert.deepEqual(response.body.meta.pagination, {
+        assert.deepStrictEqual(response.body.avis.length, 2);
+        assert.deepStrictEqual(response.body.meta.pagination, {
             page: 0,
             itemsPerPage: 2,
             itemsOnThisPage: 2,
@@ -169,7 +180,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .get('/api/backoffice/avis?page=1')
         .set('authorization', `Bearer ${token}`);
 
-        assert.deepEqual(response.body.meta.pagination, {
+        assert.deepStrictEqual(response.body.meta.pagination, {
             page: 1,
             itemsPerPage: 2,
             itemsOnThisPage: 1,
@@ -178,28 +189,72 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         });
     });
 
-    it('should return inventory in meta', async () => {
-
+    it('can search all avis with reponse', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment({ rejected: true, published: false })),
-            insertIntoDatabase('comment', newComment({ published: true })),
+            insertIntoDatabase('comment', newComment({
+                reported: true,
+            })),
+            insertIntoDatabase('comment', newComment({
+                answer: {
+                    text: 'Voici notre réponse',
+                    status: 'published',
+                },
+            })),
+            insertIntoDatabase('comment', newComment({
+                answer: {
+                    text: 'Voici notre réponse',
+                    status: 'rejected',
+                },
+            })),
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis')
+        .get('/api/backoffice/avis?reponseStatus=published')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.meta.inventory, {
-            reported: 0,
-            toModerate: 0,
-            rejected: 1,
-            published: 1,
-            all: 2
-        });
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.avis);
+        assert.deepStrictEqual(response.body.avis.length, 1);
     });
+
+    it('can publish reponse', async () => {
+
+        let app = await startServer();
+        let comment = newComment();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/publishReponse`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.answer.lastModerationAction);
+        assert.deepStrictEqual(response.body.answer.status, 'published');
+    });
+
+    it('can reject reponse', async () => {
+
+        let app = await startServer();
+        let comment = newComment();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/rejectReponse`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.answer.lastModerationAction);
+        assert.deepStrictEqual(response.body.answer.status, 'rejected');
+    });
+
 
     it('can edit an avis', async () => {
 
@@ -215,8 +270,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .send({ text: 'New message' })
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.editedComment.text, 'New message');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.editedComment.text, 'New message');
         assert.ok(response.body.lastModerationAction);
     });
 
@@ -234,12 +289,12 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .send({ qualification: 'positif' })
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.moderated, true);
-        assert.deepEqual(response.body.published, true);
-        assert.deepEqual(response.body.reported, false);
-        assert.deepEqual(response.body.rejectReason, null);
-        assert.deepEqual(response.body.qualification, 'positif');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.moderated, true);
+        assert.deepStrictEqual(response.body.published, true);
+        assert.deepStrictEqual(response.body.reported, false);
+        assert.deepStrictEqual(response.body.rejectReason, null);
+        assert.deepStrictEqual(response.body.qualification, 'positif');
         assert.ok(response.body.lastModerationAction);
     });
 
@@ -257,12 +312,12 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .send({ reason: 'alerte' })
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.moderated, true);
-        assert.deepEqual(response.body.published, false);
-        assert.deepEqual(response.body.rejected, true);
-        assert.deepEqual(response.body.reported, false);
-        assert.deepEqual(response.body.rejectReason, 'alerte');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.moderated, true);
+        assert.deepStrictEqual(response.body.published, false);
+        assert.deepStrictEqual(response.body.rejected, true);
+        assert.deepStrictEqual(response.body.reported, false);
+        assert.deepStrictEqual(response.body.rejectReason, 'alerte');
         assert.ok(response.body.lastModerationAction);
     });
 
@@ -279,10 +334,10 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .delete(`/api/backoffice/avis/${id}`)
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let db = await getTestDatabase();
         let count = await db.collection('comment').countDocuments({ _id: id });
-        assert.equal(count, 0);
+        assert.strictEqual(count, 0);
     });
 
     it('can mask pseudo', async () => {
@@ -299,8 +354,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .send({ mask: true })
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.pseudoMasked, true);
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.pseudoMasked, true);
     });
 
     it('can unmask pseudo', async () => {
@@ -317,8 +372,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .send({ mask: false })
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.pseudoMasked, false);
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.pseudoMasked, false);
     });
 
     it('can mask title', async () => {
@@ -335,8 +390,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .send({ mask: true })
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.titleMasked, true);
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.titleMasked, true);
     });
 
     it('can unmask title', async () => {
@@ -353,8 +408,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .send({ mask: false })
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.titleMasked, false);
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.titleMasked, false);
     });
 
     it('can not reject unknown avis', async () => {
@@ -369,28 +424,28 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .send({ reason: 'alerte' })
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 404);
+        assert.strictEqual(response.statusCode, 404);
     });
 
     it('can not search avis when not authenticated', async () => {
 
         let app = await startServer();
 
-        let response = await request(app).get('/api/backoffice/avis?filter=all');
-        assert.equal(response.statusCode, 401);
-        assert.deepEqual(response.body, { error: true });
+        let response = await request(app).get('/api/backoffice/avis?status=all');
+        assert.strictEqual(response.statusCode, 401);
+        assert.deepStrictEqual(response.body, { error: true });
     });
 
-    it('can not search advices when authenticated as organisme', async () => {
+    it('can not search avis when authenticated as organisme', async () => {
 
         let app = await startServer();
         let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 11111111111111);
 
-        let response = await request(app).get('/api/backoffice/avis?filter=all')
+        let response = await request(app).get('/api/backoffice/avis?status=all')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 403);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 403);
+        assert.deepStrictEqual(response.body, {
             'error': 'Forbidden',
             'message': 'Action non autorisé',
             'statusCode': 403
@@ -403,11 +458,11 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
 
         let token = await logAsFinancer(app, 'organisme@pole-emploi.fr', '2');
 
-        let response = await request(app).get('/api/backoffice/avis?filter=all')
+        let response = await request(app).get('/api/backoffice/avis?status=all')
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 403);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 403);
+        assert.deepStrictEqual(response.body, {
             'error': 'Forbidden',
             'message': 'Action non autorisé',
             'statusCode': 403

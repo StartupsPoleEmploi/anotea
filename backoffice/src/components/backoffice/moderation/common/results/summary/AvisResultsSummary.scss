@@ -1,14 +1,13 @@
-@import '../../../../styles/variables';
+@import '../../../../../../styles/variables';
 
 .Description {
 
   font-size: 1.125rem;
   font-weight: $font-weight-400;
-  padding-bottom: 10px;
   text-align: center;
   position: relative;
 
-  .filter {
+  .status {
     font-weight: $font-weight-700;
   }
 
@@ -20,7 +19,7 @@
     opacity: 0.75;
   }
 
-  .status {
+  .summary {
     padding-top: 4px;
     color: $color-grey-50;
     font-weight: $font-weight-400;
