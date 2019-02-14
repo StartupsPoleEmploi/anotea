@@ -13,3 +13,4 @@ data/intercarif
 test-results.xml
 heapdump-*
 .data
+.log
