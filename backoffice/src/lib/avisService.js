@@ -1,11 +1,12 @@
-import { _get, _post, _delete, _put } from '../utils/http-client';
+import { _delete, _get, _put } from '../utils/http-client';
+import queryString from 'query-string';
 
 export const searchAvis = (options = {}) => {
-    let filter = options.filter || 'all';
-    let stagiaire = options.stagiaire || '';
-    let page = options.page ? options.page - 1 : 0;
+    return _get(`/backoffice/avis?${queryString.stringify(options)}`);
+};
 
-    return _get(`/backoffice/avis?filter=${filter}&page=${page}&stagiaire=${stagiaire}`);
+export const searchAvisWithReponse = (options = {}) => {
+    return _get(`/backoffice/avisWithReponse?${queryString.stringify(options)}`);
 };
 
 export const maskPseudo = (id, mask) => {
@@ -37,25 +38,27 @@ export const unreportAvis = (id, userId) => {
 };
 
 export const publishAvis = (id, qualification) => {
-    return _put(`/backoffice/avis/${id}/publish`, {
-        qualification: qualification
-    });
+    return _put(`/backoffice/avis/${id}/publish`, { qualification });
+};
+
+export const publishReponse = id => {
+    return _put(`/backoffice/avis/${id}/publishReponse`);
+};
+
+export const rejectReponse = id => {
+    return _put(`/backoffice/avis/${id}/rejectReponse`);
 };
 
 export const answerAvis = (id, answer) => {
-    return _post(`/backoffice/avis/${id}/answer`, {
-        answer: answer
-    });
+    return _put(`/backoffice/avis/${id}/reponse`, { answer });
 };
 
 export const removeAvisAnswer = id => {
-    return _delete(`/backoffice/avis/${id}/answer`);
+    return _delete(`/backoffice/avis/${id}/reponse`);
 };
 
 export const editAvis = (id, text) => {
-    return _put(`/backoffice/avis/${id}/edit`, {
-        text,
-    });
+    return _put(`/backoffice/avis/${id}/edit`, { text });
 };
 
 export const resendEmail = id => {

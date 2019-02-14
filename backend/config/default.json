@@ -87,21 +87,12 @@
     ]
   },
   "log": {
-    "console": {
-      "json": false
-    },
-    "file": {
-      "enabled": true,
-      "info": "logs/anotea.log",
-      "error": "logs/anotea.error.log",
-      "maxSize": "20M",
-      "keep": 10,
-      "compress": true
-    },
-    "sentry": {
-      "enabled": false,
-      "DSN": "https://token@sentry.io/projet"
-    }
+    "level": "info",
+    "json": false
+  },
+  "sentry": {
+    "enabled": false,
+    "DSN": "https://token@sentry.io/projet"
   },
   "mongodb": {
     "uri": "mongodb://127.0.0.1:27017/anotea?w=1&socketTimeoutMS=600000"

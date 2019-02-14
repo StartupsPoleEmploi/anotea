@@ -41,6 +41,9 @@ module.exports = {
             db.collection('comment').createIndex({ 'training.organisation.label': 1 }),
             db.collection('comment').createIndex({ 'training.organisation.siret': 1 }),
             db.collection('comment').createIndex({ 'training.certifInfo.id': 1 }),
+            db.collection('comment').createIndex({ 'answer.lastModerationAction': 1 }),
+            db.collection('comment').createIndex({ 'answer.status': 1 }),
+            db.collection('comment').createIndex({ 'answer.date': 1 }),
         ]);
     },
     regions: db => {

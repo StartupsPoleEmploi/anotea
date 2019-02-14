@@ -1,0 +1,19 @@
+@import '../../../../../../styles/variables';
+
+.Avis {
+  min-height: 10rem;
+  border-bottom: 0.1rem solid $color-grey-5;
+
+  .disabled {
+    border: 1px solid $color-grey-5;
+    background-color: $color-grey-5;
+    opacity: 0.6;
+  }
+
+  .stagiaire-actions {
+    span:first-child {
+      margin-right: 1rem;
+    }
+  }
+}
+

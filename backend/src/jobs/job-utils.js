@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const moment = require('moment');
 const createComponents = require('../components');
+const createLogger = require('../common/components/logger');
 
 module.exports = {
     delay: milliseconds => {
@@ -16,28 +17,31 @@ module.exports = {
         process.on('uncaughtException', e => console.log(e));
 
         let components = await createComponents();
-        let logger = components.logger;
-        let client = components.client;
+        let logger = createLogger('anotea-job', components.configuration);
         const exit = error => {
             if (error) {
                 return logger.error(error, () => {
-                    client.close(() => process.exit(1));
+                    components.client.close(() => process.exit(1));
                 });
             }
-            return client.close();
+            return components.client.close();
         };
 
-        let jobComponents = Object.assign({}, components, { exit, client });
+        let jobComponents = Object.assign({}, components, { logger, exit });
 
         try {
             let launchTime = new Date().getTime();
             let results = await job(jobComponents);
 
             let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
-            logger.info(`Completed in ${duration}`);
+            let data = {};
             if (results) {
-                logger.info(`Results:\n${JSON.stringify(results, null, 2)}`);
+                data = results.toJSON ? results.toJSON() : results;
+                if (results.constructor === Array) {
+                    data = results.map(r => r.toJSON ? r.toJSON() : r);
+                }
             }
+            logger.info(`Completed in ${duration}`, data);
             exit();
         } catch (e) {
             exit(e);

@@ -3,6 +3,7 @@ const auth = require('./common/components/auth');
 const password = require('./common/components/password');
 const regions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
+const sentry = require('./common/components/sentry');
 const moderation = require('./common/components/moderation');
 const database = require('./common/components/database');
 const createMailer = require('./smtp/mailer.js');
@@ -13,7 +14,7 @@ const sendVotreAvisEmail = require('./common/components/mailing/sendVotreAvisEma
 module.exports = async (options = {}) => {
 
     let configuration = options.configuration || config;
-    let logger = options.logger || createLogger('anotea-server', configuration);
+    let logger = options.logger || createLogger('anotea', configuration);
     let { client, db } = await database(logger, configuration);
     let mailer = options.mailer || createMailer(db, logger, configuration);
 
@@ -23,6 +24,7 @@ module.exports = async (options = {}) => {
         db,
         client,
         mailer,
+        sentry: sentry(logger, configuration),
         auth: auth(configuration),
         password,
         regions: regions(db),

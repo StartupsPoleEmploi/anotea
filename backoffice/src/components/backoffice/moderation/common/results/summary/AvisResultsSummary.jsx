@@ -1,24 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PaginationStatus } from '../../common/Pagination';
-import './Summary.scss';
+import { PaginationSummary } from '../../../../common/Pagination';
+import './AvisResultsSummary.scss';
 
-export default class Summary extends React.Component {
+export default class AvisResultsSummary extends React.Component {
 
     static propTypes = {
-        parameters: PropTypes.object.isRequired,
+        query: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
     };
 
     render() {
-        let { filter } = this.props.parameters;
+        let { status } = this.props.query;
         let { pagination, stagiaire } = this.props.results.meta;
         let suffixMapper = {
             'all': '',
             'published': 'publiés',
             'rejected': 'rejetés',
             'reported': 'signalés',
-            'toModerate': 'à modérer',
+            'none': 'à modérer',
         };
 
         if (pagination.totalItems === 0) {
@@ -28,12 +28,12 @@ export default class Summary extends React.Component {
         return (
             <p className="Description">
                 <span className="name">Liste des avis</span>
-                <span className="filter"> {stagiaire ? stagiaire.email : suffixMapper[filter]}</span>
+                <span className="status"> {stagiaire ? stagiaire.email : suffixMapper[status]}</span>
                 {stagiaire &&
                 <div className="identifiant">Identifiant: {stagiaire.dnIndividuNational}</div>
                 }
-                <span className="status d-none d-sm-block">
-                    <PaginationStatus pagination={pagination} />
+                <span className="summary d-none d-sm-block">
+                    <PaginationSummary pagination={pagination} />
                 </span>
             </p>
         );

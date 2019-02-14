@@ -135,4 +135,67 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             }
         });
     });
+
+    it('should create action with empty avis list when no comment can be found', async () => {
+
+        let db = await getTestDatabase();
+
+        let sessions = newSession({ _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX2' });
+        sessions.avis = [];
+        sessions.score = { nb_avis: 0 };
+        await Promise.all([
+            importIntercarif(),
+            insertRegions(),
+            insertIntoDatabase('sessionsReconciliees', sessions),
+        ]);
+
+        await generateActions(db);
+
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(action, {
+            _id: 'F_XX_XX|AC_XX_XXXXXX',
+            numero: 'AC_XX_XXXXXX',
+            region: '11',
+            code_region: '11',
+            avis: [],
+            score: {
+                nb_avis: 0,
+            },
+            organisme_financeurs: ['2'],
+            organisme_formateur: {
+                raison_sociale: 'Anotea Formation Paris',
+                siret: '22222222222222',
+                numero: 'OF_XXX'
+            },
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
+            },
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur web',
+                domaine_formation: {
+                    formacodes: [
+                        '31801'
+                    ]
+                },
+                certifications: [
+                    '55518'
+                ]
+            },
+            meta: {
+                source: 'intercarif',
+                reconciliation: {
+                    organisme_formateur: '22222222222222',
+                    lieu_de_formation: '75019',
+                    certifinfos: [
+                        '55518'
+                    ],
+                    formacodes: [
+                        '31801'
+                    ]
+                },
+            }
+        });
+    });
 }));
