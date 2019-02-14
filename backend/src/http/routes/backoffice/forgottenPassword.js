@@ -14,7 +14,7 @@ module.exports = ({ db, mailing, password }) => {
 
         let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': identifier });
         if (organisme) {
-            await mailing.sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), 'organismes', organisme.codeRegion);
+            await mailing.sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), organisme.codeRegion);
             return res.json({ 'message': 'mail sent' });
         }
 
