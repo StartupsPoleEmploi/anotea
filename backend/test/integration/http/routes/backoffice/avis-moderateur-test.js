@@ -197,13 +197,13 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
                 reported: true,
             })),
             insertIntoDatabase('comment', newComment({
-                answer: {
+                reponse: {
                     text: 'Voici notre réponse',
                     status: 'published',
                 },
             })),
             insertIntoDatabase('comment', newComment({
-                answer: {
+                reponse: {
                     text: 'Voici notre réponse',
                     status: 'rejected',
                 },
@@ -233,8 +233,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.ok(response.body.answer.lastStatusUpdate);
-        assert.deepStrictEqual(response.body.answer.status, 'published');
+        assert.ok(response.body.reponse.lastStatusUpdate);
+        assert.deepStrictEqual(response.body.reponse.status, 'published');
     });
 
     it('can reject reponse', async () => {
@@ -251,8 +251,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.ok(response.body.answer.lastStatusUpdate);
-        assert.deepStrictEqual(response.body.answer.status, 'rejected');
+        assert.ok(response.body.reponse.lastStatusUpdate);
+        assert.deepStrictEqual(response.body.reponse.status, 'rejected');
     });
 
 
