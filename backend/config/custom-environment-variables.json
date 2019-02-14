@@ -34,7 +34,7 @@
       "__name": "ANOTEA_SENTRY_ENABLED",
       "__format": "json"
     },
-    "DSN": "ANOTEA_LOG_SENTRY_DSN"
+    "dsn": "ANOTEA_SENTRY_DSN"
   },
   "smtp": {
     "host": "ANOTEA_SMTP_HOST",

@@ -1,17 +1,19 @@
-const Raven = require('raven');
+const { init, captureException } = require('@sentry/node');
 
 module.exports = (logger, configuration) => {
 
     let isEnabled = configuration.sentry.enabled;
 
     if (isEnabled) {
-        Raven.config(configuration.sentry.DSN).install();
+        init({
+            dsn: configuration.sentry.dsn,
+        });
     }
 
     return {
         sendError: e => {
             if (isEnabled) {
-                Raven.captureException(e);
+                captureException(e);
             } else {
                 logger.error('Message sent to Sentry');
             }
