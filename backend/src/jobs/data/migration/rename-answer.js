@@ -2,5 +2,12 @@
 'use strict';
 
 module.exports = db => {
-    return db.collection('comment').updateMany({ answer: { $exists: true } }, { $rename: { 'answer': 'reponse' } });
+    return Promise.all([
+        db.collection('comment').updateMany({ answer: { $exists: true } }, {
+            $rename: { 'answer': 'reponse' }
+        }),
+        db.collection('comment').updateMany({ lastModerationAction: { $exists: true } }, {
+            $rename: { 'lastModerationAction': 'lastStatusUpdate' }
+        }),
+    ]);
 };

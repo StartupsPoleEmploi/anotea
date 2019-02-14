@@ -52,7 +52,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
             ...(reponseStatus && reponseStatus !== 'all' ? { 'reponse.status': reponseStatus } : {}),
             ...(filter ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
         })
-        .sort(status === 'all' ? { date: -1 } : { lastModerationAction: -1 })
+        .sort(status === 'all' ? { date: -1 } : { lastStatusUpdate: -1 })
         .skip((page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 

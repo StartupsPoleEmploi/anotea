@@ -233,7 +233,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.ok(response.body.answer.lastModerationAction);
+        assert.ok(response.body.answer.lastStatusUpdate);
         assert.deepStrictEqual(response.body.answer.status, 'published');
     });
 
@@ -251,7 +251,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.ok(response.body.answer.lastModerationAction);
+        assert.ok(response.body.answer.lastStatusUpdate);
         assert.deepStrictEqual(response.body.answer.status, 'rejected');
     });
 
@@ -272,7 +272,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.editedComment.text, 'New message');
-        assert.ok(response.body.lastModerationAction);
+        assert.ok(response.body.lastStatusUpdate);
     });
 
     it('can publish an avis', async () => {
@@ -295,7 +295,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.deepStrictEqual(response.body.reported, false);
         assert.deepStrictEqual(response.body.rejectReason, null);
         assert.deepStrictEqual(response.body.qualification, 'positif');
-        assert.ok(response.body.lastModerationAction);
+        assert.ok(response.body.lastStatusUpdate);
     });
 
     it('can reject an avis', async () => {
@@ -318,7 +318,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.deepStrictEqual(response.body.rejected, true);
         assert.deepStrictEqual(response.body.reported, false);
         assert.deepStrictEqual(response.body.rejectReason, 'alerte');
-        assert.ok(response.body.lastModerationAction);
+        assert.ok(response.body.lastStatusUpdate);
     });
 
     it('can delete an avis', async () => {

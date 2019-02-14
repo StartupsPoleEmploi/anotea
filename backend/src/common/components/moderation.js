@@ -31,7 +31,7 @@ module.exports = (db, logger, mailer) => {
                         rejected: false,
                         rejectReason: null,
                         qualification: qualification,
-                        lastModerationAction: new Date()
+                        lastStatusUpdate: new Date()
                     }
                 },
                 { returnOriginal: false }
@@ -65,7 +65,7 @@ module.exports = (db, logger, mailer) => {
                         rejected: true,
                         published: false,
                         rejectReason: reason,
-                        lastModerationAction: new Date()
+                        lastStatusUpdate: new Date()
                     }
                 },
                 { returnOriginal: false }
@@ -99,7 +99,7 @@ module.exports = (db, logger, mailer) => {
                 {
                     $set: {
                         editedComment: { text: text, date: new Date() },
-                        lastModerationAction: new Date()
+                        lastStatusUpdate: new Date()
                     }
                 },
                 { returnOriginal: false }
@@ -129,6 +129,7 @@ module.exports = (db, logger, mailer) => {
                         reported: true,
                         rejected: false,
                         published: false,
+                        lastStatusUpdate: new Date(),
                     }
                 },
                 { returnOriginal: false },
@@ -218,7 +219,7 @@ module.exports = (db, logger, mailer) => {
                 {
                     $set: {
                         'reponse.status': 'published',
-                        'reponse.lastModerationAction': new Date(),
+                        'reponse.lastStatusUpdate': new Date(),
                     }
                 },
                 { returnOriginal: false },
@@ -245,7 +246,7 @@ module.exports = (db, logger, mailer) => {
                 {
                     $set: {
                         'reponse.status': 'rejected',
-                        'reponse.lastModerationAction': new Date(),
+                        'reponse.lastStatusUpdate': new Date(),
                     }
                 },
                 { returnOriginal: false },

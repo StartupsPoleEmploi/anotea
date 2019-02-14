@@ -22,14 +22,14 @@ const Status = ({ avis }) => {
         return (
             <span className="status published">
                 (<span>Publié le </span>
-                <PrettyDate date={new Date(avis.lastModerationAction)} />)
+                <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
             </span>
         );
     } else if (avis.rejected) {
         return (
             <span className="status rejected">
                 (<span>Rejeté le </span>
-                <PrettyDate date={new Date(avis.lastModerationAction)} /> pour « <b>{avis.rejectReason}</b> »)
+                <PrettyDate date={new Date(avis.lastStatusUpdate)} /> pour « <b>{avis.rejectReason}</b> »)
             </span>
         );
     } else if (!avis.moderated) {
