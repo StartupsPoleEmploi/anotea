@@ -47,7 +47,6 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-            'step': { $gte: 2 },
             'codeRegion': `${req.params.idregion}`
         };
 
@@ -78,7 +77,7 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         const projection = { token: 0 };
 
-        let filter = { 'codeRegion': `${req.params.idregion}`, 'step': { $gte: 2 } };
+        let filter = { 'codeRegion': `${req.params.idregion}` };
 
         if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
@@ -147,7 +146,6 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         const projection = { token: 0 };
         let filter = {
-            'step': { $gte: 2 },
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
             'codeRegion': `${req.params.idregion}`
         };
@@ -217,7 +215,6 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         const projection = { token: 0 };
         let filter = {
-            'step': { $gte: 2 },
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
             'codeRegion': `${req.params.idregion}`
         };
@@ -299,7 +296,6 @@ module.exports = ({ db, middlewares, configuration }) => {
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
-            'step': { $gte: 2 },
             'codeRegion': `${req.params.idregion}`
         };
 
@@ -321,7 +317,6 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-            'step': { $gte: 2 },
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
             'codeRegion': `${req.params.idregion}`
         };
@@ -353,7 +348,6 @@ module.exports = ({ db, middlewares, configuration }) => {
         const trainings = await db.collection('comment').aggregate([
             {
                 $match: Object.assign(filter, {
-                    'step': { $gte: 2 },
                     'training.organisation.siret': { '$regex': `${req.params.siren}` },
                     'training.idFormation': req.params.idTraining
                 })
@@ -400,7 +394,6 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         let filter = {
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
-            'step': { $gte: 2 },
             'codeRegion': `${req.params.idregion}`
         };
 
@@ -427,7 +420,6 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         let filter = {
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
-            'step': { $gte: 2 },
             'codeRegion': `${req.params.idregion}`
         };
 
@@ -461,7 +453,7 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
-        let filter = { 'step': { $gte: 2 }, 'codeRegion': `${req.params.idregion}` };
+        let filter = { 'codeRegion': `${req.params.idregion}` };
 
         if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });

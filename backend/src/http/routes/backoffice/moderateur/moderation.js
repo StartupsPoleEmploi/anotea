@@ -42,7 +42,6 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         let stagiaire = await getStagiaire(filter);
         let cursor = db.collection('comment')
         .find({
-            step: { $gte: 2 },
             codeRegion: codeRegion,
             ...(status !== 'all' ? { comment: { $ne: null } } : {}),
             ...(status === 'rejected' ? { rejected: true } : {}),
