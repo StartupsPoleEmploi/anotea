@@ -10,7 +10,7 @@
     .summary {
         height: 160px;
         border: 1px solid $color-grey-25;
-        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+        box-shadow: $shadow;
         border-radius: 5px;
         width: auto;
 
