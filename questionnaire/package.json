@@ -12,7 +12,7 @@
     "Benoît Guérout <bguerout@yonoma.com>",
     "Nabil Choukri <nabil.choukri@pole-emploi.fr>"
   ],
-  "homepage": "https://anotea.pole-emploi.fr/questionnaire_v2",
+  "homepage": "https://anotea.pole-emploi.fr/questionnaire",
   "dependencies": {
     "bootstrap": "4.2.1",
     "jquery": "3.3.1",
