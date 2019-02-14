@@ -31,11 +31,12 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
         let codeRegion = req.user.codeRegion;
         let { computeStats } = moderationStats(db, codeRegion);
-        let { status, reponseStatus, stagiaire: filter, page } = await Joi.validate(req.query, {
+        let { status, reponseStatus, stagiaire: filter, page, sortBy } = await Joi.validate(req.query, {
             status: Joi.string(),
             reponseStatus: Joi.string(),
             stagiaire: Joi.string().allow('').default(''),
             page: Joi.number().min(0).default(0),
+            sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
         }, { abortEarly: false });
 
         let stagiaire = await getStagiaire(filter);
@@ -52,7 +53,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
             ...(reponseStatus && reponseStatus !== 'all' ? { 'reponse.status': reponseStatus } : {}),
             ...(filter ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
         })
-        .sort(status === 'all' ? { date: -1 } : { lastStatusUpdate: -1 })
+        .sort({ [sortBy]: -1 })
         .skip((page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 

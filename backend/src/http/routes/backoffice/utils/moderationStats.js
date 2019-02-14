@@ -25,7 +25,7 @@ module.exports = (db, codeRegion) => {
                             },
                             sumReponseStatusNone: {
                                 $sum: {
-                                    $cond: { if: { $eq: ['reponse.status', 'none'] }, then: 1, else: 0 }
+                                    $cond: { if: { $eq: ['$reponse.status', 'none'] }, then: 1, else: 0 }
                                 }
                             },
                         }

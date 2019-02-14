@@ -78,26 +78,26 @@ export default class AvisStagiairesPanel extends React.Component {
                     <nav className="nav">
                         <ToolbarTab
                             label="À modérer"
-                            onClick={() => onNewQuery({ status: 'none' })}
+                            onClick={() => onNewQuery({ status: 'none', sortBy: 'lastStatusUpdate' })}
                             isActive={() => !isTabsDisabled() && query.status === 'none'}
                             isDisabled={isTabsDisabled}
                             getNbElements={() => _.get(results.meta.stats, 'status.none')} />
 
                         <ToolbarTab
                             label="Publiés"
-                            onClick={() => onNewQuery({ status: 'published' })}
+                            onClick={() => onNewQuery({ status: 'published', sortBy: 'lastStatusUpdate' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'published'} />
 
                         <ToolbarTab
                             label="Rejetés"
-                            onClick={() => onNewQuery({ status: 'rejected' })}
+                            onClick={() => onNewQuery({ status: 'rejected', sortBy: 'lastStatusUpdate' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'rejected'} />
 
                         <ToolbarTab
                             label="Tous"
-                            onClick={() => onNewQuery({ status: 'all' })}
+                            onClick={() => onNewQuery({ status: 'all', sortBy: 'date' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => query.status === 'all'} />
 
