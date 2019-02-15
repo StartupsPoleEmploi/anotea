@@ -18,6 +18,7 @@ import ModerationRoutes from './components/backoffice/moderateur/ModerationRoute
 import { MyAccount } from './components/backoffice/account/MyAccount';
 import './utils/moment-fr';
 import './App.scss';
+import GridDisplayer from "./components/backoffice/common/helpers/GridDisplayer";
 
 addLocaleData([...fr]);
 
@@ -243,9 +244,12 @@ class App extends Component {
 
     render() {
         return (
-            <IntlProvider locale="fr">
-                {this.state.loggedIn ? this.showBackofficePages() : this.showUnauthenticatedPages()}
-            </IntlProvider>
+            <div>
+                {false && <GridDisplayer />}
+                <IntlProvider locale="fr">
+                    {this.state.loggedIn ? this.showBackofficePages() : this.showUnauthenticatedPages()}
+                </IntlProvider>
+            </div>
         );
     }
 }

@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { searchOrganismes } from '../service/gestionOrganismesService';
 import Message from '../../common/Message';
 import Loader from '../../common/Loader';
-import Panel from '../../common/Panel';
-import ToolbarTab from '../common/ToolbarTab';
-import SearchInputTab from '../common/SearchInputTab';
-import OrganismeResults from './OrganismeResults';
+import Panel from '../../common/panel/Panel';
+import Toolbar from '../../common/panel/Toolbar';
+import Tab from '../../common/panel/Tab';
+import SearchInputTab from '../../common/panel/SearchInputTab';
+import Organisme from './components/Organisme';
+import Summary from '../../common/panel/Summary';
+import { Pagination } from '../../common/panel/Pagination';
 
 export default class OrganismePanel extends React.Component {
 
@@ -67,28 +71,23 @@ export default class OrganismePanel extends React.Component {
                 header={
                     <div>
                         <h1 className="title">Gestion des organismes</h1>
-                        <p className="subtitle">
-                            Ici, vous trouverez les réponses des organismes de formation adressées aux stagiaires.
-                            Vous pouvez également consulter les informations d&apos;un organisme en effectuant une
-                            recherche
-                        </p>
                     </div>
                 }
                 toolbar={
-                    <nav className="nav">
-                        <ToolbarTab
+                    <Toolbar>
+                        <Tab
                             label="Actifs"
                             onClick={() => onNewQuery({ activated: true })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.activated === 'true'} />
 
-                        <ToolbarTab
+                        <Tab
                             label="Inactifs"
                             onClick={() => onNewQuery({ activated: false })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.activated === 'false'} />
 
-                        <ToolbarTab
+                        <Tab
                             label="Tous"
                             onClick={() => onNewQuery({})}
                             isDisabled={isTabsDisabled}
@@ -98,27 +97,56 @@ export default class OrganismePanel extends React.Component {
                             label="Rechercher un organisme"
                             onSubmit={siret => onNewQuery({ siret })}
                             isActive={active => this.setState({ tabsDisabled: active })} />
-                    </nav>
+                    </Toolbar>
+                }
+                summary={
+                    <Summary
+                        pagination={results.meta.pagination}
+                        empty="Pas d'organisme pour le moment"
+                        title={
+                            <div>
+                                <span className="name">Organismes</span>
+                                <span className="type"> {query.activated ? 'actifs' : 'inactifs'}</span>
+                            </div>
+                        }>
+
+                    </Summary>
                 }
                 results={
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
                             {this.state.message &&
-                            <Message message={this.state.message} onClose={() => this.setState({ message: null })} />
+                            <Message message={this.state.message} onClose={() => {
+                                return this.setState({ message: null });
+                            }} />
                             }
-                            <OrganismeResults
-                                results={results}
-                                onNewQuery={onNewQuery}
-                                refresh={options => {
-                                    let { message } = options;
-                                    if (message) {
-                                        this.setState({ message });
-                                    }
-                                    return this.search({ silent: true, goToTop: !!options.message });
-                                }} />
+                            {
+                                results.organismes.map((organisme, key) => {
+                                    return (
+                                        <Organisme
+                                            key={key}
+                                            organisme={organisme}
+                                            onChange={(avis, options = {}) => {
+                                                let { message } = options;
+                                                if (message) {
+                                                    this.setState({ message });
+                                                }
+                                                return this.search({
+                                                    silent: true, goToTop: !!options.message
+                                                });
+                                            }} />
+                                    );
+                                })
+                            }
                         </div>
 
+                }
+                pagination={
+                    !this.state.loading &&
+                    <Pagination
+                        pagination={results.meta.pagination}
+                        onClick={page => onNewQuery(_.merge({}, query, { page }))} />
                 }
             />
         );

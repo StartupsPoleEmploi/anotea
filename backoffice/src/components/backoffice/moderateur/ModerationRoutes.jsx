@@ -30,20 +30,8 @@ export default class ModerationRoutes extends React.Component {
             <div className="anotea">
                 <Header onLogout={this.props.logout} />
                 <Switch>
-                    <Redirect exact from="/" to="/admin/moderation/avis/stagiaires" />
-                    <Redirect exact from="/admin" to="/admin/moderation/avis/stagiaires" />
-                    <Redirect
-                        exact
-                        from="/admin/moderation/avis/stagiaires"
-                        to="/admin/moderation/avis/stagiaires?page=0&status=none" />
-                    <Redirect
-                        exact
-                        from="/admin/moderation/avis/reponses"
-                        to="/admin/moderation/avis/reponses?page=0&reponseStatus=none" />
-                    <Redirect
-                        exact
-                        from="/admin/moderation/organismes"
-                        to="/admin/moderation/organismes?page=0&activated=true" />
+                    <Redirect exact from="/" to="/admin/moderation/avis/stagiaires?page=0&status=none" />
+                    <Redirect exact from="/admin" to="/admin/moderation/avis/stagiaires?page=0&status=none" />
                 </Switch>
                 <Route path="/mon-compte" render={() => <MyAccount />} />
                 <Route

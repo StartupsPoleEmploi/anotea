@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { searchAvis } from '../service/moderationService';
 import Loader from '../../common/Loader';
-import Panel from '../../common/Panel';
-import AvisResultsSummary from './common/summary/AvisResultsSummary';
-import AvisResults from './common/AvisResults';
-import ToolbarTab from '../common/ToolbarTab';
-import SearchInputTab from '../common/SearchInputTab';
+import Panel from '../../common/panel/Panel';
+import AvisTitle from './components/summary/AvisTitle';
+import AvisResults from './components/AvisResults';
+import Toolbar from '../../common/panel/Toolbar';
+import Summary from '../../common/panel/Summary';
+import Tab from '../../common/panel/Tab';
+import SearchInputTab from '../../common/panel/SearchInputTab';
+import { Pagination } from "../../common/panel/Pagination";
 
 export default class AvisStagiairesPanel extends React.Component {
 
@@ -75,27 +78,27 @@ export default class AvisStagiairesPanel extends React.Component {
                     </div>
                 }
                 toolbar={
-                    <nav className="nav">
-                        <ToolbarTab
+                    <Toolbar>
+                        <Tab
                             label="À modérer"
                             onClick={() => onNewQuery({ status: 'none', sortBy: 'lastStatusUpdate' })}
                             isActive={() => !isTabsDisabled() && query.status === 'none'}
                             isDisabled={isTabsDisabled}
                             getNbElements={() => _.get(results.meta.stats, 'status.none')} />
 
-                        <ToolbarTab
+                        <Tab
                             label="Publiés"
                             onClick={() => onNewQuery({ status: 'published', sortBy: 'lastStatusUpdate' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'published'} />
 
-                        <ToolbarTab
+                        <Tab
                             label="Rejetés"
                             onClick={() => onNewQuery({ status: 'rejected', sortBy: 'lastStatusUpdate' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'rejected'} />
 
-                        <ToolbarTab
+                        <Tab
                             label="Tous"
                             onClick={() => onNewQuery({ status: 'all', sortBy: 'date' })}
                             isDisabled={isTabsDisabled}
@@ -110,23 +113,33 @@ export default class AvisStagiairesPanel extends React.Component {
                                     stagiaire: stagiaire,
                                 });
                             }} />
-                    </nav>
+                    </Toolbar>
+                }
+                summary={
+                    <Summary
+                        pagination={results.meta.pagination}
+                        empty="Pas d'avis pour le moment"
+                        title={<AvisTitle query={query} results={results} />} />
                 }
                 results={
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
-                            <AvisResultsSummary query={query} results={results} />
                             <AvisResults
                                 results={results}
+                                refresh={() => this.search({ silent: true })}
+                                onNewQuery={onNewQuery}
                                 options={{
                                     showStatus: ['all', 'rejected'].includes(query.status),
                                     showReponse: false,
-                                }}
-                                refresh={options => this.search({ silent: true, goToTop: !options.keepFocus })}
-                                onNewQuery={onNewQuery} />
+                                }} />
                         </div>
-
+                }
+                pagination={
+                    !this.state.loading &&
+                    <Pagination
+                        pagination={results.meta.pagination}
+                        onClick={page => onNewQuery(_.merge({}, query, { page }))} />
                 }
             />
         );

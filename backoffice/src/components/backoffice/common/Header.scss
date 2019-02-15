@@ -6,12 +6,11 @@
   padding-bottom: 2em;
 
   .nav {
-    margin-top: 7px;
     font-weight: $font-weight-400;
 
     .nav-link {
       color: $color-white;
-      padding-right: 1em;
+      padding: 0 4rem 0 0;
       opacity: 0.6;
 
       &.active {
@@ -33,7 +32,7 @@
 
   .account-link {
     color: white;
-    padding: 0px 15px;
+    padding: 0 15px;
   }
 
   .logout {

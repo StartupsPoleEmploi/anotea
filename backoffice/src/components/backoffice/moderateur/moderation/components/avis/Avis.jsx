@@ -12,7 +12,7 @@ import RejectReponseButton from './buttons/RejectReponseButton';
 import PublishButton from './buttons/PublishButton';
 import RejectButton from './buttons/RejectButton';
 import EditButton from './buttons/EditButton';
-import './index.scss';
+import './Avis.scss';
 
 export default class Avis extends React.Component {
 
@@ -42,39 +42,39 @@ export default class Avis extends React.Component {
         return (
             <div className="Avis py-3">
                 <div className="row">
-                    <div className="col-4 py-3 d-none d-sm-block">
+                    <div className="offset-md-1 col-3">
                         <Organisme avis={avis} />
                     </div>
 
-                    <div className={`col-7 py-3 ${disabled ? 'disabled' : ''}`}>
+                    <div className="col-6">
+                        <div className={`${disabled ? 'disabled' : ''}`}>
+                            <div className="mb-3">
+                                <Stagiaire
+                                    avis={avis}
+                                    showStatus={options.showStatus}
+                                    disabled={disabled}
+                                    onChange={onChange} />
+                            </div>
 
-                        <div className="mb-3">
-                            <Stagiaire
-                                avis={avis}
-                                showStatus={options.showStatus}
-                                disabled={disabled}
-                                onChange={onChange} />
+                            <div className="mb-1">
+                                <Titre avis={avis} disabled={disabled} onChange={onChange} />
+                            </div>
+
+                            <div className="mb-1">
+                                {this.state.showEdition ?
+                                    <Edition avis={avis} onChange={onChange} onClose={this.toggleEdition} /> :
+                                    <Commentaire avis={avis} onChange={onChange} />
+                                }
+                            </div>
+
+                            <div className="mt-2 d-none d-lg-block">
+                                <Notes avis={avis} disabled={disabled} />
+                            </div>
                         </div>
-
-                        <div className="mb-1">
-                            <Titre avis={avis} disabled={disabled} onChange={onChange} />
-                        </div>
-
-                        <div className="mb-1">
-                            {this.state.showEdition ?
-                                <Edition avis={avis} onChange={onChange} onClose={this.toggleEdition} /> :
-                                <Commentaire avis={avis} onChange={onChange} />
-                            }
-                        </div>
-
-                        <div className="mt-2 d-none d-lg-block">
-                            <Notes avis={avis} disabled={disabled} />
-                        </div>
-
                     </div>
                     {
                         !disabled && avis.comment &&
-                        <div className="col-1 py-3 pl-0 text-right">
+                        <div className="col-1">
                             <div className="btn-group-vertical">
                                 <EditButton avis={avis} onChange={onChange} onEdit={this.toggleEdition} />
                                 <PublishButton avis={avis} onChange={onChange} />
@@ -85,11 +85,11 @@ export default class Avis extends React.Component {
                 </div>
                 {
                     options.showReponse && avis.reponse &&
-                    <div className="row pb-3">
-                        <div className="offset-4 col-7 px-0 py-3 ">
+                    <div className="row mt-3">
+                        <div className="offset-4 col-6">
                             <Reponse avis={avis} />
                         </div>
-                        <div className="col-1 py-3">
+                        <div className="col-1">
                             <div className="btn-group-vertical">
                                 <PublishReponseButton avis={avis} onChange={onChange} />
                                 <RejectReponseButton avis={avis} onChange={onChange} />

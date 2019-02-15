@@ -29,7 +29,7 @@ export default class Organisme extends React.Component {
 
         return (
             <div className="Organisme row py-3">
-                <div className="col-3">
+                <div className="offset-md-1 col-3">
                     <p className="title">Nom et SIRET</p>
                     <p className="raison-sociale">{organisme.raisonSociale}</p>
                     <p className="siret">{organisme.meta.siretAsString}</p>
@@ -60,7 +60,7 @@ export default class Organisme extends React.Component {
 
                 <div className="col-1">
                     <p className="title"/>
-                    <div className="buttons">
+                    <div className="buttons text-center">
                         <EditButton organisme={organisme} onChange={onChange} onEdit={this.toggleEdition} />
                     </div>
                 </div>

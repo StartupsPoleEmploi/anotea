@@ -8,12 +8,17 @@
     border: 1px solid $color-grey-5;
     background-color: $color-grey-5;
     opacity: 0.6;
+    padding: 0.875rem;
   }
 
   .stagiaire-actions {
     span:first-child {
       margin-right: 1rem;
     }
+  }
+
+  .btn-group-vertical {
+    width: 100%;
   }
 }
 

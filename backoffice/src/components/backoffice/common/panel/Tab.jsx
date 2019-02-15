@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './ToolbarTab.scss';
+import './Tab.scss';
 
 const Tab = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false }) => {
 
     return (
-        <li className={`ToolbarTab nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
+        <li className={`Tab nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
             <a
                 className={`nav-link`}
                 onClick={onClick}>

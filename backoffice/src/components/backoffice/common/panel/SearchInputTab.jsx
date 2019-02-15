@@ -13,7 +13,7 @@ export default class SearchInputTab extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchInputValue: this.props.value || null,
+            searchInputValue: this.props.value || '',
         };
     }
 
@@ -50,7 +50,7 @@ export default class SearchInputTab extends React.Component {
                             className="far fa-times-circle cancel"
                             onClick={() => {
                                 this.props.isActive(false);
-                                this.setState({ searchInputValue: null }, () => submit());
+                                this.setState({ searchInputValue: '' }, () => submit());
                             }} />
                         }
 

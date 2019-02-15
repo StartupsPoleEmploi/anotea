@@ -27,9 +27,9 @@ export default class Notes extends React.Component {
         };
     }
 
-    createCard = (label, note) => {
+    createNote = (label, note) => {
         return (
-            <div className="mx-3">
+            <div className="note">
                 <div className="title">{label}</div>
                 <div className="text">
                     {note}/5 <i className="fas fa-star" />
@@ -58,12 +58,12 @@ export default class Notes extends React.Component {
             <div className="Notes">
                 <button type="button" className="btn" onClick={this.toggleDetails}>{buttonText}</button>
                 {this.state.showDetails &&
-                <div className="mx-0 d-flex justify-content-center details">
-                    {this.createCard('Accueil', avis.rates.accueil)}
-                    {this.createCard('Contenu', avis.rates.contenu_formation)}
-                    {this.createCard('Formateurs', avis.rates.equipe_formateurs)}
-                    {this.createCard('Moyens', avis.rates.moyen_materiel)}
-                    {this.createCard('Accompagnement', avis.rates.accompagnement)}
+                <div className="details d-flex justify-content-between">
+                    {this.createNote('Accueil', avis.rates.accueil)}
+                    {this.createNote('Contenu', avis.rates.contenu_formation)}
+                    {this.createNote('Formateurs', avis.rates.equipe_formateurs)}
+                    {this.createNote('Moyens', avis.rates.moyen_materiel)}
+                    {this.createNote('Accompagnement', avis.rates.accompagnement)}
                 </div>
                 }
             </div>

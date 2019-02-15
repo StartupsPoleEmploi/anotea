@@ -79,30 +79,28 @@ export default class EditButton extends React.Component {
 
     render() {
         return (
-            <div className="EditButton">
+            <div className="EditButton btn-group">
                 {this.state.showModal === 'resend' && this.getResendModal()}
                 {this.state.showModal === 'delete' && this.getDeleteModal()}
-                <div className=" btn-group">
-                    <button
-                        type="button"
-                        className={`btn dropdown-toggle ${this.props.buttonClassName || ''}`}
-                        data-toggle="dropdown">
-                        <i className="fa fa-pencil-alt" />
-                    </button>
-                    <div className="dropdown-menu dropdown-menu-right">
-                        <h6 className="dropdown-header">Modifier ou supprimer</h6>
-                        <a className="dropdown-item" onClick={this.props.onEdit}>
-                            <i className="far fa-edit icon" /> Modifier le contenu
-                        </a>
-                        <div className="dropdown-divider" />
-                        <a className="dropdown-item" onClick={() => this.showModal('resend')}>
-                            <i className="far fa-envelope icon" /> Renvoyer le questionnaire
-                        </a>
-                        <div className="dropdown-divider" />
-                        <a className="dropdown-item delete" onClick={() => this.showModal('delete')}>
-                            <i className="far fa-trash-alt icon" /> Supprimer définitivement
-                        </a>
-                    </div>
+                <button
+                    type="button"
+                    className={`btn dropdown-toggle ${this.props.buttonClassName || ''}`}
+                    data-toggle="dropdown">
+                    <i className="fa fa-pencil-alt" />
+                </button>
+                <div className="dropdown-menu dropdown-menu-right">
+                    <h6 className="dropdown-header">Modifier ou supprimer</h6>
+                    <a className="dropdown-item" onClick={this.props.onEdit}>
+                        <i className="far fa-edit icon" /> Modifier le contenu
+                    </a>
+                    <div className="dropdown-divider" />
+                    <a className="dropdown-item" onClick={() => this.showModal('resend')}>
+                        <i className="far fa-envelope icon" /> Renvoyer le questionnaire
+                    </a>
+                    <div className="dropdown-divider" />
+                    <a className="dropdown-item delete" onClick={() => this.showModal('delete')}>
+                        <i className="far fa-trash-alt icon" /> Supprimer définitivement
+                    </a>
                 </div>
             </div>
         );
