@@ -4,9 +4,9 @@ import _ from 'lodash';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Header from '../common/Header';
 import queryString from 'query-string';
-import OrganismePanel from './panels/organismes/OrganismePanel';
-import AvisStagiairesPanel from './panels/AvisStagiairesPanel';
-import AvisReponsesPanel from './panels/AvisReponsesPanel';
+import OrganismePanelDeprecated from './organismes/OrganismePanelDeprecated';
+import AvisStagiairesPanel from './moderation/AvisStagiairesPanel';
+import AvisReponsesPanel from './moderation/AvisReponsesPanel';
 import { MyAccount } from '../account/MyAccount';
 
 export default class ModerationRoutes extends React.Component {
@@ -41,7 +41,7 @@ export default class ModerationRoutes extends React.Component {
                     render={() => <MyAccount />} />
                 <Route
                     path="/admin/moderation/organismes"
-                    render={() => <OrganismePanel codeRegion={this.props.codeRegion} />} />
+                    render={() => <OrganismePanelDeprecated codeRegion={this.props.codeRegion} />} />
                 <Route
                     path="/admin/moderation/avis/stagiaires"
                     render={props => {
