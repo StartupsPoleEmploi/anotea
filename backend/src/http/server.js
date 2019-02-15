@@ -18,7 +18,7 @@ module.exports = components => {
     let logMiddleware = (req, res, next) => {
         res.on('finish', () => {
             let error = req.err;
-            logger.info({
+            logger[error ? 'error' : 'info']({
                 type: 'http',
                 ...(error ? { error } : {}),
                 request: {
@@ -31,6 +31,7 @@ module.exports = components => {
                 response: {
                     statusCode: res.statusCode,
                 },
+                ...(error ? { stack: error.stack } : {}),
             }, `Http Request ${error ? 'KO' : 'OK'}`);
         });
 
