@@ -83,6 +83,24 @@
             "notifications": true
           }
         }
+      },
+      {
+        "code_region": "6",
+        "name": "Corse",
+        "filters": {
+          "code_financeurs": [
+            "-2"
+          ]
+        },
+        "mailing": {
+          "stagiaires": {
+            "avis": true
+          },
+          "organismes": {
+            "accounts": false,
+            "notifications": false
+          }
+        }
       }
     ]
   },
