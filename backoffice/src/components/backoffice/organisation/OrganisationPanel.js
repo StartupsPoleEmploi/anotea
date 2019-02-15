@@ -3,7 +3,7 @@ import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
 import AdviceRates from '../common/deprecated/AdviceRates';
-import Toolbar from '../common/deprecated/Toolbar';
+import DeprecatedToolbar from '../common/deprecated/DeprecatedToolbar';
 import SearchForm from './searchForm';
 import EntitySearchForm from './entitySearchForm';
 import Graphes from './Graphes';
@@ -340,7 +340,7 @@ export default class OrganisationPanel extends React.Component {
                             </li>
                         </ul>
 
-                        <Toolbar profile={this.props.profile} />
+                        <DeprecatedToolbar profile={this.props.profile} />
 
                         <div className="advices">
                             {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}

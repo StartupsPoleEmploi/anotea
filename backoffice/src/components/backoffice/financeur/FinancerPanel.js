@@ -3,7 +3,7 @@ import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
 
 import AdviceRates from '../common/deprecated/AdviceRates';
-import Toolbar from '../common/deprecated/Toolbar';
+import DeprecatedToolbar from '../common/deprecated/DeprecatedToolbar';
 import TrainingSearchForm from './trainingSearchForm';
 import EntitySearchForm from './EntitySearchForm';
 import OrganisationSearchForm from './OrganisationSearchForm';
@@ -425,7 +425,7 @@ export default class FinancerPanel extends React.Component {
                             </li>
                         </ul>
 
-                        <Toolbar profile={this.props.profile} exportFilters={this.getExportFilters()} />
+                        <DeprecatedToolbar profile={this.props.profile} exportFilters={this.getExportFilters()} />
 
                         <div className="advices">
                             {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}
