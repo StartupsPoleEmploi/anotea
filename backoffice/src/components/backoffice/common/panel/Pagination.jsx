@@ -47,8 +47,10 @@ export class Pagination extends React.Component {
                         {
                             (!isFirstPage && !isLastPage) &&
                             <li className="page-item active">
-                                <a className="page-link"
-                                   onClick={() => this.props.onClick(currentPage - 1)}>{currentPage}</a>
+                                <a
+                                    className="page-link"
+                                    onClick={() => this.props.onClick(currentPage - 1)}>{currentPage}
+                                </a>
                             </li>
                         }
                         {

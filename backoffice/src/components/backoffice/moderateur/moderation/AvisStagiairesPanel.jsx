@@ -10,7 +10,7 @@ import Toolbar from '../../common/panel/Toolbar';
 import Summary from '../../common/panel/Summary';
 import Tab from '../../common/panel/Tab';
 import SearchInputTab from '../../common/panel/SearchInputTab';
-import { Pagination } from "../../common/panel/Pagination";
+import { Pagination } from '../../common/panel/Pagination';
 
 export default class AvisStagiairesPanel extends React.Component {
 
@@ -30,7 +30,13 @@ export default class AvisStagiairesPanel extends React.Component {
                 avis: [],
                 meta: {
                     stats: {},
-                    pagination: {}
+                    pagination: {
+                        itemsOnThisPage: 0,
+                        itemsPerPage: 0,
+                        page: 0,
+                        totalItems: 0,
+                        totalPages: 0,
+                    }
                 }
             },
         };
@@ -136,10 +142,11 @@ export default class AvisStagiairesPanel extends React.Component {
                         </div>
                 }
                 pagination={
-                    !this.state.loading &&
-                    <Pagination
-                        pagination={results.meta.pagination}
-                        onClick={page => onNewQuery(_.merge({}, query, { page }))} />
+                    this.state.loading ?
+                        <div /> :
+                        <Pagination
+                            pagination={results.meta.pagination}
+                            onClick={page => onNewQuery(_.merge({}, query, { page }))} />
                 }
             />
         );

@@ -29,7 +29,13 @@ export default class AvisReponsesPanel extends React.Component {
                 avis: [],
                 meta: {
                     stats: {},
-                    pagination: {}
+                    pagination: {
+                        itemsOnThisPage: 0,
+                        itemsPerPage: 0,
+                        page: 0,
+                        totalItems: 0,
+                        totalPages: 0,
+                    }
                 }
             },
         };
@@ -132,10 +138,11 @@ export default class AvisReponsesPanel extends React.Component {
 
                 }
                 pagination={
-                    !this.state.loading &&
-                    <Pagination
-                        pagination={results.meta.pagination}
-                        onClick={page => onNewQuery(_.merge({}, query, { page }))} />
+                    this.state.loading ?
+                        <div /> :
+                        <Pagination
+                            pagination={results.meta.pagination}
+                            onClick={page => onNewQuery(_.merge({}, query, { page }))} />
                 }
             />
         );

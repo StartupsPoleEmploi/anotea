@@ -28,7 +28,7 @@ export default class Organisme extends React.Component {
         let { organisme, onChange } = this.props;
 
         return (
-            <div className="Organisme row py-3">
+            <div className="Organisme row">
                 <div className="offset-md-1 col-3">
                     <p className="title">Nom et SIRET</p>
                     <p className="raison-sociale">{organisme.raisonSociale}</p>

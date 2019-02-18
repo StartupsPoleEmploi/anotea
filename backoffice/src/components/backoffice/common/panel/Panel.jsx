@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Panel.scss';
 
-const Panel = ({ header, toolbar, summary, results, pagination }) => {
+const Panel = ({ header, toolbar, summary, results, pagination, className }) => {
 
     return (
-        <div className="Panel mb-0">
+        <div className={`Panel mb-0 ${className}`}>
 
             <div className="header">
                 <div className="container">
@@ -43,6 +43,7 @@ Panel.propTypes = {
     summary: PropTypes.object,
     results: PropTypes.object,
     pagination: PropTypes.object,
+    className: PropTypes.string,
 };
 
 export default Panel;

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Organisme.scss';
+import './Formation.scss';
 import PrettyDate from '../../../../common/PrettyDate';
 
-export default class Organisme extends React.Component {
+export default class Formation extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
@@ -12,7 +12,7 @@ export default class Organisme extends React.Component {
     render() {
         let avis = this.props.avis;
         return (
-            <div className="Organisme">
+            <div className="Formation">
                 <p className="name">{avis.training.organisation.name}</p>
                 <p>
                     <span>{avis.training.title}</span><br />

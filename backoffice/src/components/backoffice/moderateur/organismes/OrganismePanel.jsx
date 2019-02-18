@@ -11,6 +11,7 @@ import SearchInputTab from '../../common/panel/SearchInputTab';
 import Organisme from './components/Organisme';
 import Summary from '../../common/panel/Summary';
 import { Pagination } from '../../common/panel/Pagination';
+import './OrganismePanel.scss';
 
 export default class OrganismePanel extends React.Component {
 
@@ -30,7 +31,13 @@ export default class OrganismePanel extends React.Component {
                 organismes: [],
                 meta: {
                     stats: {},
-                    pagination: {}
+                    pagination: {
+                        itemsOnThisPage: 0,
+                        itemsPerPage: 0,
+                        page: 0,
+                        totalItems: 0,
+                        totalPages: 0,
+                    }
                 }
             },
         };
@@ -68,6 +75,7 @@ export default class OrganismePanel extends React.Component {
 
         return (
             <Panel
+                className={'OrganismePanel'}
                 header={
                     <div>
                         <h1 className="title">Gestion des organismes</h1>
@@ -143,10 +151,11 @@ export default class OrganismePanel extends React.Component {
 
                 }
                 pagination={
-                    !this.state.loading &&
-                    <Pagination
-                        pagination={results.meta.pagination}
-                        onClick={page => onNewQuery(_.merge({}, query, { page }))} />
+                    this.state.loading ?
+                        <div /> :
+                        <Pagination
+                            pagination={results.meta.pagination}
+                            onClick={page => onNewQuery(_.merge({}, query, { page }))} />
                 }
             />
         );

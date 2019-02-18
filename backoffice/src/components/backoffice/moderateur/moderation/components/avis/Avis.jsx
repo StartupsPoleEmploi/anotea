@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Stagiaire from './Stagiaire';
 import Titre from './Titre';
 import Commentaire from './Commentaire';
-import Organisme from './Organisme';
+import Formation from './Formation';
 import Edition from './Edition';
 import Notes from './Notes';
 import Reponse from './Reponse';
@@ -40,10 +40,10 @@ export default class Avis extends React.Component {
         let disabled = options.showReponse;
 
         return (
-            <div className="Avis py-3">
+            <div className="Avis">
                 <div className="row">
                     <div className="offset-md-1 col-3">
-                        <Organisme avis={avis} />
+                        <Formation avis={avis} />
                     </div>
 
                     <div className="col-6">

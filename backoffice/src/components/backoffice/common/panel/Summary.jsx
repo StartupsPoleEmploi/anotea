@@ -8,7 +8,7 @@ export default class Summary extends React.Component {
     static propTypes = {
         pagination: PropTypes.object.isRequired,
         empty: PropTypes.string.isRequired,
-        title: PropTypes.array.isRequired,
+        title: PropTypes.object.isRequired,
     };
 
     render() {
