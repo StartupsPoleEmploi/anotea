@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Toolbar.scss';
 
-const Toolbar = ({ children }) => {
+export { default as Tab } from './Tab';
+export { default as SearchInputTab } from './SearchInputTab';
+export const Toolbar = ({ children }) => {
 
     return (
         <div className="Toolbar row">
@@ -20,5 +22,3 @@ const Toolbar = ({ children }) => {
 Toolbar.propTypes = {
     children: PropTypes.array.isRequired,
 };
-
-export default Toolbar;

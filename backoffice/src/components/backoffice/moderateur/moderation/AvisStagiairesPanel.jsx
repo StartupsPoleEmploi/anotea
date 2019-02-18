@@ -6,10 +6,8 @@ import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
 import AvisTitle from './components/summary/AvisTitle';
 import AvisResults from './components/AvisResults';
-import Toolbar from '../../common/panel/Toolbar';
+import { Toolbar, Tab, SearchInputTab } from '../../common/panel/toolbar/Toolbar';
 import Summary from '../../common/panel/Summary';
-import Tab from '../../common/panel/Tab';
-import SearchInputTab from '../../common/panel/SearchInputTab';
 import { Pagination } from '../../common/panel/Pagination';
 
 export default class AvisStagiairesPanel extends React.Component {

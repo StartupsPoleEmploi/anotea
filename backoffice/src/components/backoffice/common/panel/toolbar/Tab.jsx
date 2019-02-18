@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Tab.scss';
 
 const Tab = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false }) => {
 
@@ -9,7 +8,7 @@ const Tab = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = 
             <a
                 className={`nav-link`}
                 onClick={onClick}>
-                <span className="mr-1">
+                <span>
                     {label}
                     {getNbElements() > 0 ?
                         <span className="badge badge-light pastille">{getNbElements()}</span> :
