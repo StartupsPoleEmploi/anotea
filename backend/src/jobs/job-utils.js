@@ -20,9 +20,7 @@ module.exports = {
         let logger = createLogger('anotea-job', components.configuration);
         const exit = error => {
             if (error) {
-                return logger.error(error, () => {
-                    components.client.close(() => process.exit(1));
-                });
+                logger.error(error);
             }
             return components.client.close();
         };
@@ -41,7 +39,7 @@ module.exports = {
                     data = results.map(r => r.toJSON ? r.toJSON() : r);
                 }
             }
-            logger.info(`Completed in ${duration}`, data);
+            logger.info({ data }, `Completed in ${duration}`);
             exit();
         } catch (e) {
             exit(e);
