@@ -4,6 +4,27 @@ import logo from './Header.svg';
 import './Header.scss';
 import { NavLink } from 'react-router-dom';
 
+const Link = ({ label, url }) => {
+
+    //Ignore parameters when comparing the current location with the link url
+    let baseUrl = url.indexOf('?') === -1 ? url : url.split('?')[0];
+
+    return (
+        <NavLink
+            to={url}
+            isActive={(match, location) => location.pathname.indexOf(baseUrl) !== -1}
+            className="nav-link"
+            activeClassName="active">
+            {label}
+        </NavLink>
+    );
+};
+
+Link.propTypes = {
+    label: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+};
+
 export default class Header extends React.Component {
 
     static propTypes = {
@@ -22,24 +43,17 @@ export default class Header extends React.Component {
                         </div>
                         <div className="col-7">
                             <nav className="nav">
-                                <NavLink
-                                    to="/admin/moderation/avis/stagiaires?page=0&status=none"
-                                    className="nav-link"
-                                    activeClassName="active">
-                                    Avis stagiaires
-                                </NavLink>
-                                <NavLink
-                                    to="/admin/moderation/avis/reponses?page=0&reponseStatus=none"
-                                    className="nav-link"
-                                    activeClassName="active">
-                                    Réponses des organismes
-                                </NavLink>
-                                <NavLink
-                                    to="/admin/moderation/organismes?page=0&activated=true"
-                                    className="nav-link"
-                                    activeClassName="active">
-                                    Gestion des organimes
-                                </NavLink>
+                                <Link
+                                    label="Avis stagiaires"
+                                    url="/admin/moderation/avis/stagiaires?page=0&status=none" />
+
+                                <Link
+                                    label=" Réponses des organismes"
+                                    url="/admin/moderation/avis/reponses?page=0&reponseStatus=none" />
+
+                                <Link
+                                    label="Gestion des organimes"
+                                    url="/admin/moderation/organismes?page=0&activated=true" />
                             </nav>
                         </div>
                         <div className="col-3 text-right">
