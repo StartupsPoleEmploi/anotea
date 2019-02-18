@@ -1,9 +1,16 @@
 @import '../../../styles/variables';
 
 .Header {
-  background-color: $color-blue;
   padding-top: 0.8em;
   padding-bottom: 2em;
+
+  &.avis {
+    background-color: $color-blue;
+  }
+
+  &.organismes {
+    background-color: $color-green;
+  }
 
   .nav {
     font-weight: $font-weight-400;
