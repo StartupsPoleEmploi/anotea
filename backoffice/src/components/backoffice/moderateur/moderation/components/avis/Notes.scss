@@ -2,11 +2,10 @@
 
 .Notes {
 
-  font-size: 0.875rem;;
+  font-size: 0.875rem;
 
   .text {
     padding-left: 0;
-    font-size: 1rem;
   }
 
   button {
@@ -21,8 +20,8 @@
     }
   }
 
-
   .details {
+
     border: 1px solid $color-grey-5;
     border-radius: 5px;
 
@@ -62,6 +61,7 @@
 
       .fa-star {
         color: $color-yellow;
+        font-size: 0.75rem;
       }
     }
   }
