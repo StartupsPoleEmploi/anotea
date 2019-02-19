@@ -22,7 +22,9 @@ module.exports = components => {
                 type: 'http',
                 ...(error ? { error } : {}),
                 request: {
-                    uri: (req.baseUrl || '') + (req.url || '-'),
+                    fullUrl: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
+                    relativeUrl: (req.baseUrl || '') + (req.url || ''),
+                    path: (req.baseUrl || '') + (req.path || ''),
                     parameters: _.omit(req.query, ['access_token']),
                     method: req.method,
                     headers: req.headers,
@@ -30,6 +32,8 @@ module.exports = components => {
                 },
                 response: {
                     statusCode: res.statusCode,
+                    statusCodeAsString: `${res.statusCode}`,
+                    headers: res._headers,
                 },
                 ...(error ? { stack: error.stack } : {}),
             }, `Http Request ${error ? 'KO' : 'OK'}`);
