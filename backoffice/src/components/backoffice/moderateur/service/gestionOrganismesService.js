@@ -1,11 +1,16 @@
-import { _delete, _post } from '../../../../utils/http-client';
+import { _put, _get, _post } from '../../../../utils/http-client';
+import queryString from 'query-string';
 
-export const updateEditedCourriel = (id, email) => {
-    return _post(`/backoffice/moderateur/organismes/${id}/editedCourriel`, { email: email });
+export const searchOrganismes = (options = {}) => {
+    return _get(`/backoffice/moderateur/organismes?${queryString.stringify(options)}`);
 };
 
-export const deleteEditedCourriel = (id, email) => {
-    return _delete(`/backoffice/moderateur/organismes/${id}/editedCourriel`, { email: email });
+export const updateEditedCourriel = (id, courriel) => {
+    return _put(`/backoffice/moderateur/organismes/${id}/updateEditedCourriel`, { courriel });
+};
+
+export const removeEditedCourriel = id => {
+    return _put(`/backoffice/moderateur/organismes/${id}/removeEditedCourriel`);
 };
 
 export const resendEmailAccount = id => {

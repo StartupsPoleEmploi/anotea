@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Header from '../common/Header';
 import queryString from 'query-string';
-import OrganismePanelDeprecated from './organismes/OrganismePanelDeprecated';
+import OrganismePanel from './organismes/OrganismePanel';
 import AvisStagiairesPanel from './moderation/AvisStagiairesPanel';
 import AvisReponsesPanel from './moderation/AvisReponsesPanel';
 import { MyAccount } from '../account/MyAccount';
@@ -16,8 +16,13 @@ export default class ModerationRoutes extends React.Component {
         logout: PropTypes.func.isRequired,
     };
 
-    getQueryFromUrl = routeProps => {
-        return queryString.parse(routeProps.location.search);
+    parse = location => {
+        return queryString.parse(location.search);
+    };
+
+    buildParameters = options => {
+        let newQuery = _(_.merge({ page: 0 }, options)).omitBy(_.isUndefined).omitBy(_.isNull).value();
+        return queryString.stringify(newQuery);
     };
 
     render() {
@@ -35,35 +40,40 @@ export default class ModerationRoutes extends React.Component {
                         exact
                         from="/admin/moderation/avis/reponses"
                         to="/admin/moderation/avis/reponses?page=0&reponseStatus=none" />
+                    <Redirect
+                        exact
+                        from="/admin/moderation/organismes"
+                        to="/admin/moderation/organismes?page=0&activated=true" />
                 </Switch>
-                <Route
-                    path="/mon-compte"
-                    render={() => <MyAccount />} />
+                <Route path="/mon-compte" render={() => <MyAccount />} />
                 <Route
                     path="/admin/moderation/organismes"
-                    render={() => <OrganismePanelDeprecated codeRegion={this.props.codeRegion} />} />
+                    render={({ history, location }) => {
+                        return <OrganismePanel
+                            codeRegion={this.props.codeRegion}
+                            query={this.parse(location)}
+                            onNewQuery={options => {
+                                return history.push(`/admin/moderation/organismes?${this.buildParameters(options)}`);
+                            }} />;
+                    }} />
                 <Route
                     path="/admin/moderation/avis/stagiaires"
-                    render={props => {
+                    render={({ history, location }) => {
                         return <AvisStagiairesPanel
                             codeRegion={this.props.codeRegion}
-                            query={this.getQueryFromUrl(props)}
+                            query={this.parse(location)}
                             onNewQuery={options => {
-                                let newQuery = _.merge({ page: 0 }, options);
-                                let parameters = queryString.stringify(newQuery);
-                                props.history.push(`/admin/moderation/avis/stagiaires?${parameters}`);
+                                return history.push(`/admin/moderation/avis/stagiaires?${this.buildParameters(options)}`);
                             }} />;
                     }} />
                 <Route
                     path="/admin/moderation/avis/reponses"
-                    render={props => {
+                    render={({ history, location }) => {
                         return <AvisReponsesPanel
                             codeRegion={this.props.codeRegion}
-                            query={this.getQueryFromUrl(props)}
+                            query={this.parse(location)}
                             onNewQuery={options => {
-                                let newQuery = _.merge({ page: 0 }, options);
-                                let parameters = queryString.stringify(newQuery);
-                                props.history.push(`/admin/moderation/avis/reponses?${parameters}`);
+                                return history.push(`/admin/moderation/avis/reponses?${this.buildParameters(options)}`);
                             }} />;
                     }} />
             </div>
