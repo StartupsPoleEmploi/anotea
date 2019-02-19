@@ -5,7 +5,7 @@ module.exports = async db => {
     let comments = await db.collection('comment').find({ step: { $ne: null } }).toArray();
 
     return Promise.all(comments.map(async comment => {
-        db.collection('trainee').updateOne({ token: comment.token }, { $set: { 'tracking.click': comment.date } });
+        await db.collection('trainee').updateOne({ token: comment.token }, { $set: { 'tracking.click': comment.date } });
         if (comment.step === 1) {
             return db.collection('comment').removeOne({ token: comment.token });
         } else {
