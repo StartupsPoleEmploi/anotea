@@ -65,9 +65,7 @@ module.exports = ({ db, logger, configuration }) => {
     };
 
     const calculateAverageRate = avis => {
-        let modifiedAvis = Object.assign({}, avis);
-        modifiedAvis.rates.global = Math.round((avis.rates.accueil + avis.rates.contenu_formation + avis.rates.equipe_formateurs + avis.rates.moyen_materiel + avis.rates.accompagnement) / 5);
-        return modifiedAvis;
+        return Math.round((avis.rates.accueil + avis.rates.contenu_formation + avis.rates.equipe_formateurs + avis.rates.moyen_materiel + avis.rates.accompagnement) / 5);
     };
 
     const sanitizeBody = body => {
@@ -188,7 +186,7 @@ module.exports = ({ db, logger, configuration }) => {
                             training: trainee.training,
                             codeRegion: trainee.codeRegion
                         };
-                        Object.assign(avis, calculateAverageRate(resultAvis.avis));
+                        Object.assign(avis, { rates: calculateAverageRate(resultAvis.avis) });
                         await Promise.all([
                             db.collection('comment').insertOne(avis),
                             db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),
