@@ -1,0 +1,13 @@
+@import '../../../../../../styles/variables';
+
+.Avis .Commentaire {
+
+  font-size: 1rem;
+  line-height: 1.6rem;
+
+  &.empty {
+    color: $color-grey-50;
+    font-style: italic;
+  }
+}
+

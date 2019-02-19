@@ -28,23 +28,11 @@ export default class ModerationRoutes extends React.Component {
     render() {
         return (
             <div className="anotea">
-                <Header onLogout={this.props.logout} />
                 <Switch>
-                    <Redirect exact from="/" to="/admin/moderation/avis/stagiaires" />
-                    <Redirect exact from="/admin" to="/admin/moderation/avis/stagiaires" />
-                    <Redirect
-                        exact
-                        from="/admin/moderation/avis/stagiaires"
-                        to="/admin/moderation/avis/stagiaires?page=0&status=none" />
-                    <Redirect
-                        exact
-                        from="/admin/moderation/avis/reponses"
-                        to="/admin/moderation/avis/reponses?page=0&reponseStatus=none" />
-                    <Redirect
-                        exact
-                        from="/admin/moderation/organismes"
-                        to="/admin/moderation/organismes?page=0&activated=true" />
+                    <Redirect exact from="/" to="/admin/moderation/avis/stagiaires?page=0&status=none" />
+                    <Redirect exact from="/admin" to="/admin/moderation/avis/stagiaires?page=0&status=none" />
                 </Switch>
+                <Header onLogout={this.props.logout} />
                 <Route path="/mon-compte" render={() => <MyAccount />} />
                 <Route
                     path="/admin/moderation/organismes"
@@ -53,7 +41,7 @@ export default class ModerationRoutes extends React.Component {
                             codeRegion={this.props.codeRegion}
                             query={this.parse(location)}
                             onNewQuery={options => {
-                                return history.push(`/admin/moderation/organismes?${this.buildParameters(options)}`);
+                                history.push(`/admin/moderation/organismes?${this.buildParameters(options)}`);
                             }} />;
                     }} />
                 <Route
@@ -63,7 +51,7 @@ export default class ModerationRoutes extends React.Component {
                             codeRegion={this.props.codeRegion}
                             query={this.parse(location)}
                             onNewQuery={options => {
-                                return history.push(`/admin/moderation/avis/stagiaires?${this.buildParameters(options)}`);
+                                history.push(`/admin/moderation/avis/stagiaires?${this.buildParameters(options)}`);
                             }} />;
                     }} />
                 <Route
@@ -73,7 +61,7 @@ export default class ModerationRoutes extends React.Component {
                             codeRegion={this.props.codeRegion}
                             query={this.parse(location)}
                             onNewQuery={options => {
-                                return history.push(`/admin/moderation/avis/reponses?${this.buildParameters(options)}`);
+                                history.push(`/admin/moderation/avis/reponses?${this.buildParameters(options)}`);
                             }} />;
                     }} />
             </div>

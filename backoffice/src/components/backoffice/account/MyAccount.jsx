@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChangePassword } from './ChangePassword';
-import Panel from '../common/Panel';
+import Panel from '../common/panel/Panel';
 
 export class MyAccount extends React.Component {
 
@@ -20,7 +20,7 @@ export class MyAccount extends React.Component {
                     <ChangePassword />
                 }
             >
-                
+
             </Panel>
         );
     }
