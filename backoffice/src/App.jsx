@@ -14,7 +14,7 @@ import AccountActivation from './components/backoffice/organisation/AccountActiv
 import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
-import ModerationRoutes from './components/backoffice/moderateur/ModerationRoutes';
+import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import { MyAccount } from './components/backoffice/account/MyAccount';
 import './utils/moment-fr';
 import './App.scss';
@@ -188,7 +188,7 @@ class App extends Component {
         if (this.state.profile === 'moderateur') {
             return (
                 <Router>
-                    <ModerationRoutes logout={this.handleLogout} codeRegion={this.state.codeRegion} />
+                    <ModerateurRoutes logout={this.handleLogout} codeRegion={this.state.codeRegion} />
                 </Router>
             );
         }

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { updateEditedCourriel } from '../../service/gestionOrganismesService';
+import { updateEditedCourriel } from '../../gestionOrganismesService';
 import './Edition.scss';
 
 export default class Edition extends React.Component {

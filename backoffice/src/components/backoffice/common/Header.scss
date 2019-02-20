@@ -2,18 +2,57 @@
 
 .Header {
   padding-top: 0.8em;
-  padding-bottom: 2em;
+  padding-bottom: 2.5em;
 
-  &.avis {
+  &.moderation {
     background-color: $color-blue;
+
+    .dropdown-menu {
+      background-color: $color-blue;
+    }
   }
 
-  &.organismes {
+  &.gestion {
     background-color: $color-green;
+
+    .dropdown-menu {
+      background-color: $color-green;
+    }
   }
 
   .nav {
     font-weight: $font-weight-400;
+
+    .dropdown-menu {
+      border: none;
+      border-left: 2px solid $color-white;
+      border-radius: unset;
+      padding: 0;
+
+      .dropdown-toggle {
+        .active {
+          opacity: 1;
+          background-color: unset;
+        }
+      }
+
+      .dropdown-item {
+        padding: 0.1rem 0.75rem;
+        margin-left: 0.5rem;
+        color: rgba(255, 255, 255, 0.6);
+
+        &.active {
+          color: rgba(255, 255, 255, 1);
+          background-color: unset;
+        }
+
+        &:hover,
+        &:focus {
+          background-color: rgba(255, 255, 255, 0.19);
+          border-radius: 5px;
+        }
+      }
+    }
 
     .nav-link {
       color: $color-white;
