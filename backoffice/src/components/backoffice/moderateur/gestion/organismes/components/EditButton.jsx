@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { removeEditedCourriel, resendEmailAccount } from '../../service/gestionOrganismesService';
+import { removeEditedCourriel, resendEmailAccount } from '../../gestionOrganismesService';
 import './EditButton.scss';
 
 export default class EditButton extends React.Component {

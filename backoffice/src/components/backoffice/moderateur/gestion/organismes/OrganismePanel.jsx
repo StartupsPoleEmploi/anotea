@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { searchOrganismes } from '../service/gestionOrganismesService';
-import Message from '../../common/Message';
-import Loader from '../../common/Loader';
-import Panel from '../../common/panel/Panel';
-import { Toolbar, Tab, SearchInputTab } from '../../common/panel/toolbar/Toolbar';
+import { searchOrganismes } from '../gestionOrganismesService';
+import Message from '../../../common/Message';
+import Loader from '../../../common/Loader';
+import Panel from '../../../common/panel/Panel';
+import { Toolbar, Tab, SearchInputTab } from '../../../common/panel/toolbar/Toolbar';
 import Organisme from './components/Organisme';
-import Summary from '../../common/panel/Summary';
-import { Pagination } from '../../common/panel/Pagination';
+import Summary from '../../../common/panel/Summary';
+import { Pagination } from '../../../common/panel/Pagination';
 import './OrganismePanel.scss';
 
 export default class OrganismePanel extends React.Component {
