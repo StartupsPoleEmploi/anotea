@@ -1,5 +1,6 @@
 @import 'styles/deprecated/anotea-deprecated.scss';
 @import 'styles/variables';
+@import 'styles/button-mixins';
 
 .anotea {
   font-size: 1em;
@@ -8,4 +9,16 @@
   color: $color-black;
   background-color: $color-white;
   min-height: 1000px;
+
+  button {
+    &.a-cancel {
+      @include confirmation-button($color-red, $color-white);
+      border: none;
+      text-transform: unset;
+    }
+
+    &.a-confirm {
+      @include confirmation-button($color-blue, $color-blue-10);
+    }
+  }
 }

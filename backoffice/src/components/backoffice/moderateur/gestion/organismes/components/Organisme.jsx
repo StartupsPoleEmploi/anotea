@@ -47,23 +47,30 @@ export default class Organisme extends React.Component {
                     <p className="score">{organisme.score.nb_avis}</p>
                 </div>
 
+                {this.state.showEdition &&
+                <div className="col-4">
+                    <p className="title">Contact</p>
+                    <Edition organisme={organisme} onChange={onChange} onClose={this.toggleEdition} />
+                </div>
+                }
+
+                {!this.state.showEdition &&
                 <div className="col-3">
                     <p className="title">Contact</p>
-                    {!this.state.showEdition ?
-                        <p className="email">{organisme.editedCourriel ? organisme.editedCourriel : organisme.courriel}</p> :
-                        <Edition
-                            organisme={organisme}
-                            onChange={onChange}
-                            onClose={this.toggleEdition} />
-                    }
+                    <p className="email">
+                        {organisme.editedCourriel ? organisme.editedCourriel : organisme.courriel}
+                    </p>
                 </div>
+                }
 
+                {!this.state.showEdition &&
                 <div className="col-1">
-                    <p className="title"/>
+                    <p className="title" />
                     <div className="buttons text-center">
                         <EditButton organisme={organisme} onChange={onChange} onEdit={this.toggleEdition} />
                     </div>
                 </div>
+                }
             </div>
         );
     }
