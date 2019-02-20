@@ -21,7 +21,7 @@ export default class ModerateurRoutes extends React.Component {
     };
 
     buildParameters = options => {
-        let newQuery = _(_.merge({ page: 0 }, options)).omitBy(_.isUndefined).omitBy(_.isNull).value();
+        let newQuery = _(_.merge({ page: 0 }, options)).omitBy(_.isUndefined).omitBy(_.isNull).omitBy(_.isEmpty).value();
         return queryString.stringify(newQuery);
     };
 
@@ -30,7 +30,8 @@ export default class ModerateurRoutes extends React.Component {
             <div className="anotea">
                 <Switch>
                     <Redirect exact from="/" to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
-                    <Redirect exact from="/admin" to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
+                    <Redirect exact from="/admin"
+                              to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
                 </Switch>
                 <Header onLogout={this.props.logout} />
                 <Route path="/mon-compte" render={() => <MyAccount />} />

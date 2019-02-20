@@ -38,16 +38,6 @@
         .modal-footer {
           padding-top: 0;
           border-top: none;
-
-          button.cancel {
-            @include action-button($color-red, $color-white);
-            border: none;
-            text-transform: unset;
-          }
-
-          button.confirm {
-            @include action-button($color-blue, $color-blue-10);
-          }
         }
       }
     }

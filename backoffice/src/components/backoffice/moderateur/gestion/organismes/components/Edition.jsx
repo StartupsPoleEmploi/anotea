@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { updateEditedCourriel } from '../../gestionOrganismesService';
-import './Edition.scss';
 
 export default class Edition extends React.Component {
 
@@ -36,14 +35,10 @@ export default class Edition extends React.Component {
                     onChange={e => this.setState({ inputValue: e.target.value })}
                     value={this.state.inputValue} />
 
-                <div className="mt-1 pt-0 d-flex justify-content-end">
-                    <button type="button" className="cancel" onClick={this.props.onClose}>
-                        <i className={`far fa-times-circle`} /> Annuler
-                    </button>
+                <div className="py-2 d-flex justify-content-end">
+                    <button type="button" className="a-cancel" onClick={this.props.onClose}>Annuler</button>
 
-                    <button type="button" className="confirm" onClick={this.update}>
-                        <i className={`far fa-times-circle`} /> Valider
-                    </button>
+                    <button type="button" className="a-confirm" onClick={this.update}>Valider</button>
 
                 </div>
             </div>

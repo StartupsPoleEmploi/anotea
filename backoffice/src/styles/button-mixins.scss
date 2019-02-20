@@ -24,7 +24,7 @@
   }
 }
 
-@mixin action-button($text-color, $background-color) {
+@mixin confirmation-button($text-color, $background-color) {
   background-color: $background-color;
   border-color: $background-color;
   border-radius: 5px;
