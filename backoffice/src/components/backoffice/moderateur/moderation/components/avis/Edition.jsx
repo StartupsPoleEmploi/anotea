@@ -35,14 +35,12 @@ export default class Edition extends React.Component {
                     onChange={e => this.setState({ text: e.target.value })}
                     value={this.state.text} />
 
-                <div className="mt-1 pt-0 d-flex justify-content-end">
-                    <button type="button" className="cancel" onClick={this.props.onClose}>
-                        <i className={`far fa-times-circle`} /> Annuler
-                    </button>
+                <div className="py-2 d-flex justify-content-end">
+                    <button type="button" className="a-btn-cancel" onClick={this.props.onClose}>Annuler</button>
 
-                    <div className="btn-group publish">
-                        <button type="button" className={`dropdown-toggle`} data-toggle="dropdown">
-                            <i className="far fa-check-circle" /> Valider et Publier
+                    <div className="a-btn-confirm-dropdown btn-group">
+                        <button type="button" className="dropdown-toggle" data-toggle="dropdown">
+                            Valider et Publier
                         </button>
                         <div className="dropdown-menu">
                             <h6 className="dropdown-header">Valider et tagguer comme</h6>

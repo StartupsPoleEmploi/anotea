@@ -52,8 +52,8 @@ export default class Modal extends React.Component {
                                 <p>{message.text}</p>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="a-cancel" onClick={onClose}>Annuler</button>
-                                <button type="button" className="a-confirm" onClick={onConfirmed}>Confirmer</button>
+                                <button type="button" className="a-btn-cancel" onClick={onClose}>Annuler</button>
+                                <button type="button" className="a-btn-confirm" onClick={onConfirmed}>Confirmer</button>
                             </div>
                         </div>
                     </div>

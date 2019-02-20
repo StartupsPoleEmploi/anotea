@@ -3,17 +3,6 @@
 
 .Avis .Edition {
 
-  button.cancel {
-    @include edition-button($color-red);
-  }
 
-  .publish {
-    margin-bottom: 0;
-    @include dropdown();
-
-    button {
-      @include edition-button($color-green);
-    }
-  }
 
 }

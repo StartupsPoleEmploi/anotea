@@ -36,9 +36,9 @@ export default class Edition extends React.Component {
                     value={this.state.inputValue} />
 
                 <div className="py-2 d-flex justify-content-end">
-                    <button type="button" className="a-cancel" onClick={this.props.onClose}>Annuler</button>
+                    <button type="button" className="a-btn-cancel" onClick={this.props.onClose}>Annuler</button>
 
-                    <button type="button" className="a-confirm" onClick={this.update}>Valider</button>
+                    <button type="button" className="a-btn-confirm" onClick={this.update}>Valider</button>
 
                 </div>
             </div>

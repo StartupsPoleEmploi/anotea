@@ -10,14 +10,20 @@
   background-color: $color-white;
   min-height: 1000px;
 
-  button {
-    &.a-cancel {
-      @include confirmation-button($color-red, $color-white);
-      border: none;
-      text-transform: unset;
-    }
+  .a-btn-cancel {
+    @include confirmation-button($color-red, $color-white);
+    border: none;
+    text-transform: unset;
+  }
 
-    &.a-confirm {
+  .a-btn-confirm {
+    @include confirmation-button($color-blue, $color-blue-10);
+  }
+
+  .a-btn-confirm-dropdown {
+    @include dropdown();
+
+    button {
       @include confirmation-button($color-blue, $color-blue-10);
     }
   }
