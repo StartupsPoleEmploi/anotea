@@ -1,6 +1,7 @@
 @import 'styles/deprecated/anotea-deprecated.scss';
 @import 'styles/variables';
-@import 'styles/button-mixins';
+@import 'styles/dropdown-mixins';
+@import 'styles/buttons-mixins';
 
 .anotea {
   font-size: 1em;
@@ -10,21 +11,47 @@
   background-color: $color-white;
   min-height: 1000px;
 
-  .a-btn-cancel {
-    @include confirmation-button($color-red, $color-white);
-    border: none;
-    text-transform: unset;
+  .a-icon {
+    margin-right: 0.375rem;
   }
 
-  .a-btn-confirm {
-    @include confirmation-button($color-blue, $color-blue-10);
+  /**************************
+  *       BUTTONS
+  **************************/
+
+  .a-btn-disabled {
+    @include disable-button($color-white, $color-grey-25);
   }
 
-  .a-btn-confirm-dropdown {
+  .a-btn-small {
+    @include small-button();
+  }
+
+  .a-btn-medium {
+    @include medium-button();
+  }
+
+  .a-btn-large {
+    @include large-button();
+  }
+
+  /**************************
+  *       DROPDOWNS
+  **************************/
+
+  .a-dropdown-small {
     @include dropdown();
 
     button {
-      @include confirmation-button($color-blue, $color-blue-10);
+      @include small-button();
+    }
+  }
+
+  .a-dropdown-large {
+    @include dropdown();
+
+    button {
+      @include large-button();
     }
   }
 }

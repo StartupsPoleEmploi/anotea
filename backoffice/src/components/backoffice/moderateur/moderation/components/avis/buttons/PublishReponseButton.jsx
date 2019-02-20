@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { publishReponse } from '../../../moderationService';
-import './PublishReponseButton.scss';
 
 export default class PublishReponseButton extends React.Component {
 
@@ -25,9 +24,9 @@ export default class PublishReponseButton extends React.Component {
         return (
             <button
                 type="button"
-                className={`PublishReponseButton btn ${this.getDisableClass()}`}
+                className={`PublishReponseButton a-btn-large a-btn-publish ${this.getDisableClass()}`}
                 onClick={this.onClick}>
-                <i className="far fa-check-circle" />
+                <i className="far fa-check-circle a-icon" />
             </button>
         );
     }

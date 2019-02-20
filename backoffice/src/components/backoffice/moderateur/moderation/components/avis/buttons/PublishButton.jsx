@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { publishAvis } from '../../../moderationService';
-import './PublishButton.scss';
 
 export default class PublishButton extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
-        buttonClassName: PropTypes.string,
     };
 
     publish = async qualification => {
@@ -18,29 +16,25 @@ export default class PublishButton extends React.Component {
         this.props.onChange(updated);
     };
 
-    getExtraClasses = () => {
-        let classes = this.props.buttonClassName || '';
-        return `${classes} ${this.props.avis.published ? 'disabled' : ''}`;
-    };
-
     render() {
 
+        let isPublished = this.props.avis.published;
         return (
-            <div className="PublishButton btn-group">
+            <div className="PublishButton a-dropdown-large btn-group">
                 <button
                     type="button"
-                    className={`btn dropdown-toggle ${this.getExtraClasses()}`}
+                    className={`a-btn-publish dropdown-toggle ${isPublished ? 'a-btn-disabled' : ''}`}
                     data-toggle="dropdown">
                     <i className="far fa-check-circle" />
                 </button>
                 <div className="dropdown-menu dropdown-menu-right">
                     <h6 className="dropdown-header">Valider et tagguer comme</h6>
                     <a className="dropdown-item" onClick={() => this.publish('négatif')}>
-                        <i className="far fa-thumbs-down icon" /> Négatif
+                        <i className="far fa-thumbs-down a-icon" /> Négatif
                     </a>
                     <div className="dropdown-divider" />
                     <a className="dropdown-item" onClick={() => this.publish('positif')}>
-                        <i className="far fa-thumbs-up icon" /> Positif ou neutre
+                        <i className="far fa-thumbs-up a-icon" /> Positif ou neutre
                     </a>
                 </div>
             </div>

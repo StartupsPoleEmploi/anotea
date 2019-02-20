@@ -58,8 +58,14 @@
     line-height: 1.25rem;
   }
 
-  .buttons {
-    padding-top: 1.5rem;
+  .btn-group-vertical {
+    width: 100%;
+
+    button {
+      width: 100%;
+      margin-bottom: 0.7rem;
+      padding: 0.5rem 1rem;
+    }
   }
 
 }

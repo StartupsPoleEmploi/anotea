@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { rejectAvis } from '../../../moderationService';
 import Modal from '../../../../../common/Modal';
-import './RejectButton.scss';
 
 export default class RejectButton extends React.Component {
 
@@ -13,7 +12,6 @@ export default class RejectButton extends React.Component {
     static propTypes = {
         avis: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
-        buttonClassName: PropTypes.string,
     };
 
     reject = async (avis, reason) => {
@@ -50,20 +48,16 @@ export default class RejectButton extends React.Component {
         );
     };
 
-    getExtraClasses = () => {
-        let classes = this.props.buttonClassName || '';
-        return `${classes} ${this.props.avis.rejected ? 'disabled' : ''}`;
-    };
-
     render() {
         let { avis } = this.props;
 
+        let isRejected = this.props.avis.rejected;
         return (
-            <div className="RejectButton btn-group">
+            <div className="RejectButton a-dropdown-large btn-group">
                 {this.state.showModal && this.getModal()}
                 <button
                     type="button"
-                    className={`btn dropdown-toggle ${this.getExtraClasses()}`}
+                    className={`a-btn-reject dropdown-toggle ${isRejected ? 'disabled' : ''}`}
                     data-toggle="dropdown">
                     <i className="far fa-times-circle" />
                 </button>

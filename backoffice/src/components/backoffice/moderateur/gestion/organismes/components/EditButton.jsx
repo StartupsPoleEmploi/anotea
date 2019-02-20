@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { removeEditedCourriel, resendEmailAccount } from '../../gestionOrganismesService';
-import './EditButton.scss';
 
 export default class EditButton extends React.Component {
 
@@ -26,10 +25,10 @@ export default class EditButton extends React.Component {
     render() {
         return (
             <div className="EditButton">
-                <div className=" btn-group">
+                <div className="a-dropdown-large btn-group">
                     <button
                         type="button"
-                        className={`btn dropdown-toggle `}
+                        className="a-btn-edit dropdown-toggle"
                         data-toggle="dropdown">
                         <i className="fa fa-pencil-alt" />
                     </button>

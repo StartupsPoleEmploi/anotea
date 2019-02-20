@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { editAvis, publishAvis } from '../../moderationService';
-import './Edition.scss';
 
 export default class Edition extends React.Component {
 
@@ -36,10 +35,15 @@ export default class Edition extends React.Component {
                     value={this.state.text} />
 
                 <div className="py-2 d-flex justify-content-end">
-                    <button type="button" className="a-btn-cancel" onClick={this.props.onClose}>Annuler</button>
+                    <button
+                        type="button"
+                        className="a-btn-small a-btn-cancel"
+                        onClick={this.props.onClose}>
+                        Annuler
+                    </button>
 
-                    <div className="a-btn-confirm-dropdown btn-group">
-                        <button type="button" className="dropdown-toggle" data-toggle="dropdown">
+                    <div className="a-dropdown-small btn-group">
+                        <button type="button" className="a-btn-confirm dropdown-toggle" data-toggle="dropdown">
                             Valider et Publier
                         </button>
                         <div className="dropdown-menu">

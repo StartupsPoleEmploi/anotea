@@ -16,9 +16,10 @@ import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import { MyAccount } from './components/backoffice/account/MyAccount';
+import GridDisplayer from './components/backoffice/common/helpers/GridDisplayer';
 import './utils/moment-fr';
 import './App.scss';
-import GridDisplayer from "./components/backoffice/common/helpers/GridDisplayer";
+import Library from "./components/Library";
 
 addLocaleData([...fr]);
 
@@ -188,7 +189,10 @@ class App extends Component {
         if (this.state.profile === 'moderateur') {
             return (
                 <Router>
-                    <ModerateurRoutes logout={this.handleLogout} codeRegion={this.state.codeRegion} />
+                    <div>
+                        <Route exact path="/admin/library" component={Library} />
+                        <ModerateurRoutes logout={this.handleLogout} codeRegion={this.state.codeRegion} />
+                    </div>
                 </Router>
             );
         }
@@ -217,7 +221,7 @@ class App extends Component {
 
                         <Route
                             path="/admin"
-                            render={props => (
+                            render={() => (
                                 <div className="main">
                                     {this.state.profile === 'organisme' &&
                                     <OrganisationPanel
