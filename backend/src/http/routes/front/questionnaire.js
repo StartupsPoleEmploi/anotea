@@ -64,6 +64,10 @@ module.exports = ({ db, logger, configuration }) => {
         return Joi.validate(rates, schema);
     };
 
+    const calculateAverageRate = avis => {
+        return Math.round((avis.rates.accueil + avis.rates.contenu_formation + avis.rates.equipe_formateurs + avis.rates.moyen_materiel + avis.rates.accompagnement) / 5);
+    };
+
     const sanitizeBody = body => {
 
         let sanitizedBody = Object.assign({}, body);
@@ -182,7 +186,7 @@ module.exports = ({ db, logger, configuration }) => {
                             training: trainee.training,
                             codeRegion: trainee.codeRegion
                         };
-                        Object.assign(avis, resultAvis.avis);
+                        Object.assign(avis, { rates: calculateAverageRate(resultAvis.avis) });
                         await Promise.all([
                             db.collection('comment').insertOne(avis),
                             db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),
