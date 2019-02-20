@@ -27,52 +27,43 @@ export default class DeprecatedHeader extends React.PureComponent {
 
     state = {
         region: '',
-    }
-
-    constructor(props) {
-        super(props);
-
-        // this.getRegionName(props.codeRegion);
     };
 
     getLabel = code => tab.map(e => e.code === code ? (e.label) : '');
 
     getRegionName = (codeRegion) => {
-        let region = ''
         getRegion(codeRegion).then(region => {
-            region += region.region
-            console.log('fif');
+            this.setState({ region: region.region })
         });
-        // return region
-        console.log(region);
+        return this.state.region;
     };
 
     render() {
-      const { props } = this;
+        const { props } = this;
 
-      return (
-          <div className="App-header">
-              <NavLink to="/">
-              <img src={`${process.env.PUBLIC_URL}/images/logo.png`} className="App-logo" alt="logo" />
-              {props.profile === 'organisme' ? <h5 className="label h5">{props.raisonSociale}</h5> :
-                  props.profile === 'financeur' ?
-                      <h1>Espace Financeur {this.getLabel(props.codeFinanceur)} {this.getRegionName(props.codeRegion)}</h1> :
-                      <h1>Espace Anotea</h1>
-              }
-              </NavLink>
-              {props.profile === 'organisme' && <a className="helpLink float-right"
-                  href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide</a>}
+        return (
+            <div className="App-header">
+                <NavLink to="/">
+                <img src={`${process.env.PUBLIC_URL}/images/logo.png`} className="App-logo" alt="logo" />
+                {props.profile === 'organisme' ? <h5 className="label h5">{props.raisonSociale}</h5> :
+                    props.profile === 'financeur' ?
+                        <h1>Espace Financeur {this.getLabel(props.codeFinanceur)} {this.getRegionName(props.codeRegion)}</h1> :
+                        <h1>Espace Anotea</h1>
+                }
+                </NavLink>
+                {props.profile === 'organisme' && <a className="helpLink float-right"
+                    href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide</a>}
 
-              {props.loggedIn &&
-                  <div>
-                      <NavLink to="/mon-compte" className="account-link"
-                          activeClassName="active">
-                          <span className="fas fa-cog" />
-                      </NavLink>
-                      <Logout handleLogout={props.handleLogout} />
-                  </div>
-              }
-          </div>
-      );
+                {props.loggedIn &&
+                    <div>
+                        <NavLink to="/mon-compte" className="account-link"
+                            activeClassName="active">
+                            <span className="fas fa-cog" />
+                        </NavLink>
+                        <Logout handleLogout={props.handleLogout} />
+                    </div>
+                }
+            </div>
+        );
     }
 };
