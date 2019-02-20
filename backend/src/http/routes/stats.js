@@ -47,7 +47,8 @@ module.exports = ({ db, configuration, logger, regions }) => {
                     _id: '$campaign',
                     date: { $min: '$mailSentDate' },
                     mailSent: { $sum: { $cond: ['$mailSent', 1, 0] } },
-                    mailOpen: { $sum: { $cond: ['$tracking', 1, 0] } },
+                    mailOpen: { $sum: { $cond: ['$tracking.firstRead', 1, 0] } },
+                    linkClick: { $sum: { $cond: ['$tracking.click', 1, 0] } }
                 }
             },
             {
@@ -78,9 +79,8 @@ module.exports = ({ db, configuration, logger, regions }) => {
                         date: { $first: '$date' },
                         mailSent: { $first: '$mailSent' },
                         mailOpen: { $first: '$mailOpen' },
-                        linkClick: { $sum: { $cond: { if: { $gte: ['$comments.step', 1] }, then: 1, else: 0 } } },
-                        pageOne: { $sum: { $cond: { if: { $gte: ['$comments.step', 2] }, then: 1, else: 0 } } },
-                        formValidated: { $sum: { $cond: { if: { $eq: ['$comments.step', 3] }, then: 1, else: 0 } } },
+                        linkClick: { $first: '$linkClick' },
+                        formValidated: { $sum: { $size: '$comments' } },
                         allowToContact: {
                             $sum: {
                                 $cond: {
@@ -125,7 +125,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 3 } }),
-            db.collection('comment').countDocuments({ codeRegion: { $in: codeRegions }, step: { $gte: 2 } }),
+            db.collection('comment').countDocuments({ codeRegion: { $in: codeRegions } }),
             db.collection('sessionsReconciliees').aggregate([
                 {
                     $match: {
@@ -209,7 +209,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
         } else if (req.params.format === 'csv') {
             res.setHeader('Content-disposition', 'attachment; filename=stats.csv');
             res.setHeader('Content-Type', 'text/csv');
-            let lines = 'Nom de la campagne;Date;Mails envoyés;Mails ouverts;Ouvertures de lien;Personnes ayant validé la page 1;Personnes ayant validé tout le questionnaire;Autorisations de contact;Commentaires;Commentaires rejetés\n';
+            let lines = 'Nom de la campagne;Date;Mails envoyés;Mails ouverts;Ouvertures de lien;Personnes ayant validé le questionnaire;Autorisations de contact;Commentaires;Commentaires rejetés\n';
             data.forEach(campaignStats => {
                 campaignStats.date = moment(campaignStats.date).format('DD/MM/YYYY h:mm');
                 let values = [];

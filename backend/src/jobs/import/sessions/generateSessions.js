@@ -59,7 +59,6 @@ module.exports = db => {
                         $match: {
                             $expr: {
                                 $and: [
-                                    { $gte: ['$step', 2] },
                                     { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret'] },
                                     { $eq: ['$training.place.postalCode', '$$lieu_de_formation'] },
                                     {

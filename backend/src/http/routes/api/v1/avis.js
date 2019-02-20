@@ -35,9 +35,6 @@ const buildAvisQuery = filters => {
 
     return {
         '$and': [
-            {
-                'step': { $gte: 2 },
-            },
             queries.length === 0 ? {} : { '$or': queries },
             {
                 '$or': [

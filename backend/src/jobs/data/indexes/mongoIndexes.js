@@ -22,7 +22,6 @@ module.exports = {
     },
     comment: db => {
         return Promise.all([
-            db.collection('comment').createIndex({ 'step': 1 }),
             db.collection('comment').createIndex({ 'formacode': 1 }),
             db.collection('comment').createIndex({ 'idSession': 1 }),
             db.collection('comment').createIndex({ 'lastModerationAction': 1 }),
