@@ -20,18 +20,28 @@ module.exports = components => {
             let error = req.err;
             logger[error ? 'error' : 'info']({
                 type: 'http',
-                ...(error ? { error } : {}),
+                ...(!error ? {} : {
+                    error: {
+                        ...error,
+                        stack: error.stack,
+                    }
+                }),
                 request: {
-                    uri: (req.baseUrl || '') + (req.url || '-'),
-                    parameters: _.omit(req.query, ['access_token']),
+                    url: {
+                        full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
+                        relative: (req.baseUrl || '') + (req.url || ''),
+                        path: (req.baseUrl || '') + (req.path || ''),
+                        parameters: _.omit(req.query, ['access_token']),
+                    },
                     method: req.method,
                     headers: req.headers,
                     body: _.omit(req.body, ['password'])
                 },
                 response: {
                     statusCode: res.statusCode,
+                    statusCodeAsString: `${res.statusCode}`,
+                    headers: res._headers,
                 },
-                ...(error ? { stack: error.stack } : {}),
             }, `Http Request ${error ? 'KO' : 'OK'}`);
         });
 

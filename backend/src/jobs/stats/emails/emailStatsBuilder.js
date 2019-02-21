@@ -36,16 +36,17 @@ module.exports = db => {
                         as: 'advice',
                         cond: {
                             $or: [{
+                                // avis avec commentaire, publié
                                 $and: [
-                                    { $eq: ['$$advice.published', true] },
-                                    { $eq: ['$$advice.step', 3] }
+                                    [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 1, 0],
+                                    { $eq: ['$$advice.published', true] }
                                 ]
                             }, {
+                                // avis sans commentaire (notes seules)
                                 $and: [
-                                    [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 0, 1],
-                                    { $eq: ['$$advice.step', 3] }
+                                    [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 0, 1]
                                 ]
-                            }, { $eq: ['$$advice.step', 2] }]
+                            }]
                         }
                     }
                 }, advicesWithComments: {
@@ -69,14 +70,12 @@ module.exports = db => {
                                 {
                                     $and: [
                                         { $eq: ['$$advice.published', true] },
-                                        { $eq: ['$$advice.step', 3] },
                                         { $eq: ['$$advice.qualification', 'positif'] },
                                     ]
                                 },
                                 {
                                     $and: [
                                         { $eq: ['$$advice.published', true] },
-                                        { $eq: ['$$advice.step', 3] },
                                         { $eq: ['$$advice.qualification', 'neutre'] },
                                     ]
                                 }]
@@ -90,7 +89,6 @@ module.exports = db => {
                         cond: {
                             $and: [
                                 { $eq: ['$$advice.published', true] },
-                                { $eq: ['$$advice.step', 3] },
                                 { $eq: ['$$advice.qualification', 'négatif'] },
                             ]
                         }

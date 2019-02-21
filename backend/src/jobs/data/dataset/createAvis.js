@@ -78,7 +78,6 @@ const buildAvis = (session, custom) => {
             },
             codeFinanceur: formation.action.organisme_financeurs[0],
         },
-        step: 3,
         rates: {
             accueil: 3,
             contenu_formation: 2,

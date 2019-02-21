@@ -44,7 +44,6 @@ let newComment = (custom, date = getDateInThePast()) => {
             },
             codeFinanceur: '10'
         },
-        step: 3,
         rates: {
             accueil: 3,
             contenu_formation: 2,

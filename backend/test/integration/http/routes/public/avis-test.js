@@ -384,7 +384,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let pseudo = randomize('pseudo');
         let comment = newComment({
             pseudo: pseudo,
-            step: 2,
             moderated: false,
         });
         delete comment.comment;
@@ -402,31 +401,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let pseudo = randomize('pseudo');
         await insertIntoDatabase('comment', newComment({
             pseudo: pseudo,
-            step: 2,
             comment: null,
         }));
-
-        let response = await request(app).get(`/api/v1/avis`);
-
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
-    });
-
-    it('should return avis with step greater than 1', async () => {
-
-        let app = await startServer();
-        let pseudo = randomize('pseudo');
-
-        await Promise.all([
-            insertIntoDatabase('comment', newComment({
-                step: 1,
-            })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: pseudo,
-                step: 2,
-            })),
-        ]);
-
 
         let response = await request(app).get(`/api/v1/avis`);
 
@@ -441,7 +417,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await insertIntoDatabase('comment', newComment({
             pseudo: pseudo,
-            step: 2,
             published: false,
         }));
 
@@ -459,7 +434,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await insertIntoDatabase('comment', newComment({
             _id: '12345',
             pseudo: pseudo,
-            step: 2,
             published: false,
             rejected: true,
         }));

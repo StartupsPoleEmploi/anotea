@@ -4,7 +4,6 @@ module.exports = (db, codeRegion) => {
             let results = await db.collection('comment').aggregate([
                 {
                     $match: {
-                        step: { $gte: 2 },
                         comment: { $ne: null },
                         codeRegion,
                     }

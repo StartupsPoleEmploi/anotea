@@ -21,8 +21,7 @@ module.exports = ({ db, middlewares, logger }) => {
                 { 'comment': { $exists: false } },
                 { 'comment': null },
                 { 'published': true }
-            ],
-            step: { $gte: 2 }
+            ]
         };
 
         if (req.query.status === 'reported') {
@@ -69,7 +68,7 @@ module.exports = ({ db, middlewares, logger }) => {
         let stream = await db.collection('comment').find(query, { token: 0 }).stream();
         res.setHeader('Content-disposition', 'attachment; filename=avis.csv');
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
-        res.write('id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n');
+        res.write('id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n');
 
         let handleError = e => {
             logger.error('An error occurred', e);
@@ -96,7 +95,6 @@ module.exports = ({ db, middlewares, logger }) => {
                 (comment.comment !== undefined && comment.comment !== null ? s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
                 comment.campaign + ';' +
-                comment.step + ';' +
                 comment.date + ';' +
                 comment.accord + ';' +
                 comment.training.idFormation + ';' +

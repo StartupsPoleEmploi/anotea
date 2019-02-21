@@ -1,0 +1,65 @@
+@import '../../../../../../styles/variables';
+
+.Organisme {
+
+  padding-top: 1rem;
+  border-bottom: 0.1rem solid $color-grey-5;
+
+  .title {
+    opacity: 0.87;
+    color: $color-grey-50;
+    font-size: 0.75rem;
+    font-weight: $font-weight-700;
+    line-height: 1rem;
+    letter-spacing: 0.38px;
+    text-transform: uppercase;
+  }
+
+  .raison-sociale {
+    opacity: 0.87;
+    color: $color-black;
+    font-size: 1rem;
+    font-weight: $font-weight-700;
+    margin-bottom: 0.5rem;
+  }
+
+  .siret {
+    opacity: 0.87;
+    color: $color-grey-50;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .score {
+    padding-top: 1rem;
+    opacity: 0.87;
+    color: $color-grey-50;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .status {
+    padding-top: 1rem;
+    opacity: 0.87;
+    color: $color-green;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+
+    &.inactif {
+      color: $color-red;
+    }
+  }
+
+  .email {
+    padding-top: 1rem;
+    opacity: 0.87;
+    color: $color-black;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .buttons {
+    padding-top: 1.5rem;
+  }
+
+}

@@ -1,9 +1,10 @@
 const express = require('express');
-const _ = require('lodash');
 const Boom = require('boom');
 const Joi = require('joi');
+const { IdNotFoundError } = require('../../../../common/errors');
 const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
 const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
+const convertOrganismeToDTO = require('./utils/convertOrganismeToDTO');
 
 module.exports = ({ db, configuration, mailing, middlewares }) => {
 
@@ -20,8 +21,8 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
     router.get('/backoffice/moderateur/organismes', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { status, siret, page } = await Joi.validate(req.query, {
-            status: Joi.string().allow(['actif', 'inactif']),
+        let { activated, siret, page } = await Joi.validate(req.query, {
+            activated: Joi.boolean(),
             siret: Joi.string(),
             page: Joi.number().min(0).default(0),
         }, { abortEarly: false });
@@ -31,7 +32,7 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
             profile: 'organisme',
             codeRegion: codeRegion,
             ...(siret ? { 'meta.siretAsString': siret } : {}),
-            ...(status ? { passwordHash: { $exists: status === 'actif' } } : {}),
+            ...(activated !== undefined ? { passwordHash: { $exists: activated } } : {}),
         })
         //.sort({ updateDate: -1 })
         .skip((page || 0) * itemsPerPage)
@@ -43,7 +44,7 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         ]);
 
         res.send({
-            organismes: organismes.map(o => _.omit(o, ['passwordHash', 'token'])),
+            organismes: organismes.map(o => convertOrganismeToDTO(o)),
             meta: {
                 pagination: {
                     page: page,
@@ -56,29 +57,31 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         });
     }));
 
-    router.post('/backoffice/moderateur/organismes/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/moderateur/organismes/:id/updateEditedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
-        let parameters = await Joi.validate(req.body, {
-            email: Joi.string().email().required(),
-        }, { abortEarly: false });
+        let { courriel } = await Joi.validate(req.body, { courriel: Joi.string().email().required() }, { abortEarly: false });
 
-        let organisme = await db.collection('accounts').findOne({ _id: id });
-        if (organisme) {
-            await db.collection('accounts').updateOne({ _id: id }, { $set: { editedCourriel: parameters.email } });
-            saveEvent(id, 'editEmail', {
-                app: 'moderation',
-                profile: 'moderateur',
-                user: 'admin',
-                ip: getRemoteAddress(req)
-            });
-            res.status(201).send({ 'status': 'OK' });
-        } else {
-            throw Boom.notFound('Not found');
+        let result = await db.collection('accounts').findOneAndUpdate(
+            { _id: id },
+            { $set: { editedCourriel: courriel } },
+            { returnOriginal: false }
+        );
+
+        if (!result.value) {
+            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
         }
+
+        saveEvent(id, 'editEmail', {
+            app: 'moderation',
+            profile: 'moderateur',
+            user: 'admin',
+            ip: getRemoteAddress(req)
+        });
+        return res.status(201).send(result.value);
     }));
 
-    router.delete('/backoffice/moderateur/organismes/:id/editedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/moderateur/organismes/:id/removeEditedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
 
         let organisme = await db.collection('accounts').findOne({ _id: id });

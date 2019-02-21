@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { searchAvis } from '../service/moderationService';
+import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
-import Panel from '../../common/Panel';
-import ReponseResultsSummary from './common/summary/ReponseResultsSummary';
-import ToolbarTab from '../common/ToolbarTab';
-import AvisResults from './common/AvisResults';
-import AvisResultsSummary from './common/summary/AvisResultsSummary';
+import Panel from '../../common/panel/Panel';
+import ReponseTitle from './components/summary/ReponseTitle';
+import Summary from '../../common/panel/Summary';
+import { Toolbar, Tab } from '../../common/panel/toolbar/Toolbar';
+import AvisResults from './components/AvisResults';
+import AvisTitle from './components/summary/AvisTitle';
+import { Pagination } from '../../common/panel/Pagination';
 
 export default class AvisReponsesPanel extends React.Component {
 
@@ -26,7 +28,13 @@ export default class AvisReponsesPanel extends React.Component {
                 avis: [],
                 meta: {
                     stats: {},
-                    pagination: {}
+                    pagination: {
+                        itemsOnThisPage: 0,
+                        itemsPerPage: 0,
+                        page: 0,
+                        totalItems: 0,
+                        totalPages: 0,
+                    }
                 }
             },
         };
@@ -67,44 +75,56 @@ export default class AvisReponsesPanel extends React.Component {
                     </div>
                 }
                 toolbar={
-                    <nav className="nav">
-                        <ToolbarTab
+                    <Toolbar>
+                        <Tab
                             label="À modérer"
                             onClick={() => onNewQuery({ reponseStatus: 'none', sortBy: 'reponse.lastStatusUpdate' })}
                             isActive={() => query.reponseStatus === 'none'}
                             getNbElements={() => _.get(results.meta.stats, 'reponseStatus.none')} />
 
-                        <ToolbarTab
+                        <Tab
                             label="Publiés"
-                            onClick={() => onNewQuery({ reponseStatus: 'published', sortBy: 'reponse.lastStatusUpdate' })}
+                            onClick={() => onNewQuery({
+                                reponseStatus: 'published',
+                                sortBy: 'reponse.lastStatusUpdate'
+                            })}
                             isActive={() => query.reponseStatus === 'published'} />
 
-                        <ToolbarTab
+                        <Tab
                             label="Rejetés"
-                            onClick={() => onNewQuery({ reponseStatus: 'rejected', sortBy: 'reponse.lastStatusUpdate' })}
+                            onClick={() => onNewQuery({
+                                reponseStatus: 'rejected',
+                                sortBy: 'reponse.lastStatusUpdate'
+                            })}
                             isActive={() => query.reponseStatus === 'rejected'} />
 
-                        <ToolbarTab
+                        <Tab
                             label="Signalés"
                             onClick={() => onNewQuery({ status: 'reported', sortBy: 'lastStatusUpdate' })}
                             isActive={() => query.status === 'reported'}
                             getNbElements={() => _.get(results.meta.stats, 'status.reported')} />
 
-                        <ToolbarTab
+                        <Tab
                             label="Tous"
                             onClick={() => onNewQuery({ reponseStatus: 'all', sortBy: 'date' })}
                             isActive={() => query.reponseStatus === 'all'} />
-                    </nav>
+                    </Toolbar>
+                }
+                summary={
+                    query.status === 'reported' ?
+                        <Summary
+                            pagination={results.meta.pagination}
+                            empty="Pas d'avis pour le moment"
+                            title={<AvisTitle query={query} results={results} />} /> :
+                        <Summary
+                            pagination={results.meta.pagination}
+                            empty="Pas de réponses pour le moment"
+                            title={<ReponseTitle query={query} />} />
                 }
                 results={
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
-                            {
-                                query.status === 'reported' ?
-                                    <AvisResultsSummary query={query} results={results} /> :
-                                    <ReponseResultsSummary query={query} results={results} />
-                            }
                             <AvisResults
                                 results={results}
                                 refresh={() => this.search({ silent: true })}
@@ -115,6 +135,13 @@ export default class AvisReponsesPanel extends React.Component {
                                 }} />
                         </div>
 
+                }
+                pagination={
+                    this.state.loading ?
+                        <div /> :
+                        <Pagination
+                            pagination={results.meta.pagination}
+                            onClick={page => onNewQuery(_.merge({}, query, { page }))} />
                 }
             />
         );

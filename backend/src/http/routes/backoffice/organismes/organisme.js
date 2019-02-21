@@ -72,7 +72,6 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                 {
                     $match: {
                         '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-                        'step': { $gte: 2 },
                         'training.organisation.siret': `${req.params.id}`
                     }
                 },
@@ -95,7 +94,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         checkOrganisme(req);
 
         const projection = { token: 0 };
-        let filter = { 'step': { $gte: 2 }, 'training.organisation.siret': req.params.id };
+        let filter = {  'training.organisation.siret': req.params.id };
         if (req.query.filter) {
             if (req.query.filter === 'reported') {
                 filter.reported = true;
@@ -162,7 +161,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
             if (req.query.postalCode) {
                 filter = Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
             }
-            filter = Object.assign(filter, { 'step': { $gte: 2 }, 'training.organisation.siret': `${req.params.id}` });
+            filter = Object.assign(filter, { 'training.organisation.siret': `${req.params.id}` });
             const trainings = await db.collection('comment').aggregate([
                 { $match: filter },
                 {
@@ -184,7 +183,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         checkOrganisme(req);
 
         const projection = { token: 0 };
-        let filter = { 'step': { $gte: 2 }, 'training.organisation.siret': req.params.id };
+        let filter = { 'training.organisation.siret': req.params.id };
 
         if (req.query.trainingId === 'null') {
             Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
@@ -264,7 +263,6 @@ module.exports = ({ db, configuration, password, middlewares }) => {
             const trainings = await db.collection('comment').aggregate([
                 {
                     $match: Object.assign(filter, {
-                        'step': { $gte: 2 },
                         'training.organisation.siret': `${req.params.id}`,
                         'training.idFormation': req.params.idTraining
                     })
@@ -316,7 +314,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
-            const filter = { 'training.organisation.siret': `${req.params.id}`, 'step': { $gte: 2 } };
+            const filter = { 'training.organisation.siret': `${req.params.id}` };
 
             if (req.query.trainingId === 'null') {
                 Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
@@ -359,7 +357,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
 
         const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
-            const filter = { 'training.organisation.siret': `${req.params.id}`, 'step': { $gte: 2 } };
+            const filter = { 'training.organisation.siret': `${req.params.id}` };
 
             let inventory = {};
 
@@ -401,8 +399,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                 {
                     $match: {
                         '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-                        'training.organisation.siret': `${req.params.id}`,
-                        'step': { $gte: 2 },
+                        'training.organisation.siret': `${req.params.id}`
                     }
                 },
                 {
