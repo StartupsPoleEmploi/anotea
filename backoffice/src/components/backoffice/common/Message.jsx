@@ -18,6 +18,7 @@ export default class Message extends React.Component {
 
     componentDidMount() {
         this.triggerTransition();
+        setTimeout(() => this.props.onClose(), 5000);
     }
 
     triggerTransition() {
@@ -29,13 +30,25 @@ export default class Message extends React.Component {
         let transitionClass = this.state.showTransition ? 'show' : '';
 
         return (
-            <div className={`Message alert alert-dismissible fade ${transitionClass}`} role="alert">
-                <h4 className="alert-heading title">{message.title}</h4>
-                <span>{message.text}</span>
+            <div
+                className={`Message ${message.global ? 'fixed-bottom d-flex justify-content-center' : 'row'} fixed-bottom`}>
+                <div className={`${message.global ? 'fixed' : 'offset-md-1 col-10'}`}>
+                    <div className={`alert alert-dismissible fade ${transitionClass}`} role="alert">
+                        {message.title &&
+                        <h4 className="alert-heading title">{message.title}</h4>
+                        }
+                        <span>{message.text}</span>
 
-                <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={onClose}>
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                        <button
+                            type="button"
+                            className="close"
+                            data-dismiss="alert"
+                            aria-label="Close"
+                            onClick={onClose}>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     }
