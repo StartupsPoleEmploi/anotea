@@ -11,9 +11,9 @@ export default class DeprecatedHeader extends React.PureComponent {
     getLabel = code => financeurs.map(e => e.code === code ? (e.label) : '');
 
     getRegionName = codeRegion => {
-        let region = regions.find(e => e.region_num === codeRegion);
-        return region ? region.region : null;
-    }
+        let region = regions.find(e => e.codeRegion === codeRegion);
+        return region ? region.nom : null;
+    };
 
     render() {
         const { props } = this;
