@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { editAvis, publishAvis } from '../../moderationService';
+import Button from "../../../../common/Button";
+import { Dropdown, DropdownDivider, DropdownItem } from "../../../../common/Dropdown";
 
 export default class Edition extends React.Component {
 
@@ -35,31 +37,29 @@ export default class Edition extends React.Component {
                     value={this.state.text} />
 
                 <div className="py-2 d-flex justify-content-end">
-                    <button
-                        type="button"
-                        className="a-btn-small a-btn-red mr-2"
-                        onClick={this.props.onClose}>
+                    <Button size="small" color="red" className="mr-2" onClick={this.props.onClose}>
                         Annuler
-                    </button>
+                    </Button>
 
-                    <div className="a-dropdown btn-group">
-                        <button
-                            type="button"
-                            className="a-btn-medium a-btn-blue dropdown-toggle"
-                            data-toggle="dropdown">
-                            Valider et Publier
-                        </button>
-                        <div className="dropdown-menu">
-                            <h6 className="dropdown-header">Valider et tagguer comme</h6>
-                            <a className="dropdown-item" onClick={() => this.publish('négatif')}>
-                                <i className="far fa-thumbs-down icon" /> Négatif
-                            </a>
-                            <div className="dropdown-divider" />
-                            <a className="dropdown-item" onClick={() => this.publish('positif')}>
-                                <i className="far fa-thumbs-up icon" /> Positif ou neutre
-                            </a>
-                        </div>
-                    </div>
+                    <Dropdown
+                        header="Valider et tagguer comme"
+                        button={
+                            <Button size="medium" color="blue" toggable={true}>
+                                Valider et Publier
+                            </Button>
+                        }
+                        items={
+                            <div>
+                                <DropdownItem onClick={() => this.publish('négatif')}>
+                                    <i className="far fa-thumbs-down icon" /> Négatif
+                                </DropdownItem>
+                                <DropdownDivider />
+                                <DropdownItem onClick={() => this.publish('positif')}>
+                                    <i className="far fa-thumbs-up icon" /> Positif ou neutre
+                                </DropdownItem>
+                            </div>
+                        }
+                    />
                 </div>
             </div>
         );

@@ -57,4 +57,12 @@
     font-size: 0.875rem;
     line-height: 1.25rem;
   }
+
+  .btn-group-vertical {
+    display: contents;
+    button {
+      width: 100%;
+      margin-bottom: 0.7rem;
+    }
+  }
 }

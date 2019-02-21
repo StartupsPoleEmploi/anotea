@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { rejectAvis } from '../../../moderationService';
 import Modal from '../../../../../common/Modal';
+import Button from '../../../../../common/Button';
+import { Dropdown, DropdownDivider, DropdownItem } from "../../../../../common/Dropdown";
 
 export default class RejectButton extends React.Component {
 
@@ -51,26 +53,33 @@ export default class RejectButton extends React.Component {
     render() {
         let { avis } = this.props;
 
-        let isRejected = this.props.avis.rejected;
+        let isRejected = !!this.props.avis.rejected;
         return (
-            <div className="RejectButton a-dropdown btn-group">
+            <div className="RejectButton">
                 {this.state.showModal && this.getModal()}
-                <button
-                    type="button"
-                    className={`a-btn-large a-btn-red dropdown-toggle ${isRejected ? 'disabled' : ''}`}
-                    data-toggle="dropdown">
-                    <i className="far fa-times-circle" />
-                </button>
-                <div className="dropdown-menu dropdown-menu-right">
-                    <h6 className="dropdown-header">Rejeter</h6>
-                    <a className="dropdown-item" onClick={() => this.setState({ showModal: true })}>Injure</a>
-                    <div className="dropdown-divider" />
-                    <a className="dropdown-item" onClick={() => this.reject(avis, 'alerte')}>Alerte</a>
-                    <div className="dropdown-divider" />
-                    <a className="dropdown-item" onClick={() => this.reject(avis, 'non concerné')}>
-                        Non concerné
-                    </a>
-                </div>
+                <Dropdown
+                    header="Rejeter"
+                    button={
+                        <Button size="large" color="red" disabled={isRejected} toggable={true}>
+                            <i className="far fa-times-circle" />
+                        </Button>
+                    }
+                    items={
+                        <div>
+                            <DropdownItem onClick={() => this.setState({ showModal: true })}>
+                                Injure
+                            </DropdownItem>
+                            <DropdownDivider />
+                            <DropdownItem onClick={() => this.reject(avis, 'alerte')}>
+                                Alerte
+                            </DropdownItem>
+                            <DropdownDivider />
+                            <DropdownItem onClick={() => this.reject(avis, 'non concerné')}>
+                                Non concerné
+                            </DropdownItem>
+                        </div>
+                    }
+                />
             </div>
         );
     }

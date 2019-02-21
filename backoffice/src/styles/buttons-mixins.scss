@@ -41,7 +41,7 @@
     outline: 0;
   }
 
-  &.a-btn-disabled {
+  &.disabled {
     @include disable-button($color-white, $color-grey-25);
     border: 1px solid $color-grey-25;
   }
@@ -73,7 +73,7 @@
     background-color: $background-color-hover;
   }
 
-  &.a-btn-disabled {
+  &.disabled {
     @include disable-button($color-grey-5, $color-grey-25);
     border: 1px solid $color-grey-5;
   }

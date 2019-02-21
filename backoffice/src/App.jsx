@@ -17,7 +17,7 @@ import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import { MyAccount } from './components/backoffice/account/MyAccount';
 import GridDisplayer from './components/backoffice/common/helpers/GridDisplayer';
-import Library from './components/Library';
+import LibraryPanel from './components/LibraryPanel';
 import Header from './components/backoffice/common/Header';
 import './utils/moment-fr';
 import './App.scss';
@@ -190,9 +190,9 @@ class App extends Component {
         if (this.state.profile === 'moderateur') {
             return (
                 <Router>
-                    <div>
+                    <div className="anotea">
                         <Header onLogout={this.handleLogout} />
-                        <Route exact path="/admin/library" component={Library} />
+                        <Route exact path="/admin/library" component={LibraryPanel} />
                         <ModerateurRoutes codeRegion={this.state.codeRegion} />
                     </div>
                 </Router>
@@ -251,7 +251,7 @@ class App extends Component {
     render() {
         return (
             <div>
-                {true && <GridDisplayer />}
+                {false && <GridDisplayer />}
                 <IntlProvider locale="fr">
                     {this.state.loggedIn ? this.showBackofficePages() : this.showUnauthenticatedPages()}
                 </IntlProvider>

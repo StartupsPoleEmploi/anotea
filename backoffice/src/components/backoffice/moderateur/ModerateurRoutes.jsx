@@ -25,7 +25,7 @@ export default class ModerateurRoutes extends React.Component {
 
     render() {
         return (
-            <div className="anotea">
+            <div>
                 <Switch>
                     <Redirect exact from="/" to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
                     <Redirect exact from="/admin"

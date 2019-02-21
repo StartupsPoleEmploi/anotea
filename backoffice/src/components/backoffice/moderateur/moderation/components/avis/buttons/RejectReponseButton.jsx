@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { rejectReponse } from '../../../moderationService';
+import Button from '../../../../../common/Button';
 
 export default class RejectReponseButton extends React.Component {
 
@@ -16,18 +17,15 @@ export default class RejectReponseButton extends React.Component {
         this.props.onChange(updated);
     };
 
-    getDisableClass = () => {
-        return this.props.avis.reponse.status === 'rejected' ? 'a-btn-disabled' : '';
-    };
-
     render() {
         return (
-            <button
-                type="button"
-                className={`RejectReponseButton a-btn-large a-btn-red ${this.getDisableClass()}`}
-                onClick={this.onClick}>
-                <i className="far fa-times-circle" />
-            </button>
+            <div className="RejectReponseButton">
+                <Button
+                    size="large" color="red" onClick={this.onClick} className="RejectReponseButton"
+                    disabled={this.props.avis.reponse.status === 'rejected'}>
+                    <i className="far fa-times-circle" />
+                </Button>
+            </div>
         );
     }
 }
