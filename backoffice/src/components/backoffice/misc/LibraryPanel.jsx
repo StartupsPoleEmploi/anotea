@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './LibraryPanel.scss';
-import Button from './backoffice/common/Button';
-import Panel from './backoffice/common/panel/Panel';
-import { Dropdown, DropdownDivider, DropdownItem } from './backoffice/common/Dropdown';
+import Button from '../common/Button';
+import Panel from '../common/panel/Panel';
+import { Dropdown, DropdownDivider, DropdownItem } from '../common/Dropdown';
 
 const ButtonShowcase = ({ size, color }) => {
     return (

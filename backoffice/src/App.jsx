@@ -17,8 +17,8 @@ import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import { MyAccount } from './components/backoffice/account/MyAccount';
 import GridDisplayer from './components/backoffice/common/helpers/GridDisplayer';
-import LibraryPanel from './components/LibraryPanel';
 import Header from './components/backoffice/common/Header';
+import MiscRoutes from './components/backoffice/misc/MiscRoutes';
 import './utils/moment-fr';
 import './App.scss';
 
@@ -187,13 +187,14 @@ class App extends Component {
 
     showBackofficePages = () => {
 
+        //Use new design
         if (this.state.profile === 'moderateur') {
             return (
                 <Router>
                     <div className="anotea">
                         <Header onLogout={this.handleLogout} />
-                        <Route exact path="/admin/library" component={LibraryPanel} />
                         <ModerateurRoutes codeRegion={this.state.codeRegion} />
+                        <MiscRoutes />
                     </div>
                 </Router>
             );
