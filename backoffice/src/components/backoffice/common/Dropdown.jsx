@@ -1,12 +1,18 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './Dropdown.scss';
 
 export const DropdownDivider = () => (<div className="dropdown-divider" />);
 
-export const DropdownItem = ({ className, children }) => {
+export const DropdownItem = props => {
     return (
-        <a className={`dropdown-item ${className}`}>{children}</a>
+        <a
+            className={`dropdown-item ${props.className}`}
+            {..._.omit(props, ['className', 'children'])}
+        >
+            {props.children}
+        </a>
     );
 };
 

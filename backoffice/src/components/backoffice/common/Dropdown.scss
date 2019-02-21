@@ -3,5 +3,6 @@
 
 .Dropdown {
   width: 100%;
+  display: inline;
   @include dropdown();
 }

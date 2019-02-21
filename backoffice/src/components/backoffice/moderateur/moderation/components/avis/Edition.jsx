@@ -36,7 +36,7 @@ export default class Edition extends React.Component {
                     onChange={e => this.setState({ text: e.target.value })}
                     value={this.state.text} />
 
-                <div className="py-2 d-flex justify-content-end">
+                <div className="py-2 text-right">
                     <Button size="small" color="red" className="mr-2" onClick={this.props.onClose}>
                         Annuler
                     </Button>

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Modal.scss';
 import Button from "./Button";
+import { Dropdown, DropdownDivider, DropdownItem } from "./Dropdown";
 
 export default class Modal extends React.Component {
 
@@ -53,12 +54,15 @@ export default class Modal extends React.Component {
                                 <p>{message.text}</p>
                             </div>
                             <div className="modal-footer">
-                                <Button size="small" color="red" onClick={onClose}>
-                                    Annuler
-                                </Button>
-                                <Button size="large" color="blue" onClick={onConfirmed}>
-                                    Confirmer
-                                </Button>
+
+                                <div className="d-flex justify-content-end">
+                                    <Button size="small" color="red" onClick={onClose} className="mr-2">
+                                        Annuler
+                                    </Button>
+                                    <Button size="large" color="blue" onClick={onConfirmed}>
+                                        Confirmer
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
