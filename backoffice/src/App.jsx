@@ -117,12 +117,6 @@ class App extends Component {
             raisonSociale: raisonSociale,
             features: features
         });
-
-        getRegion(this.state.codeRegion).then(region => {
-            this.setState({
-                region: region.region
-            });
-        });
     };
 
     handleError = () => {
@@ -151,8 +145,7 @@ class App extends Component {
                         profile={this.state.profile}
                         raisonSociale={this.state.raisonSociale}
                         codeFinanceur={this.state.codeFinanceur}
-                        codeRegion={this.state.codeRegion}
-                        region={this.state.region} />
+                        codeRegion={this.state.codeRegion}/>
 
                     {this.state.action === 'creation' &&
                     <AccountActivation
