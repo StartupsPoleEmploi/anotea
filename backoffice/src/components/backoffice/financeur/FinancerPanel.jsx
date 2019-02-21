@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedDate } from 'react-intl';
 import ReactPaginate from 'react-paginate';
+import PropTypes from 'prop-types';
 
 import AdviceRates from '../common/deprecated/AdviceRates';
 import DeprecatedToolbar from '../common/deprecated/DeprecatedToolbar';
@@ -18,7 +19,6 @@ import {
     getOrganisations,
     loadInventoryASelectedOrganisation
 } from './service/financeurService';
-import PropTypes from 'prop-types';
 import Dashboard from './stats/Dashboard';
 import SideMenu from './SideMenu';
 
@@ -62,7 +62,7 @@ export default class FinancerPanel extends React.Component {
         codeFinanceur: PropTypes.string.isRequired,
         profile: PropTypes.string.isRequired,
         features: PropTypes.string.isRequired
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -103,7 +103,7 @@ export default class FinancerPanel extends React.Component {
         });
 
         this.doGetAdvices();
-    }
+    };
 
     handleFinancerChange = (options, evt) => {
         this.setState({
@@ -329,21 +329,20 @@ export default class FinancerPanel extends React.Component {
     };
 
     handlePageClick = data => {
-        this.setState({ pagination: { current: data.selected + 1 } }, () => {
-            this.doLoadAdvices();
-        });
-    };
+        if (this.state.training.currentEntity) {
+            this.setState({ pagination: { current: data.selected + 1 } }, () => {
+                this.doLoadAdvices();
+            });
+        } else if (!this.state.training.currentOrganisation) {
+            this.setState({ pagination: { current: data.selected + 1 } }, () => {
+                this.doGetAdvices();
+            });
+        } else if (!this.state.training.currentEntity && this.state.training.currentOrganisation) {
+            this.setState({ pagination: { current: data.selected + 1 } }, () => {
+                this.doGetOrganisationAdvices();
+            });
+        }
 
-    handlePageClickInCaseOfDisplayingAllAdvicesForARegion = data => {
-        this.setState({ pagination: { current: data.selected + 1 } }, () => {
-            this.doGetAdvices();
-        });
-    };
-
-    handlePageClickInCaseOfShowingOneOrganisationAdvices = data => {
-        this.setState({ pagination: { current: data.selected + 1 } }, () => {
-            this.doGetOrganisationAdvices();
-        });
     };
 
     getActiveStatus = current => this.state.tab === current ? 'active' : '';
@@ -370,7 +369,7 @@ export default class FinancerPanel extends React.Component {
         }
 
         return str;
-    }
+    };
 
     render() {
         const { currentOrganisation, currentEntity, organisations, entities } = this.state.training;
@@ -493,7 +492,7 @@ export default class FinancerPanel extends React.Component {
                                     </div>
                                 </div>)}
 
-                            {currentEntity && this.state.pagination.count > 1 &&
+                            {this.state.pagination.count > 1 &&
                                 <ReactPaginate previousLabel={'<'}
                                     nextLabel={'>'}
                                     pageCount={this.state.pagination.count}
@@ -501,46 +500,6 @@ export default class FinancerPanel extends React.Component {
                                     marginPagesDisplayed={2}
                                     pageRangeDisplayed={5}
                                     onPageChange={this.handlePageClick}
-                                    breakClassName="page-item"
-                                    breakLabel={<a className="page-link">...</a>}
-                                    pageClassName="page-item"
-                                    previousClassName="page-item"
-                                    nextClassName="page-item"
-                                    pageLinkClassName="page-link"
-                                    previousLinkClassName="page-link"
-                                    nextLinkClassName="page-link"
-                                    activeClassName={'active'}
-                                    containerClassName={'pagination'}
-                                    disableInitialCallback={true} />
-                            }
-                            {!currentEntity && currentOrganisation && this.state.pagination.count > 1 &&
-                                <ReactPaginate previousLabel={'<'}
-                                    nextLabel={'>'}
-                                    pageCount={this.state.pagination.count}
-                                    forcePage={this.state.pagination.current - 1}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={5}
-                                    onPageChange={this.handlePageClickInCaseOfShowingOneOrganisationAdvices}
-                                    breakClassName="page-item"
-                                    breakLabel={<a className="page-link">...</a>}
-                                    pageClassName="page-item"
-                                    previousClassName="page-item"
-                                    nextClassName="page-item"
-                                    pageLinkClassName="page-link"
-                                    previousLinkClassName="page-link"
-                                    nextLinkClassName="page-link"
-                                    activeClassName={'active'}
-                                    containerClassName={'pagination'}
-                                    disableInitialCallback={true} />
-                            }
-                            {!currentOrganisation && this.state.pagination.count > 1 &&
-                                <ReactPaginate previousLabel={'<'}
-                                    nextLabel={'>'}
-                                    pageCount={this.state.pagination.count}
-                                    forcePage={this.state.pagination.current - 1}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={5}
-                                    onPageChange={this.handlePageClickInCaseOfDisplayingAllAdvicesForARegion}
                                     breakClassName="page-item"
                                     breakLabel={<a className="page-link">...</a>}
                                     pageClassName="page-item"
