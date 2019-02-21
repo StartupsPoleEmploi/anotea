@@ -65,8 +65,8 @@ export default class Organisme extends React.Component {
 
                 {!this.state.showEdition &&
                 <div className="col-1">
-                    <p className="title" />
-                    <div className="btn-group-vertical">
+                    <p className="title">&nbsp;</p>
+                    <div>
                         <EditButton organisme={organisme} onChange={onChange} onEdit={this.toggleEdition} />
                     </div>
                 </div>

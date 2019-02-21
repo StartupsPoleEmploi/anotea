@@ -1,40 +1,20 @@
 @import 'variables';
 
-@mixin confirmation-button($text-color, $background-color) {
-  background-color: $background-color;
-  border-color: $background-color;
-  border-radius: 5px;
-  font-size: 0.875rem;
-  padding: 0.5rem;
-  color: $text-color;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-
-  .icon {
-    padding-right: 0.4rem;
-  }
-
-  &:focus {
-    outline: 0;
-  }
-}
-
 @mixin disable-button($background-color, $border-color ) {
   pointer-events: none;
-  border: 1px solid $border-color;
   background-color: $background-color;
   color: $color-grey-25 !important;
 }
 
-@mixin small-button() {
+@mixin small-button($text-color, $background-color) {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: $color-black;
+  color: $text-color;
   border: none;
   background-color: $color-white;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
+  text-transform: uppercase;
 
   &:focus {
     outline: 0;
@@ -42,128 +22,60 @@
 
   &:hover, &:focus, &.a-btn-hover {
     border-radius: 5px;
-    background-color: $color-grey-25;
-  }
-
-  &.a-btn-cancel {
-    color: $color-red;
-
-    &:hover, &:focus, &.a-btn-hover {
-      background-color: $color-red-10;
-    }
-  }
-
-  &.a-btn-confirm {
-    color: $color-blue;
-
-    &:hover, &:focus, &.a-btn-hover {
-      background-color: $color-blue-10;
-    }
+    background-color: $background-color;
   }
 }
 
-@mixin medium-button() {
+@mixin medium-button($text-color, $background-color) {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: $color-black;
-  border: 1px solid $color-grey-25;
+  color: $text-color;
+  border: 1px solid $text-color;
   border-radius: 5px;
   background-color: $color-white;
   cursor: pointer;
   padding: 0.375rem 0.5rem;
+  text-transform: uppercase;
 
   &:focus {
     outline: 0;
-  }
-
-  &:hover, &:focus, &.a-btn-hover {
-    background-color: $color-grey-25;
-  }
-}
-
-@mixin large-button() {
-  font-size: 1rem;
-  line-height: 1.125rem;
-  letter-spacing: 0.5px;
-  color: $color-black;
-  border: 1px solid $color-grey-25;
-  border-radius: 5px;
-  background-color: $color-white;
-  cursor: pointer;
-  padding: 0.75rem 0.5rem;
-
-  &:focus {
-    outline: 0;
-  }
-
-  &:hover, &:focus, &.a-btn-hover {
-    background-color: $color-grey-5;
   }
 
   &.a-btn-disabled {
-    @include disable-button($color-grey-5, $color-grey-5);
+    @include disable-button($color-white, $color-grey-25);
+    border: 1px solid $color-grey-25;
   }
 
-  &.a-btn-publish {
-    color: $color-green;
-    border: 1px solid $color-green-10;
-    background-color: $color-green-10;
-
-    &:hover, &:focus, &.a-btn-hover {
-      border: 1px solid $color-green-10;
-      background-color: $color-green-10;
-    }
-
-    &.a-btn-disabled {
-      @include disable-button($color-grey-5, $color-grey-5);
-    }
-  }
-
-  &.a-btn-reject {
-    color: $color-red;
-    border: 1px solid $color-red-10;
-    background-color: $color-red-10;
-
-    &:hover, &:focus, &.a-btn-hover {
-      border: 1px solid $color-red-10;
-      background-color: $color-red-10;
-    }
-
-    &.a-btn-disabled {
-      @include disable-button($color-grey-5, $color-grey-5);
-    }
-  }
-
-  &.a-btn-edit {
-    color: $color-blue;
-    border: 1px solid $color-blue-10;
-    background-color: $color-blue-10;
-
-    &:hover, &:focus, &.a-btn-hover {
-      border: 1px solid $color-blue-10;
-      background-color: $color-blue-10;
-    }
-
-    &.a-btn-disabled {
-      @include disable-button($color-grey-5, $color-grey-5);
-    }
+  &:hover, &:focus, &.a-btn-hover {
+    background-color: $background-color;
+    border: 1px solid $background-color;
   }
 }
 
-@mixin edition-button($color) {
-  color: $color;
-  font-size: 0.8rem;
-  background-color: $color-white;
-  border: none;
+@mixin large-button($text-color, $background-color, $background-color-hover) {
+  font-size: 1rem;
+  line-height: 1.125rem;
+  letter-spacing: 0.5px;
+  color: $text-color;
+  border-radius: 5px;
+  border: 1px solid $background-color;
+  background-color: $background-color;
   cursor: pointer;
+  padding: 0.75rem 0.5rem;
+  text-transform: uppercase;
 
   &:focus {
     outline: 0;
   }
 
-  &.active, &:hover, &:focus {
-    background-color: $color-white;
-    border: none;
-    box-shadow: none;
+  &:hover, &:focus, &.a-btn-hover {
+    border: 1px solid $background-color-hover;
+    background-color: $background-color-hover;
   }
+
+  &.a-btn-disabled {
+    @include disable-button($color-grey-5, $color-grey-25);
+    border: 1px solid $color-grey-5;
+  }
+
 }

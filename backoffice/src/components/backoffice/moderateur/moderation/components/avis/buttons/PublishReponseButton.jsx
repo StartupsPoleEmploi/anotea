@@ -24,7 +24,7 @@ export default class PublishReponseButton extends React.Component {
         return (
             <button
                 type="button"
-                className={`PublishReponseButton a-btn-large a-btn-publish ${this.getDisableClass()}`}
+                className={`PublishReponseButton a-btn-large a-btn-green ${this.getDisableClass()}`}
                 onClick={this.onClick}>
                 <i className="far fa-check-circle a-icon" />
             </button>

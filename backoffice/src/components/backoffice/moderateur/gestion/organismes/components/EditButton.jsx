@@ -25,10 +25,10 @@ export default class EditButton extends React.Component {
     render() {
         return (
             <div className="EditButton">
-                <div className="a-dropdown-large btn-group">
+                <div className="a-dropdown btn-group a-fill">
                     <button
                         type="button"
-                        className="a-btn-edit dropdown-toggle"
+                        className="a-btn-large a-btn-blue dropdown-toggle a-fill"
                         data-toggle="dropdown">
                         <i className="fa fa-pencil-alt" />
                     </button>
@@ -42,7 +42,7 @@ export default class EditButton extends React.Component {
                             <i className="far fa-envelope icon" /> Renvoyer le lien
                         </a>
                         <div className="dropdown-divider" />
-                        <a className="dropdown-item delete" onClick={this.remove}>
+                        <a className="dropdown-item a-text-red" onClick={this.remove}>
                             <i className="far fa-trash-alt icon" /> Supprimer l&apos;adresse
                         </a>
                     </div>

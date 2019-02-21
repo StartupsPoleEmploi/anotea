@@ -20,10 +20,10 @@ export default class PublishButton extends React.Component {
 
         let isPublished = this.props.avis.published;
         return (
-            <div className="PublishButton a-dropdown-large btn-group">
+            <div className="PublishButton a-dropdown btn-group">
                 <button
                     type="button"
-                    className={`a-btn-publish dropdown-toggle ${isPublished ? 'a-btn-disabled' : ''}`}
+                    className={`a-btn-large a-btn-green dropdown-toggle ${isPublished ? 'a-btn-disabled' : ''}`}
                     data-toggle="dropdown">
                     <i className="far fa-check-circle" />
                 </button>

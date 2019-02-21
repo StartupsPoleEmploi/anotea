@@ -37,13 +37,16 @@ export default class Edition extends React.Component {
                 <div className="py-2 d-flex justify-content-end">
                     <button
                         type="button"
-                        className="a-btn-small a-btn-cancel"
+                        className="a-btn-small a-btn-red mr-2"
                         onClick={this.props.onClose}>
                         Annuler
                     </button>
 
-                    <div className="a-dropdown-small btn-group">
-                        <button type="button" className="a-btn-confirm dropdown-toggle" data-toggle="dropdown">
+                    <div className="a-dropdown btn-group">
+                        <button
+                            type="button"
+                            className="a-btn-medium a-btn-blue dropdown-toggle"
+                            data-toggle="dropdown">
                             Valider et Publier
                         </button>
                         <div className="dropdown-menu">

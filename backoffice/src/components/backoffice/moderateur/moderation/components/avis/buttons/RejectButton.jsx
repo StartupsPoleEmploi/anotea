@@ -53,11 +53,11 @@ export default class RejectButton extends React.Component {
 
         let isRejected = this.props.avis.rejected;
         return (
-            <div className="RejectButton a-dropdown-large btn-group">
+            <div className="RejectButton a-dropdown btn-group">
                 {this.state.showModal && this.getModal()}
                 <button
                     type="button"
-                    className={`a-btn-reject dropdown-toggle ${isRejected ? 'disabled' : ''}`}
+                    className={`a-btn-large a-btn-red dropdown-toggle ${isRejected ? 'disabled' : ''}`}
                     data-toggle="dropdown">
                     <i className="far fa-times-circle" />
                 </button>

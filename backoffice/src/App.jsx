@@ -17,9 +17,10 @@ import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import { MyAccount } from './components/backoffice/account/MyAccount';
 import GridDisplayer from './components/backoffice/common/helpers/GridDisplayer';
+import Library from './components/Library';
+import Header from './components/backoffice/common/Header';
 import './utils/moment-fr';
 import './App.scss';
-import Library from "./components/Library";
 
 addLocaleData([...fr]);
 
@@ -190,8 +191,9 @@ class App extends Component {
             return (
                 <Router>
                     <div>
+                        <Header onLogout={this.handleLogout} />
                         <Route exact path="/admin/library" component={Library} />
-                        <ModerateurRoutes logout={this.handleLogout} codeRegion={this.state.codeRegion} />
+                        <ModerateurRoutes codeRegion={this.state.codeRegion} />
                     </div>
                 </Router>
             );
@@ -249,7 +251,7 @@ class App extends Component {
     render() {
         return (
             <div>
-                {false && <GridDisplayer />}
+                {true && <GridDisplayer />}
                 <IntlProvider locale="fr">
                     {this.state.loggedIn ? this.showBackofficePages() : this.showUnauthenticatedPages()}
                 </IntlProvider>

@@ -77,12 +77,12 @@ export default class EditButton extends React.Component {
 
     render() {
         return (
-            <div className="EditButton a-dropdown-large btn-group">
+            <div className="EditButton a-dropdown btn-group">
                 {this.state.showModal === 'resend' && this.getResendModal()}
                 {this.state.showModal === 'delete' && this.getDeleteModal()}
                 <button
                     type="button"
-                    className="a-btn-edit dropdown-toggle"
+                    className="a-btn-large a-btn-blue dropdown-toggle"
                     data-toggle="dropdown">
                     <i className="fa fa-pencil-alt" />
                 </button>
@@ -96,7 +96,7 @@ export default class EditButton extends React.Component {
                         <i className="far fa-envelope a-icon" /> Renvoyer le questionnaire
                     </a>
                     <div className="dropdown-divider" />
-                    <a className="dropdown-item delete" onClick={() => this.showModal('delete')}>
+                    <a className="dropdown-item a-text-red" onClick={() => this.showModal('delete')}>
                         <i className="far fa-trash-alt a-icon" /> Supprimer définitivement
                     </a>
                 </div>

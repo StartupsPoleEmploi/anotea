@@ -15,6 +15,18 @@
     margin-right: 0.375rem;
   }
 
+  .a-text-red {
+    color: $color-red !important;
+  }
+
+  .a-fill {
+    width: 100%;
+  }
+
+  .a-dropdown {
+    @include dropdown();
+  }
+
   /**************************
   *       BUTTONS
   **************************/
@@ -24,34 +36,51 @@
   }
 
   .a-btn-small {
-    @include small-button();
+    @include small-button($color-grey-50, $color-grey-25);
+
+    &.a-btn-red {
+      @include small-button($color-red, $color-red-10);
+    }
+
+    &.a-btn-green {
+      @include small-button($color-green, $color-green-10);
+    }
+
+    &.a-btn-blue {
+      @include small-button($color-blue, $color-blue-10);
+    }
   }
 
   .a-btn-medium {
-    @include medium-button();
+    @include medium-button($color-grey-50, $color-grey-25);
+
+    &.a-btn-red {
+      @include medium-button($color-red, $color-red-10);
+    }
+
+    &.a-btn-green {
+      @include medium-button($color-green, $color-green-10);
+    }
+
+    &.a-btn-blue {
+      @include medium-button($color-blue, $color-blue-10);
+    }
+
   }
 
   .a-btn-large {
-    @include large-button();
-  }
+    @include large-button($color-grey-50, $color-grey-5, $color-grey-25);
 
-  /**************************
-  *       DROPDOWNS
-  **************************/
-
-  .a-dropdown-small {
-    @include dropdown();
-
-    button {
-      @include small-button();
+    &.a-btn-red {
+      @include large-button($color-red, $color-red-10, $color-red-30);
     }
-  }
-
-  .a-dropdown-large {
-    @include dropdown();
-
-    button {
-      @include large-button();
+    &.a-btn-green {
+      @include large-button($color-green, $color-green-10, $color-green-30);
     }
+
+    &.a-btn-blue {
+      @include large-button($color-blue, $color-blue-10, $color-blue-30);
+    }
+
   }
 }

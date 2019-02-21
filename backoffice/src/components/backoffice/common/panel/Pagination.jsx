@@ -18,7 +18,9 @@ export class Pagination extends React.Component {
         let isLastPage = currentPage === lastPage;
         let showPrevious = currentPage > 2;
 
-        if (totalPages === 1) {
+        console.log(JSON.stringify({ meta: 'Pagination.jsx:21', data: totalPages},null,2));
+
+        if (totalPages <= 1) {
             return (<ul className="Pagination" />);
         }
 

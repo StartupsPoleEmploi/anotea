@@ -24,7 +24,7 @@ export default class RejectReponseButton extends React.Component {
         return (
             <button
                 type="button"
-                className={`RejectReponseButton a-btn-large a-btn-reject ${this.getDisableClass()}`}
+                className={`RejectReponseButton a-btn-large a-btn-red ${this.getDisableClass()}`}
                 onClick={this.onClick}>
                 <i className="far fa-times-circle" />
             </button>
