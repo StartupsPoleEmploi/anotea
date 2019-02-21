@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { updateEditedCourriel } from '../../gestionOrganismesService';
-import Button from "../../../../common/Button";
+import Button from '../../../../common/Button';
 
 export default class Edition extends React.Component {
 
@@ -23,7 +23,10 @@ export default class Edition extends React.Component {
         let updated = await updateEditedCourriel(this.props.organisme._id, this.state.inputValue);
         this.props.onClose();
         this.props.onChange(updated, {
-            message: { title: 'Email', text: 'L\'adresse email a été mise à jour' }
+            message: {
+                text: 'L\'adresse email a été mise à jour',
+                position: 'bottom',
+            }
         });
     };
 

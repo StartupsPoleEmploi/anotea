@@ -7,9 +7,10 @@ import Panel from '../../common/panel/Panel';
 import ReponseTitle from './components/summary/ReponseTitle';
 import Summary from '../../common/panel/Summary';
 import { Toolbar, Tab } from '../../common/panel/toolbar/Toolbar';
-import AvisResults from './components/AvisResults';
+import Message from '../../common/Message';
 import AvisTitle from './components/summary/AvisTitle';
 import { Pagination } from '../../common/panel/Pagination';
+import Avis from './components/avis/Avis';
 
 export default class AvisReponsesPanel extends React.Component {
 
@@ -125,14 +126,32 @@ export default class AvisReponsesPanel extends React.Component {
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
-                            <AvisResults
-                                results={results}
-                                refresh={() => this.search({ silent: true })}
-                                onNewQuery={onNewQuery}
-                                options={{
-                                    showStatus: false,
-                                    showReponse: query.status !== 'reported',
-                                }} />
+                            {this.state.message &&
+                            <Message
+                                message={this.state.message}
+                                onClose={() => this.setState({ message: null })} />
+                            }
+                            {
+                                results.avis.map((avis, key) => {
+                                    return (
+                                        <Avis
+                                            key={key}
+                                            avis={avis}
+                                            options={{
+                                                showStatus: false,
+                                                showReponse: query.status !== 'reported',
+                                            }}
+                                            onChange={(avis, options = {}) => {
+                                                let { message } = options;
+                                                if (message) {
+                                                    this.setState({ message });
+                                                }
+                                                this.search({ silent: true });
+                                            }}>
+                                        </Avis>
+                                    );
+                                })
+                            }
                         </div>
 
                 }

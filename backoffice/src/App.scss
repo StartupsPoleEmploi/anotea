@@ -11,6 +11,15 @@
   background-color: $color-white;
   min-height: 1000px;
 
+  .a-centered {
+    width: 50%;
+    height: 50%;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+  }
+
   .a-icon {
     margin-right: 0.25rem;
   }

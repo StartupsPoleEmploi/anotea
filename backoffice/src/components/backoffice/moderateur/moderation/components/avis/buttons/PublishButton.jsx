@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { publishAvis } from '../../../moderationService';
 import Button from '../../../../../common/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from "../../../../../common/Dropdown";
+import { Dropdown, DropdownDivider, DropdownItem } from '../../../../../common/Dropdown';
 
 export default class PublishButton extends React.Component {
 
@@ -15,7 +15,12 @@ export default class PublishButton extends React.Component {
         let { avis } = this.props;
 
         let updated = await publishAvis(avis._id, qualification);
-        this.props.onChange(updated);
+        this.props.onChange(updated, {
+            message: {
+                text: 'L\'avis a été publié.',
+                position: 'centered',
+            },
+        });
     };
 
     render() {

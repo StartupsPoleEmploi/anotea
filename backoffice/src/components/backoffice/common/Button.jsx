@@ -5,9 +5,9 @@ import './Button.scss';
 
 const Button = props => {
 
-    let sizeClass = props.size;
-    let colorClass = props.color ? props.color : '';
-    let disabledClass = props.disabled ? 'disabled' : '';
+    let sizeClass = `a-btn-${props.size}`;
+    let colorClass = props.color ? `a-btn-${props.color}` : '';
+    let disabledClass = props.disabled ? 'a-btn-disabled' : '';
     let toggableClass = props.toggable ? 'dropdown-toggle' : '';
 
     return (
