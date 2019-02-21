@@ -2,14 +2,23 @@
 'use strict';
 
 module.exports = async db => {
-    let comments = await db.collection('comment').find({ step: { $ne: null } }).toArray();
+    let promises = [];
+    let cursor = await db.collection('comment').find({ step: { $ne: null } });
 
-    return Promise.all(comments.map(async comment => {
-        await db.collection('trainee').updateOne({ token: comment.token }, { $set: { 'tracking.click': comment.date } });
-        if (comment.step === 1) {
-            return db.collection('comment').removeOne({ token: comment.token });
-        } else {
-            return db.collection('comment').updateOne({ token: comment.token }, { $unset: { step: '' } });
-        }
-    }));
+    while (await cursor.hasNext()) {
+        let comment = await cursor.next();
+
+        let promise = comment.step === 1 ?
+            db.collection('comment').removeOne({ token: comment.token }) :
+            db.collection('comment').updateOne({ token: comment.token }, { $unset: { step: '' } });
+
+        promises.push(Promise.all([
+            promise,
+            db.collection('trainee')
+            .updateOne({ token: comment.token }, { $set: { 'tracking.click': comment.date } })
+        ]));
+    }
+
+    return Promise.all(promises);
+
 };
