@@ -7,7 +7,6 @@ import Toolbar from '../common/deprecated/Toolbar';
 import SearchForm from './searchForm';
 import EntitySearchForm from './entitySearchForm';
 import Graphes from './Graphes';
-// import NotesFilter          from './notesFilter'
 import Notice from './Notice';
 
 import {
@@ -256,7 +255,7 @@ export default class OrganisationPanel extends React.Component {
     };
 
     handlePageClick = data => {
-        if(this.state.training.currentEntity) {
+        if (this.state.training.currentEntity) {
             this.setState({ pagination: { current: data.selected + 1 } }, () => {
                 this.doLoadAdvices();
             });
@@ -308,8 +307,6 @@ export default class OrganisationPanel extends React.Component {
                                     changeTrainingSession={this.changeTrainingSession} />
                             </div>
                         </div>
-                        {/*A laisser en commentaire */}
-                        {/*<NotesFilter />*/}
                     </div>
 
                     <div className="avis">
