@@ -8,7 +8,6 @@ import SearchForm from './searchForm';
 import EntitySearchForm from './entitySearchForm';
 import Graphes from './Graphes';
 // import NotesFilter          from './notesFilter'
-
 import Notice from './Notice';
 
 import {
@@ -257,16 +256,16 @@ export default class OrganisationPanel extends React.Component {
     };
 
     handlePageClick = data => {
-        this.setState({ pagination: { current: data.selected + 1 } }, () => {
-            this.doLoadAdvices();
-        });
-    };
-
-    handlePageClickWhenSelectingPlace = data => {
-        this.setState({ pagination: { current: data.selected + 1 } }, () => {
-            this.doLoadAllAdvices();
-        });
-    };
+        if(this.state.training.currentEntity) {
+            this.setState({ pagination: { current: data.selected + 1 } }, () => {
+                this.doLoadAdvices();
+            });
+        } else {
+            this.setState({ pagination: { current: data.selected + 1 } }, () => {
+                this.doLoadAllAdvices();
+            });
+        }
+    }
 
     unsetTraining = () => {
         this.setState(Object.assign(this.state, {
@@ -294,20 +293,23 @@ export default class OrganisationPanel extends React.Component {
                     <div className="filters">
                         <div className="row">
                             <div className="col-md-6">
-                                <EntitySearchForm currentEntity={currentEntity} entities={entities}
-                                                  handleEntityChange={this.handleEntityChange}
-                                                  unsetEntity={this.unsetEntity} />
+                                <EntitySearchForm
+                                    currentEntity={currentEntity}
+                                    entities={entities}
+                                    handleEntityChange={this.handleEntityChange}
+                                    unsetEntity={this.unsetEntity} />
                             </div>
                             <div className="col-md-6">
-                                <SearchForm id={this.state.organisationId} currentEntity={currentEntity}
-                                            changeEntity={this.changeEntity} unsetTraining={this.unsetTraining}
-                                            changeTrainingSession={this.changeTrainingSession} />
+                                <SearchForm
+                                    id={this.state.organisationId}
+                                    currentEntity={currentEntity}
+                                    changeEntity={this.changeEntity}
+                                    unsetTraining={this.unsetTraining}
+                                    changeTrainingSession={this.changeTrainingSession} />
                             </div>
                         </div>
-
                         {/*A laisser en commentaire */}
                         {/*<NotesFilter />*/}
-
                     </div>
 
                     <div className="avis">
@@ -369,82 +371,81 @@ export default class OrganisationPanel extends React.Component {
                                                             <em>Cet utilisateur n'a pas laissé d'avis</em>}
                                                         </p>
                                                     </div>
-
-                                                    {this.state.reply && this.state.reply.id === advice._id &&
-                                                    <div className="answer">
-                                                        <h4>Votre réponse</h4>
-
-                                                        <textarea className="form-control" rows="3"
-                                                                  onChange={this.handleReplyChange.bind(this, advice._id)}
-                                                                  value={this.state.reply.text}></textarea>
-
-                                                        <p {...this.state.reply.maxLengthReached ? { className: 'maxLengthReached' } : {}}>Il
-                                                            vous
-                                                            reste {MAX_LENGTH - this.state.reply.text.length} caractères
-                                                            pour écrire votre réponse.</p>
-
-                                                        <div className="actions">
-                                                            <button className="btn btn-success btn-sm"
-                                                                    onClick={this.handleDoReply.bind(this, advice._id)}>
-                                                                <span className="fas comment-alt" /> Valider la réponse
-                                                            </button>
-                                                            {advice.reponse &&
-                                                            <button className="btn btn-danger btn-sm"
-                                                                    onClick={this.handleRemoveReply.bind(this, advice._id)}>
-                                                                <span className="fas fa-trash" /> &Ocirc;ter
-                                                                la réponse</button>}
-                                                            <button className="btn btn-warning btn-sm"
-                                                                    onClick={this.handleCancelReply.bind(this, advice._id)}>
-                                                                <span className="fas fa-comment-alt" /> Annuler
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    }
-                                                    {(advice.reponse && !this.state.reply.shown) &&
-                                                    <div className="answer">
-                                                        <h4>Votre réponse</h4>
-                                                        <p>{advice.reponse.text}</p>
-                                                    </div>
-                                                    }
-                                                    {!(this.state.reply.shown === true && this.state.reply.id === advice._id) &&
-                                                    <div className="actions">
-                                                        {(advice.read !== true && this.state.tab !== 'reported') &&
-                                                        <button className="btn btn-info btn-sm"
-                                                                onClick={this.handleMarkAsRead.bind(this, advice._id)}>
-                                                            <span className="fas fa-eye" /> Marquer comme lu
-                                                        </button>}
-                                                        {(advice.read === true && this.state.tab !== 'reported') &&
-                                                        <button className="btn btn-info btn-sm"
-                                                                onClick={this.handleMarkAsNotRead.bind(this, advice._id)}>
-                                                            <span className="fas fa-eye" /> Marquer comme non
-                                                            lu</button>}
-                                                        {this.state.tab !== 'reported' &&
-                                                        <button className="btn btn-success btn-sm"
-                                                                onClick={this.handleReply.bind(this, advice._id)}
-                                                                title="votre réponse à avis sera publiée sur les sites partenaires et accessible aux futurs stagiaires potentiels">
-                                                            <span
-                                                                className="fas fa-comment-alt" /> {advice.reponse ? 'Modifier la réponse' : 'Répondre'}
-                                                        </button>}
-                                                        {(this.state.tab !== 'reported' && advice.reported !== true) &&
-                                                        <button className="btn btn-danger btn-sm"
-                                                                onClick={this.handleReport.bind(this, advice._id)}
-                                                                title="signaler un avis permet d'alerter le modérateur sur son non-respect potentiel de la charte de modération">
-                                                            <span className="fas fa-exclamation-triangle" /> Signaler
-                                                        </button>}
-                                                        {advice.reported === true &&
-                                                        <button className="btn btn-danger btn-sm"
-                                                                onClick={this.handleUnreport.bind(this, advice._id)}>
-                                                            <span className="fas fa-warning" /> Marquer comme non
-                                                            signalé
-                                                        </button>}
-                                                    </div>
-                                                    }
                                                 </div>
                                                 }
                                                 {!advice.comment &&
                                                 <div>
                                                     <div className="noComment">Cet utilisateur n'a pas laissé d'avis.
                                                     </div>
+                                                </div>
+                                                }
+                                                {this.state.reply && this.state.reply.id === advice._id &&
+                                                <div className="answer">
+                                                    <h4>Votre réponse</h4>
+
+                                                    <textarea className="form-control" rows="3"
+                                                              onChange={this.handleReplyChange.bind(this, advice._id)}
+                                                              value={this.state.reply.text}></textarea>
+
+                                                    <p {...this.state.reply.maxLengthReached ? { className: 'maxLengthReached' } : {}}>Il
+                                                        vous
+                                                        reste {MAX_LENGTH - this.state.reply.text.length} caractères
+                                                        pour écrire votre réponse.</p>
+
+                                                    <div className="actions">
+                                                        <button className="btn btn-success btn-sm"
+                                                                onClick={this.handleDoReply.bind(this, advice._id)}>
+                                                            <span className="fas comment-alt" /> Valider la réponse
+                                                        </button>
+                                                        {advice.reponse &&
+                                                        <button className="btn btn-danger btn-sm"
+                                                                onClick={this.handleRemoveReply.bind(this, advice._id)}>
+                                                            <span className="fas fa-trash" /> &Ocirc;ter
+                                                            la réponse</button>}
+                                                        <button className="btn btn-warning btn-sm"
+                                                                onClick={this.handleCancelReply.bind(this, advice._id)}>
+                                                            <span className="fas fa-comment-alt" /> Annuler
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                }
+                                                {(advice.reponse && !this.state.reply.shown) &&
+                                                <div className="answer">
+                                                    <h4>Votre réponse</h4>
+                                                    <p>{advice.reponse.text}</p>
+                                                </div>
+                                                }
+                                                {!(this.state.reply.shown === true && this.state.reply.id === advice._id) &&
+                                                <div className="actions">
+                                                    {(advice.read !== true && this.state.tab !== 'reported') &&
+                                                    <button className="btn btn-info btn-sm"
+                                                            onClick={this.handleMarkAsRead.bind(this, advice._id)}>
+                                                        <span className="fas fa-eye" /> Marquer comme lu
+                                                    </button>}
+                                                    {(advice.read === true && this.state.tab !== 'reported') &&
+                                                    <button className="btn btn-info btn-sm"
+                                                            onClick={this.handleMarkAsNotRead.bind(this, advice._id)}>
+                                                        <span className="fas fa-eye" /> Marquer comme non
+                                                        lu</button>}
+                                                    {this.state.tab !== 'reported' &&
+                                                    <button className="btn btn-success btn-sm"
+                                                            onClick={this.handleReply.bind(this, advice._id)}
+                                                            title="votre réponse à avis sera publiée sur les sites partenaires et accessible aux futurs stagiaires potentiels">
+                                                        <span
+                                                            className="fas fa-comment-alt" /> {advice.reponse ? 'Modifier la réponse' : 'Répondre'}
+                                                    </button>}
+                                                    {(this.state.tab !== 'reported' && advice.reported !== true) &&
+                                                    <button className="btn btn-danger btn-sm"
+                                                            onClick={this.handleReport.bind(this, advice._id)}
+                                                            title="signaler un avis permet d'alerter le modérateur sur son non-respect potentiel de la charte de modération">
+                                                        <span className="fas fa-exclamation-triangle" /> Signaler
+                                                    </button>}
+                                                    {advice.reported === true &&
+                                                    <button className="btn btn-danger btn-sm"
+                                                            onClick={this.handleUnreport.bind(this, advice._id)}>
+                                                        <span className="fas fa-warning" /> Marquer comme non
+                                                        signalé
+                                                    </button>}
                                                 </div>
                                                 }
                                             </div>
@@ -473,7 +474,7 @@ export default class OrganisationPanel extends React.Component {
                                     </div>
                                 </div>)}
 
-                            {currentEntity && this.state.pagination.count > 1 &&
+                            {this.state.pagination.count > 1 &&
                             <ReactPaginate previousLabel={'<'}
                                            nextLabel={'>'}
                                            pageCount={this.state.pagination.count}
@@ -493,26 +494,7 @@ export default class OrganisationPanel extends React.Component {
                                            containerClassName={'pagination'}
                                            disableInitialCallback={true} />
                             }
-                            {!currentEntity && this.state.pagination.count > 1 &&
-                            <ReactPaginate previousLabel={'<'}
-                                           nextLabel={'>'}
-                                           pageCount={this.state.pagination.count}
-                                           forcePage={this.state.pagination.current - 1}
-                                           marginPagesDisplayed={2}
-                                           pageRangeDisplayed={5}
-                                           onPageChange={this.handlePageClickWhenSelectingPlace}
-                                           breakClassName="page-item"
-                                           breakLabel={<a className="page-link">...</a>}
-                                           pageClassName="page-item"
-                                           previousClassName="page-item"
-                                           nextClassName="page-item"
-                                           pageLinkClassName="page-link"
-                                           previousLinkClassName="page-link"
-                                           nextLinkClassName="page-link"
-                                           activeClassName={'active'}
-                                           containerClassName={'pagination'}
-                                           disableInitialCallback={true} />
-                            }
+
                         </div>
                     </div>
                 </div>

@@ -8,7 +8,7 @@ import { removeToken, setToken } from './utils/token';
 import { getRegion } from './components/backoffice/financeur/service/financeurService';
 import { subscribeToHttpEvent } from './utils/http-client';
 import DeprecatedHeader from './components/backoffice/common/deprecated/DeprecatedHeader';
-import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel';
+import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel.jsx';
 import FinancerPanel from './components/backoffice/financeur/FinancerPanel';
 import AccountActivation from './components/backoffice/organisation/AccountActivation';
 import ForgottenPassword from './components/login/ForgottenPassword';
