@@ -1,0 +1,54 @@
+@import '../../../styles/variables';
+@import '../../../styles/buttons-mixins';
+
+.Button {
+
+  &.small {
+    @include small-button($color-grey-50, $color-grey-25);
+
+    &.red {
+      @include small-button($color-red, $color-red-10);
+    }
+
+    &.green {
+      @include small-button($color-green, $color-green-10);
+    }
+
+    &.blue {
+      @include small-button($color-blue, $color-blue-10);
+    }
+  }
+
+  &.medium {
+    @include medium-button($color-grey-50, $color-grey-25);
+
+    &.red {
+      @include medium-button($color-red, $color-red-10);
+    }
+
+    &.green {
+      @include medium-button($color-green, $color-green-10);
+    }
+
+    &.blue {
+      @include medium-button($color-blue, $color-blue-10);
+    }
+
+  }
+
+  &.large {
+    @include large-button($color-grey-50, $color-grey-5, $color-grey-25);
+
+    &.red {
+      @include large-button($color-red, $color-red-10, $color-red-30);
+    }
+    &.green {
+      @include large-button($color-green, $color-green-10, $color-green-30);
+    }
+
+    &.blue {
+      @include large-button($color-blue, $color-blue-10, $color-blue-30);
+    }
+
+  }
+}

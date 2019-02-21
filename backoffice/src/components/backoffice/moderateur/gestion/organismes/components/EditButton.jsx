@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { removeEditedCourriel, resendEmailAccount } from '../../gestionOrganismesService';
-import './EditButton.scss';
+import Button from '../../../../common/Button';
+import { Dropdown, DropdownDivider, DropdownItem } from '../../../../common/Dropdown';
 
 export default class EditButton extends React.Component {
 
@@ -26,28 +27,29 @@ export default class EditButton extends React.Component {
     render() {
         return (
             <div className="EditButton">
-                <div className=" btn-group">
-                    <button
-                        type="button"
-                        className={`btn dropdown-toggle `}
-                        data-toggle="dropdown">
-                        <i className="fa fa-pencil-alt" />
-                    </button>
-                    <div className="dropdown-menu dropdown-menu-right">
-                        <h6 className="dropdown-header">Modifier ou supprimer</h6>
-                        <a className="dropdown-item" onClick={this.props.onEdit}>
-                            <i className="far fa-edit icon" /> Modifier l&apos;adresse
-                        </a>
-                        <div className="dropdown-divider" />
-                        <a className="dropdown-item" onClick={this.resend}>
-                            <i className="far fa-envelope icon" /> Renvoyer le lien
-                        </a>
-                        <div className="dropdown-divider" />
-                        <a className="dropdown-item delete" onClick={this.remove}>
-                            <i className="far fa-trash-alt icon" /> Supprimer l&apos;adresse
-                        </a>
-                    </div>
-                </div>
+                <Dropdown
+                    header="Modifier ou supprimer"
+                    button={
+                        <Button size="large" color="blue" toggable={true}>
+                            <i className="fa fa-pencil-alt" />
+                        </Button>
+                    }
+                    items={
+                        <div>
+                            <DropdownItem onClick={this.props.onEdit}>
+                                <i className="far fa-edit a-icon" /> Modifier l&apos;adresse
+                            </DropdownItem>
+                            <DropdownDivider />
+                            <DropdownItem onClick={this.resend}>
+                                <i className="far fa-envelope a-icon" /> Renvoyer le lien
+                            </DropdownItem>
+                            <DropdownDivider />
+                            <DropdownItem onClick={this.remove} className="a-text-important">
+                                <i className="far fa-trash-alt a-icon" /> Supprimer l&apos;adresse
+                            </DropdownItem>
+                        </div>
+                    }
+                />
             </div>
         );
     }

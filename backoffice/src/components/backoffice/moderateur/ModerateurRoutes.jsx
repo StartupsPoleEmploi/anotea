@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Header from '../common/Header';
 import queryString from 'query-string';
 import OrganismePanel from './gestion/organismes/OrganismePanel';
 import AvisStagiairesPanel from './moderation/AvisStagiairesPanel';
@@ -13,7 +12,6 @@ export default class ModerateurRoutes extends React.Component {
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
-        logout: PropTypes.func.isRequired,
     };
 
     parse = location => {
@@ -27,13 +25,12 @@ export default class ModerateurRoutes extends React.Component {
 
     render() {
         return (
-            <div className="anotea">
+            <div>
                 <Switch>
                     <Redirect exact from="/" to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
                     <Redirect exact from="/admin"
                               to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
                 </Switch>
-                <Header onLogout={this.props.logout} />
                 <Route path="/mon-compte" render={() => <MyAccount />} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"

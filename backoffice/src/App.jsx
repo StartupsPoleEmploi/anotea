@@ -16,9 +16,11 @@ import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import { MyAccount } from './components/backoffice/account/MyAccount';
+import GridDisplayer from './components/backoffice/common/helpers/GridDisplayer';
+import Header from './components/backoffice/common/Header';
+import MiscRoutes from './components/backoffice/misc/MiscRoutes';
 import './utils/moment-fr';
 import './App.scss';
-import GridDisplayer from "./components/backoffice/common/helpers/GridDisplayer";
 
 addLocaleData([...fr]);
 
@@ -178,10 +180,15 @@ class App extends Component {
 
     showBackofficePages = () => {
 
+        //Use new design
         if (this.state.profile === 'moderateur') {
             return (
                 <Router>
-                    <ModerateurRoutes logout={this.handleLogout} codeRegion={this.state.codeRegion} />
+                    <div className="anotea">
+                        <Header onLogout={this.handleLogout} />
+                        <ModerateurRoutes codeRegion={this.state.codeRegion} />
+                        <MiscRoutes />
+                    </div>
                 </Router>
             );
         }
@@ -210,7 +217,7 @@ class App extends Component {
 
                         <Route
                             path="/admin"
-                            render={props => (
+                            render={() => (
                                 <div className="main">
                                     {this.state.profile === 'organisme' &&
                                     <OrganisationPanel

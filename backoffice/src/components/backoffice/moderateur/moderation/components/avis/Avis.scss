@@ -21,7 +21,11 @@
   }
 
   .btn-group-vertical {
-    width: 100%;
+    display: contents;
+    button {
+      width: 100%;
+      margin-bottom: 0.7rem;
+    }
   }
 }
 

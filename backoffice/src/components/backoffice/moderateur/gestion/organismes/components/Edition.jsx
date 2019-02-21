@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { updateEditedCourriel } from '../../gestionOrganismesService';
+import Button from "../../../../common/Button";
 
 export default class Edition extends React.Component {
 
@@ -36,10 +37,12 @@ export default class Edition extends React.Component {
                     value={this.state.inputValue} />
 
                 <div className="py-2 d-flex justify-content-end">
-                    <button type="button" className="a-cancel" onClick={this.props.onClose}>Annuler</button>
-
-                    <button type="button" className="a-confirm" onClick={this.update}>Valider</button>
-
+                    <Button size="small" color="red" className="mr-2" onClick={this.props.onClose}>
+                        Annuler
+                    </Button>
+                    <Button size="medium" color="blue" onClick={this.update}>
+                        Valider
+                    </Button>
                 </div>
             </div>
         );

@@ -1,6 +1,7 @@
 @import 'styles/deprecated/anotea-deprecated.scss';
 @import 'styles/variables';
-@import 'styles/button-mixins';
+@import 'styles/dropdown-mixins';
+@import 'styles/buttons-mixins';
 
 .anotea {
   font-size: 1em;
@@ -10,15 +11,11 @@
   background-color: $color-white;
   min-height: 1000px;
 
-  button {
-    &.a-cancel {
-      @include confirmation-button($color-red, $color-white);
-      border: none;
-      text-transform: unset;
-    }
+  .a-icon {
+    margin-right: 0.25rem;
+  }
 
-    &.a-confirm {
-      @include confirmation-button($color-blue, $color-blue-10);
-    }
+  .a-text-important {
+    color: $color-red !important;
   }
 }
