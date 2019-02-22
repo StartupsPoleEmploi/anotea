@@ -9,6 +9,7 @@ import { Toolbar, Tab, SearchInputTab } from '../../common/panel/toolbar/Toolbar
 import Summary from '../../common/panel/Summary';
 import { Pagination } from '../../common/panel/Pagination';
 import Avis from './components/avis/Avis';
+import ResultDivider from '../../common/panel/ResultDivider';
 
 export default class AvisStagiairesPanel extends React.Component {
 
@@ -126,15 +127,17 @@ export default class AvisStagiairesPanel extends React.Component {
                             {
                                 results.avis.map((avis, key) => {
                                     return (
-                                        <Avis
-                                            key={key}
-                                            avis={avis}
-                                            options={{
-                                                showStatus: ['all', 'rejected'].includes(query.status),
-                                                showReponse: false,
-                                            }}
-                                            onChange={() => this.search({ silent: true })}>
-                                        </Avis>
+                                        <div key={key}>
+                                            <Avis
+                                                avis={avis}
+                                                options={{
+                                                    showStatus: ['all', 'rejected'].includes(query.status),
+                                                    showReponse: false,
+                                                }}
+                                                onChange={() => this.search({ silent: true })}>
+                                            </Avis>
+                                            <ResultDivider />
+                                        </div>
                                     );
                                 })
                             }
