@@ -34,12 +34,13 @@ const ButtonShowcase = ({ size, color }) => {
                 </div>
 
                 <div className="col-3">
-                    <div className="box d-flex justify-content-center">
+                    <div className="box">
                         <Dropdown
+                            className="d-flex justify-content-center"
                             header="Header"
                             button={
                                 <Button size={size} color={color} toggable={true}>
-                                    <i className="far fa-envelope a-icon" /> DROPDOWN
+                                    DROPDOWN
                                 </Button>
                             }
                             items={
@@ -78,15 +79,15 @@ const LibraryPanel = () => {
                     </div>
                 }
                 results={
-                    <div className="container">
+                    <div >
                         <div className="row py-3">
-                            <div className="offset-2 col-2">
+                            <div className="offset-1 col-2">
                                 <h3>BUTTONS</h3>
                             </div>
                         </div>
 
                         <div className="row py-3">
-                            <div className="offset-2 col-6">
+                            <div className="offset-1 col-6">
                                 <h5>BUTTONS LARGE - 1ST EMPHASIS</h5>
                             </div>
                         </div>
@@ -97,7 +98,7 @@ const LibraryPanel = () => {
                         <ButtonShowcase size="large" color="blue" />
 
                         <div className="row py-3">
-                            <div className="offset-2 col-6">
+                            <div className="offset-1 col-6">
                                 <h5>BUTTONS MEDIUM - 2ND EMPHASIS</h5>
                             </div>
                         </div>
@@ -108,7 +109,7 @@ const LibraryPanel = () => {
                         <ButtonShowcase size="medium" color="blue" />
 
                         <div className="row py-3">
-                            <div className="offset-2 col-6">
+                            <div className="offset-1 col-6">
                                 <h5>BUTTONS SMALL - 3RD EMPHASIS</h5>
                             </div>
                         </div>

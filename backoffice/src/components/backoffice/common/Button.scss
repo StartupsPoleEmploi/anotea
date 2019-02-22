@@ -22,7 +22,7 @@
       outline: 0;
     }
 
-    &:hover, &:focus, &.a-btn-hover {
+    &:hover, &.a-btn-hover {
       border-radius: 5px;
       background-color: $background-color;
     }
@@ -52,7 +52,7 @@
       border: 1px solid $color-grey-25;
     }
 
-    &:hover, &:focus, &.a-btn-hover {
+    &:hover, &.a-btn-hover {
       background-color: $hover-color;
       border: 1px solid $hover-color;
     }
@@ -74,7 +74,7 @@
       outline: 0;
     }
 
-    &:hover, &:focus, &.a-btn-hover {
+    &:hover, &.a-btn-hover {
       border: 1px solid $background-color-hover;
       background-color: $background-color-hover;
     }

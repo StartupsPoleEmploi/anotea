@@ -51,7 +51,7 @@ export default class Avis extends React.Component {
     render() {
         let { avis, options } = this.props;
         let readonly = options.showReponse;
-        let disabledClass = this.state.message && this.state.message.position === 'centered' ? 'disabled' : '';
+        let disabledClass = this.state.message && this.state.message.position === 'centered' ? 'a-disabled' : '';
 
         return (
             <div className="Avis">

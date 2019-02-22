@@ -8,18 +8,6 @@
     padding-left: 0;
   }
 
-  button {
-    padding-left: 0;
-    color: $color-blue;
-    border: none;
-
-    &.active, &:hover, &:focus {
-      color: $color-blue;
-      border: none;
-      box-shadow: none;
-    }
-  }
-
   .details {
 
     border: 1px solid $color-grey-5;

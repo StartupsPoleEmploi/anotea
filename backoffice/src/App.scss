@@ -9,6 +9,11 @@
   background-color: $color-white;
   min-height: 1000px;
 
+  .a-disabled {
+    pointer-events: none;
+    opacity: 0.05;
+  }
+
   .a-centered {
     width: 50%;
     height: 50%;
