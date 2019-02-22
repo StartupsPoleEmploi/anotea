@@ -27,7 +27,7 @@ export default class Edition extends React.Component {
         this.props.onChange(updated, {
             message: {
                 text: 'L\'avis a été publié.',
-                position: updated.published ? 'global' : 'centered',
+                position: this.props.avis.published ? 'global' : 'centered',
             },
         });
     };

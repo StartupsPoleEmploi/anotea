@@ -9,6 +9,7 @@ import { Toolbar, Tab, SearchInputTab } from '../../../common/panel/toolbar/Tool
 import Organisme from './components/Organisme';
 import Summary from '../../../common/panel/Summary';
 import { Pagination } from '../../../common/panel/Pagination';
+import ResultDivider from '../../../common/panel/ResultDivider';
 import './OrganismePanel.scss';
 
 export default class OrganismePanel extends React.Component {
@@ -127,15 +128,18 @@ export default class OrganismePanel extends React.Component {
                             {
                                 results.organismes.map((organisme, key) => {
                                     return (
-                                        <Organisme
-                                            key={key}
-                                            organisme={organisme}
-                                            onChange={(avis, options = {}) => {
-                                                if (options.message) {
-                                                    this.setState({ message: options.message });
-                                                }
-                                                return this.search({ silent: true });
-                                            }} />
+                                        <div key={key}>
+                                            <Organisme
+
+                                                organisme={organisme}
+                                                onChange={(avis, options = {}) => {
+                                                    if (options.message) {
+                                                        this.setState({ message: options.message });
+                                                    }
+                                                    return this.search({ silent: true });
+                                                }} />
+                                            <ResultDivider />
+                                        </div>
                                     );
                                 })
                             }

@@ -106,15 +106,15 @@
     @include medium-button($color-grey-50, $color-grey-25);
 
     &.a-btn-red {
-      @include medium-button($color-red, $color-red-10);
+      @include medium-button($color-red, $color-red-30);
     }
 
     &.a-btn-green {
-      @include medium-button($color-green, $color-green-10);
+      @include medium-button($color-green, $color-green-30);
     }
 
     &.a-btn-blue {
-      @include medium-button($color-blue, $color-blue-10);
+      @include medium-button($color-blue, $color-blue-30);
     }
 
   }

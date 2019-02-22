@@ -2,10 +2,9 @@
 
 .Avis {
 
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   min-height: 10rem;
-  border-bottom: 0.1rem solid $color-grey-5;
   position: relative;
 
   .readonly {
@@ -23,6 +22,7 @@
 
   .btn-group-vertical {
     display: contents;
+
     button {
       width: 100%;
       margin-bottom: 0.7rem;

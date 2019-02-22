@@ -11,6 +11,7 @@ import Message from '../../common/Message';
 import AvisTitle from './components/summary/AvisTitle';
 import { Pagination } from '../../common/panel/Pagination';
 import Avis from './components/avis/Avis';
+import ResultDivider from '../../common/panel/ResultDivider';
 
 export default class AvisReponsesPanel extends React.Component {
 
@@ -134,21 +135,23 @@ export default class AvisReponsesPanel extends React.Component {
                             {
                                 results.avis.map((avis, key) => {
                                     return (
-                                        <Avis
-                                            key={key}
-                                            avis={avis}
-                                            options={{
-                                                showStatus: false,
-                                                showReponse: query.status !== 'reported',
-                                            }}
-                                            onChange={(avis, options = {}) => {
-                                                let { message } = options;
-                                                if (message) {
-                                                    this.setState({ message });
-                                                }
-                                                this.search({ silent: true });
-                                            }}>
-                                        </Avis>
+                                        <div key={key}>
+                                            <Avis
+                                                avis={avis}
+                                                options={{
+                                                    showStatus: false,
+                                                    showReponse: query.status !== 'reported',
+                                                }}
+                                                onChange={(avis, options = {}) => {
+                                                    let { message } = options;
+                                                    if (message) {
+                                                        this.setState({ message });
+                                                    }
+                                                    this.search({ silent: true });
+                                                }}>
+                                            </Avis>
+                                            <ResultDivider />
+                                        </div>
                                     );
                                 })
                             }
