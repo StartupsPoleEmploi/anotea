@@ -7,7 +7,7 @@ import Panel from '../../common/panel/Panel';
 import ReponseTitle from './components/summary/ReponseTitle';
 import Summary from '../../common/panel/Summary';
 import { Toolbar, Tab } from '../../common/panel/toolbar/Toolbar';
-import Message from '../../common/Message';
+import GlobalMessage from '../../common/message/GlobalMessage';
 import AvisTitle from './components/summary/AvisTitle';
 import { Pagination } from '../../common/panel/Pagination';
 import Avis from './components/avis/Avis';
@@ -128,14 +128,14 @@ export default class AvisReponsesPanel extends React.Component {
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
                             {this.state.message &&
-                            <Message
+                            <GlobalMessage
                                 message={this.state.message}
                                 onClose={() => this.setState({ message: null })} />
                             }
                             {
-                                results.avis.map((avis, key) => {
+                                results.avis.map(avis => {
                                     return (
-                                        <div key={key}>
+                                        <div key={avis._id}>
                                             <Avis
                                                 avis={avis}
                                                 options={{

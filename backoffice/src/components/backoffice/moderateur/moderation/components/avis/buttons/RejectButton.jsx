@@ -20,10 +20,13 @@ export default class RejectButton extends React.Component {
         this.setState({ showModal: false });
         let updated = await rejectAvis(avis._id, reason);
         this.props.onChange(updated, {
-            message: reason !== 'injure' ? null : {
-                title: 'Avis rejeté pour injure',
-                text: (<span>L&apos;avis a bien été <b>rejeté</b>, un email a été adressé au stagiaire.</span>),
-                position: 'centered',
+            message: {
+                title: reason === 'injure' ? 'Avis rejeté pour injure' : null,
+                type: 'local',
+                text: (
+                    <span>L&apos;avis a été <b>rejeté</b>.
+                        {reason === 'injure' ? ' Un email a été adressé au stagiaire.' : ''}
+                    </span>),
             }
         });
     };

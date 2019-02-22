@@ -38,11 +38,11 @@ const Panel = ({ header, toolbar, summary, results, pagination, className }) => 
 };
 
 Panel.propTypes = {
-    header: PropTypes.object,
-    toolbar: PropTypes.object,
-    summary: PropTypes.object,
-    results: PropTypes.object,
-    pagination: PropTypes.object,
+    header: PropTypes.node,
+    toolbar: PropTypes.node,
+    summary: PropTypes.node,
+    results: PropTypes.node,
+    pagination: PropTypes.node,
     className: PropTypes.string,
 };
 

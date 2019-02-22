@@ -41,7 +41,7 @@ export default class EditButton extends React.Component {
                     await this.props.onChange(this.props.avis, {
                         message: {
                             text: 'L\'avis a été supprimé.',
-                            position: 'centered',
+                            type: 'local',
                         },
                     });
                     this.setState({ showModal: 'none' });
@@ -63,7 +63,7 @@ export default class EditButton extends React.Component {
                     await this.props.onChange(this.props.avis, {
                         message: {
                             text: 'Le questionnaire a bien été envoyé au stagiaire.',
-                            position: 'centered',
+                            type: 'local',
                         }
                     });
                     this.setState({ showModal: 'none' });

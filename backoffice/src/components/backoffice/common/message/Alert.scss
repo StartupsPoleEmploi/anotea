@@ -1,16 +1,8 @@
-@import '../../../styles/variables';
+@import '../../../../styles/variables';
 
-.Message {
+.Alert {
 
-  &.a-centered {
-    width: 55% !important;
-  }
-
-  .global {
-    width: 70%;
-  }
-
-  .alert {
+  &.alert {
     padding: 0.5rem 1.25rem;
     color: $color-green;
     background-color: $color-green-10;
