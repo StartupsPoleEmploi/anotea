@@ -35,7 +35,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
                     mailSentDate: organisme.mailSentDate.toJSON(),
                     codeRegion: '11',
                     numero: '14_OF_0000000123',
-                    activated: true,
+                    status: 'active',
                     lieux_de_formation: [
                         {
                             adresse: {
@@ -102,7 +102,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         ]);
 
         let response = await request(app)
-        .get(`/api/backoffice/moderateur/organismes?activated=true`)
+        .get(`/api/backoffice/moderateur/organismes?status=active`)
         .set('authorization', `Bearer ${token}`)
         .send({ email: 'edited@pole-emploi.fr' });
 
@@ -138,7 +138,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         ]);
 
         let response = await request(app)
-        .get(`/api/backoffice/moderateur/organismes?activated=false`)
+        .get(`/api/backoffice/moderateur/organismes?status=inactive`)
         .set('authorization', `Bearer ${token}`)
         .send({ email: 'edited@pole-emploi.fr' });
 

@@ -27,6 +27,8 @@ export default class Organisme extends React.Component {
     render() {
         let { organisme, onChange } = this.props;
 
+        let isInactive = organisme.status === 'inactive';
+
         return (
             <div className="Organisme row">
                 <div className="col-sm-3 offset-md-1">
@@ -37,8 +39,8 @@ export default class Organisme extends React.Component {
 
                 <div className="col-2">
                     <p className="title d-none d-sm-block">Statut</p>
-                    <p className={`status ${organisme.activated ? '' : 'inactif'}`}>
-                        {organisme.activated ? 'Compte activé' : 'Inactif'}
+                    <p className={`status ${isInactive ? 'inactive' : ''}`}>
+                        {isInactive ? 'Inactif' : 'Compte activé'}
                     </p>
                 </div>
 

@@ -19,7 +19,12 @@ export default class ModerateurRoutes extends React.Component {
     };
 
     buildParameters = options => {
-        let newQuery = _(_.merge({ page: 0 }, options)).omitBy(_.isUndefined).omitBy(_.isNull).omitBy(_.isEmpty).value();
+        let newQuery = _(_.merge({ page: 0 }, options))
+        .omitBy(_.isUndefined)
+        .omitBy(_.isNull)
+        .omitBy(_.isEmpty)
+        .value();
+
         return queryString.stringify(newQuery);
     };
 

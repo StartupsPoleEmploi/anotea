@@ -75,7 +75,7 @@ export default class Header extends React.Component {
                                             <Link
                                                 className="nav-link"
                                                 label="Gestion des organimes"
-                                                url="/admin/moderateur/gestion/organismes?page=0&activated=true" />
+                                                url="/admin/moderateur/gestion/organismes?page=0&status=active" />
                                         </li>
                                     </ul>
                                 </div>
