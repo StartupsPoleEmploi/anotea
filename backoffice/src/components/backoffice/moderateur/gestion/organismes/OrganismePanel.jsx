@@ -79,21 +79,21 @@ export default class OrganismePanel extends React.Component {
                     <Toolbar>
                         <Tab
                             label="Actifs"
-                            onClick={() => onNewQuery({ activated: true })}
+                            onClick={() => onNewQuery({ status: 'active' })}
                             isDisabled={isTabsDisabled}
-                            isActive={() => !isTabsDisabled() && query.activated === 'true'} />
+                            isActive={() => !isTabsDisabled() && query.status === 'active'} />
 
                         <Tab
                             label="Inactifs"
-                            onClick={() => onNewQuery({ activated: false })}
+                            onClick={() => onNewQuery({ status: 'inactive' })}
                             isDisabled={isTabsDisabled}
-                            isActive={() => !isTabsDisabled() && query.activated === 'false'} />
+                            isActive={() => !isTabsDisabled() && query.status === 'inactive'} />
 
                         <Tab
                             label="Tous"
-                            onClick={() => onNewQuery({})}
+                            onClick={() => onNewQuery({ status: 'all' })}
                             isDisabled={isTabsDisabled}
-                            isActive={() => query.activated === undefined} />
+                            isActive={() => !isTabsDisabled() && query.status === 'all'} />
 
                         <SearchInputTab
                             label="Rechercher un organisme"

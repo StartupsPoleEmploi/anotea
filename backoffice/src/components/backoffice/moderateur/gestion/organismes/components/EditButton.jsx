@@ -47,9 +47,11 @@ export default class EditButton extends React.Component {
                                 <i className="far fa-envelope a-icon" /> Renvoyer le lien
                             </DropdownItem>
                             <DropdownDivider />
+                            {this.props.organisme.editedCourriel &&
                             <DropdownItem onClick={this.remove} className="a-text-important">
                                 <i className="far fa-trash-alt a-icon" /> Supprimer l&apos;adresse
                             </DropdownItem>
+                            }
                         </div>
                     }
                 />
