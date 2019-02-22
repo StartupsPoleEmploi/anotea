@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { editAvis, publishAvis } from '../../moderationService';
-import Button from "../../../../common/Button";
-import { Dropdown, DropdownDivider, DropdownItem } from "../../../../common/Dropdown";
+import Button from '../../../../common/Button';
+import { Dropdown, DropdownDivider, DropdownItem } from '../../../../common/Dropdown';
 
 export default class Edition extends React.Component {
 
@@ -24,7 +24,12 @@ export default class Edition extends React.Component {
         await editAvis(this.props.avis._id, this.state.text);
         let updated = await publishAvis(this.props.avis._id, qualification);
         this.props.onClose();
-        this.props.onChange(updated);
+        this.props.onChange(updated, {
+            message: {
+                text: 'L\'avis a été publié.',
+                position: updated.published ? 'global' : 'centered',
+            },
+        });
     };
 
     render() {

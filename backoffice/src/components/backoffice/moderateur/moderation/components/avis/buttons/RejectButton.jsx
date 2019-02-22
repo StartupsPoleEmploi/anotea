@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { rejectAvis } from '../../../moderationService';
 import Modal from '../../../../../common/Modal';
 import Button from '../../../../../common/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from "../../../../../common/Dropdown";
+import { Dropdown, DropdownDivider, DropdownItem } from '../../../../../common/Dropdown';
 
 export default class RejectButton extends React.Component {
 
@@ -22,7 +22,8 @@ export default class RejectButton extends React.Component {
         this.props.onChange(updated, {
             message: reason !== 'injure' ? null : {
                 title: 'Avis rejeté pour injure',
-                text: (<span>L&apos;avis a bien été <b>rejeté</b>, un email a été adressé au stagiaire.</span>)
+                text: (<span>L&apos;avis a bien été <b>rejeté</b>, un email a été adressé au stagiaire.</span>),
+                position: 'centered',
             }
         });
     };
@@ -32,21 +33,18 @@ export default class RejectButton extends React.Component {
     };
 
     getModal = () => {
-
-        let message = {
-            title: 'Rejeter cet avis pour injure',
-            text: (
-                <span>
-                    Le <b>rejet pour injure</b> entraîne <b>l&apos;envoi d&apos;un email</b> automatique au stagiaire pour l&apos;informer que le <b>commentaire ne sera pas publié</b>. Confirmez-vous cette demande ?
-                </span>
-            )
-        };
-
         return (
             <Modal
-                message={message}
-                onConfirmed={() => this.reject(this.props.avis, 'injure')}
-                onClose={this.handleCancel} />
+                title="Rejeter cet avis pour injure"
+                body={
+                    <div>
+                        Le <b>rejet pour injure</b> entraîne <b>l&apos;envoi d&apos;un email </b> automatique au
+                        stagiaire pour l&apos;informer que le <b>commentaire ne sera pas publié</b>. Confirmez-vous
+                        cette demande ?
+                    </div>
+                }
+                onClose={this.handleCancel}
+                onConfirmed={() => this.reject(this.props.avis, 'injure')} />
         );
     };
 

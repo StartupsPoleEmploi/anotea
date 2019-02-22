@@ -6,12 +6,18 @@
   padding-bottom: 2rem;
   min-height: 10rem;
   border-bottom: 0.1rem solid $color-grey-5;
+  position: relative;
 
-  .disabled {
+  .readonly {
     border: 1px solid $color-grey-5;
     background-color: $color-grey-5;
     opacity: 0.6;
     padding: 0.875rem;
+  }
+
+  .disabled {
+    pointer-events: none;
+    opacity: 0.05;
   }
 
   .stagiaire-actions {

@@ -29,34 +29,34 @@ export default class Organisme extends React.Component {
 
         return (
             <div className="Organisme row">
-                <div className="offset-md-1 col-3">
-                    <p className="title">Nom et SIRET</p>
+                <div className="col-sm-3 offset-md-1">
+                    <p className="title d-none d-sm-block">Nom et SIRET</p>
                     <p className="raison-sociale">{organisme.raisonSociale}</p>
                     <p className="siret">{organisme.meta.siretAsString}</p>
                 </div>
 
                 <div className="col-2">
-                    <p className="title">Statut</p>
+                    <p className="title d-none d-sm-block">Statut</p>
                     <p className={`status ${organisme.activated ? '' : 'inactif'}`}>
                         {organisme.activated ? 'Compte activé' : 'Inactif'}
                     </p>
                 </div>
 
                 <div className="col-1">
-                    <p className="title">Avis</p>
+                    <p className="title d-none d-sm-block">Avis</p>
                     <p className="score">{organisme.score.nb_avis}</p>
                 </div>
 
                 {this.state.showEdition &&
                 <div className="col-4">
-                    <p className="title">Contact</p>
+                    <p className="title d-none d-sm-block">Contact</p>
                     <Edition organisme={organisme} onChange={onChange} onClose={this.toggleEdition} />
                 </div>
                 }
 
                 {!this.state.showEdition &&
-                <div className="col-3">
-                    <p className="title">Contact</p>
+                <div className="col-xs-8 col-sm-4 col-md-3">
+                    <p className="title d-none d-sm-block">Contact</p>
                     <p className="email">
                         {organisme.editedCourriel ? organisme.editedCourriel : organisme.courriel}
                     </p>
@@ -64,8 +64,8 @@ export default class Organisme extends React.Component {
                 }
 
                 {!this.state.showEdition &&
-                <div className="col-1">
-                    <p className="title">&nbsp;</p>
+                <div className="col-sm-2 col-md-1">
+                    <p className="title d-none d-sm-block">&nbsp;</p>
                     <div className="btn-group-vertical">
                         <EditButton organisme={organisme} onChange={onChange} onEdit={this.toggleEdition} />
                     </div>

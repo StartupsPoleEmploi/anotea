@@ -55,12 +55,7 @@ export default class OrganismePanel extends React.Component {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
                 let results = await searchOrganismes(this.props.query);
-                this.setState({ results, loading: false }, () => {
-                    if (options.goToTop) {
-                        window.scrollTo(0, 0);
-                    }
-                    return resolve();
-                });
+                this.setState({ results, loading: false }, () => resolve());
             });
         });
     };
@@ -123,9 +118,11 @@ export default class OrganismePanel extends React.Component {
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
                             {this.state.message &&
-                            <Message message={this.state.message} onClose={() => {
-                                return this.setState({ message: null });
-                            }} />
+                            <Message
+                                message={this.state.message}
+                                onClose={() => {
+                                    return this.setState({ message: null });
+                                }} />
                             }
                             {
                                 results.organismes.map((organisme, key) => {
@@ -134,13 +131,10 @@ export default class OrganismePanel extends React.Component {
                                             key={key}
                                             organisme={organisme}
                                             onChange={(avis, options = {}) => {
-                                                let { message } = options;
-                                                if (message) {
-                                                    this.setState({ message });
+                                                if (options.message) {
+                                                    this.setState({ message: options.message });
                                                 }
-                                                return this.search({
-                                                    silent: true, goToTop: !!options.message
-                                                });
+                                                return this.search({ silent: true });
                                             }} />
                                     );
                                 })

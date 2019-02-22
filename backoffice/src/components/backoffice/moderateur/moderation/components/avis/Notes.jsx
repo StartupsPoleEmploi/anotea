@@ -17,7 +17,7 @@ export default class Notes extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        disabled: PropTypes.bool,
+        readonly: PropTypes.bool,
     };
 
     constructor(props) {
@@ -43,14 +43,14 @@ export default class Notes extends React.Component {
     };
 
     render() {
-        let { avis, disabled } = this.props;
+        let { avis, readonly } = this.props;
         let buttonText = (
             <span className="text">
                 Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
             </span>
         );
 
-        if (disabled) {
+        if (readonly) {
             return <div className="Notes">{buttonText}</div>;
         }
 

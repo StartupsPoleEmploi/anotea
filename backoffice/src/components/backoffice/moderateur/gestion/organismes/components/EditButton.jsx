@@ -15,7 +15,10 @@ export default class EditButton extends React.Component {
     resend = async () => {
         let updated = await resendEmailAccount(this.props.organisme._id);
         this.props.onChange(updated, {
-            message: { title: 'Email', text: 'Email envoyé avec succès.' }
+            message: {
+                text: 'Email envoyé avec succès.',
+                position: 'bottom',
+            }
         });
     };
 

@@ -45,7 +45,7 @@ export default class Stagiaire extends React.Component {
     static propTypes = {
         avis: PropTypes.object.isRequired,
         showStatus: PropTypes.bool,
-        disabled: PropTypes.bool,
+        readonly: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -56,7 +56,7 @@ export default class Stagiaire extends React.Component {
     };
 
     render() {
-        let { avis, disabled, showStatus } = this.props;
+        let { avis, readonly, showStatus } = this.props;
 
         return (
             <div className="Stagiaire">
@@ -67,7 +67,7 @@ export default class Stagiaire extends React.Component {
                         {avis.pseudo ? avis.pseudo : 'anonyme'}
                     </span>
 
-                    {!disabled && avis.pseudo &&
+                    {!readonly && avis.pseudo &&
                     <i className={`far ${avis.pseudoMasked ? 'fa-eye' : 'fa-eye-slash'} togglable mr-2`}
                        onClick={this.toggle} />
                     }
@@ -75,7 +75,7 @@ export default class Stagiaire extends React.Component {
 
                 <div className="date">
                     le <PrettyDate date={new Date(avis.date)} /> &nbsp;
-                    {!disabled && showStatus &&
+                    {!readonly && showStatus &&
                     <Status avis={avis} />
                     }
                 </div>

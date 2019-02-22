@@ -5,10 +5,10 @@ import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
 import AvisTitle from './components/summary/AvisTitle';
-import AvisResults from './components/AvisResults';
 import { Toolbar, Tab, SearchInputTab } from '../../common/panel/toolbar/Toolbar';
 import Summary from '../../common/panel/Summary';
 import { Pagination } from '../../common/panel/Pagination';
+import Avis from './components/avis/Avis';
 
 export default class AvisStagiairesPanel extends React.Component {
 
@@ -22,7 +22,6 @@ export default class AvisStagiairesPanel extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            message: null,
             tabsDisabled: false,
             results: {
                 avis: [],
@@ -54,12 +53,7 @@ export default class AvisStagiairesPanel extends React.Component {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
                 let results = await searchAvis(this.props.query);
-                this.setState({ results, loading: false }, () => {
-                    if (options.goToTop) {
-                        window.scrollTo(0, 0);
-                    }
-                    return resolve();
-                });
+                this.setState({ results, loading: false }, () => resolve());
             });
         });
     };
@@ -129,14 +123,21 @@ export default class AvisStagiairesPanel extends React.Component {
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
-                            <AvisResults
-                                results={results}
-                                refresh={() => this.search({ silent: true })}
-                                onNewQuery={onNewQuery}
-                                options={{
-                                    showStatus: ['all', 'rejected'].includes(query.status),
-                                    showReponse: false,
-                                }} />
+                            {
+                                results.avis.map((avis, key) => {
+                                    return (
+                                        <Avis
+                                            key={key}
+                                            avis={avis}
+                                            options={{
+                                                showStatus: ['all', 'rejected'].includes(query.status),
+                                                showReponse: false,
+                                            }}
+                                            onChange={() => this.search({ silent: true })}>
+                                        </Avis>
+                                    );
+                                })
+                            }
                         </div>
                 }
                 pagination={

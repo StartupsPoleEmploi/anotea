@@ -29,49 +29,43 @@ export default class EditButton extends React.Component {
     };
 
     getDeleteModal = () => {
-        let message = {
-            title: 'Supprimer définitivement cet avis',
-            text: (
-                <span>
-                Cette action entrainera la <b>suppression</b> de l&apos;avis déposé, <b>confirmez-vous votre demande ?</b>
-                </span>
-            )
-        };
-
         return (
             <Modal
-                message={message}
+                title="Supprimer définitivement cet avis"
+                body={
+                    <span>Cette action entrainera la <b>suppression </b> de l&apos;avis déposé, <b>confirmez-vous votre demande ?</b></span>
+                }
                 onClose={this.handleCancel}
                 onConfirmed={async () => {
-                    let message = { title: 'Avis supprimé', text: 'L\'avis a été supprimé.' };
                     await deleteAvis(this.props.avis._id);
-                    await this.props.onChange(this.props.avis, { message });
+                    await this.props.onChange(this.props.avis, {
+                        message: {
+                            text: 'L\'avis a été supprimé.',
+                            position: 'centered',
+                        },
+                    });
                     this.setState({ showModal: 'none' });
                 }} />
         );
     };
 
     getResendModal = () => {
-        let message = {
-            title: 'Renvoyer le questionnaire au stagiaire',
-            text: (
-                <span>
-                Cette action entrainera la suppression de l&apos;avis déposé, <b>confirmez-vous votre demande ?</b>
-                </span>
-            )
-        };
 
         return (
             <Modal
-                message={message}
+                title="Renvoyer le questionnaire au stagiaire"
+                body={
+                    <span>Cette action entrainera la suppression de l&apos;avis déposé, <b>confirmez-vous votre demande ?</b></span>
+                }
                 onClose={this.handleCancel}
                 onConfirmed={async () => {
-                    let message = {
-                        title: 'Questionnaire envoyé',
-                        text: 'Le questionnaire a bien été envoyé au stagiaire.'
-                    };
                     await resendEmail(this.props.avis._id);
-                    await this.props.onChange(this.props.avis, { message });
+                    await this.props.onChange(this.props.avis, {
+                        message: {
+                            text: 'Le questionnaire a bien été envoyé au stagiaire.',
+                            position: 'centered',
+                        }
+                    });
                     this.setState({ showModal: 'none' });
                 }} />
         );
