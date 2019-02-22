@@ -22,7 +22,7 @@ module.exports = {
             if (error) {
                 logger.error(error);
             }
-            components.client.close(() => error && process.exit(1));
+            return components.client.close(() => error && process.exit(1));
         };
 
         let jobComponents = Object.assign({}, components, { logger, exit });
