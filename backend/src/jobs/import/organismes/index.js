@@ -15,8 +15,9 @@ cli.description('Import accounts from Intercarif and Kairos')
 
 execute(async ({ logger, db }) => {
 
-    let imported = {};
+    let hasErrors = false;
     logger.info('Generating organismes data from intercarif...');
+    let imported = {};
     imported.intercarif = await generateOrganismesFromIntercarif(db, logger);
 
     if (cli.import) {
@@ -25,10 +26,17 @@ execute(async ({ logger, db }) => {
     }
 
     logger.info('Synchronizing organismes with existing ones...');
-    let synchronized = await synchronizeOrganismesWithAccounts(db, logger);
+    let synchronized = {};
+    try {
+        synchronized = await synchronizeOrganismesWithAccounts(db, logger);
+    } catch (e) {
+        hasErrors = true;
+        synchronized = e;
+    }
 
     logger.info('Computing score for all organismes...');
     let computed = await computeOrganismesScore(db, logger);
 
-    return { imported, synchronized, computed };
+    let results = { imported, synchronized, computed, hasErrors };
+    return hasErrors ? Promise.reject(results) : Promise.resolve(results);
 });
