@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { searchOrganismes } from '../gestionOrganismesService';
-import Message from '../../../common/Message';
+import GlobalMessage from '../../../common/message/GlobalMessage';
 import Loader from '../../../common/Loader';
 import Panel from '../../../common/panel/Panel';
 import { Toolbar, Tab, SearchInputTab } from '../../../common/panel/toolbar/Toolbar';
@@ -119,22 +119,22 @@ export default class OrganismePanel extends React.Component {
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
                             {this.state.message &&
-                            <Message
+                            <GlobalMessage
                                 message={this.state.message}
                                 onClose={() => {
                                     return this.setState({ message: null });
                                 }} />
                             }
                             {
-                                results.organismes.map((organisme, key) => {
+                                results.organismes.map(organisme => {
                                     return (
-                                        <div key={key}>
+                                        <div key={organisme._id}>
                                             <Organisme
-
                                                 organisme={organisme}
                                                 onChange={(avis, options = {}) => {
-                                                    if (options.message) {
-                                                        this.setState({ message: options.message });
+                                                    let { message } = options;
+                                                    if (message) {
+                                                        this.setState({ message: message });
                                                     }
                                                     return this.search({ silent: true });
                                                 }} />

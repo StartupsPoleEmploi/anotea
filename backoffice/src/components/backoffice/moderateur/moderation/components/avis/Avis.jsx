@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import Stagiaire from './Stagiaire';
 import Titre from './Titre';
 import Commentaire from './Commentaire';
@@ -12,7 +13,7 @@ import RejectReponseButton from './buttons/RejectReponseButton';
 import PublishButton from './buttons/PublishButton';
 import RejectButton from './buttons/RejectButton';
 import EditButton from './buttons/EditButton';
-import Message from '../../../../common/Message';
+import LocalMessage from '../../../../common/message/LocalMessage';
 import './Avis.scss';
 
 export default class Avis extends React.Component {
@@ -27,6 +28,7 @@ export default class Avis extends React.Component {
         super(props);
         this.state = {
             message: null,
+            onMessageClosed: () => ({}),
             showEdition: false,
         };
     }
@@ -37,28 +39,31 @@ export default class Avis extends React.Component {
         });
     };
 
-    handleChange = (avis, options = {}) => {
+    handleChange = (newAvis, options = {}) => {
         let { message } = options;
-        if (message) {
-            this.setState({ message });
+        if (message && message.type === 'local') {
+            this.setState({
+                message,
+                onMessageClosed: () => this.props.onChange(newAvis, _.omit(options, ['message']))
+            });
+        } else {
+            this.props.onChange(newAvis, options);
         }
-
-        setTimeout(() => {
-            this.setState({ message: null }, () => this.props.onChange(avis, options));
-        }, 5000);
     };
 
     render() {
         let { avis, options } = this.props;
         let readonly = options.showReponse;
-        let disabledClass = this.state.message && this.state.message.position === 'centered' ? 'a-disabled' : '';
+        let disabledClass = this.state.message ? 'a-disabled' : '';
 
         return (
             <div className="Avis">
                 {this.state.message &&
-                <Message
+                <LocalMessage
                     message={this.state.message}
-                    onClose={() => this.setState({ message: null })} />
+                    onClose={() => {
+                        this.setState({ message: null }, this.state.onMessageClosed);
+                    }} />
                 }
 
                 <div className="row">
@@ -109,7 +114,7 @@ export default class Avis extends React.Component {
                 {
                     options.showReponse && avis.reponse &&
                     <div className="row mt-3">
-                        <div className="offset-sm-3 offset-md-4 col-sm-7 col-md-6">
+                        <div className={`offset-sm-3 offset-md-4 col-sm-7 col-md-6 ${disabledClass}`}>
                             <Reponse avis={avis} />
                         </div>
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>

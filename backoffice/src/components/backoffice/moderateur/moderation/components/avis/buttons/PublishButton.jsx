@@ -18,7 +18,7 @@ export default class PublishButton extends React.Component {
         this.props.onChange(updated, {
             message: {
                 text: 'L\'avis a été publié.',
-                position: 'centered',
+                type: avis.published ? 'global' : 'local',
             },
         });
     };

@@ -10,6 +10,7 @@ import Summary from '../../common/panel/Summary';
 import { Pagination } from '../../common/panel/Pagination';
 import Avis from './components/avis/Avis';
 import ResultDivider from '../../common/panel/ResultDivider';
+import GlobalMessage from "../../common/message/GlobalMessage";
 
 export default class AvisStagiairesPanel extends React.Component {
 
@@ -23,6 +24,7 @@ export default class AvisStagiairesPanel extends React.Component {
         super(props);
         this.state = {
             loading: false,
+            message: null,
             tabsDisabled: false,
             results: {
                 avis: [],
@@ -124,17 +126,28 @@ export default class AvisStagiairesPanel extends React.Component {
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
+                            {this.state.message &&
+                            <GlobalMessage
+                                message={this.state.message}
+                                onClose={() => this.setState({ message: null })} />
+                            }
                             {
-                                results.avis.map((avis, key) => {
+                                results.avis.map(avis => {
                                     return (
-                                        <div key={key}>
+                                        <div key={avis._id}>
                                             <Avis
                                                 avis={avis}
                                                 options={{
                                                     showStatus: ['all', 'rejected'].includes(query.status),
                                                     showReponse: false,
                                                 }}
-                                                onChange={() => this.search({ silent: true })}>
+                                                onChange={(avis, options) => {
+                                                    let { message } = options;
+                                                    if (message) {
+                                                        this.setState({ message });
+                                                    }
+                                                    return this.search({ silent: true });
+                                                }}>
                                             </Avis>
                                             <ResultDivider />
                                         </div>
