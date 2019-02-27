@@ -25,6 +25,7 @@ module.exports = db => {
                     region: '$region',
                     code_region: '$code_region',
                     avis: {
+                        //Flatten avis arrays
                         $reduce: {
                             input: '$avis',
                             initialValue: [],
@@ -36,16 +37,15 @@ module.exports = db => {
                             if: {
                                 $eq: ['$accueil', null]
                             },
-                            then: { nb_avis: 0 },
+                            then: {},
                             else: {
-                                nb_avis: { $size: '$avis' },
                                 notes: {
-                                    accueil: '$accueil',
-                                    contenu_formation: '$contenu_formation',
-                                    equipe_formateurs: '$equipe_formateurs',
-                                    moyen_materiel: '$moyen_materiel',
-                                    accompagnement: '$accompagnement',
-                                    global: '$global'
+                                    accueil: { $ceil: '$accueil' },
+                                    contenu_formation: { $ceil: '$contenu_formation' },
+                                    equipe_formateurs: { $ceil: '$equipe_formateurs' },
+                                    moyen_materiel: { $ceil: '$moyen_materiel' },
+                                    accompagnement: { $ceil: '$accompagnement' },
+                                    global: { $ceil: '$global' },
                                 }
                             }
                         }
@@ -54,6 +54,11 @@ module.exports = db => {
                     meta: '$meta',
                 },
             },
+        },
+        {
+            $addFields: {
+                'score.nb_avis': { $ifNull: [{ $size: '$avis' }, { nb_avis: 0 }] },
+            }
         },
         // Remove action property from formation
         {
