@@ -169,7 +169,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         ]);
 
         let response = await request(app)
-        .get(`/api/backoffice/moderateur/organismes?siret=33333333333333`)
+        .get(`/api/backoffice/moderateur/organismes?value=33333333333333`)
         .set('authorization', `Bearer ${token}`)
         .send({ email: 'edited@pole-emploi.fr' });
 
