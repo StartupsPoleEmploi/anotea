@@ -97,7 +97,7 @@ export default class OrganismePanel extends React.Component {
 
                         <SearchInputTab
                             label="Rechercher un organisme"
-                            onSubmit={siret => onNewQuery({ siret })}
+                            onSubmit={value => onNewQuery({ value })}
                             isActive={active => this.setState({ tabsDisabled: active })} />
                     </Toolbar>
                 }

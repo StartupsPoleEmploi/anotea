@@ -69,10 +69,10 @@ export default class AvisReponsesPanel extends React.Component {
             <Panel
                 header={
                     <div>
-                        <h1 className="title">Réponses des organimes</h1>
+                        <h1 className="title">Réponses des organismes</h1>
                         <p className="subtitle">
                             Ici, vous trouverez les réponses des organismes de formation adressées aux stagiaires ainsi
-                            que les avis signanlés par les organismes.
+                            que les avis signalés par les organismes.
                         </p>
                     </div>
                 }

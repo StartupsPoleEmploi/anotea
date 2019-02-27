@@ -74,7 +74,7 @@ export default class Header extends React.Component {
                                         <li className="nav-item">
                                             <Link
                                                 className="nav-link"
-                                                label="Gestion des organimes"
+                                                label="Gestion des organismes"
                                                 url="/admin/moderateur/gestion/organismes?page=0&status=active" />
                                         </li>
                                     </ul>
