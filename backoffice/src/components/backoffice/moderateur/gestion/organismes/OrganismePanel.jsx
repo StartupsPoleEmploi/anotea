@@ -8,7 +8,7 @@ import Panel from '../../../common/panel/Panel';
 import { Toolbar, Tab, SearchInputTab } from '../../../common/panel/toolbar/Toolbar';
 import Organisme from './components/Organisme';
 import Summary from '../../../common/panel/Summary';
-import Export from '../../../common/panel/Export';
+import ExportButton from '../../../common/panel/ExportButton';
 import { Pagination } from '../../../common/panel/Pagination';
 import ResultDivider from '../../../common/panel/ResultDivider';
 import './OrganismePanel.scss';
@@ -115,11 +115,6 @@ export default class OrganismePanel extends React.Component {
 
                     </Summary>
                 }
-                exportOrganismeInfo={
-                    <Export>
-
-                    </Export>
-                }
                 results={
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
@@ -131,6 +126,9 @@ export default class OrganismePanel extends React.Component {
                                     return this.setState({ message: null });
                                 }} />
                             }
+                            <ExportButton>
+
+                            </ExportButton>
                             {
                                 results.organismes.map(organisme => {
                                     return (

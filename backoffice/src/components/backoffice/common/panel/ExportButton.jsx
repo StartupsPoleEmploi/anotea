@@ -1,12 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import { exportOrganismes } from '../../moderateur/gestion/gestionOrganismesService';
 
-import './Export.scss';
+import './ExportButton.scss';
 
-export default class Export extends React.Component {
+export default class ExportButton extends React.Component {
 
   exportOrganismeInfoToExcel = () => {
-      console.log('kiki');
+      // exportOrganismes();
   };
 
     render() {
@@ -16,7 +16,7 @@ export default class Export extends React.Component {
                     type="button"
                     className="export-button"
                     onClick={this.exportOrganismeInfoToExcel}>
-                    <i className="fas fa-file-export" />
+                    <i className="fas fa-download" />
                     &nbsp; EXPORTER
                 </button>
             </div>
