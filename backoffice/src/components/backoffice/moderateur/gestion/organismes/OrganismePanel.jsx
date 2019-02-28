@@ -126,9 +126,7 @@ export default class OrganismePanel extends React.Component {
                                     return this.setState({ message: null });
                                 }} />
                             }
-                            <ExportButton>
-
-                            </ExportButton>
+                            <ExportButton status={this.props.query.status}></ExportButton>
                             {
                                 results.organismes.map(organisme => {
                                     return (

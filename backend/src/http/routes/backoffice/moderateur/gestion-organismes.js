@@ -57,6 +57,23 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         });
     }));
 
+    router.get('/backoffice/moderateur/organismes/export/:status', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+
+        let codeRegion = req.user.codeRegion;
+        let { status } = await Joi.validate(req.params, {
+            status: Joi.string().allow(['all', 'active', 'inactive']).default('all'),
+        }, { abortEarly: false });
+
+        const organismes = await db.collection('accounts').find({
+            profile: 'organisme',
+            codeRegion: codeRegion,
+            ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
+        }).toArray();
+
+         res.send(organismes);
+
+    }));
+
     router.put('/backoffice/moderateur/organismes/:id/updateEditedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });

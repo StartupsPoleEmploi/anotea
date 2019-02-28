@@ -16,3 +16,7 @@ export const removeEditedCourriel = id => {
 export const resendEmailAccount = id => {
     return _post(`/backoffice/moderateur/organismes/${id}/resendEmailAccount`);
 };
+
+export const exportOrganismes = (status) => {
+    return _get(`/backoffice/moderateur/organismes/export/${status}`);
+};
