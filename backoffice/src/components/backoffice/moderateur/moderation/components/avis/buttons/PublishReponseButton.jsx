@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { publishReponse } from '../../../../service/moderationService';
-import './PublishReponseButton.scss';
+import { publishReponse } from '../../../moderationService';
+import Button from '../../../../../common/Button';
 
 export default class PublishReponseButton extends React.Component {
 
@@ -14,21 +14,22 @@ export default class PublishReponseButton extends React.Component {
         let { avis } = this.props;
 
         let updated = await publishReponse(avis._id);
-        this.props.onChange(updated);
-    };
-
-    getDisableClass = () => {
-        return this.props.avis.reponse.status === 'published' ? 'disabled' : '';
+        this.props.onChange(updated, {
+            message: {
+                text: 'La réponse a été publiée.',
+                type: 'local',
+            },
+        });
     };
 
     render() {
+        let isPublished = this.props.avis.reponse.status === 'published';
         return (
-            <button
-                type="button"
-                className={`PublishReponseButton btn ${this.getDisableClass()}`}
-                onClick={this.onClick}>
-                <i className="far fa-check-circle" />
-            </button>
+            <div className="PublishReponseButton">
+                <Button size="large" color="green" disabled={isPublished} onClick={this.onClick}>
+                    <i className="far fa-check-circle a-icon" />
+                </Button>
+            </div>
         );
     }
 }

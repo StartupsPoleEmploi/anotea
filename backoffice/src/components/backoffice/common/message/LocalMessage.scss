@@ -1,0 +1,12 @@
+@import '../../../../styles/variables';
+
+.Message {
+
+  &.a-centered {
+    width: 55% !important;
+  }
+
+  .global {
+    width: 70%;
+  }
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Notes.scss';
+import Button from "../../../../common/Button";
 
 const Note = ({ label, note }) => {
     return (
@@ -17,7 +18,7 @@ export default class Notes extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        disabled: PropTypes.bool,
+        readonly: PropTypes.bool,
     };
 
     constructor(props) {
@@ -43,20 +44,22 @@ export default class Notes extends React.Component {
     };
 
     render() {
-        let { avis, disabled } = this.props;
+        let { avis, readonly } = this.props;
         let buttonText = (
             <span className="text">
                 Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
             </span>
         );
 
-        if (disabled) {
+        if (readonly) {
             return <div className="Notes">{buttonText}</div>;
         }
 
         return (
             <div className="Notes">
-                <button type="button" className="btn" onClick={this.toggleDetails}>{buttonText}</button>
+                <Button size="small" color="blue" className="pl-0" onClick={this.toggleDetails}>
+                    {buttonText}
+                </Button>
                 {this.state.showDetails &&
                 <div className="details d-flex justify-content-between">
                     {this.createNote('Accueil', avis.rates.accueil)}

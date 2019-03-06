@@ -8,17 +8,19 @@ import { removeToken, setToken } from './utils/token';
 import { getRegion } from './components/backoffice/financeur/service/financeurService';
 import { subscribeToHttpEvent } from './utils/http-client';
 import DeprecatedHeader from './components/backoffice/common/deprecated/DeprecatedHeader';
-import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel';
-import FinancerPanel from './components/backoffice/financeur/FinancerPanel';
+import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel.jsx';
+import FinancerPanel from './components/backoffice/financeur/FinancerPanel.jsx';
 import AccountActivation from './components/backoffice/organisation/AccountActivation';
 import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
-import ModerationRoutes from './components/backoffice/moderateur/ModerationRoutes';
+import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import { MyAccount } from './components/backoffice/account/MyAccount';
+import GridDisplayer from './components/backoffice/common/helpers/GridDisplayer';
+import Header from './components/backoffice/common/Header';
+import MiscRoutes from './components/backoffice/misc/MiscRoutes';
 import './utils/moment-fr';
 import './App.scss';
-import GridDisplayer from "./components/backoffice/common/helpers/GridDisplayer";
 
 addLocaleData([...fr]);
 
@@ -117,12 +119,6 @@ class App extends Component {
             raisonSociale: raisonSociale,
             features: features
         });
-
-        getRegion(this.state.codeRegion).then(region => {
-            this.setState({
-                region: region.region
-            });
-        });
     };
 
     handleError = () => {
@@ -151,8 +147,7 @@ class App extends Component {
                         profile={this.state.profile}
                         raisonSociale={this.state.raisonSociale}
                         codeFinanceur={this.state.codeFinanceur}
-                        codeRegion={this.state.codeRegion}
-                        region={this.state.region} />
+                        codeRegion={this.state.codeRegion}/>
 
                     {this.state.action === 'creation' &&
                     <AccountActivation
@@ -185,10 +180,15 @@ class App extends Component {
 
     showBackofficePages = () => {
 
+        //Use new design
         if (this.state.profile === 'moderateur') {
             return (
                 <Router>
-                    <ModerationRoutes logout={this.handleLogout} codeRegion={this.state.codeRegion} />
+                    <div className="anotea">
+                        <Header onLogout={this.handleLogout} />
+                        <ModerateurRoutes codeRegion={this.state.codeRegion} />
+                        <MiscRoutes />
+                    </div>
                 </Router>
             );
         }
@@ -217,7 +217,7 @@ class App extends Component {
 
                         <Route
                             path="/admin"
-                            render={props => (
+                            render={() => (
                                 <div className="main">
                                     {this.state.profile === 'organisme' &&
                                     <OrganisationPanel

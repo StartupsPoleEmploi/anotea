@@ -2,10 +2,37 @@
 @import 'styles/variables';
 
 .anotea {
+
   font-size: 1em;
   font-family: 'Lato', sans-serif;
   font-weight: $font-weight-400;
   color: $color-black;
   background-color: $color-white;
   min-height: 1000px;
+
+  .a-disabled {
+    pointer-events: none;
+    opacity: 0.05;
+  }
+
+  .a-centered {
+    width: 50%;
+    height: 50%;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+  }
+
+  .a-icon {
+    margin-right: 0.25rem;
+  }
+
+  .a-text-important {
+    color: $color-red !important;
+  }
+
+  .a-text-medium {
+    font-size: 0.875rem;
+  }
 }

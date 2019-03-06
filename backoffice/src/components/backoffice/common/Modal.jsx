@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from './Button';
 import './Modal.scss';
 
 export default class Modal extends React.Component {
 
     static propTypes = {
-        message: PropTypes.object.isRequired,
+        title: PropTypes.string.isRequired,
+        body: PropTypes.node.isRequired,
         onClose: PropTypes.func.isRequired,
         onConfirmed: PropTypes.func.isRequired,
     };
@@ -36,7 +38,7 @@ export default class Modal extends React.Component {
     }
 
     render() {
-        let { message, onClose, onConfirmed } = this.props;
+        let { title, body, onClose, onConfirmed } = this.props;
         let transitionClass = this.state.showTransition ? 'show' : '';
 
         return (
@@ -46,18 +48,20 @@ export default class Modal extends React.Component {
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">{message.title}</h5>
+                                <h5 className="modal-title">{title}</h5>
                             </div>
                             <div className="modal-body">
-                                <p>{message.text}</p>
+                                <p>{body}</p>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="cancel" onClick={onClose}>
-                                    Annuler
-                                </button>
-                                <button type="button" className="confirm" onClick={onConfirmed}>
-                                    Confirmer
-                                </button>
+                                <div className="d-flex justify-content-end">
+                                    <Button size="small" color="red" onClick={onClose} className="mr-2">
+                                        Annuler
+                                    </Button>
+                                    <Button size="large" color="blue" onClick={onConfirmed}>
+                                        Confirmer
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { searchAvis } from '../service/moderationService';
+import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
 import ReponseTitle from './components/summary/ReponseTitle';
 import Summary from '../../common/panel/Summary';
 import { Toolbar, Tab } from '../../common/panel/toolbar/Toolbar';
-import AvisResults from './components/AvisResults';
+import GlobalMessage from '../../common/message/GlobalMessage';
 import AvisTitle from './components/summary/AvisTitle';
 import { Pagination } from '../../common/panel/Pagination';
+import Avis from './components/avis/Avis';
+import ResultDivider from '../../common/panel/ResultDivider';
 
 export default class AvisReponsesPanel extends React.Component {
 
@@ -67,10 +69,10 @@ export default class AvisReponsesPanel extends React.Component {
             <Panel
                 header={
                     <div>
-                        <h1 className="title">Réponses des organimes</h1>
+                        <h1 className="title">Réponses des organismes</h1>
                         <p className="subtitle">
                             Ici, vous trouverez les réponses des organismes de formation adressées aux stagiaires ainsi
-                            que les avis signanlés par les organismes.
+                            que les avis signalés par les organismes.
                         </p>
                     </div>
                 }
@@ -125,14 +127,34 @@ export default class AvisReponsesPanel extends React.Component {
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
-                            <AvisResults
-                                results={results}
-                                refresh={() => this.search({ silent: true })}
-                                onNewQuery={onNewQuery}
-                                options={{
-                                    showStatus: false,
-                                    showReponse: query.status !== 'reported',
-                                }} />
+                            {this.state.message &&
+                            <GlobalMessage
+                                message={this.state.message}
+                                onClose={() => this.setState({ message: null })} />
+                            }
+                            {
+                                results.avis.map(avis => {
+                                    return (
+                                        <div key={avis._id}>
+                                            <Avis
+                                                avis={avis}
+                                                options={{
+                                                    showStatus: false,
+                                                    showReponse: query.status !== 'reported',
+                                                }}
+                                                onChange={(avis, options = {}) => {
+                                                    let { message } = options;
+                                                    if (message) {
+                                                        this.setState({ message });
+                                                    }
+                                                    this.search({ silent: true });
+                                                }}>
+                                            </Avis>
+                                            <ResultDivider />
+                                        </div>
+                                    );
+                                })
+                            }
                         </div>
 
                 }

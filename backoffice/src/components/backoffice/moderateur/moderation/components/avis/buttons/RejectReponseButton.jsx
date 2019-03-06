@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { rejectReponse } from '../../../../service/moderationService';
-import './RejectReponseButton.scss';
+import { rejectReponse } from '../../../moderationService';
+import Button from '../../../../../common/Button';
 
 export default class RejectReponseButton extends React.Component {
 
@@ -14,21 +14,23 @@ export default class RejectReponseButton extends React.Component {
         let { avis } = this.props;
 
         let updated = await rejectReponse(avis._id);
-        this.props.onChange(updated);
-    };
-
-    getDisableClass = () => {
-        return this.props.avis.reponse.status === 'rejected' ? 'disabled' : '';
+        this.props.onChange(updated, {
+            message: {
+                text: 'La réponse a été rejetée.',
+                type: 'local',
+            },
+        });
     };
 
     render() {
         return (
-            <button
-                type="button"
-                className={`RejectReponseButton btn ${this.getDisableClass()}`}
-                onClick={this.onClick}>
-                <i className="far fa-times-circle" />
-            </button>
+            <div className="RejectReponseButton">
+                <Button
+                    size="large" color="red" onClick={this.onClick} className="RejectReponseButton"
+                    disabled={this.props.avis.reponse.status === 'rejected'}>
+                    <i className="far fa-times-circle" />
+                </Button>
+            </div>
         );
     }
 }

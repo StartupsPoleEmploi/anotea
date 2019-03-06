@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import Stagiaire from './Stagiaire';
 import Titre from './Titre';
 import Commentaire from './Commentaire';
@@ -12,6 +13,7 @@ import RejectReponseButton from './buttons/RejectReponseButton';
 import PublishButton from './buttons/PublishButton';
 import RejectButton from './buttons/RejectButton';
 import EditButton from './buttons/EditButton';
+import LocalMessage from '../../../../common/message/LocalMessage';
 import './Avis.scss';
 
 export default class Avis extends React.Component {
@@ -25,6 +27,8 @@ export default class Avis extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            message: null,
+            onMessageClosed: () => ({}),
             showEdition: false,
         };
     }
@@ -35,50 +39,74 @@ export default class Avis extends React.Component {
         });
     };
 
+    handleChange = (newAvis, options = {}) => {
+        let { message } = options;
+        if (message && message.type === 'local') {
+            this.setState({
+                message,
+                onMessageClosed: () => this.props.onChange(newAvis, _.omit(options, ['message']))
+            });
+        } else {
+            this.props.onChange(newAvis, options);
+        }
+    };
+
     render() {
-        let { avis, onChange, options } = this.props;
-        let disabled = options.showReponse;
+        let { avis, options } = this.props;
+        let readonly = options.showReponse;
+        let disabledClass = this.state.message ? 'a-disabled' : '';
 
         return (
             <div className="Avis">
+                {this.state.message &&
+                <LocalMessage
+                    message={this.state.message}
+                    onClose={() => {
+                        this.setState({ message: null }, this.state.onMessageClosed);
+                    }} />
+                }
+
                 <div className="row">
-                    <div className="offset-md-1 col-3">
+                    <div className={`col-sm-3 offset-md-1 ${disabledClass}`}>
                         <Formation avis={avis} />
                     </div>
 
-                    <div className="col-6">
-                        <div className={`${disabled ? 'disabled' : ''}`}>
+                    <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
+                        <div className={`${readonly ? 'readonly' : ''}`}>
                             <div className="mb-3">
                                 <Stagiaire
                                     avis={avis}
                                     showStatus={options.showStatus}
-                                    disabled={disabled}
-                                    onChange={onChange} />
+                                    readonly={readonly}
+                                    onChange={this.handleChange} />
                             </div>
 
                             <div className="mb-1">
-                                <Titre avis={avis} disabled={disabled} onChange={onChange} />
+                                <Titre avis={avis} readonly={readonly} onChange={this.handleChange} />
                             </div>
 
                             <div className="mb-1">
                                 {this.state.showEdition ?
-                                    <Edition avis={avis} onChange={onChange} onClose={this.toggleEdition} /> :
-                                    <Commentaire avis={avis} onChange={onChange} />
+                                    <Edition
+                                        avis={avis}
+                                        onChange={this.handleChange}
+                                        onClose={this.toggleEdition} /> :
+                                    <Commentaire avis={avis} onChange={this.handleChange} />
                                 }
                             </div>
 
                             <div className="mt-2 d-none d-lg-block">
-                                <Notes avis={avis} disabled={disabled} />
+                                <Notes avis={avis} readonly={readonly} />
                             </div>
                         </div>
                     </div>
                     {
-                        !disabled && avis.comment &&
-                        <div className="col-1">
+                        !readonly && avis.comment &&
+                        <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
-                                <EditButton avis={avis} onChange={onChange} onEdit={this.toggleEdition} />
-                                <PublishButton avis={avis} onChange={onChange} />
-                                <RejectButton avis={avis} onChange={onChange} />
+                                <EditButton avis={avis} onChange={this.handleChange} onEdit={this.toggleEdition} />
+                                <PublishButton avis={avis} onChange={this.handleChange} />
+                                <RejectButton avis={avis} onChange={this.handleChange} />
                             </div>
                         </div>
                     }
@@ -86,18 +114,19 @@ export default class Avis extends React.Component {
                 {
                     options.showReponse && avis.reponse &&
                     <div className="row mt-3">
-                        <div className="offset-4 col-6">
+                        <div className={`offset-sm-3 offset-md-4 col-sm-7 col-md-6 ${disabledClass}`}>
                             <Reponse avis={avis} />
                         </div>
-                        <div className="col-1">
+                        <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
-                                <PublishReponseButton avis={avis} onChange={onChange} />
-                                <RejectReponseButton avis={avis} onChange={onChange} />
+                                <PublishReponseButton avis={avis} onChange={this.handleChange} />
+                                <RejectReponseButton avis={avis} onChange={this.handleChange} />
                             </div>
                         </div>
                     </div>
                 }
             </div>
+
         );
     }
 }

@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { searchOrganismes } from '../service/gestionOrganismesService';
-import Message from '../../common/Message';
-import Loader from '../../common/Loader';
-import Panel from '../../common/panel/Panel';
-import { Toolbar, Tab, SearchInputTab } from '../../common/panel/toolbar/Toolbar';
+import { searchOrganismes } from '../gestionOrganismesService';
+import GlobalMessage from '../../../common/message/GlobalMessage';
+import Loader from '../../../common/Loader';
+import Panel from '../../../common/panel/Panel';
+import { Toolbar, Tab, SearchInputTab } from '../../../common/panel/toolbar/Toolbar';
 import Organisme from './components/Organisme';
-import Summary from '../../common/panel/Summary';
-import { Pagination } from '../../common/panel/Pagination';
+import Summary from '../../../common/panel/Summary';
+import ExportButton from '../../../common/panel/ExportButton';
+import { Pagination } from '../../../common/panel/Pagination';
+import ResultDivider from '../../../common/panel/ResultDivider';
 import './OrganismePanel.scss';
 
 export default class OrganismePanel extends React.Component {
@@ -55,12 +57,7 @@ export default class OrganismePanel extends React.Component {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
                 let results = await searchOrganismes(this.props.query);
-                this.setState({ results, loading: false }, () => {
-                    if (options.goToTop) {
-                        window.scrollTo(0, 0);
-                    }
-                    return resolve();
-                });
+                this.setState({ results, loading: false }, () => resolve());
             });
         });
     };
@@ -83,25 +80,25 @@ export default class OrganismePanel extends React.Component {
                     <Toolbar>
                         <Tab
                             label="Actifs"
-                            onClick={() => onNewQuery({ activated: true })}
+                            onClick={() => onNewQuery({ status: 'active' })}
                             isDisabled={isTabsDisabled}
-                            isActive={() => !isTabsDisabled() && query.activated === 'true'} />
+                            isActive={() => !isTabsDisabled() && query.status === 'active'} />
 
                         <Tab
                             label="Inactifs"
-                            onClick={() => onNewQuery({ activated: false })}
+                            onClick={() => onNewQuery({ status: 'inactive' })}
                             isDisabled={isTabsDisabled}
-                            isActive={() => !isTabsDisabled() && query.activated === 'false'} />
+                            isActive={() => !isTabsDisabled() && query.status === 'inactive'} />
 
                         <Tab
                             label="Tous"
-                            onClick={() => onNewQuery({})}
+                            onClick={() => onNewQuery({ status: 'all' })}
                             isDisabled={isTabsDisabled}
-                            isActive={() => query.activated === undefined} />
+                            isActive={() => !isTabsDisabled() && query.status === 'all'} />
 
                         <SearchInputTab
                             label="Rechercher un organisme"
-                            onSubmit={siret => onNewQuery({ siret })}
+                            onSubmit={value => onNewQuery({ value })}
                             isActive={active => this.setState({ tabsDisabled: active })} />
                     </Toolbar>
                 }
@@ -123,25 +120,30 @@ export default class OrganismePanel extends React.Component {
                         <div className="d-flex justify-content-center"><Loader /></div> :
                         <div>
                             {this.state.message &&
-                            <Message message={this.state.message} onClose={() => {
-                                return this.setState({ message: null });
-                            }} />
+                            <GlobalMessage
+                                message={this.state.message}
+                                onClose={() => {
+                                    return this.setState({ message: null });
+                                }} />
                             }
+                            <ExportButton>
+
+                            </ExportButton>
                             {
-                                results.organismes.map((organisme, key) => {
+                                results.organismes.map(organisme => {
                                     return (
-                                        <Organisme
-                                            key={key}
-                                            organisme={organisme}
-                                            onChange={(avis, options = {}) => {
-                                                let { message } = options;
-                                                if (message) {
-                                                    this.setState({ message });
-                                                }
-                                                return this.search({
-                                                    silent: true, goToTop: !!options.message
-                                                });
-                                            }} />
+                                        <div key={organisme._id}>
+                                            <Organisme
+                                                organisme={organisme}
+                                                onChange={(avis, options = {}) => {
+                                                    let { message } = options;
+                                                    if (message) {
+                                                        this.setState({ message: message });
+                                                    }
+                                                    return this.search({ silent: true });
+                                                }} />
+                                            <ResultDivider />
+                                        </div>
                                     );
                                 })
                             }

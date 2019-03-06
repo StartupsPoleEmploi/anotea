@@ -4,7 +4,7 @@ import logo from './Header.svg';
 import './Header.scss';
 import { NavLink, Route } from 'react-router-dom';
 
-const Link = ({ label, url }) => {
+const Link = ({ label, url, className }) => {
     return (
         <NavLink
             to={url}
@@ -13,7 +13,7 @@ const Link = ({ label, url }) => {
                 let baseUrl = url.indexOf('?') === -1 ? url : url.split('?')[0];
                 return location.pathname.indexOf(baseUrl) !== -1;
             }}
-            className="nav-link"
+            className={className}
             activeClassName="active">
             {label}
         </NavLink>
@@ -23,6 +23,7 @@ const Link = ({ label, url }) => {
 Link.propTypes = {
     label: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
+    className: PropTypes.string.isRequired,
 };
 
 export default class Header extends React.Component {
@@ -36,10 +37,10 @@ export default class Header extends React.Component {
         return (
             <Route render={({ location }) => {
 
-                let isSecondary = location.pathname.indexOf('/admin/moderation/organismes') !== -1;
+                let isModeration = location.pathname.indexOf('/admin/moderateur/moderation/avis') !== -1;
 
                 return (
-                    <div className={`Header ${isSecondary ? 'organismes' : 'avis'}`}>
+                    <div className={`Header ${isModeration ? 'moderation' : 'gestion'}`}>
                         <div className="container">
                             <div className="row align-items-center">
                                 <div className="col-2">
@@ -48,19 +49,35 @@ export default class Header extends React.Component {
                                     </NavLink>
                                 </div>
                                 <div className="col-7">
-                                    <nav className="nav">
-                                        <Link
-                                            label="Avis stagiaires"
-                                            url="/admin/moderation/avis/stagiaires?page=0&status=none" />
-
-                                        <Link
-                                            label=" Réponses des organismes"
-                                            url="/admin/moderation/avis/reponses?page=0&reponseStatus=none" />
-
-                                        <Link
-                                            label="Gestion des organimes"
-                                            url="/admin/moderation/organismes?page=0&activated=true" />
-                                    </nav>
+                                    <ul className="nav">
+                                        <li className="nav-item dropdown">
+                                            <a
+                                                className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
+                                                data-toggle="dropdown"
+                                                href="#"
+                                                role="button"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                                Moderation
+                                            </a>
+                                            <div className="dropdown-menu">
+                                                <Link
+                                                    className="dropdown-item"
+                                                    label="Avis stagiaires"
+                                                    url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
+                                                <Link
+                                                    className="dropdown-item"
+                                                    label=" Réponses des organismes"
+                                                    url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
+                                            </div>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link
+                                                className="nav-link"
+                                                label="Gestion des organismes"
+                                                url="/admin/moderateur/gestion/organismes?page=0&status=active" />
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div className="col-3 text-right">
                                     <NavLink to="/mon-compte" className="account-link" activeClassName="active">
