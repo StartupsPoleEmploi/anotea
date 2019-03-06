@@ -16,7 +16,7 @@ module.exports = (logger, db, configuration) => {
         let total = 0;
         let output = fs.createWriteStream(path.join(__dirname, `../../../../.data/stagiaires-phoning.csv`));
 
-        output.write(`Nom;Prénom;Numéro de téléphone;Formation;Lien\n`);
+        output.write(`Nom;Prénom;Numéro de téléphone;Formation;Date de sortie;Lien\n`);
 
         db.collection('trainee').find({
             mailSent: true,
@@ -33,7 +33,7 @@ module.exports = (logger, db, configuration) => {
         }).transformStream({
             transform: stagiaire => {
                 const link = mailer(db, logger, configuration).getFormLink(stagiaire);
-                return `"${stagiaire.trainee.name}";"${stagiaire.trainee.firstName}";"${stagiaire.trainee.phoneNumbers[0]}";"${stagiaire.training.title};"${link}"\n`;
+                return `"${stagiaire.trainee.name}";"${stagiaire.trainee.firstName}";"${stagiaire.trainee.phoneNumbers[0]}";"${stagiaire.training.title}";"${moment(stagiaire.training.scheduledEndDate).format('DD/MM/YYYY')}";"${link}"\n`;
             }
         })
         .on('data', () => total++)
