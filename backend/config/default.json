@@ -101,6 +101,24 @@
             "notifications": false
           }
         }
+      },
+      {
+        "code_region": "13",
+        "name": "Martinique",
+        "filters": {
+          "code_financeurs": [
+            "-2"
+          ]
+        },
+        "mailing": {
+          "stagiaires": {
+            "avis": true
+          },
+          "organismes": {
+            "accounts": false,
+            "notifications": false
+          }
+        }
       }
     ]
   },
