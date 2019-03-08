@@ -119,24 +119,6 @@
             "notifications": false
           }
         }
-      },
-      {
-        "code_region": "14",
-        "name": "Normandie",
-        "filters": {
-          "code_financeurs": [
-            "-2"
-          ]
-        },
-        "mailing": {
-          "stagiaires": {
-            "avis": false
-          },
-          "organismes": {
-            "accounts": false,
-            "notifications": false
-          }
-        }
       }
     ]
   },
