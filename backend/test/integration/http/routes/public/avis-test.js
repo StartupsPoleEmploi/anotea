@@ -478,7 +478,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                         pattern: {},
                         value: 'INVALID',
                     },
-                    message: '"lieu_de_formation" with value "INVALID" fails to match the required pattern: /^(([0-8][0-9])|(9[0-5])|(2[ab]))[0-9]{3}$/',
+                    message: '"lieu_de_formation" with value "INVALID" fails to match the required pattern: /^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/',
                     path: [
                         'lieu_de_formation',
                     ],

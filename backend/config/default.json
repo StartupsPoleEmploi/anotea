@@ -103,6 +103,24 @@
         }
       },
       {
+        "code_region": "13",
+        "name": "Martinique",
+        "filters": {
+          "code_financeurs": [
+            "-2"
+          ]
+        },
+        "mailing": {
+          "stagiaires": {
+            "avis": true
+          },
+          "organismes": {
+            "accounts": false,
+            "notifications": false
+          }
+        }
+      },
+      {
         "code_region": "3",
         "name": "Bourgogne-Franche-Comté",
         "filters": {
