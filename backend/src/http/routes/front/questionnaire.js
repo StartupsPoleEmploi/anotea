@@ -17,7 +17,7 @@ module.exports = ({ db, logger, configuration }) => {
         db.collection('trainee').findOne({ token: req.params.token })
         .then(trainee => {
             if (!trainee) {
-                res.status(404).render('errors/404');
+                res.status(404).send({ error: 'not found' });
                 return;
             }
 
@@ -194,12 +194,16 @@ module.exports = ({ db, logger, configuration }) => {
                         let infos = await getInfosRegion(trainee);
                         res.send({ error: false, infos });
                     } else {
+                        console.log("ici");
                         throw new BadDataError();
                     }
                 } else {
+                    console.log("là");
                     throw new BadDataError();
                 }
             } catch (e) {
+                console.log("olala");
+                console.log(e);
                 throw new BadDataError();
             }
         }
