@@ -194,16 +194,12 @@ module.exports = ({ db, logger, configuration }) => {
                         let infos = await getInfosRegion(trainee);
                         res.send({ error: false, infos });
                     } else {
-                        console.log("ici");
                         throw new BadDataError();
                     }
                 } else {
-                    console.log("là");
                     throw new BadDataError();
                 }
             } catch (e) {
-                console.log("olala");
-                console.log(e);
                 throw new BadDataError();
             }
         }
