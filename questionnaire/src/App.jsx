@@ -35,8 +35,8 @@ class App extends Component {
                     }
 
                     <Switch>
-                        <Route path="/:token" exact render={props => (<Questionnaire token={props.match.params.token} setStagiaire={this.setStagiaire} showRemerciements={this.showRemerciements} />)} />
-                        <Route path="/:token/remerciements" exact render={() => (<Remerciements stagiaire={this.state.stagiaire} infosRegion={this.state.infosRegion} />)} />
+                        <Route path={`${process.env.PUBLIC_URL}/:token`} exact render={props => (<Questionnaire token={props.match.params.token} setStagiaire={this.setStagiaire} showRemerciements={this.showRemerciements} />)} />
+                        <Route path={`${process.env.PUBLIC_URL}/:token/remerciements`} exact render={() => (<Remerciements stagiaire={this.state.stagiaire} infosRegion={this.state.infosRegion} />)} />
                         <Route component={NoMatch} />
                     </Switch>
                 </div>
