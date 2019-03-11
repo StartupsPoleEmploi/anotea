@@ -31,7 +31,7 @@ class App extends Component {
             <Router>
                 <div>
                     {this.state.toRemerciements === true &&
-                        <Redirect to={`/${this.state.stagiaire.token}/remerciements`} />
+                        <Redirect to={`${process.env.PUBLIC_URL}/${this.state.stagiaire.token}/remerciements`} />
                     }
 
                     <Switch>
