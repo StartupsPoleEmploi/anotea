@@ -12,7 +12,8 @@ class Note extends Component {
         description: PropTypes.string.isRequired,
         parity: PropTypes.string.isRequired,
         onSelect: PropTypes.func.isRequired,
-        index: PropTypes.number.isRequired
+        index: PropTypes.number.isRequired,
+        value: PropTypes.number
     };
 
     render() {
@@ -20,7 +21,7 @@ class Note extends Component {
             <div className={`note ${this.props.parity}`}>
                 <span className="title">{this.props.title}</span>
                 <span className="description">{this.props.description}</span>
-                <Stars onSelect={this.props.onSelect} index={this.props.index} />
+                <Stars onSelect={this.props.onSelect} index={this.props.index} value={this.props.value} />
             </div>
         );
     }
