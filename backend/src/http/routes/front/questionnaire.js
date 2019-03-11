@@ -17,7 +17,7 @@ module.exports = ({ db, logger, configuration }) => {
         db.collection('trainee').findOne({ token: req.params.token })
         .then(trainee => {
             if (!trainee) {
-                res.status(404).render('errors/404');
+                res.status(404).send({ error: 'not found' });
                 return;
             }
 

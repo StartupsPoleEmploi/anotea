@@ -65,7 +65,7 @@ class Notes extends Component {
 
     getItems = () => {
         return items.map((item, index) =>
-            <Note key={index} index={index} title={item.title} description={item.description} parity={index % 2 === 0 ? 'even' : 'odd'} onSelect={this.onSelect} />
+            <Note key={index} index={index} title={item.title} description={item.description} parity={index % 2 === 0 ? 'even' : 'odd'} value={this.state.notes[index] ?this.state.notes[index].value : 0 } onSelect={this.onSelect} />
         );
     }
 

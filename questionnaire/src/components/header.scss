@@ -1,7 +1,7 @@
 @import '../styles/variables';
 
 .header {
-    left: -50px;
+    width: 520px;
     position: relative;
     text-align: center;
 
@@ -18,9 +18,10 @@
 	}
 
 	h2 {
-	    width: 621px;
+        width: 500px;
 	    color: $color-black;
-	    font-size: 1rem;
-	    line-height: 24px;
+        font-size: 1rem;
+        line-height: 24px;
+        margin-left: 10px;
 	}
 }
