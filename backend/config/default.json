@@ -112,7 +112,7 @@
         },
         "mailing": {
           "stagiaires": {
-            "avis": false
+            "avis": true
           },
           "organismes": {
             "accounts": false,
