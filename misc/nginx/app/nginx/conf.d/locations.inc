@@ -13,7 +13,7 @@ location /admin  {
 }
 
 
-location /questionnaire/  {
+location /questionnaire  {
 
     limit_req zone=flood burst=100 nodelay;
 
