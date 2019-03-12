@@ -30,7 +30,7 @@ export default class Organisme extends React.Component {
         let isInactive = organisme.status === 'inactive';
 
         return (
-            <div className="Organisme row">
+            <div className="Organisme row align-items-center">
                 <div className="col-sm-3 offset-md-1">
                     <p className="raison-sociale">{organisme.raisonSociale}</p>
                     <p className="siret">{organisme.meta.siretAsString}</p>
