@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
-const { newOrganismeAccount, newComment } = require('../../../../helpers/data/dataset');
+const { newOrganismeAccount, newModerateurAccount, newComment } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
 const computeOrganismesScore = require('../../../../../src/jobs/import/organismes/computeOrganismesScore');
 
@@ -45,18 +45,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 meta: {
                     siretAsString: '22222222222222'
                 },
-            })), ['score']),
+            }), ['score'])),
         ]);
 
         let stats = await computeOrganismesScore(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
-        assert.deepEqual(stats, {
+        assert.deepStrictEqual(stats, {
             total: 1,
             updated: 1,
             invalid: 0,
         });
-        assert.deepEqual(doc.score, {
+        assert.deepStrictEqual(doc.score, {
             nb_avis: 2,
             notes: {
                 accompagnement: 1,
@@ -68,6 +68,23 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             }
         });
     });
+
+    it('should not compute score for moderateur', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            prepareDatabase(),
+            insertIntoDatabase('accounts', newModerateurAccount({
+                courriel: 'admin@pole-emploi.fr',
+            })),
+        ]);
+
+        await computeOrganismesScore(db, logger);
+
+        let doc = await db.collection('accounts').findOne({ courriel: 'admin@pole-emploi.fr' });
+        assert.deepStrictEqual(doc.score, undefined);
+    });
+
 
     it('should use rejected avis to compute score', async () => {
 
@@ -102,7 +119,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await computeOrganismesScore(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
-        assert.deepEqual(doc.score, {
+        assert.deepStrictEqual(doc.score, {
             nb_avis: 3,
             notes: {
                 accompagnement: 1,
@@ -132,7 +149,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await computeOrganismesScore(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 44444444444444 });
-        assert.deepEqual(doc.score, {
+        assert.deepStrictEqual(doc.score, {
             nb_avis: 0,
         });
     });
