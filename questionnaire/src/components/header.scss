@@ -5,12 +5,6 @@
     position: relative;
     text-align: center;
 
-	.logo {
-	    left: 670px;
-	    position: relative;
-	    top: 110px;
-	}
-
 	h1 {
 		color: $color-blue;
 		font-size: 2rem;
@@ -23,5 +17,26 @@
         font-size: 1rem;
         line-height: 24px;
         margin-left: 10px;
-	}
+            
+        p {
+            span {
+                text-transform: capitalize;
+            }
+        }
+    }
+}
+
+@media screen and (min-width:1024px) {
+
+    #root {
+        margin-top: 50px;
+    }
+
+    .header {
+        .logo {
+            position: fixed;
+            top: 50px;
+            right: 50px;
+        }
+    }
 }

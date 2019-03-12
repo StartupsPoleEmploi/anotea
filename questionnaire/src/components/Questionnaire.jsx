@@ -33,7 +33,8 @@ class Questionnaire extends Component {
         accord: false,
         accordEntreprise: false,
         error: null,
-        formError: null
+        formError: null,
+        clicked: false
     }
 
     static propTypes = {
@@ -68,7 +69,11 @@ class Questionnaire extends Component {
     }
 
     openModal = () => {
-        this.setState({ modalOpen: true });
+        if (this.state.isValid) {
+            this.setState({ modalOpen: true });
+        } else {
+            this.setState({ clicked: true });
+        }
     }
 
     closeModal = () => {
@@ -118,7 +123,7 @@ class Questionnaire extends Component {
                     <div>
                         <Header stagiaire={this.state.stagiaire} />
 
-                        <Notes setValid={this.setValid} />
+                        <Notes setValid={this.setValid} clicked={this.state.clicked} />
 
                         {this.state.isValid &&
                             <Commentaire onChange={this.updateCommentaire} />
@@ -126,7 +131,7 @@ class Questionnaire extends Component {
 
                         <Autorisations onChange={this.updateAccord}/>
 
-                        <SendButton enabled={this.state.isValid && !this.state.badwords} onSend={this.openModal} />
+                        <SendButton enabled={!this.state.badwords} onSend={this.openModal} />
 
                         { this.state.formError === 'bad data' &&
                             <ErrorAlert />

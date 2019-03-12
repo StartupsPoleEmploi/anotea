@@ -17,7 +17,6 @@
 
         .link {
             width: 30%;
-            float: left;
             margin: 20px 10px 0px 10px;
             background-color: $color-blue-10;
             border-radius: 5px;
@@ -49,6 +48,33 @@
             line-height: 21px;
             color: $color-black;
             margin-bottom: 2em;
+        }
+    }
+}
+
+@media screen and (max-width:1024px) {
+    .panel-remerciements {
+
+        .links-block {
+
+            .link {
+                margin: auto;
+                color: red;
+                margin-top: 15px;
+            }
+        }
+    }
+}
+
+@media screen and (min-width:1024px) {
+    .panel-remerciements {
+
+        .links-block {
+
+            .link {
+                color: green;
+                float: left;
+            }
         }
     }
 }
