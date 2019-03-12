@@ -108,8 +108,8 @@ export default class OrganismePanel extends React.Component {
                         empty="Pas d'organisme pour le moment"
                         title={
                             <div>
-                                <span className="name">Organismes</span>
-                                <span className="type"> {query.activated ? 'actifs' : 'inactifs'}</span>
+                                <span className="name">Tous les organismes</span>
+                                <span className="type"> {query.status === 'all' ? '' : query.status === 'active' ? 'Actifs' : 'Inactifs'} </span>
                             </div>
                         }>
 
