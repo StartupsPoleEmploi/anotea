@@ -1,5 +1,7 @@
 @import '../../../../styles/variables';
 
 .ResultDivider {
-  border-bottom: 2px solid $color-grey-5;
+  .divider {
+    border-bottom: 2px solid $color-grey-5;
+  }
 }
