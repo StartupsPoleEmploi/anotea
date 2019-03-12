@@ -37,6 +37,10 @@
         .modal-footer {
           padding-top: 0;
           border-top: none;
+
+          button {
+            margin-bottom: 0;
+          }
         }
       }
     }
