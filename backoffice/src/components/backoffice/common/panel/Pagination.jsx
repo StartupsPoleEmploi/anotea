@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Pagination.scss';
 
-export class Pagination extends React.Component {
+export default class Pagination extends React.Component {
 
     static propTypes = {
         pagination: PropTypes.object.isRequired,
@@ -71,20 +71,6 @@ export class Pagination extends React.Component {
                     </ul>
                 </div>
             </div>
-        );
-    }
-}
-
-export class PaginationSummary extends React.Component {
-
-    static propTypes = {
-        pagination: PropTypes.object.isRequired,
-    };
-
-    render() {
-        let { totalItems, itemsOnThisPage } = this.props.pagination;
-        return (
-            <span>{itemsOnThisPage} avis affiché(s) sur {totalItems}</span>
         );
     }
 }
