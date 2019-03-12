@@ -21,7 +21,7 @@
         position: relative;
 
         &.active {
-          border: 1px solid $color-grey-25;
+          border: 1px solid $color-grey-5;
           color: $color-black;
           background-color: $color-grey-5;
           font-weight: $font-weight-700;
@@ -65,7 +65,6 @@
           letter-spacing: 0.3px;
           line-height: 1.187rem;
           padding: 0.5rem 1rem 0.4rem 1rem;
-
         }
 
         &.nav-search {
@@ -73,6 +72,10 @@
           background-color: $color-white;
           border-bottom-right-radius: 6px;
           border-top-right-radius: 6px;
+
+          &:hover, &:focus {
+            background-color: $color-white;
+          }
 
           .input-group {
             opacity: 0.6;
@@ -93,6 +96,10 @@
               background-color: $color-white;
               border: none;
               box-shadow: none;
+            }
+
+            .form-control {
+              padding-left: 0;
             }
 
             .cancel {
@@ -116,6 +123,10 @@
 
             &.active {
               opacity: 1;
+            }
+
+            &:hover {
+              background-color: $color-grey-5;
             }
           }
         }
