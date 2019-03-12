@@ -121,7 +121,7 @@ export default class AvisReponsesPanel extends React.Component {
                                 empty="Pas d'avis pour le moment"
                                 title={<AvisTitle query={query} results={results} />} /> :
                             <Summary
-                                paginationLabel="avis"
+                                paginationLabel="réponse(s)"
                                 pagination={results.meta.pagination}
                                 empty="Pas de réponses pour le moment"
                                 title={<ReponseTitle query={query} />} />
