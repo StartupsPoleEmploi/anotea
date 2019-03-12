@@ -40,4 +40,27 @@
         margin-left: 390px;
         margin-top: -60px;
     }
+
+    .note-container {
+        .fas.fa-times {
+            display: none;
+        }
+    }
+
+    .note-container.missing {
+        .fas.fa-times {
+            display: inherit;
+            color: $color-red;
+            float: left;
+            position: relative;
+            left: -20px;
+            top: 40px;
+        }
+
+        .note {
+            border: 1px solid $color-red;
+            background-color: $color-red-10;
+            margin: 3px;
+        }
+    }
 }
