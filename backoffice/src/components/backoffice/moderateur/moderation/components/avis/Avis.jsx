@@ -28,7 +28,7 @@ export default class Avis extends React.Component {
         super(props);
         this.state = {
             message: null,
-            onMessageClosed: () => ({}),
+            propagateChanges: () => ({}),
             showEdition: false,
         };
     }
@@ -44,7 +44,7 @@ export default class Avis extends React.Component {
         if (message && message.type === 'local') {
             this.setState({
                 message,
-                onMessageClosed: () => this.props.onChange(newAvis, _.omit(options, ['message']))
+                propagateChanges: () => this.props.onChange(newAvis, _.omit(options, ['message']))
             });
         } else {
             this.props.onChange(newAvis, options);
@@ -61,9 +61,7 @@ export default class Avis extends React.Component {
                 {this.state.message &&
                 <LocalMessage
                     message={this.state.message}
-                    onClose={() => {
-                        this.setState({ message: null }, this.state.onMessageClosed);
-                    }} />
+                    onClose={async () => await this.state.propagateChanges()} />
                 }
 
                 <div className="row">
