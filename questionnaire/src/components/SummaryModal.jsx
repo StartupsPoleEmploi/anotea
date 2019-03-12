@@ -26,7 +26,7 @@ class SummaryModal extends Component {
             width: '60%',
             margin: 'auto',
             marginTop: '25%',
-            height: '310px',
+            overflow: 'auto',
             backgroundColor: 'white',
             padding: '15px',
             borderRadius: '5px',
@@ -72,7 +72,7 @@ class SummaryModal extends Component {
                         {
                             items.map((item, index) => {
                                 return (
-                                    <li className={`col-sm-2 ${index % 2 === 0 ? 'even' : 'odd'}`} key={index}>
+                                    <li className={`col ${index % 2 === 0 ? 'even' : 'odd'}`} key={index}>
                                         <h3>{item.title}</h3>
                                         <span>{this.props.notes[index].value}/5 <i className="fas fa-star" /></span>
                                     </li>
@@ -85,6 +85,8 @@ class SummaryModal extends Component {
                 <div className="buttons">
                     <a className="cancel" onClick={this.props.closeModal}>Annuler</a> <SendButton enabled={true} onSend={this.props.submit} text="Confirmer" />
                 </div>
+
+                <div className="clear"></div>
             </Modal>
         );
     }

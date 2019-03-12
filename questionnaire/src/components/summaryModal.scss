@@ -8,14 +8,13 @@
     }
 
     .summary {
-        height: 160px;
         border: 1px solid $color-grey-25;
         box-shadow: $shadow;
         border-radius: 5px;
         width: auto;
 
         .header-summary {
-            height: 109px;
+            margin-bottom: 10px;
             
             .stars {
                 margin-top: -10px;
@@ -24,6 +23,7 @@
 
         ul.note-list {
             padding: 0;
+            margin-bottom: 0;
 
             li:first-child {
                 border-left: none;
@@ -34,6 +34,7 @@
                 border: 1px solid $color-grey-25;
                 border-right: none;
                 height: 50px;
+                min-width: 125px;
 
                 h3 {
                     margin: 0px;
@@ -72,6 +73,10 @@
         .send-button {
             display: inline;
         }
+    }
+
+    .clear {
+        clear: both;
     }
 }
 
