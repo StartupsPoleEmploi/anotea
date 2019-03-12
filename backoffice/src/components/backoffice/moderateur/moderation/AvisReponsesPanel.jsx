@@ -113,15 +113,16 @@ export default class AvisReponsesPanel extends React.Component {
                     </Toolbar>
                 }
                 summary={
-                    query.status === 'reported' ?
-                        <Summary
-                            pagination={results.meta.pagination}
-                            empty="Pas d'avis pour le moment"
-                            title={<AvisTitle query={query} results={results} />} /> :
-                        <Summary
-                            pagination={results.meta.pagination}
-                            empty="Pas de réponses pour le moment"
-                            title={<ReponseTitle query={query} />} />
+                    this.state.loading ? <div /> :
+                        query.status === 'reported' ?
+                            <Summary
+                                pagination={results.meta.pagination}
+                                empty="Pas d'avis pour le moment"
+                                title={<AvisTitle query={query} results={results} />} /> :
+                            <Summary
+                                pagination={results.meta.pagination}
+                                empty="Pas de réponses pour le moment"
+                                title={<ReponseTitle query={query} />} />
                 }
                 results={
                     this.state.loading ?

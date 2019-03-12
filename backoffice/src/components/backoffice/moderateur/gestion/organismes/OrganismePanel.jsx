@@ -103,17 +103,23 @@ export default class OrganismePanel extends React.Component {
                     </Toolbar>
                 }
                 summary={
-                    <Summary
-                        pagination={results.meta.pagination}
-                        empty="Pas d'organisme pour le moment"
-                        title={
-                            <div>
-                                <span className="name">Tous les organismes</span>
-                                <span className="type"> {query.status === 'all' ? '' : query.status === 'active' ? 'Actifs' : 'Inactifs'} </span>
-                            </div>
-                        }>
+                    this.state.loading ? <div /> :
+                        <Summary
+                            pagination={results.meta.pagination}
+                            empty="Pas d'organisme pour le moment"
+                            title={
+                                <div>
+                                    <span className="name">Tous les organismes</span>
+                                    {
+                                        query.status === 'all' ? <span /> :
+                                            <span className="type">
+                                                {query.status === 'active' ? ' actifs' : ' inactifs'}
+                                            </span>
+                                    }
+                                </div>
+                            }>
 
-                    </Summary>
+                        </Summary>
                 }
                 results={
                     this.state.loading ?
@@ -126,9 +132,6 @@ export default class OrganismePanel extends React.Component {
                                     return this.setState({ message: null });
                                 }} />
                             }
-                            <ExportButton>
-
-                            </ExportButton>
                             {
                                 results.organismes.map(organisme => {
                                     return (
