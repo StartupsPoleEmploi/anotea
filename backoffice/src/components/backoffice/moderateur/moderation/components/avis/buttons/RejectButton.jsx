@@ -40,11 +40,11 @@ export default class RejectButton extends React.Component {
             <Modal
                 title="Rejeter cet avis pour injure"
                 body={
-                    <div>
+                    <span>
                         Le <b>rejet pour injure</b> entraîne <b>l&apos;envoi d&apos;un email </b> automatique au
                         stagiaire pour l&apos;informer que le <b>commentaire ne sera pas publié</b>. Confirmez-vous
                         cette demande ?
-                    </div>
+                    </span>
                 }
                 onClose={this.handleCancel}
                 onConfirmed={() => this.reject(this.props.avis, 'injure')} />
