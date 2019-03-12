@@ -8,7 +8,6 @@ import Panel from '../../../common/panel/Panel';
 import { Toolbar, Tab, SearchInputTab } from '../../../common/panel/toolbar/Toolbar';
 import Organisme from './components/Organisme';
 import Summary from '../../../common/panel/Summary';
-import ExportButton from '../../../common/panel/ExportButton';
 import { Pagination } from '../../../common/panel/Pagination';
 import ResultDivider from '../../../common/panel/ResultDivider';
 import './OrganismePanel.scss';
@@ -98,7 +97,7 @@ export default class OrganismePanel extends React.Component {
 
                         <SearchInputTab
                             label="Rechercher un organisme"
-                            onSubmit={value => onNewQuery({ value })}
+                            onSubmit={search => onNewQuery({ search })}
                             isActive={active => this.setState({ tabsDisabled: active })} />
                     </Toolbar>
                 }

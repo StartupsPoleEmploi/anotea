@@ -169,7 +169,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         ]);
 
         let response = await request(app)
-        .get(`/api/backoffice/moderateur/organismes?value=33333333333333`)
+        .get(`/api/backoffice/moderateur/organismes?search=33333333333333`)
         .set('authorization', `Bearer ${token}`)
         .send({ email: 'edited@pole-emploi.fr' });
 
@@ -178,6 +178,63 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepStrictEqual(response.body.organismes[0]._id, 33333333333333);
     });
 
+    it('can search organismes by raison sociale', async () => {
+
+        let app = await startServer();
+        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 11111111111111,
+                raisonSociale: 'Anotea',
+            })),
+
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+                raisonSociale: 'Anotea Misc',
+            })),
+
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 33333333333333,
+                raisonSociale: 'Pole Emploi',
+            })),
+        ]);
+
+        let response = await request(app)
+        .get(`/api/backoffice/moderateur/organismes?search=Anotea`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ email: 'edited@pole-emploi.fr' });
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.organismes.length, 2);
+        assert.deepStrictEqual(response.body.organismes[0]._id, 11111111111111);
+        assert.deepStrictEqual(response.body.organismes[1]._id, 22222222222222);
+    });
+
+    it('can search organismes by courriel', async () => {
+
+        let app = await startServer();
+        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 11111111111111,
+                courriel: 'contact@anotea.fr',
+            })),
+
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 33333333333333,
+                courriel: 'contact@poleemploi-formation.fr',
+            })),
+        ]);
+
+        let response = await request(app)
+        .get(`/api/backoffice/moderateur/organismes?search=contact@anotea.fr`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ email: 'edited@pole-emploi.fr' });
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.organismes.length, 1);
+        assert.deepStrictEqual(response.body.organismes[0]._id, 11111111111111);
+    });
 
     it('can edit email', async () => {
 
