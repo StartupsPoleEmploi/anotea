@@ -133,6 +133,29 @@ export default class OrganismePanel extends React.Component {
                                 }} />
                             }
                             {
+                                <div className="row">
+                                    <div className="col-sm-3 offset-md-1">
+                                        <p className="column-title d-none d-sm-block">Nom et SIRET</p>
+                                    </div>
+
+                                    <div className="col-2">
+                                        <p className="column-title d-none d-sm-block">Statut</p>
+                                    </div>
+
+                                    <div className="col-1">
+                                        <p className="column-title d-none d-sm-block">Avis</p>
+                                    </div>
+
+                                    <div className="col-xs-8 col-sm-4 col-md-3">
+                                        <p className="column-title d-none d-sm-block">Contact</p>
+                                    </div>
+
+                                    <div className="col-sm-2 col-md-1">
+                                        <p className="column-title d-none d-sm-block">&nbsp;</p>
+                                    </div>
+                                </div>
+                            }
+                            {
                                 results.organismes.map(organisme => {
                                     return (
                                         <div key={organisme._id}>
