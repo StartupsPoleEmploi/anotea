@@ -1,18 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PaginationSummary } from './Pagination';
 import './Summary.scss';
 
 export default class Summary extends React.Component {
 
     static propTypes = {
         pagination: PropTypes.object.isRequired,
-        empty: PropTypes.string.isRequired,
-        title: PropTypes.object.isRequired,
+        paginationLabel: PropTypes.node.isRequired,
+        title: PropTypes.node.isRequired,
+        empty: PropTypes.node.isRequired,
     };
 
     render() {
-        let { pagination, empty, title } = this.props;
+        let { pagination, paginationLabel, empty, title } = this.props;
+        let { totalItems, itemsOnThisPage } = this.props.pagination;
 
         if (pagination.totalItems === 0) {
             return (<p className="Summary">{empty}</p>);
@@ -25,7 +26,7 @@ export default class Summary extends React.Component {
                 </div>
 
                 <span className="pages col-sm-4 col-md-3 text-right">
-                    <PaginationSummary pagination={pagination} />
+                     <span>{itemsOnThisPage} {paginationLabel} affiché(s) sur {totalItems}</span>
                 </span>
             </div>
         );

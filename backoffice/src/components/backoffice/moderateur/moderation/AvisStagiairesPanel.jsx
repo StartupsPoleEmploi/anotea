@@ -7,10 +7,10 @@ import Panel from '../../common/panel/Panel';
 import AvisTitle from './components/summary/AvisTitle';
 import { Toolbar, Tab, SearchInputTab } from '../../common/panel/toolbar/Toolbar';
 import Summary from '../../common/panel/Summary';
-import { Pagination } from '../../common/panel/Pagination';
+import Pagination from '../../common/panel/Pagination';
 import Avis from './components/avis/Avis';
 import ResultDivider from '../../common/panel/ResultDivider';
-import GlobalMessage from "../../common/message/GlobalMessage";
+import GlobalMessage from '../../common/message/GlobalMessage';
 
 export default class AvisStagiairesPanel extends React.Component {
 
@@ -117,10 +117,12 @@ export default class AvisStagiairesPanel extends React.Component {
                     </Toolbar>
                 }
                 summary={
-                    <Summary
-                        pagination={results.meta.pagination}
-                        empty="Pas d'avis pour le moment"
-                        title={<AvisTitle query={query} results={results} />} />
+                    this.state.loading ? <div /> :
+                        <Summary
+                            paginationLabel="avis"
+                            pagination={results.meta.pagination}
+                            empty="Pas d'avis pour le moment"
+                            title={<AvisTitle query={query} results={results} />} />
                 }
                 results={
                     this.state.loading ?

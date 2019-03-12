@@ -16,7 +16,9 @@ export class Alert extends React.Component {
 
         return (
             <div className={`Alert alert alert-dismissible fade ${transitionClass}`} role="alert">
+                {message.title &&
                 <h4 className="alert-heading title">{message.title}</h4>
+                }
                 <span>{message.text}</span>
 
                 <button

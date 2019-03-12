@@ -21,9 +21,9 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
     router.get('/backoffice/moderateur/organismes', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { status, value, page } = await Joi.validate(req.query, {
+        let { status, search, page } = await Joi.validate(req.query, {
             status: Joi.string().allow(['all', 'active', 'inactive']).default('all'),
-            value: Joi.string(),
+            search: Joi.string(),
             page: Joi.number().min(0).default(0),
         }, { abortEarly: false });
 
@@ -31,7 +31,12 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         .find({
             profile: 'organisme',
             codeRegion: codeRegion,
-            ...(value ? { $or: [ { 'meta.siretAsString': value }, { courriel: value }, {raisonSociale: value} ] } : {}),
+            ...(search ? {
+                $or: [
+                    { 'meta.siretAsString': search },
+                    { 'courriel': search },
+                    { 'raisonSociale': new RegExp(search) }]
+            } : {}),
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
         })
         //.sort({ updateDate: -1 })

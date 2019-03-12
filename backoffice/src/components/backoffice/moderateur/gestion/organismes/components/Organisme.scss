@@ -4,16 +4,6 @@
 
   padding-top: 1rem;
 
-  .title {
-    opacity: 0.87;
-    color: $color-grey-50;
-    font-size: 0.75rem;
-    font-weight: $font-weight-700;
-    line-height: 1rem;
-    letter-spacing: 0.38px;
-    text-transform: uppercase;
-  }
-
   .raison-sociale {
     opacity: 0.87;
     color: $color-black;
@@ -55,6 +45,7 @@
     color: $color-black;
     font-size: 0.875rem;
     line-height: 1.25rem;
+    overflow-wrap: break-word;
   }
 
   .btn-group-vertical {
