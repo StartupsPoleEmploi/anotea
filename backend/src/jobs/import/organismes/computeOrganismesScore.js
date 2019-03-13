@@ -1,6 +1,6 @@
 module.exports = async (db, logger) => {
 
-    let cursor = db.collection('accounts').find();
+    let cursor = db.collection('accounts').find({ profile: 'organisme' });
     const computeScore = async siret => {
         let results = await db.collection('comment').aggregate([
             {
