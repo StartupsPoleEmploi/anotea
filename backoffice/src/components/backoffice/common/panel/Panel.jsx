@@ -7,6 +7,7 @@ const Panel = ({ header, toolbar, summary, results, pagination, className }) => 
     return (
         <div className={`Panel mb-0 ${className}`}>
 
+            {header &&
             <div className="header">
                 <div className="container">
                     <div className="row justify-content-center">
@@ -16,6 +17,7 @@ const Panel = ({ header, toolbar, summary, results, pagination, className }) => 
                     </div>
                 </div>
             </div>
+            }
 
             <div className="container">
                 <div className="toolbar sticky-top">
