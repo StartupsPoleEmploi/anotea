@@ -40,7 +40,7 @@ export default class Header extends React.Component {
                 let isModeration = location.pathname.indexOf('/admin/moderateur/moderation/avis') !== -1;
 
                 return (
-                    <div className={`Header ${isModeration ? 'moderation' : 'gestion'}`}>
+                    <div className={`Header ${isModeration ? 'moderation' : 'misc'}`}>
                         <div className="container">
                             <div className="row align-items-center">
                                 <div className="col-2">

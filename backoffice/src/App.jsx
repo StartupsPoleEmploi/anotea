@@ -5,7 +5,6 @@ import { addLocaleData, IntlProvider } from 'react-intl';
 import jwtDecode from 'jwt-decode';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { removeToken, setToken } from './utils/token';
-import { getRegion } from './components/backoffice/financeur/service/financeurService';
 import { subscribeToHttpEvent } from './utils/http-client';
 import DeprecatedHeader from './components/backoffice/common/deprecated/DeprecatedHeader';
 import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel.jsx';
@@ -15,7 +14,7 @@ import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
-import { MyAccount } from './components/backoffice/account/MyAccount';
+import MonComptePanel from './components/backoffice/account/MonComptePanel';
 import GridDisplayer from './components/backoffice/common/helpers/GridDisplayer';
 import Header from './components/backoffice/common/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
@@ -213,7 +212,7 @@ class App extends Component {
 
                         <Route
                             path="/mon-compte"
-                            render={props => (<MyAccount {...props} />)} />
+                            render={props => (<MonComptePanel {...props} />)} />
 
                         <Route
                             path="/admin"
