@@ -2,6 +2,7 @@ const express = require('express');
 const Boom = require('boom');
 const uuid = require('node-uuid');
 const Joi = require('joi');
+const _ = require('lodash');
 const configuration = require('config');
 const { tryAndCatch } = require('../../routes-utils');
 
@@ -19,7 +20,7 @@ module.exports = ({ db, auth, middlewares }) => {
         }
     });
 
-    const buildAccount = async data => {
+    let buildAccount = async data => {
         return {
             _id: parseInt(data.siret),
             SIRET: parseInt(data.siret),
@@ -40,7 +41,17 @@ module.exports = ({ db, auth, middlewares }) => {
         };
     };
 
-    router.post('/backoffice/generate-auth-url', tryAndCatch(checkAuth), tryAndCatch(async (req, res) => {
+    let getAccessToken = async organisme => {
+        let token = await auth.buildJWT('backoffice', {
+            sub: organisme.meta.siretAsString,
+            profile: 'organisme',
+            id: organisme._id,
+            raisonSociale: organisme.raisonSociale,
+        });
+        return token.access_token;
+    };
+
+    let generateAuthUrlRoute = tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.body, {
             siret: Joi.string().required(),
@@ -57,15 +68,10 @@ module.exports = ({ db, auth, middlewares }) => {
             await collection.insertOne(organisme);
         }
 
-        let token = await auth.buildJWT('backoffice', {
-            sub: organisme.meta.siretAsString,
-            profile: 'organisme',
-            id: organisme._id,
-            raisonSociale: organisme.raisonSociale,
-        });
+        let accessToken = await getAccessToken(organisme);
 
-        res.json({
-            url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&access_token=${token.access_token}`,
+        return res.json({
+            url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&access_token=${accessToken}`,
             meta: {
                 organisme: {
                     siret: organisme.meta.siretAsString,
@@ -74,7 +80,12 @@ module.exports = ({ db, auth, middlewares }) => {
                 },
             }
         });
-    }));
+    });
+
+    //Deprecated route
+    router.post('/backoffice/generate-auth-url', checkAuth, generateAuthUrlRoute);
+
+    router.post('/kairos/generate-auth-url', checkAuth, generateAuthUrlRoute);
 
     return router;
 };
