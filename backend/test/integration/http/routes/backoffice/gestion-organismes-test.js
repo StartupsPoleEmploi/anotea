@@ -190,7 +190,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 22222222222222,
-                raisonSociale: 'Anotea Misc',
+                raisonSociale: 'anotea Misc',
             })),
 
             insertIntoDatabase('accounts', newOrganismeAccount({
