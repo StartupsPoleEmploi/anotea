@@ -95,7 +95,7 @@ export default class Stars extends React.PureComponent {
                 {
                     this.state.starArray.map((star, index) =>
                         <div className="star-block" key={index}>
-                            <span
+                            <button
                                 className={`star ${this.getStar(index)}`}
                                 style={this.props.starsStyle ? this.props.starsStyle : { width: '20px' }}
                                 onMouseOver={this.updateHoverState.bind(this, index)}
