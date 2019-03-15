@@ -54,10 +54,6 @@ module.exports = function(db, logger, configuration) {
         return carif.courriel !== undefined ? carif.courriel : configuration.smtp.from;
     };
 
-    const getFrom = () => {
-        return `Anotea <${configuration.smtp.from}>`;
-    };
-
     const getReplyTo = carif => {
         return `Anotea <${getContact(carif)}>`;
     };
@@ -92,7 +88,7 @@ module.exports = function(db, logger, configuration) {
         if (cc) {
             mailOptions.cc = cc;
         }
-        mailOptions.from = getFrom();
+        mailOptions.from = `Anotea <${configuration.smtp.from}>`;
 
         let contents = [];
         contents.push(buildContent(template, 'txt', params));
