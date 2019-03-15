@@ -40,6 +40,13 @@
     .star-tooltip.active {
         display: inline-block;
     }
+
+    .star {
+        border: none;
+        background: transparent;
+        padding: 0px;
+        outline: none;
+    }
 }
 
 .stars.readonly {
