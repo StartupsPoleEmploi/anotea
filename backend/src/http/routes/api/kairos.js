@@ -4,12 +4,13 @@ const uuid = require('node-uuid');
 const Joi = require('joi');
 const _ = require('lodash');
 const configuration = require('config');
-const { tryAndCatch } = require('../../routes-utils');
+const { tryAndCatch } = require('../routes-utils');
+const convertToExposableOrganismeFomateur = require('./v1/dto/convertToExposableOrganismeFomateur');
 
 module.exports = ({ db, auth, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let { findCodeRegionByName } = require('../../../../common/components/regions')(db);
+    let { findCodeRegionByName } = require('../../../common/components/regions')(db);
     let { createJWTAuthMiddleware } = middlewares;
     let checkAuth = createJWTAuthMiddleware('kairos', {
         externalToken: true,
@@ -72,14 +73,10 @@ module.exports = ({ db, auth, middlewares }) => {
         let accessToken = await getAccessToken(organisme);
 
         return res.json({
-            url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&access_token=${accessToken}`,
+            url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&kairos=true&access_token=${accessToken}`,
             meta: {
                 created,
-                organisme: {
-                    siret: organisme.meta.siretAsString,
-                    raison_sociale: organisme.raisonSociale,
-                    code_region: organisme.codeRegion,
-                },
+                organisme: convertToExposableOrganismeFomateur(organisme),
             }
         });
     });
@@ -101,14 +98,9 @@ module.exports = ({ db, auth, middlewares }) => {
         }
 
         return res.json({
-            eligible: !!_.get(organisme, 'meta.kairos.eligible'),
+            eligible: !!_.get(organisme, 'meta.kairos.eligible') && _.get(organisme, 'score.nb_avis') > 0,
             meta: {
-                organisme: {
-                    siret: organisme.meta.siretAsString,
-                    raison_sociale: organisme.raisonSociale,
-                    code_region: organisme.codeRegion,
-                }
-
+                organisme: convertToExposableOrganismeFomateur(organisme)
             }
         });
     }));

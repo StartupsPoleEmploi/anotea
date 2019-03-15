@@ -49,12 +49,33 @@ describe(__filename, withServer(({ startServer, insertDepartements, insertIntoDa
         assert.deepStrictEqual(response.body.meta, {
             created: false,
             organisme: {
-                siret,
+                id: siret,
                 raison_sociale: 'Pole Emploi Formation',
-                code_region: '11',
+                siret: siret,
+                numero: '14_OF_0000000123',
+                lieux_de_formation: [
+                    {
+                        adresse: {
+                            code_postal: '75019',
+                            ville: 'Paris 19e',
+                            region: '11'
+                        }
+                    }
+                ],
+                score: {
+                    nb_avis: 15,
+                    notes: {
+                        accueil: 5,
+                        contenu_formation: 5,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 3,
+                        accompagnement: 4,
+                        global: 5
+                    }
+                }
             }
         });
-        assert.ok(response.body.url.startsWith('http://127.0.0.1:3000/admin?action=loginWithAccessToken&access_token=ey'));
+        assert.ok(response.body.url.startsWith('http://127.0.0.1:3000/admin?action=loginWithAccessToken&kairos=true&access_token=ey'));
     });
 
     it('when organisme is unknown, it is created during authentication url generation', async () => {
@@ -109,7 +130,7 @@ describe(__filename, withServer(({ startServer, insertDepartements, insertIntoDa
         .send(createPayload(siret));
         assert.strictEqual(response.statusCode, 200);
 
-        let token = response.body.url.split('=')[2];
+        let token = response.body.url.split('=')[3];
         response = await request(app)
         .get(`/api/backoffice/login?access_token=${token}`);
 
@@ -144,7 +165,7 @@ describe(__filename, withServer(({ startServer, insertDepartements, insertIntoDa
         .send(createPayload(siret));
         assert.strictEqual(response.statusCode, 200);
 
-        let token = response.body.url.split('=')[2];
+        let token = response.body.url.split('=')[3];
 
         response = await request(app)
         .get(`/api/backoffice/login?access_token=${token}`);
@@ -333,12 +354,65 @@ describe(__filename, withServer(({ startServer, insertDepartements, insertIntoDa
             eligible: true,
             meta: {
                 organisme: {
-                    siret,
+                    id: siret,
                     raison_sociale: 'Pole Emploi Formation',
-                    code_region: '11',
+                    siret: siret,
+                    numero: '14_OF_0000000123',
+                    lieux_de_formation: [
+                        {
+                            adresse: {
+                                code_postal: '75019',
+                                ville: 'Paris 19e',
+                                region: '11'
+                            }
+                        }
+                    ],
+                    score: {
+                        nb_avis: 15,
+                        notes: {
+                            accueil: 5,
+                            contenu_formation: 5,
+                            equipe_formateurs: 4,
+                            moyen_materiel: 3,
+                            accompagnement: 4,
+                            global: 5
+                        }
+                    }
                 }
             }
         });
+    });
+
+    it('an organisme without avis should not be eligible', async () => {
+
+        let app = await startServer();
+        let { buildJWT } = auth(configuration);
+        let siret = randomSIRET();
+        let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
+
+        await Promise.all([
+            insertDepartements(),
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: parseInt(siret),
+                SIRET: parseInt(siret),
+                score: {
+                    nb_avis: 0,
+                },
+                meta: {
+                    siretAsString: siret,
+                    kairos: {
+                        eligible: true,
+                    },
+                },
+            }))
+        ]);
+
+        let response = await request(app)
+        .get(`/api/kairos/check-if-organisme-is-eligible?siret=${siret}`)
+        .set('authorization', `Bearer ${jwt.access_token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.eligible, false);
     });
 
 }));

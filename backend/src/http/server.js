@@ -109,7 +109,7 @@ module.exports = components => {
     app.use('/api', require('./routes/api/v1/actions')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs')(httpComponents));
     app.use('/api', require('./routes/stats')(httpComponents));
-    app.use('/api', require('./routes/backoffice/auth/kairos')(httpComponents));
+    app.use('/api', require('./routes/api/kairos')(httpComponents));
 
     //Pubic routes with server-side rendering
     app.use('/', require('./routes/front/front')(httpComponents));
