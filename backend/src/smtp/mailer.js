@@ -232,7 +232,6 @@ module.exports = function(db, logger, configuration) {
             const consultationLink = getConsultationLink(trainee);
             const unsubscribeLink = getUnsubscribeLink(trainee);
             const formLink = getFormLink(trainee);
-            const trackingLink = getTrackingLink(trainee);
 
             mailOptions.list = Object.assign({}, list, {
                 unsubscribe: {
@@ -248,7 +247,6 @@ module.exports = function(db, logger, configuration) {
                     consultationLink: consultationLink,
                     unsubscribeLink: unsubscribeLink,
                     formLink: formLink,
-                    trackingLink: trackingLink,
                     hostname: configuration.app.public_hostname,
                     carifEmail: mailOptions.from,
                     moment: moment
