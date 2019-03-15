@@ -54,7 +54,11 @@ module.exports = function(db, logger, configuration) {
         return carif.courriel !== undefined ? carif.courriel : configuration.smtp.from;
     };
 
-    const getFrom = carif => {
+    const getFrom = () => {
+        return `Anotea <${configuration.smtp.from}>`;
+    };
+
+    const getReplyTo = carif => {
         return `Anotea <${getContact(carif)}>`;
     };
 
@@ -88,6 +92,7 @@ module.exports = function(db, logger, configuration) {
         if (cc) {
             mailOptions.cc = cc;
         }
+        mailOptions.from = getFrom();
 
         let contents = [];
         contents.push(buildContent(template, 'txt', params));
@@ -140,7 +145,7 @@ module.exports = function(db, logger, configuration) {
             mailOptions.list = list;
 
             getCarif(organisme.codeRegion, carif => {
-                mailOptions.from = getFrom(carif);
+                mailOptions.replyTo = getReplyTo(carif);
                 mailOptions.subject = `Pôle Emploi - Vous avez ${data.nbUnreadComments} nouveaux avis stagiaires`;
                 const params = {
                     hostname: configuration.app.public_hostname,
@@ -161,7 +166,7 @@ module.exports = function(db, logger, configuration) {
             mailOptions.list = list;
 
             getCarif(organisation.codeRegion, carif => {
-                mailOptions.from = getFrom(carif);
+                mailOptions.replyTo = getReplyTo(carif);
                 const params = {
                     link: link,
                     trackingLink: trackingLink,
@@ -180,7 +185,7 @@ module.exports = function(db, logger, configuration) {
             mailOptions.list = list;
   
             getCarif(codeRegion, carif => {
-                mailOptions.from = getFrom(carif);
+                mailOptions.replyTo = getReplyTo(carif);
                 const params = { link: link, hostname: configuration.app.public_hostname, codeRegion: codeRegion };
                 sendMail('password_forgotten', params, mailOptions, successCallback, errorCallback);
             }, errorCallback);
@@ -200,7 +205,7 @@ module.exports = function(db, logger, configuration) {
             });
 
             getCarif(trainee.codeRegion, carif => {
-                mailOptions.from = getFrom(carif);
+                mailOptions.replyTo = getReplyTo(carif);
                 const params = {
                     trainee: trainee,
                     consultationLink: consultationLink,
@@ -240,7 +245,7 @@ module.exports = function(db, logger, configuration) {
             });
 
             getCarif(trainee.codeRegion, carif => {
-                mailOptions.from = getFrom(carif);
+                mailOptions.replyTo = getReplyTo(carif);
                 const params = {
                     comment: comment,
                     trainee: trainee,
