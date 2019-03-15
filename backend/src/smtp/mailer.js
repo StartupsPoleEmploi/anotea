@@ -119,6 +119,15 @@ module.exports = function(db, logger, configuration) {
         });
     };
 
+    const list = {
+        help: {
+            url: 'https://anotea.pole-emploi.fr/faq'
+        },
+        unsubscribe: {
+            url: 'https://anotea.pole-emploi.fr/admin',
+        }
+    };
+
     return {
         getConsultationLink: getConsultationLink,
         getUnsubscribeLink: getUnsubscribeLink,
@@ -127,6 +136,9 @@ module.exports = function(db, logger, configuration) {
         sendNewCommentsNotification: async (mailOptions, data, successCallback, errorCallback) => {
 
             let { organisme, pickedComment } = data;
+
+            mailOptions.list = list;
+
             getCarif(organisme.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
                 mailOptions.subject = `Pôle Emploi - Vous avez ${data.nbUnreadComments} nouveaux avis stagiaires`;
@@ -145,6 +157,9 @@ module.exports = function(db, logger, configuration) {
 
             const link = getOrganisationPasswordLink(organisation);
             const trackingLink = getTrackingLink(organisation);
+
+            mailOptions.list = list;
+
             getCarif(organisation.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
                 const params = {
@@ -161,6 +176,9 @@ module.exports = function(db, logger, configuration) {
             mailOptions.subject = 'Votre compte Anotéa : Demande de renouvellement de mot de passe';
 
             const link = getPasswordForgottenLink(passwordToken);
+
+            mailOptions.list = list;
+  
             getCarif(codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
                 const params = { link: link, hostname: configuration.app.public_hostname, codeRegion: codeRegion };
@@ -174,6 +192,13 @@ module.exports = function(db, logger, configuration) {
             const unsubscribeLink = getUnsubscribeLink(trainee);
             const formLink = getFormLink(trainee);
             const trackingLink = getTrackingLink(trainee);
+
+            mailOptions.list = Object.assign({}, list, {
+                unsubscribe: {
+                    url: unsubscribeLink,
+                }
+            });
+
             getCarif(trainee.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
                 const params = {
@@ -207,6 +232,13 @@ module.exports = function(db, logger, configuration) {
             const unsubscribeLink = getUnsubscribeLink(trainee);
             const formLink = getFormLink(trainee);
             const trackingLink = getTrackingLink(trainee);
+
+            mailOptions.list = Object.assign({}, list, {
+                unsubscribe: {
+                    url: unsubscribeLink,
+                }
+            });
+
             getCarif(trainee.codeRegion, carif => {
                 mailOptions.from = getFrom(carif);
                 const params = {
