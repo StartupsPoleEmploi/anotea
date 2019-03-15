@@ -35,7 +35,7 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
                 $or: [
                     { 'meta.siretAsString': search },
                     { 'courriel': search },
-                    { 'raisonSociale': new RegExp(search) }]
+                    { 'raisonSociale': new RegExp(search, 'i') }]
             } : {}),
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
         })
