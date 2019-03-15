@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
@@ -51,19 +50,19 @@ class SummaryModal extends Component {
                             <AverageScore score={this.props.score} />
                             <span>par <strong>{this.props.pseudo !== '' ? this.props.pseudo : 'anonyme'}</strong></span>
                         </div>
-                        
+
 
                         <div className="col-sm-8">
-                            { (this.props.commentaire.titre !== '' || this.props.commentaire.texte !== '') && 
-                                <div>
-                                    <h3>{this.props.commentaire.titre}</h3>
-                                    <p>
-                                        {this.props.commentaire.texte}
-                                    </p>
-                                </div>
+                            {(this.props.commentaire.titre !== '' || this.props.commentaire.texte !== '') &&
+                            <div>
+                                <h3>{this.props.commentaire.titre}</h3>
+                                <p>
+                                    {this.props.commentaire.texte}
+                                </p>
+                            </div>
                             }
-                            { this.props.commentaire.titre === '' && this.props.commentaire.texte === '' && 
-                                <span>Si vous souhaitez écrire un commentaire, cliquer sur annuler.</span>
+                            {this.props.commentaire.titre === '' && this.props.commentaire.texte === '' &&
+                            <span>Si vous souhaitez écrire un commentaire, cliquer sur annuler.</span>
                             }
                         </div>
                     </div>
@@ -83,7 +82,9 @@ class SummaryModal extends Component {
                 </div>
 
                 <div className="buttons">
-                    <a className="cancel" onClick={this.props.closeModal}>Annuler</a> <SendButton enabled={true} onSend={this.props.submit} text="Confirmer" />
+                    <a className="cancel" onClick={this.props.closeModal}>Annuler</a> <SendButton enabled={true}
+                                                                                                  onSend={this.props.submit}
+                                                                                                  text="Confirmer" />
                 </div>
 
                 <div className="clear"></div>

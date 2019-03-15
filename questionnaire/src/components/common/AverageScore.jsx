@@ -19,7 +19,9 @@ class AverageScore extends Component {
         return (
             <div className={`average-score`}>
                 <div className="score">
-                    <span className="averageScore">{this.props.score ? this.formattedScore(this.props.score) : '-'}</span><span className="total">/ 5</span>
+                    <span
+                        className="averageScore">{this.props.score ? this.formattedScore(this.props.score) : '-'}</span><span
+                    className="total">/ 5</span>
                 </div>
                 <Stars value={this.roundHalf(this.props.score)} readonly={true} starsStyle={{ fontSize: '10px' }} />
             </div>

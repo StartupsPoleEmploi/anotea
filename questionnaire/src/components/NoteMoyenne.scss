@@ -1,46 +1,46 @@
 @import '../styles/variables';
 
 .note-moyenne {
-	width: 512px;
-	height: 73px;
-    margin: 0px;
-    
-    border-right: 1px solid $color-grey-5;
-    border-left: 1px solid $color-grey-5;
+  width: 512px;
+  height: 73px;
+  margin: 0px;
 
-    .label {
-        width: 70%;
-        display: inline-block;
-        height: 100px;
-        margin-left: 16px;
-        
-        .title {
-            color: $color-black;
-            font-size: 18px;
-            font-weight: 900;
-            line-height: 22px;
-            display: block;
-            padding-top: 16px;
-        }
+  border-right: 1px solid $color-grey-5;
+  border-left: 1px solid $color-grey-5;
 
-        .description {
-            opacity: 0.6;
-            color: $color-dark;
-            font-size: 14px;
-        }    
+  .label {
+    width: 70%;
+    display: inline-block;
+    height: 100px;
+    margin-left: 16px;
+
+    .title {
+      color: $color-black;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 22px;
+      display: block;
+      padding-top: 16px;
     }
 
-    .score {
-        position: relative;
-        top: -14px;
-        left: 65px;
+    .description {
+      opacity: 0.6;
+      color: $color-dark;
+      font-size: 14px;
     }
+  }
 
-    .stars {
-        height: 20px;
-        width: 130px;
-        margin-left: 390px;
-        position: relative;
-        left: 30px;
-    }
+  .score {
+    position: relative;
+    top: -14px;
+    left: 65px;
+  }
+
+  .stars {
+    height: 20px;
+    width: 130px;
+    margin-left: 390px;
+    position: relative;
+    left: 30px;
+  }
 }

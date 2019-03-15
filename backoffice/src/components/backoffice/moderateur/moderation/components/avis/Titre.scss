@@ -19,6 +19,7 @@
   .masked {
     color: $color-grey-50;
     opacity: 0.5;
+
     &.title {
       text-decoration: line-through;
     }

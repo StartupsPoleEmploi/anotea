@@ -94,7 +94,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         checkOrganisme(req);
 
         const projection = { token: 0 };
-        let filter = {  'training.organisation.siret': req.params.id };
+        let filter = { 'training.organisation.siret': req.params.id };
         if (req.query.filter) {
             if (req.query.filter === 'reported') {
                 filter.reported = true;

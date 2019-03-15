@@ -1,43 +1,43 @@
 @import '../styles/variables';
 
 .no-match {
-    color: $color-grey-50;
-    max-width: 760px;
-    margin: auto;
-    background-color: $color-white;
-    padding: 20px;
+  color: $color-grey-50;
+  max-width: 760px;
+  margin: auto;
+  background-color: $color-white;
+  padding: 20px;
 
-    .error-page {
-        margin-top: 60px;
-    }
-    
-    .propulsed {
-        font-size: 0.9em;
-        top: 60px;
-        margin-left: 500px;
-        position: absolute;
+  .error-page {
+    margin-top: 60px;
+  }
 
-        img {
-            vertical-align: middle;
-        }
-    }
-    
-    .logo-pe {
-        width: 60px;
-    }
-    
-    .logo-anotea {
-        height: 120px;
-    }
+  .propulsed {
+    font-size: 0.9em;
+    top: 60px;
+    margin-left: 500px;
+    position: absolute;
 
-    section.error-page h2 {
-        font-size: 1.25em;
-        color: $color-blue;
-        text-align: center;
-        font-weight: bold;
+    img {
+      vertical-align: middle;
     }
+  }
 
-    section.error-page, header {
-        text-align: center;
-    }
+  .logo-pe {
+    width: 60px;
+  }
+
+  .logo-anotea {
+    height: 120px;
+  }
+
+  section.error-page h2 {
+    font-size: 1.25em;
+    color: $color-blue;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  section.error-page, header {
+    text-align: center;
+  }
 }

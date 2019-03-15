@@ -112,7 +112,7 @@ export default class FinancerPanel extends React.Component {
                 entities: [],
                 currentEntity: '',
             }),
-            currentFinancer: this.state.financers.filter(function (financer) {
+            currentFinancer: this.state.financers.filter(function(financer) {
                 return financer._id === options.id;
             })[0]
         }, () => {
@@ -144,7 +144,7 @@ export default class FinancerPanel extends React.Component {
                 training: Object.assign(this.state.training, {
                     entities: [],
                     currentEntity: '',
-                    currentOrganisation: this.state.training.organisations.filter(function (organisation) {
+                    currentOrganisation: this.state.training.organisations.filter(function(organisation) {
                         return organisation._id === options.id;
                     })[0]
                 })
@@ -184,7 +184,7 @@ export default class FinancerPanel extends React.Component {
             inventory: { reported: 0, commented: 0, all: 0 },
             advices: [],
             training: Object.assign(this.state.training, {
-                currentEntity: this.state.training.entities.filter(function (entity) {
+                currentEntity: this.state.training.entities.filter(function(entity) {
                     return entity._id === id;
                 })[0]
             })
@@ -381,139 +381,142 @@ export default class FinancerPanel extends React.Component {
                 <SideMenu onChangePage={this.handleChangePage} features={this.props.features} />
 
                 {this.state.currentPage === 'stats' &&
-                    <Dashboard codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} />
+                <Dashboard codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} />
                 }
 
                 {this.state.currentPage === 'advices' &&
-                    <div>
-                        {this.props.codeFinanceur === POLE_EMPLOI &&
-                            <CodeFinancerSearchForm currentFinancer={currentFinancer} financers={financers}
-                                handleFinancerChange={this.handleFinancerChange}
-                                unsetFinancer={this.unsetFinancer} />
-                        }
+                <div>
+                    {this.props.codeFinanceur === POLE_EMPLOI &&
+                    <CodeFinancerSearchForm currentFinancer={currentFinancer} financers={financers}
+                                            handleFinancerChange={this.handleFinancerChange}
+                                            unsetFinancer={this.unsetFinancer} />
+                    }
 
-                        <OrganisationSearchForm currentOrganisation={currentOrganisation} organisations={organisations}
-                            handleOrganisationChange={this.handleOrganisationChange}
-                            unsetOrganisation={this.unsetOrganisation} />
+                    <OrganisationSearchForm currentOrganisation={currentOrganisation} organisations={organisations}
+                                            handleOrganisationChange={this.handleOrganisationChange}
+                                            unsetOrganisation={this.unsetOrganisation} />
 
-                        {currentOrganisation &&
-                            <EntitySearchForm currentEntity={currentEntity} entities={entities}
-                                handleEntityChange={this.handleEntityChange} unsetEntity={this.unsetEntity} />
-                        }
+                    {currentOrganisation &&
+                    <EntitySearchForm currentEntity={currentEntity} entities={entities}
+                                      handleEntityChange={this.handleEntityChange} unsetEntity={this.unsetEntity} />
+                    }
 
-                        {currentEntity &&
-                            <TrainingSearchForm id={currentOrganisation._id} currentEntity={currentEntity}
-                                codeFinanceur={currentFinancer._id} codeRegion={this.props.codeRegion}
-                                changeTrainingSession={this.changeTrainingSession} />
-                        }
+                    {currentEntity &&
+                    <TrainingSearchForm id={currentOrganisation._id} currentEntity={currentEntity}
+                                        codeFinanceur={currentFinancer._id} codeRegion={this.props.codeRegion}
+                                        changeTrainingSession={this.changeTrainingSession} />
+                    }
 
-                        <h2>Liste des notes et avis</h2>
+                    <h2>Liste des notes et avis</h2>
 
-                        <ul className="nav nav-tabs">
-                            <li className="nav-item">
-                                <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`} onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
-                                    className="badge rejected">{inventory.reported}</span></button>
-                            </li>
-                            <li className="nav-item">
-                                <button className={`nav-link btn btn-link ${this.getActiveStatus('commented')}`} onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
-                                    className="badge published">{inventory.commented}</span></button>
-                            </li>
-                            <li className="nav-item">
-                                <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`} onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
-                                    className="badge badge-secondary">{inventory.all}</span></button>
-                            </li>
-                        </ul>
+                    <ul className="nav nav-tabs">
+                        <li className="nav-item">
+                            <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`}
+                                    onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
+                                className="badge rejected">{inventory.reported}</span></button>
+                        </li>
+                        <li className="nav-item">
+                            <button className={`nav-link btn btn-link ${this.getActiveStatus('commented')}`}
+                                    onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
+                                className="badge published">{inventory.commented}</span></button>
+                        </li>
+                        <li className="nav-item">
+                            <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`}
+                                    onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
+                                className="badge badge-secondary">{inventory.all}</span></button>
+                        </li>
+                    </ul>
 
-                        <DeprecatedToolbar profile={this.props.profile} exportFilters={this.getExportFilters()} />
+                    <DeprecatedToolbar profile={this.props.profile} exportFilters={this.getExportFilters()} />
 
-                        <div className="advices">
-                            {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}
-                            {this.state.advices.map(advice =>
-                                <div key={advice._id} className="advice">
-                                    <div className="content">
-                                        <div className="row">
-                                            <div className="col-md-6">
-                                                <h3 className="header">
-                                                    <i className="avatar glyphicon glyphicon-user" />
-                                                    {advice.pseudo}
-                                                    {!advice.pseudo && <em>anonyme</em>} -&nbsp;
+                    <div className="advices">
+                        {this.state.advices.length === 0 && <em>Pas d'avis pour le moment</em>}
+                        {this.state.advices.map(advice =>
+                            <div key={advice._id} className="advice">
+                                <div className="content">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <h3 className="header">
+                                                <i className="avatar glyphicon glyphicon-user" />
+                                                {advice.pseudo}
+                                                {!advice.pseudo && <em>anonyme</em>} -&nbsp;
 
-                                                    {advice.date &&
-                                                        <FormattedDate
-                                                            value={new Date(advice.date)}
-                                                            day="numeric"
-                                                            month="long"
-                                                            year="numeric" />
-                                                    }
-                                                    {!advice.date && <em>Pas de date pour cet avis</em>}
-                                                </h3>
-                                                {advice.comment &&
-                                                    <div>
-                                                        <div className="comment">
-                                                            <h4>{advice.comment.title}</h4>
-                                                            <p>
-                                                                {advice.comment.text}
-                                                                {!advice.comment.text &&
-                                                                    <em>Cet utilisateur n'a pas laissé d'avis</em>}
-                                                            </p>
-                                                        </div>
-                                                        {this.props.codeFinanceur === POLE_EMPLOI &&
-                                                            <div> Qualification: {advice.qualification} </div>
-                                                        }
-                                                    </div>
+                                                {advice.date &&
+                                                <FormattedDate
+                                                    value={new Date(advice.date)}
+                                                    day="numeric"
+                                                    month="long"
+                                                    year="numeric" />
                                                 }
-                                                {!advice.comment &&
-                                                    <div>
-                                                        <div className="noComment">Cet utilisateur n'a pas laissé d'avis.</div>
-                                                    </div>
-                                                }
-                                            </div>
-                                            <div className="col-md-3">
-                                                <AdviceRates rates={advice.rates} />
-                                            </div>
-                                            <div className="col-md-3">
-                                                <div><strong>Organisme</strong> {advice.training.organisation.name}</div>
-                                                <div><strong>Formation</strong> {advice.training.title}</div>
-                                                <strong>Session</strong> {advice.training.place.city}
-                                                <div>
-                                                    du <strong><FormattedDate
-                                                        value={new Date(advice.training.startDate)}
-                                                        day="numeric"
-                                                        month="numeric"
-                                                        year="numeric" /></strong>
-                                                    &nbsp;au <strong><FormattedDate
-                                                        value={new Date(advice.training.scheduledEndDate)}
-                                                        day="numeric"
-                                                        month="numeric"
-                                                        year="numeric" /></strong>
+                                                {!advice.date && <em>Pas de date pour cet avis</em>}
+                                            </h3>
+                                            {advice.comment &&
+                                            <div>
+                                                <div className="comment">
+                                                    <h4>{advice.comment.title}</h4>
+                                                    <p>
+                                                        {advice.comment.text}
+                                                        {!advice.comment.text &&
+                                                        <em>Cet utilisateur n'a pas laissé d'avis</em>}
+                                                    </p>
                                                 </div>
+                                                {this.props.codeFinanceur === POLE_EMPLOI &&
+                                                <div> Qualification: {advice.qualification} </div>
+                                                }
+                                            </div>
+                                            }
+                                            {!advice.comment &&
+                                            <div>
+                                                <div className="noComment">Cet utilisateur n'a pas laissé d'avis.</div>
+                                            </div>
+                                            }
+                                        </div>
+                                        <div className="col-md-3">
+                                            <AdviceRates rates={advice.rates} />
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div><strong>Organisme</strong> {advice.training.organisation.name}</div>
+                                            <div><strong>Formation</strong> {advice.training.title}</div>
+                                            <strong>Session</strong> {advice.training.place.city}
+                                            <div>
+                                                du <strong><FormattedDate
+                                                value={new Date(advice.training.startDate)}
+                                                day="numeric"
+                                                month="numeric"
+                                                year="numeric" /></strong>
+                                                &nbsp;au <strong><FormattedDate
+                                                value={new Date(advice.training.scheduledEndDate)}
+                                                day="numeric"
+                                                month="numeric"
+                                                year="numeric" /></strong>
                                             </div>
                                         </div>
                                     </div>
-                                </div>)}
+                                </div>
+                            </div>)}
 
-                            {this.state.pagination.count > 1 &&
-                                <ReactPaginate previousLabel={'<'}
-                                    nextLabel={'>'}
-                                    pageCount={this.state.pagination.count}
-                                    forcePage={this.state.pagination.current - 1}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={5}
-                                    onPageChange={this.handlePageClick}
-                                    breakClassName="page-item"
-                                    breakLabel={<a className="page-link">...</a>}
-                                    pageClassName="page-item"
-                                    previousClassName="page-item"
-                                    nextClassName="page-item"
-                                    pageLinkClassName="page-link"
-                                    previousLinkClassName="page-link"
-                                    nextLinkClassName="page-link"
-                                    activeClassName={'active'}
-                                    containerClassName={'pagination'}
-                                    disableInitialCallback={true} />
-                            }
-                        </div>
+                        {this.state.pagination.count > 1 &&
+                        <ReactPaginate previousLabel={'<'}
+                                       nextLabel={'>'}
+                                       pageCount={this.state.pagination.count}
+                                       forcePage={this.state.pagination.current - 1}
+                                       marginPagesDisplayed={2}
+                                       pageRangeDisplayed={5}
+                                       onPageChange={this.handlePageClick}
+                                       breakClassName="page-item"
+                                       breakLabel={<a className="page-link">...</a>}
+                                       pageClassName="page-item"
+                                       previousClassName="page-item"
+                                       nextClassName="page-item"
+                                       pageLinkClassName="page-link"
+                                       previousLinkClassName="page-link"
+                                       nextLinkClassName="page-link"
+                                       activeClassName={'active'}
+                                       containerClassName={'pagination'}
+                                       disableInitialCallback={true} />
+                        }
                     </div>
+                </div>
                 }
             </div>
         );

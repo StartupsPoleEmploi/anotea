@@ -103,7 +103,8 @@ export default class Stars extends React.PureComponent {
         return (
             <div className={`stars ${this.state.readonly ? 'readonly' : ''}`}>
                 <div className="tooltip-block">
-                    <span className={`star-tooltip ${(this.state.hover !== null || this.state.selected !== null) && !this.state.readonly ? 'active' : 'inactive'}`}>
+                    <span
+                        className={`star-tooltip ${(this.state.hover !== null || this.state.selected !== null) && !this.state.readonly ? 'active' : 'inactive'}`}>
                         {tooltipLabels[this.state.hover !== null ? this.state.hover - 1 : this.state.selected - 1]}
                     </span>
                 </div>

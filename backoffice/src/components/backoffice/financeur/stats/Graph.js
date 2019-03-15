@@ -51,26 +51,65 @@ export default class Graph extends React.Component {
 
     loadData = (codeRegion, year, codeFinanceur, type) => {
         getGraphData(codeRegion, year, codeFinanceur === '4' ? 'all' : codeFinanceur).then(graphData => {
-   
+
             let accumulator = graphData.reduce((accumulator, item) => {
                 return accumulator + item.count;
             }, 0);
 
             const allData = [
                 Object.assign({ label: 'Nombre de mails envoyés', data: graphData.map(item => item.count) }, options),
-                Object.assign({ label: 'Nombre de mails ouverts', data: graphData.map(item => item.countEmailOpen) }, options),
-                Object.assign({ label: 'Nombre d\'avis déposés', data: graphData.map(item => item.countAdvicesPublished) }, options),
-                Object.assign({ label: 'Nombre d\'avis avec commentaires', data: graphData.map(item => item.countAdvicesWithComments) }, options),
-                Object.assign({ label: 'Nombre de commentaires positifs ou neutres', data: graphData.map(item => item.countAdvicesPositif) }, options),
-                Object.assign({ label: 'Nombre de commentaires négatifs', data: graphData.map(item => item.countAdvicesNegatif) }, options),
-                Object.assign({ label: 'Nombre de commentaires rejetés', data: graphData.map(item => item.countAdvicesRejected) }, options),
-                Object.assign({ label: 'Nombre de sessions diffusées', data: graphData.map(item => item.countSession) }, options),
-                Object.assign({ label: 'Nombre de sessions avec avis', data: graphData.map(item => item.countSessionWithAdvices) }, options),
-                Object.assign({ label: 'Nombre de sessions avec avis', data: graphData.map(item => item.countSessionWithAdvices) }, options),
-                Object.assign({ label: 'Nombre de sessions avec au moins trois avis', data: graphData.map(item => item.countSessionHavingMoreThanTwoAdvices) }, options),
-                Object.assign({ label: 'Nombre d\'organismes de formation', data: graphData.map(item => item.countOrganisme) }, options),
-                Object.assign({ label: 'Nombre d\'organismes de formation avec au moins un avis', data: graphData.map(item => item.countOrganismeWithMorethanOneAdvice) }, options),
-                Object.assign({ label: 'Nombre d\'organismes de formation connectés dans les trois derniers mois', data: graphData.map(item => item.countOrganismeLogin) }, options)
+                Object.assign({
+                    label: 'Nombre de mails ouverts',
+                    data: graphData.map(item => item.countEmailOpen)
+                }, options),
+                Object.assign({
+                    label: 'Nombre d\'avis déposés',
+                    data: graphData.map(item => item.countAdvicesPublished)
+                }, options),
+                Object.assign({
+                    label: 'Nombre d\'avis avec commentaires',
+                    data: graphData.map(item => item.countAdvicesWithComments)
+                }, options),
+                Object.assign({
+                    label: 'Nombre de commentaires positifs ou neutres',
+                    data: graphData.map(item => item.countAdvicesPositif)
+                }, options),
+                Object.assign({
+                    label: 'Nombre de commentaires négatifs',
+                    data: graphData.map(item => item.countAdvicesNegatif)
+                }, options),
+                Object.assign({
+                    label: 'Nombre de commentaires rejetés',
+                    data: graphData.map(item => item.countAdvicesRejected)
+                }, options),
+                Object.assign({
+                    label: 'Nombre de sessions diffusées',
+                    data: graphData.map(item => item.countSession)
+                }, options),
+                Object.assign({
+                    label: 'Nombre de sessions avec avis',
+                    data: graphData.map(item => item.countSessionWithAdvices)
+                }, options),
+                Object.assign({
+                    label: 'Nombre de sessions avec avis',
+                    data: graphData.map(item => item.countSessionWithAdvices)
+                }, options),
+                Object.assign({
+                    label: 'Nombre de sessions avec au moins trois avis',
+                    data: graphData.map(item => item.countSessionHavingMoreThanTwoAdvices)
+                }, options),
+                Object.assign({
+                    label: 'Nombre d\'organismes de formation',
+                    data: graphData.map(item => item.countOrganisme)
+                }, options),
+                Object.assign({
+                    label: 'Nombre d\'organismes de formation avec au moins un avis',
+                    data: graphData.map(item => item.countOrganismeWithMorethanOneAdvice)
+                }, options),
+                Object.assign({
+                    label: 'Nombre d\'organismes de formation connectés dans les trois derniers mois',
+                    data: graphData.map(item => item.countOrganismeLogin)
+                }, options)
             ];
 
             this.setState({
@@ -104,8 +143,8 @@ export default class Graph extends React.Component {
     render() {
         return (
             <div>
-                { !this.state.isEmpty &&
-                    <Line data={this.state.graphData} options={chartOptions} />
+                {!this.state.isEmpty &&
+                <Line data={this.state.graphData} options={chartOptions} />
                 }
             </div>
         );

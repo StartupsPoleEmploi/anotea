@@ -2,15 +2,15 @@
 
 .champ-commentaire {
   .title {
-  	color: $color-black;
-  	font-size: 1rem;
-  	line-height: 19px;
+    color: $color-black;
+    font-size: 1rem;
+    line-height: 19px;
     padding-left: 16px;
     padding-top: 16px;
   }
 
   .title_texte {
-  	@extend .title;
+    @extend .title;
     display: block;
   }
 
@@ -48,8 +48,8 @@
   }
 
   .textarea_texte {
-  	height: 79px;
-  	@extend .textarea;
+    height: 79px;
+    @extend .textarea;
   }
 
   .textarea_titre {
@@ -68,31 +68,31 @@
     @extend .placeholder;
   }
 
-    .remaining {
-        font-size: 0.75rem;
-        font-style: italic;
-        text-align: right;
-        padding: 5px 20px;
-    }
+  .remaining {
+    font-size: 0.75rem;
+    font-style: italic;
+    text-align: right;
+    padding: 5px 20px;
+  }
 
-    .remaining.yes {
-        color: $color-black;
-    }
+  .remaining.yes {
+    color: $color-black;
+  }
 
-    .remaining.no {
-        color: $color-red;
-    }
+  .remaining.no {
+    color: $color-red;
+  }
 
-    textarea.badwords {
-        border: solid 1px $color-red;
-        color: $color-red;
-    }
+  textarea.badwords {
+    border: solid 1px $color-red;
+    color: $color-red;
+  }
 
-    .alert.badwords {
-        color: $color-red;
-        font-size: 0.7rem;
-        font-style: italic;
-        font-weight: bold;
-        line-height: 16px;
-    }
+  .alert.badwords {
+    color: $color-red;
+    font-size: 0.7rem;
+    font-style: italic;
+    font-weight: bold;
+    line-height: 16px;
+  }
 }
