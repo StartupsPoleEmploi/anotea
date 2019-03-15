@@ -9,7 +9,6 @@ const { tryAndCatch } = require('../../routes-utils');
 module.exports = ({ db, auth, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let collection = db.collection('accounts');
     let { findCodeRegionByName } = require('../../../../common/components/regions')(db);
     let { createJWTAuthMiddleware } = middlewares;
     let checkAuth = createJWTAuthMiddleware('kairos', {
@@ -19,37 +18,6 @@ module.exports = ({ db, auth, middlewares }) => {
             throw Boom.unauthorized(message, e);
         }
     });
-
-    let buildAccount = async data => {
-        return {
-            _id: parseInt(data.siret),
-            SIRET: parseInt(data.siret),
-            raisonSociale: data.raison_sociale,
-            courriel: data.courriel,
-            courriels: [data.courriel],
-            kairosCourriel: data.courriel,
-            profile: 'organisme',
-            token: uuid.v4(),
-            creationDate: new Date(),
-            sources: ['kairos', 'sso'],
-            codeRegion: await findCodeRegionByName(data.region),
-            numero: null,
-            lieux_de_formation: [],
-            meta: {
-                siretAsString: data.siret,
-            },
-        };
-    };
-
-    let getAccessToken = async organisme => {
-        let token = await auth.buildJWT('backoffice', {
-            sub: organisme.meta.siretAsString,
-            profile: 'organisme',
-            id: organisme._id,
-            raisonSociale: organisme.raisonSociale,
-        });
-        return token.access_token;
-    };
 
     let generateAuthUrlRoute = tryAndCatch(async (req, res) => {
 
@@ -61,11 +29,44 @@ module.exports = ({ db, auth, middlewares }) => {
         }, { abortEarly: false });
 
 
-        let organisme = await collection.findOne({ 'meta.siretAsString': parameters.siret });
+        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': parameters.siret });
+        let created = false;
+
+        let buildAccount = async data => {
+            return {
+                _id: parseInt(data.siret),
+                SIRET: parseInt(data.siret),
+                raisonSociale: data.raison_sociale,
+                courriel: data.courriel,
+                courriels: [data.courriel],
+                kairosCourriel: data.courriel,
+                profile: 'organisme',
+                token: uuid.v4(),
+                creationDate: new Date(),
+                sources: ['kairos', 'sso'],
+                codeRegion: await findCodeRegionByName(data.region),
+                numero: null,
+                lieux_de_formation: [],
+                meta: {
+                    siretAsString: data.siret,
+                },
+            };
+        };
+
+        let getAccessToken = async () => {
+            let token = await auth.buildJWT('backoffice', {
+                sub: organisme.meta.siretAsString,
+                profile: 'organisme',
+                id: organisme._id,
+                raisonSociale: organisme.raisonSociale,
+            });
+            return token.access_token;
+        };
 
         if (!organisme) {
             organisme = await buildAccount(parameters);
-            await collection.insertOne(organisme);
+            await db.collection('accounts').insertOne(organisme);
+            created = true;
         }
 
         let accessToken = await getAccessToken(organisme);
@@ -73,6 +74,7 @@ module.exports = ({ db, auth, middlewares }) => {
         return res.json({
             url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&access_token=${accessToken}`,
             meta: {
+                created,
                 organisme: {
                     siret: organisme.meta.siretAsString,
                     raison_sociale: organisme.raisonSociale,
@@ -84,8 +86,32 @@ module.exports = ({ db, auth, middlewares }) => {
 
     //Deprecated route
     router.post('/backoffice/generate-auth-url', checkAuth, generateAuthUrlRoute);
-
     router.post('/kairos/generate-auth-url', checkAuth, generateAuthUrlRoute);
+
+    router.get('/kairos/check-if-organisme-is-eligible', checkAuth, tryAndCatch(async (req, res) => {
+
+        let parameters = await Joi.validate(req.query, {
+            siret: Joi.string().required(),
+        }, { abortEarly: false });
+
+        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': parameters.siret });
+
+        if (!organisme) {
+            throw Boom.badRequest('Numéro de siret invalide');
+        }
+
+        return res.json({
+            eligible: !!_.get(organisme, 'meta.kairos.eligible'),
+            meta: {
+                organisme: {
+                    siret: organisme.meta.siretAsString,
+                    raison_sociale: organisme.raisonSociale,
+                    code_region: organisme.codeRegion,
+                }
+
+            }
+        });
+    }));
 
     return router;
 };
