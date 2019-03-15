@@ -206,8 +206,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 2);
-        assert.deepStrictEqual(response.body.organismes[0]._id, 11111111111111);
-        assert.deepStrictEqual(response.body.organismes[1]._id, 22222222222222);
+        assert.ok(response.body.organismes.find(o => o._id, 11111111111111));
+        assert.ok(response.body.organismes.find(o => o._id, 22222222222222));
     });
 
     it('can search organismes by courriel', async () => {
