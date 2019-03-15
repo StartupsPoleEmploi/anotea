@@ -4,8 +4,8 @@ exports.config = {
     'seleniumAddress': 'http://hub-cloud.browserstack.com/wd/hub',
 
     'capabilities': {
-        'browserstack.user': 'locguillois1',
-        'browserstack.key': 'grw8pupcUVHeDQWQjFAG',
+        'browserstack.user': 'yyy',
+        'browserstack.key': 'xxx',
         'browserstack.local': true,
         'browserName': 'chrome',
         'build': 'v1',
