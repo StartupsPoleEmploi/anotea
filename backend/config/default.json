@@ -169,7 +169,7 @@
     "secure": false,
     "hostname": "localhost",
     "greetingTimeout": 300000,
-    "from": "anotea@pole-emploi.fr",
+    "from": "anotea@anotea.pole-emploi.fr",
     "stagiaires": {
       "avisRelaunchDelay": 7,
       "avisMaxRelaunch": 1
