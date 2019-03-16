@@ -63,7 +63,11 @@ module.exports = ({ db, mailing, password }) => {
 
                         return res.status(201).json({
                             message: 'Account successfully updated',
-                            userInfo: { username: account.courriel, profile: forgottenPasswordToken.profile, id: account._id }
+                            userInfo: {
+                                username: account.courriel,
+                                profile: forgottenPasswordToken.profile,
+                                id: account._id
+                            }
                         });
 
                     } else {

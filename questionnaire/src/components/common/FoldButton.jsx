@@ -8,7 +8,7 @@ class FoldButton extends Component {
     state = {
         folded: false
     }
-    
+
     static propTypes = {
         onFold: PropTypes.func.isRequired,
         onUnfold: PropTypes.func.isRequired,
@@ -39,7 +39,8 @@ class FoldButton extends Component {
     render() {
         return (
             <div className="foldButton">
-                <i className={`fas ${this.state.folded ? 'fa-chevron-down' : 'fa-chevron-up'}`} onClick={this.click}></i>
+                <i className={`fas ${this.state.folded ? 'fa-chevron-down' : 'fa-chevron-up'}`}
+                   onClick={this.click}></i>
             </div>
         );
     }

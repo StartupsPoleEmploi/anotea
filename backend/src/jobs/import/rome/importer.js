@@ -8,7 +8,7 @@ module.exports = function(db, logger, configuration) {
     const doImport = file => {
         logger.info('ROME <-> FORMACODE mapping import - launch');
 
-        let promises =[];
+        let promises = [];
         return new Promise((resolve, reject) => {
             let launchTime = new Date().getTime();
             let parser = parse({ delimiter: ',', quote: '"' });

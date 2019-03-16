@@ -24,14 +24,14 @@ export default class EntitySearchForm extends React.PureComponent {
                 }
                 <div className="dropdown">
                     <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="true">
+                            aria-haspopup="true" aria-expanded="true">
                         Changer de Lieu
                         <span className="caret"></span>
                     </button>
                     <div className="dropdown-menu">
                         {entities.map(entity =>
                             <a key={entity._id} className="dropdown-item" role="button"
-                                onClick={this.handleEntityChange.bind(this, entity._id)}>{entity.city}
+                               onClick={this.handleEntityChange.bind(this, entity._id)}>{entity.city}
                                 <small>({entity._id})</small>
                             </a>
                         )}

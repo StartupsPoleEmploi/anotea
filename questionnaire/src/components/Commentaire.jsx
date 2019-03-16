@@ -44,12 +44,16 @@ class Commentaire extends Component {
         state[name] = value;
         state.badwords = Object.assign(this.state.badwords, { [name]: containsBadwords });
         this.setState(state);
-        this.props.onChange({ commentaire: { titre: state.titre, texte: state.texte }, pseudo: state.pseudo }, state.badwords);
+        this.props.onChange({
+            commentaire: { titre: state.titre, texte: state.texte },
+            pseudo: state.pseudo
+        }, state.badwords);
     }
 
     getItems = () => {
         return this.items.map((item, index) =>
-            <ChampCommentaire key={index} titre={item.title} placeholder={item.placeholder} name={item.name} onChange={this.onChange} />
+            <ChampCommentaire key={index} titre={item.title} placeholder={item.placeholder} name={item.name}
+                              onChange={this.onChange} />
         );
     }
 

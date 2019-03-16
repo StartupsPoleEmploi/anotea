@@ -12,7 +12,7 @@ export default class Logout extends React.PureComponent {
         return (
             <div className="logout">
                 <button onClick={this.props.handleLogout} className="btn btn-primary btn-md">
-                    <span className="fas fa-sign-out-alt"/> Se déconnecter
+                    <span className="fas fa-sign-out-alt" /> Se déconnecter
                 </button>
             </div>
         );

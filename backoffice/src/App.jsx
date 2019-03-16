@@ -146,7 +146,7 @@ class App extends Component {
                         profile={this.state.profile}
                         raisonSociale={this.state.raisonSociale}
                         codeFinanceur={this.state.codeFinanceur}
-                        codeRegion={this.state.codeRegion}/>
+                        codeRegion={this.state.codeRegion} />
 
                     {this.state.action === 'creation' &&
                     <AccountActivation

@@ -35,7 +35,7 @@ body {
     width: 120px;
     font-size: 0.8em;
     margin-left: 20px;
-    text-decoration:none;
+    text-decoration: none;
     text-align: center;
 }
 
@@ -93,7 +93,7 @@ h1 {
 
 .content-how li {
     display: inline-block;
-    vertical-align:top;
+    vertical-align: top;
     margin-right: 55px;
     margin-left: 55px;
     width: 200px;
@@ -153,12 +153,13 @@ h1 {
 
 .logos .circle {
     vertical-align: top;
-    display:  inline-block;
+    display: inline-block;
     background-color: white;
     border-radius: 92px;
     width: 184px;
     height: 184px;
 }
+
 .logos .circle img {
     width: 115px;
     display: inline;
@@ -286,13 +287,13 @@ h1 {
     text-align: center;
     width: 1030px;
     margin: auto;
-    padding:0px;
+    padding: 0px;
     padding-top: 20px;
 }
 
 .donnees li {
     display: inline-block;
-    vertical-align:top;
+    vertical-align: top;
     width: 265px;
     margin-right: 75px;
     margin-top: 20px;
@@ -332,6 +333,7 @@ h1 {
     border-width: 20px 27px 0 27px;
     border-color: #E1E2E4 transparent transparent transparent;
 }
+
 .question h1 {
     color: #FFFFFF;
     font-size: 36px;
@@ -380,7 +382,7 @@ h1 {
 }
 
 @media (min-width: 1024px) {
-    .title, .confiance h1, .services h1 , .retrouver h1, .donnees h1 {
+    .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
         font-size: 42px;
     }
 
@@ -404,7 +406,7 @@ h1 {
 }
 
 @media (max-width: 1024px) {
-    .title, .confiance h1, .services h1 , .retrouver h1, .donnees h1 {
+    .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
         font-size: 38px;
     }
 
@@ -413,7 +415,7 @@ h1 {
     }
 
     .content-how ul {
-        width: 700px; 
+        width: 700px;
     }
 
     .services ul {
@@ -437,7 +439,7 @@ h1 {
 }
 
 @media (max-width: 740px) {
-    .title, .confiance h1, .services h1 , .retrouver h1, .donnees h1 {
+    .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
         font-size: 30px;
     }
 

@@ -334,7 +334,7 @@ export default class Graphes extends React.Component {
 
                             <div className="pull-right">
                                 <button className="btn btn-success btn-sm"
-                                    onClick={this.closeModal}>
+                                        onClick={this.closeModal}>
                                     Fermer <i className="glyphicon glyphicon glyphicon-remove" />
                                 </button>
                             </div>

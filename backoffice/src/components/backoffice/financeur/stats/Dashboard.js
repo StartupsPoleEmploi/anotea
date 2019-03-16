@@ -50,19 +50,22 @@ export default class DashBoard extends React.Component {
             <div>
                 <h2>
                     <i className="fas fa-chevron-left goToYear" onClick={this.goToPreviousYear} />
-                    
+
                     {this.getTitle()}
 
-                    { this.state.year !== 'TOTAL' &&
-                        <i className="fas fa-chevron-right goToYear" onClick={this.goToNextYear} />
+                    {this.state.year !== 'TOTAL' &&
+                    <i className="fas fa-chevron-right goToYear" onClick={this.goToNextYear} />
                     }
                 </h2>
                 <div className="row">
                     <div className="col-md-6">
-                        <Table codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} changeType={this.onChangeType} type={this.state.type} index={this.state.index} year={this.state.year} />
+                        <Table codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion}
+                               changeType={this.onChangeType} type={this.state.type} index={this.state.index}
+                               year={this.state.year} />
                     </div>
                     <div className="col-md-6">
-                        <Graph codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} type={this.state.type} year={this.state.year} />
+                        <Graph codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion}
+                               type={this.state.type} year={this.state.year} />
                     </div>
                 </div>
             </div>

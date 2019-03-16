@@ -5,9 +5,9 @@ import './ExportButton.scss';
 
 export default class ExportButton extends React.Component {
 
-  exportOrganismeInfoToExcel = () => {
-      // exportOrganismes();
-  };
+    exportOrganismeInfoToExcel = () => {
+        // exportOrganismes();
+    };
 
     render() {
         return (

@@ -18,14 +18,14 @@ class Remerciements extends Component {
     render() {
         return (
             <div className="remerciements">
-                { this.props.stagiaire &&
-                    <div>
-                        <Header stagiaire={this.props.stagiaire} />
+                {this.props.stagiaire &&
+                <div>
+                    <Header stagiaire={this.props.stagiaire} />
 
-                        <PanelRemerciements infosRegion={this.props.infosRegion} stagiaire={this.props.stagiaire} />
+                    <PanelRemerciements infosRegion={this.props.infosRegion} stagiaire={this.props.stagiaire} />
 
-                        <Footer codeRegion={this.props.stagiaire.codeRegion} />
-                    </div>
+                    <Footer codeRegion={this.props.stagiaire.codeRegion} />
+                </div>
                 }
             </div>
         );

@@ -2,7 +2,11 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { askNewPassword, updatePassword, checkIfPasswordTokenExists } from '../backoffice/account/service/forgottenPasswordService';
+import {
+    askNewPassword,
+    updatePassword,
+    checkIfPasswordTokenExists
+} from '../backoffice/account/service/forgottenPasswordService';
 import { isPasswordStrongEnough, checkConfirm, passwordIsOK } from '../../utils/validation';
 
 export default class ForgottenPassword extends React.Component {
@@ -76,12 +80,12 @@ export default class ForgottenPassword extends React.Component {
                         <div className="alert alert-danger">Cet identifiant est inconnu.</div>}
 
                         <input type="text"
-                            id="username"
-                            value={this.state.username}
-                            className="form-control input-sm"
-                            placeholder="Numéro de SIRET ou identifiant"
-                            onChange={this.handleUsernameChange}
-                            onKeyPress={this.handleKeyPress} />
+                               id="username"
+                               value={this.state.username}
+                               className="form-control input-sm"
+                               placeholder="Numéro de SIRET ou identifiant"
+                               onChange={this.handleUsernameChange}
+                               onKeyPress={this.handleKeyPress} />
 
                         <div className="wrapper">
                             <span className="group-btn">
@@ -96,7 +100,8 @@ export default class ForgottenPassword extends React.Component {
                         <p>Vous allez pouvoir recréer un mot de passe qui vous permettra d'accéder à votre espace
                             Anotéa.</p>
 
-                        <p>Il vous suffit simplement de saisir le numéro de SIRET de votre organisme ou identifiant et de cliquer sur
+                        <p>Il vous suffit simplement de saisir le numéro de SIRET de votre organisme ou identifiant et
+                            de cliquer sur
                             le bouton «Envoyer».</p>
                         <p>Vous recevrez très rapidement un e-mail qui vous permettra de créer un nouveau mot de passe
                             afin d'accéder à votre espace en toute sécurité.</p>
@@ -123,9 +128,9 @@ export default class ForgottenPassword extends React.Component {
                         <div className="form-group">
                             <label>Choisissez un nouveau mot de passe pour votre compte Anotea</label>
                             <input type="password"
-                                className={'form-control ' + (isPasswordStrongEnough(this.state.password) ? 'is-valid' : 'is-invalid')}
-                                onChange={this.handlePasswordChange} value={this.state.password}
-                                placeholder="Mot de passe" />
+                                   className={'form-control ' + (isPasswordStrongEnough(this.state.password) ? 'is-valid' : 'is-invalid')}
+                                   onChange={this.handlePasswordChange} value={this.state.password}
+                                   placeholder="Mot de passe" />
                             {!isPasswordStrongEnough(this.state.password) &&
                             <div className="invalid-feedback">
                                 Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère
@@ -136,9 +141,9 @@ export default class ForgottenPassword extends React.Component {
                         <div className="form-group">
                             <label>Confirmez votre mot de passe</label>
                             <input type="password"
-                                className={'form-control ' + (checkConfirm(this.state.password, this.state.passwordConfirm) ? 'is-valid' : 'is-invalid')}
-                                onChange={this.handlePasswordConfirmChange} value={this.state.passwordConfirm}
-                                placeholder="Mot de passe" />
+                                   className={'form-control ' + (checkConfirm(this.state.password, this.state.passwordConfirm) ? 'is-valid' : 'is-invalid')}
+                                   onChange={this.handlePasswordConfirmChange} value={this.state.passwordConfirm}
+                                   placeholder="Mot de passe" />
                             {!checkConfirm(this.state.password, this.state.passwordConfirm) &&
                             <div className="invalid-feedback">
                                 Les mots de passes ne sont pas identiques.
@@ -146,15 +151,15 @@ export default class ForgottenPassword extends React.Component {
                             }
                         </div>
                         <a role="button" className="btn btn-primary"
-                            disabled={!passwordIsOK(this.state.password, this.state.passwordConfirm)}
-                            onClick={this.handePasswordChange}>Modifier</a>
+                           disabled={!passwordIsOK(this.state.password, this.state.passwordConfirm)}
+                           onClick={this.handePasswordChange}>Modifier</a>
                     </form>
                 </div>
                 }
                 {this.state.passwordLost && this.state.userInfo &&
                 <div className="passwordChanged">
                     Votre mot de passe a été changé avec succès. Vous pouvez maintenant accéder à <a
-                        onClick={this.onSuccess} role="button">votre espace Anotea</a>.
+                    onClick={this.onSuccess} role="button">votre espace Anotea</a>.
                 </div>}
             </div>
         );

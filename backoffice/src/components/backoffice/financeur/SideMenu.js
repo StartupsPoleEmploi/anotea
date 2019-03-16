@@ -35,8 +35,12 @@ export default class SideMenu extends React.PureComponent {
                         <span className="caret"></span>
                     </button>
                     <div className="dropdown-menu">
-                        <button className={`"dropdown-item ${this.state.currentPage === 'advices' ? 'active' : ''}`} onClick={this.changePage.bind(this, 'advices')}>Avis</button>
-                        <button className={`"dropdown-item ${this.state.currentPage === 'stats' ? 'active' : ''}`} onClick={this.changePage.bind(this, 'stats')}>Statistiques</button>
+                        <button className={`"dropdown-item ${this.state.currentPage === 'advices' ? 'active' : ''}`}
+                                onClick={this.changePage.bind(this, 'advices')}>Avis
+                        </button>
+                        <button className={`"dropdown-item ${this.state.currentPage === 'stats' ? 'active' : ''}`}
+                                onClick={this.changePage.bind(this, 'stats')}>Statistiques
+                        </button>
                     </div>
                 </div>
             </div>

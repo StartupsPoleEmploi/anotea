@@ -41,12 +41,17 @@ class ChampCommentaire extends Component {
         return (
             <div className="champ-commentaire">
                 <span className={`title_${this.props.name}`}><strong>{this.props.titre}</strong> (optionnel)</span>
-                <textarea className={`textarea_${this.props.name} ${this.state.badwords ? 'badwords' : ''}`} type="text" placeholder={this.props.placeholder} name={this.props.name} value={this.state.value} onChange={this.onChange} />
-                { this.state.value.length > 0 &&
-                    <div className={this.state.value.length === LIMIT ? 'remaining no' : 'remaining yes'}>{LIMIT - this.state.value.length} caractères restant</div>
+                <textarea className={`textarea_${this.props.name} ${this.state.badwords ? 'badwords' : ''}`} type="text"
+                          placeholder={this.props.placeholder} name={this.props.name} value={this.state.value}
+                          onChange={this.onChange} />
+                {this.state.value.length > 0 &&
+                <div
+                    className={this.state.value.length === LIMIT ? 'remaining no' : 'remaining yes'}>{LIMIT - this.state.value.length} caractères
+                    restant</div>
                 }
-                { this.state.badwords &&
-                    <div className="alert badwords">Votre commentaire comporte une ou plusieurs injures, <strong>veuillez corriger votre commentaire</strong>.</div>
+                {this.state.badwords &&
+                <div className="alert badwords">Votre commentaire comporte une ou plusieurs injures, <strong>veuillez
+                    corriger votre commentaire</strong>.</div>
                 }
             </div>
         );

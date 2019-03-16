@@ -14,7 +14,7 @@ export default class SideMenu extends React.PureComponent {
     }
 
     hide = () => {
-        this.setState({shown: false });
+        this.setState({ shown: false });
     }
 
     render() {
@@ -22,7 +22,8 @@ export default class SideMenu extends React.PureComponent {
             <div className={`notice alert ${!this.state.shown ? 'hidden' : ''}`}>
                 <button className="close" onClick={this.hide}>x</button>
                 <p>Vous avez des questions sur le fonctionnement d'Anotea?</p>
-                <p>Consulter notre page <a href={`https://anotea.pole-emploi.fr/notices/notice-${this.props.codeRegion}.pdf`}>"Aide"</a></p>
+                <p>Consulter notre page <a
+                    href={`https://anotea.pole-emploi.fr/notices/notice-${this.props.codeRegion}.pdf`}>"Aide"</a></p>
             </div>
         );
     }
