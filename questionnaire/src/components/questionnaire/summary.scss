@@ -1,0 +1,31 @@
+@import '../../styles/variables';
+
+.summary {
+  border: 1px solid $color-grey-5;
+  padding: 0.875rem;
+  font-size: 1rem;
+
+  .titre {
+    font-weight: $font-weight-700;
+  }
+
+  .pseudo {
+    font-size: 0.875rem;
+    font-weight: $font-weight-700;
+  }
+
+  .by {
+    font-size: 0.875rem;
+    color: $color-grey-50;
+  }
+
+  .missing {
+    font-size: 0.875rem;
+    font-weight: $font-weight-400;
+    color: $color-grey-50;
+  }
+
+  .separator {
+    border-right: 1px solid $color-grey-5;
+  }
+}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Questionnaire from './components/Questionnaire';
+import Questionnaire from './components/questionnaire/Questionnaire';
 import Remerciements from './components/Remerciements';
 import NoMatch from './components/NoMatch';
 
@@ -18,11 +18,11 @@ class App extends Component {
     state = {
         stagiaire: null,
         infosRegion: null
-    }
+    };
 
     showRemerciements = infosRegion => {
         this.setState({ infosRegion, toRemerciements: true });
-    }
+    };
 
     setStagiaire = stagiaire => this.setState({ stagiaire });
 
@@ -35,11 +35,19 @@ class App extends Component {
                     }
 
                     <Switch>
-                        <Route path={`${process.env.PUBLIC_URL}/:token`} exact render={props => (
-                            <Questionnaire token={props.match.params.token} setStagiaire={this.setStagiaire}
-                                           showRemerciements={this.showRemerciements} />)} />
-                        <Route path={`${process.env.PUBLIC_URL}/:token/remerciements`} exact render={() => (
-                            <Remerciements stagiaire={this.state.stagiaire} infosRegion={this.state.infosRegion} />)} />
+                        <Route path={`${process.env.PUBLIC_URL}/:token`} exact render={props => {
+                            return (
+                                <Questionnaire
+                                    token={props.match.params.token}
+                                    setStagiaire={this.setStagiaire}
+                                    showRemerciements={this.showRemerciements} />);
+                        }} />
+                        <Route path={`${process.env.PUBLIC_URL}/:token/remerciements`} exact render={() => {
+                            return (
+                                <Remerciements
+                                    stagiaire={this.state.stagiaire}
+                                    infosRegion={this.state.infosRegion} />);
+                        }} />
                         <Route component={NoMatch} />
                     </Switch>
                 </div>

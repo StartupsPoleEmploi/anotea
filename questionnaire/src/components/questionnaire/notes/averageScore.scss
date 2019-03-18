@@ -1,0 +1,19 @@
+@import '../../../styles/variables';
+
+.average-score {
+
+  .score {
+    color: $color-black;
+    font-size: 1rem;
+
+    .average {
+      font-size: 2rem;
+      font-weight: 900;
+    }
+
+    .star {
+      padding-left: 0.25rem;
+      color: $color-orange;
+    }
+  }
+}

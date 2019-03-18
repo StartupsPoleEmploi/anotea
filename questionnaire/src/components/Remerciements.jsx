@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 
-import Header from './Header';
-import Footer from './Footer';
+import Header from './common/Header';
+import Footer from './common/Footer';
 
 import './remerciements.scss';
 import PanelRemerciements from './PanelRemerciements';

@@ -1,0 +1,25 @@
+@import '../../styles/variables';
+
+.footer {
+
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+  text-align: center;
+
+  .propulsed {
+    color: $color-black;
+    font-size: 0.875rem;
+  }
+
+  .logo-pe, .logo-region, .logo {
+    vertical-align: middle;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .logo {
+    margin-top: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
