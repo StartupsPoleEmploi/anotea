@@ -21,8 +21,8 @@ services:
     build:
       context: backoffice
       args:
-        REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID:1234
-        REACT_APP_ANOTEA_HOTJAR_ID:1234
+        - REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID:1234
+        - REACT_APP_ANOTEA_HOTJAR_ID:1234
     depends_on:
       - backend
 
@@ -32,8 +32,8 @@ services:
     build:
       context: questionnaire
       args:
-        REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID:1234
-        REACT_APP_ANOTEA_HOTJAR_ID:1234
+        - REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID:1234
+        - REACT_APP_ANOTEA_HOTJAR_ID:1234
     depends_on:
       - backend
 
