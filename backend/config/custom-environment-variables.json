@@ -37,7 +37,7 @@
     "dsn": "ANOTEA_SENTRY_DSN"
   },
   "analytics": {
-    "ga": "REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID"
+    "ga": "ANOTEA_GOOGLE_ANALYTICS_ID"
   },
   "smtp": {
     "host": "ANOTEA_SMTP_HOST",
