@@ -12,6 +12,8 @@ Le projet est composé de deux projets :
 - backend qui contient un serveur node.js et expose des serveurs via un API
 - backoffice qui contient une Single Page Application en React fournissant des outils de modération d'avis
 
+[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=cDdFS0VEeVkwNGplNWRRZTc3ajFXakk3Z1FYS1VXOVdDbHU1K0F0TDlYTT0tLWJJU1RoSk9YZzliWURyODU5a0xRZEE9PQ==--891e4fe6e282b4d38005ce6116797dbf12e80496)](https://www.browserstack.com/automate/public-build/cDdFS0VEeVkwNGplNWRRZTc3ajFXakk3Z1FYS1VXOVdDbHU1K0F0TDlYTT0tLWJJU1RoSk9YZzliWURyODU5a0xRZEE9PQ==--891e4fe6e282b4d38005ce6116797dbf12e80496)
+
 ## Démarrer l'application 
 
 L'application nécessite MongoDB 4, Node.js 8

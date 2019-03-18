@@ -6,6 +6,7 @@ import './stars.scss';
 
 const MAX_STARS = 5;
 const tooltipLabels = ['Pas du tout satisfait', 'Pas satisfait', 'Moyennement satisfait', 'Satisfait', 'Très satisfait'];
+const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
 export default class Stars extends React.PureComponent {
 
@@ -84,22 +85,37 @@ export default class Stars extends React.PureComponent {
         }
     }
 
+    mouseOverHandler = index => {
+        if (iOS) {
+            this.select(index);
+        } else {
+            this.updateHoverState(index);
+        }
+    }
+
+    mouseOutHandler = () => {
+        if (!iOS) {
+            this.removeHoverState();
+        }
+    }
+
     render() {
         return (
             <div className={`stars ${this.state.readonly ? 'readonly' : ''}`}>
                 <div className="tooltip-block">
-                    <span className={`star-tooltip ${(this.state.hover !== null || this.state.selected !== null) && !this.state.readonly ? 'active' : 'inactive'}`}>
+                    <span
+                        className={`star-tooltip ${(this.state.hover !== null || this.state.selected !== null) && !this.state.readonly ? 'active' : 'inactive'}`}>
                         {tooltipLabels[this.state.hover !== null ? this.state.hover - 1 : this.state.selected - 1]}
                     </span>
                 </div>
                 {
                     this.state.starArray.map((star, index) =>
                         <div className="star-block" key={index}>
-                            <span
+                            <button
                                 className={`star ${this.getStar(index)}`}
                                 style={this.props.starsStyle ? this.props.starsStyle : { width: '20px' }}
-                                onMouseOver={this.updateHoverState.bind(this, index)}
-                                onMouseOut={this.removeHoverState}
+                                onMouseOver={this.mouseOverHandler.bind(this, index)}
+                                onMouseOut={this.mouseOutHandler.bind(this)}
                                 onClick={this.select.bind(this, index)}
                             />
                         </div>

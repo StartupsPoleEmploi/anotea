@@ -2,7 +2,7 @@ const moment = require('moment');
 
 module.exports = (db, logger) => {
 
-    const SINCE = moment().subtract(15, 'months').format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+    const SINCE = moment().subtract(24, 'months').format('YYYY-MM-DDTHH:mm:ss.SSSZ');
 
     let filter = { 'training.scheduledEndDate': { $lte: new Date(SINCE) } };
     let count = 0;

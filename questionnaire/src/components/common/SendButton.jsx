@@ -14,8 +14,9 @@ class SendButton extends Component {
     render() {
         return (
             <div className="send-button">
-                <button className="send-button" type="button" onClick={this.props.onSend} disabled={!this.props.enabled}>
-                    { this.props.text ? this.props.text : 'Envoyer' }
+                <button className="send-button" type="button" onClick={this.props.onSend}
+                        disabled={!this.props.enabled}>
+                    {this.props.text ? this.props.text : 'Envoyer'}
                 </button>
             </div>
         );

@@ -125,7 +125,11 @@ responses:
   GenerateAuthUrlResponse:
     description: Contient l'url permettant à l'organisme de s'authentifier en SSO sur Anotéa
     schema:
-      $ref: "#/definitions/AuthUrl"
+      $ref: "#/definitions/OrganismeAuthUrl"
+
+  CheckIfOrganismeIsEligibleResponse:
+    schema:
+      $ref: "#/definitions/CheckOrganismeEligibility"
 
   UnauthorizedErrorResponse:
     description: Le header Authorization header est manquant ou invalide
@@ -412,7 +416,7 @@ definitions:
       score:
         $ref: "#/definitions/Score"
 
-  AuthUrl:
+  OrganismeAuthUrl:
     type: object
     properties:
       url:
@@ -422,18 +426,19 @@ definitions:
         type: object
         properties:
           organisme:
-            type: object
-            properties:
-              siret:
-                type: string
-                description: Le siret de l'organisme qui est aussi son login
-              raison_sociale:
-                type: string
-                description: Le raison sociale de l'organisme qui est aussi son login
-              code_region:
-                type: string
-                description: Le code region de l'organisme qui est aussi son login
+            $ref: "#/definitions/OrganismeFormateur"
 
+  CheckOrganismeEligibility:
+    type: object
+    properties:
+      eligible:
+        type: boolean
+        description: true si l'organisme est éligible
+      meta:
+        type: object
+        properties:
+          organisme:
+            $ref: "#/definitions/OrganismeFormateur"
 
 paths:
   /v1/avis:
@@ -811,7 +816,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
-  /backoffice/generate-auth-url:
+  /kairos/generate-auth-url:
     post:
       description: >
         Permet de générer un lien pour authentifier en SSO un organisme sur le backoffice Anotéa (signin).
@@ -848,4 +853,26 @@ paths:
           $ref: "#/responses/GenerateAuthUrlResponse"
         400:
           $ref: "#/responses/BadRequestErrorResponse"
+
+  /kairos/check-if-organisme-is-eligible:
+    get:
+      description: >
+        Permet de vérifier si un organisme est éligible à la connexion Anoté
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: siret
+          description: Le SIRET de l'organisme formateur
+          type: string
+          required: true
+
+      security:
+        - Bearer: []
+      responses:
+        200:
+          $ref: "#/responses/CheckIfOrganismeIsEligibleResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+
 

@@ -12,7 +12,7 @@
     }
   }
 
-  &.gestion {
+  &.misc {
     background-color: $color-green;
 
     .dropdown-menu {
@@ -37,7 +37,7 @@
       }
 
       .dropdown-item {
-        padding: 0.1rem 0.75rem;
+        padding: 0.1rem 0.5rem;
         margin-left: 0.5rem;
         color: rgba(255, 255, 255, 0.6);
 

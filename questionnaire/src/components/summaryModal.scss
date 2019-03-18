@@ -2,79 +2,84 @@
 
 .summary-modal {
 
-    h2 {
-        text-align: center;
-        margin: 10px 0px 20px 0px;
+  h2 {
+    text-align: center;
+    margin: 10px 0px 20px 0px;
+  }
+
+  .summary {
+    border: 1px solid $color-grey-25;
+    box-shadow: $shadow;
+    border-radius: 5px;
+    width: auto;
+
+    .header-summary {
+      margin-bottom: 10px;
+
+      .stars {
+        margin-top: -10px;
+      }
     }
 
-    .summary {
-        height: 160px;
+    ul.note-list {
+      padding: 0;
+      margin-bottom: 0;
+
+      li:first-child {
+        border-left: none;
+      }
+
+      li {
+        display: block;
         border: 1px solid $color-grey-25;
-        box-shadow: $shadow;
-        border-radius: 5px;
-        width: auto;
+        border-right: none;
+        height: 50px;
+        min-width: 125px;
 
-        .header-summary {
-            height: 109px;
-            
-            .stars {
-                margin-top: -10px;
-            }
+        h3 {
+          margin: 0px;
+          font-weight: normal;
+          font-size: 1rem;
+          text-overflow: ellipsis;
+          text-overflow: fade(10px);
+          text-overflow: fade(5%);
+          white-space: nowrap;
+          overflow: hidden;
+          display: block;
+          color: $color-grey-50;
         }
 
-        ul.note-list {
-            padding: 0;
+        span {
+          font-weight: bold;
+          font-size: 1rem;
 
-            li:first-child {
-                border-left: none;
-            }
-
-            li {
-                display: block;
-                border: 1px solid $color-grey-25;
-                border-right: none;
-                height: 50px;
-
-                h3 {
-                    margin: 0px;
-                    font-weight: normal;
-                    font-size: 1rem;
-                    text-overflow: ellipsis;
-                    text-overflow: fade(10px);
-                    text-overflow: fade(5%);
-                    white-space: nowrap;
-                    overflow: hidden;
-                    display: block;
-                    color: $color-grey-50;
-                }
-
-                span {
-                    font-weight: bold;
-                    font-size: 1rem;
-
-                    .fas.fa-star {
-                        color: $color-yellow;
-                    }
-                }
-            }
+          .fas.fa-star {
+            color: $color-yellow;
+          }
         }
+      }
+    }
+  }
+
+  .buttons {
+    float: right;
+
+    .cancel {
+      color: $color-red;
+      margin-right: 20px;
+      cursor: pointer;
     }
 
-    .buttons {
-        float: right;
-
-        .cancel {
-            color: $color-red;
-            margin-right: 20px;
-            cursor: pointer;
-        }
-
-        .send-button {
-            display: inline;
-        }
+    .send-button {
+      display: inline;
     }
+  }
+
+  .clear {
+    clear: both;
+  }
 }
 
 .ReactModalPortal .ReactModal__Overlay {
-    background-color: rgba(0,0,0,0.75) !important;
+  background-color: rgba(0, 0, 0, 0.75) !important;
 }

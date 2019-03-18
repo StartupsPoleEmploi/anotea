@@ -2,53 +2,79 @@
 
 .panel-remerciements {
 
+  .links-block {
+    width: 760px;
+    margin: auto;
+    text-align: center;
+    margin-top: 3em;
+
+    h1 {
+      color: $color-blue;
+      font-size: 1.5rem;
+      line-height: 29px;
+      font-weight: 900;
+    }
+
+    .link {
+      width: 30%;
+      margin: 20px 10px 0px 10px;
+      background-color: $color-blue-10;
+      border-radius: 5px;
+
+      .btn {
+        color: $color-blue;
+        font-size: 1rem;
+        line-height: 24px;
+      }
+    }
+  }
+
+  .merci {
+    height: 252px;
+    width: 100%;
+    background-color: $color-grey-5;
+    text-align: center;
+    padding-top: 1em;
+    margin-top: 3em;
+
+    h2 {
+      color: $color-blue;
+    }
+
+    p {
+      width: 517px;
+      margin: auto;
+      font-size: 0.9rem;
+      line-height: 21px;
+      color: $color-black;
+      margin-bottom: 2em;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .panel-remerciements {
+
     .links-block {
-        width: 760px;
+
+      .link {
         margin: auto;
-        text-align: center;
-        margin-top: 3em;
-
-        h1 {
-            color: $color-blue;
-            font-size: 1.5rem;
-            line-height: 29px;
-            font-weight: 900;
-        }
-
-        .link {
-            width: 30%;
-            float: left;
-            margin: 20px 10px 0px 10px;
-            background-color: $color-blue-10;
-            border-radius: 5px;
-
-            .btn {
-                color: $color-blue;
-                font-size: 1rem;
-                line-height: 24px;
-            }
-        }  
+        color: red;
+        margin-top: 15px;
+      }
     }
+  }
+}
 
-    .merci {
-        height: 252px;
-        width: 100%;
-        background-color: $color-grey-5;
-        text-align: center;
-        padding-top: 1em;
-        margin-top: 3em;
+@media screen and (min-width: 1024px) {
+  .panel-remerciements {
 
-        h2 {
-            color: $color-blue;
-        }
+    .links-block {
 
-        p {
-            width: 517px;
-            margin: auto;
-            font-size: 0.9rem;
-            line-height: 21px;
-            color: $color-black;
-            margin-bottom: 2em;
-        }
+      .link {
+        color: green;
+        float: left;
+      }
     }
+  }
 }

@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
@@ -26,7 +25,7 @@ class SummaryModal extends Component {
             width: '60%',
             margin: 'auto',
             marginTop: '25%',
-            height: '310px',
+            overflow: 'auto',
             backgroundColor: 'white',
             padding: '15px',
             borderRadius: '5px',
@@ -51,19 +50,19 @@ class SummaryModal extends Component {
                             <AverageScore score={this.props.score} />
                             <span>par <strong>{this.props.pseudo !== '' ? this.props.pseudo : 'anonyme'}</strong></span>
                         </div>
-                        
+
 
                         <div className="col-sm-8">
-                            { (this.props.commentaire.titre !== '' || this.props.commentaire.texte !== '') && 
-                                <div>
-                                    <h3>{this.props.commentaire.titre}</h3>
-                                    <p>
-                                        {this.props.commentaire.texte}
-                                    </p>
-                                </div>
+                            {(this.props.commentaire.titre !== '' || this.props.commentaire.texte !== '') &&
+                            <div>
+                                <h3>{this.props.commentaire.titre}</h3>
+                                <p>
+                                    {this.props.commentaire.texte}
+                                </p>
+                            </div>
                             }
-                            { this.props.commentaire.titre === '' && this.props.commentaire.texte === '' && 
-                                <span>Si vous souhaitez écrire un commentaire, cliquer sur annuler.</span>
+                            {this.props.commentaire.titre === '' && this.props.commentaire.texte === '' &&
+                            <span>Si vous souhaitez écrire un commentaire, cliquer sur annuler.</span>
                             }
                         </div>
                     </div>
@@ -72,7 +71,7 @@ class SummaryModal extends Component {
                         {
                             items.map((item, index) => {
                                 return (
-                                    <li className={`col-sm-2 ${index % 2 === 0 ? 'even' : 'odd'}`} key={index}>
+                                    <li className={`col ${index % 2 === 0 ? 'even' : 'odd'}`} key={index}>
                                         <h3>{item.title}</h3>
                                         <span>{this.props.notes[index].value}/5 <i className="fas fa-star" /></span>
                                     </li>
@@ -83,8 +82,12 @@ class SummaryModal extends Component {
                 </div>
 
                 <div className="buttons">
-                    <a className="cancel" onClick={this.props.closeModal}>Annuler</a> <SendButton enabled={true} onSend={this.props.submit} text="Confirmer" />
+                    <a className="cancel" onClick={this.props.closeModal}>Annuler</a> <SendButton enabled={true}
+                                                                                                  onSend={this.props.submit}
+                                                                                                  text="Confirmer" />
                 </div>
+
+                <div className="clear"></div>
             </Modal>
         );
     }

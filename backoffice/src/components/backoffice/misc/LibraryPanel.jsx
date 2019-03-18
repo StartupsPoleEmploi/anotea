@@ -79,7 +79,7 @@ const LibraryPanel = () => {
                     </div>
                 }
                 results={
-                    <div >
+                    <div>
                         <div className="row py-3">
                             <div className="offset-1 col-2">
                                 <h3>BUTTONS</h3>

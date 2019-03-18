@@ -26,7 +26,7 @@ export default class Edition extends React.Component {
         this.props.onClose();
         this.props.onChange(updated, {
             message: {
-                text: 'L\'avis a été publié.',
+                text: <span>L&apos;avis a été <b>publié</b> et taggué comme <b>{updated.qualification}</b>.</span>,
                 type: this.props.avis.published ? 'global' : 'local',
             },
         });

@@ -47,20 +47,22 @@ module.exports = ({ db, middlewares }) => {
         });
 
         let stats = await db.collection(mailStatsCollection).aggregate([
-            { $match:
+            {
+                $match:
                 match
             },
-            { $group:
-                {
-                    _id: '$_id.month',
-                    count: { $sum: '$count' },
-                    countEmailOpen: { $sum: '$countEmailOpen' },
-                    countAdvicesPublished: { $sum: '$countAdvicesPublished' },
-                    countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
-                    countAdvicesPositif: { $sum: '$countAdvicesPositif' },
-                    countAdvicesNegatif: { $sum: '$countAdvicesNegatif' },
-                    countAdvicesRejected: { $sum: '$countAdvicesRejected' }
-                }
+            {
+                $group:
+                    {
+                        _id: '$_id.month',
+                        count: { $sum: '$count' },
+                        countEmailOpen: { $sum: '$countEmailOpen' },
+                        countAdvicesPublished: { $sum: '$countAdvicesPublished' },
+                        countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
+                        countAdvicesPositif: { $sum: '$countAdvicesPositif' },
+                        countAdvicesNegatif: { $sum: '$countAdvicesNegatif' },
+                        countAdvicesRejected: { $sum: '$countAdvicesRejected' }
+                    }
             }
         ]).toArray();
 
@@ -108,50 +110,56 @@ module.exports = ({ db, middlewares }) => {
         }
 
         let stats = await db.collection(mailStatsCollection).aggregate([
-            { $match:
+            {
+                $match:
                 match
             },
-            { $group:
-                {
-                    _id: null,
-                    count: { $sum: '$count' },
-                    countEmailOpen: { $sum: '$countEmailOpen' },
-                    countAdvicesPublished: { $sum: '$countAdvicesPublished' },
-                    countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
-                    countAdvicesPositif: { $sum: '$countAdvicesPositif' },
-                    countAdvicesNegatif: { $sum: '$countAdvicesNegatif' },
-                    countAdvicesRejected: { $sum: '$countAdvicesRejected' }
-                }
+            {
+                $group:
+                    {
+                        _id: null,
+                        count: { $sum: '$count' },
+                        countEmailOpen: { $sum: '$countEmailOpen' },
+                        countAdvicesPublished: { $sum: '$countAdvicesPublished' },
+                        countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
+                        countAdvicesPositif: { $sum: '$countAdvicesPositif' },
+                        countAdvicesNegatif: { $sum: '$countAdvicesNegatif' },
+                        countAdvicesRejected: { $sum: '$countAdvicesRejected' }
+                    }
             }
         ]).toArray();
 
 
         let organismesStats = await db.collection('organismesStats').aggregate([
-            { $match:
+            {
+                $match:
                 match
             },
-            { $group:
-                {
-                    _id: null,
-                    countOrganisme: { $sum: '$count' },
-                    countOrganismeAccountCreated: { $sum: '$countAccountCreated' },
-                    countOrganismeWithMorethanOneAdvice: { $sum: '$countWithMorethanOneAdvice' },
-                    countOrganismeLogin: { $sum: '$countLogin' }
-                }
+            {
+                $group:
+                    {
+                        _id: null,
+                        countOrganisme: { $sum: '$count' },
+                        countOrganismeAccountCreated: { $sum: '$countAccountCreated' },
+                        countOrganismeWithMorethanOneAdvice: { $sum: '$countWithMorethanOneAdvice' },
+                        countOrganismeLogin: { $sum: '$countLogin' }
+                    }
             }
         ]).toArray();
 
         let sessionsStats = await db.collection(sessionsStatsCollection).aggregate([
-            { $match:
+            {
+                $match:
                 match
             },
-            { $group:
-                {
-                    _id: null,
-                    countSessions: { $sum: '$count' },
-                    countSessionsWithAdvices: { $sum: '$countWithAdvices' },
-                    countSessionsWithMoreThanTwoAdvices: { $sum: '$countWithMoreThanTwoAdvices' }
-                }
+            {
+                $group:
+                    {
+                        _id: null,
+                        countSessions: { $sum: '$count' },
+                        countSessionsWithAdvices: { $sum: '$countWithAdvices' },
+                        countSessionsWithMoreThanTwoAdvices: { $sum: '$countWithMoreThanTwoAdvices' }
+                    }
             }
         ]).toArray();
 

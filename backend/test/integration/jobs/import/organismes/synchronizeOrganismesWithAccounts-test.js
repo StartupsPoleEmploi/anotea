@@ -24,7 +24,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
-        assert.deepEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
+        assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
             _id: 22222222222222,
             SIRET: 22222222222222,
             courriel: 'anotea.pe+paris@gmail.com',
@@ -47,6 +47,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
             ],
             meta: {
                 siretAsString: '22222222222222',
+                kairos: {
+                    eligible: false,
+                }
             },
         });
     });
@@ -78,7 +81,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.updateDate);
-        assert.deepEqual(_.omit(doc, ['updateDate']), {
+        assert.deepStrictEqual(_.omit(doc, ['updateDate']), {
             _id: 22222222222222,
             SIRET: 22222222222222,
             raisonSociale: 'Formateur',
@@ -144,7 +147,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         let doc = await db.collection('accounts').findOne({ SIRET: 33333333333333 });
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
-        assert.deepEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
+        assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
             _id: 33333333333333,
             SIRET: 33333333333333,
             courriel: 'contact+kairos@formation.fr',
@@ -158,6 +161,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
             lieux_de_formation: [],
             meta: {
                 siretAsString: '33333333333333',
+                kairos: {
+                    eligible: false,
+                }
             },
         });
     });

@@ -70,15 +70,15 @@ export default class AccountActivation extends React.Component {
                             <div className="form-group">
                                 <label>Votre identifiant pour la connexion</label>
                                 <input type="text" className="form-control" value={this.state.accountStatus.siret}
-                                    readOnly="readonly" />
+                                       readOnly="readonly" />
                             </div>
                             <div className="form-group">
                                 <label className="instructions">Choisissez un mot de passe pour créer votre compte
                                     Anotea</label>
                                 <input type="password"
-                                    className={'form-control ' + (isPasswordStrongEnough(this.state.password) ? 'is-valid' : 'is-invalid')}
-                                    onChange={this.handlePasswordChange} value={this.state.password}
-                                    placeholder="Mot de passe" />
+                                       className={'form-control ' + (isPasswordStrongEnough(this.state.password) ? 'is-valid' : 'is-invalid')}
+                                       onChange={this.handlePasswordChange} value={this.state.password}
+                                       placeholder="Mot de passe" />
                                 {!isPasswordStrongEnough(this.state.password) &&
                                 <div className="invalid-feedback">
                                     Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un
@@ -89,9 +89,9 @@ export default class AccountActivation extends React.Component {
                             <div className="form-group">
                                 <label>Confirmez votre mot de passe</label>
                                 <input type="password"
-                                    className={'form-control ' + (checkConfirm(this.state.password, this.state.passwordConfirm) ? 'is-valid' : 'is-invalid')}
-                                    onChange={this.handlePasswordConfirmChange} value={this.state.passwordConfirm}
-                                    placeholder="Mot de passe" />
+                                       className={'form-control ' + (checkConfirm(this.state.password, this.state.passwordConfirm) ? 'is-valid' : 'is-invalid')}
+                                       onChange={this.handlePasswordConfirmChange} value={this.state.passwordConfirm}
+                                       placeholder="Mot de passe" />
                                 {!checkConfirm(this.state.password, this.state.passwordConfirm) &&
                                 <div className="invalid-feedback">
                                     Les mots de passes ne sont pas identiques.
@@ -99,21 +99,21 @@ export default class AccountActivation extends React.Component {
                                 }
                             </div>
                             <a role="button" className="btn btn-primary"
-                                disabled={!passwordIsOK(this.state.password, this.state.passwordConfirm)}
-                                onClick={this.handleActivation}>Créez votre compte</a>
+                               disabled={!passwordIsOK(this.state.password, this.state.passwordConfirm)}
+                               onClick={this.handleActivation}>Créez votre compte</a>
                         </form>
 
                         <p className="info">
                             Vous souhaitez en savoir plus sur le service Anotéa : consultez <a
-                                href="http://anotea.pole-emploi.fr" target="blank">http://anotea.pole-emploi.fr</a> et sa <a
-                                href="http://anotea.pole-emploi.fr/faq" target="blank">Foire aux Questions</a>.
+                            href="http://anotea.pole-emploi.fr" target="blank">http://anotea.pole-emploi.fr</a> et sa <a
+                            href="http://anotea.pole-emploi.fr/faq" target="blank">Foire aux Questions</a>.
                         </p>
                     </div>}
 
                     {this.state.accountCreated &&
                     <div>
                         Votre compte a été créé avec succès. Vous pouvez maintenant accéder à <a
-                            onClick={this.onSuccess} role="button">votre espace Anotea</a>.
+                        onClick={this.onSuccess} role="button">votre espace Anotea</a>.
                     </div>}
                 </div>
                 }

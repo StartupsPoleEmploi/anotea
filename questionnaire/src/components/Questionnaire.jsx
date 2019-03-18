@@ -33,7 +33,8 @@ class Questionnaire extends Component {
         accord: false,
         accordEntreprise: false,
         error: null,
-        formError: null
+        formError: null,
+        clicked: false
     }
 
     static propTypes = {
@@ -41,7 +42,7 @@ class Questionnaire extends Component {
         showRemerciements: PropTypes.func.isRequired,
         setStagiaire: PropTypes.func.isRequired
     }
-    
+
     constructor(props) {
         super(props);
         this.state.token = props.token;
@@ -68,7 +69,11 @@ class Questionnaire extends Component {
     }
 
     openModal = () => {
-        this.setState({ modalOpen: true });
+        if (this.state.isValid) {
+            this.setState({ modalOpen: true });
+        } else {
+            this.setState({ clicked: true });
+        }
     }
 
     closeModal = () => {
@@ -104,44 +109,49 @@ class Questionnaire extends Component {
     }
 
     updateCommentaire = (commentaire, badwords) => {
-        this.setState({ commentaire: commentaire.commentaire, pseudo: commentaire.pseudo, badwords: badwords.titre || badwords.texte || badwords.pseudo });
+        this.setState({
+            commentaire: commentaire.commentaire,
+            pseudo: commentaire.pseudo,
+            badwords: badwords.titre || badwords.texte || badwords.pseudo
+        });
     }
 
-    updateAccord = ({accord, accordEntreprise }) => {
+    updateAccord = ({ accord, accordEntreprise }) => {
         this.setState({ accord, accordEntreprise });
     }
 
     render() {
         return (
             <div className="questionnaire">
-                { !this.state.error && this.state.stagiaire &&
-                    <div>
-                        <Header stagiaire={this.state.stagiaire} />
+                {!this.state.error && this.state.stagiaire &&
+                <div>
+                    <Header stagiaire={this.state.stagiaire} />
 
-                        <Notes setValid={this.setValid} />
+                    <Notes setValid={this.setValid} clicked={this.state.clicked} />
 
-                        {this.state.isValid &&
-                            <Commentaire onChange={this.updateCommentaire} />
-                        }
+                    {this.state.isValid &&
+                    <Commentaire onChange={this.updateCommentaire} />
+                    }
 
-                        <Autorisations onChange={this.updateAccord}/>
+                    <Autorisations onChange={this.updateAccord} />
 
-                        <SendButton enabled={this.state.isValid && !this.state.badwords} onSend={this.openModal} />
+                    <SendButton enabled={!this.state.badwords} onSend={this.openModal} />
 
-                        { this.state.formError === 'bad data' &&
-                            <ErrorAlert />
-                        }
+                    {this.state.formError === 'bad data' &&
+                    <ErrorAlert />
+                    }
 
-                        <Footer codeRegion={this.state.stagiaire.codeRegion} />
-                    </div>
+                    <Footer codeRegion={this.state.stagiaire.codeRegion} />
+                </div>
                 }
 
                 {this.state.modalOpen &&
-                    <SummaryModal closeModal={this.closeModal} score={this.state.averageScore} notes={this.state.notes} commentaire={this.state.commentaire} pseudo={this.state.pseudo} submit={this.submit} />
+                <SummaryModal closeModal={this.closeModal} score={this.state.averageScore} notes={this.state.notes}
+                              commentaire={this.state.commentaire} pseudo={this.state.pseudo} submit={this.submit} />
                 }
 
-                { this.state.error &&
-                    <ErrorPanel error={this.state.error} />
+                {this.state.error &&
+                <ErrorPanel error={this.state.error} />
                 }
             </div>
         );

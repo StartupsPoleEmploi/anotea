@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import OrganismePanel from './gestion/organismes/OrganismePanel';
 import AvisStagiairesPanel from './moderation/AvisStagiairesPanel';
 import AvisReponsesPanel from './moderation/AvisReponsesPanel';
-import { MyAccount } from '../account/MyAccount';
+import MonComptePanel from '../account/MonComptePanel';
 
 export default class ModerateurRoutes extends React.Component {
 
@@ -20,9 +20,8 @@ export default class ModerateurRoutes extends React.Component {
 
     buildParameters = options => {
         let newQuery = _(_.merge({ page: 0 }, options))
-        .omitBy(_.isUndefined)
-        .omitBy(_.isNull)
-        .omitBy(_.isEmpty)
+        .omitBy(_.isNil)
+        .omitBy(value => value === '')
         .value();
 
         return queryString.stringify(newQuery);
@@ -36,7 +35,7 @@ export default class ModerateurRoutes extends React.Component {
                     <Redirect exact from="/admin"
                               to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
                 </Switch>
-                <Route path="/mon-compte" render={() => <MyAccount />} />
+                <Route path="/mon-compte" component={MonComptePanel} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"
                     render={({ history, location }) => {

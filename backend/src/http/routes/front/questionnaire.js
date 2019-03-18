@@ -17,7 +17,7 @@ module.exports = ({ db, logger, configuration }) => {
         db.collection('trainee').findOne({ token: req.params.token })
         .then(trainee => {
             if (!trainee) {
-                res.status(404).render('errors/404');
+                res.status(404).send({ error: 'not found' });
                 return;
             }
 
@@ -79,8 +79,16 @@ module.exports = ({ db, logger, configuration }) => {
         return sanitizedBody;
     };
 
-    const buildAvis = (notes, body) => {
-        let avis = {};
+    const buildAvis = (notes, token, body, trainee) => {
+        let avis = {
+            date: new Date(),
+            token: token,
+            campaign: trainee.campaign,
+            formacode: trainee.training.formacode,
+            idSession: trainee.training.idSession,
+            training: trainee.training,
+            codeRegion: trainee.codeRegion
+        };
         avis.rates = notes;
 
         avis.pseudo = body.pseudo.replace(/ /g, '');
@@ -175,18 +183,10 @@ module.exports = ({ db, logger, configuration }) => {
             try {
                 let resultNotes = validateNotes(req.body);
                 if (resultNotes.error === null) {
-                    let resultAvis = validateAvis(buildAvis(resultNotes.value, sanitizeBody(req.body)));
+                    const avis = buildAvis(resultNotes.value, req.params.token, sanitizeBody(req.body), req.trainee);
+                    let resultAvis = validateAvis(avis);
                     if (resultAvis.error === null) {
-                        let avis = {
-                            date: new Date(),
-                            token: req.params.token,
-                            campaign: trainee.campaign,
-                            formacode: trainee.training.formacode,
-                            idSession: trainee.training.idSession,
-                            training: trainee.training,
-                            codeRegion: trainee.codeRegion
-                        };
-                        Object.assign(avis, { rates: calculateAverageRate(resultAvis.avis) });
+                        avis.rates.global = calculateAverageRate(avis);
                         await Promise.all([
                             db.collection('comment').insertOne(avis),
                             db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),

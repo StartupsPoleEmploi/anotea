@@ -8,8 +8,7 @@ import Panel from '../../../common/panel/Panel';
 import { Toolbar, Tab, SearchInputTab } from '../../../common/panel/toolbar/Toolbar';
 import Organisme from './components/Organisme';
 import Summary from '../../../common/panel/Summary';
-import ExportButton from '../../../common/panel/ExportButton';
-import { Pagination } from '../../../common/panel/Pagination';
+import Pagination from '../../../common/panel/Pagination';
 import ResultDivider from '../../../common/panel/ResultDivider';
 import './OrganismePanel.scss';
 
@@ -98,22 +97,29 @@ export default class OrganismePanel extends React.Component {
 
                         <SearchInputTab
                             label="Rechercher un organisme"
-                            onSubmit={value => onNewQuery({ value })}
+                            onSubmit={search => onNewQuery({ search })}
                             isActive={active => this.setState({ tabsDisabled: active })} />
                     </Toolbar>
                 }
                 summary={
-                    <Summary
-                        pagination={results.meta.pagination}
-                        empty="Pas d'organisme pour le moment"
-                        title={
-                            <div>
-                                <span className="name">Organismes</span>
-                                <span className="type"> {query.activated ? 'actifs' : 'inactifs'}</span>
-                            </div>
-                        }>
+                    this.state.loading ? <div /> :
+                        <Summary
+                            paginationLabel="organisme(s)"
+                            pagination={results.meta.pagination}
+                            empty="Pas d'organisme pour le moment"
+                            title={
+                                <div>
+                                    <span className="name">Tous les organismes</span>
+                                    {
+                                        query.status === 'all' ? <span /> :
+                                            <span className="type">
+                                                {query.status === 'active' ? ' actifs' : ' inactifs'}
+                                            </span>
+                                    }
+                                </div>
+                            }>
 
-                    </Summary>
+                        </Summary>
                 }
                 results={
                     this.state.loading ?
@@ -127,6 +133,29 @@ export default class OrganismePanel extends React.Component {
                                 }} />
                             }
                             <ExportButton status={this.props.query.status}></ExportButton>
+                            {
+                                <div className="row">
+                                    <div className="col-sm-3 offset-md-1">
+                                        <p className="column-title d-none d-sm-block">Nom et SIRET</p>
+                                    </div>
+
+                                    <div className="col-2">
+                                        <p className="column-title d-none d-sm-block">Statut</p>
+                                    </div>
+
+                                    <div className="col-1">
+                                        <p className="column-title d-none d-sm-block">Avis</p>
+                                    </div>
+
+                                    <div className="col-xs-8 col-sm-4 col-md-3">
+                                        <p className="column-title d-none d-sm-block">Contact</p>
+                                    </div>
+
+                                    <div className="col-sm-2 col-md-1">
+                                        <p className="column-title d-none d-sm-block">&nbsp;</p>
+                                    </div>
+                                </div>
+                            }
                             {
                                 results.organismes.map(organisme => {
                                     return (

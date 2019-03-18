@@ -1,22 +1,23 @@
 @import '../../styles/variables';
 
 .average-score {
-    display: inline;
+  display: inline;
 
-    .score {
-		color: $color-black;
-		line-height: 39px;
-		text-align: center;
-	    display: inline-block;
-        margin-top: 0px;
-        
-        .averageScore {
-            font-size: 2rem;
-            font-weight: 900;
-        }
-    }
+  .score {
+    color: $color-black;
+    line-height: 39px;
+    text-align: center;
+    display: inline-block;
+    margin-top: 0px;
+    width: 70px;
 
-    .tooltip-block {
-        display: none;
+    .averageScore {
+      font-size: 2rem;
+      font-weight: 900;
     }
+  }
+
+  .tooltip-block {
+    display: none;
+  }
 }

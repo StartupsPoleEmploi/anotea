@@ -76,6 +76,21 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     }
                 },
             })),
+            insertIntoDatabase('sessionsReconciliees', newSession({
+                _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX3',
+                avis: [uniqueAvis],
+                score: {
+                    nb_avis: 1,
+                    notes: {
+                        accueil: 1,
+                        contenu_formation: 1,
+                        equipe_formateurs: 1,
+                        moyen_materiel: 1,
+                        accompagnement: 1,
+                        global: 1,
+                    }
+                },
+            })),
         ]);
 
         await generateActions(db);

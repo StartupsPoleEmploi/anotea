@@ -9,7 +9,7 @@ import Summary from '../../common/panel/Summary';
 import { Toolbar, Tab } from '../../common/panel/toolbar/Toolbar';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import AvisTitle from './components/summary/AvisTitle';
-import { Pagination } from '../../common/panel/Pagination';
+import Pagination from '../../common/panel/Pagination';
 import Avis from './components/avis/Avis';
 import ResultDivider from '../../common/panel/ResultDivider';
 
@@ -113,15 +113,18 @@ export default class AvisReponsesPanel extends React.Component {
                     </Toolbar>
                 }
                 summary={
-                    query.status === 'reported' ?
-                        <Summary
-                            pagination={results.meta.pagination}
-                            empty="Pas d'avis pour le moment"
-                            title={<AvisTitle query={query} results={results} />} /> :
-                        <Summary
-                            pagination={results.meta.pagination}
-                            empty="Pas de réponses pour le moment"
-                            title={<ReponseTitle query={query} />} />
+                    this.state.loading ? <div /> :
+                        query.status === 'reported' ?
+                            <Summary
+                                paginationLabel="avis"
+                                pagination={results.meta.pagination}
+                                empty="Pas d'avis pour le moment"
+                                title={<AvisTitle query={query} results={results} />} /> :
+                            <Summary
+                                paginationLabel="réponse(s)"
+                                pagination={results.meta.pagination}
+                                empty="Pas de réponses pour le moment"
+                                title={<ReponseTitle query={query} />} />
                 }
                 results={
                     this.state.loading ?

@@ -25,7 +25,8 @@ class Notes extends Component {
     }
 
     static propTypes = {
-        setValid: PropTypes.func.isRequired
+        setValid: PropTypes.func.isRequired,
+        clicked: PropTypes.bool.isRequired
     }
 
     onSelect = (index, value) => {
@@ -63,9 +64,16 @@ class Notes extends Component {
         }
     }
 
+    isMissing = index => this.state.notes[index].value === null && this.props.clicked;
+
     getItems = () => {
         return items.map((item, index) =>
-            <Note key={index} index={index} title={item.title} description={item.description} parity={index % 2 === 0 ? 'even' : 'odd'} onSelect={this.onSelect} />
+            <div key={index} className={`note-container ${this.isMissing(index) ? 'missing' : ''}`}>
+                <i className="fas fa-times"></i>
+                <Note index={index} title={item.title} description={item.description}
+                      parity={index % 2 === 0 ? 'even' : 'odd'}
+                      value={this.state.notes[index] ? this.state.notes[index].value : 0} onSelect={this.onSelect} />
+            </div>
         );
     }
 
@@ -83,8 +91,8 @@ class Notes extends Component {
                     <span className="label">Détails des notes</span>
                     <FoldButton onFold={this.fold} onUnfold={this.unfold} folded={this.state.folded} />
                 </div>
-                { !this.state.folded &&
-                    this.getItems()
+                {!this.state.folded &&
+                this.getItems()
                 }
             </div>
         );

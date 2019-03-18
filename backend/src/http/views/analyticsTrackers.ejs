@@ -1,8 +1,12 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=<%= analytics.ga %>"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', '<%= analytics.ga %>');
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', '<%= analytics.ga %>');
 </script>

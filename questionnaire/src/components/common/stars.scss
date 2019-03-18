@@ -1,49 +1,56 @@
 @import '../../styles/variables';
 
 .stars {
-    .far.fa-star {
-        color: $color-black;
-    }
-    
-    .fas.fa-star, .fas.fa-star-half-alt {
-        color: $color-yellow;
-        cursor: pointer;
-    }
-    
-    .tooltip-block {
-        height: 20px;
-        margin-bottom: 5px;
-    }
-    
-    .star-block {
-        display: inline;
-        position: relative;
-        margin-left: 3px;
-    }
-    
-    .star-tooltip {
-        border-radius: 2px;
-        background-color: $color-black;
-        color: $color-white;
-        font-size: 0.75rem;
-        line-height: 12px;
-        text-align: center;
-        font-weight: normal;
-        padding: 3px;
-        margin: auto;
-    }
-    
-    .star-tooltip.inactive {
-        display: none;
-    }
-    
-    .star-tooltip.active {
-        display: inline-block;
-    }
+  .far.fa-star {
+    color: $color-black;
+  }
+
+  .fas.fa-star, .fas.fa-star-half-alt {
+    color: $color-yellow;
+    cursor: pointer;
+  }
+
+  .tooltip-block {
+    height: 20px;
+    margin-bottom: 5px;
+  }
+
+  .star-block {
+    display: inline;
+    position: relative;
+    margin-left: 3px;
+  }
+
+  .star-tooltip {
+    border-radius: 2px;
+    background-color: $color-black;
+    color: $color-white;
+    font-size: 0.75rem;
+    line-height: 12px;
+    text-align: center;
+    font-weight: normal;
+    padding: 3px;
+    margin: auto;
+  }
+
+  .star-tooltip.inactive {
+    display: none;
+  }
+
+  .star-tooltip.active {
+    display: inline-block;
+  }
+
+  .star {
+    border: none;
+    background: transparent;
+    padding: 0px;
+    outline: none;
+  }
 }
 
 .stars.readonly {
-    .fas.fa-star {
-        cursor: inherit;
-    }
+  .fas.fa-star {
+    cursor: inherit;
+  }
 }

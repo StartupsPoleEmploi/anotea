@@ -1,26 +1,42 @@
 @import '../styles/variables';
 
 .header {
-    left: -50px;
-    position: relative;
-    text-align: center;
+  width: 520px;
+  position: relative;
+  text-align: center;
 
-	.logo {
-	    left: 670px;
-	    position: relative;
-	    top: 110px;
-	}
+  h1 {
+    color: $color-blue;
+    font-size: 2rem;
+    font-weight: 900;
+  }
 
-	h1 {
-		color: $color-blue;
-		font-size: 2rem;
-		font-weight: 900;
-	}
+  h2 {
+    width: 500px;
+    color: $color-black;
+    font-size: 1rem;
+    line-height: 24px;
+    margin-left: 10px;
 
-	h2 {
-	    width: 621px;
-	    color: $color-black;
-	    font-size: 1rem;
-	    line-height: 24px;
-	}
+    p {
+      span {
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+
+  #root {
+    margin-top: 50px;
+  }
+
+  .header {
+    .logo {
+      position: fixed;
+      top: 50px;
+      right: 50px;
+    }
+  }
 }

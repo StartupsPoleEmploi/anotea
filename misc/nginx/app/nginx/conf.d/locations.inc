@@ -1,4 +1,3 @@
-
 location /admin  {
 
     limit_req zone=flood burst=100 nodelay;

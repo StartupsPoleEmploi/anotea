@@ -1,5 +1,3 @@
-
-
 module.exports = (db, mailer) => {
 
     let _onSuccess = trainee => {

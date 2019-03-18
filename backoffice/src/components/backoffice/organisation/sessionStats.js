@@ -59,8 +59,8 @@ export default class SessionStats extends React.Component {
                                         <li key={index}><strong>{5 - index}</strong>
                                             <div className="progress">
                                                 <div className="progress-bar" role="progressbar" aria-valuenow={count}
-                                                    aria-valuemin="0" aria-valuemax="100"
-                                                    style={{ width: count / this.sumRates * 100 + '%' }}></div>
+                                                     aria-valuemin="0" aria-valuemax="100"
+                                                     style={{ width: count / this.sumRates * 100 + '%' }}></div>
                                             </div>
                                             {count} notes</li>
                                     )}
@@ -72,30 +72,35 @@ export default class SessionStats extends React.Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">Accueil</div>
-                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.accueil)} /></div>
+                                    <div className="col-md-4"><Stars
+                                        value={Math.round(this.data.ratesAverage.accueil)} /></div>
                                     <div className="col-md-3">{this.data.ratesAverage.accueil}/5</div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">Contenu</div>
-                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.contenu_formation)} />
+                                    <div className="col-md-4"><Stars
+                                        value={Math.round(this.data.ratesAverage.contenu_formation)} />
                                     </div>
                                     <div className="col-md-3">{this.data.ratesAverage.contenu_formation}/5</div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">&Eacute;quipe formateurs</div>
-                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.equipe_formateurs)} />
+                                    <div className="col-md-4"><Stars
+                                        value={Math.round(this.data.ratesAverage.equipe_formateurs)} />
                                     </div>
                                     <div className="col-md-3">{this.data.ratesAverage.equipe_formateurs}/5</div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">Moyens</div>
-                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.moyen_materiel)} />
+                                    <div className="col-md-4"><Stars
+                                        value={Math.round(this.data.ratesAverage.moyen_materiel)} />
                                     </div>
                                     <div className="col-md-3">{this.data.ratesAverage.moyen_materiel}/5</div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-5">Accompagnement</div>
-                                    <div className="col-md-4"><Stars value={Math.round(this.data.ratesAverage.accompagnement)} />
+                                    <div className="col-md-4"><Stars
+                                        value={Math.round(this.data.ratesAverage.accompagnement)} />
                                     </div>
                                     <div className="col-md-3">{this.data.ratesAverage.accompagnement}/5</div>
                                 </div>

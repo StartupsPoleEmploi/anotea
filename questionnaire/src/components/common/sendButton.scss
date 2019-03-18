@@ -2,27 +2,27 @@
 
 .send-button {
 
-    text-align: center;
-    width: 514px;
+  text-align: center;
+  width: 514px;
 
-    button {
-        height: 43px;
-        width: 128px;
-        border-radius: 5px;
-        background-color: $color-blue-10;
-        border: 0px;
-        margin-top: 33px;
-	    color: $color-blue;
-	    font-size: 1rem;
-	    font-weight: bold;
-	    letter-spacing: 2px;
-        line-height: 19px;
-        text-transform: uppercase;
-        cursor: pointer;
-    }
+  button {
+    height: 43px;
+    width: 128px;
+    border-radius: 5px;
+    background-color: $color-blue-10;
+    border: 0px;
+    margin-top: 33px;
+    color: $color-blue;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    line-height: 19px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
 
-    button[disabled] {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
+  button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
