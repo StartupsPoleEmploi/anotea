@@ -109,7 +109,7 @@ module.exports = ({ db, middlewares, logger }) => {
                 (comment.rates !== undefined ? comment.rates.global : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
-                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
+                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + 
                 qualification + ';' +
                 comment.campaign + ';' +
                 comment.date + ';' +
