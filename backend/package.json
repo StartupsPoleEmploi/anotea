@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm run test:unit",
     "test:unit": "mocha --recursive --exit --timeout 1000 test/unit",
+    "test:coverage": "nyc --reporter=html --reporter=text-summary mocha --recursive --exit --timeout 5000 test",
     "test:integration": "mocha --recursive --exit --timeout 5000 test/integration",
     "test:all": "npm run test:unit && npm run test:integration",
     "start": "npm run start:default",
@@ -73,6 +74,7 @@
     "md5": "2.2.1",
     "mocha": "5.2.0",
     "nodemon": "1.18.7",
+    "nyc": "13.3.0",
     "rxjs": "5.5.11",
     "supertest": "3.3.0",
     "xml2js": "0.4.19"
