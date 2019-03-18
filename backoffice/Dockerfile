@@ -19,6 +19,13 @@ RUN echo "source $NVM_DIR/nvm.sh && \
     nvm alias default $NODE_VERSION && \
     nvm use default" | bash
 
+#Set env variables
+ARG REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID
+ENV REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID ${REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID:-defaultvalue}
+
+ARG REACT_APP_ANOTEA_HOTJAR_ID
+ENV REACT_APP_ANOTEA_HOTJAR_ID ${REACT_APP_ANOTEA_HOTJAR_ID:-defaultvalue}
+
 #Build project
 COPY package.json package-lock.json /tmp/
 RUN cd /tmp && npm ci && mkdir -p /opt/anotea/backoffice && mv /tmp/node_modules /opt/anotea/backoffice/

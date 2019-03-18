@@ -20,6 +20,9 @@ services:
     container_name: anotea_backoffice
     build:
       context: backoffice
+      args:
+        REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID:1234
+        REACT_APP_ANOTEA_HOTJAR_ID:1234
     depends_on:
       - backend
 
@@ -28,6 +31,9 @@ services:
     container_name: anotea_questionnaire
     build:
       context: questionnaire
+      args:
+        REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID:1234
+        REACT_APP_ANOTEA_HOTJAR_ID:1234
     depends_on:
       - backend
 
