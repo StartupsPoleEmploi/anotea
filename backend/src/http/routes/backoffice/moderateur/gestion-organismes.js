@@ -6,6 +6,7 @@ const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
 const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 const convertOrganismeToDTO = require('./utils/convertOrganismeToDTO');
 const { encodeStream } = require('iconv-lite');
+const { transformObject } = require('../../../../common/utils/stream-utils');
 
 module.exports = ({ db, configuration, mailing, middlewares }) => {
 
@@ -81,7 +82,7 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         res.setHeader('Content-disposition', 'attachment; filename=organismes.csv');
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
         res.write(lines);
-
+        
         let handleError = e => {
             logger.error('An error occurred', e);
             res.status(500);
@@ -92,13 +93,19 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         .on('error', handleError)
         .pipe(transformObject(async organisme => {
 
-            return organisme._id + ';' +
+            let email = getOrganismeEmail(organisme);
+
+            return organisme.meta.siretAsString + ';' +
                 organisme.raisonSociale + ';' +
-                organisme.courriel + ';' +
+                email + ';' +
                 organisme.score.nb_avis + '\n';
+
         }))
         .pipe(encodeStream('UTF-16BE'))
-        .pipe(res);
+        .pipe(res)
+        .on('end', function () {
+            res.end()
+        })
 
     }));
 
