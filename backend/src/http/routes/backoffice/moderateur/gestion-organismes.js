@@ -77,7 +77,7 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
             codeRegion: codeRegion,
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
         }, { token: 0 }).stream();
-        let lines = 'Siret;Nom;Email;Nombre d\'avis\n';
+        let lines = 'Siret;Nom;Ville;Email;Nombre d\'Avis;Kairos\n';
 
         res.setHeader('Content-disposition', 'attachment; filename=organismes.csv');
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
@@ -93,19 +93,37 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         .on('error', handleError)
         .pipe(transformObject(async organisme => {
 
+            isKairos = (organisme) => {
+                let kairos = organisme.sources.find(s => s === 'kairos');
+                return kairos === 'kairos' ? 'oui' : 'non';
+            }
+
+            let kairos = isKairos(organisme)
             let email = getOrganismeEmail(organisme);
+
+            // A voir si créer une méthode pour la ville 
+            let lieux_de_formation = organisme.lieux_de_formation ?
+                organisme.lieux_de_formation : '';
+            let valid_lieux_de_formation = lieux_de_formation[0] ? 
+                lieux_de_formation[0] : '';
+            let adresse = valid_lieux_de_formation ? 
+                valid_lieux_de_formation.adresse : '';
+            let ville = adresse ? 
+                adresse.ville : '';
 
             return organisme.meta.siretAsString + ';' +
                 organisme.raisonSociale + ';' +
+                ville + ';' +
                 email + ';' +
-                organisme.score.nb_avis + '\n';
+                organisme.score.nb_avis + ';' +
+                kairos + '\n';
 
         }))
         .pipe(encodeStream('UTF-16BE'))
         .pipe(res)
         .on('end', function () {
             res.end()
-        })
+        });
 
     }));
 
