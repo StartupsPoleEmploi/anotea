@@ -5,6 +5,7 @@ const { IdNotFoundError } = require('../../../../common/errors');
 const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
 const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 const convertOrganismeToDTO = require('./utils/convertOrganismeToDTO');
+const { encodeStream } = require('iconv-lite');
 
 module.exports = ({ db, configuration, mailing, middlewares }) => {
 
@@ -60,6 +61,45 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
                 },
             }
         });
+    }));
+
+    // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
+    router.get('/backoffice/moderateur/export/organismes.csv', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+
+        let codeRegion = req.user.codeRegion;
+        let { status } = await Joi.validate(req.params, {
+            status: Joi.string().allow(['all', 'active', 'inactive']).default('all'),
+        }, { abortEarly: false });
+
+        let stream = await db.collection('accounts').find({
+            profile: 'organisme',
+            codeRegion: codeRegion,
+            ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
+        }, { token: 0 }).stream();
+        let lines = 'Siret;Nom;Email;Nombre d\'avis\n';
+
+        res.setHeader('Content-disposition', 'attachment; filename=organismes.csv');
+        res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
+        res.write(lines);
+
+        let handleError = e => {
+            logger.error('An error occurred', e);
+            res.status(500);
+            stream.push(Boom.boomify(e).output.payload);
+        };
+
+        stream
+        .on('error', handleError)
+        .pipe(transformObject(async organisme => {
+
+            return organisme._id + ';' +
+                organisme.raisonSociale + ';' +
+                organisme.courriel + ';' +
+                organisme.score.nb_avis + '\n';
+        }))
+        .pipe(encodeStream('UTF-16BE'))
+        .pipe(res);
+
     }));
 
     router.put('/backoffice/moderateur/organismes/:id/updateEditedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {

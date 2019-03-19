@@ -1,24 +1,24 @@
 import React from 'react';
-// import { exportOrganismes } from '../../moderateur/gestion/gestionOrganismesService';
+import { getToken } from '../../../../utils/token';
 
 import './ExportButton.scss';
 
 export default class ExportButton extends React.Component {
 
-    exportOrganismeInfoToExcel = () => {
-        // exportOrganismes();
+    getUrl = () => {
+        const publicUrl = process.env.PUBLIC_URL ? '' : 'http://localhost:8080';
+        let filters = this.props.status !== undefined ? this.props.status : '';
+        let params = filters ? `?${filters}&token=${getToken()}` : `?token=${getToken()}`;
+        
+        return `${publicUrl}/api/backoffice/moderateur/export/organismes.csv${params}`;
     };
 
     render() {
         return (
             <div className="Export">
-                <button
-                    type="button"
-                    className="export-button"
-                    onClick={this.exportOrganismeInfoToExcel}>
-                    <i className="fas fa-download" />
-                    &nbsp; EXPORTER
-                </button>
+                <a className="btn btn-success btn-sm" href={this.getUrl()}>
+                    <span className="fas fa-file-export" /> Exporter vers Excel
+                </a>
             </div>
         );
     }
