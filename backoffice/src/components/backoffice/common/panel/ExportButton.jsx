@@ -16,7 +16,7 @@ export default class ExportButton extends React.Component {
     render() {
         return (
             <div className="Export">
-                <a className="btn btn-success btn-sm" href={this.getUrl()}>
+                <a className="btn export-button btn-sm" href={this.getUrl()}>
                     <span className="fas fa-file-export" /> Exporter vers Excel
                 </a>
             </div>
