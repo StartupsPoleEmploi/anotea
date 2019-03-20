@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Questionnaire from './components/questionnaire/Questionnaire';
+import Questionnaire from './components/Questionnaire';
 import Remerciements from './components/Remerciements';
 import NoMatch from './components/NoMatch';
 
