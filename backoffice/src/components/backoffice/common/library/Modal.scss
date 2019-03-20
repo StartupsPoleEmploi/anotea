@@ -1,4 +1,4 @@
-@import '../../../styles/variables';
+@import '../../../../styles/variables';
 
 .Modal {
   display: inline-block;
@@ -28,10 +28,6 @@
             font-size: 1.1rem;
             font-weight: $font-weight-700;
           }
-        }
-
-        .modal-body {
-          padding-bottom: 0;
         }
 
         .modal-footer {

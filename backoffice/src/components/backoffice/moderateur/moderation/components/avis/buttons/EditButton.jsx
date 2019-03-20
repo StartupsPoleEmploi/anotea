@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { deleteAvis, resendEmail } from '../../../moderationService';
-import Modal from '../../../../../common/Modal';
-import Button from '../../../../../common/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from '../../../../../common/Dropdown';
+import Modal from '../../../../../common/library/Modal';
+import Button from '../../../../../common/library/Button';
+import { Dropdown, DropdownDivider, DropdownItem } from '../../../../../common/library/Dropdown';
 
 export default class EditButton extends React.Component {
 

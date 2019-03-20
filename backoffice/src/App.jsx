@@ -15,7 +15,7 @@ import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import MonComptePanel from './components/backoffice/account/MonComptePanel';
-import GridDisplayer from './components/backoffice/common/helpers/GridDisplayer';
+import GridDisplayer from './components/backoffice/common/library/GridDisplayer';
 import Header from './components/backoffice/common/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
 import './utils/moment-fr';

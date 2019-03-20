@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { publishAvis } from '../../../moderationService';
-import Button from '../../../../../common/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from '../../../../../common/Dropdown';
+import Button from '../../../../../common/library/Button';
+import { Dropdown, DropdownDivider, DropdownItem } from '../../../../../common/library/Dropdown';
 
 export default class PublishButton extends React.Component {
 
