@@ -136,7 +136,8 @@ module.exports = ({ db, middlewares, logger }) => {
                 comment.training.codeFinanceur + '\n';
         }))
         .pipe(encodeStream('UTF-16BE'))
-        .pipe(res);
+        .pipe(res)
+        .on('end', () => res.end());
     }));
 
     return router;
