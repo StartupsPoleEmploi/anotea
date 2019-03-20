@@ -3,7 +3,6 @@
 .panel-remerciements {
 
   .links-block {
-    width: 760px;
     margin: auto;
     text-align: center;
     margin-top: 3em;
@@ -16,7 +15,6 @@
     }
 
     .link {
-      width: 30%;
       margin: 20px 10px 0px 10px;
       background-color: $color-blue-10;
       border-radius: 5px;
@@ -31,7 +29,6 @@
 
   .merci {
     height: 252px;
-    width: 100%;
     background-color: $color-grey-5;
     text-align: center;
     padding-top: 1em;
@@ -42,7 +39,6 @@
     }
 
     p {
-      width: 517px;
       margin: auto;
       font-size: 0.9rem;
       line-height: 21px;
