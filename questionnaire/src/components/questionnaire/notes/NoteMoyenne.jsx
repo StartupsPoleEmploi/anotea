@@ -12,7 +12,7 @@ class NoteMoyenne extends Component {
     render() {
         return (
             <div className="note-moyenne">
-                <div className={`row align-items-center`}>
+                <div className={`row inner-row align-items-center`}>
                     <div className="col-sm-7">
                         <div className="label">
                             <span className="title">Note moyenne</span>

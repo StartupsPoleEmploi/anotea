@@ -1,56 +1,88 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Textarea from './Textarea';
+import { checkBadwords } from '../../../lib/stagiaireService';
+import Badwords from './Badwords';
 import './commentaire.scss';
 
 class Commentaire extends Component {
 
-    state = {
-        titre: '',
-        texte: '',
-        pseudo: '',
-        badwords: {
-            titre: false,
-            texte: false,
-            pseudo: false
-        }
-    };
-
     static propTypes = {
+        commentaire: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired
     };
 
-    onChange = (name, value, containsBadwords) => {
-        let state = this.state;
-        state[name] = value;
-        state.badwords = Object.assign(this.state.badwords, { [name]: containsBadwords });
-        this.setState(state);
-        this.props.onChange({
-            commentaire: { titre: state.titre, texte: state.texte },
-            pseudo: state.pseudo
-        }, state.badwords);
+    onChange = async event => {
+        const { name, value, maxLength } = event.target;
+        if (value.length <= maxLength) {
+            this.setState({ [name]: { value } });
+        }
+
+        let sentence = await checkBadwords(value);
+        this.props.onChange(name, value, sentence.isGood);
     };
 
     render() {
+
+        let { commentaire } = this.props;
         return (
             <div className="commentaire">
-                <h3>Commentaire <span className="description">(optionnel)</span></h3>
-                <div className="frame">
-                    <Textarea
-                        name="texte"
-                        titre="Votre commentaire"
-                        placeholder="Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois."
-                        onChange={this.onChange} />
-                    <Textarea
-                        name="titre"
-                        titre="Titre du commentaire"
-                        placeholder="Le titre permet d’avoir un résumé de votre expérience de la formation."
-                        onChange={this.onChange} />
-                    <Textarea
-                        titre="Pseudo"
-                        placeholder="Choisissez votre pseudo afin de préserver votre anonymat."
-                        name="pseudo"
-                        onChange={this.onChange} />
+
+                <div className="row">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                        <h3>
+                            Commentaire <span className="description">(optionnel)</span>
+                        </h3>
+                    </div>
+                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                        <div className="row inner-row field">
+                            <div className="col-sm-12">
+                                <div className="title"><strong>Votre commentaire</strong> (optionnel)</div>
+                                <textarea
+                                    name="texte"
+                                    rows="3"
+                                    maxLength={200}
+                                    className={`${!commentaire.texte.isValid ? 'badwords' : ''}`}
+                                    placeholder="Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois."
+                                    value={commentaire.texte.value}
+                                    onChange={this.onChange} />
+                                {!commentaire.texte.isValid && <Badwords />}
+                            </div>
+                        </div>
+
+                        <div className="row inner-row field">
+                            <div className="col-sm-12">
+                                <div className="title"><strong>Titre du commentaire</strong> (optionnel)</div>
+                                <input
+                                    type="text"
+                                    name="titre"
+                                    value={commentaire.titre.value}
+                                    maxLength={50}
+                                    className={`${!commentaire.titre.isValid ? 'badwords' : ''}`}
+                                    placeholder="Le titre permet d’avoir un résumé de votre expérience de la formation."
+                                    onChange={this.onChange} />
+                                {!commentaire.titre.isValid && <Badwords />}
+                            </div>
+                        </div>
+
+                        <div className="row inner-row field">
+                            <div className="col-sm-12">
+                                <div className="title"><strong>Pseudo</strong> (optionnel)</div>
+                                <input
+                                    type="text"
+                                    name="pseudo"
+                                    value={commentaire.pseudo.value}
+                                    maxLength={50}
+                                    className={`${!commentaire.pseudo.isValid ? 'badwords' : ''}`}
+                                    placeholder="Choisissez votre pseudo afin de préserver votre anonymat."
+                                    onChange={this.onChange} />
+                                {!commentaire.pseudo.isValid && <Badwords />}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+
                 </div>
             </div>
         );
