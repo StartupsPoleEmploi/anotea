@@ -64,7 +64,6 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         });
     }));
 
-    // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
     router.get('/backoffice/moderateur/export/organismes.csv', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
@@ -93,15 +92,14 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         .on('error', handleError)
         .pipe(transformObject(async organisme => {
 
-            isKairos = (organisme) => {
+            let isKairos = (organisme) => {
                 let kairos = organisme.sources.find(s => s === 'kairos');
                 return kairos === 'kairos' ? 'oui' : 'non';
             }
 
             let kairos = isKairos(organisme)
             let email = getOrganismeEmail(organisme);
-
-            // A voir si créer une méthode pour la ville 
+ 
             let lieux_de_formation = organisme.lieux_de_formation ?
                 organisme.lieux_de_formation : '';
             let valid_lieux_de_formation = lieux_de_formation[0] ? 
@@ -121,9 +119,7 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         }))
         .pipe(encodeStream('UTF-16BE'))
         .pipe(res)
-        .on('end', function () {
-            res.end()
-        });
+        .on('end', () => res.end());
 
     }));
 
