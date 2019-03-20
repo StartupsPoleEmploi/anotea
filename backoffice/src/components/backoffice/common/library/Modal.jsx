@@ -51,7 +51,7 @@ export default class Modal extends React.Component {
                                 <h5 className="modal-title">{title}</h5>
                             </div>
                             <div className="modal-body">
-                                <p>{body}</p>
+                                <div>{body}</div>
                             </div>
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end">
