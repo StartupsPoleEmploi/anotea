@@ -89,14 +89,14 @@ class Notes extends Component {
         return (
             <div className="notes">
                 <div className="row">
-                    <div className="col-sm-12 offset-lg-3 col-lg-6">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8">
                         <h3>Notes</h3>
                     </div>
                 </div>
 
                 {this.showMoyenne() &&
                 <div className="row">
-                    <div className="col-sm-12 offset-lg-3 col-lg-6">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8">
                         <NoteMoyenne averageScore={this.state.averageScore} />
                     </div>
                 </div>
@@ -104,7 +104,7 @@ class Notes extends Component {
 
                 {this.showMoyenne() &&
                 <div className="row">
-                    <div className="col-sm-12 offset-lg-3 col-lg-6">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8">
                         <div className="note-details py-2">
                             <span className="label">Détails des notes</span>
                             <FoldButton onFold={this.fold} onUnfold={this.unfold} folded={this.state.folded} />
@@ -115,7 +115,7 @@ class Notes extends Component {
 
                 {!this.state.folded &&
                 <div className="row" key="O">
-                    <div className="col-sm-12 offset-lg-3 col-lg-6">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8">
                         {this.renderAllNotes()}
                     </div>
                 </div>

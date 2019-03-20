@@ -137,9 +137,9 @@ export default class Questionnaire extends Component {
 
                     <Notes setValid={this.setValid} clicked={this.state.clicked} />
 
-                    {this.state.isNotesValid &&
+                    {!this.state.isNotesValid &&
                     <div className="row">
-                        <div className="col-sm-12 offset-lg-3 col-lg-6">
+                        <div className="col-sm-12 offset-lg-2 col-lg-8">
                             <Commentaire onChange={this.updateCommentaire} />
                         </div>
                     </div>
@@ -147,14 +147,14 @@ export default class Questionnaire extends Component {
 
                     {this.state.isNotesValid &&
                     <div className="row">
-                        <div className="col-sm-12 offset-lg-3 col-lg-6">
+                        <div className="col-sm-12 offset-lg-2 col-lg-8">
                             <Autorisations onChange={this.updateAccord} />
                         </div>
                     </div>
                     }
 
                     <div className="row">
-                        <div className="col-sm-12 offset-lg-3 col-lg-6">
+                        <div className="col-sm-12 offset-lg-2 col-lg-8">
                             <div className="d-flex justify-content-center">
                                 <Button className="send-button" size="large" color="blue" onClick={this.openModal}
                                         disabled={this.state.badwords}>

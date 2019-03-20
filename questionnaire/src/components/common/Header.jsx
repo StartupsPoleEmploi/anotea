@@ -15,7 +15,7 @@ class Header extends Component {
         return (
             <div className="header">
                 <div className="row pb-4">
-                    <div className="col-sm-12 offset-lg-3 col-lg-6">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8">
                         {this.props.stagiaire &&
                         <div>
                             <h1>Notez et commentez votre formation</h1>
