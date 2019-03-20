@@ -67,16 +67,14 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
     router.get('/backoffice/moderateur/export/organismes.csv', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { status } = await Joi.validate(req.params, {
-            status: Joi.string().allow(['all', 'active', 'inactive']).default('all'),
-        }, { abortEarly: false });
+        let status = req.query.status;
 
         let stream = await db.collection('accounts').find({
             profile: 'organisme',
             codeRegion: codeRegion,
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
         }, { token: 0 }).stream();
-        let lines = 'Siret;Nom;Ville;Email;Nombre d\'Avis;Kairos\n';
+        let lines = 'Siret;Nom;Email;Nombre d\'Avis;Kairos\n';
 
         res.setHeader('Content-disposition', 'attachment; filename=organismes.csv');
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
@@ -99,19 +97,9 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
 
             let kairos = isKairos(organisme)
             let email = getOrganismeEmail(organisme);
- 
-            let lieux_de_formation = organisme.lieux_de_formation ?
-                organisme.lieux_de_formation : '';
-            let valid_lieux_de_formation = lieux_de_formation[0] ? 
-                lieux_de_formation[0] : '';
-            let adresse = valid_lieux_de_formation ? 
-                valid_lieux_de_formation.adresse : '';
-            let ville = adresse ? 
-                adresse.ville : '';
 
             return organisme.meta.siretAsString + ';' +
                 organisme.raisonSociale + ';' +
-                ville + ';' +
                 email + ';' +
                 organisme.score.nb_avis + ';' +
                 kairos + '\n';

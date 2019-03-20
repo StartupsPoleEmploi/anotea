@@ -8,8 +8,8 @@ export default class ExportButton extends React.Component {
     getUrl = () => {
         const publicUrl = process.env.PUBLIC_URL ? '' : 'http://localhost:8080';
         let filters = this.props.status !== undefined ? this.props.status : '';
-        let params = filters ? `?${filters}&token=${getToken()}` : `?token=${getToken()}`;
-        
+        let params = filters ? `?status=${filters}&token=${getToken()}` : `?token=${getToken()}`;
+
         return `${publicUrl}/api/backoffice/moderateur/export/organismes.csv${params}`;
     };
 
