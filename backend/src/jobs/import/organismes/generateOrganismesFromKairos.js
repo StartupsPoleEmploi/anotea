@@ -72,6 +72,7 @@ module.exports = async (db, logger, file) => {
                 logger.debug(`Organisme imported ${organisme.siret}`);
             }
         })
+        .on('error', err => reject(err))
         .on('finish', async () => stats.invalid === 0 ? resolve(stats) : reject(stats));
     });
 
