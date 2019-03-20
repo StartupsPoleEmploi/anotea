@@ -5,6 +5,8 @@ const { IdNotFoundError } = require('../../../../common/errors');
 const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
 const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 const convertOrganismeToDTO = require('./utils/convertOrganismeToDTO');
+const { encodeStream } = require('iconv-lite');
+const { transformObject } = require('../../../../common/utils/stream-utils');
 
 module.exports = ({ db, configuration, mailing, middlewares }) => {
 
@@ -60,6 +62,56 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
                 },
             }
         });
+    }));
+
+    router.get('/backoffice/moderateur/export/organismes.csv', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+
+        let codeRegion = req.user.codeRegion;
+        let { status } = await Joi.validate(req.query, {
+            status: Joi.string().allow(['all', 'active', 'inactive']).default('all'),
+            token: Joi.string().required(),
+        }, { abortEarly: false });
+
+        let stream = await db.collection('accounts').find({
+            profile: 'organisme',
+            codeRegion: codeRegion,
+            ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
+        }, { token: 0 }).stream();
+        let lines = 'Siret;Nom;Email;Nombre d\'Avis;Kairos\n';
+
+        res.setHeader('Content-disposition', 'attachment; filename=organismes.csv');
+        res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
+        res.write(lines);
+        
+        let handleError = e => {
+            logger.error('An error occurred', e);
+            res.status(500);
+            stream.push(Boom.boomify(e).output.payload);
+        };
+
+        stream
+        .on('error', handleError)
+        .pipe(transformObject(async organisme => {
+
+            let isKairos = (organisme) => {
+                let kairos = organisme.sources.find(s => s === 'kairos');
+                return kairos === 'kairos' ? 'oui' : 'non';
+            }
+
+            let kairos = isKairos(organisme)
+            let email = getOrganismeEmail(organisme);
+
+            return organisme.meta.siretAsString + ';' +
+                organisme.raisonSociale + ';' +
+                email + ';' +
+                organisme.score.nb_avis + ';' +
+                kairos + '\n';
+
+        }))
+        .pipe(encodeStream('UTF-16BE'))
+        .pipe(res)
+        .on('end', () => res.end());
+
     }));
 
     router.put('/backoffice/moderateur/organismes/:id/updateEditedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {

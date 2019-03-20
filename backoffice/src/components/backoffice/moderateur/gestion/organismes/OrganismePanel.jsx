@@ -10,6 +10,7 @@ import Organisme from './components/Organisme';
 import Summary from '../../../common/panel/Summary';
 import Pagination from '../../../common/panel/Pagination';
 import ResultDivider from '../../../common/panel/ResultDivider';
+import ExportButton from '../../../common/panel/ExportButton';
 import './OrganismePanel.scss';
 
 export default class OrganismePanel extends React.Component {
@@ -132,6 +133,7 @@ export default class OrganismePanel extends React.Component {
                                     return this.setState({ message: null });
                                 }} />
                             }
+                            <ExportButton status={this.props.query.status}></ExportButton>
                             {
                                 <div className="row">
                                     <div className="col-sm-3 offset-md-1">
