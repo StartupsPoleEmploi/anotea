@@ -11,14 +11,20 @@ class Commentaire extends Component {
         onChange: PropTypes.func.isRequired
     };
 
+    state = {
+        texte: '',
+        titre: '',
+        pseudo: '',
+    };
+
     onChange = async event => {
         const { name, value, maxLength } = event.target;
         if (value.length <= maxLength) {
-            this.setState({ [name]: { value } });
+            this.setState({ [name]: value }, async () => {
+                let sentence = await checkBadwords(value);
+                this.props.onChange(name, value, sentence.isGood);
+            });
         }
-
-        let sentence = await checkBadwords(value);
-        this.props.onChange(name, value, sentence.isGood);
     };
 
     render() {
@@ -39,11 +45,11 @@ class Commentaire extends Component {
                                 <div className="title"><strong>Votre commentaire</strong> (optionnel)</div>
                                 <textarea
                                     name="texte"
-                                    rows="3"
+                                    value={this.state.texte}
                                     maxLength={200}
+                                    rows="3"
                                     className={`${!commentaire.texte.isValid ? 'badwords' : ''}`}
                                     placeholder="Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois."
-                                    value={commentaire.texte.value}
                                     onChange={this.onChange} />
                                 {!commentaire.texte.isValid && <Badwords />}
                             </div>
@@ -55,7 +61,7 @@ class Commentaire extends Component {
                                 <input
                                     type="text"
                                     name="titre"
-                                    value={commentaire.titre.value}
+                                    value={this.state.titre}
                                     maxLength={50}
                                     className={`${!commentaire.titre.isValid ? 'badwords' : ''}`}
                                     placeholder="Le titre permet d’avoir un résumé de votre expérience de la formation."
@@ -70,7 +76,7 @@ class Commentaire extends Component {
                                 <input
                                     type="text"
                                     name="pseudo"
-                                    value={commentaire.pseudo.value}
+                                    value={this.state.pseudo}
                                     maxLength={50}
                                     className={`${!commentaire.pseudo.isValid ? 'badwords' : ''}`}
                                     placeholder="Choisissez votre pseudo afin de préserver votre anonymat."
