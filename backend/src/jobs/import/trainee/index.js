@@ -41,6 +41,7 @@ execute(async ({ logger, db, exit, configuration, mailer }) => {
     .option('-s, --source [name]', 'Source to import (PE or IDF)')
     .option('-f, --file [file]', 'The CSV file to import')
     .option('-r, --region [codeRegion]', 'Code region to filter')
+    .option('-c, --certifinfo [certifInfo]', 'Code certifInfo to filter')
     .option('-s, --since [startDate]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
     .option('--append', 'Append stagiaires to an existing campaign')
     .option('-d, --dry-run', 'Execute this script in dry mode', () => {
@@ -72,6 +73,7 @@ execute(async ({ logger, db, exit, configuration, mailer }) => {
         codeRegion: cli.region,
         startDate: cli.since && cli.since.toDate(),
         append: cli.append,
+        certifInfo: cli.certifInfo
     };
 
     if (dryRun === true) {
