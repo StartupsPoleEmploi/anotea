@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 
-import './errorPanel.scss';
+import './globalError.scss';
 
-class ErrorPanel extends Component {
+class GlobalError extends Component {
 
     static propTypes = {
         error: PropTypes.string.isRequired
@@ -12,11 +12,7 @@ class ErrorPanel extends Component {
 
     render() {
         return (
-            <div className="error-panel">
-                <img className="logo" src={`${process.env.PUBLIC_URL}/images/logo.png`} alt="logo Anotéa" />
-                <span className="propulsed">Service propulsé par</span>
-                <img className="logoPE" src="/img/poleemploi.png" alt="logo Pôle Emploi" />
-
+            <div className="global-panel">
                 {this.props.error === 'already sent' &&
                 <h1>Vous avez déjà partagé votre avis. Merci.</h1>
                 }
@@ -28,4 +24,4 @@ class ErrorPanel extends Component {
     }
 }
 
-export default ErrorPanel;
+export default GlobalError;

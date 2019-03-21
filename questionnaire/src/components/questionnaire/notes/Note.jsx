@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import Stars from './Stars';
-
 import './note.scss';
 
 class Note extends Component {
@@ -19,7 +17,7 @@ class Note extends Component {
     render() {
         return (
             <div className={`note ${this.props.parity}`}>
-                <div className={`row align-items-center`}>
+                <div className={`row inner-row align-items-center`}>
                     <div className="col-sm-7">
                         <div className="title">{this.props.title}</div>
                         <div className="description">{this.props.description}</div>
