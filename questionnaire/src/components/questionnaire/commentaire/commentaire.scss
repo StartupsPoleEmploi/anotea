@@ -12,17 +12,50 @@
     margin: 0;
   }
 
+  .inner-row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .field {
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
   .description {
     font-style: italic;
     font-weight: normal;
     color: $color-grey-5;
   }
 
-  .frame {
-    border-right: 1px solid $color-grey-5;
-    border-left: 1px solid $color-grey-5;
-    border-bottom: 1px solid $color-grey-5;
-    border-radius: 0px 0px 5px 5px;
-    padding-bottom: 15px;
+  .title {
+    color: $color-black;
+    font-size: 1rem;
+    line-height: 19px;
+    padding-bottom: 0.875rem;
+  }
+
+  textarea, input {
+    border-radius: 5px;
+    border: none;
+    resize: none;
+    outline: none;
+    background-color: $color-grey-5;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    width: 100%;
+
+    &.badwords {
+      border: solid 1px $color-red;
+      color: $color-red;
+    }
+
+    &::placeholder {
+      opacity: 0.6;
+      color: $color-black;
+      font-size: 0.9rem;
+      font-style: italic;
+      line-height: 21px;
+    }
   }
 }

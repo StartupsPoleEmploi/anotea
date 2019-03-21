@@ -2,15 +2,12 @@
 
 .note {
 
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
   @media (max-width: 575.98px) {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-  }
-
-  .row {
-    margin-left: 0;
-    margin-right: 0;
-    min-height: 100px;
   }
 
   .title {

@@ -7,7 +7,6 @@ class Summary extends Component {
 
     static propTypes = {
         averageScore: PropTypes.number.isRequired,
-        pseudo: PropTypes.string.isRequired,
         commentaire: PropTypes.object.isRequired,
     };
 
@@ -18,17 +17,17 @@ class Summary extends Component {
                     <div className="col-sm-3 separator">
                         <AverageScore score={this.props.averageScore} />
                         <span className="by">par &nbsp;</span>
-                        <span className="pseudo">{this.props.pseudo || 'anonyme'}</span>
+                        <span className="pseudo">{this.props.commentaire.pseudo.value || 'anonyme'}</span>
                     </div>
                     <div className="col-sm-9">
-                        {this.props.commentaire.titre &&
+                        {this.props.commentaire.titre.value &&
                         <div className="titre">
-                            <span>{this.props.commentaire.titre}</span>
+                            <span>{this.props.commentaire.titre.value}</span>
                         </div>
                         }
                         <div className="texte">
-                            <span className={!this.props.commentaire.texte ? 'missing' : ''}>
-                                {this.props.commentaire.texte || 'Si vous souhaitez écrire un commentaire, cliquer sur annuler.'}
+                            <span className={!this.props.commentaire.texte.value ? 'missing' : ''}>
+                                {this.props.commentaire.texte.value || 'Si vous souhaitez écrire un commentaire, cliquer sur annuler.'}
                             </span>
                         </div>
                     </div>

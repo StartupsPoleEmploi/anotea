@@ -1,0 +1,9 @@
+@import '../../../styles/variables';
+
+.badwords {
+  color: $color-red;
+  font-size: 0.7rem;
+  font-style: italic;
+  font-weight: bold;
+  line-height: 16px;
+}
