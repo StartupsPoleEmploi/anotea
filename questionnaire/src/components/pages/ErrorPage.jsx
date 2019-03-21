@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Footer from '../common/Footer';
 import './errorPage.scss';
 
 export default class ErrorPage extends Component {
@@ -11,7 +10,6 @@ export default class ErrorPage extends Component {
                     <h2>Page introuvable</h2>
                     <p>Le contenu auquel vous tentez d&apos;accéder n&apos;existe pas ou plus.</p>
                 </section>
-                <Footer />
             </div>
         );
     }
