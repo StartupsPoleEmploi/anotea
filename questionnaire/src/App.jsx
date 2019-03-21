@@ -1,9 +1,4 @@
 import React, { Component } from 'react';
-
-import Questionnaire from './components/Questionnaire';
-import Remerciements from './components/Remerciements';
-import NoMatch from './components/NoMatch';
-
 import {
     BrowserRouter as Router,
     Route,
@@ -11,6 +6,10 @@ import {
     Redirect
 } from 'react-router-dom';
 
+import Remerciements from './components/Remerciements';
+import Questionnaire from './components/Questionnaire';
+import NoMatch from './components/NoMatch';
+import Footer from './components/common/Footer';
 import './App.scss';
 
 class App extends Component {
@@ -43,6 +42,10 @@ class App extends Component {
                                     showRemerciements={this.showRemerciements} />);
                         }} />
                         <Route path={`${process.env.PUBLIC_URL}/:token/remerciements`} exact render={() => {
+                            if (!this.state.stagiaire) {
+                                //FIXME fix how stagiaire is fetched
+                                return <div />;
+                            }
                             return (
                                 <Remerciements
                                     stagiaire={this.state.stagiaire}
@@ -50,6 +53,8 @@ class App extends Component {
                         }} />
                         <Route component={NoMatch} />
                     </Switch>
+
+                    <Footer codeRegion={this.state.stagiaire ? this.state.stagiaire.codeRegion : null} />
                 </div>
             </Router>
         );

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import './header.scss';
+import './formation.scss';
 
-class Header extends Component {
+class Formation extends Component {
 
     static propTypes = {
         stagiaire: PropTypes.object
@@ -13,7 +13,7 @@ class Header extends Component {
         let startDate = moment(this.props.stagiaire.training.startDate).format('DD/MM/YYYY');
         let scheduledEndDate = moment(this.props.stagiaire.training.scheduledEndDate).format('DD/MM/YYYY');
         return (
-            <div className="header">
+            <div className="formation">
                 <div className="row pb-4">
                     <div className="col-sm-12 offset-lg-2 col-lg-8">
                         {this.props.stagiaire &&
@@ -38,4 +38,4 @@ class Header extends Component {
     }
 }
 
-export default Header;
+export default Formation;

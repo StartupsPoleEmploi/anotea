@@ -5,20 +5,22 @@ import './footer.scss';
 class Footer extends Component {
 
     static propTypes = {
-        codeRegion: PropTypes.string
+        stagiaire: PropTypes.string
     };
 
     render() {
+        let { stagiaire } = this.props;
+
         return (
             <div className="footer container">
                 <div className="row">
                     <div className="col-sm-6 offset-lg-3">
                         <span className="propulsed">Service propulsé par</span>
                         <img className="logo-pe" src={`/img/poleemploi.png`} alt="logo Pôle Emploi" />
-                        {this.props.codeRegion &&
+                        {stagiaire && stagiaire.codeRegion &&
                         <img
                             className="logo-region"
-                            src={`/img/regions/logo-questionnaire/region-${this.props.codeRegion}.png`}
+                            src={`/img/regions/logo-questionnaire/region-${stagiaire.codeRegion}.png`}
                             alt="logo région" />
                         }
                     </div>

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import Notes from './questionnaire/notes/Notes';
 import Commentaire from './questionnaire/commentaire/Commentaire';
-import Footer from './common/Footer';
 import Autorisations from './questionnaire/Autorisations';
 import GlobalError from './questionnaire/GlobalError';
 import ErrorAlert from './questionnaire/ErrorAlert';
-import Header from './common/Header';
+import Formation from './common/Formation';
 import PropTypes from 'prop-types';
 import { getStagiaireInfo, submitAvis } from '../lib/stagiaireService';
 import GridDisplayer from './common/library/GridDisplayer';
@@ -160,12 +159,17 @@ export default class Questionnaire extends Component {
     };
 
     render() {
+
+        if (this.state.error) {
+            return <GlobalError error={this.state.error} />;
+        }
+
         return (
             <div className="questionnaire">
                 {false && <GridDisplayer />}
                 {!this.state.error && this.state.stagiaire &&
                 <div className="container">
-                    <Header stagiaire={this.state.stagiaire} />
+                    <Formation stagiaire={this.state.stagiaire} />
 
                     <Notes
                         notes={this.state.notes}
@@ -180,11 +184,7 @@ export default class Questionnaire extends Component {
                     }
 
                     {this.state.isNotesValid &&
-                    <div className="row">
-                        <div className="col-sm-12 offset-lg-2 col-lg-8">
-                            <Autorisations onChange={this.updateAccord} />
-                        </div>
-                    </div>
+                    <Autorisations onChange={this.updateAccord} />
                     }
 
                     <div className="row">
@@ -218,12 +218,6 @@ export default class Questionnaire extends Component {
                     onClose={this.closeModal}
                     onConfirmed={this.submit} />
                 }
-
-                {this.state.error &&
-                <GlobalError error={this.state.error} />
-                }
-
-                <Footer codeRegion={this.state.stagiaire ? this.state.stagiaire.codeRegion : null} />
 
             </div>
         );
