@@ -167,6 +167,28 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
         });
     });
 
+    it('can filter trainee by certifInfo id', async () => {
+        let db = await getTestDatabase();
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
+        let importer = traineeImporter(db, logger);
+        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        await insertDepartements();
+
+        let results = await importer.importTrainee(csvFile, handler, {
+            certifInfo: '8122'
+        });
+
+        let doc = await db.collection('trainee').findOne();
+        assert.ok(doc.trainee);
+        assert.deepEqual(doc.trainee.email, 'email_1@pe.com');
+        assert.deepEqual(results, {
+            invalid: 0,
+            ignored: 3,
+            imported: 1,
+            total: 4,
+        });
+    });
+
     it('can filter trainee by session date', async () => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
