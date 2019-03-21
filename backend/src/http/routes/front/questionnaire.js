@@ -154,56 +154,56 @@ module.exports = ({ db, logger, configuration }) => {
 
     router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
 
-        let trainee = req.trainee;
-        let comment = await db.collection('comment').findOne({
-            token: req.params.token,
-            formacode: trainee.training.formacode,
-            idSession: trainee.training.idSession
-        });
+        let stagiaire = req.trainee;
+        let [comment, infosRegion] = await Promise.all([
+            db.collection('comment').findOne({
+                token: req.params.token,
+                formacode: stagiaire.training.formacode,
+                idSession: stagiaire.training.idSession
+            }),
+            getInfosRegion(stagiaire)
+        ]);
 
         if (!comment) {
             db.collection('trainee').updateOne({ token: req.params.token }, { $set: { 'tracking.click': new Date() } });
-            res.send({ trainee: trainee });
-        } else {
-            throw new AlreadySentError();
         }
+
+        return res.send({ stagiaire, infosRegion, submitted: !!comment });
     }));
 
     router.post('/questionnaire/:token', getTraineeFromToken, tryAndCatch(async (req, res) => {
 
-        let trainee = req.trainee;
-        let comment = await db.collection('comment').findOne({
-            token: req.params.token,
-            formacode: trainee.training.formacode,
-            idSession: trainee.training.idSession
-        });
+        let stagiaire = req.trainee;
+        let [comment, infosRegion] = await Promise.all([
+            db.collection('comment').findOne({
+                token: req.params.token,
+                formacode: stagiaire.training.formacode,
+                idSession: stagiaire.training.idSession
+            }),
+            getInfosRegion(stagiaire)
+        ]);
 
-        if (comment !== null) {
+        if (comment) {
             throw new AlreadySentError();
-        } else {
-            try {
-                let resultNotes = validateNotes(req.body);
-                if (resultNotes.error === null) {
-                    const avis = buildAvis(resultNotes.value, req.params.token, sanitizeBody(req.body), req.trainee);
-                    let resultAvis = validateAvis(avis);
-                    if (resultAvis.error === null) {
-                        avis.rates.global = calculateAverageRate(avis);
-                        await Promise.all([
-                            db.collection('comment').insertOne(avis),
-                            db.collection('trainee').updateOne({ _id: trainee._id }, { $set: { avisCreated: true } }),
-                        ]);
-                        let infos = await getInfosRegion(trainee);
-                        res.send({ error: false, infos });
-                    } else {
-                        throw new BadDataError();
-                    }
-                } else {
-                    throw new BadDataError();
-                }
-            } catch (e) {
+        }
+
+        let resultNotes = validateNotes(req.body);
+        if (resultNotes.error === null) {
+            const avis = buildAvis(resultNotes.value, req.params.token, sanitizeBody(req.body), req.trainee);
+            let resultAvis = validateAvis(avis);
+            if (resultAvis.error === null) {
+                avis.rates.global = calculateAverageRate(avis);
+                await Promise.all([
+                    db.collection('comment').insertOne(avis),
+                    db.collection('trainee').updateOne({ _id: stagiaire._id }, { $set: { avisCreated: true } }),
+                ]);
+            } else {
                 throw new BadDataError();
             }
+        } else {
+            throw new BadDataError();
         }
+        return res.send({ stagiaire, infosRegion });
     }));
 
     return router;

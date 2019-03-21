@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Note from './Note';
-import items from '../../../data.json';
+import items from '../../../../data.json';
 import NoteMoyenne from './NoteMoyenne';
 import './notes.scss';
 

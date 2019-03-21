@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { checkBadwords } from '../../../lib/stagiaireService';
+import { checkBadwords } from '../../../../lib/stagiaireService';
 import Badwords from './Badwords';
 import './commentaire.scss';
 

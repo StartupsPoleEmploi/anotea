@@ -4,21 +4,20 @@ import Commentaire from './questionnaire/commentaire/Commentaire';
 import Autorisations from './questionnaire/Autorisations';
 import GlobalError from './questionnaire/GlobalError';
 import ErrorAlert from './questionnaire/ErrorAlert';
-import Formation from './common/Formation';
+import Formation from '../common/Formation';
 import PropTypes from 'prop-types';
-import { getStagiaireInfo, submitAvis } from '../lib/stagiaireService';
-import GridDisplayer from './common/library/GridDisplayer';
+import { submitAvis } from '../../lib/stagiaireService';
+import GridDisplayer from '../common/library/GridDisplayer';
 import Summary from './questionnaire/Summary';
-import Modal from './common/library/Modal';
-import Button from './common/library/Button';
+import Modal from '../common/library/Modal';
+import Button from '../common/library/Button';
 import './questionnaire.scss';
 
 export default class Questionnaire extends Component {
 
     static propTypes = {
-        token: PropTypes.string.isRequired,
-        showRemerciements: PropTypes.func.isRequired,
-        setStagiaire: PropTypes.func.isRequired
+        stagiaire: PropTypes.object.isRequired,
+        onSubmit: PropTypes.func.isRequired,
     };
 
     state = {
@@ -54,27 +53,6 @@ export default class Questionnaire extends Component {
         submitButtonClicked: false
     };
 
-    constructor(props) {
-        super(props);
-        this.state.token = props.token;
-        this.loadInfo(this.state.token);
-    }
-
-    loadInfo = async token => {
-        try {
-            let info = await getStagiaireInfo(token);
-            this.setState({ stagiaire: info.trainee });
-            this.props.setStagiaire(info.trainee);
-        } catch (ex) {
-            let error = await ex.json;
-            if (error.statusCode === 423) {
-                this.setState({ error: 'already sent' });
-            } else {
-                this.setState({ error: 'error' });
-            }
-        }
-    };
-
     scrollToTop = () => {
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
@@ -93,26 +71,25 @@ export default class Questionnaire extends Component {
     };
 
     submit = async () => {
-        let avis = {
-            avis_accueil: this.state.notes[0].value,
-            avis_contenu_formation: this.state.notes[1].value,
-            avis_equipe_formateurs: this.state.notes[2].value,
-            avis_moyen_materiel: this.state.notes[3].value,
-            avis_accompagnement: this.state.notes[4].value,
-            pseudo: this.state.commentaire.pseudo.value,
-            commentaire: {
-                texte: this.state.commentaire.pseudo.value,
-                titre: this.state.commentaire.titre.value,
-            },
-            accord: this.state.accord,
-            accordEntreprise: this.state.accordEntreprise
-        };
-
         try {
-            let response = await submitAvis(this.state.token, avis);
-            this.props.showRemerciements(response.infos);
+            let response = await submitAvis(this.props.stagiaire.token, {
+                avis_accueil: this.state.notes[0].value,
+                avis_contenu_formation: this.state.notes[1].value,
+                avis_equipe_formateurs: this.state.notes[2].value,
+                avis_moyen_materiel: this.state.notes[3].value,
+                avis_accompagnement: this.state.notes[4].value,
+                pseudo: this.state.commentaire.pseudo.value,
+                commentaire: {
+                    texte: this.state.commentaire.pseudo.value,
+                    titre: this.state.commentaire.titre.value,
+                },
+                accord: this.state.accord,
+                accordEntreprise: this.state.accordEntreprise
+            });
+            this.props.onSubmit(response);
         } catch (ex) {
-            let error = await ex.json;
+            console.error('An error occured', ex);
+            let error = ex.json;
             if (error.statusCode === 400) {
                 this.setState({ formError: 'bad data' });
             } else {
@@ -121,6 +98,7 @@ export default class Questionnaire extends Component {
         }
 
         this.closeModal();
+        this.scrollToTop();
     };
 
     computeAverageScore = () => {
@@ -167,9 +145,9 @@ export default class Questionnaire extends Component {
         return (
             <div className="questionnaire">
                 {false && <GridDisplayer />}
-                {!this.state.error && this.state.stagiaire &&
+                {!this.state.error && this.props.stagiaire &&
                 <div className="container">
-                    <Formation stagiaire={this.state.stagiaire} />
+                    <Formation stagiaire={this.props.stagiaire} />
 
                     <Notes
                         notes={this.state.notes}
