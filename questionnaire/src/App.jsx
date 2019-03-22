@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getStagiaireInfo } from './lib/stagiaireService';
+import getToken from './lib/getToken';
 import Questionnaire from './components/pages/Questionnaire';
 import Remerciements from './components/pages/Remerciements';
 import ErrorPage from './components/pages/ErrorPage';
@@ -15,18 +16,14 @@ class App extends Component {
         showErrorPage: false,
     };
 
-    static getToken() {
-        let urlParts = window.location.href.split('/');
-        return urlParts[urlParts.length - 1];
-    }
-
     fetchStagiaire = async () => {
         try {
-            let response = await getStagiaireInfo(App.getToken());
+            let token = getToken();
+            let data = await getStagiaireInfo(token);
             this.setState({
-                stagiaire: response.stagiaire,
-                infosRegion: response.infosRegion,
-                showRemerciements: response.submitted,
+                stagiaire: data.stagiaire,
+                infosRegion: data.infosRegion,
+                showRemerciements: data.submitted,
             });
         } catch (err) {
             console.error('An error occured', err);

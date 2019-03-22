@@ -72,7 +72,7 @@ export default class Questionnaire extends Component {
 
     submit = async () => {
         try {
-            let response = await submitAvis(this.props.stagiaire.token, {
+            let data = await submitAvis(this.props.stagiaire.token, {
                 avis_accueil: this.state.notes[0].value,
                 avis_contenu_formation: this.state.notes[1].value,
                 avis_equipe_formateurs: this.state.notes[2].value,
@@ -86,7 +86,7 @@ export default class Questionnaire extends Component {
                 accord: this.state.accord,
                 accordEntreprise: this.state.accordEntreprise
             });
-            this.props.onSubmit(response);
+            this.props.onSubmit(data);
         } catch (ex) {
             console.error('An error occured', ex);
             let error = ex.json;
