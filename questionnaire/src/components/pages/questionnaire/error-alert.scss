@@ -1,0 +1,10 @@
+@import '../../../styles/variables';
+
+.error-message {
+  color: $color-red;
+  font-size: 1rem;
+  font-weight: $font-weight-700;
+  line-height: 17px;
+  text-align: center;
+  margin-top: 20px;
+}

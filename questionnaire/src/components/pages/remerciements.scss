@@ -1,4 +1,4 @@
-@import '../styles/variables';
+@import '../../styles/variables';
 
 .remerciements {
 
@@ -11,9 +11,7 @@
   .panel-remerciements {
 
     .links-block {
-      margin: auto;
       text-align: center;
-      margin-top: 3em;
 
       h1 {
         color: $color-blue;
@@ -23,7 +21,7 @@
       }
 
       .link {
-        margin: 20px 10px 0px 10px;
+        margin: 20px 10px 0 10px;
         background-color: $color-blue-10;
         border-radius: 5px;
 
@@ -39,8 +37,8 @@
       height: 252px;
       background-color: $color-grey-5;
       text-align: center;
-      padding-top: 1em;
-      margin-top: 3em;
+      padding: 1rem;
+      margin-top: 3rem;
 
       h2 {
         color: $color-blue;

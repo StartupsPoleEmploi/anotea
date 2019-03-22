@@ -5,30 +5,35 @@ import './footer.scss';
 class Footer extends Component {
 
     static propTypes = {
-        stagiaire: PropTypes.string
+        stagiaire: PropTypes.object
     };
 
     render() {
+
         let { stagiaire } = this.props;
 
         return (
             <div className="footer container">
-                <div className="row">
-                    <div className="col-sm-6 offset-lg-3">
-                        <span className="propulsed">Service propulsé par</span>
-                        <img className="logo-pe" src={`/img/poleemploi.png`} alt="logo Pôle Emploi" />
-                        {stagiaire && stagiaire.codeRegion &&
+                <div className="row mb-4">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                        <div className="d-flex justify-content-center">
+                            <span className="propulsed">Service propulsé par</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="row align-items-center">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8">
                         <img
-                            className="logo-region"
+                            className="logo"
+                            src={`${process.env.PUBLIC_URL}/images/logo.png`}
+                            alt="logo Anotéa" />
+                        <img className="logo" src={`/img/poleemploi.png`} alt="logo Pôle Emploi" />
+                        {!!stagiaire &&
+                        <img
+                            className="logo"
                             src={`/img/regions/logo-questionnaire/region-${stagiaire.codeRegion}.png`}
                             alt="logo région" />
                         }
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-sm-6 offset-lg-3">
-                        <img className="logo" src={`${process.env.PUBLIC_URL}/images/logo.png`}
-                             alt="logo Anotéa" />
                     </div>
                 </div>
             </div>

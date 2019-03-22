@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch,
-    Redirect
-} from 'react-router-dom';
-
-import Remerciements from './components/Remerciements';
-import Questionnaire from './components/Questionnaire';
-import NoMatch from './components/NoMatch';
+import { getStagiaireInfo } from './lib/stagiaireService';
+import getToken from './lib/getToken';
+import Questionnaire from './components/pages/Questionnaire';
+import Remerciements from './components/pages/Remerciements';
+import ErrorPage from './components/pages/ErrorPage';
 import Footer from './components/common/Footer';
 import './App.scss';
 
@@ -16,47 +11,52 @@ class App extends Component {
 
     state = {
         stagiaire: null,
-        infosRegion: null
+        infosRegion: null,
+        showRemerciements: false,
+        showErrorPage: false,
     };
 
-    showRemerciements = infosRegion => {
-        this.setState({ infosRegion, toRemerciements: true });
+    fetchStagiaire = async () => {
+        try {
+            let token = getToken();
+            let data = await getStagiaireInfo(token);
+            this.setState({
+                stagiaire: data.stagiaire,
+                infosRegion: data.infosRegion,
+                showRemerciements: data.submitted,
+            });
+        } catch (err) {
+            console.error('An error occured', err);
+            this.setState({ showErrorPage: true });
+        }
     };
 
-    setStagiaire = stagiaire => this.setState({ stagiaire });
+    componentDidMount() {
+        this.fetchStagiaire(this.state.token);
+    }
 
     render() {
+        let { stagiaire } = this.state;
+
+        if (this.state.showErrorPage) {
+            return <ErrorPage />;
+        }
+
+        if (!stagiaire) {
+            //Not yet loaded
+            return (<div />);
+        }
+
         return (
-            <Router>
-                <div>
-                    {this.state.toRemerciements === true &&
-                    <Redirect to={`${process.env.PUBLIC_URL}/${this.state.stagiaire.token}/remerciements`} />
-                    }
-
-                    <Switch>
-                        <Route path={`${process.env.PUBLIC_URL}/:token`} exact render={props => {
-                            return (
-                                <Questionnaire
-                                    token={props.match.params.token}
-                                    setStagiaire={this.setStagiaire}
-                                    showRemerciements={this.showRemerciements} />);
-                        }} />
-                        <Route path={`${process.env.PUBLIC_URL}/:token/remerciements`} exact render={() => {
-                            if (!this.state.stagiaire) {
-                                //FIXME fix how stagiaire is fetched
-                                return <div />;
-                            }
-                            return (
-                                <Remerciements
-                                    stagiaire={this.state.stagiaire}
-                                    infosRegion={this.state.infosRegion} />);
-                        }} />
-                        <Route component={NoMatch} />
-                    </Switch>
-
-                    <Footer codeRegion={this.state.stagiaire ? this.state.stagiaire.codeRegion : null} />
-                </div>
-            </Router>
+            <div>
+                {this.state.showRemerciements ?
+                    <Remerciements stagiaire={stagiaire} infosRegion={this.state.infosRegion} /> :
+                    <Questionnaire
+                        stagiaire={stagiaire}
+                        onSubmit={() => this.setState({ showRemerciements: true })} />
+                }
+                <Footer stagiaire={stagiaire} />
+            </div>
         );
     }
 }
