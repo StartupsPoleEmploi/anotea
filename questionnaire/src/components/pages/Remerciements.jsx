@@ -22,7 +22,7 @@ class Remerciements extends Component {
                         <div className="col-sm-12 offset-lg-2 col-lg-8">
 
                             <div className="panel-remerciements">
-                                {!infosRegion.showLinks &&
+                                {infosRegion.showLinks &&
                                 <div className="links-block">
                                     <h1>Et après la formation...</h1>
                                     <p>
