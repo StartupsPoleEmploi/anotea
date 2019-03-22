@@ -35,7 +35,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
     const computeMailingStats = async (codeRegion, codeFinanceur) => {
 
-        const docs = await db.collection('trainee').aggregate([
+        return await db.collection('trainee').aggregate([
             {
                 $match: {
                     ...(codeRegion ? { codeRegion: codeRegion } : {}),
@@ -52,69 +52,59 @@ module.exports = ({ db, configuration, logger, regions }) => {
                 }
             },
             {
-                $lookup:
-                    {
-                        from: 'comment',
-                        localField: '_id',
-                        foreignField: 'campaign',
-                        as: 'comments'
-                    }
-            },
-            {
-                $unwind:
-                    {
-                        path: '$comments',
-                        preserveNullAndEmptyArrays: true
-                    }
-            },
-            {
-                $match: {
-                    ...(codeRegion ? { 'comments.codeRegion': codeRegion } : {}),
-                }
-            },
-            {
-                $group:
-                    {
-                        _id: '$_id',
-                        date: { $first: '$date' },
-                        mailSent: { $first: '$mailSent' },
-                        mailOpen: { $first: '$mailOpen' },
-                        linkClick: { $first: '$linkClick' },
-                        formValidated: { $sum: { $size: '$comments' } },
-                        allowToContact: {
-                            $sum: {
-                                $cond: {
-                                    if: { $eq: ['$comments.accord', true] },
-                                    then: 1,
-                                    else: 0
-                                }
+                $lookup: {
+                    from: 'comment',
+                    let: {
+                        campaign: '$_id',
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$campaign', '$$campaign'] },
+                                        //hack to return a valid expression when codeRegion is empty
+                                        codeRegion ? { $eq: ['$codeRegion', codeRegion] } : { $eq: ['$campaign', '$$campaign'] },
+                                    ]
+                                },
                             }
                         },
-                        commentsArray: { $push: '$comments.comment' },
-                        commentsRejectedArray: { $push: '$comments.badwords' }
-                    }
+                        {
+                            $group: {
+                                _id: null,
+                                nbComments: { $sum: 1 },
+                                allowToContact: {
+                                    $sum: {
+                                        $cond: {
+                                            if: { $eq: ['$accord', true] },
+                                            then: 1,
+                                            else: 0
+                                        }
+                                    }
+                                },
+                            }
+                        },
+                    ],
+                    as: 'stats'
+                }
             },
             {
-                $sort:
-                    {
-                        date: -1
-                    }
-            }
-        ]).toArray();
-
-        return docs.map(doc => {
-            doc.comments = 0;
-            for (let idx in doc.commentsArray) {
-                if (doc.commentsArray[idx] !== null &&
-                    (doc.commentsArray[idx].title !== '' || doc.commentsArray[idx].text !== '')) {
-                    doc.comments++;
+                $group: {
+                    _id: '$_id',
+                    date: { $first: '$date' },
+                    mailSent: { $first: '$mailSent' },
+                    mailOpen: { $first: '$mailOpen' },
+                    linkClick: { $first: '$linkClick' },
+                    formValidated: { $first: '$stats.nbComments' },
+                    allowToContact: { $first: '$stats.allowToContact' },
+                }
+            },
+            {
+                $sort: {
+                    date: -1
                 }
             }
-            doc.commentsRejected = doc.commentsRejectedArray.length;
-            delete doc.commentsArray;
-            delete doc.commentsRejectedArray;
-            return doc;
-        });
+        ]).toArray();
     };
 
     const computeSessionStats = async (regionName, codeRegions) => {
@@ -209,7 +199,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
         res.json(organismes);
     }));
 
-    router.get('/stats/mailing.:format', async (req, res) => {
+    router.get('/stats/mailing.:format', tryAndCatch(async (req, res) => {
 
         let data = await computeMailingStats(req.query.codeRegion, req.query.codeFinanceur);
         if (req.params.format === 'json' || !req.params.format) {
@@ -230,7 +220,7 @@ module.exports = ({ db, configuration, logger, regions }) => {
         } else {
             res.status(404).render('errors/404');
         }
-    });
+    }));
 
     router.get('/stats/stagiaires/ventilation.:format', tryAndCatch(async (req, res) => {
 
