@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import Notes from './questionnaire/notes/Notes';
 import Commentaire from './questionnaire/commentaire/Commentaire';
 import Autorisations from './questionnaire/Autorisations';
-import GlobalError from './questionnaire/GlobalError';
-import ErrorAlert from './questionnaire/ErrorAlert';
+import ErrorMessage from './questionnaire/ErrorMessage';
 import Formation from '../common/Formation';
 import PropTypes from 'prop-types';
 import { submitAvis } from '../../lib/stagiaireService';
@@ -48,8 +47,7 @@ export default class Questionnaire extends Component {
         stagiaire: null,
         accord: false,
         accordEntreprise: false,
-        error: null,
-        formError: null,
+        showErrorMessage: null,
         submitButtonClicked: false
     };
 
@@ -87,18 +85,13 @@ export default class Questionnaire extends Component {
                 accordEntreprise: this.state.accordEntreprise
             });
             this.props.onSubmit(data);
+            this.scrollToTop();
         } catch (ex) {
             console.error('An error occured', ex);
-            let error = ex.json;
-            if (error.statusCode === 400) {
-                this.setState({ formError: 'bad data' });
-            } else {
-                this.setState({ error: 'error' });
-            }
+            this.setState({ showErrorMessage: true });
         }
 
         this.closeModal();
-        this.scrollToTop();
     };
 
     computeAverageScore = () => {
@@ -137,18 +130,12 @@ export default class Questionnaire extends Component {
     };
 
     render() {
-
-        if (this.state.error) {
-            return <GlobalError error={this.state.error} />;
-        }
-
         return (
             <div className="questionnaire">
                 {false && <GridDisplayer />}
                 {!this.state.error && this.props.stagiaire &&
                 <div className="container">
                     <Formation stagiaire={this.props.stagiaire} />
-
                     <Notes
                         notes={this.state.notes}
                         averageScore={this.state.averageScore}
@@ -179,9 +166,7 @@ export default class Questionnaire extends Component {
                             </div>
                         </div>
                     </div>
-
-                    {this.state.formError === 'bad data' && <ErrorAlert />}
-
+                    {this.state.showErrorMessage && <ErrorMessage />}
                 </div>
                 }
 
@@ -196,7 +181,6 @@ export default class Questionnaire extends Component {
                     onClose={this.closeModal}
                     onConfirmed={this.submit} />
                 }
-
             </div>
         );
     }
