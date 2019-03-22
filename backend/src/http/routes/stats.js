@@ -89,6 +89,13 @@ module.exports = ({ db, configuration, logger, regions }) => {
                 }
             },
             {
+                $unwind:
+                    {
+                        path: '$stats',
+                        preserveNullAndEmptyArrays: true
+                    }
+            },
+            {
                 $group: {
                     _id: '$_id',
                     date: { $first: '$date' },
