@@ -16,6 +16,7 @@ module.exports = {
             db.collection('trainee').createIndex({ 'token': 1 }),
             db.collection('trainee').createIndex({ 'trainee.email': 1 }),
             db.collection('trainee').createIndex({ 'trainee.dnIndividuNational': 1 }),
+            db.collection('trainee').createIndex({ 'training.codeFinanceur': 1 }),
             //Used during import of stagiaires
             db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.infoCarif.numeroSession': 1 }),
         ]);
