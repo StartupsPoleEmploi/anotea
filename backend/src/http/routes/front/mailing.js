@@ -32,7 +32,7 @@ module.exports = ({ db, logger, mailer }) => {
 
     const trackRouteHandler = (collection, doc, found, response) => {
         if (found) {
-            let trackingFieldName = doc.tracking ? 'lastRead' : 'firstRead';
+            let trackingFieldName = doc.tracking.firstRead !== undefined ? 'lastRead' : 'firstRead';
             db.collection(collection).updateOne({ _id: doc._id }, {
                 $set: {
                     [`tracking.${trackingFieldName}`]: new Date()
