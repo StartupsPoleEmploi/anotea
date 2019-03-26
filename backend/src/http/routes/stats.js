@@ -72,7 +72,25 @@ module.exports = ({ db, configuration, logger, regions }) => {
                         {
                             $group: {
                                 _id: null,
-                                nbComments: { $sum: 1 },
+                                nbAvis: { $sum: 1 },
+                                nbCommentaires: {
+                                    $sum: {
+                                        $cond: {
+                                            if: { $not: ['$comment'] },
+                                            then: 0,
+                                            else: 1,
+                                        }
+                                    }
+                                },
+                                nbCommentairesRejected: {
+                                    $sum: {
+                                        $cond: {
+                                            if: { $eq: ['$rejected', true] },
+                                            then: 1,
+                                            else: 0,
+                                        }
+                                    }
+                                },
                                 allowToContact: {
                                     $sum: {
                                         $cond: {
@@ -102,8 +120,10 @@ module.exports = ({ db, configuration, logger, regions }) => {
                     mailSent: { $first: '$mailSent' },
                     mailOpen: { $first: '$mailOpen' },
                     linkClick: { $first: '$linkClick' },
-                    formValidated: { $first: '$stats.nbComments' },
+                    formValidated: { $first: '$stats.nbAvis' },
                     allowToContact: { $first: '$stats.allowToContact' },
+                    nbCommentaires: { $first: '$stats.nbCommentaires' },
+                    nbCommentairesRejected: { $first: '$stats.nbCommentairesRejected' },
                 }
             },
             {
