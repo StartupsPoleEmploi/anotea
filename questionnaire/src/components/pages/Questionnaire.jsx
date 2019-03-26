@@ -78,7 +78,7 @@ export default class Questionnaire extends Component {
                 avis_accompagnement: this.state.notes[4].value,
                 pseudo: this.state.commentaire.pseudo.value,
                 commentaire: {
-                    texte: this.state.commentaire.pseudo.value,
+                    texte: this.state.commentaire.texte.value,
                     titre: this.state.commentaire.titre.value,
                 },
                 accord: this.state.accord,
