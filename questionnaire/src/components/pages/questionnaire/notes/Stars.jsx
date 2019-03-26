@@ -46,13 +46,8 @@ export default class Stars extends React.PureComponent {
 
     select = value => {
         if (!this.state.readonly) {
-            if (this.state.selected === value + 1) {
-                this.setState({ selected: null });
-                this.props.onSelect(this.props.index, null);
-            } else {
-                this.setState({ selected: value + 1 });
-                this.props.onSelect(this.props.index, value);
-            }
+            this.setState({ selected: value + 1 });
+            this.props.onSelect(this.props.index, value);
         }
     };
 
