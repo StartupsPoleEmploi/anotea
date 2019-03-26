@@ -29,8 +29,7 @@ module.exports = (db, logger) => {
 
             stream.on('end', async () => {
                 await Promise.all(promises);
-                resolve();
-                logger.info(`Old ${sourceCollection}s archiving - completed (${count} ${sourceCollection}s)`);
+                resolve({sourceCollection, count});
             });
         });
     };

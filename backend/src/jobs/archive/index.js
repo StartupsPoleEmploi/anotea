@@ -13,8 +13,12 @@ execute(async ({ db, logger, configuration }) => {
 
     let archiver = require(`./archive`)(db, logger, configuration);
 
-    await Promise.all([
-        archiver.archive('comment', 'archivedAdvices'),
-        archiver.archive('trainee', 'archivedTrainees')
-    ]);
+    let log = result => logger.info(`Old ${result.sourceCollection}s archiving - completed (${result.count} ${result.sourceCollection}s)`);
+
+    return new Promise(async (resolve, reject) => {
+        log(await archiver.archive('comment', 'archivedAdvices'));
+        log(await archiver.archive('trainee', 'archivedTrainees'));
+        resolve();
+    });
+    
 });
