@@ -9,10 +9,12 @@ cli.description('launch trainees & advices archive')
 
 execute(async ({ db, logger, configuration }) => {
 
-    logger.info(`Archiving old ${cli.source}s from the collection ${cli.source}...`);
+    logger.info(`Archiving old comments and trainees...`);
 
     let archiver = require(`./archive`)(db, logger, configuration);
 
-    archiver.archive('comment', 'archivedAdvices');
-    archiver.archive('trainee', 'archivedTrainees');
+    await Promise.all([
+        archiver.archive('comment', 'archivedAdvices'),
+        archiver.archive('trainee', 'archivedTrainees')
+    ]);
 });
