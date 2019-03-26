@@ -2,8 +2,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import logo from './Header.svg';
 import './Header.scss';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Route } from 'react-router-dom';
 
+const Link = ({ label, url, className }) => {
+    return (
+        <NavLink
+            to={url}
+            isActive={(match, location) => {
+                //Ignore parameters when comparing the current location with the link url
+                let baseUrl = url.indexOf('?') === -1 ? url : url.split('?')[0];
+                return location.pathname.indexOf(baseUrl) !== -1;
+            }}
+            className={className}
+            activeClassName="active">
+            {label}
+        </NavLink>
+    );
+};
+
+Link.propTypes = {
+    label: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    className: PropTypes.string.isRequired,
+};
 
 export default class Header extends React.Component {
 
@@ -12,39 +33,66 @@ export default class Header extends React.Component {
     };
 
     render() {
+
         return (
-            <div className="Header">
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-md-2 pl-5">
-                            <NavLink to="/admin">
-                                <img src={logo} className="logo" alt="logo" />
-                            </NavLink>
-                        </div>
-                        <div className="col-md-7">
-                            <nav className="nav">
-                                <NavLink to="/admin/moderation/stagiaires/all" className="nav-link"
-                                         activeClassName="active">
-                                    Stagiaires
-                                </NavLink>
-                                <NavLink to="/admin/moderation/organismes" className="nav-link"
-                                         activeClassName="active">
-                                    Organismes de formation
-                                </NavLink>
-                            </nav>
-                        </div>
-                        <div className="col-md-3 text-right pr-5">
-                            <NavLink to="/mon-compte" className="account-link"
-                                activeClassName="active">
-                                <span className="fas fa-cog" />
-                            </NavLink>
-                            <button onClick={this.props.onLogout} className="logout btn btn-outline-light">
-                                <span>SE DECONNECTER</span>
-                            </button>
+            <Route render={({ location }) => {
+
+                let isModeration = location.pathname.indexOf('/admin/moderateur/moderation/avis') !== -1;
+
+                return (
+                    <div className={`Header ${isModeration ? 'moderation' : 'misc'}`}>
+                        <div className="container">
+                            <div className="row align-items-center">
+                                <div className="col-2">
+                                    <NavLink to="/admin">
+                                        <img src={logo} className="logo" alt="logo" />
+                                    </NavLink>
+                                </div>
+                                <div className="col-7">
+                                    <ul className="nav">
+                                        <li className="nav-item dropdown">
+                                            <a
+                                                className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
+                                                data-toggle="dropdown"
+                                                href="#"
+                                                role="button"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                                Moderation
+                                            </a>
+                                            <div className="dropdown-menu">
+                                                <Link
+                                                    className="dropdown-item"
+                                                    label="Avis stagiaires"
+                                                    url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
+                                                <Link
+                                                    className="dropdown-item"
+                                                    label=" Réponses des organismes"
+                                                    url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
+                                            </div>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link
+                                                className="nav-link"
+                                                label="Gestion des organismes"
+                                                url="/admin/moderateur/gestion/organismes?page=0&status=active" />
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className="col-3 text-right">
+                                    <NavLink to="/mon-compte" className="account-link" activeClassName="active">
+                                        <span className="fas fa-cog" />
+                                    </NavLink>
+                                    <button onClick={this.props.onLogout} className="logout btn btn-outline-light">
+                                        <span>SE DECONNECTER</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                );
+            }} />
+
         );
     }
 }

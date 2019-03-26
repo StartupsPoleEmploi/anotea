@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { login } from '../../lib/loginService';
+import { login } from '../backoffice/account/service/loginService';
 
 export default class LoginForm extends React.Component {
 
@@ -61,31 +61,33 @@ export default class LoginForm extends React.Component {
                         recommencer.</div>}
 
                     <input type="text"
-                        id="username"
-                        value={this.state.username}
-                        className="form-control input-sm"
-                        placeholder="Numéro de SIRET"
-                        onChange={this.handleLoginUsernameChange}
-                        onKeyPress={this.handleKeyPress} />
+                           id="username"
+                           value={this.state.username}
+                           className="form-control input-sm"
+                           placeholder="Numéro de SIRET"
+                           onChange={this.handleLoginUsernameChange}
+                           onKeyPress={this.handleKeyPress} />
 
                     <input type="password"
-                        id="password"
-                        value={this.state.password}
-                        className="form-control input-sm"
-                        placeholder="votre mot de passe"
-                        onChange={this.handleLoginPasswordChange}
-                        onKeyPress={this.handleKeyPress} />
+                           id="password"
+                           value={this.state.password}
+                           className="form-control input-sm"
+                           placeholder="votre mot de passe"
+                           onChange={this.handleLoginPasswordChange}
+                           onKeyPress={this.handleKeyPress} />
 
                     <div className="wrapper">
                         <span className="group-btn">
                             <button onClick={this.handleLogin} className="btn btn-primary btn-md">
-                                Se connecter <span className="fas fa-sign-in-alt"/>
+                                Se connecter <span className="fas fa-sign-in-alt" />
                             </button>
                         </span>
                     </div>
                 </div>
                 <div className="loginHelp">
-                    <button type="button" className="btn btn-link" onClick={this.handleForgottenPassword}>Mot de passe oublié?</button>
+                    <button type="button" className="btn btn-link" onClick={this.handleForgottenPassword}>Mot de passe
+                        oublié?
+                    </button>
                 </div>
             </div>
         );

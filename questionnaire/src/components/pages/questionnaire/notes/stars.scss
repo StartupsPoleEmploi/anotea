@@ -1,0 +1,61 @@
+@import '../../../../styles/variables';
+
+.stars {
+
+  text-align: right;
+  @media (max-width: 575.98px) {
+    text-align: center;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .buttons {
+
+    .star {
+      border: none;
+      background: transparent;
+      outline: none;
+      padding-left: 0;
+      font-size: 1.25rem;
+    }
+
+    .far.fa-star {
+      color: $color-black;
+      cursor: pointer;
+    }
+
+    .fas.fa-star {
+      color: $color-orange;
+      cursor: pointer;
+    }
+
+    .star-tooltip {
+      margin-bottom: 0.25rem;
+
+      .label {
+        border-radius: 2px;
+        background-color: $color-black;
+        color: $color-white;
+        font-size: 0.75rem;
+        line-height: 12px;
+        font-weight: normal;
+        padding: 0.25rem;
+      }
+
+      &.inactive {
+        visibility: hidden;
+      }
+    }
+  }
+
+  &.readonly {
+    .fas.fa-star, .far.fa-star {
+      cursor: unset;
+    }
+
+    .inactive {
+      display: none;
+    }
+  }
+}
+

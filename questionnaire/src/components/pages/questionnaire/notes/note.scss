@@ -1,0 +1,36 @@
+@import '../../../../styles/variables';
+
+.note {
+
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  @media (max-width: 575.98px) {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .title {
+    padding-bottom: 0.25rem;
+    color: $color-black;
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 19px;
+  }
+
+  .description {
+    opacity: 0.6;
+    color: $color-dark;
+    font-size: 0.875rem;
+    line-height: 17px;
+  }
+
+  .stars-container {
+    text-align: center;
+  }
+
+  &.odd {
+    background-color: $color-grey-5;
+  }
+}
+

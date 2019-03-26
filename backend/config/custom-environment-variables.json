@@ -36,6 +36,9 @@
     },
     "dsn": "ANOTEA_SENTRY_DSN"
   },
+  "analytics": {
+    "ga": "ANOTEA_GOOGLE_ANALYTICS_ID"
+  },
   "smtp": {
     "host": "ANOTEA_SMTP_HOST",
     "port": "ANOTEA_SMTP_PORT"

@@ -78,7 +78,6 @@ const buildAvis = (session, custom) => {
             },
             codeFinanceur: formation.action.organisme_financeurs[0],
         },
-        step: 3,
         rates: {
             accueil: 3,
             contenu_formation: 2,
@@ -101,6 +100,16 @@ const buildAvis = (session, custom) => {
     }, custom);
 };
 
+const buildReponse = () => {
+
+    //TODO add a component to be able to reuse reply action
+    return {
+        text: faker.lorem.paragraph(),
+        date: new Date(),
+        status: 'none',
+    };
+};
+
 module.exports = async (db, moderation, options = {}) => {
 
     let promises = [];
@@ -110,7 +119,7 @@ module.exports = async (db, moderation, options = {}) => {
 
     promises.push(
         ...(options.published || generate(10)).map(custom => {
-            let avis = buildAvis(session, custom);
+            let avis = buildAvis(session, { reponse: buildReponse() }, custom);
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
                 db.collection('comment').insertOne(avis),

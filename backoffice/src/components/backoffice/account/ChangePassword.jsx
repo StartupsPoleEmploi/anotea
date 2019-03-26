@@ -1,7 +1,7 @@
 import React from 'react';
 import './changePassword.scss';
 import { checkPasswordComplexity } from '../../../utils/password';
-import { updatePassword } from '../../../lib/accountService';
+import { updatePassword } from './service/accountService';
 
 export class ChangePassword extends React.Component {
 
@@ -62,7 +62,8 @@ export class ChangePassword extends React.Component {
         return (
             <div className="changePassword">
                 <h3 className="subtitle"><span className="fas fa-key" /> Changer le mot de passe</h3>
-                <small>Nous vous conseillons d’utiliser un mot de passe sûr que vous n’utilisez nulle part ailleurs</small>
+                <small>Nous vous conseillons d’utiliser un mot de passe sûr que vous n’utilisez nulle part ailleurs
+                </small>
                 {this.state.success && <div className="alert alert-success" role="alert">
                     Mot de passe mis &agrave; jour avec succ&egrave;s.
                 </div>
@@ -70,27 +71,37 @@ export class ChangePassword extends React.Component {
 
                 <div className="form-group">
                     <label>Mot de passe actuel</label>
-                    <input type="password" className="form-control" value={this.state.actualPassword} onChange={this.change.bind(this, 'actualPassword')} placeholder="Mot de passe" />
-                    {this.state.serverSideError && this.state.serverSideError.type === 'PASSWORD_INVALID' && <small className="form-text error">
-                        { this.state.serverSideError.message }
+                    <input type="password" className="form-control" value={this.state.actualPassword}
+                           onChange={this.change.bind(this, 'actualPassword')} placeholder="Mot de passe" />
+                    {this.state.serverSideError && this.state.serverSideError.type === 'PASSWORD_INVALID' &&
+                    <small className="form-text error">
+                        {this.state.serverSideError.message}
                     </small>}
                 </div>
 
                 <div className="form-group">
                     <label>Nouveau mot de passe</label>
-                    <input type="password" className="form-control" value={this.state.newPassword} onChange={this.change.bind(this, 'newPassword')} placeholder="Mot de passe" />
+                    <input type="password" className="form-control" value={this.state.newPassword}
+                           onChange={this.change.bind(this, 'newPassword')} placeholder="Mot de passe" />
                     {this.state.errors.tooShort && <small className="form-text error">Trop court</small>}
-                    {(this.state.errors.tooSimple || this.state.serverSideError && this.state.serverSideError.type === 'PASSWORD_NOT_STRONG') && <small className="form-text error">Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre</small>}
+                    {(this.state.errors.tooSimple || this.state.serverSideError && this.state.serverSideError.type === 'PASSWORD_NOT_STRONG') &&
+                    <small className="form-text error">Le mot de passe doit contenir au moins une minuscule, une
+                        majuscule et un chiffre</small>}
                 </div>
 
                 <div className="form-group">
                     <label>Confirmer nouveau mot de passe</label>
-                    <input type="password" className="form-control" value={this.state.confirmPassword} onChange={this.change.bind(this, 'confirmPassword')} placeholder="Mot de passe" />
-                    {this.state.errors.notEquals && <small className="form-text error">Les mots de passe ne sont pas identiques</small>}
-                    {!this.state.errors.notEquals && this.state.confirmPassword.length !== 0 && <small className="form-text ok">Mots de passe sont identiques</small>}
+                    <input type="password" className="form-control" value={this.state.confirmPassword}
+                           onChange={this.change.bind(this, 'confirmPassword')} placeholder="Mot de passe" />
+                    {this.state.errors.notEquals &&
+                    <small className="form-text error">Les mots de passe ne sont pas identiques</small>}
+                    {!this.state.errors.notEquals && this.state.confirmPassword.length !== 0 &&
+                    <small className="form-text ok">Mots de passe sont identiques</small>}
                 </div>
 
-                <button className="btn btn-primary" onClick={this.update} disabled={!this.passwordIsOk()} >Mettre à jour</button>
+                <button className="btn btn-primary" onClick={this.update} disabled={!this.passwordIsOk()}>Mettre à
+                    jour
+                </button>
 
             </div>
         );

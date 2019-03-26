@@ -159,8 +159,7 @@
     }
   },
   "analytics": {
-    "ga": "UA-92533869-2",
-    "hotjar": "504758",
+    "ga": "1234",
     "sessionDuration": 3600000
   },
   "smtp": {

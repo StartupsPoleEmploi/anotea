@@ -1,0 +1,20 @@
+.Export {
+
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 95px;
+  margin-bottom: 2rem;
+
+  .export-button {
+    height: 36px;
+    width: 12em;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #24303A;
+    border: 1px solid #24303A;;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+  }
+
+}

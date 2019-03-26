@@ -19,39 +19,52 @@ module.exports = db => {
                 as: 'events',
             }
         },
-        {
-            $project: {
-                codeRegion: '$codeRegion',
-                passwordHash: '$passwordHash',
-                nbAvis: '$score.nb_avis',
-                login: {
-                    $filter: {
-                        input: '$events',
-                        as: 'event',
-                        cond: {
-                            $and: [
-                                { $eq: ['$$event.type', 'log in'] },
-                                { $gte: ['$$event.date', THREE_MONTHS_AGO] },
-                            ]
+            {
+                $project: {
+                    codeRegion: '$codeRegion',
+                    passwordHash: '$passwordHash',
+                    nbAvis: '$score.nb_avis',
+                    login: {
+                        $filter: {
+                            input: '$events',
+                            as: 'event',
+                            cond: {
+                                $and: [
+                                    { $eq: ['$$event.type', 'log in'] },
+                                    { $gte: ['$$event.date', THREE_MONTHS_AGO] },
+                                ]
+                            }
                         }
                     }
                 }
-            }
-        },
-        {
-            $group: {
-                _id: {
-                    codeRegion: '$codeRegion',
-                },
-                count: { $sum: 1 },
-                countAccountCreated: { $sum: { $cond: ['$passwordHash', 1, 0] } },
-                countWithMorethanOneAdvice: { $sum: { $cond: ['$nbAvis', 1, 0] } },
-                countLogin: { $sum: { $cond: [{ $size: '$login' }, 1, 0] } }
-            }
-        }]).toArray();
+            },
+            {
+                $group: {
+                    _id: {
+                        codeRegion: '$codeRegion',
+                    },
+                    count: { $sum: 1 },
+                    countAccountCreated: { $sum: { $cond: ['$passwordHash', 1, 0] } },
+                    countWithMorethanOneAdvice: { $sum: { $cond: ['$nbAvis', 1, 0] } },
+                    countLogin: { $sum: { $cond: [{ $size: '$login' }, 1, 0] } }
+                }
+            }]).toArray();
 
         stats.forEach(stat => {
-            db.collection('organismesStats').updateOne({ _id: { codeRegion: stat._id.codeRegion, year: today.getFullYear(), month: today.getMonth() + 1 }}, { $set: { count: stat.count, countAccountCreated: stat.countAccountCreated, countWithMorethanOneAdvice: stat.countWithMorethanOneAdvice, countLogin: stat.countLogin }}, { upsert: true });
+            db.collection('organismesStats').updateOne({
+                _id: {
+                    codeRegion: stat._id.codeRegion,
+                    year: today.getFullYear(),
+                    month: today.getMonth() + 1
+                }
+            }, {
+                $set: {
+                    count: stat.count,
+                    countAccountCreated: stat.countAccountCreated,
+                    countWithMorethanOneAdvice: stat.countWithMorethanOneAdvice,
+                    countLogin: stat.countLogin
+                }
+            }, { upsert: true });
         });
     };
 

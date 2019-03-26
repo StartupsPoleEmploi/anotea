@@ -1,0 +1,31 @@
+@import '../../../styles/variables';
+
+.autorisations {
+
+  padding: 5px 20px 10px 30px;
+
+  .input-accord {
+    border: 1px solid $color-grey-25;
+    border-radius: 5px;
+    background-color: $color-grey-5;
+    box-shadow: $shadow-light;
+  }
+
+  span {
+    color: $color-black;
+    font-size: 0.9rem;
+    margin-left: 8px;
+  }
+
+  .autorisations {
+    margin-top: 32px;
+    margin-left: 26px;
+    display: block;
+  }
+
+  .field {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+}

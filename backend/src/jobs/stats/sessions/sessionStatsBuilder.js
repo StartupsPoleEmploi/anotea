@@ -19,13 +19,30 @@ module.exports = db => {
             {
                 $match: { code_region: { $ne: null } }
             },
-            { $group:
-                {
-                    _id: { codeRegion: '$code_region', codeFinanceur: codeFinancerProject },
-                    count: { $sum: 1 },
-                    countWithAdvices: { $sum: { $cond: { if: { $gte: ['$score.nb_avis', 1] }, then: 1, else: 0 } } },
-                    countWithMoreThanTwoAdvices: { $sum: { $cond: { if: { $gte: ['$score.nb_avis', 3] }, then: 1, else: 0 } } }
-                }
+            {
+                $group:
+                    {
+                        _id: { codeRegion: '$code_region', codeFinanceur: codeFinancerProject },
+                        count: { $sum: 1 },
+                        countWithAdvices: {
+                            $sum: {
+                                $cond: {
+                                    if: { $gte: ['$score.nb_avis', 1] },
+                                    then: 1,
+                                    else: 0
+                                }
+                            }
+                        },
+                        countWithMoreThanTwoAdvices: {
+                            $sum: {
+                                $cond: {
+                                    if: { $gte: ['$score.nb_avis', 3] },
+                                    then: 1,
+                                    else: 0
+                                }
+                            }
+                        }
+                    }
             }
         ].forEach(item => {
             query.push(item);
@@ -36,7 +53,13 @@ module.exports = db => {
         stats.forEach(stat => {
             stat._id.year = today.getFullYear();
             stat._id.month = today.getMonth() + 1;
-            db.collection(outCollection).updateOne({_id : stat._id}, { $set: { count: stat.count, countWithAdvices: stat.countWithAdvices, countWithMoreThanTwoAdvices: stat.countWithMoreThanTwoAdvices } }, { upsert: true });
+            db.collection(outCollection).updateOne({ _id: stat._id }, {
+                $set: {
+                    count: stat.count,
+                    countWithAdvices: stat.countWithAdvices,
+                    countWithMoreThanTwoAdvices: stat.countWithMoreThanTwoAdvices
+                }
+            }, { upsert: true });
         });
     };
 

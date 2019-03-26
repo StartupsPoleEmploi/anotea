@@ -1,0 +1,17 @@
+@import '../../../../../styles/variables';
+
+.OrganismePanel {
+  .header {
+    background-color: $color-green;
+  }
+
+  .column-title {
+    opacity: 0.87;
+    color: $color-grey-50;
+    font-size: 0.75rem;
+    font-weight: $font-weight-700;
+    line-height: 1rem;
+    letter-spacing: 0.38px;
+    text-transform: uppercase;
+  }
+}

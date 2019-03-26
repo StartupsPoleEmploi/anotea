@@ -6,7 +6,7 @@ import Stars from '../common/deprecated/Stars';
 
 import {
     getOrganisationStates
-} from '../../../lib/organisationService';
+} from './service/organismeService';
 
 const labels = ['Pas du tout satisfait (%)', 'Pas satisfait (%)', 'Moyennement satisfait (%)', 'Satisfait (%)', 'Très satisfait (%)'];
 const backgroundColor = [
@@ -334,7 +334,7 @@ export default class Graphes extends React.Component {
 
                             <div className="pull-right">
                                 <button className="btn btn-success btn-sm"
-                                    onClick={this.closeModal}>
+                                        onClick={this.closeModal}>
                                     Fermer <i className="glyphicon glyphicon glyphicon-remove" />
                                 </button>
                             </div>

@@ -35,9 +35,6 @@ const buildAvisQuery = filters => {
 
     return {
         '$and': [
-            {
-                'step': { $gte: 2 },
-            },
             queries.length === 0 ? {} : { '$or': queries },
             {
                 '$or': [
@@ -62,7 +59,7 @@ module.exports = ({ db, middlewares }) => {
         const parameters = await Joi.validate(req.query, {
             ...paginationValidator(),
             organisme_formateur: Joi.string().min(9).max(15),
-            lieu_de_formation: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[ab]))[0-9]{3}$/),
+            lieu_de_formation: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/),
             certif_info: Joi.string(),
             formacode: Joi.string(),
         }, { abortEarly: false });

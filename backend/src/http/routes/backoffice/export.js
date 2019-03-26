@@ -21,8 +21,7 @@ module.exports = ({ db, middlewares, logger }) => {
                 { 'comment': { $exists: false } },
                 { 'comment': null },
                 { 'published': true }
-            ],
-            step: { $gte: 2 }
+            ]
         };
 
         if (req.query.status === 'reported') {
@@ -67,9 +66,17 @@ module.exports = ({ db, middlewares, logger }) => {
         }
 
         let stream = await db.collection('comment').find(query, { token: 0 }).stream();
+        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
+
+        if (req.user.codeFinanceur === POLE_EMPLOI) {
+            let array = lines.split(';');
+            array.splice(10, 0, 'qualification');
+            lines = array.join(';');
+        }
+
         res.setHeader('Content-disposition', 'attachment; filename=avis.csv');
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
-        res.write('id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;etape;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n');
+        res.write(lines);
 
         let handleError = e => {
             logger.error('An error occurred', e);
@@ -80,11 +87,19 @@ module.exports = ({ db, middlewares, logger }) => {
         stream
         .on('error', handleError)
         .pipe(transformObject(async comment => {
+
+            let qualification = '';
+            if (req.user.codeFinanceur === POLE_EMPLOI) {
+                let validQualification = comment.qualification !== undefined ? comment.qualification : '';
+                qualification = ';' + validQualification;
+            }
+
             if (comment.comment !== undefined && comment.comment !== null) {
                 comment.comment.pseudo = (comment.comment.pseudo !== undefined) ? comment.comment.pseudo.replace(/\r?\n|\r/g, ' ') : '';
                 comment.comment.title = (comment.comment.title !== undefined) ? comment.comment.title.replace(/\r?\n|\r/g, ' ') : '';
                 comment.comment.text = (comment.comment.text !== undefined) ? comment.comment.text.replace(/\r?\n|\r/g, ' ') : '';
             }
+
             return comment._id + ';' +
                 (comment.rates !== undefined ? comment.rates.accueil : '') + ';' +
                 (comment.rates !== undefined ? comment.rates.contenu_formation : '') + ';' +
@@ -92,11 +107,11 @@ module.exports = ({ db, middlewares, logger }) => {
                 (comment.rates !== undefined ? comment.rates.moyen_materiel : '') + ';' +
                 (comment.rates !== undefined ? comment.rates.accompagnement : '') + ';' +
                 (comment.rates !== undefined ? comment.rates.global : '') + ';' +
-                (comment.comment !== undefined && comment.comment !== null ? s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
-                (comment.comment !== undefined && comment.comment !== null ? s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
-                (comment.comment !== undefined && comment.comment !== null ? s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s : '') + ';' +
+                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
+                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
+                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + 
+                qualification + ';' +
                 comment.campaign + ';' +
-                comment.step + ';' +
                 comment.date + ';' +
                 comment.accord + ';' +
                 comment.training.idFormation + ';' +

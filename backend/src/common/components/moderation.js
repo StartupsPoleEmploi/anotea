@@ -31,7 +31,7 @@ module.exports = (db, logger, mailer) => {
                         rejected: false,
                         rejectReason: null,
                         qualification: qualification,
-                        lastModerationAction: new Date()
+                        lastStatusUpdate: new Date()
                     }
                 },
                 { returnOriginal: false }
@@ -65,7 +65,7 @@ module.exports = (db, logger, mailer) => {
                         rejected: true,
                         published: false,
                         rejectReason: reason,
-                        lastModerationAction: new Date()
+                        lastStatusUpdate: new Date()
                     }
                 },
                 { returnOriginal: false }
@@ -99,7 +99,7 @@ module.exports = (db, logger, mailer) => {
                 {
                     $set: {
                         editedComment: { text: text, date: new Date() },
-                        lastModerationAction: new Date()
+                        lastStatusUpdate: new Date()
                     }
                 },
                 { returnOriginal: false }
@@ -124,7 +124,14 @@ module.exports = (db, logger, mailer) => {
 
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: oid },
-                { $set: { reported: true } },
+                {
+                    $set: {
+                        reported: true,
+                        rejected: false,
+                        published: false,
+                        lastStatusUpdate: new Date(),
+                    }
+                },
                 { returnOriginal: false },
             );
 
@@ -196,6 +203,60 @@ module.exports = (db, logger, mailer) => {
             }
 
             saveEvent(id, 'maskTitle', {
+                app: 'moderation',
+                user: 'admin',
+                profile: 'moderateur',
+                ...(options.events || {}),
+            });
+
+            return result.value;
+        },
+        publishReponse: async (id, options) => {
+            let oid = new ObjectID(id);
+
+            let result = await db.collection('comment').findOneAndUpdate(
+                { _id: oid },
+                {
+                    $set: {
+                        'reponse.status': 'published',
+                        'reponse.lastStatusUpdate': new Date(),
+                    }
+                },
+                { returnOriginal: false },
+            );
+
+            if (!result.value) {
+                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+            }
+
+            saveEvent(id, 'publishReponse', {
+                app: 'moderation',
+                user: 'admin',
+                profile: 'moderateur',
+                ...(options.events || {}),
+            });
+
+            return result.value;
+        },
+        rejectReponse: async (id, options) => {
+            let oid = new ObjectID(id);
+
+            let result = await db.collection('comment').findOneAndUpdate(
+                { _id: oid },
+                {
+                    $set: {
+                        'reponse.status': 'rejected',
+                        'reponse.lastStatusUpdate': new Date(),
+                    }
+                },
+                { returnOriginal: false },
+            );
+
+            if (!result.value) {
+                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+            }
+
+            saveEvent(id, 'rejectReponse', {
                 app: 'moderation',
                 user: 'admin',
                 profile: 'moderateur',

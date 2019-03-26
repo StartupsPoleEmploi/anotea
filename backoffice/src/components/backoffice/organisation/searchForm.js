@@ -2,8 +2,8 @@ import React from 'react';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-import { getOrganisationTrainings } from '../../../lib/organisationService';
-import { getOrganisationLieuTrainingSessions } from '../../../lib/financerService';
+import { getOrganisationTrainings } from './service/organismeService';
+import { getOrganisationLieuTrainingSessions } from '../financeur/service/financeurService';
 
 export default class SearchForm extends React.Component {
 

@@ -60,7 +60,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
                     city: 'Ris-Orangis'
                 },
                 certifInfo: {
-                    id: '84244',
+                    id: '8122',
                     label: 'Titre professionnel'
                 },
                 idSession: '3565575',

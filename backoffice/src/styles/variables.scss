@@ -1,3 +1,4 @@
+$font-weight-300: 300;
 $font-weight-400: 400;
 $font-weight-700: 700;
 $font-weight-900: 900;
@@ -5,8 +6,6 @@ $font-weight-900: 900;
 $color-black: #24303A;
 $color-dark: #11181E;
 $color-white: #FFFFFF;
-$color-yellow: #F0801A;
-
 $color-grey-50: #91979C;
 $color-grey-25: #C8CBCE;
 $color-grey-5: #F4F4F5;
@@ -14,20 +13,32 @@ $color-grey-5: #F4F4F5;
 $color-blue-dark: #1C2755;
 $color-blue: #384EAA;
 $color-blue-60: #8895CC;
-$color-blue-20: #C3C9E5;
+$color-blue-30: #C3C9E5;
 $color-blue-10: #EBEDF6;
 
 $color-red-dark: #751314;
 $color-red: #DD3433;
 $color-red-60: #EB8585;
-$color-red-20: #F4C2C1;
+$color-red-30: #F4C2C1;
 $color-red-10: #FBEAEA;
 
 $color-green-dark: #00432B;
 $color-green: #007E54;
 $color-green-60: #66B298;
-$color-green-20: #B2D8CB;
+$color-green-30: #B2D8CB;
 $color-green-10: #E5F2ED;
 
-$shadow: 0 0.115rem 0.625rem rgba(36, 48, 58, 0.25) !important;
+$color-orange-dark: #751314;
+$color-orange: #F0801A;
+$color-orange-60: #F7A583;
+$color-orange-30: #FBD2C0;
+$color-orange-10: #FDF0EA;
+
+$color-yellow-dark: #751314;
+$color-yellow: #F2B630;
+$color-yellow-60: #F7D383;
+$color-yellow-30: #F6F0E0;
+$color-yellow-10: #FDF7EA;
+
+$shadow: 0 0.115rem 0.625rem -2px rgba(0, 0, 0, 0.15) !important;
 

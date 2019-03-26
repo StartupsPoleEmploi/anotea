@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { loginWithAccessToken } from '../../lib/loginService';
+import { loginWithAccessToken } from '../backoffice/account/service/loginService';
 
 export default class LoginWithAccessToken extends React.Component {
 

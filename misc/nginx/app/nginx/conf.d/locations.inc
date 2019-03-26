@@ -1,4 +1,3 @@
-
 location /admin  {
 
     limit_req zone=flood burst=100 nodelay;
@@ -13,7 +12,7 @@ location /admin  {
 }
 
 
-location /questionnaire_v2  {
+location /questionnaire  {
 
     limit_req zone=flood burst=100 nodelay;
 

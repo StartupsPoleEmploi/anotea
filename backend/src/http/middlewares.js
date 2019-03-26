@@ -1,11 +1,12 @@
 const Boom = require('boom');
+const { tryAndCatch } = require('./routes/routes-utils');
 
 module.exports = (auth, logger, configuration) => {
     return {
         createHMACAuthMiddleware: (types, options) => {
             let scheme = 'ANOTEA-HMAC-SHA256 ';
 
-            return (req, res, next) => {
+            return tryAndCatch((req, res, next) => {
                 try {
                     if (options.allowNonAuthenticatedRequests && !req.headers.authorization) {
                         return next();
@@ -44,11 +45,11 @@ module.exports = (auth, logger, configuration) => {
                     throw Boom.unauthorized(`Cette resource doit être appelée avec un header Authorization: ` +
                         `${scheme}<yourApiKey>:<timestamp>:<sha256-hmac-digest>`, e);
                 }
-            };
+            });
         },
 
         createJWTAuthMiddleware: (type, options = {}) => {
-            return (req, res, next) => {
+            return tryAndCatch((req, res, next) => {
                 let scheme = 'Bearer ';
                 if ((!req.headers.authorization || !req.headers.authorization.startsWith(scheme)) && !req.query.token) {
                     //FIXME we need to trap all error into an express middleware and log them
@@ -73,10 +74,10 @@ module.exports = (auth, logger, configuration) => {
                     //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
                     res.status(401).send({ error: true });
                 });
-            };
+            });
         },
         checkProfile: (...profiles) => {
-            return (req, res, next) => {
+            return tryAndCatch((req, res, next) => {
                 if (!profiles.includes(req.user.profile)) {
                     //TODO must thrown a Boom exception instead when all routes will have tryAndCatch wrapper
                     res.status(403).send({
@@ -87,7 +88,7 @@ module.exports = (auth, logger, configuration) => {
                     return;
                 }
                 next();
-            };
+            });
         },
     };
 };

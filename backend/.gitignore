@@ -13,3 +13,6 @@ data/intercarif
 test-results.xml
 heapdump-*
 .data
+coverage
+.nyc_output
+

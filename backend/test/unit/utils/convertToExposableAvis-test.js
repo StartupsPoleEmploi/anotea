@@ -76,7 +76,7 @@ describe(__filename, () => {
     it('should map avis with réponse', async () => {
 
         let comment = newComment({
-            answer: {
+            reponse: {
                 text: 'Voici notre réponse',
                 status: 'published',
             },

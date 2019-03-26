@@ -44,7 +44,6 @@ let newComment = (custom, date = getDateInThePast()) => {
             },
             codeFinanceur: '10'
         },
-        step: 3,
         rates: {
             accueil: 3,
             contenu_formation: 2,
@@ -66,7 +65,7 @@ let newComment = (custom, date = getDateInThePast()) => {
         rejected: false,
         rejectReason: null,
         qualification: 'positif',
-        lastModerationAction: date,
+        lastStatusUpdate: date,
         read: true,
         importDate: date,
         unsubscribe: false,

@@ -6,10 +6,7 @@ module.exports = async (db, logger) => {
             {
                 $match: {
                     $expr: {
-                        $and: [
-                            { $gte: ['$step', 2] },
-                            { $eq: ['$training.organisation.siret', siret] },
-                        ]
+                        $eq: ['$training.organisation.siret', siret]
                     },
                     $or: [
                         { 'comment': { $exists: false } },

@@ -16,13 +16,13 @@ module.exports = {
             db.collection('trainee').createIndex({ 'token': 1 }),
             db.collection('trainee').createIndex({ 'trainee.email': 1 }),
             db.collection('trainee').createIndex({ 'trainee.dnIndividuNational': 1 }),
+            db.collection('trainee').createIndex({ 'training.codeFinanceur': 1 }),
             //Used during import of stagiaires
             db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.infoCarif.numeroSession': 1 }),
         ]);
     },
     comment: db => {
         return Promise.all([
-            db.collection('comment').createIndex({ 'step': 1 }),
             db.collection('comment').createIndex({ 'formacode': 1 }),
             db.collection('comment').createIndex({ 'idSession': 1 }),
             db.collection('comment').createIndex({ 'lastModerationAction': 1 }),
@@ -41,6 +41,9 @@ module.exports = {
             db.collection('comment').createIndex({ 'training.organisation.label': 1 }),
             db.collection('comment').createIndex({ 'training.organisation.siret': 1 }),
             db.collection('comment').createIndex({ 'training.certifInfo.id': 1 }),
+            db.collection('comment').createIndex({ 'reponse.lastModerationAction': 1 }),
+            db.collection('comment').createIndex({ 'reponse.status': 1 }),
+            db.collection('comment').createIndex({ 'reponse.date': 1 }),
         ]);
     },
     regions: db => {

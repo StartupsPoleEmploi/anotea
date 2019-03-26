@@ -30,7 +30,7 @@ describe('/api/stats', withServer(({ startServer, insertRegions }) => {
 
         let app = await startServer();
         await insertRegions();
-        
+
         let response = await request(app).get('/api/stats/organismes.json');
 
         assert.equal(response.statusCode, 200);
