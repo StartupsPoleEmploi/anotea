@@ -122,13 +122,6 @@ export default class Questionnaire extends Component {
         this.setState({ accord, accordEntreprise });
     };
 
-    isFormValid = () => {
-        let commentaire = this.state.commentaire;
-        let isCommentaireValid = commentaire.texte.isValid && commentaire.titre.isValid && commentaire.pseudo.isValid;
-
-        return this.state.isNotesValid && isCommentaireValid;
-    };
-
     render() {
         return (
             <div className="questionnaire">
@@ -159,8 +152,7 @@ export default class Questionnaire extends Component {
                                     className="send-button"
                                     size="large"
                                     color="blue"
-                                    onClick={this.openModal}
-                                    disabled={!this.isFormValid()}>
+                                    onClick={this.openModal}>
                                     Envoyer
                                 </Button>
                             </div>
