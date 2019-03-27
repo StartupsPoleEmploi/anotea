@@ -56,8 +56,17 @@ export default class Questionnaire extends Component {
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     };
 
+    isFormValid = () => {
+        let commentaire = this.state.commentaire;
+        let isCommentaireValid = commentaire.texte.isValid &&
+            commentaire.titre.isValid &&
+            commentaire.pseudo.isValid;
+
+        return this.state.isNotesValid && isCommentaireValid;
+    };
+
     openModal = () => {
-        if (this.state.isNotesValid) {
+        if (this.isFormValid()) {
             this.setState({ showModal: true });
         } else {
             this.setState({ submitButtonClicked: true }, () => this.scrollToTop());
