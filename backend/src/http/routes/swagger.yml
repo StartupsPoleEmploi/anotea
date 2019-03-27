@@ -469,7 +469,7 @@ paths:
         401:
           $ref: "#/responses/UnauthorizedErrorResponse"
       tags:
-        - ESD
+        - Publique
 
   /v1/avis/:id:
     get:
@@ -494,7 +494,7 @@ paths:
         404:
           $ref: "#/responses/NotFoundErrorResponse"
       tags:
-        - ESD
+        - Publique
 
   /v1/sessions:
     get:
@@ -558,7 +558,7 @@ paths:
         401:
           $ref: "#/responses/UnauthorizedErrorResponse"
       tags:
-        - ESD
+        - Publique
 
   /v1/sessions/:id:
     get:
@@ -586,7 +586,7 @@ paths:
         404:
           $ref: "#/responses/NotFoundErrorResponse"
       tags:
-        - ESD
+        - Publique
 
   /v1/actions:
     get:
@@ -650,7 +650,7 @@ paths:
         401:
           $ref: "#/responses/UnauthorizedErrorResponse"
       tags:
-        - ESD
+        - Publique
 
   /v1/ations/:id:
     get:
@@ -678,7 +678,7 @@ paths:
         404:
           $ref: "#/responses/NotFoundErrorResponse"
       tags:
-        - ESD
+        - Publique
 
   /v1/organismes-formateurs:
     get:
@@ -744,7 +744,7 @@ paths:
         401:
           $ref: "#/responses/UnauthorizedErrorResponse"
       tags:
-        - ESD
+        - Publique
 
   /v1/organismes-formateurs/:id:
     get:
@@ -771,7 +771,7 @@ paths:
         404:
           $ref: "#/responses/NotFoundErrorResponse"
       tags:
-        - ESD
+        - Publique
 
   /v1/ping/anonymous:
     get:
@@ -789,7 +789,7 @@ paths:
                 type: string
                 description: L'utilisateur anonyme
       tags:
-        - ESD
+        - Publique
 
   /v1/ping/authenticated:
     get:
@@ -805,7 +805,7 @@ paths:
           schema:
             $ref: "#/definitions/User"
       tags:
-        - ESD
+        - Publique
 
   /v1/ping/error:
     get:
@@ -819,7 +819,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
       tags:
-        - ESD
+        - Publique
 
   /kairos/generate-auth-url:
     post:
@@ -864,7 +864,7 @@ paths:
   /kairos/check-if-organisme-is-eligible:
     get:
       description: >
-        Permet de vérifier si un organisme est éligible à la connexion Anoté
+        Permet de vérifier si un organisme est éligible à la connexion Anotéa
       produces:
         - application/json
       parameters:
