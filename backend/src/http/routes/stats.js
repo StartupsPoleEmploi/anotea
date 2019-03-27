@@ -28,10 +28,10 @@ const financeurs = {
 
 const findLabelByCodeFinanceur = code => financeurs[code];
 
-module.exports = ({ db, configuration, logger, regions }) => {
+module.exports = ({ db, logger, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    const { findRegionByCodeRegion } = regions;
+    const { findRegionByCodeRegion, findActiveRegions } = regions;
 
     const computeMailingStats = async (codeRegion, codeFinanceur) => {
 
@@ -207,20 +207,20 @@ module.exports = ({ db, configuration, logger, regions }) => {
 
     router.get('/stats/sessions.:format', tryAndCatch(async (req, res) => {
 
-        let sessions = await Promise.all(configuration.app.active_regions.map(async ar => {
-            return computeSessionStats(ar.name, [ar.code_region]);
+        let regions = findActiveRegions();
+        let sessions = await Promise.all(regions.map(async region => {
+            return computeSessionStats(region.nom, [region.codeRegion]);
         }));
 
-        sessions.push(await computeSessionStats('Toutes', configuration.app.active_regions.map(ar => ar.code_region)));
+        sessions.push(await computeSessionStats('Toutes', regions.map(region => region.codeRegion)));
 
         res.json(sessions);
     }));
 
     router.get('/stats/organismes.:format', tryAndCatch(async (req, res) => {
 
-        let organismes = await Promise.all(configuration.app.active_regions.map(async ar => {
-            let { nom } = await findRegionByCodeRegion(ar.code_region);
-            return computeOrganismesStats(nom, ar.code_region);
+        let organismes = await Promise.all(findActiveRegions().map(async region => {
+            return computeOrganismesStats(region.nom, region.codeRegion);
         }));
 
         res.json(organismes);

@@ -11,8 +11,8 @@ describe('/api/stats', withServer(({ startServer, insertRegions }) => {
 
         let response = await request(app).get('/api/stats/mailing.json');
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, []);
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, []);
     });
 
     it('can get stats about sessions', async () => {
@@ -22,7 +22,7 @@ describe('/api/stats', withServer(({ startServer, insertRegions }) => {
 
         let response = await request(app).get('/api/stats/sessions.json');
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body);
     });
 
@@ -33,7 +33,7 @@ describe('/api/stats', withServer(({ startServer, insertRegions }) => {
 
         let response = await request(app).get('/api/stats/organismes.json');
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body);
     });
 

@@ -1,47 +1,48 @@
 const path = require('path');
 const assert = require('assert');
-const configuration = require('config');
 const { withMongoDB } = require('../../../../helpers/test-database');
-const logger = require('../../../../helpers/test-logger');
 const validateCsvFile = require('../../../../../src/jobs/import/trainee/validateCsvFile');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/trainee/handlers/poleEmploiCSVHandler');
 const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/trainee/handlers/ileDeFranceCSVHandler');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComponents }) => {
 
     it('can validate PE file', async () => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
         await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
-        assert.deepEqual(validationErrors, null);
+        assert.deepStrictEqual(validationErrors, null);
     });
 
     it('can validate IDF file', async () => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-idf.csv');
-        let handler = ileDeFranceCSVHandler(db, logger, configuration);
+        let { regions } = await getComponents();
+        let handler = ileDeFranceCSVHandler(db, regions);
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
-        assert.deepEqual(validationErrors, null);
+        assert.deepStrictEqual(validationErrors, null);
     });
 
     it('should detect invalid header', async () => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-header.csv');
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
         await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
-        assert.deepEqual(validationErrors.type, {
+        assert.deepStrictEqual(validationErrors.type, {
             name: 'BAD_HEADER',
             message: 'du format non conforme',
         });
@@ -52,12 +53,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-line.csv');
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
         await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
-        assert.deepEqual(validationErrors.type, {
+        assert.deepStrictEqual(validationErrors.type, {
             name: 'BAD_DATA',
             message: 'du format non conforme',
         });
@@ -68,12 +70,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-duplicated.csv');
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
         await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
-        assert.deepEqual(validationErrors.type, {
+        assert.deepStrictEqual(validationErrors.type, {
             name: 'DUPLICATED',
             message: 'de la présence de doublons',
         });

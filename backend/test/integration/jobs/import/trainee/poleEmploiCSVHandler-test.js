@@ -1,32 +1,32 @@
 const path = require('path');
 const _ = require('lodash');
 const assert = require('assert');
-const configuration = require('config');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
 const traineeImporter = require('../../../../../src/jobs/import/trainee/traineeImporter');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/trainee/handlers/poleEmploiCSVHandler');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComponents }) => {
 
     it('should import trainees from csv file', async () => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
+        let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        let handler = poleEmploiCSVHandler(db, regions);
         await insertDepartements();
 
         await importer.importTrainee(csvFile, handler);
 
         let count = await db.collection('trainee').countDocuments();
-        assert.equal(count, 4);
+        assert.strictEqual(count, 4);
         let results = await db.collection('trainee').find({ 'trainee.name': 'MARTIN' }).toArray();
         assert.ok(results[0]._id);
         assert.ok(results[0].importDate);
         assert.ok(results[0].campaignDate);
         assert.ok(results[0].token);
-        assert.deepEqual(_.omit(results[0], ['_id', 'importDate', 'token', 'campaignDate']), {
+        assert.deepStrictEqual(_.omit(results[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-pe',
             avisCreated: false,
             trainee: {
@@ -93,14 +93,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
+        let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        let handler = poleEmploiCSVHandler(db, regions);
 
         try {
             await importer.importTrainee(csvFile, handler);
             assert.fail('Should have fail');
         } catch (e) {
-            assert.deepEqual(e, {
+            assert.deepStrictEqual(e, {
                 invalid: 4,
                 ignored: 0,
                 imported: 0,
@@ -113,28 +114,30 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-inactive-region.csv');
+        let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        let handler = poleEmploiCSVHandler(db, regions);
         await insertDepartements();
 
         await importer.importTrainee(csvFile, handler);
 
         let count = await db.collection('trainee').countDocuments();
-        assert.equal(count, 0);
+        assert.strictEqual(count, 0);
     });
 
     it('should ignore trainee already imported', async () => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
+        let { regions } = await getComponents();
         let csvFileWithDuplicates = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-doublons.csv');
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, logger, configuration);
+        let handler = poleEmploiCSVHandler(db, regions);
         await insertDepartements();
 
         await importer.importTrainee(csvFile, handler);
         let results = await importer.importTrainee(csvFileWithDuplicates, handler);
 
-        assert.deepEqual(results, {
+        assert.deepStrictEqual(results, {
             invalid: 0,
             ignored: 1,
             imported: 0,

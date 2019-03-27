@@ -1,4 +1,6 @@
-module.exports = db => ({
+const _ = require('lodash');
+
+module.exports = (db, configuration) => ({
     findCodeRegionByPostalCode: async postalCode => {
         let code = postalCode.substr(0, 2) !== '97' ? postalCode.substr(0, 2) : postalCode.substr(0, 3);
 
@@ -28,6 +30,11 @@ module.exports = db => ({
         } else {
             return region.region_num;
         }
+    },
+    findActiveRegions: feature => {
+        return configuration.regions
+        .filter(region => region.active === true)
+        .filter(region => !feature || _.get(region, feature) === true);
     },
     findRegionByCodeRegion: async codeRegion => {
         let region = await db.collection('regions').findOne({ codeRegion: codeRegion });

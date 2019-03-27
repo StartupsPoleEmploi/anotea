@@ -3,7 +3,7 @@
 
 const cli = require('commander');
 const TraineeMailer = require('./AvisMailer');
-const { findActiveRegions, capitalizeFirstLetter, execute } = require('../../../job-utils');
+const { capitalizeFirstLetter, execute } = require('../../../job-utils');
 
 cli.description('send email campaign')
 .option('-c, --campaign [campaign]', 'Limit emailing to the campaign name')
@@ -13,14 +13,15 @@ cli.description('send email campaign')
 .option('-d, --delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
 .parse(process.argv);
 
-execute(({ logger, db, configuration, mailer }) => {
+execute(({ logger, db, configuration, mailer, regions }) => {
 
     let type = cli.type || 'Send';
     let traineeMailer = new TraineeMailer(db, logger, mailer);
     let ActionClass = require(`./actions/${type}Action`);
     let action = new ActionClass(configuration, {
         campaign: cli.campaign,
-        codeRegions: cli.region ? [cli.region] : findActiveRegions(configuration.app.active_regions, 'stagiaires.avis'),
+        codeRegions: cli.region ? [cli.region] :
+            regions.findActiveRegions('mailing.stagiaires.avis').map(region => region.codeRegion),
     });
 
     logger.info(`Sending emails to stagiaires (${type})...`);
