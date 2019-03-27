@@ -90,6 +90,9 @@ module.exports = components => {
             if (this.headers) {
                 res.setHeader('Retry-After', Math.ceil(this.windowMs / 1000));
             }
+
+            sentry.sendError(Boom.tooManyRequests(this.message));
+
             res.format({
                 html: () => {
                     res.status(this.statusCode).end(this.message);
