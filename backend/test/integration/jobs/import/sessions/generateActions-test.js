@@ -1,38 +1,20 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
-const { newComment, newSession } = require('../../../../helpers/data/dataset');
+const { newComment } = require('../../../../helpers/data/dataset');
 const generateActions = require('../../../../../src/jobs/import/sessions/generateActions');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, insertRegions }) => {
 
-    it('should generate actions from sessions', async () => {
+    it('should reconcile actions with comments', async () => {
 
         let db = await getTestDatabase();
         let date = new Date();
-        let duplicatedAvis = newComment({
-            pseudo: 'robert',
-            formacode: '31801',
+        let comment = newComment({
+            formacode: '22403',
             training: {
-                formacode: '31801',
+                formacode: '22403',
                 certifInfo: {
-                    id: '55518',
-                },
-                organisation: {
-                    siret: '22222222222222',
-                },
-                place: {
-                    postalCode: '75019',
-                },
-            }
-        }, date);
-
-        let uniqueAvis = newComment({
-            pseudo: 'john',
-            formacode: '31801',
-            training: {
-                formacode: '31801',
-                certifInfo: {
-                    id: '55518',
+                    id: '80735',
                 },
                 organisation: {
                     siret: '22222222222222',
@@ -46,94 +28,52 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([
             importIntercarif(),
             insertRegions(),
-            insertIntoDatabase('sessionsReconciliees', newSession({
-                _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1',
-                avis: [duplicatedAvis],
-                score: {
-                    nb_avis: 1,
-                    notes: {
-                        accueil: 5,
-                        contenu_formation: 5,
-                        equipe_formateurs: 5,
-                        moyen_materiel: 5,
-                        accompagnement: 5,
-                        global: 5,
-                    }
-                },
-            })),
-            insertIntoDatabase('sessionsReconciliees', newSession({
-                _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX2',
-                avis: [duplicatedAvis, uniqueAvis],
-                score: {
-                    nb_avis: 1,
-                    notes: {
-                        accueil: 1,
-                        contenu_formation: 1,
-                        equipe_formateurs: 1,
-                        moyen_materiel: 1,
-                        accompagnement: 1,
-                        global: 1,
-                    }
-                },
-            })),
-            insertIntoDatabase('sessionsReconciliees', newSession({
-                _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX3',
-                avis: [uniqueAvis],
-                score: {
-                    nb_avis: 1,
-                    notes: {
-                        accueil: 1,
-                        contenu_formation: 1,
-                        equipe_formateurs: 1,
-                        moyen_materiel: 1,
-                        accompagnement: 1,
-                        global: 1,
-                    }
-                },
-            })),
+            insertIntoDatabase('comment', comment),
         ]);
 
         await generateActions(db);
 
-        let action = await db.collection('actionsReconciliees').findOne();
-        assert.deepStrictEqual(action, {
+        let session = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
             region: '11',
             code_region: '11',
-            avis: [duplicatedAvis, uniqueAvis],
-            score: {
-                nb_avis: 2,
-                notes: {
-                    accueil: 3,
-                    contenu_formation: 3,
-                    equipe_formateurs: 3,
-                    moyen_materiel: 3,
-                    accompagnement: 3,
-                    global: 3,
-                }
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
             },
-            organisme_financeurs: ['2'],
+            organisme_financeurs: [
+                '2'
+            ],
             organisme_formateur: {
                 raison_sociale: 'Anotea Formation Paris',
                 siret: '22222222222222',
                 numero: 'OF_XXX'
             },
-            lieu_de_formation: {
-                code_postal: '75019',
-                ville: 'Paris'
+            avis: [comment],
+            score: {
+                nb_avis: 1,
+                notes: {
+                    accueil: 3,
+                    contenu_formation: 2,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 2,
+                    accompagnement: 1,
+                    global: 2
+                }
             },
             formation: {
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
                     formacodes: [
-                        '31801'
+                        '22403'
                     ]
                 },
                 certifications: [
-                    '55518'
-                ]
+                    '80735'
+                ],
             },
             meta: {
                 source: 'intercarif',
@@ -141,61 +81,231 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
                     certifinfos: [
-                        '55518'
+                        '80735'
                     ],
                     formacodes: [
-                        '31801'
+                        '22403'
                     ]
                 },
             }
         });
     });
 
-    it('should create action with empty avis list when no comment can be found', async () => {
+
+    it('should round notes during reconciliation', async () => {
 
         let db = await getTestDatabase();
-
-        let sessions = newSession({ _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX2' });
-        sessions.avis = [];
-        sessions.score = { nb_avis: 0 };
         await Promise.all([
             importIntercarif(),
             insertRegions(),
-            insertIntoDatabase('sessionsReconciliees', sessions),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+                rates: {
+                    accueil: 1,
+                    contenu_formation: 1,
+                    equipe_formateurs: 3,
+                    moyen_materiel: 4,
+                    accompagnement: 5,
+                    global: 5,
+                },
+            })),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+                rates: {
+                    accueil: 1,
+                    contenu_formation: 1,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 5,
+                    accompagnement: 5,
+                    global: 5,
+                },
+            })),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+                rates: {
+                    accueil: 2,
+                    contenu_formation: 1,
+                    equipe_formateurs: 1,
+                    moyen_materiel: 5,
+                    accompagnement: 1,
+                    global: 5,
+                },
+            })),
         ]);
 
         await generateActions(db);
 
-        let action = await db.collection('actionsReconciliees').findOne();
-        assert.deepStrictEqual(action, {
+        let session = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(session.score, {
+            nb_avis: 3,
+            notes: {
+                accueil: 1,
+                contenu_formation: 1,
+                equipe_formateurs: 3,
+                moyen_materiel: 5,
+                accompagnement: 4,
+                global: 5,
+            }
+        });
+    });
+
+    it('should create session with empty avis list when no comment can be found', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            importIntercarif(),
+            insertRegions(),
+        ]);
+
+        await generateActions(db);
+
+        let session = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
             region: '11',
             code_region: '11',
-            avis: [],
-            score: {
-                nb_avis: 0,
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
             },
-            organisme_financeurs: ['2'],
+            organisme_financeurs: [
+                '2'
+            ],
             organisme_formateur: {
                 raison_sociale: 'Anotea Formation Paris',
                 siret: '22222222222222',
                 numero: 'OF_XXX'
             },
-            lieu_de_formation: {
-                code_postal: '75019',
-                ville: 'Paris'
+            avis: [],
+            score: {
+                nb_avis: 0
             },
             formation: {
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
                     formacodes: [
-                        '31801'
+                        '22403'
                     ]
                 },
                 certifications: [
-                    '55518'
+                    '80735'
+                ]
+            },
+            meta: {
+                source: 'intercarif',
+                reconciliation: {
+                    organisme_formateur: '22222222222222',
+                    lieu_de_formation: '75019',
+                    formacodes: ['22403'],
+                    certifinfos: ['80735']
+                },
+            },
+        });
+    });
+
+    it('should reconcile comments with same formace/siret/code_postal than the session', async () => {
+        let db = await getTestDatabase();
+        let date = new Date();
+        let comment = newComment({
+            formacode: '22403',
+            training: {
+                formacode: '22403',
+                certifInfo: null,
+                organisation: {
+                    siret: '22222222222222',
+                },
+                place: {
+                    postalCode: '75019',
+                },
+            }
+        }, date);
+
+        await Promise.all([
+            importIntercarif(),
+            insertRegions(),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        await generateActions(db);
+
+        let session = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(session, {
+            _id: 'F_XX_XX|AC_XX_XXXXXX',
+            numero: 'AC_XX_XXXXXX',
+            region: '11',
+            code_region: '11',
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
+            },
+            organisme_financeurs: [
+                '2'
+            ],
+            organisme_formateur: {
+                raison_sociale: 'Anotea Formation Paris',
+                siret: '22222222222222',
+                numero: 'OF_XXX'
+            },
+            avis: [comment],
+            score: {
+                nb_avis: 1,
+                notes: {
+                    accueil: 3,
+                    contenu_formation: 2,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 2,
+                    accompagnement: 1,
+                    global: 2
+                }
+            },
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur web',
+                domaine_formation: {
+                    formacodes: [
+                        '22403'
+                    ]
+                },
+                certifications: [
+                    '80735'
                 ]
             },
             meta: {
@@ -204,13 +314,223 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
                     certifinfos: [
-                        '55518'
+                        '80735'
                     ],
                     formacodes: [
-                        '31801'
+                        '22403'
                     ]
                 },
             }
         });
+    });
+
+    it('should reconcile comments with same certifinfo/siret/code_postal than the session', async () => {
+
+        let db = await getTestDatabase();
+        let date = new Date();
+        let comment = newComment({
+            formacode: null,
+            training: {
+                formacode: null,
+                certifInfo: { id: '80735' },
+                organisation: {
+                    siret: '22222222222222',
+                },
+                place: {
+                    postalCode: '75019',
+                },
+            }
+        }, date);
+
+        await Promise.all([
+            importIntercarif(),
+            insertRegions(),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        await generateActions(db);
+
+        let session = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(session, {
+            _id: 'F_XX_XX|AC_XX_XXXXXX',
+            numero: 'AC_XX_XXXXXX',
+            region: '11',
+            code_region: '11',
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
+            },
+            organisme_financeurs: [
+                '2'
+            ],
+            organisme_formateur: {
+                raison_sociale: 'Anotea Formation Paris',
+                siret: '22222222222222',
+                numero: 'OF_XXX'
+            },
+            avis: [comment],
+            score: {
+                nb_avis: 1,
+                notes: {
+                    accueil: 3,
+                    contenu_formation: 2,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 2,
+                    accompagnement: 1,
+                    global: 2
+                }
+            },
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur web',
+                domaine_formation: {
+                    formacodes: [
+                        '22403'
+                    ]
+                },
+                certifications: [
+                    '80735'
+                ],
+            },
+            meta: {
+                source: 'intercarif',
+                reconciliation: {
+                    organisme_formateur: '22222222222222',
+                    lieu_de_formation: '75019',
+                    certifinfos: [
+                        '80735'
+                    ],
+                    formacodes: [
+                        '22403'
+                    ]
+                },
+            }
+        });
+    });
+
+    it('should reconcile comment without commentaire (null)', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            importIntercarif(),
+            insertRegions(),
+            insertIntoDatabase('comment', newComment({
+                comment: null,
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+            })),
+        ]);
+
+        await generateActions(db);
+
+        let session = await db.collection('actionsReconciliees').findOne();
+        assert.equal(session.avis.length, 1);
+        assert.equal(session.avis[0].comment, undefined);
+    });
+
+    it('should reconcile comment without commentaire (undefined)', async () => {
+
+        let db = await getTestDatabase();
+        let comment = newComment({
+            comment: undefined,
+            training: {
+                formacode: '22403',
+                certifInfo: {
+                    id: '80735',
+                },
+                organisation: {
+                    siret: '22222222222222',
+                },
+                place: {
+                    postalCode: '75019',
+                },
+            },
+        });
+        delete comment.comment;
+
+        await Promise.all([
+            importIntercarif(),
+            insertRegions(),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        await generateActions(db);
+
+        let session = await db.collection('actionsReconciliees').findOne();
+        assert.equal(session.avis.length, 1);
+        assert.equal(session.avis[0].comment, undefined);
+    });
+
+    it('should ignore not yet published comment', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            importIntercarif(),
+            insertIntoDatabase('comment', newComment({
+                published: false,
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+            })),
+        ]);
+
+        await generateActions(db);
+
+        let session = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(session.avis, []);
+    });
+
+    it('should reconcile rejected comment', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            importIntercarif(),
+            insertRegions(),
+            insertIntoDatabase('comment', newComment({
+                published: false,
+                rejected: true,
+                comment: {
+                    title: 'WTF',
+                    text: 'WTF',
+                },
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+            })),
+        ]);
+
+        await generateActions(db);
+
+        let session = await db.collection('actionsReconciliees').findOne();
+        assert.equal(session.avis.length, 1);
+        assert.equal(session.avis[0].rejected, true);
     });
 }));
