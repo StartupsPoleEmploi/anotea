@@ -33,12 +33,12 @@ module.exports = async (db, logger) => {
                     _id: 0,
                     nb_avis: '$count',
                     notes: {
-                        accueil: { $ceil: '$accueil' },
-                        contenu_formation: { $ceil: '$contenu_formation' },
-                        equipe_formateurs: { $ceil: '$equipe_formateurs' },
-                        moyen_materiel: { $ceil: '$moyen_materiel' },
-                        accompagnement: { $ceil: '$accompagnement' },
-                        global: { $ceil: '$global' }
+                        accueil: { $avg: '$accueil' },
+                        contenu_formation: { $avg: '$contenu_formation' },
+                        equipe_formateurs: { $avg: '$equipe_formateurs' },
+                        moyen_materiel: { $avg: '$moyen_materiel' },
+                        accompagnement: { $avg: '$accompagnement' },
+                        global: { $avg: '$global' }
                     },
                 }
             }

@@ -1,5 +1,29 @@
-module.exports = db => {
-    return db.collection('intercarif').aggregate([
+module.exports = async db => {
+
+    let roundNotes = async collectionName => {
+        //TODO wait for $round in Mongo 4.2
+        let promises = [];
+        let cursor = db.collection(collectionName).find({ 'score.notes': { $exists: true } });
+        while (await cursor.hasNext()) {
+            const document = await cursor.next();
+            let notes = document.score.notes;
+            promises.push(db.collection(collectionName).updateOne({ _id: document._id }, {
+                $set: {
+                    'score.notes': {
+                        accueil: Math.round(notes.accueil),
+                        contenu_formation: Math.round(notes.contenu_formation),
+                        equipe_formateurs: Math.round(notes.equipe_formateurs),
+                        moyen_materiel: Math.round(notes.moyen_materiel),
+                        accompagnement: Math.round(notes.accompagnement),
+                        global: Math.round(notes.global)
+                    },
+                },
+
+            }));
+        }
+    };
+
+    await db.collection('intercarif').aggregate([
         {
             $project: {
                 _id: 0,
@@ -97,12 +121,12 @@ module.exports = db => {
                             score: {
                                 nb_avis: '$count',
                                 notes: {
-                                    accueil: { $ceil: '$accueil' },
-                                    contenu_formation: { $ceil: '$contenu_formation' },
-                                    equipe_formateurs: { $ceil: '$equipe_formateurs' },
-                                    moyen_materiel: { $ceil: '$moyen_materiel' },
-                                    accompagnement: { $ceil: '$accompagnement' },
-                                    global: { $ceil: '$global' }
+                                    accueil: { $avg: '$accueil' },
+                                    contenu_formation: { $avg: '$contenu_formation' },
+                                    equipe_formateurs: { $avg: '$equipe_formateurs' },
+                                    moyen_materiel: { $avg: '$moyen_materiel' },
+                                    accompagnement: { $avg: '$accompagnement' },
+                                    global: { $avg: '$global' }
                                 },
                             }
                         }
@@ -181,5 +205,8 @@ module.exports = db => {
             $out: 'sessionsReconciliees'
         }
     ], { allowDiskUse: true }).toArray();
+
+
+    return roundNotes('sessionsReconciliees');
 };
 
