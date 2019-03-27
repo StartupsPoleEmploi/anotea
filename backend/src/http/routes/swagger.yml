@@ -18,25 +18,8 @@ securityDefinitions:
     in: header
     name: Authorization
     description: |
-      Le header Authorization doit être de la forme suivante :
-
-      Authorization: "ANOTEA-HMAC-SHA256 api_key:timestamp:digest"
-
-      Le digest doit être crée en générant, à partir de vote secret, un HMAC SHA256 de la chaine de caractères composée des informations suivants concaténées dans l'ordre :
-
-      digest = "timestamp + method + path + body"
-
-      -timestamp :  Nombre de millisecondes depuis l'Unix Epoch UTC.
-      -body : Le body de la requête (ex: json) ou rien s'il n'y a pas de body (ex: requête GET)
-      -method: La méthode de la requête en upper case (ex: GET)
-      -path : Le chemin de la route avec les parameters (ex: /api/v1/ping/authenticated?value=1)
-
-      La durée de validité du digest est de 5 minutes.
-
-      Exemple d'appel:
-      curl -X GET \
-        https://anotea.pole-emploi.fr/api/v1/ping/authenticated \
-        -H 'Authorization: ANOTEA-HMAC-SHA256 admin:1532004499293:217e41887152c459e34bd7070ab1ac8da572c1cf6107cafbbd0217d4b87db1a4'
+      Pour plus d'informations voir :
+      https://github.com/StartupsPoleEmploi/anotea/blob/master/API.md#Authentification
 responses:
   AvisResponse:
     description: La liste des avis
@@ -485,6 +468,8 @@ paths:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
           $ref: "#/responses/UnauthorizedErrorResponse"
+      tags:
+        - Publique
 
   /v1/avis/:id:
     get:
@@ -508,6 +493,8 @@ paths:
           $ref: "#/responses/UnauthorizedErrorResponse"
         404:
           $ref: "#/responses/NotFoundErrorResponse"
+      tags:
+        - Publique
 
   /v1/sessions:
     get:
@@ -570,6 +557,8 @@ paths:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
           $ref: "#/responses/UnauthorizedErrorResponse"
+      tags:
+        - Publique
 
   /v1/sessions/:id:
     get:
@@ -596,6 +585,8 @@ paths:
           $ref: "#/responses/UnauthorizedErrorResponse"
         404:
           $ref: "#/responses/NotFoundErrorResponse"
+      tags:
+        - Publique
 
   /v1/actions:
     get:
@@ -658,6 +649,8 @@ paths:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
           $ref: "#/responses/UnauthorizedErrorResponse"
+      tags:
+        - Publique
 
   /v1/ations/:id:
     get:
@@ -684,6 +677,8 @@ paths:
           $ref: "#/responses/UnauthorizedErrorResponse"
         404:
           $ref: "#/responses/NotFoundErrorResponse"
+      tags:
+        - Publique
 
   /v1/organismes-formateurs:
     get:
@@ -748,6 +743,8 @@ paths:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
           $ref: "#/responses/UnauthorizedErrorResponse"
+      tags:
+        - Publique
 
   /v1/organismes-formateurs/:id:
     get:
@@ -773,6 +770,8 @@ paths:
           $ref: "#/responses/UnauthorizedErrorResponse"
         404:
           $ref: "#/responses/NotFoundErrorResponse"
+      tags:
+        - Publique
 
   /v1/ping/anonymous:
     get:
@@ -789,6 +788,8 @@ paths:
               user:
                 type: string
                 description: L'utilisateur anonyme
+      tags:
+        - Publique
 
   /v1/ping/authenticated:
     get:
@@ -803,6 +804,8 @@ paths:
           description: Successful
           schema:
             $ref: "#/definitions/User"
+      tags:
+        - Publique
 
   /v1/ping/error:
     get:
@@ -815,6 +818,8 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/Error"
+      tags:
+        - Publique
 
   /kairos/generate-auth-url:
     post:
@@ -853,11 +858,13 @@ paths:
           $ref: "#/responses/GenerateAuthUrlResponse"
         400:
           $ref: "#/responses/BadRequestErrorResponse"
+      tags:
+        - Kairos
 
   /kairos/check-if-organisme-is-eligible:
     get:
       description: >
-        Permet de vérifier si un organisme est éligible à la connexion Anoté
+        Permet de vérifier si un organisme est éligible à la connexion Anotéa
       produces:
         - application/json
       parameters:
@@ -866,7 +873,6 @@ paths:
           description: Le SIRET de l'organisme formateur
           type: string
           required: true
-
       security:
         - Bearer: []
       responses:
@@ -874,5 +880,7 @@ paths:
           $ref: "#/responses/CheckIfOrganismeIsEligibleResponse"
         400:
           $ref: "#/responses/BadRequestErrorResponse"
+      tags:
+        - Kairos
 
 
