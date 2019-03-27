@@ -9,32 +9,62 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     const prepareDatabase = () => {
         return Promise.all([
-            ...(
-                _.range(1).map(() => {
-                    return insertIntoDatabase('comment', newComment({
-                        training: {
-                            organisation: {
-                                siret: '11111111111111',
-                            },
-                        }
-                    }));
-                })
-            ),
-            ...(
-                _.range(2).map(() => {
-                    return insertIntoDatabase('comment', newComment({
-                        training: {
-                            organisation: {
-                                siret: '22222222222222',
-                            },
-                        }
-                    }));
-                })
-            ),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '11111111111111',
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+                rates: {
+                    accueil: 1,
+                    contenu_formation: 1,
+                    equipe_formateurs: 1,
+                    moyen_materiel: 1,
+                    accompagnement: 1,
+                    global: 1,
+                },
+            })),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+                rates: {
+                    accueil: 3,
+                    contenu_formation: 3,
+                    equipe_formateurs: 3,
+                    moyen_materiel: 3,
+                    accompagnement: 3,
+                    global: 3,
+                },
+            })),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+                rates: {
+                    accueil: 3,
+                    contenu_formation: 3,
+                    equipe_formateurs: 3,
+                    moyen_materiel: 3,
+                    accompagnement: 3,
+                    global: 3,
+                },
+            })),
         ]);
     };
 
-    it('should compute score', async () => {
+    it('should compute rounded score', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
@@ -57,19 +87,19 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             invalid: 0,
         });
         assert.deepStrictEqual(doc.score, {
-            nb_avis: 2,
+            nb_avis: 3,
             notes: {
-                accompagnement: 1,
-                accueil: 3,
+                accompagnement: 2,
+                accueil: 2,
                 contenu_formation: 2,
-                equipe_formateurs: 4,
+                equipe_formateurs: 2,
                 moyen_materiel: 2,
                 global: 2,
             }
         });
     });
 
-    it('should not compute score for moderateur', async () => {
+    it('should not compute score for moderateur account', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
@@ -120,12 +150,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.deepStrictEqual(doc.score, {
-            nb_avis: 3,
+            nb_avis: 4,
             notes: {
-                accompagnement: 1,
+                accompagnement: 2,
                 accueil: 2,
                 contenu_formation: 2,
-                equipe_formateurs: 3,
+                equipe_formateurs: 2,
                 moyen_materiel: 2,
                 global: 2,
             }
