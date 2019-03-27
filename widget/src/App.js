@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import './widget/WidgetAnotea';
+import './widget/AnoteaWebComponent';
 
 class App extends Component {
 

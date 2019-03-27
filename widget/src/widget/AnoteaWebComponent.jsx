@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import AnoteaWidget from './AnoteaWidget';
 
 class WidgetAnotea extends HTMLElement {
     connectedCallback() {
-        ReactDOM.render(<div>Hello World!</div>, document.getElementById('widgetAnotea'));
+        ReactDOM.render(<AnoteaWidget />, document.getElementById('widgetAnotea'));
     }
 }
 

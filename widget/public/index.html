@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <script src="%PUBLIC_URL%/vendor/webcomponents-bundle.js"></script>
     <script src="%PUBLIC_URL%/vendor/custom-elements-es5-adapter.js"></script>
-    <script>if (!window.customElements) { document.write("erreur: navigateur non supporté"); }</script>
+    <script>if (!window.customElements) { document.write("erreur: navigateur non supporté"); } else { document.write('<widget-anotea></widget-anotea>')} </script>
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <title>Demo Widget Anotea</title>
   </head>
   <body>
-    <div id="widgetAnotea"></div>
+    <div id="widgetAnotea" niveau="organisme" siret="1234"></div>
   </body>
 </html>
