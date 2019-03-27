@@ -138,7 +138,9 @@ module.exports = async db => {
                         domaine_formation: {
                             formacodes: '$formacodes',
                         },
-                        certifications: '$certifinfos',
+                        certifications: {
+                            certifinfos: '$certifinfos',
+                        },
                         action: {
                             numero: '$numero_action',
                             lieu_de_formation: {

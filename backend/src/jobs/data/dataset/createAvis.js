@@ -64,7 +64,7 @@ const buildAvis = (session, custom) => {
                 city: formation.action.lieu_de_formation.ville
             },
             certifInfo: {
-                id: formation.certifications[0],
+                id: formation.certifications.certifinfos[0],
                 label: 'NULL'
             },
             idSession: session.numero,

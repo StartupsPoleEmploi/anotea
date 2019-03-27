@@ -240,13 +240,11 @@ module.exports = {
                 numero: numeroFormation,
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '31801'
-                    ]
+                    formacodes: ['31801']
                 },
-                certifications: [
-                    '55518'
-                ],
+                certifications: {
+                    certifinfos: ['55518']
+                },
                 action: {
                     numero: numeroAction,
                     lieu_de_formation: {
@@ -268,12 +266,8 @@ module.exports = {
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
-                    certifinfos: [
-                        '55518'
-                    ],
-                    formacodes: [
-                        '31801'
-                    ]
+                    certifinfos: ['55518'],
+                    formacodes: ['31801']
                 },
             }
         }, custom, { test: true });
@@ -318,25 +312,19 @@ module.exports = {
                 numero: numeroFormation,
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '31801'
-                    ]
+                    formacodes: ['31801']
                 },
-                certifications: [
-                    '55518'
-                ],
+                certifications: {
+                    certifinfos: ['55518']
+                },
             },
             meta: {
                 source: 'intercarif',
                 reconciliation: {
                     organisme_formateur: '11111111111111',
                     lieu_de_formation: '49000',
-                    certifinfos: [
-                        '55518'
-                    ],
-                    formacodes: [
-                        '31801'
-                    ]
+                    certifinfos: ['55518'],
+                    formacodes: ['31801']
                 },
             }
         }, custom, { test: true });

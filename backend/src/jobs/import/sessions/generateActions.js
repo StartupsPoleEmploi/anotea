@@ -144,7 +144,9 @@ module.exports = async db => {
                         domaine_formation: {
                             formacodes: '$formacodes',
                         },
-                        certifications: '$certifinfos',
+                        certifications: {
+                            certifinfos: '$certifinfos',
+                        },
                     },
                     meta: {
                         source: 'intercarif',

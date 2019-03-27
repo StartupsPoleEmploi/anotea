@@ -55,13 +55,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '22403'
-                    ]
+                    formacodes: ['22403']
                 },
-                certifications: [
-                    '80735'
-                ],
+                certifications: {
+                    certifinfos: ['80735']
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -83,12 +81,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
-                    certifinfos: [
-                        '80735'
-                    ],
-                    formacodes: [
-                        '22403'
-                    ]
+                    certifinfos: ['80735'],
+                    formacodes: ['22403']
                 },
             }
         });
@@ -212,13 +206,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '22403'
-                    ]
+                    formacodes: ['22403']
                 },
-                certifications: [
-                    '80735'
-                ],
+                certifications: {
+                    certifinfos: ['80735']
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -294,13 +286,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '22403'
-                    ]
+                    formacodes: ['22403']
                 },
-                certifications: [
-                    '80735'
-                ],
+                certifications: {
+                    certifinfos: ['80735']
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -322,12 +312,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
-                    certifinfos: [
-                        '80735'
-                    ],
-                    formacodes: [
-                        '22403'
-                    ]
+                    certifinfos: ['80735'],
+                    formacodes: ['22403']
                 },
             }
         });
@@ -381,13 +367,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '22403'
-                    ]
+                    formacodes: ['22403']
                 },
-                certifications: [
-                    '80735'
-                ],
+                certifications: {
+                    certifinfos: ['80735']
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -409,12 +393,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
-                    certifinfos: [
-                        '80735'
-                    ],
-                    formacodes: [
-                        '22403'
-                    ]
+                    certifinfos: ['80735'],
+                    formacodes: ['22403']
                 },
             }
         });
