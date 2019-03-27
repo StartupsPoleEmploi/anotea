@@ -42,6 +42,7 @@ module.exports = {
             logger.info({ data }, `Completed in ${duration}`);
             exit();
         } catch (e) {
+            components.sentry.sendError(e);
             exit(e);
         }
     },

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { checkBadwords } from '../../../../lib/stagiaireService';
 import Badwords from './Badwords';
@@ -17,13 +18,18 @@ class Commentaire extends Component {
         pseudo: '',
     };
 
+    constructor(props) {
+        super(props);
+        this.checkBadwords = _.debounce(async (name, value) => {
+            let sentence = await checkBadwords(value);
+            this.props.onChange(name, value, sentence.isGood);
+        }, 750);
+    }
+
     onChange = async event => {
         const { name, value, maxLength } = event.target;
         if (value.length <= maxLength) {
-            this.setState({ [name]: value }, async () => {
-                let sentence = await checkBadwords(value);
-                this.props.onChange(name, value, sentence.isGood);
-            });
+            this.setState({ [name]: value }, () => this.checkBadwords(name, value));
         }
     };
 

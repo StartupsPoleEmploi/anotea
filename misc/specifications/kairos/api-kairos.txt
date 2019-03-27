@@ -1,0 +1,27 @@
+Utilisateur->Kairos:Affichage onglet Anotéa
+
+activate Kairos
+Kairos<-Kairos:Création d'un token JWT
+Kairos->Anotea: GET https://anotea.pole-emploi.fr/api/check-if-organisme-is-eligible
+
+activate Anotea
+Anotea->Anotea: Vérification si l'organisme est éligible
+Anotea-->Kairos: Envoi de l'égligibilité
+deactivate Anotea
+deactivate Kairos
+
+activate Kairos
+activate Anotea
+Kairos->Anotea: POST https://anotea.pole-emploi.fr/api/kairos/generate-auth-url
+
+Anotea->Anotea: Création de l'organisme si inconnu
+
+Anotea-->Kairos: Envoi du lien de connexion
+
+Kairos-->Utilisateur:Affichage du bouton
+deactivate Anotea
+deactivate Kairos
+
+activate Utilisateur
+
+Utilisateur->Anotea:GET https://anotea.pole-emploi.fr/admin?...
