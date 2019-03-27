@@ -13,6 +13,7 @@ module.exports = action => {
 
     if (action.meta && action.formation) {
         dto.meta.source = {
+            //TODO remove source field in v2
             numero_formation: action.formation.numero,
             numero_action: action.numero,
             type: dto.meta.source,

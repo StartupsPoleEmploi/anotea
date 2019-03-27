@@ -12,6 +12,7 @@ module.exports = session => {
 
     if (session.meta && session.formation) {
         dto.meta.source = {
+            //TODO remove source field in v2
             numero_formation: session.formation.numero,
             numero_action: session.formation.action.numero,
             numero_session: session.numero,
