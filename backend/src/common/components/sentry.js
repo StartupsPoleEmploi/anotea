@@ -1,4 +1,4 @@
-const { init, captureException } = require('@sentry/node');
+const { init, captureException, configureScope } = require('@sentry/node');
 
 module.exports = (logger, configuration) => {
 
@@ -11,8 +11,13 @@ module.exports = (logger, configuration) => {
     }
 
     return {
-        sendError: e => {
+        sendError: (e, options) => {
             if (isEnabled) {
+                if (options) {
+                    configureScope(scope => {
+                        scope.setExtra('requestId', options.requestId);
+                    });
+                }
                 captureException(e);
             } else {
                 logger.error('Message sent to Sentry');
