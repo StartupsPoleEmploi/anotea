@@ -5,9 +5,9 @@ module.exports = (logger, configuration) => {
     let isEnabled = configuration.sentry.enabled;
 
     if (isEnabled) {
-        init({
-            dsn: configuration.sentry.dsn,
-        });
+        init({ dsn: configuration.sentry.dsn });
+        process.on('unhandledRejection', e => captureException(e));
+        process.on('uncaughtException', e => captureException(e));
     }
 
     return {
