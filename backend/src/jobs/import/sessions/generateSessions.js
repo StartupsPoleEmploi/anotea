@@ -1,5 +1,8 @@
-module.exports = db => {
-    return db.collection('intercarif').aggregate([
+const roundNotes = require('./roundNotes');
+
+module.exports = async db => {
+
+    await db.collection('intercarif').aggregate([
         {
             $project: {
                 _id: 0,
@@ -97,12 +100,12 @@ module.exports = db => {
                             score: {
                                 nb_avis: '$count',
                                 notes: {
-                                    accueil: { $ceil: '$accueil' },
-                                    contenu_formation: { $ceil: '$contenu_formation' },
-                                    equipe_formateurs: { $ceil: '$equipe_formateurs' },
-                                    moyen_materiel: { $ceil: '$moyen_materiel' },
-                                    accompagnement: { $ceil: '$accompagnement' },
-                                    global: { $ceil: '$global' }
+                                    accueil: { $avg: '$accueil' },
+                                    contenu_formation: { $avg: '$contenu_formation' },
+                                    equipe_formateurs: { $avg: '$equipe_formateurs' },
+                                    moyen_materiel: { $avg: '$moyen_materiel' },
+                                    accompagnement: { $avg: '$accompagnement' },
+                                    global: { $avg: '$global' }
                                 },
                             }
                         }
@@ -135,7 +138,9 @@ module.exports = db => {
                         domaine_formation: {
                             formacodes: '$formacodes',
                         },
-                        certifications: '$certifinfos',
+                        certifications: {
+                            certifinfos: '$certifinfos',
+                        },
                         action: {
                             numero: '$numero_action',
                             lieu_de_formation: {
@@ -181,5 +186,7 @@ module.exports = db => {
             $out: 'sessionsReconciliees'
         }
     ], { allowDiskUse: true }).toArray();
+
+    return roundNotes(db, 'sessionsReconciliees');
 };
 

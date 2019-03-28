@@ -55,13 +55,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '22403'
-                    ]
+                    formacodes: ['22403']
                 },
-                certifications: [
-                    '80735'
-                ],
+                certifications: {
+                    certifinfos: ['80735']
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -83,13 +81,103 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
-                    certifinfos: [
-                        '80735'
-                    ],
-                    formacodes: [
-                        '22403'
-                    ]
+                    certifinfos: ['80735'],
+                    formacodes: ['22403']
                 },
+            }
+        });
+    });
+
+
+    it('should round notes during reconcile', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            importIntercarif(),
+            insertRegions(),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+                rates: {
+                    accueil: 1,
+                    contenu_formation: 1,
+                    equipe_formateurs: 3,
+                    moyen_materiel: 4,
+                    accompagnement: 5,
+                    global: 5,
+                },
+            })),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+                rates: {
+                    accueil: 1,
+                    contenu_formation: 1,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 5,
+                    accompagnement: 5,
+                    global: 5,
+                },
+            })),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                },
+                rates: {
+                    accueil: 2,
+                    contenu_formation: 1,
+                    equipe_formateurs: 1,
+                    moyen_materiel: 5,
+                    accompagnement: 1,
+                    global: 5,
+                },
+            })),
+        ]);
+
+        await generateSessions(db);
+
+        let session = await db.collection('sessionsReconciliees').findOne();
+        assert.deepStrictEqual(session.score, {
+            nb_avis: 3,
+            notes: {
+                accueil: 1,
+                contenu_formation: 1,
+                equipe_formateurs: 3,
+                moyen_materiel: 5,
+                accompagnement: 4,
+                global: 5,
             }
         });
     });
@@ -105,7 +193,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
-        assert.deepEqual(session, {
+        assert.deepStrictEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
@@ -118,13 +206,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '22403'
-                    ]
+                    formacodes: ['22403']
                 },
-                certifications: [
-                    '80735'
-                ],
+                certifications: {
+                    certifinfos: ['80735']
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -179,7 +265,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
-        assert.deepEqual(session, {
+        assert.deepStrictEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
@@ -200,13 +286,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '22403'
-                    ]
+                    formacodes: ['22403']
                 },
-                certifications: [
-                    '80735'
-                ],
+                certifications: {
+                    certifinfos: ['80735']
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -228,12 +312,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
-                    certifinfos: [
-                        '80735'
-                    ],
-                    formacodes: [
-                        '22403'
-                    ]
+                    certifinfos: ['80735'],
+                    formacodes: ['22403']
                 },
             }
         });
@@ -266,7 +346,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
-        assert.deepEqual(session, {
+        assert.deepStrictEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
             region: '11',
@@ -287,13 +367,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
                 domaine_formation: {
-                    formacodes: [
-                        '22403'
-                    ]
+                    formacodes: ['22403']
                 },
-                certifications: [
-                    '80735'
-                ],
+                certifications: {
+                    certifinfos: ['80735']
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -315,12 +393,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
-                    certifinfos: [
-                        '80735'
-                    ],
-                    formacodes: [
-                        '22403'
-                    ]
+                    certifinfos: ['80735'],
+                    formacodes: ['22403']
                 },
             }
         });

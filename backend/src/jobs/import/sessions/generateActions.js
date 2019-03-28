@@ -1,82 +1,186 @@
-module.exports = db => {
-    return db.collection('sessionsReconciliees').aggregate([
+const roundNotes = require('./roundNotes');
+
+module.exports = async db => {
+
+    await db.collection('intercarif').aggregate([
         {
-            $group: {
-                _id: '$formation.action.numero',
-                formation: { $first: '$formation' },
-                region: { $first: '$region' },
-                code_region: { $first: '$code_region' },
-                meta: { $first: '$meta' },
-                avis: { $push: '$avis' },
-                accueil: { $avg: '$score.notes.accueil' },
-                contenu_formation: { $avg: '$score.notes.contenu_formation' },
-                equipe_formateurs: { $avg: '$score.notes.equipe_formateurs' },
-                moyen_materiel: { $avg: '$score.notes.moyen_materiel' },
-                accompagnement: { $avg: '$score.notes.accompagnement' },
-                global: { $avg: '$score.notes.global' },
+            $project: {
+                _id: 0,
+                _attributes: 1,
+                _meta: 1,
+                intitule_formation: 1,
+                actions: 1,
             }
         },
-        // Convert session into action
         {
-            $replaceRoot: {
-                newRoot: {
-                    _id: { $concat: ['$formation.numero', '|', '$formation.action.numero'] },
-                    numero: '$formation.action.numero',
-                    region: '$region',
-                    code_region: '$code_region',
-                    avis: {
-                        //Flatten avis arrays
-                        $reduce: {
-                            input: '$avis',
-                            initialValue: [],
-                            in: { $setUnion: ['$$value', '$$this'] }
-                        }
-                    },
-                    score: {
-                        $cond: {
-                            if: {
-                                $eq: ['$accueil', null]
-                            },
-                            then: {},
-                            else: {
-                                notes: {
-                                    accueil: { $ceil: '$accueil' },
-                                    contenu_formation: { $ceil: '$contenu_formation' },
-                                    equipe_formateurs: { $ceil: '$equipe_formateurs' },
-                                    moyen_materiel: { $ceil: '$moyen_materiel' },
-                                    accompagnement: { $ceil: '$accompagnement' },
-                                    global: { $ceil: '$global' },
-                                }
-                            }
-                        }
-                    },
-                    formation: '$formation',
-                    meta: '$meta',
-                },
-            },
-        },
-        {
-            $addFields: {
-                'score.nb_avis': { $ifNull: [{ $size: '$avis' }, { nb_avis: 0 }] },
-            }
-        },
-        // Remove action property from formation
-        {
-            $replaceRoot: {
-                newRoot: {
-                    $mergeObjects: ['$formation.action', '$$ROOT']
-                }
-            }
+            $unwind: '$actions'
         },
         {
             $project: {
-                'formation.action': 0,
-            },
+                numero_formation: '$_attributes.numero',
+                intitule_formation: '$intitule_formation',
+                numero_action: '$actions._attributes.numero',
+                organisme_formateur_siret: '$actions.organisme_formateur.siret_formateur.siret',
+                organisme_formateur_numero: '$actions.organisme_formateur._attributes.numero',
+                organisme_formateur_raison_sociale: '$actions.organisme_formateur.raison_sociale_formateur',
+                organisme_financeurs: '$actions.organisme_financeurs',
+                lieu_de_formation: '$actions.lieu_de_formation.coordonnees.adresse.codepostal',
+                ville: '$actions.lieu_de_formation.coordonnees.adresse.ville',
+                region: '$actions.lieu_de_formation.coordonnees.adresse.region',
+                certifinfos: '$_meta.certifinfos',
+                formacodes: '$_meta.formacodes',
+            }
+        },
+        //Resolving region
+        {
+            $lookup: {
+                from: 'regions',
+                localField: 'region',
+                foreignField: 'codeINSEE',
+                as: 'regions'
+            }
+        },
+        {
+            $unwind: { path: '$regions', preserveNullAndEmptyArrays: true }
+        },
+        //Reconciling comments
+        {
+            $lookup: {
+                from: 'comment',
+                let: {
+                    organisme_formateur_siret: '$organisme_formateur_siret',
+                    lieu_de_formation: '$lieu_de_formation',
+                    certifinfos: '$certifinfos',
+                    formacodes: '$formacodes'
+                },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret'] },
+                                    { $eq: ['$training.place.postalCode', '$$lieu_de_formation'] },
+                                    {
+                                        $or: [
+                                            { $in: ['$training.certifInfo.id', '$$certifinfos'] },
+                                            { $in: ['$formacode', '$$formacodes'] }
+                                        ]
+                                    }
+                                ]
+                            },
+                            $or: [
+                                { 'comment': { $exists: false } },
+                                { 'comment': null },
+                                { 'published': true },
+                                { 'rejected': true },
+                            ]
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            comments: { $push: '$$ROOT' },
+                            accueil: { $avg: '$rates.accueil' },
+                            contenu_formation: { $avg: '$rates.contenu_formation' },
+                            equipe_formateurs: { $avg: '$rates.equipe_formateurs' },
+                            moyen_materiel: { $avg: '$rates.moyen_materiel' },
+                            accompagnement: { $avg: '$rates.accompagnement' },
+                            global: { $avg: '$rates.global' },
+                            count: { $sum: 1 }
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            comments: 1,
+                            score: {
+                                nb_avis: '$count',
+                                notes: {
+                                    accueil: { $avg: '$accueil' },
+                                    contenu_formation: { $avg: '$contenu_formation' },
+                                    equipe_formateurs: { $avg: '$equipe_formateurs' },
+                                    moyen_materiel: { $avg: '$moyen_materiel' },
+                                    accompagnement: { $avg: '$accompagnement' },
+                                    global: { $avg: '$global' }
+                                },
+                            }
+                        }
+                    }],
+                as: 'reconciliation'
+            }
+        },
+        {
+            $unwind: { path: '$reconciliation', preserveNullAndEmptyArrays: true }
+        },
+        //Add score when session has not comments
+        {
+            $addFields: {
+                'reconciliation.score': { $ifNull: ['$reconciliation.score', { nb_avis: 0 }] },
+            }
+        },
+        //Build final session document
+        {
+            $replaceRoot: {
+                newRoot: {
+                    _id: { $concat: ['$numero_formation', '|', '$numero_action'] },
+                    numero: '$numero_action',
+                    region: '$region',
+                    code_region: '$regions.codeRegion',
+                    lieu_de_formation: {
+                        code_postal: '$lieu_de_formation',
+                        ville: '$ville',
+                    },
+                    organisme_financeurs: '$organisme_financeurs.code_financeur',
+                    organisme_formateur: {
+                        raison_sociale: '$organisme_formateur_raison_sociale',
+                        siret: '$organisme_formateur_siret',
+                        numero: '$organisme_formateur_numero',
+                    },
+                    avis: { $ifNull: ['$reconciliation.comments', []] },
+                    score: '$reconciliation.score',
+                    formation: {
+                        numero: '$numero_formation',
+                        intitule: '$intitule_formation',
+                        domaine_formation: {
+                            formacodes: '$formacodes',
+                        },
+                        certifications: {
+                            certifinfos: '$certifinfos',
+                        },
+                    },
+                    meta: {
+                        source: 'intercarif',
+                        reconciliation: {
+                            organisme_formateur: '$organisme_formateur_siret',
+                            lieu_de_formation: '$lieu_de_formation',
+                            certifinfos: '$certifinfos',
+                            formacodes: '$formacodes',
+                        },
+                    },
+                }
+            }
+        },
+        //Ensure action is unique
+        {
+            $group: {
+                _id: '$_id',
+                unique: { $first: '$$ROOT' }
+            }
+        },
+        {
+            $replaceRoot: {
+                newRoot: {
+                    $mergeObjects: ['$unique']
+                }
+            }
         },
         //Output documents into target collection
         {
             $out: 'actionsReconciliees'
         }
     ], { allowDiskUse: true }).toArray();
+
+
+    return roundNotes(db, 'actionsReconciliees');
 };
 
