@@ -69,13 +69,12 @@
   "regions": [
     {
       "nom": "Auvergne-Rhône-Alpes",
+      "active": true,
       "codeRegion": "2",
       "codeINSEE": "84",
-      "active": true,
+      "departements": ["3", "7", "15", "26", "43", "74", "38", "1", "42", "63", "73", "69"],
       "filters": {
-        "code_financeurs": [
-          "-2"
-        ]
+        "code_financeurs": ["-2"]
       },
       "mailing": {
         "stagiaires": {
@@ -89,13 +88,12 @@
     },
     {
       "nom": "Bourgogne-Franche-Comté",
+      "active": true,
       "codeRegion": "3",
       "codeINSEE": "27",
-      "active": true,
+      "departements": ["21", "25", "39", "58", "71", "90", "89", "70"],
       "filters": {
-        "code_financeurs": [
-          "-2"
-        ]
+        "code_financeurs": ["-2"]
       },
       "mailing": {
         "stagiaires": {
@@ -109,25 +107,26 @@
     },
     {
       "nom": "Bretagne",
+      "active": false,
       "codeRegion": "4",
       "codeINSEE": "53",
-      "active": false
+      "departements": ["22", "29", "35", "56"]
     },
     {
       "nom": "Centre-Val de Loire",
+      "active": false,
       "codeRegion": "5",
       "codeINSEE": "24",
-      "active": false
+      "departements": ["28", "36", "37", "41", "45", "18"]
     },
     {
       "nom": "Corse",
+      "active": true,
       "codeRegion": "6",
       "codeINSEE": "94",
-      "active": true,
+      "departements": ["20"],
       "filters": {
-        "code_financeurs": [
-          "-2"
-        ]
+        "code_financeurs": ["-2"]
       },
       "mailing": {
         "stagiaires": {
@@ -141,13 +140,12 @@
     },
     {
       "nom": "Grand-Est",
+      "active": true,
       "codeRegion": "7",
       "codeINSEE": "44",
-      "active": true,
+      "departements": ["68", "8", "10", "52", "67", "51", "54", "55", "88", "57"],
       "filters": {
-        "code_financeurs": [
-          "-2"
-        ]
+        "code_financeurs": ["-2"]
       },
       "mailing": {
         "stagiaires": {
@@ -160,58 +158,83 @@
       }
     },
     {
+      "name": "Guadeloupe",
+      "active": false,
+      "codeINSEE": "1",
+      "codeRegion": "8",
+      "departements": ["971", "977", "970", "975"]
+    },
+    {
       "nom": "Guyane",
+      "active": false,
       "codeRegion": "9",
       "codeINSEE": "3",
-      "active": false
+      "departements": ["973"]
     },
     {
       "nom": "Hauts-de-France",
+      "active": false,
       "codeRegion": "10",
       "codeINSEE": "32",
-      "active": false
+      "departements": ["2", "59", "62", "60", "80"]
     },
     {
-      "nom": "La Réunion",
+      "codeRegion": "11",
+      "codeINSEE": "11",
+      "nom": "Île-de-France",
+      "active": true,
+      "departements": ["91", "92", "75", "93", "77", "95", "94", "78"],
+      "mailing": {
+        "stagiaires": {
+          "avis": true
+        },
+        "organismes": {
+          "accounts": true,
+          "notifications": true
+        }
+      }
+    },
+    {
+      "nom": "La Réunion-Mayotte",
+      "active": false,
       "codeRegion": "12",
       "codeINSEE": "4",
-      "active": false
+      "departements": ["974", "976", "978"]
     },
     {
       "nom": "Martinique",
+      "active": false,
       "codeRegion": "13",
       "codeINSEE": "2",
-      "active": false
-    },
-    {
-      "nom": "Mayotte",
-      "codeRegion": "12",
-      "codeINSEE": "6",
-      "active": false
+      "departements": ["972"]
     },
     {
       "nom": "Normandie",
+      "active": false,
       "codeRegion": "14",
       "codeINSEE": "28",
-      "active": false
+      "departements": ["14", "27", "27", "50", "76", "61"]
     },
     {
       "nom": "Nouvelle-Aquitaine",
+      "active": false,
       "codeRegion": "15",
       "codeINSEE": "75",
-      "active": false
+      "departements": ["19", "16", "17", "23", "79", "24", "24", "33", "87", "40", "47", "64", "86", "33"]
     },
     {
       "nom": "Occitanie",
+      "active": false,
       "codeRegion": "16",
       "codeINSEE": "76",
-      "active": false
+      "departements": ["32", "9", "11", "12", "30", "31", "34", "65", "46", "48", "66", "81", "82"]
     },
     {
       "nom": "Pays de la Loire",
+      "active": true,
       "codeRegion": "17",
       "codeINSEE": "52",
-      "active": true,
+      "departements": ["44", "53", "49", "85", "72"],
       "mailing": {
         "stagiaires": {
           "avis": true
@@ -224,29 +247,13 @@
     },
     {
       "nom": "Provence-Alpes-Côte d'Azur",
+      "active": true,
       "codeRegion": "18",
       "codeINSEE": "93",
-      "active": true,
+      "departements": ["4", "13", "6", "83", "84", "5"],
       "filters": {
-        "code_financeurs": [
-          "-2"
-        ]
+        "code_financeurs": ["-2"]
       },
-      "mailing": {
-        "stagiaires": {
-          "avis": true
-        },
-        "organismes": {
-          "accounts": true,
-          "notifications": true
-        }
-      }
-    },
-    {
-      "codeRegion": "11",
-      "codeINSEE": "11",
-      "nom": "Île-de-France",
-      "active": true,
       "mailing": {
         "stagiaires": {
           "avis": true

@@ -6,7 +6,7 @@ const logger = require('../../../../helpers/test-logger');
 const traineeImporter = require('../../../../../src/jobs/import/trainee/traineeImporter');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/trainee/handlers/poleEmploiCSVHandler');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, getComponents }) => {
 
     it('should import trainees from csv file', async () => {
 
@@ -15,7 +15,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        await insertRegions();
 
         await importer.importTrainee(csvFile, handler);
 
@@ -92,7 +92,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
     it('should fail to import trainee when codeRegion can not be found', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-departement.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
@@ -102,10 +102,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
             assert.fail('Should have fail');
         } catch (e) {
             assert.deepStrictEqual(e, {
-                invalid: 4,
+                invalid: 1,
                 ignored: 0,
                 imported: 0,
-                total: 4,
+                total: 1,
             });
         }
     });
@@ -117,7 +117,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        await insertRegions();
 
         await importer.importTrainee(csvFile, handler);
 
@@ -132,7 +132,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFileWithDuplicates = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-doublons.csv');
         let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        await insertRegions();
 
         await importer.importTrainee(csvFile, handler);
         let results = await importer.importTrainee(csvFileWithDuplicates, handler);

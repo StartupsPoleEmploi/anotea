@@ -1,92 +1,104 @@
 [
   {
+    "nom": "Auvergne-Rhône-Alpes",
+    "codeRegion": "2",
+    "codeINSEE": "84",
+    "departements": ["3", "7", "15", "26", "43", "74", "38", "1", "42", "63", "73", "69"]
+  },
+  {
+    "nom": "Bourgogne-Franche-Comté",
+    "codeRegion": "3",
+    "codeINSEE": "27",
+    "departements": ["21", "25", "39", "58", "71", "90", "89", "70"]
+  },
+  {
+    "nom": "Bretagne",
+    "codeRegion": "4",
+    "codeINSEE": "53",
+    "departements": ["22", "29", "35", "56"]
+  },
+  {
+    "nom": "Centre-Val de Loire",
+    "codeRegion": "5",
+    "codeINSEE": "24",
+    "departements": ["28", "36", "37", "41", "45", "18"]
+  },
+  {
+    "nom": "Corse",
+    "codeRegion": "6",
+    "codeINSEE": "94",
+    "departements": ["20"]
+  },
+  {
+    "nom": "Grand-Est",
+    "codeRegion": "7",
+    "codeINSEE": "44",
+    "departements": ["68", "8", "10", "52", "67", "51", "54", "55", "88", "57"]
+  },
+  {
+    "name": "Guadeloupe",
     "codeINSEE": "1",
     "codeRegion": "8",
-    "name": "Guadeloupe"
+    "departements": ["971", "977", "970", "975"]
   },
   {
-    "codeINSEE": "2",
-    "codeRegion": "13",
-    "name": "Martinique"
-  },
-  {
-    "codeINSEE": "3",
+    "nom": "Guyane",
     "codeRegion": "9",
-    "name": "Guyane"
+    "codeINSEE": "3",
+    "departements": ["973"]
   },
   {
-    "codeINSEE": "4",
-    "codeRegion": "12",
-    "name": "La Réunion"
-  },
-  {
-    "codeINSEE": "6",
-    "codeRegion": "12",
-    "name": "Mayotte"
-  },
-  {
-    "codeINSEE": "11",
-    "codeRegion": "11",
-    "name": "Île-de-France"
-  },
-  {
-    "codeINSEE": "24",
-    "codeRegion": "5",
-    "name": "Centre-Val de Loire"
-  },
-  {
-    "codeINSEE": "27",
-    "codeRegion": "3",
-    "name": "Bourgogne-Franche-Comté"
-  },
-  {
-    "codeINSEE": "28",
-    "codeRegion": "14",
-    "name": "Normandie"
-  },
-  {
-    "codeINSEE": "32",
+    "nom": "Hauts-de-France",
     "codeRegion": "10",
-    "name": "Hauts-de-France"
+    "codeINSEE": "32",
+    "departements": ["2", "59", "62", "60", "80"]
   },
   {
-    "codeINSEE": "52",
-    "codeRegion": "17",
-    "name": "Pays de la Loire"
+    "codeRegion": "11",
+    "codeINSEE": "11",
+    "nom": "Île-de-France",
+    "departements": ["91", "92", "75", "93", "77", "95", "94", "78"]
   },
   {
-    "codeINSEE": "53",
-    "codeRegion": "4",
-    "name": "Bretagne"
+    "nom": "La Réunion-Mayotte",
+    "codeRegion": "12",
+    "codeINSEE": "4",
+    "departements": ["974", "976", "978"]
   },
   {
-    "codeINSEE": "75",
+    "nom": "Martinique",
+    "codeRegion": "13",
+    "codeINSEE": "2",
+    "departements": ["972"]
+  },
+  {
+    "nom": "Normandie",
+    "codeRegion": "14",
+    "codeINSEE": "28",
+    "departements": ["14", "27", "27", "50", "76", "61"]
+  },
+  {
+    "nom": "Nouvelle-Aquitaine",
     "codeRegion": "15",
-    "name": "Nouvelle-Aquitaine"
+    "codeINSEE": "75",
+    "departements": ["19", "16", "17", "23", "79", "24", "24", "33", "87", "40", "47", "64", "86", "33"]
   },
   {
-    "codeINSEE": "84",
-    "codeRegion": "2",
-    "name": "Auvergne-Rhône-Alpes"
-  },
-  {
-    "codeINSEE": "93",
-    "codeRegion": "18",
-    "name": "Provence-Alpes-Côte d'Azur"
-  },
-  {
-    "codeINSEE": "94",
-    "codeRegion": "6",
-    "name": "Corse"
-  },
-  {
-    "codeINSEE": "76",
+    "nom": "Occitanie",
     "codeRegion": "16",
-    "name": "Occitanie"
+    "codeINSEE": "76",
+    "departements": ["32", "9", "11", "12", "30", "31", "34", "65", "46", "48", "66", "81", "82"]
   },
   {
-    "codeINSEE": "44",
-    "codeRegion": "7",
-    "name": "Grand-Est"
+    "nom": "Pays de la Loire",
+    "codeRegion": "17",
+    "codeINSEE": "52",
+    "departements": ["44", "53", "49", "85", "72"]
+  },
+  {
+    "nom": "Provence-Alpes-Côte d'Azur",
+    "codeRegion": "18",
+    "codeINSEE": "93",
+    "departements": ["4", "13", "6", "83", "84", "5"]
   }
 ]

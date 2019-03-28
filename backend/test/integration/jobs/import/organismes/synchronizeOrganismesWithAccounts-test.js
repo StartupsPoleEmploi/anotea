@@ -8,7 +8,7 @@ const synchronizeOrganismesWithAccounts = require('../../../../../src/jobs/impor
 const generateOrganismesFromIntercarif = require('../../../../../src/jobs/import/organismes/generateOrganismesFromIntercarif');
 const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/generateOrganismesFromKairos');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertIntoDatabase, importIntercarif, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, insertIntoDatabase, importIntercarif, getComponents }) => {
 
     let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
 
@@ -16,7 +16,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await Promise.all([importIntercarif(), insertDepartements()]);
+        await Promise.all([importIntercarif(), insertRegions()]);
 
         await generateOrganismesFromIntercarif(db, logger);
         await generateOrganismesFromKairos(db, logger, csvFile);
@@ -32,7 +32,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
             courriels: ['anotea.pe+paris@gmail.com'],
             sources: ['intercarif'],
             profile: 'organisme',
-            codeRegion: '1',
+            codeRegion: '15',
             kairosCourriel: 'contact+kairos@formation.fr',
             numero: 'OF_XXX',
             raisonSociale: 'Anotea Formation Paris',
@@ -61,7 +61,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
         let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
-            insertDepartements(),
+            insertRegions(),
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
@@ -128,7 +128,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await Promise.all([importIntercarif(), insertDepartements()]);
+        await Promise.all([importIntercarif(), insertRegions()]);
 
         await generateOrganismesFromIntercarif(db, logger);
         await generateOrganismesFromKairos(db, logger, csvFile);
@@ -142,7 +142,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, insertI
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await Promise.all([importIntercarif(), insertDepartements()]);
+        await Promise.all([importIntercarif(), insertRegions()]);
 
         await generateOrganismesFromIntercarif(db, logger);
         await generateOrganismesFromKairos(db, logger, csvFile);

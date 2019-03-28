@@ -5,7 +5,7 @@ const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
 const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoDatabase, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoDatabase, getTestDatabase, insertRegions }) => {
 
     it('can login as moderator', async () => {
 
@@ -181,13 +181,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let db = await getTestDatabase();
         let app = await startServer();
         await Promise.all([
-            db.collection('departements').createIndex({ region: 'text' }), //FIXME
-            insertIntoDatabase('departements', {
-                region: 'Ile De France',
-                dept_num: '91',
-                region_num: '11',
-                codeFinanceur: '2'
-            })
+            insertRegions(),
         ]);
 
         let authUrl = await generateKairosToken(app);
