@@ -1,11 +1,13 @@
 const assert = require('assert');
 const path = require('path');
-const getFormations = require('../../../../../src/jobs/import/intercarif/utils/getFormationsFromCSV');
+const getFormations = require('../../../../../src/jobs/import/intercarif/utils/getFormationsFromXml');
+const regions = require('../../../../../src/common/components/regions');
 
 describe(__filename, () => {
 
     const extractFormation = callback => {
-        getFormations(path.join(__dirname, '../../../../helpers/data', 'intercarif-data-test.xml'))
+        let file = path.join(__dirname, '../../../../helpers/data', 'intercarif-data-test.xml');
+        getFormations(file, regions())
         .first()
         .subscribe(
             document => callback(document),
@@ -18,8 +20,8 @@ describe(__filename, () => {
 
         extractFormation(document => {
             assert.ok(document.md5);
-            assert.equal(document.md5.constructor.name, 'String');
-            assert.equal(document.md5.length, 32);
+            assert.strictEqual(document.md5.constructor.name, 'String');
+            assert.strictEqual(document.md5.length, 32);
             done();
         });
     });
@@ -27,7 +29,7 @@ describe(__filename, () => {
     it('should store xml attributes into _attributes', done => {
 
         extractFormation(document => {
-            assert.deepEqual(document._attributes, {
+            assert.deepStrictEqual(document._attributes, {
                 numero: 'F_XX_XX',
                 datecrea: '20010503',
                 datemaj: '20171213',
@@ -41,7 +43,7 @@ describe(__filename, () => {
     it('should lower case tags (eg. FORMACODE, SIRET, NSF, ROME) and text value into _value', done => {
 
         extractFormation(document => {
-            assert.deepEqual(document.domaine_formation, {
+            assert.deepStrictEqual(document.domaine_formation, {
                 code_formacodes: [
                     {
                         _value: '22403',
@@ -58,7 +60,7 @@ describe(__filename, () => {
                     'F1604'
                 ]
             });
-            assert.deepEqual(document.organisme_formation_responsable.siret_organisme_formation.siret, 11111111111111);
+            assert.deepStrictEqual(document.organisme_formation_responsable.siret_organisme_formation.siret, '11111111111111');
             done();
         });
     });
@@ -66,8 +68,8 @@ describe(__filename, () => {
     it('should convert action and session tags into array', done => {
 
         extractFormation(document => {
-            assert.deepEqual(document.actions.length, 1);
-            assert.deepEqual(document.actions[0].sessions.length, 1);
+            assert.deepStrictEqual(document.actions.length, 1);
+            assert.deepStrictEqual(document.actions[0].sessions.length, 1);
             done();
         });
     });
@@ -75,7 +77,7 @@ describe(__filename, () => {
     it('should add _meta', done => {
 
         extractFormation(document => {
-            assert.deepEqual(document._meta, {
+            assert.deepStrictEqual(document._meta, {
                 certifinfos: ['80735'],
                 formacodes: ['22403']
             });
@@ -83,10 +85,9 @@ describe(__filename, () => {
         });
     });
 
-    it('should add region name', done => {
-
+    it('should add codeRegion', done => {
         extractFormation(document => {
-            assert.deepEqual(document.actions[0].lieu_de_formation.coordonnees.adresse.nom_region, 'Île-de-France');
+            assert.deepStrictEqual(document.actions[0].lieu_de_formation.coordonnees.adresse.code_region, '11');
             done();
         });
     });

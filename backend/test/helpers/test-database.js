@@ -35,8 +35,9 @@ module.exports = {
                 importIntercarif: async file => {
                     let intercarifFile = path.join(__dirname, 'data', 'intercarif-data-test.xml');
                     let db = await getTestDatabase();
+                    let { regions } = await context.getComponents();
 
-                    return importIntercarif(db, logger, file || intercarifFile);
+                    return importIntercarif(db, logger, file || intercarifFile, regions);
                 },
             }));
         });
