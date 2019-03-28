@@ -24,7 +24,7 @@ cli.description('Inject dataset')
 .option('--generate', 'Generate a avis.json and exit')
 .parse(process.argv);
 
-execute(async ({ db, logger, moderation, exit }) => {
+execute(async ({ db, logger, moderation, exit, regions }) => {
 
     if (cli.generate) {
         if (!cli.dump) {
@@ -46,8 +46,8 @@ execute(async ({ db, logger, moderation, exit }) => {
 
     await importIntercarif(db, logger, path.join(__dirname, '../../../../test/helpers/data/intercarif-data-test.xml'));
 
-    await generateSessions(db);
-    await generateActions(db);
+    await generateSessions(db, regions);
+    await generateActions(db, regions);
 
     await generateOrganismesFromIntercarif(db, logger);
     await synchronizeOrganismesWithAccounts(db, logger);

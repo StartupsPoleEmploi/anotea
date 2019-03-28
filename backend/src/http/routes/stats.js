@@ -299,7 +299,7 @@ module.exports = ({ db, logger, regions }) => {
             .pipe(transformObject(async doc => {
                 let { campaign, codeRegion, codeFinanceurs, nbStagiaires } = doc;
                 let libelleFinanceurs = codeFinanceurs.map(code => findLabelByCodeFinanceur(code) || 'Inconnu').join(',');
-                let libelleRegion = await findRegionByCodeRegion(codeRegion).name;
+                let libelleRegion = findRegionByCodeRegion(codeRegion).name;
                 return `"${campaign}";"${libelleRegion}";="${codeRegion}";"${libelleFinanceurs}";="${codeFinanceurs}";"${nbStagiaires}"\n`;
             }))
             .pipe(encodeStream('UTF-16BE'))

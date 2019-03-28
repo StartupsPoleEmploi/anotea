@@ -2,17 +2,16 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const moment = require('moment');
 const { transformObject } = require('../../../common/utils/stream-utils');
-const regions = require('../../../common/components/regions');
+const getCodeRegionFromKairosRegionName = require('./kairos/getCodeRegionFromKairosRegionName');
 
 const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
 
 module.exports = async (db, logger, file) => {
 
     const buildDocument = async data => {
-        const { findCodeRegionByName } = regions(db);
         return {
             siret: data['SIRET'],
-            codeRegion: await findCodeRegionByName(data['Nouvelle région']),
+            codeRegion: getCodeRegionFromKairosRegionName(data['Nouvelle région']),
             libelle: data['LIBELLE'],
             region: data['Nouvelle région'],
             nomRGC: data['Nom RGC'],

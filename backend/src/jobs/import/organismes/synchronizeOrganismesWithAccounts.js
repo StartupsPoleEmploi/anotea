@@ -11,15 +11,12 @@ module.exports = async (db, logger, regions) => {
     };
 
     const buildAccountFromIntercarif = async data => {
-        let { findCodeRegionByPostalCode } = regions;
+        let { findRegionByPostalCode } = regions;
         let adresse = data.lieux_de_formation ?
             data.lieux_de_formation.find(l => l.adresse.code_postal).adresse : data.adresse;
         let siret = `${parseInt(data.siret, 10)}`;
-
-        let [codeRegion, kairos] = await Promise.all([
-            findCodeRegionByPostalCode(adresse.code_postal),
-            db.collection('kairos_organismes').findOne({ siret }),
-        ]);
+        let region = findRegionByPostalCode(adresse.code_postal);
+        let kairos = await db.collection('kairos_organismes').findOne({ siret });
 
         let document = {
             _id: parseInt(data.siret, 10),
@@ -29,7 +26,7 @@ module.exports = async (db, logger, regions) => {
             courriels: data.courriel ? [data.courriel] : [],
             token: uuid.v4(),
             creationDate: new Date(),
-            codeRegion: codeRegion,
+            codeRegion: region.codeRegion,
             sources: ['intercarif'],
             profile: 'organisme',
             numero: data.numero,

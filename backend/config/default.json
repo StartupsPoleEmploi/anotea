@@ -110,14 +110,38 @@
       "active": false,
       "codeRegion": "4",
       "codeINSEE": "53",
-      "departements": ["22", "29", "35", "56"]
+      "departements": ["22", "29", "35", "56"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
       "nom": "Centre-Val de Loire",
       "active": false,
       "codeRegion": "5",
       "codeINSEE": "24",
-      "departements": ["28", "36", "37", "41", "45", "18"]
+      "departements": ["28", "36", "37", "41", "45", "18"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
       "nom": "Corse",
@@ -158,30 +182,66 @@
       }
     },
     {
-      "name": "Guadeloupe",
+      "nom": "Guadeloupe",
       "active": false,
       "codeINSEE": "1",
       "codeRegion": "8",
-      "departements": ["971", "977", "970", "975"]
+      "departements": ["971", "977", "970", "975"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
       "nom": "Guyane",
       "active": false,
       "codeRegion": "9",
       "codeINSEE": "3",
-      "departements": ["973"]
+      "departements": ["973"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
       "nom": "Hauts-de-France",
       "active": false,
       "codeRegion": "10",
       "codeINSEE": "32",
-      "departements": ["2", "59", "62", "60", "80"]
+      "departements": ["2", "59", "62", "60", "80"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
+      "nom": "Île-de-France",
       "codeRegion": "11",
       "codeINSEE": "11",
-      "nom": "Île-de-France",
       "active": true,
       "departements": ["91", "92", "75", "93", "77", "95", "94", "78"],
       "mailing": {
@@ -199,35 +259,95 @@
       "active": false,
       "codeRegion": "12",
       "codeINSEE": "4",
-      "departements": ["974", "976", "978"]
+      "departements": ["974", "976", "978"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
       "nom": "Martinique",
       "active": false,
       "codeRegion": "13",
       "codeINSEE": "2",
-      "departements": ["972"]
+      "departements": ["972"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
       "nom": "Normandie",
       "active": false,
       "codeRegion": "14",
       "codeINSEE": "28",
-      "departements": ["14", "27", "27", "50", "76", "61"]
+      "departements": ["14", "27", "27", "50", "76", "61"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
       "nom": "Nouvelle-Aquitaine",
       "active": false,
       "codeRegion": "15",
       "codeINSEE": "75",
-      "departements": ["19", "16", "17", "23", "79", "24", "24", "33", "87", "40", "47", "64", "86", "33"]
+      "departements": ["19", "16", "17", "23", "79", "24", "24", "33", "87", "40", "47", "64", "86", "33"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
       "nom": "Occitanie",
       "active": false,
       "codeRegion": "16",
       "codeINSEE": "76",
-      "departements": ["32", "9", "11", "12", "30", "31", "34", "65", "46", "48", "66", "81", "82"]
+      "departements": ["32", "9", "11", "12", "30", "31", "34", "65", "46", "48", "66", "81", "82"],
+      "filters": {
+        "code_financeurs": ["-2"]
+      },
+      "mailing": {
+        "stagiaires": {
+          "avis": false
+        },
+        "organismes": {
+          "accounts": false,
+          "notifications": false
+        }
+      }
     },
     {
       "nom": "Pays de la Loire",

@@ -8,7 +8,7 @@ const synchronizeOrganismesWithAccounts = require('../../../../../src/jobs/impor
 const generateOrganismesFromIntercarif = require('../../../../../src/jobs/import/organismes/generateOrganismesFromIntercarif');
 const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/generateOrganismesFromKairos');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, insertIntoDatabase, importIntercarif, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, getComponents }) => {
 
     let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
 
@@ -16,7 +16,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, insertIntoDa
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await Promise.all([importIntercarif(), insertRegions()]);
+        await importIntercarif();
 
         await generateOrganismesFromIntercarif(db, logger);
         await generateOrganismesFromKairos(db, logger, csvFile);
@@ -61,7 +61,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, insertIntoDa
         let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
-            insertRegions(),
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
@@ -128,7 +127,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, insertIntoDa
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await Promise.all([importIntercarif(), insertRegions()]);
+        await importIntercarif();
 
         await generateOrganismesFromIntercarif(db, logger);
         await generateOrganismesFromKairos(db, logger, csvFile);
@@ -142,7 +141,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, insertIntoDa
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await Promise.all([importIntercarif(), insertRegions()]);
+        await importIntercarif();
 
         await generateOrganismesFromIntercarif(db, logger);
         await generateOrganismesFromKairos(db, logger, csvFile);

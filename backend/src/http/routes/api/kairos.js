@@ -6,11 +6,11 @@ const _ = require('lodash');
 const configuration = require('config');
 const { tryAndCatch } = require('../routes-utils');
 const convertToExposableOrganismeFomateur = require('./v1/dto/convertToExposableOrganismeFomateur');
+const getCodeRegionFromKairosRegionName = require('../../../jobs/import/organismes/kairos/getCodeRegionFromKairosRegionName');
 
 module.exports = ({ db, auth, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let { findCodeRegionByName } = require('../../../common/components/regions')(db);
     let { createJWTAuthMiddleware } = middlewares;
     let checkAuth = createJWTAuthMiddleware('kairos', {
         externalToken: true,
@@ -34,6 +34,8 @@ module.exports = ({ db, auth, middlewares }) => {
         let created = false;
 
         let buildAccount = async data => {
+            let codeRegion = getCodeRegionFromKairosRegionName(data.region);
+            console.log(JSON.stringify({ meta: 'kairos.js:38', data: codeRegion},null,2));
             return {
                 _id: parseInt(data.siret),
                 SIRET: parseInt(data.siret),
@@ -45,7 +47,7 @@ module.exports = ({ db, auth, middlewares }) => {
                 token: uuid.v4(),
                 creationDate: new Date(),
                 sources: ['kairos', 'sso'],
-                codeRegion: await findCodeRegionByName(data.region),
+                codeRegion: codeRegion,
                 numero: null,
                 lieux_de_formation: [],
                 meta: {
