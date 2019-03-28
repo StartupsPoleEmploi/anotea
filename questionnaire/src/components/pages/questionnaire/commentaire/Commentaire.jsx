@@ -20,17 +20,32 @@ class Commentaire extends Component {
 
     constructor(props) {
         super(props);
-        this.checkBadwords = _.debounce(async (name, value) => {
-            let sentence = await checkBadwords(value);
-            this.props.onChange(name, value, sentence.isGood);
-        }, 750);
+        let createBadwordsDebouncer = name => {
+            return _.debounce(async value => {
+                let sentence = await checkBadwords(value);
+                this.props.onChange(name, value, sentence.isGood);
+            }, 1000);
+        };
+
+        this.badwordValidators = {
+            texte: createBadwordsDebouncer('texte'),
+            titre: createBadwordsDebouncer('titre'),
+            pseudo: createBadwordsDebouncer('pseudo'),
+        };
     }
 
     onChange = async event => {
         const { name, value, maxLength } = event.target;
         if (value.length <= maxLength) {
-            this.setState({ [name]: value }, () => this.checkBadwords(name, value));
+            this.setState({ [name]: value }, () => {
+                return this.badwordValidators[name](value);
+            });
         }
+    };
+
+    onBlur = async event => {
+        const { name } = event.target;
+        this.badwordValidators[name].flush();
     };
 
     render() {
@@ -56,6 +71,7 @@ class Commentaire extends Component {
                                     rows="3"
                                     className={`${!commentaire.texte.isValid ? 'badwords' : ''}`}
                                     placeholder="Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois."
+                                    onBlur={this.onBlur}
                                     onChange={this.onChange} />
                                 {!commentaire.texte.isValid && <Badwords />}
                             </div>
@@ -71,6 +87,7 @@ class Commentaire extends Component {
                                     maxLength={50}
                                     className={`${!commentaire.titre.isValid ? 'badwords' : ''}`}
                                     placeholder="Le titre permet d’avoir un résumé de votre expérience de la formation."
+                                    onBlur={this.onBlur}
                                     onChange={this.onChange} />
                                 {!commentaire.titre.isValid && <Badwords />}
                             </div>
@@ -86,6 +103,7 @@ class Commentaire extends Component {
                                     maxLength={50}
                                     className={`${!commentaire.pseudo.isValid ? 'badwords' : ''}`}
                                     placeholder="Choisissez votre pseudo afin de préserver votre anonymat."
+                                    onBlur={this.onBlur}
                                     onChange={this.onChange} />
                                 {!commentaire.pseudo.isValid && <Badwords />}
                             </div>

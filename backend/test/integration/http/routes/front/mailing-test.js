@@ -19,7 +19,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         let result = await db.collection('trainee').findOne({ token: trainee.token });
 
-        assert.deepEqual(trainee.token, result.token);
+        assert.deepStrictEqual(trainee.token, result.token);
         assert.ok(result.tracking.firstRead);
         assert.ok(result.tracking.lastRead);
     });
