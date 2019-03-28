@@ -93,7 +93,7 @@ module.exports = (db, regions) => {
                     return Promise.reject(new Error(`Données CSV invalides ${record}`));
                 }
 
-                let codeRegion = await regions.findCodeRegionByPostalCode(record['dc_cp_lieuformation']);
+                let region = regions.findRegionByPostalCode(record['dc_cp_lieuformation']);
                 let token = buildToken(record['c_adresseemail']);
                 let { email, mailDomain } = buildEmail(record['c_adresseemail']);
 
@@ -106,7 +106,7 @@ module.exports = (db, regions) => {
                     mailSent: false,
                     avisCreated: false,
                     token: token,
-                    codeRegion: codeRegion,
+                    codeRegion: region.codeRegion,
                     trainee: {
                         name: record['c_nomcorrespondance'],
                         firstName: record['c_prenomcorrespondance'],

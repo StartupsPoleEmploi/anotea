@@ -15,10 +15,10 @@ execute(async ({ logger, db, regions }) => {
 
     logger.info('Building email statistics displayed on financer dashboard');
 
-    const generateCSV = ({ name, codeRegion }) => {
+    const generateCSV = ({ nom, codeRegion }) => {
         return new Promise((resolve, reject) => {
             let total = 0;
-            let output = fs.createWriteStream(path.join(__dirname, `../../../../.data/organismes-${name}-${codeRegion}.csv`));
+            let output = fs.createWriteStream(path.join(__dirname, `../../../../.data/organismes-${nom}-${codeRegion}.csv`));
 
             output.write(`Siret;Raison sociale;Email;Nombre Avis;Kairos\n`);
 

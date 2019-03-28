@@ -1,14 +1,4 @@
 module.exports = {
-    departements: db => {
-        return Promise.all([
-            db.collection('departements').createIndex({ 'region': 'text' }),
-            db.collection('departements').createIndex({ 'region_num': 1, 'dept_num': 1, 'region': 1 }),
-            db.collection('departements').createIndex({ 'dept_num': 1 }),
-            db.collection('departements').createIndex({
-                'region': 'text'
-            }),
-        ]);
-    },
     trainee: db => {
         return Promise.all([
             db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
@@ -44,12 +34,6 @@ module.exports = {
             db.collection('comment').createIndex({ 'reponse.lastModerationAction': 1 }),
             db.collection('comment').createIndex({ 'reponse.status': 1 }),
             db.collection('comment').createIndex({ 'reponse.date': 1 }),
-        ]);
-    },
-    regions: db => {
-        return Promise.all([
-            db.collection('regions').createIndex({ 'codeINSEE': 1 }),
-            db.collection('regions').createIndex({ 'codeRegion': 1 }),
         ]);
     },
     accounts: db => {

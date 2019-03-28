@@ -11,35 +11,12 @@ module.exports = ({ db, middlewares, configuration }) => {
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let allProfiles = checkProfile('moderateur', 'financeur', 'organisme');
 
-    const checkCodeRegion = req => {
-        if (req.params.idregion !== req.user.codeRegion) {
-            throw Boom.forbidden('Action non autorisé');
-        }
-    };
-
     const checkCodeRegionAndCodeFinanceur = req => {
         if (req.params.idregion !== req.user.codeRegion ||
             (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
             throw Boom.forbidden('Action non autorisé');
         }
     };
-
-    router.get('/backoffice/financeur/region/:idregion', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
-
-        checkCodeRegion(req);
-
-        let filter = { 'region_num': `${req.params.idregion}` };
-        const region = await db.collection('departements').aggregate([
-            { $match: filter },
-            { $group: { _id: '$region_num', region: { $first: '$region' } } }])
-        .toArray();
-
-        if (region !== null) {
-            res.status(200).send(region[0]);
-        } else {
-            res.send({ error: 404 });
-        }
-    }));
 
     router.get('/backoffice/financeur/region/:idregion/organisations', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 

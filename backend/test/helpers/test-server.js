@@ -72,7 +72,7 @@ module.exports = {
                         siret: '22222222222222',
                         raison_sociale: 'Pole Emploi Formation',
                         courriel: 'contact@organisme.fr',
-                        region: 'Ile De France',
+                        region: 'Ile-de-France',
 
                     });
 

@@ -5,7 +5,7 @@ const validateCsvFile = require('../../../../../src/jobs/import/trainee/validate
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/trainee/handlers/poleEmploiCSVHandler');
 const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/trainee/handlers/ileDeFranceCSVHandler');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
 
     it('can validate PE file', async () => {
 
@@ -13,7 +13,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
@@ -38,7 +37,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-header.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
@@ -55,7 +53,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-line.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 
@@ -72,7 +69,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-duplicated.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
 
         let validationErrors = await validateCsvFile(csvFile, handler);
 

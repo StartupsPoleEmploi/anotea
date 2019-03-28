@@ -8,10 +8,6 @@ export const getOrganisations = (idregion, codeFinanceur) => {
     return _get(`/backoffice/financeur/region/${idregion}/organisations${query}`);
 };
 
-export const getRegion = (idregion) => {
-    return _get(`/backoffice/financeur/region/${idregion}`)
-};
-
 export const getAdvices = (idRegion, codeFinanceur, filter, order, page) => {
     let query = '';
     if (codeFinanceur) {

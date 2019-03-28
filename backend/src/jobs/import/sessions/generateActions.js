@@ -1,6 +1,7 @@
 const roundNotes = require('./roundNotes');
+const addCodeRegion = require('./addCodeRegion');
 
-module.exports = async db => {
+module.exports = async (db, regions) => {
 
     await db.collection('intercarif').aggregate([
         {
@@ -30,18 +31,6 @@ module.exports = async db => {
                 certifinfos: '$_meta.certifinfos',
                 formacodes: '$_meta.formacodes',
             }
-        },
-        //Resolving region
-        {
-            $lookup: {
-                from: 'regions',
-                localField: 'region',
-                foreignField: 'codeINSEE',
-                as: 'regions'
-            }
-        },
-        {
-            $unwind: { path: '$regions', preserveNullAndEmptyArrays: true }
         },
         //Reconciling comments
         {
@@ -125,7 +114,6 @@ module.exports = async db => {
                     _id: { $concat: ['$numero_formation', '|', '$numero_action'] },
                     numero: '$numero_action',
                     region: '$region',
-                    code_region: '$regions.codeRegion',
                     lieu_de_formation: {
                         code_postal: '$lieu_de_formation',
                         ville: '$ville',
@@ -181,6 +169,9 @@ module.exports = async db => {
     ], { allowDiskUse: true }).toArray();
 
 
-    return roundNotes(db, 'actionsReconciliees');
+    return Promise.all([
+        roundNotes(db, 'actionsReconciliees'),
+        addCodeRegion(db, 'actionsReconciliees', regions),
+    ]);
 };
 

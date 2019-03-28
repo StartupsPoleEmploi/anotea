@@ -180,15 +180,6 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let db = await getTestDatabase();
         let app = await startServer();
-        await Promise.all([
-            db.collection('departements').createIndex({ region: 'text' }), //FIXME
-            insertIntoDatabase('departements', {
-                region: 'Ile De France',
-                dept_num: '91',
-                region_num: '11',
-                codeFinanceur: '2'
-            })
-        ]);
 
         let authUrl = await generateKairosToken(app);
 

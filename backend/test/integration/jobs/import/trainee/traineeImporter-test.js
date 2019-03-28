@@ -8,7 +8,7 @@ const logger = require('../../../../helpers/test-logger');
 const traineeImporter = require('../../../../../src/jobs/import/trainee/traineeImporter');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/trainee/handlers/poleEmploiCSVHandler');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
 
     it('should store import status', async () => {
 
@@ -16,8 +16,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let { regions } = await getComponents();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        let handler = poleEmploiCSVHandler(db, regions);;
 
         await importer.importTrainee(csvFile, handler);
 
@@ -45,8 +44,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe_2018-11-20.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        let handler = poleEmploiCSVHandler(db, regions);;
 
         await importer.importTrainee(csvFile, handler);
 
@@ -74,8 +72,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let { regions } = await getComponents();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        let handler = poleEmploiCSVHandler(db, regions);;
 
         let results = await importer.importTrainee(csvFile, handler);
 
@@ -93,8 +90,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        let handler = poleEmploiCSVHandler(db, regions);;
         await importer.importTrainee(csvFile, handler);
 
         let results = await importer.importTrainee(csvFile, handler);
@@ -113,8 +109,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        let handler = poleEmploiCSVHandler(db, regions);;
         await importer.importTrainee(csvFile, handler);
 
         let results = await importer.importTrainee(csvFile, handler, { append: true });
@@ -141,8 +136,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-email.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        let handler = poleEmploiCSVHandler(db, regions);;
 
         await importer.importTrainee(csvFile, handler);
 
@@ -155,8 +149,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        let handler = poleEmploiCSVHandler(db, regions);;
 
         let results = await importer.importTrainee(csvFile, handler, {
             codeRegion: '2'
@@ -178,8 +171,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        let handler = poleEmploiCSVHandler(db, regions);;
 
         let results = await importer.importTrainee(csvFile, handler, {
             certifInfo: '8122'
@@ -201,8 +193,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-        await insertDepartements();
+        let handler = poleEmploiCSVHandler(db, regions);;
 
         let results = await importer.importTrainee(csvFile, handler, {
             startDate: moment('2018-09-01 00Z').toDate(),
@@ -223,8 +214,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-filtered.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
-        await insertDepartements();
+        let importer = traineeImporter(db, logger);;
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
                 return [{
@@ -263,8 +253,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements, getComp
                     }
                 }];
             }
-        }));
-        await insertDepartements();
+        }));;
 
         let results = await importer.importTrainee(csvFile, handler);
 
