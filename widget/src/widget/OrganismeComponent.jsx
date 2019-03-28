@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { getOrganismeStats } from '../lib/avisService';
+import { getOrganismeStats, getOrganismeAvis } from '../lib/avisService';
 import PropTypes from 'prop-types';
 
 class OrganismeComponent extends Component {
 
     state = {
-        organisme: null
+        organisme: null,
+        avis: []
     }
 
     static propTypes = {
@@ -18,9 +19,10 @@ class OrganismeComponent extends Component {
     }
 
     async loadInfos(props) {
-        let result = await getOrganismeStats(props.siret);
-        if(result.organismes_formateurs.length > 0) {
-            this.setState({organisme: result.organismes_formateurs[0]});
+        let stats = await getOrganismeStats(props.siret);
+        let avis = await getOrganismeAvis(props.siret);
+        if(stats.organismes_formateurs.length > 0) {
+            this.setState({organisme: stats.organismes_formateurs[0], avis: avis.avis });
         }
     }
 
@@ -31,6 +33,11 @@ class OrganismeComponent extends Component {
                 { this.state.organisme && 
                     <span>{this.state.organisme.score.nb_avis} avis</span>
                 }
+                <ul>
+                { this.state.avis.map(avis =>
+                    <li>{avis.notes.global}</li>
+                )}
+                </ul>
             </div>
         );
     }

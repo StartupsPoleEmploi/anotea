@@ -5,7 +5,8 @@ import { getActionFormationStats } from '../lib/avisService';
 class ActionFormationComponent extends Component {
 
     state = {
-        actionFormation: null
+        actionFormation: null,
+        avis: []
     }
     
     static propTypes = {
@@ -19,8 +20,9 @@ class ActionFormationComponent extends Component {
 
     async loadInfos(props) {
         let result = await getActionFormationStats(props.numeroAction);
+
         if(result.actions.length > 0) {
-            this.setState({ actionFormation: result.actions[0]});
+            this.setState({ actionFormation: result.actions[0], avis: result.actions[0].avis });
         }
     }
 
@@ -31,6 +33,11 @@ class ActionFormationComponent extends Component {
                 { this.state.actionFormation && 
                     <span>{this.state.actionFormation.score.nb_avis} avis</span>
                 }
+                <ul>
+                { this.state.avis.map(avis =>
+                    <li>{avis.notes.global}</li>
+                )}
+                </ul>
             </div>
         );
     }
