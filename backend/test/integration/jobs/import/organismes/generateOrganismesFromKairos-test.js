@@ -5,13 +5,12 @@ const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
 const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/generateOrganismesFromKairos');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertRegions }) => {
+describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
     it('should create collection with organismes from CSV file', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
-        await insertRegions();
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');;
 
         let stats = await generateOrganismesFromKairos(db, logger, csvFile);
 

@@ -35,7 +35,6 @@ module.exports = ({ db, auth, middlewares }) => {
 
         let buildAccount = async data => {
             let codeRegion = getCodeRegionFromKairosRegionName(data.region);
-            console.log(JSON.stringify({ meta: 'kairos.js:38', data: codeRegion},null,2));
             return {
                 _id: parseInt(data.siret),
                 SIRET: parseInt(data.siret),

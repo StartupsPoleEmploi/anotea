@@ -6,7 +6,7 @@ const logger = require('../../../../helpers/test-logger');
 const traineeImporter = require('../../../../../src/jobs/import/trainee/traineeImporter');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/trainee/handlers/poleEmploiCSVHandler');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
 
     it('should import trainees from csv file', async () => {
 
@@ -15,7 +15,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, getComponent
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertRegions();
 
         await importer.importTrainee(csvFile, handler);
 
@@ -117,7 +116,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, getComponent
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertRegions();
 
         await importer.importTrainee(csvFile, handler);
 
@@ -132,7 +130,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, getComponent
         let csvFileWithDuplicates = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-doublons.csv');
         let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
-        await insertRegions();
 
         await importer.importTrainee(csvFile, handler);
         let results = await importer.importTrainee(csvFileWithDuplicates, handler);

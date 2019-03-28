@@ -3,7 +3,7 @@ const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
 const generateSessions = require('../../../../../src/jobs/import/sessions/generateSessions');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, insertRegions, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, getComponents }) => {
 
     it('should reconcile sessions with comments', async () => {
 
@@ -28,7 +28,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
-            insertRegions(),
             insertIntoDatabase('comment', comment),
         ]);
 
@@ -96,7 +95,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
-            insertRegions(),
             insertIntoDatabase('comment', newComment({
                 formacode: '22403',
                 training: {
@@ -190,7 +188,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
-            insertRegions(),
         ]);
 
         await generateSessions(db, regions);
@@ -262,7 +259,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
-            insertRegions(),
             insertIntoDatabase('comment', comment),
         ]);
 
@@ -344,7 +340,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
-            insertRegions(),
             insertIntoDatabase('comment', comment),
         ]);
 
@@ -411,7 +406,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
-            insertRegions(),
             insertIntoDatabase('comment', newComment({
                 comment: null,
                 training: {
@@ -459,7 +453,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
-            insertRegions(),
             insertIntoDatabase('comment', comment),
         ]);
 
@@ -505,7 +498,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
-            insertRegions(),
             insertIntoDatabase('comment', newComment({
                 published: false,
                 rejected: true,

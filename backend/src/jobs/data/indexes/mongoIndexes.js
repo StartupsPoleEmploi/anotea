@@ -36,13 +36,6 @@ module.exports = {
             db.collection('comment').createIndex({ 'reponse.date': 1 }),
         ]);
     },
-    regions: db => {
-        return Promise.all([
-            db.collection('regions').createIndex({ 'codeINSEE': 1 }),
-            db.collection('regions').createIndex({ 'codeRegion': 1 }),
-            db.collection('regions').createIndex({ 'nom': 'text' }),
-        ]);
-    },
     accounts: db => {
         return Promise.all([
             db.collection('accounts').createIndex({ 'numero': 1 }),

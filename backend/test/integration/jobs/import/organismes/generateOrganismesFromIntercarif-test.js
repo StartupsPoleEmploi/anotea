@@ -3,12 +3,12 @@ const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
 const generateOrganismesFromIntercarif = require('../../../../../src/jobs/import/organismes/generateOrganismesFromIntercarif');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertRegions, importIntercarif }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
     it('should generate organismes collections', async () => {
 
         let db = await getTestDatabase();
-        await Promise.all([importIntercarif(), insertRegions()]);
+        await importIntercarif();
 
         let results = await generateOrganismesFromIntercarif(db, logger);
 

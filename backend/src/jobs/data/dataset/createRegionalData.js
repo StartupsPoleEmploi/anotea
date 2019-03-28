@@ -1,8 +1,5 @@
-const regions = require('../../../../test/helpers/data/regions.json');
-
 module.exports = async db => {
     return Promise.all([
-        Promise.all(regions.map(region => db.collection('regions').insertOne(region))),
         db.collection('carif').insertOne({
             codeRegion: '11',
             name: 'Carif web',
