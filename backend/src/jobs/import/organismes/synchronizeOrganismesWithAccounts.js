@@ -1,8 +1,7 @@
 const uuid = require('node-uuid');
 const _ = require('lodash');
-const regions = require('../../../common/components/regions');
 
-module.exports = async (db, logger) => {
+module.exports = async (db, logger, regions) => {
 
     let stats = {
         total: 0,
@@ -12,7 +11,7 @@ module.exports = async (db, logger) => {
     };
 
     const buildAccountFromIntercarif = async data => {
-        let { findCodeRegionByPostalCode } = regions(db);
+        let { findCodeRegionByPostalCode } = regions;
         let adresse = data.lieux_de_formation ?
             data.lieux_de_formation.find(l => l.adresse.code_postal).adresse : data.adresse;
         let siret = `${parseInt(data.siret, 10)}`;

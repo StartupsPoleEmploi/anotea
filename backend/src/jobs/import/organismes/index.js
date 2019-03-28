@@ -12,8 +12,7 @@ cli.description('Import accounts from Intercarif and Kairos')
 .option('-i, --import [import]', 'The CSV file to import')
 .parse(process.argv);
 
-
-execute(async ({ logger, db }) => {
+execute(async ({ logger, db, regions }) => {
 
     let hasErrors = false;
     logger.info('Generating organismes data from intercarif...');
@@ -28,7 +27,7 @@ execute(async ({ logger, db }) => {
     logger.info('Synchronizing organismes with existing ones...');
     let synchronized = {};
     try {
-        synchronized = await synchronizeOrganismesWithAccounts(db, logger);
+        synchronized = await synchronizeOrganismesWithAccounts(db, logger, regions);
     } catch (e) {
         hasErrors = true;
         synchronized = e;

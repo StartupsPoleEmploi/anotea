@@ -3,9 +3,9 @@
 
 const cli = require('commander');
 const AccountMailer = require('./AccountMailer');
-const { findActiveRegions, capitalizeFirstLetter, execute } = require('../../../job-utils');
+const { capitalizeFirstLetter, execute } = require('../../../job-utils');
 
-execute(({ logger, db, configuration, mailer }) => {
+execute(({ logger, db, configuration, mailer, regions }) => {
 
     let accountMailer = new AccountMailer(db, logger, configuration, mailer);
 
@@ -31,7 +31,7 @@ execute(({ logger, db, configuration, mailer }) => {
         let ActionClass = require(`./actions/${type}Action`);
         let action = new ActionClass(configuration, {
             codeRegions: cli.region ? [cli.region] :
-                findActiveRegions(configuration.app.active_regions, 'organismes.accounts'),
+                regions.findActiveRegions('mailing.organismes.accounts').map(region => region.codeRegion),
         });
 
         return accountMailer.sendEmails(action, options);
