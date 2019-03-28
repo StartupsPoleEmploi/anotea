@@ -91,7 +91,7 @@ module.exports = ({ db, logger, configuration }) => {
         };
         avis.rates = notes;
 
-        avis.pseudo = body.pseudo.replace(/ /g, '');
+        avis.pseudo = body.pseudo.replace(/ /g, '').replace(/\./g, '');
 
         let commentTxt = body.commentaire.texte;
         let commentTitle = body.commentaire.titre;
@@ -115,24 +115,21 @@ module.exports = ({ db, logger, configuration }) => {
             return { error: 'too long' };
         }
 
-        if (s(avis.pseudo).isAlphaNumeric()) {
-            let pseudoOK = badwords.isGood(avis.pseudo);
-            let commentOK = avis.comment ? badwords.isGood(avis.comment.text) : true;
-            let commentTitleOK = avis.comment ? badwords.isGood(avis.comment.title) : true;
+        let pseudoOK = avis.pseudo ? badwords.isGood(avis.pseudo) : true;
+        let commentOK = avis.comment ? badwords.isGood(avis.comment.text) : true;
+        let commentTitleOK = avis.comment ? badwords.isGood(avis.comment.title) : true;
 
-            if (pseudoOK && commentOK && commentTitleOK) {
-                return { error: null, avis };
-            } else {
-                let badwords = {
-                    pseudo: !pseudoOK,
-                    comment: !commentOK,
-                    commentTitle: !commentTitleOK
-                };
-                return { error: 'badwords', badwords };
-            }
+        if (pseudoOK && commentOK && commentTitleOK) {
+            return { error: null, avis };
         } else {
-            return { error: 'alphanum' };
+            let badwords = {
+                pseudo: !pseudoOK,
+                comment: !commentOK,
+                commentTitle: !commentTitleOK
+            };
+            return { error: 'badwords', badwords };
         }
+
     };
 
     const getInfosRegion = async trainee => {
