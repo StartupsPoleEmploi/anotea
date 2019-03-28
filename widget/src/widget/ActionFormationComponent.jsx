@@ -18,16 +18,16 @@ class ActionFormationComponent extends Component {
     }
 
     async loadInfos(props) {
-        let organismes = await getActionFormationStats(props.numeroAction).actions;
-        if(organismes.length > 0) {
-            this.state.actionFormation = organismes[0];
+        let result = await getActionFormationStats(props.numeroAction);
+        if(result.actions.length > 0) {
+            this.setState({ actionFormation: result.actions[0]});
         }
     }
 
     render() {
         return (
             <div>
-                Action de formation  {this.props.numeroAction}
+                <h1>Action de formation  {this.props.numeroAction}</h1>
                 { this.state.actionFormation && 
                     <span>{this.state.actionFormation.score.nb_avis} avis</span>
                 }

@@ -1,5 +1,4 @@
 /* global fetch */
-import { getToken } from '../utils/token';
 import EventEmitter from 'events';
 
 class HTTPError extends Error {
@@ -25,8 +24,7 @@ export const _get = path => {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`,
+            'Content-Type': 'application/json'
         }
     })
     .then(res => handleResponse(path, res));
@@ -37,8 +35,7 @@ export const _post = (path, body) => {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`,
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
     })
@@ -50,8 +47,7 @@ export const _put = (path, body = {}) => {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`,
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
     })
@@ -63,8 +59,7 @@ export const _delete = path => {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`,
+            'Content-Type': 'application/json'
         }
     })
     .then(res => handleResponse(path, res));

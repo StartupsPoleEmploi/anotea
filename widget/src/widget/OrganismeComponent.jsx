@@ -18,16 +18,16 @@ class OrganismeComponent extends Component {
     }
 
     async loadInfos(props) {
-        let organismes = await getOrganismeStats(props.siret).organismes_formateurs;
-        if(organismes.length > 0) {
-            this.state.organisme = organismes[0];
+        let result = await getOrganismeStats(props.siret);
+        if(result.organismes_formateurs.length > 0) {
+            this.setState({organisme: result.organismes_formateurs[0]});
         }
     }
 
     render() {
         return (
             <div>
-                Organisme {this.props.siret}
+                <h1>Organisme {this.props.siret}</h1>
                 { this.state.organisme && 
                     <span>{this.state.organisme.score.nb_avis} avis</span>
                 }
