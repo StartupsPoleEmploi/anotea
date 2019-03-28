@@ -93,7 +93,8 @@ class App extends Component {
         delete sessionStorage.features;
         removeToken();
         //Reload page to flush all react states
-        window.location = '/admin';
+        window.location.href = '/admin';
+        window.location.reload(true);
     };
 
     handleLoggedIn = result => {
