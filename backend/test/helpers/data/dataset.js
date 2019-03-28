@@ -88,11 +88,11 @@ let newComment = (custom, date = getDateInThePast()) => {
 module.exports = {
     randomize,
     randomSIRET,
-    newTrainee: custom => {
+    newTrainee: (custom, date = getDateInThePast()) => {
         return _.merge({
             _id: `${randomize('test-campaign')}`,
             campaign: 'test-campaign',
-            importDate: getDateInThePast(),
+            importDate: date,
             trainee: {
                 name: 'Dupont',
                 firstName: 'Henri',
@@ -108,8 +108,8 @@ module.exports = {
             training: {
                 idFormation: '14_AF_0000011111',
                 title: 'Développeur',
-                startDate: getDateInThePast(),
-                scheduledEndDate: getDateInThePast(),
+                startDate: date,
+                scheduledEndDate: date,
                 organisation: {
                     id: '14_OF_XXXXXXXXXX',
                     siret: '11111111111111',
@@ -138,9 +138,9 @@ module.exports = {
             unsubscribe: false,
             mailSent: true,
             token: randomize('token'),
-            mailSentDate: getDateInThePast(),
+            mailSentDate: date,
             tracking: {
-                firstRead: getDateInThePast()
+                firstRead: date
             },
             codeRegion: '11'
         }, custom);
