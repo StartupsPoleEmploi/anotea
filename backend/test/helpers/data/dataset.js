@@ -341,9 +341,11 @@ module.exports = {
     newFormation: custom => {
 
         let avis = custom.avis ? custom.avis : [newComment()];
+        let numeroFormation = custom._id || 'F_XX_XX';
 
         return _.merge({
-            _id: 'F_XX_XX',
+            _id: numeroFormation,
+            numero: numeroFormation,
             intitule: 'Développeur web',
             domaine_formation: {
                 formacodes: ['31801']
@@ -365,7 +367,7 @@ module.exports = {
             },
             meta: {
                 source: {
-                    numero_formation: 'F_XX_XX',
+                    numero_formation: numeroFormation,
                     type: 'intercarif',
                 },
                 reconciliation: {
