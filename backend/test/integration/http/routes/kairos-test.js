@@ -37,7 +37,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let { buildJWT } = auth(configuration);
         let siret = randomSIRET();
         let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
-        await [insertOrganisme(siret)];
+        await insertOrganisme(siret);
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
@@ -119,7 +119,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let { buildJWT } = auth(configuration);
         let siret = randomSIRET();
         let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
-        await [insertOrganisme(siret)];
+        await insertOrganisme(siret);
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
@@ -153,7 +153,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let { buildJWT } = auth(configuration);
         let siret = randomSIRET();
         let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
-        await [insertOrganisme(siret)];
+        await insertOrganisme(siret);
 
         let response = await request(app)
         .post('/api/backoffice/generate-auth-url')
