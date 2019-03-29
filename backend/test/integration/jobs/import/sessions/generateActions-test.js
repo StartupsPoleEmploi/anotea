@@ -71,6 +71,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 certifications: {
                     certifinfos: ['80735']
                 },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
+                },
             },
             meta: {
                 source: 'intercarif',
@@ -216,6 +221,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 certifications: {
                     certifinfos: ['80735']
                 },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
+                },
             },
             meta: {
                 source: 'intercarif',
@@ -291,6 +301,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
                 certifications: {
                     certifinfos: ['80735']
+                },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
                 },
             },
             meta: {
@@ -368,6 +383,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
                 certifications: {
                     certifinfos: ['80735']
+                },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
                 },
             },
             meta: {

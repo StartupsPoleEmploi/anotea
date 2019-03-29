@@ -59,6 +59,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 certifications: {
                     certifinfos: ['80735']
                 },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -208,6 +213,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 certifications: {
                     certifinfos: ['80735']
                 },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
+                },
                 action: {
                     numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
@@ -286,6 +296,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
                 certifications: {
                     certifinfos: ['80735']
+                },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
                 },
                 action: {
                     numero: 'AC_XX_XXXXXX',
@@ -366,6 +381,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
                 certifications: {
                     certifinfos: ['80735']
+                },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
                 },
                 action: {
                     numero: 'AC_XX_XXXXXX',

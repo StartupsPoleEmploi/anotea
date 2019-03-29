@@ -10,6 +10,7 @@ module.exports = async db => {
                 _meta: 1,
                 intitule_formation: 1,
                 actions: 1,
+                organisme_formation_responsable: 1,
             }
         },
         {
@@ -20,6 +21,9 @@ module.exports = async db => {
                 numero_formation: '$_attributes.numero',
                 intitule_formation: '$intitule_formation',
                 numero_action: '$actions._attributes.numero',
+                organisme_responsable_siret: '$organisme_formation_responsable.siret_organisme_formation.siret',
+                organisme_responsable_numero: '$organisme_formation_responsable._attributes.numero',
+                organisme_responsable_raison_sociale: '$organisme_formation_responsable.raison_sociale',
                 organisme_formateur_siret: '$actions.organisme_formateur.siret_formateur.siret',
                 organisme_formateur_numero: '$actions.organisme_formateur._attributes.numero',
                 organisme_formateur_raison_sociale: '$actions.organisme_formateur.raison_sociale_formateur',
@@ -135,6 +139,11 @@ module.exports = async db => {
                         },
                         certifications: {
                             certifinfos: '$certifinfos',
+                        },
+                        organisme_responsable: {
+                            raison_sociale: '$organisme_responsable_raison_sociale',
+                            siret: '$organisme_responsable_siret',
+                            numero: '$organisme_responsable_numero',
                         },
                     },
                     meta: {
