@@ -9,11 +9,13 @@ const generateActions = require('./generateActions');
 cli.description('Reconciling sessions/actions with comments...')
 .parse(process.argv);
 
-execute(async ({ logger, db }) => {
+execute(async ({ logger, db, regions }) => {
 
-    logger.info(`Generating sessions collection...`);
-    await generateSessions(db);
+    logger.info(`Generating formations collections...`);
+    let [sessions, actions] = await Promise.all([
+        generateSessions(db, regions),
+        generateActions(db, regions)
+    ]);
 
-    logger.info(`Generating actions collection...`);
-    await generateActions(db);
+    return { sessions, actions };
 });

@@ -14,7 +14,7 @@ cli.description('Import intercarif and generate all related collections')
 })
 .parse(process.argv);
 
-execute(async ({ logger, db, exit }) => {
+execute(async ({ logger, db, exit, regions }) => {
 
     if (!cli.file) {
         return exit('file are required');
@@ -27,5 +27,5 @@ execute(async ({ logger, db, exit }) => {
     }
 
     logger.info(`Generating intercarif collection...`);
-    return importIntercarif(db, logger, xmlFile);
+    return importIntercarif(db, logger, xmlFile, regions);
 });

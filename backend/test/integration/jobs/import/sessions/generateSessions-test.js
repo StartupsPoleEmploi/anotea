@@ -3,12 +3,11 @@ const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
 const generateSessions = require('../../../../../src/jobs/import/sessions/generateSessions');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
     it('should reconcile sessions with comments', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         let date = new Date();
         let comment = newComment({
             formacode: '22403',
@@ -31,7 +30,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db, regions);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
@@ -92,7 +91,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should round notes during reconcile', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
@@ -166,7 +164,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db, regions);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.score, {
@@ -185,12 +183,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should create session with empty avis list when no comment can be found', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
         ]);
 
-        await generateSessions(db, regions);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
@@ -241,7 +238,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
     it('should reconcile comments with same formace/siret/code_postal than the session', async () => {
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         let date = new Date();
         let comment = newComment({
             formacode: '22403',
@@ -262,7 +258,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db, regions);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
@@ -322,7 +318,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile comments with same certifinfo/siret/code_postal than the session', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         let date = new Date();
         let comment = newComment({
             formacode: null,
@@ -343,7 +338,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db, regions);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
@@ -403,7 +398,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile comment without commentaire (null)', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
@@ -423,7 +417,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db, regions);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.equal(session.avis.length, 1);
@@ -433,7 +427,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile comment without commentaire (undefined)', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         let comment = newComment({
             comment: undefined,
             training: {
@@ -456,7 +449,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db, regions);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
@@ -466,7 +459,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should ignore not yet published comment', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
@@ -486,7 +478,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db, regions);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.avis, []);
@@ -495,7 +487,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile rejected comment', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
@@ -520,7 +511,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db, regions);
+        await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);

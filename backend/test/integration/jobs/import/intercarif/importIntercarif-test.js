@@ -5,19 +5,20 @@ const { withMongoDB } = require('../../../../helpers/test-database');
 const importIntercarif = require('../../../../../src/jobs/import/intercarif/importIntercarif');
 const logger = require('../../../../helpers/test-logger');
 
-describe(__filename, withMongoDB(({ getTestDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
 
     let intercarifFile = path.join(__dirname, '../../../../helpers/data', 'intercarif-data-test.xml');
 
     it('should import formation', async () => {
 
         let db = await getTestDatabase();
+        let { regions } = await getComponents();
 
-        await importIntercarif(db, logger, intercarifFile);
+        await importIntercarif(db, logger, intercarifFile, regions);
 
         let formation = await db.collection('intercarif').findOne({ '_attributes.numero': 'F_XX_XX' });
         assert.ok(formation.md5);
-        assert.deepEqual(_.omit(formation, ['_id', 'md5']), {
+        assert.deepStrictEqual(_.omit(formation, ['_id', 'md5']), {
             _attributes: {
                 numero: 'F_XX_XX',
                 datecrea: '20010503',
@@ -57,7 +58,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                         ville: 'Montreuil',
                         departement: '93',
                         code_insee_commune: '93100',
-                        nom_region: 'Île-de-France',
+                        code_region: '11',
                         region: '11',
                         pays: 'FR',
                         geolocalisation: {
@@ -112,7 +113,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                             ville: 'Montreuil',
                             departement: '93',
                             code_insee_commune: '93100',
-                            nom_region: 'Île-de-France',
+                            code_region: '11',
                             region: '11',
                             pays: 'FR',
                             geolocalisation: {
@@ -149,7 +150,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                             ville: 'Montreuil',
                             departement: '93',
                             code_insee_commune: '93100',
-                            nom_region: 'Île-de-France',
+                            code_region: '11',
                             region: '11',
                             pays: 'FR',
                             geolocalisation: {
@@ -360,7 +361,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                 ville: 'Paris',
                                 departement: '75',
                                 code_insee_commune: '75019',
-                                nom_region: 'Île-de-France',
+                                code_region: '11',
                                 region: '11',
                                 pays: 'FR',
                                 geolocalisation: {
@@ -400,7 +401,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                             ville: 'Paris',
                             departement: '75',
                             code_insee_commune: '75019',
-                            nom_region: 'Île-de-France',
+                            code_region: '11',
                             region: '11',
                             pays: 'FR',
                             geolocalisation: {
@@ -437,7 +438,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                     ville: 'Paris',
                                     departement: '75',
                                     code_insee_commune: '75019',
-                                    nom_region: 'Île-de-France',
+                                    code_region: '11',
                                     region: '11',
                                     pays: 'FR',
                                     geolocalisation: {
@@ -646,7 +647,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
                                     ville: 'Paris',
                                     departement: '75',
                                     code_insee_commune: '75019',
-                                    nom_region: 'Île-de-France',
+                                    code_region: '11',
                                     region: '11',
                                     pays: 'FR',
                                     geolocalisation: {
@@ -694,9 +695,10 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
     it('should remove all documents when importing formations', async () => {
 
         let db = await getTestDatabase();
+        let { regions } = await getComponents();
 
-        await importIntercarif(db, logger, intercarifFile);
-        await importIntercarif(db, logger, intercarifFile);
+        await importIntercarif(db, logger, intercarifFile, regions);
+        await importIntercarif(db, logger, intercarifFile, regions);
 
         let count = await db.collection('intercarif').countDocuments({});
         assert.equal(count, 1);

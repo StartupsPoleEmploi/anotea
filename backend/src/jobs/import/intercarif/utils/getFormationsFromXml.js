@@ -44,33 +44,16 @@ const buildXmlParser = () => {
     return util.promisify(parser.parseString);
 };
 
-const getRegionName = code => {
-    let mapping = [
-        { region: '32', name: 'Hauts-de-France' },
-        { region: '44', name: 'Grand-Est' },
-        { region: '27', name: 'Bourgogne-Franche-Comté' },
-        { region: '84', name: 'Auvergne-Rhône-Alpes' },
-        { region: '93', name: 'Provence-Alpes-Côte d\'Azur' },
-        { region: '76', name: 'Occitanie' },
-        { region: '75', name: 'Nouvelle-Aquitaine' },
-        { region: '52', name: 'Pays-de-la-Loire' },
-        { region: '53', name: 'Bretagne' },
-        { region: '24', name: 'Centre-Val de Loire' },
-        { region: '11', name: 'Île-de-France' },
-        { region: '28', name: 'Normandie' },
-        { region: '94', name: 'Corse' },
-        { region: '04', name: 'La Réunion' },
-        { region: '08', name: 'Nouvelle Calédonie' },
-        { region: '06', name: 'Mayotte' },
-        { region: '03', name: 'Guyane' },
-        { region: '07', name: 'Polynésie française' },
-        { region: '02', name: 'Martinique' },
-        { region: '01', name: 'Guadeloupe' },
-    ];
-    return mapping.find(m => m.region === code).name;
+const getCodeRegion = (regions, codeINSEE) => {
+    try {
+        return regions.findRegionByCodeINSEE(codeINSEE).codeRegion;
+    } catch (err) {
+        return 'XX';
+    }
 };
 
-const sanitizeJson = json => {
+
+const sanitizeJson = (json, regions) => {
     //According to lheo.xsd theses fields are the only ones with maxOccurs > 1. see http://lheo.gouv.fr/2.2/lheo.xsd
     let excludedProperties = ['extras'];
     const tagsWithMultipleOccurrences = [
@@ -113,9 +96,10 @@ const sanitizeJson = json => {
                 }
 
                 if (key === 'region') {
-                    value.nom_region = getRegionName(value[key]);
+                    value.code_region = getCodeRegion(regions, value[key]);
                     return;
                 }
+
                 if (key === 'siret') {
                     // Sometimes siret are prefixed by 0
                     value[key] = `${parseInt(value[key], 10)}`;
@@ -141,12 +125,12 @@ const sanitizeJson = json => {
     return document;
 };
 
-module.exports = file => {
+module.exports = (file, regions) => {
     let parseXml = buildXmlParser();
 
     return getFormationsAsXml(file)
     .flatMap(async xml => {
         let json = await parseXml(xml);
-        return sanitizeJson(json);
+        return sanitizeJson(json, regions);
     });
 };
