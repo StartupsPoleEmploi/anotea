@@ -170,8 +170,8 @@ module.exports = async db => {
     ], { allowDiskUse: true }).toArray();
 
 
-    return Promise.all([
-        roundNotes(db, 'actionsReconciliees'),
-    ]);
+    await roundNotes(db, 'actionsReconciliees');
+
+    return { imported: await db.collection('actionsReconciliees').countDocuments() };
 };
 

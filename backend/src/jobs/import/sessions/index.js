@@ -12,8 +12,10 @@ cli.description('Reconciling sessions/actions with comments...')
 execute(async ({ logger, db, regions }) => {
 
     logger.info(`Generating formations collections...`);
-    return Promise.all([
+    let [sessions, actions] = await Promise.all([
         generateSessions(db, regions),
         generateActions(db, regions)
     ]);
+
+    return { sessions, actions };
 });
