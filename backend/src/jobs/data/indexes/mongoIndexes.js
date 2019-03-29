@@ -29,7 +29,6 @@ module.exports = {
             db.collection('comment').createIndex({ 'training.place.postalCode': 1 }),
             db.collection('comment').createIndex({ 'training.organisation.siret': 1 }),
             db.collection('comment').createIndex({ 'training.organisation.label': 1 }),
-            db.collection('comment').createIndex({ 'training.organisation.siret': 1 }),
             db.collection('comment').createIndex({ 'training.certifInfo.id': 1 }),
             db.collection('comment').createIndex({ 'reponse.lastModerationAction': 1 }),
             db.collection('comment').createIndex({ 'reponse.status': 1 }),
@@ -48,12 +47,12 @@ module.exports = {
             db.collection('accounts').createIndex({ 'profile': 1 })
         ]);
     },
-    sessionsReconciliees: db => {
+    formationsReconciliees: db => {
         return Promise.all([
-            db.collection('sessionsReconciliees').createIndex({ 'numero': 1 }),
-            db.collection('sessionsReconciliees').createIndex({ 'region': 1 }),
-            db.collection('sessionsReconciliees').createIndex({ 'code_region': 1 }),
-            db.collection('sessionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
+            db.collection('formationsReconciliees').createIndex({ 'numero': 1 }),
+            db.collection('formationsReconciliees').createIndex({ 'region': 1 }),
+            db.collection('formationsReconciliees').createIndex({ 'code_region': 1 }),
+            db.collection('formationsReconciliees').createIndex({ 'score.nb_avis': 1 }),
         ]);
     },
     actionsReconciliees: db => {
@@ -62,6 +61,14 @@ module.exports = {
             db.collection('actionsReconciliees').createIndex({ 'region': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
+        ]);
+    },
+    sessionsReconciliees: db => {
+        return Promise.all([
+            db.collection('sessionsReconciliees').createIndex({ 'numero': 1 }),
+            db.collection('sessionsReconciliees').createIndex({ 'region': 1 }),
+            db.collection('sessionsReconciliees').createIndex({ 'code_region': 1 }),
+            db.collection('sessionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
         ]);
     },
     events: db => {

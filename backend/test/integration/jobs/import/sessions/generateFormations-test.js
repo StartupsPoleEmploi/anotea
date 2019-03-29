@@ -61,12 +61,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                 source: {
+                source: {
                     numero_formation: 'F_XX_XX',
                     type: 'intercarif',
                 },
                 reconciliation: {
-                    organisme_formateurs: ['22222222222222'],
+                    organisme_formateur: '22222222222222',
                     certifinfos: ['80735'],
                     formacodes: ['22403']
                 },
@@ -197,12 +197,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 nb_avis: 0
             },
             meta: {
-                 source: {
+                source: {
                     numero_formation: 'F_XX_XX',
                     type: 'intercarif',
                 },
                 reconciliation: {
-                    organisme_formateurs: ['22222222222222'],
+                    organisme_formateur: '22222222222222',
                     formacodes: ['22403'],
                     certifinfos: ['80735']
                 },
@@ -263,12 +263,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                 source: {
+                source: {
                     numero_formation: 'F_XX_XX',
                     type: 'intercarif',
                 },
                 reconciliation: {
-                    organisme_formateurs: ['22222222222222'],
+                    organisme_formateur: '22222222222222',
                     certifinfos: ['80735'],
                     formacodes: ['22403']
                 },
@@ -330,12 +330,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                 source: {
+                source: {
                     numero_formation: 'F_XX_XX',
                     type: 'intercarif',
                 },
                 reconciliation: {
-                    organisme_formateurs: ['22222222222222'],
+                    organisme_formateur: '22222222222222',
                     certifinfos: ['80735'],
                     formacodes: ['22403']
                 },

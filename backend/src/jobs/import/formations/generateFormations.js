@@ -6,23 +6,13 @@ module.exports = async db => {
         {
             $project: {
                 _id: 0,
-                _attributes: 1,
-                _meta: 1,
-                intitule_formation: 1,
-                actions: 1,
-                organisme_formation_responsable: 1,
-            }
-        },
-        {
-            $project: {
                 numero_formation: '$_attributes.numero',
                 intitule_formation: '$intitule_formation',
-                numero_action: '$actions._attributes.numero',
-                numero_session: '$actions.sessions._attributes.numero',
                 organisme_responsable_siret: '$organisme_formation_responsable.siret_organisme_formation.siret',
                 organisme_responsable_numero: '$organisme_formation_responsable._attributes.numero',
                 organisme_responsable_raison_sociale: '$organisme_formation_responsable.raison_sociale',
-                organisme_formateur_sirets: '$actions.organisme_formateur.siret_formateur.siret',
+                //Use only first element until https://jira.mongodb.org/browse/SERVER-37470 fixed
+                organisme_formateur_siret: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 0] },
                 certifinfos: '$_meta.certifinfos',
                 formacodes: '$_meta.formacodes',
             }
@@ -32,7 +22,7 @@ module.exports = async db => {
             $lookup: {
                 from: 'comment',
                 let: {
-                    organisme_formateur_sirets: '$organisme_formateur_sirets',
+                    organisme_formateur_siret: '$organisme_formateur_siret',
                     certifinfos: '$certifinfos',
                     formacodes: '$formacodes'
                 },
@@ -41,7 +31,7 @@ module.exports = async db => {
                         $match: {
                             $expr: {
                                 $and: [
-                                    { $in: ['$training.organisation.siret', '$$organisme_formateur_sirets'] },
+                                    { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret'] },
                                     {
                                         $or: [
                                             { $in: ['$training.certifInfo.id', '$$certifinfos'] },
@@ -127,7 +117,7 @@ module.exports = async db => {
                             type: 'intercarif',
                         },
                         reconciliation: {
-                            organisme_formateurs: '$organisme_formateur_sirets',
+                            organisme_formateur: '$organisme_formateur_siret',
                             certifinfos: '$certifinfos',
                             formacodes: '$formacodes',
                         },
@@ -135,7 +125,7 @@ module.exports = async db => {
                 }
             }
         },
-        //Ensure session is unique
+        //Ensure formation is unique
         {
             $group: {
                 _id: '$_id',

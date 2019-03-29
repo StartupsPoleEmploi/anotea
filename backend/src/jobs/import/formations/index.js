@@ -10,13 +10,13 @@ const generateSessions = require('./generateSessions');
 cli.description('Reconciling sessions/actions with comments...')
 .parse(process.argv);
 
-execute(async ({ logger, db, regions }) => {
+execute(async ({ logger, db }) => {
 
-    logger.info(`Generating formations collections...`);
+    logger.info(`Reconcile avis with intercarif...`);
     let [formations, actions, sessions] = await Promise.all([
-        generateFormations(db, regions),
-        generateActions(db, regions),
-        generateSessions(db, regions),
+        generateFormations(db),
+        generateActions(db),
+        generateSessions(db),
     ]);
 
     return { formations, actions, sessions };
