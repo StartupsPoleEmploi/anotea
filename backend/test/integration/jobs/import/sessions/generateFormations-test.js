@@ -61,7 +61,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                source: 'intercarif',
+                 source: {
+                    numero_formation: 'F_XX_XX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateurs: ['22222222222222'],
                     certifinfos: ['80735'],
@@ -194,7 +197,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 nb_avis: 0
             },
             meta: {
-                source: 'intercarif',
+                 source: {
+                    numero_formation: 'F_XX_XX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateurs: ['22222222222222'],
                     formacodes: ['22403'],
@@ -257,7 +263,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                source: 'intercarif',
+                 source: {
+                    numero_formation: 'F_XX_XX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateurs: ['22222222222222'],
                     certifinfos: ['80735'],
@@ -321,7 +330,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                source: 'intercarif',
+                 source: {
+                    numero_formation: 'F_XX_XX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateurs: ['22222222222222'],
                     certifinfos: ['80735'],

@@ -81,7 +81,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_action: 'AC_XX_XXXXXX',
+                    numero_formation: 'F_XX_XX',
+                    numero_session: 'SE_XXXXXX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
@@ -235,7 +240,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_action: 'AC_XX_XXXXXX',
+                    numero_formation: 'F_XX_XX',
+                    numero_session: 'SE_XXXXXX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
@@ -319,7 +329,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_action: 'AC_XX_XXXXXX',
+                    numero_formation: 'F_XX_XX',
+                    numero_session: 'SE_XXXXXX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
@@ -404,7 +419,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_action: 'AC_XX_XXXXXX',
+                    numero_formation: 'F_XX_XX',
+                    numero_session: 'SE_XXXXXX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',

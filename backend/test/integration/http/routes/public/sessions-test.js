@@ -2,7 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
 const ObjectID = require('mongodb').ObjectID;
-const { newComment, randomize, newFormation, newSession } = require('../../../../helpers/data/dataset');
+const { newComment, randomize, newIntercarif, newSession } = require('../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
@@ -14,7 +14,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let sessionId = '14_AF_0000010729|14_SE_0000109418|SE_0000109418';
         let commentId = new ObjectID();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({
                 _id: sessionId,
                 numero: 'SE_0000109418',
@@ -46,8 +46,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/sessions/${sessionId}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
             id: sessionId,
             region: '11',
             numero: 'SE_0000109418',
@@ -136,7 +136,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let date = new Date();
         let sessionId = '14_AF_0000010729|14_SE_0000109418|SE_0000109418';
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({
                 _id: sessionId,
                 numero: 'SE_0000109418',
@@ -155,8 +155,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/sessions/${sessionId}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body.avis[0].commentaire, undefined);
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.avis[0].commentaire, undefined);
     });
 
     it('should fail when numero de session is unknown', async () => {
@@ -165,8 +165,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/sessions/UNKNOWN`);
 
-        assert.equal(response.statusCode, 404);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 404);
+        assert.deepStrictEqual(response.body, {
             error: 'Not Found',
             message: 'Numéro de session inconnu ou session expirée',
             statusCode: 404,
@@ -178,15 +178,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411' })),
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109412' })),
         ]);
 
         let response = await request(app).get('/api/v1/sessions');
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.sessions.length, 2);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.sessions.length, 2);
         assert.ok(response.body.sessions.find(s => s.numero === 'SE_0000109411'));
         assert.ok(response.body.sessions.find(s => s.numero === 'SE_0000109412'));
     });
@@ -197,7 +197,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let firstSessionId = '14_AF_0000010729|14_SE_0000109418|SE_0000109411';
         let secondSessionId = '14_AF_0000010729|14_SE_0000109418|SE_0000109412';
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: firstSessionId })),
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: secondSessionId })),
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_000010456' })),
@@ -205,8 +205,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/sessions?id=${firstSessionId},${secondSessionId}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.sessions.length, 2);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.sessions.length, 2);
         assert.ok(response.body.sessions.find(s => s.numero === 'SE_0000109411'));
         assert.ok(response.body.sessions.find(s => s.numero === 'SE_0000109412'));
     });
@@ -215,7 +215,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({
                 _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411',
                 region: '11',
@@ -228,8 +228,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/sessions?region=11`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.sessions.length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.sessions.length, 1);
         assert.ok(response.body.sessions.find(s => s.id === '14_AF_0000010729|14_SE_0000109418|SE_0000109411'));
     });
 
@@ -237,7 +237,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({
                 _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411',
                 numero: 'SE_XXXXX1'
@@ -250,8 +250,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/sessions?numero=SE_XXXXX1`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.sessions.length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.sessions.length, 1);
         assert.ok(response.body.sessions.find(s => s.id === '14_AF_0000010729|14_SE_0000109418|SE_0000109411'));
     });
 
@@ -259,7 +259,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({
                 _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411',
                 score: {
@@ -276,8 +276,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/sessions?nb_avis=1`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.sessions.length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.sessions.length, 1);
         assert.ok(response.body.sessions.find(s => s.id === '14_AF_0000010729|14_SE_0000109418|SE_0000109411'));
     });
 
@@ -285,19 +285,19 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109411' })),
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_0000109412' })),
         ]);
 
         let response = await request(app).get(`/api/v1/sessions?page=0&items_par_page=1`);
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.sessions.length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.sessions.length, 1);
 
         response = await request(app).get(`/api/v1/sessions?page=1&items_par_page=1`);
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.sessions.length, 1);
-        assert.deepEqual(response.body.meta.pagination, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.sessions.length, 1);
+        assert.deepStrictEqual(response.body.meta.pagination, {
             page: 1,
             items_par_page: 1,
             total_items: 2,
@@ -311,8 +311,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/sessions?page=0&items_par_page=5000`);
 
-        assert.equal(response.statusCode, 400);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
             statusCode: 400,
             error: 'Bad Request',
             message: 'Erreur de validation',
@@ -339,14 +339,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_000010456' })),
         ]);
 
         let response = await request(app).get('/api/v1/sessions?fields=score');
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.sessions.length, 1);
-        assert.deepEqual(Object.keys(response.body.sessions[0]), ['id', 'score']);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.sessions.length, 1);
+        assert.deepStrictEqual(Object.keys(response.body.sessions[0]), ['id', 'score']);
     });
 
     it('can search though all sessions with projection (exclusion)', async () => {
@@ -354,14 +354,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_000010456' })),
         ]);
 
         let response = await request(app).get('/api/v1/sessions?fields=-avis');
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.sessions.length, 1);
-        assert.deepEqual(Object.keys(response.body.sessions[0]), ['id', 'numero', 'region', 'score', 'meta']);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.sessions.length, 1);
+        assert.deepStrictEqual(Object.keys(response.body.sessions[0]), ['id', 'numero', 'region', 'score', 'meta']);
     });
 
 }));

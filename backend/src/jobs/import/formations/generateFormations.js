@@ -121,7 +121,11 @@ module.exports = async db => {
                     avis: { $ifNull: ['$reconciliation.comments', []] },
                     score: '$reconciliation.score',
                     meta: {
-                        source: 'intercarif',
+                        source: {
+                            //TODO remove source field in v2
+                            numero_formation: '$numero_formation',
+                            type: 'intercarif',
+                        },
                         reconciliation: {
                             organisme_formateurs: '$organisme_formateur_sirets',
                             certifinfos: '$certifinfos',

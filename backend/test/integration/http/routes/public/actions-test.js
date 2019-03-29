@@ -2,7 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../helpers/test-server');
 const ObjectID = require('mongodb').ObjectID;
-const { newComment, randomize, newFormation, newAction } = require('../../../../helpers/data/dataset');
+const { newComment, randomize, newIntercarif, newAction } = require('../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
@@ -14,7 +14,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let actionId = '14_AF_0000010729|14_SE_0000109418';
         let commentId = new ObjectID();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('actionsReconciliees', newAction({
                 _id: actionId,
                 numero: '14_SE_0000109418',
@@ -148,7 +148,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
             insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109417' })),
         ]);
@@ -167,7 +167,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let firstActionId = '14_AF_0000010729|14_SE_0000109418';
         let secondActionId = '14_AF_0000010729|14_SE_0000109417';
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('actionsReconciliees', newAction({ _id: firstActionId })),
             insertIntoDatabase('actionsReconciliees', newAction({ _id: secondActionId })),
             insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109416' })),
@@ -185,7 +185,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('actionsReconciliees', newAction({
                 _id: '14_AF_0000010729|14_SE_0000109418',
                 region: '11'
@@ -207,7 +207,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('actionsReconciliees', newAction({
                 _id: '14_AF_0000010729|14_SE_0000109418',
                 numero: '14_SE_0000109418'
@@ -229,7 +229,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('actionsReconciliees', newAction({
                 _id: '14_AF_0000010729|14_SE_0000109418',
                 score: {
@@ -255,7 +255,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
             insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109419' })),
         ]);
@@ -280,7 +280,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
         ]);
 
@@ -295,7 +295,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('intercarif', newFormation()),
+            insertIntoDatabase('intercarif', newIntercarif()),
             insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
         ]);
 
