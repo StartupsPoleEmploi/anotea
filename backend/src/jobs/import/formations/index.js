@@ -3,8 +3,9 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const generateSessions = require('./generateSessions');
+const generateFormations = require('./generateFormations');
 const generateActions = require('./generateActions');
+const generateSessions = require('./generateSessions');
 
 cli.description('Reconciling sessions/actions with comments...')
 .parse(process.argv);
@@ -12,10 +13,11 @@ cli.description('Reconciling sessions/actions with comments...')
 execute(async ({ logger, db, regions }) => {
 
     logger.info(`Generating formations collections...`);
-    let [sessions, actions] = await Promise.all([
+    let [formations, actions, sessions] = await Promise.all([
+        generateFormations(db, regions),
+        generateActions(db, regions),
         generateSessions(db, regions),
-        generateActions(db, regions)
     ]);
 
-    return { sessions, actions };
+    return { formations, actions, sessions };
 });
