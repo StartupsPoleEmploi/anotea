@@ -133,7 +133,7 @@ export default class Questionnaire extends Component {
 
     render() {
         return (
-            <div className="questionnaire">
+            <div className="anotea questionnaire">
                 {false && <GridDisplayer />}
                 {!this.state.error && this.props.stagiaire &&
                 <div className="container">
