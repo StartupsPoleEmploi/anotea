@@ -144,15 +144,11 @@ export default class Questionnaire extends Component {
                         onChange={this.updateNotes}
                         showErrorMessage={this.state.submitButtonClicked} />
 
-                    {this.state.isNotesValid &&
                     <Commentaire
                         commentaire={this.state.commentaire}
                         onChange={this.updateCommentaire} />
-                    }
 
-                    {this.state.isNotesValid &&
                     <Autorisations onChange={this.updateAccord} />
-                    }
 
                     <div className="row">
                         <div className="col-sm-12 offset-lg-2 col-lg-8">
