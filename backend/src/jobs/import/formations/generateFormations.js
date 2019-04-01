@@ -1,6 +1,40 @@
+const _ = require('lodash');
 const roundNotes = require('./roundNotes');
 
+const $inEmulator = () => {
+    return {
+        projection_organisme_formateur_siret: () => {
+            return _.range(0, 20).reduce((acc, value) => {
+                acc[`organisme_formateur_siret_${value}`] = {
+                    $cond: {
+                        if: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', value] },
+                        then: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', value] },
+                        else: null
+                    }
+                };
+                return acc;
+            }, {});
+        },
+        let_organisme_formateur_siret: () => {
+            return _.range(0, 20).reduce((acc, value) => {
+                acc[`organisme_formateur_siret_${value}`] = `$organisme_formateur_siret_${value}`;
+                return acc;
+            }, {});
+        },
+        expr_organisme_formateur_siret: () => {
+            return _.range(0, 20).reduce((acc, value) => {
+                acc.$or.push({ $eq: ['$training.organisation.siret', `$$organisme_formateur_siret_${value}`] });
+                return acc;
+            }, { $or: [] });
+
+        }
+    };
+};
+
 module.exports = async db => {
+
+    //FIXME ugly until https://jira.mongodb.org/browse/SERVER-37470 is fixed
+    let emulator = $inEmulator();
 
     await db.collection('intercarif').aggregate([
         {
@@ -13,28 +47,8 @@ module.exports = async db => {
                 organisme_responsable_raison_sociale: '$organisme_formation_responsable.raison_sociale',
                 certifinfos: '$_meta.certifinfos',
                 formacodes: '$_meta.formacodes',
-                //FIXME ugly until https://jira.mongodb.org/browse/SERVER-37470 is fixed
-                organisme_formateur_siret: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 0] },
-                organisme_formateur_siret_1: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 1] },
-                organisme_formateur_siret_2: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 2] },
-                organisme_formateur_siret_3: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 3] },
-                organisme_formateur_siret_4: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 4] },
-                organisme_formateur_siret_5: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 5] },
-                organisme_formateur_siret_6: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 6] },
-                organisme_formateur_siret_7: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 7] },
-                organisme_formateur_siret_8: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 8] },
-                organisme_formateur_siret_9: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 9] },
-                organisme_formateur_siret_10: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 10] },
-                organisme_formateur_siret_11: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 11] },
-                organisme_formateur_siret_12: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 12] },
-                organisme_formateur_siret_13: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 13] },
-                organisme_formateur_siret_14: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 14] },
-                organisme_formateur_siret_15: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 15] },
-                organisme_formateur_siret_16: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 16] },
-                organisme_formateur_siret_17: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 17] },
-                organisme_formateur_siret_18: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 18] },
-                organisme_formateur_siret_19: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 19] },
-                organisme_formateur_siret_20: { $arrayElemAt: ['$actions.organisme_formateur.siret_formateur.siret', 20] },
+                organisme_formateur_sirets: '$actions.organisme_formateur.siret_formateur.siret',
+                ...emulator.projection_organisme_formateur_siret(),
             }
         },
         //Reconciling comments
@@ -42,60 +56,16 @@ module.exports = async db => {
             $lookup: {
                 from: 'comment',
                 let: {
-                    organisme_formateur_siret: '$organisme_formateur_siret',
-                    organisme_formateur_siret_1: '$organisme_formateur_siret_1',
-                    organisme_formateur_siret_2: '$organisme_formateur_siret_2',
-                    organisme_formateur_siret_3: '$organisme_formateur_siret_3',
-                    organisme_formateur_siret_4: '$organisme_formateur_siret_4',
-                    organisme_formateur_siret_5: '$organisme_formateur_siret_5',
-                    organisme_formateur_siret_6: '$organisme_formateur_siret_6',
-                    organisme_formateur_siret_7: '$organisme_formateur_siret_7',
-                    organisme_formateur_siret_8: '$organisme_formateur_siret_8',
-                    organisme_formateur_siret_9: '$organisme_formateur_siret_9',
-                    organisme_formateur_siret_10: '$organisme_formateur_siret_10',
-                    organisme_formateur_siret_11: '$organisme_formateur_siret_11',
-                    organisme_formateur_siret_12: '$organisme_formateur_siret_12',
-                    organisme_formateur_siret_13: '$organisme_formateur_siret_13',
-                    organisme_formateur_siret_14: '$organisme_formateur_siret_14',
-                    organisme_formateur_siret_15: '$organisme_formateur_siret_15',
-                    organisme_formateur_siret_16: '$organisme_formateur_siret_16',
-                    organisme_formateur_siret_17: '$organisme_formateur_siret_17',
-                    organisme_formateur_siret_18: '$organisme_formateur_siret_18',
-                    organisme_formateur_siret_19: '$organisme_formateur_siret_19',
-                    organisme_formateur_siret_20: '$organisme_formateur_siret_20',
                     certifinfos: '$certifinfos',
-                    formacodes: '$formacodes'
+                    formacodes: '$formacodes',
+                    ...emulator.let_organisme_formateur_siret(),
                 },
                 pipeline: [
                     {
                         $match: {
                             $expr: {
                                 $and: [
-                                    {
-                                        $or: [
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_1'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_2'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_3'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_4'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_5'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_6'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_7'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_8'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_9'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_10'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_11'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_12'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_13'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_14'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_15'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_16'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_17'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_18'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_19'] },
-                                            { $eq: ['$training.organisation.siret', '$$organisme_formateur_siret_20'] },
-                                        ]
-                                    },
+                                    emulator.expr_organisme_formateur_siret(),
                                     {
                                         $or: [
                                             { $in: ['$training.certifInfo.id', '$$certifinfos'] },
@@ -182,7 +152,7 @@ module.exports = async db => {
                             type: 'intercarif',
                         },
                         reconciliation: {
-                            organisme_formateur: '$organisme_formateur_siret',
+                            organisme_formateurs: '$organisme_formateur_sirets',
                             certifinfos: '$certifinfos',
                             formacodes: '$formacodes',
                         },
