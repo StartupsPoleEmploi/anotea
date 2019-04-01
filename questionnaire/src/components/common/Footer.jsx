@@ -15,14 +15,14 @@ class Footer extends Component {
         return (
             <div className="footer container">
                 <div className="row mb-4">
-                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <div className="d-flex justify-content-center">
                             <span className="propulsed">Service propulsé par</span>
                         </div>
                     </div>
                 </div>
                 <div className="row align-items-center">
-                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <img
                             className="logo"
                             src={`${process.env.PUBLIC_URL}/images/logo.png`}

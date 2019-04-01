@@ -133,7 +133,7 @@ export default class Questionnaire extends Component {
 
     render() {
         return (
-            <div className="questionnaire">
+            <div className="anotea questionnaire">
                 {false && <GridDisplayer />}
                 {!this.state.error && this.props.stagiaire &&
                 <div className="container">
@@ -144,18 +144,14 @@ export default class Questionnaire extends Component {
                         onChange={this.updateNotes}
                         showErrorMessage={this.state.submitButtonClicked} />
 
-                    {this.state.isNotesValid &&
                     <Commentaire
                         commentaire={this.state.commentaire}
                         onChange={this.updateCommentaire} />
-                    }
 
-                    {this.state.isNotesValid &&
                     <Autorisations onChange={this.updateAccord} />
-                    }
 
                     <div className="row">
-                        <div className="col-sm-12 offset-lg-2 col-lg-8">
+                        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                             <div className="d-flex justify-content-center">
                                 <Button
                                     className="send-button"

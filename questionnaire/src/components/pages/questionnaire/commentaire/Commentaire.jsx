@@ -55,12 +55,12 @@ class Commentaire extends Component {
             <div className="commentaire">
 
                 <div className="row">
-                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <h3>
                             Commentaire <span className="description">(optionnel)</span>
                         </h3>
                     </div>
-                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <div className="row inner-row field">
                             <div className="col-sm-12">
                                 <div className="title"><strong>Votre commentaire</strong> (optionnel)</div>

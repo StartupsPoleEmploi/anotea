@@ -24,7 +24,7 @@ class Autorisations extends Component {
         return (
             <div className="autorisations">
                 <div className="row">
-                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <div className="field">
                             <input
                                 type="checkbox"
