@@ -6,8 +6,8 @@
 
   @media (max-width: 575.98px) {
     text-align: center;
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
   }
 
   .buttons {
@@ -31,6 +31,9 @@
     }
 
     .star-tooltip {
+      @media (max-width: 575.98px) {
+        display: inline;
+      }
       margin-bottom: 0.25rem;
 
       .label {
