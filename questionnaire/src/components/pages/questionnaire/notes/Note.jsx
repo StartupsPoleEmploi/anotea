@@ -22,7 +22,7 @@ class Note extends Component {
                         <div className="title">{this.props.title}</div>
                         <div className="description">{this.props.description}</div>
                     </div>
-                    <div className="col-sm-5 stars-container">
+                    <div className="col-sm-5 stars-container d-flex justify-content-center justify-content-md-end">
                         <Stars onSelect={this.props.onSelect} index={this.props.index} value={this.props.value} />
                     </div>
                 </div>
