@@ -11,14 +11,5 @@ module.exports = action => {
         dto.avis = dto.avis.map(c => convertToExposableAvis(c));
     }
 
-    if (action.meta && action.formation) {
-        dto.meta.source = {
-            //TODO remove source field in v2
-            numero_formation: action.formation.numero,
-            numero_action: action.numero,
-            type: dto.meta.source,
-        };
-    }
-
     return _.pick(dto, ['id', 'numero', 'region', 'score', 'avis', 'meta']);
 };

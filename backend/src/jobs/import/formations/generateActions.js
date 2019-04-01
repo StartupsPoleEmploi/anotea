@@ -147,7 +147,12 @@ module.exports = async db => {
                         },
                     },
                     meta: {
-                        source: 'intercarif',
+                        source: {
+                            //TODO remove source field in v2
+                            numero_formation: '$numero_formation',
+                            numero_action: '$numero_action',
+                            type: 'intercarif',
+                        },
                         reconciliation: {
                             organisme_formateur: '$organisme_formateur_siret',
                             lieu_de_formation: '$lieu_de_formation',

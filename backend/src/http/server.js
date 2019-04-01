@@ -116,8 +116,9 @@ module.exports = components => {
     app.use('/api', require('./routes/swagger')(httpComponents));
     app.use('/api', require('./routes/api/v1/ping')(httpComponents));
     app.use('/api', require('./routes/api/v1/avis')(httpComponents));
-    app.use('/api', require('./routes/api/v1/sessions')(httpComponents));
+    app.use('/api', require('./routes/api/v1/formations')(httpComponents));
     app.use('/api', require('./routes/api/v1/actions')(httpComponents));
+    app.use('/api', require('./routes/api/v1/sessions')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs')(httpComponents));
     app.use('/api', require('./routes/stats')(httpComponents));
     app.use('/api', require('./routes/api/kairos')(httpComponents));

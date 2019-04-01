@@ -1,7 +1,7 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
-const generateActions = require('../../../../../src/jobs/import/sessions/generateActions');
+const generateActions = require('../../../../../src/jobs/import/formations/generateActions');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
@@ -78,7 +78,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_action: 'AC_XX_XXXXXX',
+                    numero_formation: 'F_XX_XX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
@@ -228,7 +232,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_action: 'AC_XX_XXXXXX',
+                    numero_formation: 'F_XX_XX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
@@ -309,7 +317,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_action: 'AC_XX_XXXXXX',
+                    numero_formation: 'F_XX_XX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
@@ -391,7 +403,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_action: 'AC_XX_XXXXXX',
+                    numero_formation: 'F_XX_XX',
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',

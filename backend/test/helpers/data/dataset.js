@@ -262,7 +262,12 @@ module.exports = {
                 }
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_formation: numeroFormation,
+                    numero_action: numeroAction,
+                    numero_session: numeroSession,
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '22222222222222',
                     lieu_de_formation: '75019',
@@ -319,10 +324,54 @@ module.exports = {
                 },
             },
             meta: {
-                source: 'intercarif',
+                source: {
+                    numero_formation: numeroFormation,
+                    numero_action: numeroAction,
+                    type: 'intercarif',
+                },
                 reconciliation: {
                     organisme_formateur: '11111111111111',
                     lieu_de_formation: '49000',
+                    certifinfos: ['55518'],
+                    formacodes: ['31801']
+                },
+            }
+        }, custom, { test: true });
+    },
+    newFormation: custom => {
+
+        let avis = custom.avis ? custom.avis : [newComment()];
+        let numeroFormation = custom._id || 'F_XX_XX';
+
+        return _.merge({
+            _id: numeroFormation,
+            numero: numeroFormation,
+            intitule: 'Développeur web',
+            domaine_formation: {
+                formacodes: ['31801']
+            },
+            certifications: {
+                certifinfos: ['55518']
+            },
+            avis: avis,
+            score: {
+                nb_avis: 1,
+                notes: {
+                    accueil: 4,
+                    contenu_formation: 4,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 4,
+                    accompagnement: 4,
+                    global: 4
+                }
+            },
+            meta: {
+                source: {
+                    numero_formation: numeroFormation,
+                    type: 'intercarif',
+                },
+                reconciliation: {
+                    organisme_formateurs: ['11111111111111'],
                     certifinfos: ['55518'],
                     formacodes: ['31801']
                 },
@@ -403,7 +452,7 @@ module.exports = {
             carifNameHidden: false
         }, custom);
     },
-    newFormation: custom => {
+    newIntercarif: custom => {
         return _.merge({
             _attributes: {
                 numero: '14_AF_0000011111',
