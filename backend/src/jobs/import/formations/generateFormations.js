@@ -37,15 +37,16 @@ module.exports = async db => {
                                             { $in: ['$training.certifInfo.id', '$$certifinfos'] },
                                             { $in: ['$formacode', '$$formacodes'] }
                                         ]
+                                    },
+                                    {
+                                        $or: [
+                                            { $eq: ['$comment', null] },
+                                            { $eq: ['$published', true] },
+                                            { $eq: ['$rejected', true] },
+                                        ]
                                     }
                                 ]
                             },
-                            $or: [
-                                { 'comment': { $exists: false } },
-                                { 'comment': null },
-                                { 'published': true },
-                                { 'rejected': true },
-                            ]
                         }
                     },
                     {
