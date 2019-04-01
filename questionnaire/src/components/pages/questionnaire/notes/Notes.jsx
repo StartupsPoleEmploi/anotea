@@ -48,13 +48,13 @@ class Notes extends Component {
         return (
             <div className="notes">
                 <div className="row">
-                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <h3>Notes</h3>
                     </div>
                 </div>
 
                 <div className="row">
-                    <div className="col-sm-12 offset-lg-2 col-lg-8">
+                    <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         {
                             items.map((item, index) =>
                                 <div

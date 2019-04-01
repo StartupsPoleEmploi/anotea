@@ -19,7 +19,7 @@ class Remerciements extends Component {
                 <div className="container">
                     <Formation stagiaire={stagiaire} />
                     <div className="row">
-                        <div className="col-sm-12 offset-lg-2 col-lg-8">
+                        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
 
                             <div className="panel-remerciements">
                                 {infosRegion.showLinks &&

@@ -151,7 +151,7 @@ export default class Questionnaire extends Component {
                     <Autorisations onChange={this.updateAccord} />
 
                     <div className="row">
-                        <div className="col-sm-12 offset-lg-2 col-lg-8">
+                        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                             <div className="d-flex justify-content-center">
                                 <Button
                                     className="send-button"
