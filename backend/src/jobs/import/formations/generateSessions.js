@@ -155,15 +155,14 @@ module.exports = async db => {
                         },
                     },
                     meta: {
-                        source: {
-                            //TODO remove source field in v2
+                        source: {//TODO remove source field in v2
                             numero_formation: '$numero_formation',
                             numero_action: '$numero_action',
                             numero_session: '$numero_session',
                             type: 'intercarif',
                         },
                         reconciliation: {
-                            organisme_formateur: '$organisme_formateur_siret',
+                            organisme_formateur: '$organisme_formateur_siret',//TODO must be converted into an array in v2
                             lieu_de_formation: '$lieu_de_formation',
                             certifinfos: '$certifinfos',
                             formacodes: '$formacodes',
