@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Note from './Note';
 import items from '../../../../data.json';
-import NoteMoyenne from './NoteMoyenne';
 import './notes.scss';
 
 class Notes extends Component {
@@ -30,8 +29,6 @@ class Notes extends Component {
 
     showMoyenne = () => !this.props.notes.find(n => n.value === null);
 
-    toggleCollapse = () => this.setState({ collapsed: !this.state.collapsed });
-
     updateNote = (index, value) => {
         if (value !== null) {
             value++;
@@ -45,9 +42,6 @@ class Notes extends Component {
         });
 
         this.props.onChange(notes, this.checkIfAllNotesAreValid());
-        if (this.checkIfAllNotesAreValid()) {
-            this.toggleCollapse();
-        }
     };
 
     render() {
@@ -59,30 +53,6 @@ class Notes extends Component {
                     </div>
                 </div>
 
-                {this.showMoyenne() &&
-                <div className="row">
-                    <div className="col-sm-12 offset-lg-2 col-lg-8">
-                        <NoteMoyenne averageScore={this.props.averageScore} />
-                    </div>
-                </div>
-                }
-
-                {this.showMoyenne() &&
-                <div className="row">
-                    <div className="col-sm-12 offset-lg-2 col-lg-8">
-                        <div className="note-details py-2">
-                            <span className="label">Détails des notes</span>
-                            <div className="collapser">
-                                <i
-                                    className={`fas ${this.state.collapsed ? 'fa-chevron-down' : 'fa-chevron-up'}`}
-                                    onClick={this.toggleCollapse} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                }
-
-                {!this.state.collapsed &&
                 <div className="row">
                     <div className="col-sm-12 offset-lg-2 col-lg-8">
                         {
@@ -103,7 +73,6 @@ class Notes extends Component {
                         }
                     </div>
                 </div>
-                }
             </div>
         );
     }
