@@ -1,15 +1,20 @@
 const _ = require('lodash');
 const convertToExposableAvis = require('./convertToExposableAvis');
+const ScoreDTO = require('./ScoreDTO');
 
 module.exports = action => {
-    let dto = _.cloneDeep(action);
+    let json = _.cloneDeep(action);
 
-    dto.id = dto._id;
-    delete dto._id;
+    json.id = json._id;
+    delete json._id;
 
-    if (dto.avis) {
-        dto.avis = dto.avis.map(c => convertToExposableAvis(c));
+    if (json.avis) {
+        json.avis = json.avis.map(c => convertToExposableAvis(c));
     }
 
-    return _.pick(dto, ['id', 'numero', 'region', 'score', 'avis', 'meta']);
+    if (json.score) {
+        json.score = new ScoreDTO(json.score);
+    }
+
+    return _.pick(json, ['id', 'numero', 'region', 'score', 'avis', 'meta']);
 };

@@ -240,7 +240,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.ok(organismes.find(s => s.id === '22222222222222'));
     });
 
-    it('can search though all sessions with pagination', async () => {
+    it('can search though all organismes with pagination', async () => {
 
         let app = await startServer();
         await Promise.all([
@@ -264,7 +264,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('can search though all sessions with projection (blacklist)', async () => {
+    it('can search though all organismes with projection (blacklist)', async () => {
 
         let app = await startServer();
 
@@ -278,7 +278,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'raison_sociale', 'siret', 'numero', 'score']);
     });
 
-    it('can search though all sessions with projection (whitelist)', async () => {
+    it('can search though all organismes with projection (whitelist)', async () => {
 
         let app = await startServer();
 

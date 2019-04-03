@@ -228,12 +228,12 @@ module.exports = {
             score: {
                 nb_avis: 1,
                 notes: {
-                    accueil: 4,
-                    contenu_formation: 4,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 4,
-                    accompagnement: 4,
-                    global: 4
+                    accueil: 4.1,
+                    contenu_formation: 4.1,
+                    equipe_formateurs: 4.1,
+                    moyen_materiel: 4.1,
+                    accompagnement: 4.1,
+                    global: 4.1,
                 }
             },
             formation: {
@@ -295,12 +295,12 @@ module.exports = {
             score: {
                 nb_avis: 1,
                 notes: {
-                    accueil: 4,
-                    contenu_formation: 4,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 4,
-                    accompagnement: 4,
-                    global: 4
+                    accueil: 4.1,
+                    contenu_formation: 4.1,
+                    equipe_formateurs: 4.1,
+                    moyen_materiel: 4.1,
+                    accompagnement: 4.1,
+                    global: 4.1,
                 }
             },
             organisme_financeurs: ['2'],
@@ -357,12 +357,12 @@ module.exports = {
             score: {
                 nb_avis: 1,
                 notes: {
-                    accueil: 4,
-                    contenu_formation: 4,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 4,
-                    accompagnement: 4,
-                    global: 4
+                    accueil: 4.1,
+                    contenu_formation: 4.1,
+                    equipe_formateurs: 4.1,
+                    moyen_materiel: 4.1,
+                    accompagnement: 4.1,
+                    global: 4.1,
                 }
             },
             meta: {

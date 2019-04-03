@@ -94,12 +94,12 @@ module.exports = async db => {
                             score: {
                                 nb_avis: '$count',
                                 notes: {
-                                    accueil: $round('$accueil'),
-                                    contenu_formation: $round('$contenu_formation'),
-                                    equipe_formateurs: $round('$equipe_formateurs'),
-                                    moyen_materiel: $round('$moyen_materiel'),
-                                    accompagnement: $round('$accompagnement'),
-                                    global: $round('$global'),
+                                    accueil: $round('$accueil', 1),
+                                    contenu_formation: $round('$contenu_formation', 1),
+                                    equipe_formateurs: $round('$equipe_formateurs', 1),
+                                    moyen_materiel: $round('$moyen_materiel', 1),
+                                    accompagnement: $round('$accompagnement', 1),
+                                    global: $round('$global', 1),
                                 },
                             }
                         }

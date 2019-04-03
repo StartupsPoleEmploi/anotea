@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const NotesDTO = require('./NotesDTO');
 
 const convertCommentaire = comment => {
     if (!comment.comment || comment.rejected) {
@@ -23,14 +24,7 @@ module.exports = comment => {
         pseudo: (comment.pseudoMasked || comment.rejected || _.isEmpty(comment.pseudo)) ? undefined : comment.pseudo,
         date: comment.date ? comment.date : comment._id.getTimestamp(),
         commentaire: convertCommentaire(comment),
-        notes: {
-            accueil: rates.accueil,
-            contenu_formation: rates.contenu_formation,
-            equipe_formateurs: rates.equipe_formateurs,
-            moyen_materiel: rates.moyen_materiel,
-            accompagnement: rates.accompagnement,
-            global: rates.global,
-        },
+        notes: new NotesDTO(rates),
         formation: {
             numero: training.idFormation,
             intitule: training.title,
