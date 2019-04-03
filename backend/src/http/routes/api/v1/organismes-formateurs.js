@@ -5,8 +5,8 @@ const Boom = require('boom');
 const { tryAndCatch } = require('../../routes-utils');
 const { paginationValidator, arrayOfValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const convertToExposableOrganismeFomateur = require('./dto/convertToExposableOrganismeFomateur');
-const convertToExposablePagination = require('./dto/convertToExposablePagination');
+const createOrganismeFomateurDTO = require('./dto/createOrganismeFomateurDTO');
+const createPaginationDTO = require('./dto/createPaginationDTO');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -51,9 +51,9 @@ module.exports = ({ db, middlewares }) => {
         let [total, organismes] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            organismes_formateurs: organismes.map(of => convertToExposableOrganismeFomateur(of)) || [],
+            organismes_formateurs: organismes.map(of => createOrganismeFomateurDTO(of)) || [],
             meta: {
-                pagination: convertToExposablePagination(pagination, total)
+                pagination: createPaginationDTO(pagination, total)
             },
         });
     }));
@@ -70,7 +70,7 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Identifiant inconnu');
         }
 
-        res.json(convertToExposableOrganismeFomateur(organisme));
+        res.json(createOrganismeFomateurDTO(organisme));
     }));
 
     return router;

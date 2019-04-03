@@ -1,4 +1,4 @@
-const ScoreDTO = require('./ScoreDTO');
+const createScoreDTO = require('./createScoreDTO');
 
 module.exports = organisme => {
     return {
@@ -7,6 +7,6 @@ module.exports = organisme => {
         siret: organisme.meta ? organisme.meta.siretAsString : undefined,
         numero: organisme.numero,
         lieux_de_formation: organisme.lieux_de_formation,
-        score: organisme.score && new ScoreDTO(organisme.score),
+        score: organisme.score && createScoreDTO(organisme.score),
     };
 };

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
-const convertToExposableAvis = require('../../../src/http/routes/api/v1/dto/convertToExposableAvis');
+const createAvisDTO = require('../../../src/http/routes/api/v1/dto/createAvisDTO');
 const { newComment, randomize } = require('../../helpers/data/dataset');
 
 describe(__filename, () => {
@@ -21,9 +21,9 @@ describe(__filename, () => {
         }, date);
 
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(data, {
+        assert.deepStrictEqual(data, {
             id: 1234,
             pseudo,
             commentaire: {
@@ -82,9 +82,9 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(data.commentaire, {
+        assert.deepStrictEqual(data.commentaire, {
             titre: 'Génial',
             texte: 'Super formation.',
             reponse: 'Voici notre réponse',
@@ -100,9 +100,9 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(data.commentaire, {
+        assert.deepStrictEqual(data.commentaire, {
             titre: 'Génial',
             texte: 'Super formation.',
             reponse: undefined,
@@ -115,7 +115,7 @@ describe(__filename, () => {
             comment: null,
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
         assert.strictEqual(data.commentaire, undefined);
     });
@@ -130,7 +130,7 @@ describe(__filename, () => {
             }
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
         assert.strictEqual(data.formation.action.numero, undefined);
     });
@@ -145,9 +145,9 @@ describe(__filename, () => {
             }
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(data.formation.certifications, []);
+        assert.deepStrictEqual(data.formation.certifications, []);
     });
 
 
@@ -158,9 +158,9 @@ describe(__filename, () => {
             date: null
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(new Date(data.date).toISOString(), '1970-01-01T00:00:01.000Z');
+        assert.deepStrictEqual(new Date(data.date).toISOString(), '1970-01-01T00:00:01.000Z');
     });
 
 
@@ -174,9 +174,9 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(data.commentaire.titre, undefined);
+        assert.deepStrictEqual(data.commentaire.titre, undefined);
     });
 
     it('should ignore pseudo when pseudoMasked is true', async () => {
@@ -186,9 +186,9 @@ describe(__filename, () => {
             pseudo: 'hacker',
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(data.pseudo, undefined);
+        assert.deepStrictEqual(data.pseudo, undefined);
     });
 
     it('should return editedComment when comment has been edited', async () => {
@@ -204,9 +204,9 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(data.commentaire.texte, 'Formation super géniale.');
+        assert.deepStrictEqual(data.commentaire.texte, 'Formation super géniale.');
     });
 
     it('should not return commentaire when avis has been rejected', async () => {
@@ -219,9 +219,9 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(data.commentaire, undefined);
+        assert.deepStrictEqual(data.commentaire, undefined);
     });
 
     it('should not return pseudo when avis has been rejected', async () => {
@@ -235,9 +235,9 @@ describe(__filename, () => {
             },
         });
 
-        let data = convertToExposableAvis(comment);
+        let data = createAvisDTO(comment);
 
-        assert.deepEqual(data.pseudo, undefined);
+        assert.deepStrictEqual(data.pseudo, undefined);
     });
 
 });

@@ -5,8 +5,8 @@ const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
 const { paginationValidator, arrayOfValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const convertToExposableSession = require('./dto/convertToExposableSession');
-const convertToExposablePagination = require('./dto/convertToExposablePagination');
+const createSessionDTO = require('./dto/createSessionDTO');
+const createPaginationDTO = require('./dto/createPaginationDTO');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -44,9 +44,9 @@ module.exports = ({ db, middlewares }) => {
         let [total, sessions] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            sessions: sessions.map(session => convertToExposableSession(session)) || [],
+            sessions: sessions.map(session => createSessionDTO(session)) || [],
             meta: {
-                pagination: convertToExposablePagination(pagination, total)
+                pagination: createPaginationDTO(pagination, total)
             },
         });
     }));
@@ -63,7 +63,7 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro de session inconnu ou session expirée');
         }
 
-        res.json(convertToExposableSession(session));
+        res.json(createSessionDTO(session));
 
     }));
 

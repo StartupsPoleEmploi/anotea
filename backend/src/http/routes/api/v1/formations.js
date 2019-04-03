@@ -4,8 +4,8 @@ const Joi = require('joi');
 const _ = require('lodash');
 const { paginationValidator, arrayOfValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const convertToFormationDTO = require('./dto/convertToExposableFormation');
-const convertToPaginationDTO = require('./dto/convertToExposablePagination');
+const createFormationDTO = require('./dto/createFormationDTO');
+const createPaginationDTO = require('./dto/createPaginationDTO');
 const { tryAndCatch } = require('../../routes-utils');
 
 module.exports = ({ db, middlewares }) => {
@@ -42,9 +42,9 @@ module.exports = ({ db, middlewares }) => {
         let [total, formations] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            formations: formations.map(formation => convertToFormationDTO(formation)) || [],
+            formations: formations.map(formation => createFormationDTO(formation)) || [],
             meta: {
-                pagination: convertToPaginationDTO(pagination, total)
+                pagination: createPaginationDTO(pagination, total)
             },
         });
     }));
@@ -61,7 +61,7 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro de formation inconnu ou formation expirée');
         }
 
-        res.json(convertToFormationDTO(session));
+        res.json(createFormationDTO(session));
 
     }));
 

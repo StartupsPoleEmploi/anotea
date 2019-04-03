@@ -4,8 +4,8 @@ const Joi = require('joi');
 const _ = require('lodash');
 const { paginationValidator, arrayOfValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const convertToExposableAction = require('./dto/convertToExposableAction');
-const convertToExposablePagination = require('./dto/convertToExposablePagination');
+const createActionDTO = require('./dto/createActionDTO');
+const createPaginationDTO = require('./dto/createPaginationDTO');
 const { tryAndCatch } = require('../../routes-utils');
 
 module.exports = ({ db, middlewares }) => {
@@ -44,9 +44,9 @@ module.exports = ({ db, middlewares }) => {
         let [total, actions] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            actions: actions.map(action => convertToExposableAction(action)) || [],
+            actions: actions.map(action => createActionDTO(action)) || [],
             meta: {
-                pagination: convertToExposablePagination(pagination, total)
+                pagination: createPaginationDTO(pagination, total)
             },
         });
     }));
@@ -63,7 +63,7 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
         }
 
-        res.json(convertToExposableAction(session));
+        res.json(createActionDTO(session));
 
     }));
 

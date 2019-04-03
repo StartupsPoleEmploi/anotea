@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const convertToExposableAvis = require('./convertToExposableAvis');
-const ScoreDTO = require('./ScoreDTO');
+const createAvisDTO = require('./createAvisDTO');
+const createScoreDTO = require('./createScoreDTO');
 
 module.exports = session => {
     let dto = _.cloneDeep(session);
@@ -8,11 +8,11 @@ module.exports = session => {
     delete dto._id;
 
     if (dto.avis) {
-        dto.avis = dto.avis.map(c => convertToExposableAvis(c));
+        dto.avis = dto.avis.map(c => createAvisDTO(c));
     }
 
     if (dto.score) {
-        dto.score = new ScoreDTO(dto.score);
+        dto.score = createScoreDTO(dto.score);
     }
 
     return _.pick(dto, ['id', 'numero', 'region', 'score', 'avis', 'meta']);

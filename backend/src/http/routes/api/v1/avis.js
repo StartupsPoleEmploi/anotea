@@ -5,8 +5,8 @@ const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch } = require('../../routes-utils');
 const { paginationValidator } = require('./utils/validators');
-const convertToExposableAvis = require('./dto/convertToExposableAvis');
-const convertToExposablePagination = require('./dto/convertToExposablePagination');
+const createAvisDTO = require('./dto/createAvisDTO');
+const createPaginationDTO = require('./dto/createPaginationDTO');
 
 const buildAvisQuery = filters => {
 
@@ -80,9 +80,9 @@ module.exports = ({ db, middlewares }) => {
         let [total, avis] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            avis: avis.map(a => convertToExposableAvis(a)),
+            avis: avis.map(a => createAvisDTO(a)),
             meta: {
-                pagination: convertToExposablePagination(pagination, total)
+                pagination: createPaginationDTO(pagination, total)
             },
         });
     }));
@@ -102,7 +102,7 @@ module.exports = ({ db, middlewares }) => {
         if (!avis) {
             throw Boom.notFound('Identifiant inconnu');
         }
-        res.json(convertToExposableAvis(avis));
+        res.json(createAvisDTO(avis));
     }));
 
     return router;
