@@ -1,4 +1,4 @@
-const roundNotes = require('./roundNotes');
+const $round = require('../../$round');
 
 module.exports = async db => {
 
@@ -90,12 +90,12 @@ module.exports = async db => {
                             score: {
                                 nb_avis: '$count',
                                 notes: {
-                                    accueil: { $avg: '$accueil' },
-                                    contenu_formation: { $avg: '$contenu_formation' },
-                                    equipe_formateurs: { $avg: '$equipe_formateurs' },
-                                    moyen_materiel: { $avg: '$moyen_materiel' },
-                                    accompagnement: { $avg: '$accompagnement' },
-                                    global: { $avg: '$global' }
+                                    accueil: $round('$accueil'),
+                                    contenu_formation: $round('$contenu_formation'),
+                                    equipe_formateurs: $round('$equipe_formateurs'),
+                                    moyen_materiel: $round('$moyen_materiel'),
+                                    accompagnement: $round('$accompagnement'),
+                                    global: $round('$global'),
                                 },
                             }
                         }
@@ -183,8 +183,6 @@ module.exports = async db => {
         }
     ], { allowDiskUse: true }).toArray();
 
-
-    await roundNotes(db, 'actionsReconciliees');
 
     return { imported: await db.collection('actionsReconciliees').countDocuments() };
 };
