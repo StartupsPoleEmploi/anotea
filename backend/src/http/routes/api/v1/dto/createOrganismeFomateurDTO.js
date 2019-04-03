@@ -1,12 +1,12 @@
 const createScoreDTO = require('./createScoreDTO');
 
-module.exports = organisme => {
+module.exports = (data, options = {}) => {
     return {
-        id: `${organisme._id}`,
-        raison_sociale: organisme.raisonSociale,
-        siret: organisme.meta ? organisme.meta.siretAsString : undefined,
-        numero: organisme.numero,
-        lieux_de_formation: organisme.lieux_de_formation,
-        score: organisme.score && createScoreDTO(organisme.score),
+        id: `${data._id}`,
+        raison_sociale: data.raisonSociale,
+        siret: data.meta ? data.meta.siretAsString : undefined,
+        numero: data.numero,
+        lieux_de_formation: data.lieux_de_formation,
+        score: data.score && createScoreDTO(data.score, options),
     };
 };

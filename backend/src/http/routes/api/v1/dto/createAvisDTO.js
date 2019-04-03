@@ -15,21 +15,21 @@ const convertCommentaire = comment => {
     };
 };
 
-module.exports = comment => {
-    let training = comment.training;
-    let rates = comment.rates;
+module.exports = (data, options = {}) => {
+    let training = data.training;
+    let rates = data.rates;
 
     return {
-        id: comment._id,
-        pseudo: (comment.pseudoMasked || comment.rejected || _.isEmpty(comment.pseudo)) ? undefined : comment.pseudo,
-        date: comment.date ? comment.date : comment._id.getTimestamp(),
-        commentaire: convertCommentaire(comment),
-        notes: createNoteDTO(rates),
+        id: data._id,
+        pseudo: (data.pseudoMasked || data.rejected || _.isEmpty(data.pseudo)) ? undefined : data.pseudo,
+        date: data.date ? data.date : data._id.getTimestamp(),
+        commentaire: convertCommentaire(data),
+        notes: createNoteDTO(rates, options),
         formation: {
             numero: training.idFormation,
             intitule: training.title,
             domaine_formation: {
-                formacodes: [comment.formacode],
+                formacodes: [data.formacode],
             },
             certifications: [{
                 certif_info: training.certifInfo.id,
@@ -41,8 +41,8 @@ module.exports = comment => {
                     code_postal: training.place.postalCode,
                     ville: training.place.city,
                 },
-                organisme_financeurs: comment.codeFinanceur ? [{
-                    code_financeur: comment.codeFinanceur
+                organisme_financeurs: data.codeFinanceur ? [{
+                    code_financeur: data.codeFinanceur
                 }] : [],
                 organisme_formateur: {
                     raison_sociale: training.organisation.name,
@@ -50,7 +50,7 @@ module.exports = comment => {
                     numero: training.organisation.id,
                 },
                 session: {
-                    numero: comment.idSession, //FIXME avis.idSession training.infoCarif.numeroSession ?
+                    numero: data.idSession, //FIXME avis.idSession training.infoCarif.numeroSession ?
                     periode: {
                         debut: training.startDate,
                         fin: training.scheduledEndDate,

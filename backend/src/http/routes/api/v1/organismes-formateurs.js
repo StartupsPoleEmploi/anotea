@@ -1,12 +1,12 @@
 const express = require('express');
+const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const Boom = require('boom');
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator, arrayOfValidator } = require('./utils/validators');
+const { paginationValidator, arrayOfValidator, notesValeursDecimalesValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const createOrganismeFomateurDTO = require('./dto/createOrganismeFomateurDTO');
 const createPaginationDTO = require('./dto/createPaginationDTO');
+const createOrganismeFomateurDTO = require('./dto/createOrganismeFomateurDTO');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -25,6 +25,8 @@ module.exports = ({ db, middlewares }) => {
             lieu_de_formation: arrayOfValidator(Joi.string()),
             nb_avis: Joi.number(),
             fields: arrayOfValidator(Joi.string().required()).default([]),
+            ...paginationValidator(),
+            ...notesValeursDecimalesValidator(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -51,7 +53,9 @@ module.exports = ({ db, middlewares }) => {
         let [total, organismes] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            organismes_formateurs: organismes.map(of => createOrganismeFomateurDTO(of)) || [],
+            organismes_formateurs: organismes.map(of => {
+                return createOrganismeFomateurDTO(of, { notes_valeurs_decimales: parameters.notes_valeurs_decimales });
+            }) || [],
             meta: {
                 pagination: createPaginationDTO(pagination, total)
             },
@@ -60,9 +64,11 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/v1/organismes-formateurs/:id', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(req.params, {
+        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
+            ...notesValeursDecimalesValidator(),
         }, { abortEarly: false });
+
 
         let organisme = await collection.findOne({ _id: parseInt(parameters.id) });
 
@@ -70,7 +76,7 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Identifiant inconnu');
         }
 
-        res.json(createOrganismeFomateurDTO(organisme));
+        res.json(createOrganismeFomateurDTO(organisme, { notes_valeurs_decimales: parameters.notes_valeurs_decimales }));
     }));
 
     return router;

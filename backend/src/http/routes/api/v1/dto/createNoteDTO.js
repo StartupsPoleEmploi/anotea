@@ -1,10 +1,13 @@
-module.exports = notes => {
+module.exports = (data, options = {}) => {
+
+    const round = value => options.notes_valeurs_decimales ? value : Math.round(value);
+
     return {
-        accueil: Math.round(notes.accueil),
-        contenu_formation: Math.round(notes.contenu_formation),
-        equipe_formateurs: Math.round(notes.equipe_formateurs),
-        moyen_materiel: Math.round(notes.moyen_materiel),
-        accompagnement: Math.round(notes.accompagnement),
-        global: Math.round(notes.global),
+        accueil: round(data.accueil),
+        contenu_formation: round(data.contenu_formation),
+        equipe_formateurs: round(data.equipe_formateurs),
+        moyen_materiel: round(data.moyen_materiel),
+        accompagnement: round(data.accompagnement),
+        global: round(data.global),
     };
 };

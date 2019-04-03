@@ -20,4 +20,9 @@ module.exports = {
             items_par_page: Joi.number().min(0).max(2000).default(50),
         };
     },
+    notesValeursDecimalesValidator: () => {
+        return {
+            notes_valeurs_decimales: Joi.boolean().default(false),
+        };
+    },
 };
