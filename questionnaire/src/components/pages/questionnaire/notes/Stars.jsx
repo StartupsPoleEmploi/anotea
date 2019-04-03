@@ -93,6 +93,7 @@ export default class Stars extends React.PureComponent {
                     <div className={`star-tooltip ${isTooltipActive ? 'active' : 'inactive'}`}>
                         <span className="label">{tooltipLabel}</span>
                     </div>
+                    <i className="far fa-star invisible "/>
                     {
                         this.state.starArray.map((star, index) =>
                             <button
