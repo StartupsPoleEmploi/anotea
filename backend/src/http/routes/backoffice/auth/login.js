@@ -120,7 +120,10 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
 
     router.get('/backoffice/login', tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(req.query, { access_token: Joi.string().required() }, { abortEarly: false });
+        const parameters = await Joi.validate(req.query, {
+            access_token: Joi.string().required(),
+            origin: Joi.string(),
+        }, { abortEarly: false });
 
         let user;
         try {
