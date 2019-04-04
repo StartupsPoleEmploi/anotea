@@ -1,5 +1,5 @@
 const express = require('express');
-const { tryAndCatch } = require('../../routes-utils');
+const { tryAndCatch } = require('../../../routes-utils');
 const Boom = require('boom');
 
 module.exports = ({ db, middlewares, configuration }) => {
