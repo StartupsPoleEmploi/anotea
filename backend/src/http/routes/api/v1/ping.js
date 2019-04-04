@@ -1,10 +1,10 @@
 const express = require('express');
 const { boomify } = require('boom');
 
-module.exports = ({ logger, middlewares }) => {
+module.exports = ({ authMiddlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let { createHMACAuthMiddleware } = middlewares;
+    let { createHMACAuthMiddleware } = authMiddlewares;
     let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: false });
 
     router.get('/v1/ping/anonymous', (req, res) => res.json({ user: 'anonymous' }));

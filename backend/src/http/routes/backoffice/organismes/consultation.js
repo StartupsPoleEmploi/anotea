@@ -5,10 +5,10 @@ const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
 const { IdNotFoundError } = require('../../../../common/errors');
 const { objectId } = require('../../../../common/validators');
 
-module.exports = ({ db, logger, middlewares, moderation }) => {
+module.exports = ({ db, logger, authMiddlewares, moderation }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    let { createJWTAuthMiddleware, checkProfile } = middlewares;
+    let { createJWTAuthMiddleware, checkProfile } = authMiddlewares;
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
     const saveEvent = (id, type, source) => {

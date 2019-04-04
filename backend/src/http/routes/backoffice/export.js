@@ -6,11 +6,11 @@ const { tryAndCatch } = require('../routes-utils');
 const { encodeStream } = require('iconv-lite');
 const { transformObject } = require('../../../common/utils/stream-utils');
 
-module.exports = ({ db, middlewares, logger }) => {
+module.exports = ({ db, authMiddlewares, logger }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const POLE_EMPLOI = '4';
-    let { createJWTAuthMiddleware } = middlewares;
+    let { createJWTAuthMiddleware } = authMiddlewares;
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
     // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
@@ -109,7 +109,7 @@ module.exports = ({ db, middlewares, logger }) => {
                 (comment.rates !== undefined ? comment.rates.global : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
-                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + 
+                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') +
                 qualification + ';' +
                 comment.campaign + ';' +
                 comment.date + ';' +

@@ -1,10 +1,10 @@
 const express = require('express');
 const { tryAndCatch } = require('../routes-utils');
 
-module.exports = ({ db, middlewares }) => {
+module.exports = ({ db, authMiddlewares }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    let { createJWTAuthMiddleware, checkProfile } = middlewares;
+    let { createJWTAuthMiddleware, checkProfile } = authMiddlewares;
     const checkAuth = createJWTAuthMiddleware('backoffice');
 
     router.get('/backoffice/financeur/region/:idregion/mailStats/:year/months', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {

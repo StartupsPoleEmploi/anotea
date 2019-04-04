@@ -6,10 +6,10 @@ const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
 const moderationStats = require('./utils/moderationStats');
 const { objectId } = require('../../../../common/validators');
 
-module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
+module.exports = ({ db, authMiddlewares, configuration, moderation, mailing }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let { createJWTAuthMiddleware, checkProfile } = middlewares;
+    let { createJWTAuthMiddleware, checkProfile } = authMiddlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
 

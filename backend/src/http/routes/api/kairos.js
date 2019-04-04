@@ -8,10 +8,10 @@ const { tryAndCatch } = require('../routes-utils');
 const convertToExposableOrganismeFomateur = require('./v1/dto/convertToExposableOrganismeFomateur');
 const getCodeRegionFromKairosRegionName = require('../../../jobs/import/organismes/kairos/getCodeRegionFromKairosRegionName');
 
-module.exports = ({ db, auth, middlewares }) => {
+module.exports = ({ db, auth, authMiddlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let { createJWTAuthMiddleware } = middlewares;
+    let { createJWTAuthMiddleware } = authMiddlewares;
     let checkAuth = createJWTAuthMiddleware('kairos', {
         externalToken: true,
         onInvalidToken: e => {

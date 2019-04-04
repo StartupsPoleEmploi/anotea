@@ -6,14 +6,14 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const RateLimit = require('express-rate-limit');
 const Boom = require('boom');
-const middlewares = require('./middlewares');
+const authMiddlewares = require('./auth-middlewares');
 
 module.exports = components => {
 
     let app = express();
     let { logger, configuration, sentry, auth } = components;
     let httpComponents = Object.assign({}, components, {
-        middlewares: middlewares(auth, logger, configuration),
+        authMiddlewares: authMiddlewares(auth, logger, configuration),
     });
 
     let requestIdMiddleware = (req, res, next) => {

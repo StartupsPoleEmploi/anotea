@@ -48,10 +48,10 @@ const buildAvisQuery = filters => {
     };
 };
 
-module.exports = ({ db, middlewares }) => {
+module.exports = ({ db, authMiddlewares }) => {
 
     let router = express.Router();// eslint-disable-line new-cap
-    let { createHMACAuthMiddleware } = middlewares;
+    let { createHMACAuthMiddleware } = authMiddlewares;
     let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
     router.get('/v1/avis', checkAuth, tryAndCatch(async (req, res) => {

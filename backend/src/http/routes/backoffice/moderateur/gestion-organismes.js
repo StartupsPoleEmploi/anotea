@@ -8,10 +8,10 @@ const convertOrganismeToDTO = require('./utils/convertOrganismeToDTO');
 const { encodeStream } = require('iconv-lite');
 const { transformObject } = require('../../../../common/utils/stream-utils');
 
-module.exports = ({ db, configuration, mailing, middlewares }) => {
+module.exports = ({ db, configuration, mailing, authMiddlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let { createJWTAuthMiddleware, checkProfile } = middlewares;
+    let { createJWTAuthMiddleware, checkProfile } = authMiddlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
     let itemsPerPage = configuration.api.pagination;
@@ -82,7 +82,7 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         res.setHeader('Content-disposition', 'attachment; filename=organismes.csv');
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
         res.write(lines);
-        
+
         let handleError = e => {
             logger.error('An error occurred', e);
             res.status(500);
