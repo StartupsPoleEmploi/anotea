@@ -3,9 +3,7 @@ const { buildToken, buildEmail } = require('../utils');
 
 const parseDate = value => new Date(value + 'Z');
 
-module.exports = (db, logger, configuration) => {
-
-    const { findCodeRegionByPostalCode } = require('../../../../common/components/regions')(db);
+module.exports = (db, regions) => {
 
     const buildCodeFinanceur = data => {
         if (data !== 'NULL') {
@@ -70,7 +68,7 @@ module.exports = (db, logger, configuration) => {
             ],
         },
         shouldBeImported: async trainee => {
-            let activeRegion = configuration.app.active_regions.find(ar => ar.code_region === trainee.codeRegion);
+            let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
 
             const count = await db.collection('trainee').countDocuments({
                 'trainee.email': trainee.trainee.email,
@@ -78,7 +76,7 @@ module.exports = (db, logger, configuration) => {
             });
 
             let filters = [];
-            let codeFinanceurs = _.get(activeRegion, 'filters.code_financeurs', []);
+            let codeFinanceurs = _.get(region, 'filters.code_financeurs', []);
             codeFinanceurs.forEach(code => {
                 filters.push(trainee => {
                     let includes = trainee.training.codeFinanceur.includes(code.replace('-', ''));
@@ -86,7 +84,7 @@ module.exports = (db, logger, configuration) => {
                 });
             });
 
-            return count === 0 && trainee.trainee.emailValid && activeRegion && _.every(filters, filter => filter(trainee));
+            return count === 0 && trainee.trainee.emailValid && region && _.every(filters, filter => filter(trainee));
         },
         buildTrainee: async (record, campaign) => {
 
@@ -95,7 +93,7 @@ module.exports = (db, logger, configuration) => {
                     return Promise.reject(new Error(`Données CSV invalides ${record}`));
                 }
 
-                let codeRegion = await findCodeRegionByPostalCode(record['dc_cp_lieuformation']);
+                let region = regions.findRegionByPostalCode(record['dc_cp_lieuformation']);
                 let token = buildToken(record['c_adresseemail']);
                 let { email, mailDomain } = buildEmail(record['c_adresseemail']);
 
@@ -108,7 +106,7 @@ module.exports = (db, logger, configuration) => {
                     mailSent: false,
                     avisCreated: false,
                     token: token,
-                    codeRegion: codeRegion,
+                    codeRegion: region.codeRegion,
                     trainee: {
                         name: record['c_nomcorrespondance'],
                         firstName: record['c_prenomcorrespondance'],

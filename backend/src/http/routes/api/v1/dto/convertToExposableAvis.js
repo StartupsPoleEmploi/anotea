@@ -40,6 +40,7 @@ module.exports = comment => {
             certifications: [{
                 certif_info: training.certifInfo.id,
             }].filter(c => !_.isEmpty(c.certif_info)),
+            //TODO add organisme responsbale data
             action: {
                 numero: training.infoCarif.numeroAction !== 'NULL' ? training.infoCarif.numeroAction : undefined,
                 lieu_de_formation: {

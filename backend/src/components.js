@@ -27,7 +27,7 @@ module.exports = async (options = {}) => {
         sentry: sentry(logger, configuration),
         auth: auth(configuration),
         password,
-        regions: regions(db),
+        regions: regions(),
         moderation: moderation(db, logger, mailer),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),

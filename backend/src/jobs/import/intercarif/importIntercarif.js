@@ -1,7 +1,7 @@
 const moment = require('moment');
-const getFormationsFromCSV = require('./utils/getFormationsFromCSV');
+const getFormationsFromCSV = require('./utils/getFormationsFromXml');
 
-module.exports = async (db, logger, file) => {
+module.exports = async (db, logger, file, regions) => {
     let start = moment();
     let total = 0;
     let collection = db.collection('intercarif');
@@ -9,7 +9,7 @@ module.exports = async (db, logger, file) => {
     await collection.deleteMany({});
 
     return new Promise((resolve, reject) => {
-        getFormationsFromCSV(file)
+        getFormationsFromCSV(file, regions)
         .flatMap(async document => collection.insertOne(document))
         .subscribe(
             () => {

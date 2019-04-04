@@ -3,8 +3,6 @@ const logger = require('./test-logger');
 const importIntercarif = require('../../src/jobs/import/intercarif/importIntercarif');
 const mongoIndexes = require('../../src/jobs/data/indexes/mongoIndexes');
 const { withComponents } = require('./test-components');
-const regions = require('./data/regions');
-const departements = require('./data/departements');
 
 module.exports = {
     withMongoDB: callback => {
@@ -37,18 +35,9 @@ module.exports = {
                 importIntercarif: async file => {
                     let intercarifFile = path.join(__dirname, 'data', 'intercarif-data-test.xml');
                     let db = await getTestDatabase();
+                    let { regions } = await context.getComponents();
 
-                    return importIntercarif(db, logger, file || intercarifFile);
-                },
-                insertDepartements: async () => {
-                    await Promise.all(departements.map(departement => insertIntoDatabase('departements', departement)));
-                    let db = await getTestDatabase();
-                    return mongoIndexes.departements(db);
-                },
-                insertRegions: async () => {
-                    await Promise.all(regions.map(region => insertIntoDatabase('regions', region)));
-                    let db = await getTestDatabase();
-                    return mongoIndexes.regions(db);
+                    return importIntercarif(db, logger, file || intercarifFile, regions);
                 },
             }));
         });

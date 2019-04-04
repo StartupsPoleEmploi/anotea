@@ -112,8 +112,8 @@ export default class AccountActivation extends React.Component {
 
                     {this.state.accountCreated &&
                     <div>
-                        Votre compte a été créé avec succès. Vous pouvez maintenant accéder à <a
-                        onClick={this.onSuccess} role="button">votre espace Anotea</a>.
+                        Votre compte a été créé avec succès. Vous pouvez maintenant accéder à &nbsp;
+                        <a href="#" onClick={this.onSuccess} role="button">votre espace Anotea</a>.
                     </div>}
                 </div>
                 }

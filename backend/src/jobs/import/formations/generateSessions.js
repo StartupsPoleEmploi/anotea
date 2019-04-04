@@ -1,5 +1,8 @@
-module.exports = db => {
-    return db.collection('intercarif').aggregate([
+const roundNotes = require('./roundNotes');
+
+module.exports = async db => {
+
+    await db.collection('intercarif').aggregate([
         {
             $project: {
                 _id: 0,
@@ -7,6 +10,7 @@ module.exports = db => {
                 _meta: 1,
                 intitule_formation: 1,
                 actions: 1,
+                organisme_formation_responsable: 1,
             }
         },
         {
@@ -21,28 +25,20 @@ module.exports = db => {
                 intitule_formation: '$intitule_formation',
                 numero_action: '$actions._attributes.numero',
                 numero_session: '$actions.sessions._attributes.numero',
+                organisme_responsable_siret: '$organisme_formation_responsable.siret_organisme_formation.siret',
+                organisme_responsable_numero: '$organisme_formation_responsable._attributes.numero',
+                organisme_responsable_raison_sociale: '$organisme_formation_responsable.raison_sociale',
                 organisme_formateur_siret: '$actions.organisme_formateur.siret_formateur.siret',
                 organisme_formateur_numero: '$actions.organisme_formateur._attributes.numero',
                 organisme_formateur_raison_sociale: '$actions.organisme_formateur.raison_sociale_formateur',
                 organisme_financeurs: '$actions.organisme_financeurs',
                 lieu_de_formation: '$actions.lieu_de_formation.coordonnees.adresse.codepostal',
                 ville: '$actions.lieu_de_formation.coordonnees.adresse.ville',
-                region: '$actions.lieu_de_formation.coordonnees.adresse.region',
+                code_insee: '$actions.lieu_de_formation.coordonnees.adresse.region',
+                code_region: '$actions.lieu_de_formation.coordonnees.adresse.code_region',
                 certifinfos: '$_meta.certifinfos',
                 formacodes: '$_meta.formacodes',
             }
-        },
-        //Resolving region
-        {
-            $lookup: {
-                from: 'regions',
-                localField: 'region',
-                foreignField: 'codeINSEE',
-                as: 'regions'
-            }
-        },
-        {
-            $unwind: { path: '$regions', preserveNullAndEmptyArrays: true }
         },
         //Reconciling comments
         {
@@ -66,15 +62,16 @@ module.exports = db => {
                                             { $in: ['$training.certifInfo.id', '$$certifinfos'] },
                                             { $in: ['$formacode', '$$formacodes'] }
                                         ]
+                                    },
+                                    {
+                                        $or: [
+                                            { $eq: ['$comment', null] },
+                                            { $eq: ['$published', true] },
+                                            { $eq: ['$rejected', true] },
+                                        ]
                                     }
                                 ]
                             },
-                            $or: [
-                                { 'comment': { $exists: false } },
-                                { 'comment': null },
-                                { 'published': true },
-                                { 'rejected': true },
-                            ]
                         }
                     },
                     {
@@ -97,12 +94,12 @@ module.exports = db => {
                             score: {
                                 nb_avis: '$count',
                                 notes: {
-                                    accueil: { $ceil: '$accueil' },
-                                    contenu_formation: { $ceil: '$contenu_formation' },
-                                    equipe_formateurs: { $ceil: '$equipe_formateurs' },
-                                    moyen_materiel: { $ceil: '$moyen_materiel' },
-                                    accompagnement: { $ceil: '$accompagnement' },
-                                    global: { $ceil: '$global' }
+                                    accueil: { $avg: '$accueil' },
+                                    contenu_formation: { $avg: '$contenu_formation' },
+                                    equipe_formateurs: { $avg: '$equipe_formateurs' },
+                                    moyen_materiel: { $avg: '$moyen_materiel' },
+                                    accompagnement: { $avg: '$accompagnement' },
+                                    global: { $avg: '$global' }
                                 },
                             }
                         }
@@ -125,8 +122,8 @@ module.exports = db => {
                 newRoot: {
                     _id: { $concat: ['$numero_formation', '|', '$numero_action', '|', '$numero_session'] },
                     numero: '$numero_session',
-                    region: '$region',
-                    code_region: '$regions.codeRegion',
+                    region: '$code_insee',
+                    code_region: '$code_region',
                     avis: { $ifNull: ['$reconciliation.comments', []] },
                     score: '$reconciliation.score',
                     formation: {
@@ -135,7 +132,14 @@ module.exports = db => {
                         domaine_formation: {
                             formacodes: '$formacodes',
                         },
-                        certifications: '$certifinfos',
+                        certifications: {
+                            certifinfos: '$certifinfos',
+                        },
+                        organisme_responsable: {
+                            raison_sociale: '$organisme_responsable_raison_sociale',
+                            siret: '$organisme_responsable_siret',
+                            numero: '$organisme_responsable_numero',
+                        },
                         action: {
                             numero: '$numero_action',
                             lieu_de_formation: {
@@ -151,9 +155,14 @@ module.exports = db => {
                         },
                     },
                     meta: {
-                        source: 'intercarif',
+                        source: {//TODO remove source field in v2
+                            numero_formation: '$numero_formation',
+                            numero_action: '$numero_action',
+                            numero_session: '$numero_session',
+                            type: 'intercarif',
+                        },
                         reconciliation: {
-                            organisme_formateur: '$organisme_formateur_siret',
+                            organisme_formateur: '$organisme_formateur_siret',//TODO must be converted into an array in v2
                             lieu_de_formation: '$lieu_de_formation',
                             certifinfos: '$certifinfos',
                             formacodes: '$formacodes',
@@ -181,5 +190,9 @@ module.exports = db => {
             $out: 'sessionsReconciliees'
         }
     ], { allowDiskUse: true }).toArray();
+
+    await roundNotes(db, 'sessionsReconciliees');
+
+    return { imported: await db.collection('sessionsReconciliees').countDocuments() };
 };
 

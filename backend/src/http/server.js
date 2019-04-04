@@ -1,4 +1,5 @@
 const path = require('path');
+const uuid = require('node-uuid');
 const express = require('express');
 const _ = require('lodash');
 const bodyParser = require('body-parser');
@@ -15,6 +16,11 @@ module.exports = components => {
         middlewares: middlewares(auth, logger, configuration),
     });
 
+    let requestIdMiddleware = (req, res, next) => {
+        req.requestId = uuid.v4();
+        next();
+    };
+
     let logMiddleware = (req, res, next) => {
         res.on('finish', () => {
             let error = req.err;
@@ -27,6 +33,7 @@ module.exports = components => {
                     }
                 }),
                 request: {
+                    requestId: req.requestId,
                     url: {
                         full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
                         relative: (req.baseUrl || '') + (req.url || ''),
@@ -48,6 +55,7 @@ module.exports = components => {
         next();
     };
 
+    app.use(requestIdMiddleware);
     app.use(logMiddleware);
     app.use(cookieParser(configuration.security.secret));
     app.use(express.static(path.join(__dirname, '/public')));
@@ -91,7 +99,7 @@ module.exports = components => {
                 res.setHeader('Retry-After', Math.ceil(this.windowMs / 1000));
             }
 
-            sentry.sendError(Boom.tooManyRequests(this.message));
+            sentry.sendError(Boom.tooManyRequests(this.message), { requestId: req.requestId });
 
             res.format({
                 html: () => {
@@ -108,8 +116,9 @@ module.exports = components => {
     app.use('/api', require('./routes/swagger')(httpComponents));
     app.use('/api', require('./routes/api/v1/ping')(httpComponents));
     app.use('/api', require('./routes/api/v1/avis')(httpComponents));
-    app.use('/api', require('./routes/api/v1/sessions')(httpComponents));
+    app.use('/api', require('./routes/api/v1/formations')(httpComponents));
     app.use('/api', require('./routes/api/v1/actions')(httpComponents));
+    app.use('/api', require('./routes/api/v1/sessions')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs')(httpComponents));
     app.use('/api', require('./routes/stats')(httpComponents));
     app.use('/api', require('./routes/api/kairos')(httpComponents));
@@ -155,7 +164,7 @@ module.exports = components => {
         }
 
         if (error.output.statusCode > 404) {
-            sentry.sendError(rawError);
+            sentry.sendError(rawError, { requestId: req.requestId });
         }
         return res.status(error.output.statusCode).send(error.output.payload);
     });

@@ -5,26 +5,25 @@ const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
 const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/generateOrganismesFromKairos');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertDepartements }) => {
+describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
     it('should create collection with organismes from CSV file', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
-        await insertDepartements();
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');;
 
         let stats = await generateOrganismesFromKairos(db, logger, csvFile);
 
-        assert.deepEqual(stats, {
+        assert.deepStrictEqual(stats, {
             inserted: 3,
             invalid: 0,
         });
 
         let count = await db.collection('kairos_organismes').countDocuments();
-        assert.deepEqual(count, 3);
+        assert.deepStrictEqual(count, 3);
 
         let organisme = await db.collection('kairos_organismes').findOne();
-        assert.deepEqual(_.omit(organisme, ['_id']), {
+        assert.deepStrictEqual(_.omit(organisme, ['_id']), {
             siret: '11111111111111',
             codeRegion: '7',
             libelle: 'Pole Emploi Alsace',

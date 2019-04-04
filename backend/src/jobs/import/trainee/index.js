@@ -15,8 +15,7 @@ const sources = {
     'IDF': 'ileDeFrance',
 };
 
-
-execute(async ({ logger, db, exit, configuration, mailer }) => {
+execute(async ({ logger, db, exit, regions, mailer }) => {
 
     const handleValidationError = (validationError, csvOptions) => {
         let { line, type } = validationError;
@@ -68,7 +67,7 @@ execute(async ({ logger, db, exit, configuration, mailer }) => {
 
     let importer = createImporter(db, logger);
     let createHandler = require(`./handlers/${sources[cli.source]}CSVHandler`);
-    let handler = createHandler(db, logger, configuration);
+    let handler = createHandler(db, regions);
     let filters = {
         codeRegion: cli.region,
         startDate: cli.since && cli.since.toDate(),

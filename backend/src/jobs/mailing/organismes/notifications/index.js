@@ -3,9 +3,9 @@
 
 const cli = require('commander');
 const NotificationMailer = require('./NotificationMailer');
-const { findActiveRegions, execute } = require('../../../job-utils');
+const { execute } = require('../../../job-utils');
 
-execute(async ({ logger, db, configuration, mailer }) => {
+execute(async ({ logger, db, configuration, mailer, regions }) => {
 
     let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
 
@@ -20,6 +20,6 @@ execute(async ({ logger, db, configuration, mailer }) => {
         limit: cli.limit,
         delay: cli.delay,
         codeRegions: cli.region ? [cli.region] :
-            findActiveRegions(configuration.app.active_regions, 'organismes.notifications'),
+            regions.findActiveRegions('mailing.organismes.notifications').map(region => region.codeRegion),
     });
 });

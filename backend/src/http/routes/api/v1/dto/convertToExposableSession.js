@@ -10,14 +10,5 @@ module.exports = session => {
         dto.avis = dto.avis.map(c => convertToExposableAvis(c));
     }
 
-    if (session.meta && session.formation) {
-        dto.meta.source = {
-            numero_formation: session.formation.numero,
-            numero_action: session.formation.action.numero,
-            numero_session: session.numero,
-            type: dto.meta.source,
-        };
-    }
-
     return _.pick(dto, ['id', 'numero', 'region', 'score', 'avis', 'meta']);
 };

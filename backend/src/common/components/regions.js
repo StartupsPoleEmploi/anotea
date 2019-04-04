@@ -1,36 +1,35 @@
-module.exports = db => ({
-    findCodeRegionByPostalCode: async postalCode => {
+const _ = require('lodash');
+const regions = require('../../../config/regions.json');
+
+module.exports = () => ({
+    findRegionByPostalCode: postalCode => {
         let code = postalCode.substr(0, 2) !== '97' ? postalCode.substr(0, 2) : postalCode.substr(0, 3);
 
-        let departement = await db.collection('departements').findOne({
-            dept_num: `${parseInt(code, 10)}`,
-        });
+        let region = regions.find(region => region.departements.find(dep => dep === code));
 
-        if (!departement) {
-            return Promise.reject(new Error(`Code region inconnu pour le departement ${code}`));
-        } else {
-            return departement.region_num;
-        }
-    },
-    findCodeRegionByName: async name => {
-
-        let results = await db.collection('departements')
-        .find({ $text: { $search: name } }, { score: { $meta: 'textScore' } })
-        .project({ score: { $meta: 'textScore' } })
-        .sort({ score: { $meta: 'textScore' } })
-        .limit(1)
-        .toArray();
-
-        let region = results[0];
         if (!region) {
-            let regionName = name.split(' ').join('-');
-            return Promise.reject(new Error(`Nom de region inconnu: ${regionName}`));
-        } else {
-            return region.region_num;
+            throw new Error(`Code region inconnu pour le departement ${code}`);
         }
+        return region;
+
     },
-    findRegionByCodeRegion: async codeRegion => {
-        let region = await db.collection('regions').findOne({ codeRegion: codeRegion });
-        return region ? region : Promise.reject(new Error(`Region inconnue pour le code region: ${codeRegion}`));
+    findActiveRegions: feature => {
+        return regions
+        .filter(region => region.active === true)
+        .filter(region => !feature || _.get(region, feature) === true);
+    },
+    findRegionByCodeRegion: codeRegion => {
+        let region = regions.find(region => region.codeRegion === codeRegion);
+        if (!region) {
+            throw new Error(`Region inconnue pour le code region: ${codeRegion}`);
+        }
+        return region;
+    },
+    findRegionByCodeINSEE: codeINSEE => {
+        let region = regions.find(region => region.codeINSEE === codeINSEE);
+        if (!region) {
+            throw new Error(`Region inconnue pour le code INSEE: ${codeINSEE}`);
+        }
+        return region;
     },
 });
