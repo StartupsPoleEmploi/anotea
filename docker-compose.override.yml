@@ -1,6 +1,15 @@
 version: '3.3'
 services:
 
+  backend:
+    depends_on:
+      - fluentbit
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: docker.backend
+
   mongodb:
     image: mongo:4.0.4-xenial
     container_name: anotea_mongodb
@@ -9,9 +18,65 @@ services:
       - ./.data/mongodb/db:/data/db
       - ./.data/mongodb/config:/data/configdb
       - ./.data/backups/mongodb:/data/backups
+    depends_on:
+      - fluentbit
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: docker.mongodb
 
   smtp:
     image: mailhog/mailhog
     container_name: anotea_smtp
     ports:
       - 8024:8025
+    depends_on:
+      - fluentbit
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: docker.smtp
+
+
+  ###########
+  #EFK stack
+  ##########
+
+  fluentbit:
+    image: anotea_fluentbit
+    container_name: anotea_fluentbit
+    build:
+      context: misc/efk/fluentbit
+    ports:
+      - "24224:24224"
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+      - ELASTICSEARCH_TLS=false
+      - ELASTICSEARCH_USER=
+      - ELASTICSEARCH_PASSWORD=
+
+  elasticsearch:
+    image: anotea_elasticsearch
+    container_name: anotea_elasticsearch
+    build:
+      context: misc/efk/elasticsearch
+    volumes:
+      - ./.data/elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+
+  kibana:
+    image: anotea_kibana
+    container_name: anotea_kibana
+    build:
+      context: misc/efk/kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
