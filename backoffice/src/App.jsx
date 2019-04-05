@@ -73,7 +73,8 @@ class App extends Component {
         } else if (qs.action === 'loginWithAccessToken') {
             this.state = {
                 action: 'loginWithAccessToken',
-                access_token: qs.access_token
+                access_token: qs.access_token,
+                origin: qs.access_token,
             };
         }
     }
@@ -94,7 +95,6 @@ class App extends Component {
         removeToken();
         //Reload page to flush all react states
         window.location.href = '/admin';
-        window.location.reload(true);
     };
 
     handleLoggedIn = result => {
@@ -165,6 +165,7 @@ class App extends Component {
                     {showLoginWithAccessToken &&
                     <LoginWithAccessToken
                         access_token={this.state.access_token}
+                        origin={this.state.origin}
                         handleLoggedIn={this.handleLoggedIn}
                         handleLogout={this.handleLogout} />}
 
