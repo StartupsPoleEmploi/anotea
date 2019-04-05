@@ -1,6 +1,7 @@
 const Boom = require('boom');
 const _ = require('lodash');
 const uuid = require('node-uuid');
+const RateLimit = require('express-rate-limit');
 const { tryAndCatch } = require('./routes/routes-utils');
 
 module.exports = (auth, logger, configuration) => {
@@ -180,6 +181,41 @@ module.exports = (auth, logger, configuration) => {
             req.requestId = uuid.v4();
             next();
         },
+        allowCORS: () => (req, res, next) => {
+            res.removeHeader('X-Powered-By');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+            res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+            res.setHeader('Access-Control-Allow-Credentials', true);
+            // intercept OPTIONS method
+            if (req.method === 'OPTIONS') {
+                res.sendStatus(200);
+            } else {
+                next();
+            }
+        },
+        addRateLimit: sentry => new RateLimit({
+            keyGenerator: req => req.headers['x-forwarded-for'] || req.ip,
+            windowMs: 1 * 60 * 1000, // 1 minute
+            max: 120, // 2 requests per seconds
+            delayMs: 0, // disabled
+            handler: function(req, res) {
+                if (this.headers) {
+                    res.setHeader('Retry-After', Math.ceil(this.windowMs / 1000));
+                }
+
+                sentry.sendError(Boom.tooManyRequests(this.message), { requestId: req.requestId });
+
+                res.format({
+                    html: () => {
+                        res.status(this.statusCode).end(this.message);
+                    },
+                    json: () => {
+                        res.status(this.statusCode).json({ message: this.message });
+                    }
+                });
+            }
+        }),
     };
 };
 

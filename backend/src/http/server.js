@@ -2,7 +2,6 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const RateLimit = require('express-rate-limit');
 const Boom = require('boom');
 const createMiddlewares = require('./middlewares');
 
@@ -22,6 +21,7 @@ module.exports = components => {
 
     app.use(middlewares.addRequestId());
     app.use(middlewares.logHttpRequests());
+    app.use(middlewares.allowCORS());
     app.use(cookieParser(configuration.security.secret));
     app.use(express.static(path.join(__dirname, '/public')));
     app.use(bodyParser.urlencoded({ extended: true }));
@@ -33,45 +33,8 @@ module.exports = components => {
         }
     }));
 
-    // Allowing CORS
-    app.use(function(req, res, next) {
-        res.removeHeader('X-Powered-By');
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-        res.setHeader('Access-Control-Allow-Credentials', true);
-        // intercept OPTIONS method
-        if (req.method === 'OPTIONS') {
-            res.sendStatus(200);
-        } else {
-            next();
-        }
-    });
-
-    app.use('/api/', new RateLimit({
-        keyGenerator: req => req.headers['x-forwarded-for'] || req.ip,
-        windowMs: 1 * 60 * 1000, // 1 minute
-        max: 120, // 2 requests per seconds
-        delayMs: 0, // disabled
-        handler: function(req, res) {
-            if (this.headers) {
-                res.setHeader('Retry-After', Math.ceil(this.windowMs / 1000));
-            }
-
-            sentry.sendError(Boom.tooManyRequests(this.message), { requestId: req.requestId });
-
-            res.format({
-                html: () => {
-                    res.status(this.statusCode).end(this.message);
-                },
-                json: () => {
-                    res.status(this.statusCode).json({ message: this.message });
-                }
-            });
-        }
-    }));
-
     //Public routes
+    app.use('/api/', middlewares.addRateLimit(sentry));
     app.use('/api', require('./routes/swagger')(httpComponents));
     app.use('/api', require('./routes/api/v1/ping')(httpComponents));
     app.use('/api', require('./routes/api/v1/avis')(httpComponents));
