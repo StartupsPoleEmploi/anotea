@@ -9,7 +9,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./.data/nginx:/var/log/nginx:rw
+      - ./.data/nginx:/data:rw
     depends_on:
       - backend
       - backoffice
