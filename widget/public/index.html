@@ -4,14 +4,32 @@
     <meta charset="utf-8" />
     <script src="%PUBLIC_URL%/vendor/webcomponents-bundle.js"></script>
     <script src="%PUBLIC_URL%/vendor/custom-elements-es5-adapter.js"></script>
-    <script>if (!window.customElements) { document.write("erreur: navigateur non supporté"); } else { document.write('<widget-anotea></widget-anotea>')} </script>
+    <script>if (!window.customElements) { document.write("erreur: navigateur non supporté"); } </script>
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous"></link>
     <title>Demo Widget Anotea</title>
+
+    <style>
+        h1, h2, h3 {
+            color: red;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        body {
+            font-family: monospace;
+            color: purple;
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+
   </head>
   <body>
-    <div id="widgetAnotea" niveau="organisme" siret="13000460900017"></div>
-    <div id="widgetAnotea" niveau="actionFormation" numeroAction="01_29673"></div>
+    <h1>Lorem ipsum</h1>
+    
+    <p>dolor sit amet, consectetur adipiscing elit. Maecenas eu tristique lorem. Nam sodales vitae sapien at sollicitudin. Quisque id gravida turpis. In tincidunt urna felis, id ornare nisl vestibulum ut. Fusce fringilla elit felis, eu tincidunt justo egestas a. Cras eget justo vitae arcu elementum luctus. Nullam eu porta est. In fermentum nisl vitae orci sodales efficitur. Nunc rhoncus et nunc molestie lacinia. Sed sit amet tristique velit.</p>
+    
+    <widget-anotea id="widgetAnotea" niveau="organisme" siret="13001727000567"></widget-anotea>
+    <widget-anotea id="widgetAnotea" niveau="actionFormation" numeroAction="01_29673"></widget-anotea>
   </body>
 </html>
-
