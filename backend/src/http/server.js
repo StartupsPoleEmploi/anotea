@@ -1,62 +1,27 @@
 const path = require('path');
-const uuid = require('node-uuid');
 const express = require('express');
-const _ = require('lodash');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const RateLimit = require('express-rate-limit');
 const Boom = require('boom');
-const middlewares = require('./middlewares');
+const createMiddlewares = require('./middlewares');
 
 module.exports = components => {
 
     let app = express();
     let { logger, configuration, sentry, auth } = components;
+    let middlewares = createMiddlewares(auth, logger, configuration);
     let httpComponents = Object.assign({}, components, {
-        middlewares: middlewares(auth, logger, configuration),
+        middlewares: middlewares,
     });
 
-    let requestIdMiddleware = (req, res, next) => {
-        req.requestId = uuid.v4();
-        next();
-    };
+    // inject Google Analytics and Hotjar tracking id into views
+    app.locals.analytics = configuration.analytics;
+    app.set('view engine', 'ejs');
+    app.set('views', path.join(__dirname, 'views'));
 
-    let logMiddleware = (req, res, next) => {
-        res.on('finish', () => {
-            let error = req.err;
-            logger[error ? 'error' : 'info']({
-                type: 'http',
-                ...(!error ? {} : {
-                    error: {
-                        ...error,
-                        stack: error.stack,
-                    }
-                }),
-                request: {
-                    requestId: req.requestId,
-                    url: {
-                        full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
-                        relative: (req.baseUrl || '') + (req.url || ''),
-                        path: (req.baseUrl || '') + (req.path || ''),
-                        parameters: _.omit(req.query, ['access_token']),
-                    },
-                    method: req.method,
-                    headers: req.headers,
-                    body: _.omit(req.body, ['password'])
-                },
-                response: {
-                    statusCode: res.statusCode,
-                    statusCodeAsString: `${res.statusCode}`,
-                    headers: res._headers,
-                },
-            }, `Http Request ${error ? 'KO' : 'OK'}`);
-        });
-
-        next();
-    };
-
-    app.use(requestIdMiddleware);
-    app.use(logMiddleware);
+    app.use(middlewares.addRequestId());
+    app.use(middlewares.logHttpRequests());
     app.use(cookieParser(configuration.security.secret));
     app.use(express.static(path.join(__dirname, '/public')));
     app.use(bodyParser.urlencoded({ extended: true }));
@@ -67,12 +32,6 @@ module.exports = components => {
             }
         }
     }));
-
-    // inject Google Analytics and Hotjar tracking id into views
-    app.locals.analytics = configuration.analytics;
-
-    app.set('view engine', 'ejs');
-    app.set('views', path.join(__dirname, 'views'));
 
     // Allowing CORS
     app.use(function(req, res, next) {
