@@ -5,5 +5,7 @@ RUN apt-get update \
 
 COPY app/logrotate.d/logrotate.conf /etc/logrotate.conf
 COPY app/nginx /etc/nginx
+COPY app/start.sh /opt/nginx/start.sh
+RUN chmod +x /opt/nginx/start.sh
 
-CMD nginx && tail -f /data/log/*.log
+CMD /opt/nginx/start.sh
