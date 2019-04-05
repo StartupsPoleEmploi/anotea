@@ -20,10 +20,9 @@ class AnoteaWidget extends Component {
         average: 0
     }
 
-    constructor() {
+    constructor(props) {
         super();
-        let e = document.getElementById('widgetAnotea');
-        this.state = { niveau: e.getAttribute('niveau'), siret: e.getAttribute('siret'), numeroAction: e.getAttribute('numeroAction') }
+        this.state = { niveau: props.niveau, siret: props.siret, numeroAction: props.numeroAction }
         if (this.state.niveau === 'organisme') {
             this.loadOrganismeInfo(this.state.siret);
         } else {
@@ -45,7 +44,6 @@ class AnoteaWidget extends Component {
         let stats = await getOrganismeStats(siret);
         let avis = await getOrganismeAvis(siret);
         if (stats.organismes_formateurs.length > 0) {
-            console.log(stats.organismes_formateurs[0].score)
             this.setState({ score: stats.organismes_formateurs[0].score, avis: avis.avis, average: this.getAverage(avis.avis) });
         }
     }
