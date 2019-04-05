@@ -8,6 +8,10 @@ services:
 env:
   - DOCKER_COMPOSE_VERSION=1.23.0
 
+cache:
+  directories:
+    - /home/travis/node_modules
+
 before_install:
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -16,7 +20,8 @@ before_install:
 
 install:
   - docker-compose build backend mongodb
-  - docker-compose -f docker-compose.yml -f docker-compose.test.yml up -d --no-deps backend mongodb
+  - docker-compose -f docker-compose.yml -f docker-compose.travis.yml up -d --no-deps backend mongodb
 
 script:
+  - docker exec anotea_backend bash -c "npm ci"
   - docker exec anotea_backend bash -c "npm run test:all"

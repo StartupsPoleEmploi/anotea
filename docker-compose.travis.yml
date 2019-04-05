@@ -1,6 +1,10 @@
 version: '3.3'
 services:
 
+  backend:
+    volumes:
+      - /home/travis/node_modules:/opt/anotea/backend/node_modules:rw
+
   mongodb:
     image: mongo:4.0.4-xenial
     container_name: anotea_mongodb
