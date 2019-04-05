@@ -2,4 +2,9 @@ version: '3.3'
 services:
 
   mongodb:
+    image: mongo:4.0.4-xenial
+    container_name: anotea_mongodb
     command: --storageEngine=ephemeralForTest --wiredTigerCacheSizeGB 1
+
+  smtp:
+    image: rwgrim/docker-noop

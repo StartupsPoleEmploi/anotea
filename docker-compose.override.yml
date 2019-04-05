@@ -1,3 +1,6 @@
+# This file is for dev only and is ignored on other environments.
+# It can be overridden locally by creating a file named docker-compose.local.yml
+
 version: '3.3'
 services:
 
