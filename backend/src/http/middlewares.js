@@ -1,4 +1,6 @@
 const Boom = require('boom');
+const _ = require('lodash');
+const uuid = require('node-uuid');
 const { tryAndCatch } = require('./routes/routes-utils');
 
 module.exports = (auth, logger, configuration) => {
@@ -89,6 +91,94 @@ module.exports = (auth, logger, configuration) => {
                 }
                 next();
             });
+        },
+        logHttpRequests: () => (req, res, next) => {
+            const accumulator = {};
+
+            let jsonify = data => {
+                try {
+                    return JSON.parse(data);
+                } catch (e) {
+                    return data;
+                }
+            };
+
+            const shouldRecordChunks = req => {
+                //Include only specific routes
+                return new RegExp('^/api/kairos/.*').test(req.url) ||
+                    new RegExp('^/api/backoffice/generate-auth-url.*').test(req.url);
+            };
+
+            const createChunkRecorder = res => {
+                const chunks = [];
+
+                return {
+                    proxifyWrite: target => chunk => {
+                        chunks.push(chunk);
+                        target.apply(res, [chunk]);
+                    },
+                    proxifyEnd: (target, callback) => chunk => {
+                        if (chunk) {
+                            chunks.push(chunk);
+                        }
+                        callback(chunks);
+                        target.apply(res, [chunk]);
+                    }
+                };
+            };
+
+            let log = () => {
+                res.removeListener('finish', log);
+                res.removeListener('close', log);
+
+                let error = req.err;
+                logger[error ? 'error' : 'info']({
+                    type: 'http',
+                    ...(!error ? {} : {
+                        error: {
+                            ...error,
+                            stack: error.stack,
+                        }
+                    }),
+                    request: {
+                        requestId: req.requestId,
+                        url: {
+                            full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
+                            relative: (req.baseUrl || '') + (req.url || ''),
+                            path: (req.baseUrl || '') + (req.path || ''),
+                            parameters: _.omit(req.query, ['access_token']),
+                        },
+                        method: req.method,
+                        headers: req.headers,
+                        body: _.omit(req.body, ['password'])
+                    },
+                    response: {
+                        statusCode: res.statusCode,
+                        statusCodeAsString: `${res.statusCode}`,
+                        headers: res._headers,
+                        body: shouldRecordChunks(req) ? jsonify(accumulator.chunks) : undefined,
+                    },
+                }, `Http Request ${error ? 'KO' : 'OK'}`);
+            };
+
+            res.on('close', log);
+            res.on('finish', log);
+
+            if (shouldRecordChunks(req)) {
+                const recorder = createChunkRecorder(res);
+                res.write = recorder.proxifyWrite(res.write);
+                res.end = recorder.proxifyEnd(res.end, chunks => {
+                    let allChunksAreBuffers = _.every(chunks, c => Buffer.isBuffer(c));
+                    accumulator.chunks = allChunksAreBuffers ? Buffer.concat(chunks).toString('utf8') : chunks;
+                });
+            }
+
+            next();
+
+        },
+        addRequestId: () => (req, res, next) => {
+            req.requestId = uuid.v4();
+            next();
         },
     };
 };
