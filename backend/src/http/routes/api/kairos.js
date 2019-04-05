@@ -74,7 +74,7 @@ module.exports = ({ db, auth, middlewares }) => {
         let accessToken = await getAccessToken(organisme);
 
         return res.json({
-            url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&kairos=true&access_token=${accessToken}`,
+            url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&origin=kairos&access_token=${accessToken}`,
             meta: {
                 created,
                 organisme: convertToExposableOrganismeFomateur(organisme),
@@ -82,8 +82,7 @@ module.exports = ({ db, auth, middlewares }) => {
         });
     });
 
-    //Deprecated route
-    router.post('/backoffice/generate-auth-url', checkAuth, generateAuthUrlRoute);
+    router.post('/backoffice/generate-auth-url', checkAuth, generateAuthUrlRoute);//Deprecated
     router.post('/kairos/generate-auth-url', checkAuth, generateAuthUrlRoute);
 
     router.get('/kairos/check-if-organisme-is-eligible', checkAuth, tryAndCatch(async (req, res) => {
