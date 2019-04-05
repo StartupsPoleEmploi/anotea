@@ -48,7 +48,8 @@ export default class Questionnaire extends Component {
         accord: false,
         accordEntreprise: false,
         showErrorMessage: null,
-        submitButtonClicked: false
+        submitButtonClicked: false,
+        submitting: false,
     };
 
     scrollToTop = () => {
@@ -77,30 +78,38 @@ export default class Questionnaire extends Component {
         this.setState({ showModal: false });
     };
 
-    submit = async () => {
-        try {
-            let data = await submitAvis(this.props.stagiaire.token, {
-                avis_accueil: this.state.notes[0].value,
-                avis_contenu_formation: this.state.notes[1].value,
-                avis_equipe_formateurs: this.state.notes[2].value,
-                avis_moyen_materiel: this.state.notes[3].value,
-                avis_accompagnement: this.state.notes[4].value,
-                pseudo: this.state.commentaire.pseudo.value,
-                commentaire: {
-                    texte: this.state.commentaire.texte.value,
-                    titre: this.state.commentaire.titre.value,
-                },
-                accord: this.state.accord,
-                accordEntreprise: this.state.accordEntreprise
-            });
-            this.props.onSubmit(data);
-            this.scrollToTop();
-        } catch (ex) {
-            console.error('An error occured', ex);
-            this.setState({ showErrorMessage: true });
+    submit = () => {
+
+        if (this.state.submitting) {
+            return;
         }
 
-        this.closeModal();
+        this.setState({ submitting: true }, async () => {
+            try {
+                let data = await submitAvis(this.props.stagiaire.token, {
+                    avis_accueil: this.state.notes[0].value,
+                    avis_contenu_formation: this.state.notes[1].value,
+                    avis_equipe_formateurs: this.state.notes[2].value,
+                    avis_moyen_materiel: this.state.notes[3].value,
+                    avis_accompagnement: this.state.notes[4].value,
+                    pseudo: this.state.commentaire.pseudo.value,
+                    commentaire: {
+                        texte: this.state.commentaire.texte.value,
+                        titre: this.state.commentaire.titre.value,
+                    },
+                    accord: this.state.accord,
+                    accordEntreprise: this.state.accordEntreprise
+                });
+                this.props.onSubmit(data);
+                this.scrollToTop();
+            } catch (ex) {
+                console.error('An error occured', ex);
+                this.setState({ showErrorMessage: true });
+            }
+
+            this.setState({ submitting: false });
+            this.closeModal();
+        });
     };
 
     computeAverageScore = () => {
