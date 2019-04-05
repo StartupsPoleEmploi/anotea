@@ -21,9 +21,9 @@ RUN mkdir $NVM_DIR \
 
 #Download npm dependencies
 COPY package.json package-lock.json /tmp/
-RUN cd /tmp && npm ci && mkdir -p /opt/anotea/questionnaire && mv /tmp/node_modules /opt/anotea/questionnaire/
-COPY ./ /opt/anotea/questionnaire
-WORKDIR /opt/anotea/questionnaire
+RUN cd /tmp && npm ci && mkdir -p /opt/anotea/backoffice && mv /tmp/node_modules /opt/anotea/backoffice/
+COPY ./ /opt/anotea/backoffice
+WORKDIR /opt/anotea/backoffice
 
 #Build project
 RUN REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID=${ANOTEA_GOOGLE_ANALYTICS_ID} \

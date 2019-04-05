@@ -1,6 +1,6 @@
 const express = require('express');
 const { ObjectID } = require('mongodb');
-const { tryAndCatch } = require('../../routes-utils');
+const { tryAndCatch } = require('../../../routes-utils');
 
 module.exports = ({ db, password, configuration }) => {
 

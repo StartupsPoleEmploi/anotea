@@ -1,9 +1,9 @@
 const express = require('express');
-const moment = require('moment');
-const { encodeStream } = require('iconv-lite');
+const moment = require('moment/moment');
+const { encodeStream } = require('iconv-lite/lib/index');
 const Boom = require('boom');
-const { tryAndCatch } = require('./routes-utils');
-const { jsonStream, transformObject } = require('../../common/utils/stream-utils');
+const { tryAndCatch } = require('../routes-utils');
+const { jsonStream, transformObject } = require('../../../common/utils/stream-utils');
 
 const financeurs = {
     '0': 'Autre',

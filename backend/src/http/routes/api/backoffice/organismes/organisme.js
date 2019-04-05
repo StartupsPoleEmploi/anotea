@@ -1,6 +1,6 @@
 const express = require('express');
 const Boom = require('boom');
-const { tryAndCatch } = require('../../routes-utils');
+const { tryAndCatch } = require('../../../routes-utils');
 
 module.exports = ({ db, configuration, password, middlewares }) => {
 

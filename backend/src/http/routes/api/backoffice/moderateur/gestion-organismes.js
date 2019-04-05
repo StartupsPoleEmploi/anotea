@@ -1,12 +1,12 @@
 const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
-const { IdNotFoundError } = require('../../../../common/errors');
-const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
-const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
+const { IdNotFoundError } = require('../../../../../common/errors');
+const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
+const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
 const convertOrganismeToDTO = require('./utils/convertOrganismeToDTO');
 const { encodeStream } = require('iconv-lite');
-const { transformObject } = require('../../../../common/utils/stream-utils');
+const { transformObject } = require('../../../../../common/utils/stream-utils');
 
 module.exports = ({ db, configuration, mailing, middlewares }) => {
 
@@ -82,7 +82,7 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         res.setHeader('Content-disposition', 'attachment; filename=organismes.csv');
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
         res.write(lines);
-        
+
         let handleError = e => {
             logger.error('An error occurred', e);
             res.status(500);

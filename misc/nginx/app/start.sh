@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-nginx -g "daemon off;"
+mkdir -p /data/log
+touch /data/log/error.log
+touch /data/log/access.log
+
+nginx && tail -f /data/log/*.log

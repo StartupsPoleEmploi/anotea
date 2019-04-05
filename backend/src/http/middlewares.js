@@ -1,4 +1,7 @@
 const Boom = require('boom');
+const _ = require('lodash');
+const uuid = require('node-uuid');
+const RateLimit = require('express-rate-limit');
 const { tryAndCatch } = require('./routes/routes-utils');
 
 module.exports = (auth, logger, configuration) => {
@@ -90,6 +93,129 @@ module.exports = (auth, logger, configuration) => {
                 next();
             });
         },
+        logHttpRequests: () => (req, res, next) => {
+            const accumulator = {};
+
+            let jsonify = data => {
+                try {
+                    return JSON.parse(data);
+                } catch (e) {
+                    return data;
+                }
+            };
+
+            const shouldRecordChunks = req => {
+                //Include only specific routes
+                return new RegExp('^/api/kairos/.*').test(req.url) ||
+                    new RegExp('^/api/backoffice/generate-auth-url.*').test(req.url);
+            };
+
+            const createChunkRecorder = res => {
+                const chunks = [];
+
+                return {
+                    proxifyWrite: target => chunk => {
+                        chunks.push(chunk);
+                        target.apply(res, [chunk]);
+                    },
+                    proxifyEnd: (target, callback) => chunk => {
+                        if (chunk) {
+                            chunks.push(chunk);
+                        }
+                        callback(chunks);
+                        target.apply(res, [chunk]);
+                    }
+                };
+            };
+
+            let log = () => {
+                res.removeListener('finish', log);
+                res.removeListener('close', log);
+
+                let error = req.err;
+                logger[error ? 'error' : 'info']({
+                    type: 'http',
+                    ...(!error ? {} : {
+                        error: {
+                            ...error,
+                            stack: error.stack,
+                        }
+                    }),
+                    request: {
+                        requestId: req.requestId,
+                        url: {
+                            full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
+                            relative: (req.baseUrl || '') + (req.url || ''),
+                            path: (req.baseUrl || '') + (req.path || ''),
+                            parameters: _.omit(req.query, ['access_token']),
+                        },
+                        method: req.method,
+                        headers: req.headers,
+                        body: _.omit(req.body, ['password'])
+                    },
+                    response: {
+                        statusCode: res.statusCode,
+                        statusCodeAsString: `${res.statusCode}`,
+                        headers: res._headers,
+                        body: shouldRecordChunks(req) ? jsonify(accumulator.chunks) : undefined,
+                    },
+                }, `Http Request ${error ? 'KO' : 'OK'}`);
+            };
+
+            res.on('close', log);
+            res.on('finish', log);
+
+            if (shouldRecordChunks(req)) {
+                const recorder = createChunkRecorder(res);
+                res.write = recorder.proxifyWrite(res.write);
+                res.end = recorder.proxifyEnd(res.end, chunks => {
+                    let allChunksAreBuffers = _.every(chunks, c => Buffer.isBuffer(c));
+                    accumulator.chunks = allChunksAreBuffers ? Buffer.concat(chunks).toString('utf8') : chunks;
+                });
+            }
+
+            next();
+
+        },
+        addRequestId: () => (req, res, next) => {
+            req.requestId = uuid.v4();
+            next();
+        },
+        allowCORS: () => (req, res, next) => {
+            res.removeHeader('X-Powered-By');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+            res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+            res.setHeader('Access-Control-Allow-Credentials', true);
+            // intercept OPTIONS method
+            if (req.method === 'OPTIONS') {
+                res.sendStatus(200);
+            } else {
+                next();
+            }
+        },
+        addRateLimit: sentry => new RateLimit({
+            keyGenerator: req => req.headers['x-forwarded-for'] || req.ip,
+            windowMs: 1 * 60 * 1000, // 1 minute
+            max: 120, // 2 requests per seconds
+            delayMs: 0, // disabled
+            handler: function(req, res) {
+                if (this.headers) {
+                    res.setHeader('Retry-After', Math.ceil(this.windowMs / 1000));
+                }
+
+                sentry.sendError(Boom.tooManyRequests(this.message), { requestId: req.requestId });
+
+                res.format({
+                    html: () => {
+                        res.status(this.statusCode).end(this.message);
+                    },
+                    json: () => {
+                        res.status(this.statusCode).json({ message: this.message });
+                    }
+                });
+            }
+        }),
     };
 };
 
