@@ -35,14 +35,14 @@ module.exports = components => {
 
     //Public routes
     app.use('/api/', middlewares.addRateLimit(sentry));
-    app.use('/api', require('./routes/swagger')(httpComponents));
+    app.use('/api', require('./routes/api/swagger')(httpComponents));
     app.use('/api', require('./routes/api/v1/ping')(httpComponents));
     app.use('/api', require('./routes/api/v1/avis')(httpComponents));
     app.use('/api', require('./routes/api/v1/formations')(httpComponents));
     app.use('/api', require('./routes/api/v1/actions')(httpComponents));
     app.use('/api', require('./routes/api/v1/sessions')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs')(httpComponents));
-    app.use('/api', require('./routes/stats')(httpComponents));
+    app.use('/api', require('./routes/api/stats')(httpComponents));
     app.use('/api', require('./routes/api/kairos')(httpComponents));
 
     //Pubic routes with server-side rendering
@@ -50,16 +50,16 @@ module.exports = components => {
     app.use('/', require('./routes/front/mailing')(httpComponents));
 
     //Routes used by backoffice applications
-    app.use('/api', require('./routes/backoffice/auth/login')(httpComponents));
-    app.use('/api', require('./routes/backoffice/auth/forgottenPassword')(httpComponents));
-    app.use('/api', require('./routes/backoffice/moderateur/moderation')(httpComponents));
-    app.use('/api', require('./routes/backoffice/organismes/consultation')(httpComponents));
-    app.use('/api', require('./routes/backoffice/export')(httpComponents));
-    app.use('/api', require('./routes/backoffice/organismes/organisme')(httpComponents));
-    app.use('/api', require('./routes/backoffice/moderateur/gestion-organismes')(httpComponents));
-    app.use('/api', require('./routes/backoffice/financeur/financeur')(httpComponents));
-    app.use('/api', require('./routes/backoffice/stats')(httpComponents));
-    app.use('/api', require('./routes/backoffice/auth/account')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/auth/login')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/auth/forgottenPassword')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/moderateur/moderation')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/organismes/consultation')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/export')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/organismes/organisme')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/moderateur/gestion-organismes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/financeur/financeur')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/stats')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/auth/account')(httpComponents));
     app.use('/api', require('./routes/front/questionnaire')(httpComponents));
 
     // catch 404

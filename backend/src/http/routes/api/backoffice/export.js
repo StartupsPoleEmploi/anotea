@@ -1,10 +1,10 @@
 const express = require('express');
-const moment = require('moment');
+const moment = require('moment/moment');
 const s = require('string');
 const Boom = require('boom');
-const { tryAndCatch } = require('../routes-utils');
-const { encodeStream } = require('iconv-lite');
-const { transformObject } = require('../../../common/utils/stream-utils');
+const { tryAndCatch } = require('../../routes-utils');
+const { encodeStream } = require('iconv-lite/lib/index');
+const { transformObject } = require('../../../../common/utils/stream-utils');
 
 module.exports = ({ db, middlewares, logger }) => {
 
@@ -109,7 +109,7 @@ module.exports = ({ db, middlewares, logger }) => {
                 (comment.rates !== undefined ? comment.rates.global : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
-                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + 
+                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') +
                 qualification + ';' +
                 comment.campaign + ';' +
                 comment.date + ';' +
