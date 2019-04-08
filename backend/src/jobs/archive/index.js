@@ -4,12 +4,12 @@
 const cli = require('commander');
 const { execute } = require('../job-utils');
 
-cli.description('launch trainees & advices archive')
+cli.description('launch advices archive')
 .parse(process.argv);
 
 execute(async ({ db, logger, configuration }) => {
 
-    logger.info(`Archiving old comments and trainees...`);
+    logger.info(`Archiving old advices...`);
 
     let archiver = require(`./archive`)(db, logger, configuration);
 
@@ -17,7 +17,6 @@ execute(async ({ db, logger, configuration }) => {
 
     return new Promise(async (resolve, reject) => {
         log(await archiver.archive('comment', 'archivedAdvices'));
-        log(await archiver.archive('trainee', 'archivedTrainees'));
         resolve();
     });
     
