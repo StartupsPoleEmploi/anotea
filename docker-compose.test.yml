@@ -1,6 +1,13 @@
 version: '3.3'
 services:
 
+  backend:
+    environment:
+      - ANOTEA_LOG_JSON=true
+      - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
+      - ANOTEA_SMTP_HOST=smtp
+      - ANOTEA_SMTP_PORT=1025
+
   mongodb:
     image: mongo:4.0.4-xenial
     container_name: anotea_mongodb
