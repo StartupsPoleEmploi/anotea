@@ -3,7 +3,7 @@ module.exports = {
         return Promise.all([
             db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
             db.collection('trainee').createIndex({ 'codeRegion': 1 }),
-            db.collection('trainee').createIndex({ 'token': 1 }),
+            db.collection('trainee').createIndex({ 'token': 1 }, { unique: true }),
             db.collection('trainee').createIndex({ 'trainee.email': 1 }),
             db.collection('trainee').createIndex({ 'trainee.dnIndividuNational': 1 }),
             db.collection('trainee').createIndex({ 'training.codeFinanceur': 1 }),
@@ -16,7 +16,7 @@ module.exports = {
             db.collection('comment').createIndex({ 'formacode': 1 }),
             db.collection('comment').createIndex({ 'idSession': 1 }),
             db.collection('comment').createIndex({ 'lastModerationAction': 1 }),
-            db.collection('comment').createIndex({ 'token': 1 }),
+            db.collection('comment').createIndex({ 'token': 1 }, { unique: true }),
             db.collection('comment').createIndex({ 'codeRegion': 1 }),
             db.collection('comment').createIndex({ 'campaign': 1 }),
             db.collection('comment').createIndex({ 'published': 1 }),
