@@ -1,7 +1,66 @@
+@import '../../styles/variables';
+
 .questionnaire {
 
-  .send-button {
-    margin-top: 2rem;
-    text-align: center;
-  }
+    .info {
+        height: 56px;
+        width: 460px;
+        color: $color-blue;
+        font-size: 14px;
+        line-height: 20px;
+        border-radius: 5px;
+        background-color: $color-blue-10;
+        margin: auto;
+        padding: 10px;
+
+        .icon {
+            display: block;
+            float: left;
+            height: 100%;
+            margin-right: 5px;
+            padding: 4px;
+        }
+    }
+
+    .plusQuneDerniere {
+        height: 20px;
+        width: 288px;
+        color: $color-blue;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 20px;
+        text-align: center;
+        margin: auto;
+        margin-top: 2rem;
+    }
+
+    .send-button {
+        text-align: center;
+    }
+
+    .pageOne {
+        .send-button {
+            margin-top: 1rem;
+        }
+    }
+
+    .pageTwo {
+        .go-back {
+            color: $color-black;
+            font-size: 14px;
+            line-height: 20px;
+            border: none;
+            background: none;
+            margin-right: 30px;
+        }
+
+        .go-back:hover {
+            border: none;
+            background: none;
+        }
+
+        .send-button {
+            margin-top: 2rem;
+        }
+    }
 }

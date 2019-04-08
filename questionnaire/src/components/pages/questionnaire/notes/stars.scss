@@ -20,9 +20,8 @@
       font-size: 1.25rem;
     }
 
-    .far.fa-star {
-      color: $color-black;
-      cursor: pointer;
+    .fas.fa-star.inactive {
+        color: $color-grey-50;
     }
 
     .fas.fa-star {

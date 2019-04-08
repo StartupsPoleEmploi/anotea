@@ -58,12 +58,12 @@ export default class Stars extends React.PureComponent {
             } else if (this.state.selected - 1 > index) {
                 return 'fas fa-star';
             } else {
-                return 'far fa-star';
+                return 'fas fa-star inactive';
             }
         } else {
             // eslint-disable-next-line no-lonely-if
             if (this.state.hover <= index && this.state.selected <= index) {
-                return 'far fa-star';
+                return 'fas fa-star inactive';
             } else {
                 return 'fas fa-star';
             }

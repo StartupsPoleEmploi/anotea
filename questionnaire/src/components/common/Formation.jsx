@@ -18,11 +18,9 @@ class Formation extends Component {
                     <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         {this.props.stagiaire &&
                         <div>
-                            <h1>Notez et commentez votre formation</h1>
+                            <h1>Évaluez votre formation</h1>
                             <div>
-                                <div className="title">{this.props.stagiaire.training.title}</div>
-                                <div className="date">{startDate} au {scheduledEndDate}</div>
-                                <div className="description">
+                                <div className="title">{this.props.stagiaire.training.title} | {startDate} au {scheduledEndDate}.&nbsp;
                                     <span className="organisme">{this.props.stagiaire.training.organisation.name}</span>
                                     &nbsp;-&nbsp;
                                     <span

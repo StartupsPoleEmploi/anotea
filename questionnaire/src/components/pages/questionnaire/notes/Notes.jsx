@@ -49,7 +49,7 @@ class Notes extends Component {
             <div className="notes">
                 <div className="row">
                     <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-                        <h3>Notes</h3>
+                        <h3>Avez-vous été satisfait de...</h3>
                     </div>
                 </div>
 
