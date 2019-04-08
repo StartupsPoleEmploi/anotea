@@ -6,22 +6,22 @@ Kairos->Anotea: GET https://anotea.pole-emploi.fr/api/check-if-organisme-is-elig
 
 activate Anotea
 Anotea->Anotea: Vérification si l'organisme est éligible
-Anotea-->Kairos: Envoi de l'égligibilité
-deactivate Anotea
-deactivate Kairos
-
-activate Kairos
-activate Anotea
-Kairos->Anotea: POST https://anotea.pole-emploi.fr/api/kairos/generate-auth-url
-
-Anotea->Anotea: Création de l'organisme si inconnu
-
-Anotea-->Kairos: Envoi du lien de connexion
-
-Kairos-->Utilisateur:Affichage du bouton
+Anotea-->Kairos: Envoi de des informations d'égligibilité
+Kairos-->Utilisateur: Affichage du bouton si éligible
 deactivate Anotea
 deactivate Kairos
 
 activate Utilisateur
+Utilisateur-->Kairos: Clique sur le bouton
+activate Kairos
+Kairos->Anotea: POST https://anotea.pole-emploi.fr/api/kairos/generate-auth-url
+activate Anotea
+Anotea->Anotea: Création de l'organisme si inconnu
+
+Anotea-->Kairos: Envoi du lien de connexion
+deactivate Anotea
+
+Kairos-->Utilisateur:Ouverture d'Anotéa
+deactivate Kairos
 
 Utilisateur->Anotea:GET https://anotea.pole-emploi.fr/admin?...
