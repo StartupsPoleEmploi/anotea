@@ -4,7 +4,7 @@ module.exports = async (db, logger, collectionName) => {
             $group: {
                 _id: '$token',
                 total: { $sum: 1 },
-                avis: { $first: '$$ROOT' }
+                document: { $first: '$$ROOT' }
             }
         },
         {
