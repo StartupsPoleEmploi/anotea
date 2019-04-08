@@ -1,7 +1,8 @@
 const config = require('config');
 const auth = require('./common/components/auth');
 const password = require('./common/components/password');
-const regions = require('./common/components/regions');
+const stats = require('./common/components/stats');
+const getRegions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
 const sentry = require('./common/components/sentry');
 const moderation = require('./common/components/moderation');
@@ -17,6 +18,7 @@ module.exports = async (options = {}) => {
     let logger = options.logger || createLogger('anotea', configuration);
     let { client, db } = await database(logger, configuration);
     let mailer = options.mailer || createMailer(db, logger, configuration);
+    let regions = getRegions();
 
     return Object.assign({}, {
         configuration,
@@ -27,7 +29,8 @@ module.exports = async (options = {}) => {
         sentry: sentry(logger, configuration),
         auth: auth(configuration),
         password,
-        regions: regions(),
+        regions: regions,
+        stats: stats(db, regions),
         moderation: moderation(db, logger, mailer),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
