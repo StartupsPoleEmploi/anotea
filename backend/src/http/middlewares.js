@@ -97,6 +97,10 @@ module.exports = (auth, logger, configuration) => {
             const accumulator = {};
 
             let jsonify = data => {
+                if (!data) {
+                    return null;
+                }
+
                 try {
                     return JSON.parse(data);
                 } catch (e) {
@@ -157,7 +161,7 @@ module.exports = (auth, logger, configuration) => {
                         statusCode: res.statusCode,
                         statusCodeAsString: `${res.statusCode}`,
                         headers: res._headers,
-                        body: shouldRecordChunks(req) ? jsonify(accumulator.chunks) : undefined,
+                        body: jsonify(accumulator.chunks),
                     },
                 }, `Http Request ${error ? 'KO' : 'OK'}`);
             };

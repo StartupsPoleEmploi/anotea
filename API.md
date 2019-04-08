@@ -45,7 +45,7 @@ https://anotea.pole-emploi.fr/api/v1/ping/authenticated \
 
 ## Kairos
 
-Cette API permet aux utilistateurs de l'application Kairos de se connecter facilement à Anotéa.
+Cette API permet aux utilistateurs de l'application Kairos de se connecter automatiquement à Anotéa.
 
 Le documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/doc/#/Kairos
 
