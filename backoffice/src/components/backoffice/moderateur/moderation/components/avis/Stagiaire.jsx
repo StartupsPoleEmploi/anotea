@@ -7,7 +7,10 @@ import './Stagiaire.scss';
 
 const Stars = ({ note }) => {
     return _.range(0, 5).map((v, index) => {
-        return <span key={index} className={`stars fa fa-star ${index > note && 'empty'}`} />;
+        let starClass = (note % 1 !== 0 && Math.ceil(note) === index + 1 && index <= note) ? 'fa-star-half-alt' : 'fa-star';
+        return <span
+            key={index}
+            className={`stars fa ${starClass} ${index > note && 'empty'}`} />;
     });
 };
 Stars.propTypes = { note: PropTypes.number.isRequired };

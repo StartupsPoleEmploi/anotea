@@ -65,7 +65,13 @@ module.exports = ({ db, logger, configuration }) => {
     };
 
     const calculateAverageRate = avis => {
-        return Math.round((avis.rates.accueil + avis.rates.contenu_formation + avis.rates.equipe_formateurs + avis.rates.moyen_materiel + avis.rates.accompagnement) / 5);
+        let sum = avis.rates.accueil +
+            avis.rates.contenu_formation +
+            avis.rates.equipe_formateurs +
+            avis.rates.moyen_materiel +
+            avis.rates.accompagnement;
+
+        return Number(Math.round((sum / 5) + 'e1') + 'e-1');
     };
 
     const sanitizeBody = body => {
