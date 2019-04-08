@@ -2,23 +2,25 @@
 
 .questionnaire {
 
-    .info {
-        height: 56px;
-        width: 460px;
-        color: $color-blue;
-        font-size: 0.875rem;
-        line-height: 20px;
-        border-radius: 5px;
-        background-color: $color-blue-10;
+    .info-container {
         margin: auto;
-        padding: 10px;
 
-        .icon {
-            display: block;
-            float: left;
-            height: 100%;
-            margin-right: 5px;
-            padding: 4px;
+        .info {
+            color: $color-blue;
+            font-size: 0.875rem;
+            line-height: 20px;
+            border-radius: 5px;
+            background-color: $color-blue-10;
+            padding: 10px;
+            margin: 10px;
+
+            .icon {
+                display: block;
+                float: left;
+                height: 100%;
+                margin-right: 5px;
+                padding: 4px;
+            }
         }
     }
 

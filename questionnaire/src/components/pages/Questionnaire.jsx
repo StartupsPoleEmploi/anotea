@@ -165,20 +165,22 @@ export default class Questionnaire extends Component {
                                 averageScore={this.state.averageScore}
                                 onChange={this.updateNotes}
                                 showErrorMessage={this.state.submitButtonClicked} />
-                            <div className="plusQuneDerniere">Plus qu'une dernière étape.</div>
+                            <div className="plusQuneDerniere">Plus qu&apos;une dernière étape.</div>
                         </div>
                     }
 
                     { this.state.page === 1 &&
                     <div>
-                        <div className="info">
-                            <i className="icon fas fa-info-circle"></i>
-                            Cette partie n’est <strong>pas obligatoire</strong>, vous pouvez <strong>cliquer sur envoyer</strong> si vous ne souhaiter pas laisser de commentaire.
+                        <div className="info-container col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                            <div className="info">
+                                <i className="icon fas fa-info-circle"></i>
+                                Cette partie n’est <strong>pas obligatoire</strong>, vous pouvez <strong>cliquer sur envoyer</strong> si vous ne souhaiter pas laisser de commentaire.
+                            </div>
                         </div>
                         <Commentaire
                             commentaire={this.state.commentaire}
                             onChange={this.updateCommentaire} />
-                        <Autorisations onChange={this.updateAccord} />  
+                        <Autorisations onChange={this.updateAccord} />
                     </div>
                     }
 
