@@ -65,7 +65,6 @@ class Notes extends Component {
                                         index={index}
                                         title={item.title}
                                         description={item.description}
-                                        parity={index % 2 === 0 ? 'even' : 'odd'}
                                         value={this.props.notes[index] ? this.props.notes[index].value : 0}
                                         onSelect={this.updateNote} />
                                 </div>

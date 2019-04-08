@@ -8,7 +8,6 @@ class Note extends Component {
     static propTypes = {
         title: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
-        parity: PropTypes.string.isRequired,
         onSelect: PropTypes.func.isRequired,
         index: PropTypes.number.isRequired,
         value: PropTypes.number
@@ -16,7 +15,7 @@ class Note extends Component {
 
     render() {
         return (
-            <div className={`note ${this.props.parity}`}>
+            <div className="note">
                 <div className={`row inner-row align-items-center`}>
                     <div className="col-sm-7">
                         <div className="title">{this.props.title}</div>

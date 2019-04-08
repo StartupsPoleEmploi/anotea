@@ -20,7 +20,7 @@
 
   .title {
     color: $color-black;
-    font-weight: bolder;
+    font-weight: $font-weight-700;
     font-size: 1rem;
     line-height: 19px;
     padding-bottom: 0.875rem;
@@ -51,7 +51,7 @@
   }
 
   .chars-count {
-	font-size: 12px;
+	font-size: 0.75rem;
 	font-style: italic;
 	line-height: 16px;
 	text-align: right;
