@@ -4,12 +4,31 @@
 version: '3.3'
 services:
 
+  nginx:
+    volumes:
+      - ./.data/nginx:/data:rw
+
+  backoffice:
+    build:
+      args:
+        - ANOTEA_GOOGLE_ANALYTICS_ID:1234
+        - ANOTEA_HOTJAR_ID=1234
+
+  questionnaire:
+    build:
+      args:
+        - ANOTEA_GOOGLE_ANALYTICS_ID:1234
+        - ANOTEA_HOTJAR_ID=1234
+
   backend:
     command: npm run start:watch
     volumes:
       - ./backend:/opt/anotea/backend:ro
     environment:
       - ANOTEA_LOG_JSON=true
+      - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
+      - ANOTEA_SMTP_HOST=smtp
+      - ANOTEA_SMTP_PORT=1025
     logging:
       driver: fluentd
       options:
@@ -17,12 +36,6 @@ services:
         tag: docker.backend
     depends_on:
       - fluentbit
-
-  backoffice:
-    working_dir: /opt/anotea/backoffice
-    command: npm start
-    volumes:
-      - ./backoffice:/opt/anotea/backoffice:ro
 
   mongodb:
     image: mongo:4.0.4-xenial
