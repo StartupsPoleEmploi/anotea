@@ -54,7 +54,6 @@ class Commentaire extends Component {
                     <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <div className="row inner-row field">
                             <div className="col-sm-12">
-                                <div className="title">Avez-vous quelque chose à ajouter ?</div>
                                 <textarea
                                     name="texte"
                                     value={this.state.texte}

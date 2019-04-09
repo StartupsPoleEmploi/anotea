@@ -81,10 +81,12 @@ export default class Questionnaire extends Component {
 
     goBack = () => {
         this.setState({ page: 0 });
+        window.scrollTo(0, 0);
     }
 
     goNext = () => {
-        this.setState({ page: 1 }); 
+        this.setState({ page: 1 });
+        window.scrollTo(0, 0);
     }
 
     submit = () => {
@@ -156,10 +158,9 @@ export default class Questionnaire extends Component {
                 {!this.state.error && this.props.stagiaire &&
                 <div className={`container ${this.state.page === 0 ? 'pageOne' : 'pageTwo'}`}>
 
-                    <Formation stagiaire={this.props.stagiaire} />
-
                     { this.state.page === 0 &&
                         <div>
+                            <Formation stagiaire={this.props.stagiaire} />
                             <Notes
                                 notes={this.state.notes}
                                 averageScore={this.state.averageScore}
@@ -171,6 +172,9 @@ export default class Questionnaire extends Component {
 
                     { this.state.page === 1 &&
                     <div>
+                        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                            <h3>Avez-vous quelque chose à ajouter ?</h3>
+                        </div>
                         <div className="info-container col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                             <div className="info">
                                 <i className="icon fas fa-info-circle"></i>
