@@ -58,7 +58,7 @@ class Commentaire extends Component {
                                     name="texte"
                                     value={this.state.texte}
                                     maxLength={200}
-                                    rows="2"
+                                    rows="3"
                                     className={`${!commentaire.texte.isValid ? 'badwords' : ''}`}
                                     placeholder="Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois."
                                     onBlur={this.onBlur}
