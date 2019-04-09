@@ -24,9 +24,10 @@
   },
   "log": {
     "level": "ANOTEA_LOG_LEVEL",
-    "json": {
-      "__name": "ANOTEA_LOG_JSON",
-      "__format": "json"
+    "type": "ANOTEA_LOG_TYPE",
+    "fluentbit": {
+      "host": "ANOTEA_LOG_FLUENTBIT_HOST",
+      "port": "ANOTEA_LOG_FLUENTBIT_PORT"
     }
   },
   "sentry": {

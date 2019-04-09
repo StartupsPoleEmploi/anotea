@@ -1,14 +1,15 @@
 const PrettyStream = require('bunyan-prettystream');
 const bunyan = require('bunyan');
+const fluent = require('fluent-logger');
 
-module.exports = (name, configuration) => {
+let createStreams = (name, { log }) => {
 
-    const prettyStream = () => {
+    const defaultStream = () => {
         let pretty = new PrettyStream();
         pretty.pipe(process.stdout);
         return {
             name: 'pretty',
-            level: configuration.log.level,
+            level: log.level,
             stream: pretty,
         };
     };
@@ -16,15 +17,43 @@ module.exports = (name, configuration) => {
     const jsonStream = () => {
         return {
             name: 'json',
-            level: configuration.log.level,
+            level: log.level,
             stream: process.stdout,
         };
     };
 
+    const fluentStream = () => {
+
+        let sender = fluent.createFluentSender('docker', {
+            host: log.fluentbit.host,
+            port: log.fluentbit.port,
+            timeout: 3.0,
+            reconnectInterval: 30000 // 30 sec
+        });
+
+        return {
+            name: 'fluentbit',
+            level: log.level,
+            stream: sender.toStream(name),
+        };
+    };
+
+    switch (log.type) {
+        case 'json':
+            return [jsonStream()];
+        case 'fluentbit':
+            return [fluentStream(), jsonStream()];
+        default:
+            return [defaultStream()];
+    }
+};
+
+
+module.exports = (name, configuration) => {
 
     return bunyan.createLogger({
         name,
         serializers: bunyan.stdSerializers,
-        streams: [configuration.log.json ? jsonStream() : prettyStream()],
+        streams: createStreams(name, configuration),
     });
 };
