@@ -14,7 +14,7 @@ const sendVotreAvisEmail = require('./common/components/mailing/sendVotreAvisEma
 module.exports = async (options = {}) => {
 
     let configuration = options.configuration || config;
-    let logger = options.logger || createLogger('anotea', configuration);
+    let logger = options.logger || createLogger('backend', configuration);
     let { client, db } = await database(logger, configuration);
     let mailer = options.mailer || createMailer(db, logger, configuration);
 

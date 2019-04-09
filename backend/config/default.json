@@ -6,7 +6,11 @@
   },
   "log": {
     "level": "info",
-    "json": false
+    "type": "default",
+    "fluentbit": {
+      "host": "localhost",
+      "port": 24224
+    }
   },
   "sentry": {
     "enabled": false,
