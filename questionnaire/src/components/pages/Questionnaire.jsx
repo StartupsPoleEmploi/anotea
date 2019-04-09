@@ -48,7 +48,7 @@ export default class Questionnaire extends Component {
         accord: false,
         accordEntreprise: false,
         showErrorMessage: null,
-        submitButtonClicked: false,
+        goNextButtonClicked: false,
         submitting: false,
         page: 0
     };
@@ -71,7 +71,7 @@ export default class Questionnaire extends Component {
         if (this.isFormValid()) {
             this.setState({ showModal: true });
         } else {
-            this.setState({ submitButtonClicked: true }, () => this.scrollToTop());
+            this.setState({ goNextButtonClicked: true }, () => this.scrollToTop());
         }
     };
 
@@ -80,13 +80,15 @@ export default class Questionnaire extends Component {
     };
 
     goBack = () => {
-        this.setState({ page: 0 });
-        window.scrollTo(0, 0);
+        this.setState({ page: 0 }, () => this.scrollToTop());
     }
 
     goNext = () => {
-        this.setState({ page: 1 });
-        window.scrollTo(0, 0);
+        if (this.isFormValid()) {
+            this.setState({ page: 1 }, () => this.scrollToTop());
+        } else {
+            this.setState({ goNextButtonClicked: true }, () => this.scrollToTop());
+        }
     }
 
     submit = () => {
@@ -165,7 +167,7 @@ export default class Questionnaire extends Component {
                                 notes={this.state.notes}
                                 averageScore={this.state.averageScore}
                                 onChange={this.updateNotes}
-                                showErrorMessage={this.state.submitButtonClicked} />
+                                showErrorMessage={this.state.goNextButtonClicked} />
                             <div className="plusQuneDerniere">Plus qu&apos;une dernière étape.</div>
                         </div>
                     }
