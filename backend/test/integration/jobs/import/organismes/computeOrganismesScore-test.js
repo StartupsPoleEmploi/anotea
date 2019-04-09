@@ -89,12 +89,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepStrictEqual(doc.score, {
             nb_avis: 3,
             notes: {
-                accompagnement: 2,
-                accueil: 2,
-                contenu_formation: 2,
-                equipe_formateurs: 2,
-                moyen_materiel: 2,
-                global: 2,
+                accompagnement: 2.3,
+                accueil: 2.3,
+                contenu_formation: 2.3,
+                equipe_formateurs: 2.3,
+                moyen_materiel: 2.3,
+                global: 2.3,
             }
         });
     });
@@ -152,12 +152,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepStrictEqual(doc.score, {
             nb_avis: 4,
             notes: {
-                accompagnement: 2,
-                accueil: 2,
-                contenu_formation: 2,
-                equipe_formateurs: 2,
-                moyen_materiel: 2,
-                global: 2,
+                accompagnement: 1.8,
+                accueil: 1.8,
+                contenu_formation: 1.8,
+                equipe_formateurs: 1.8,
+                moyen_materiel: 1.8,
+                global: 1.8,
             }
         });
     });

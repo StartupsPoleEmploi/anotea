@@ -177,12 +177,12 @@ module.exports = {
             score: {
                 nb_avis: 15,
                 notes: {
-                    accueil: 5,
-                    contenu_formation: 5,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 3,
-                    accompagnement: 4,
-                    global: 5
+                    accueil: 5.1,
+                    contenu_formation: 5.1,
+                    equipe_formateurs: 4.1,
+                    moyen_materiel: 3.1,
+                    accompagnement: 4.1,
+                    global: 5.1,
                 }
             },
             meta: {
@@ -228,12 +228,12 @@ module.exports = {
             score: {
                 nb_avis: 1,
                 notes: {
-                    accueil: 4,
-                    contenu_formation: 4,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 4,
-                    accompagnement: 4,
-                    global: 4
+                    accueil: 4.1,
+                    contenu_formation: 4.1,
+                    equipe_formateurs: 4.1,
+                    moyen_materiel: 4.1,
+                    accompagnement: 4.1,
+                    global: 4.1,
                 }
             },
             formation: {
@@ -277,7 +277,7 @@ module.exports = {
             }
         }, custom, { test: true });
     },
-    newAction: custom => {
+    newAction: (custom = {}) => {
 
         let numeroFormation = 'F_XX_XX';
         let numeroAction = 'AC_XX_XXXXXX';
@@ -295,12 +295,12 @@ module.exports = {
             score: {
                 nb_avis: 1,
                 notes: {
-                    accueil: 4,
-                    contenu_formation: 4,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 4,
-                    accompagnement: 4,
-                    global: 4
+                    accueil: 4.1,
+                    contenu_formation: 4.1,
+                    equipe_formateurs: 4.1,
+                    moyen_materiel: 4.1,
+                    accompagnement: 4.1,
+                    global: 4.1,
                 }
             },
             organisme_financeurs: ['2'],
@@ -338,7 +338,7 @@ module.exports = {
             }
         }, custom, { test: true });
     },
-    newFormation: custom => {
+    newFormation: (custom = {}) => {
 
         let avis = custom.avis ? custom.avis : [newComment()];
         let numeroFormation = custom._id || 'F_XX_XX';
@@ -357,12 +357,12 @@ module.exports = {
             score: {
                 nb_avis: 1,
                 notes: {
-                    accueil: 4,
-                    contenu_formation: 4,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 4,
-                    accompagnement: 4,
-                    global: 4
+                    accueil: 4.1,
+                    contenu_formation: 4.1,
+                    equipe_formateurs: 4.1,
+                    moyen_materiel: 4.1,
+                    accompagnement: 4.1,
+                    global: 4.1,
                 }
             },
             meta: {

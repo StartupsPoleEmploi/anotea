@@ -4,9 +4,9 @@ const _ = require('lodash');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator } = require('./utils/validators');
-const convertToExposableAvis = require('./dto/convertToExposableAvis');
-const convertToExposablePagination = require('./dto/convertToExposablePagination');
+const { paginationValidator,notesValeursDecimalesValidator} = require('./utils/validators');
+const createAvisDTO = require('./dto/createAvisDTO');
+const createPaginationDTO = require('./dto/createPaginationDTO');
 
 const buildAvisQuery = filters => {
 
@@ -57,11 +57,12 @@ module.exports = ({ db, middlewares }) => {
     router.get('/v1/avis', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
-            ...paginationValidator(),
             organisme_formateur: Joi.string().min(9).max(15),
             lieu_de_formation: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/),
             certif_info: Joi.string(),
             formacode: Joi.string(),
+            ...paginationValidator(),
+            ...notesValeursDecimalesValidator(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -80,9 +81,9 @@ module.exports = ({ db, middlewares }) => {
         let [total, avis] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            avis: avis.map(a => convertToExposableAvis(a)),
+            avis: avis.map(a => createAvisDTO(a)),
             meta: {
-                pagination: convertToExposablePagination(pagination, total)
+                pagination: createPaginationDTO(pagination, total)
             },
         });
     }));
@@ -102,7 +103,7 @@ module.exports = ({ db, middlewares }) => {
         if (!avis) {
             throw Boom.notFound('Identifiant inconnu');
         }
-        res.json(convertToExposableAvis(avis));
+        res.json(createAvisDTO(avis));
     }));
 
     return router;

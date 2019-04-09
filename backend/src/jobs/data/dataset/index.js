@@ -44,13 +44,14 @@ execute(async ({ db, logger, moderation, exit, regions }) => {
         createRegionalData(db),
     ]);
 
-    await importIntercarif(db, logger, path.join(__dirname, '../../../../test/helpers/data/intercarif-data-test.xml'));
+    let file = path.join(__dirname, '../../../../test/helpers/data/intercarif-data-test.xml');
+    await importIntercarif(db, logger, file, regions);
 
     await generateSessions(db, regions);
     await generateActions(db, regions);
 
     await generateOrganismesFromIntercarif(db, logger);
-    await synchronizeOrganismesWithAccounts(db, logger);
+    await synchronizeOrganismesWithAccounts(db, logger, regions);
     await computeOrganismesScore(db, logger);
 
     await createAccounts(db);

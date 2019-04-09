@@ -5,7 +5,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 const configuration = require('config');
 const { tryAndCatch } = require('../routes-utils');
-const convertToExposableOrganismeFomateur = require('./v1/dto/convertToExposableOrganismeFomateur');
+const createOrganismeFomateurDTO = require('./v1/dto/createOrganismeFomateurDTO');
 const getCodeRegionFromKairosRegionName = require('../../../jobs/import/organismes/kairos/getCodeRegionFromKairosRegionName');
 
 module.exports = ({ db, auth, middlewares }) => {
@@ -77,7 +77,7 @@ module.exports = ({ db, auth, middlewares }) => {
             url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&origin=kairos&access_token=${accessToken}`,
             meta: {
                 created,
-                organisme: convertToExposableOrganismeFomateur(organisme),
+                organisme: createOrganismeFomateurDTO(organisme),
             }
         });
     });
@@ -100,7 +100,7 @@ module.exports = ({ db, auth, middlewares }) => {
         return res.json({
             eligible: !!_.get(organisme, 'meta.kairos.eligible') && _.get(organisme, 'score.nb_avis') > 0,
             meta: {
-                organisme: convertToExposableOrganismeFomateur(organisme)
+                organisme: createOrganismeFomateurDTO(organisme)
             }
         });
     }));

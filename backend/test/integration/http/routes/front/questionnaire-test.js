@@ -7,7 +7,7 @@ const { newTrainee, newCarif } = require('../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatabase }) => {
 
-    it('/can submit a questionnaire', async () => {
+    it('can submit a questionnaire', async () => {
 
         let app = await startServer();
         let db = await getTestDatabase();
@@ -94,7 +94,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         });
 
         let result = await db.collection('comment').findOne({ token: trainee.token });
-        
+
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date']), {
             campaign: 'test-campaign',
             formacode: '46242',
@@ -136,7 +136,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 equipe_formateurs: 1,
                 moyen_materiel: 2,
                 accompagnement: 2,
-                global: 2
+                global: 1.8,
             },
             pseudo: 'JohnD',
             comment: {

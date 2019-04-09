@@ -109,12 +109,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             score: {
                 nb_avis: 15,
                 notes: {
-                    accueil: 5,
-                    contenu_formation: 5,
-                    equipe_formateurs: 4,
-                    moyen_materiel: 3,
-                    accompagnement: 4,
-                    global: 5
+                    accueil: 5.1,
+                    contenu_formation: 5.1,
+                    equipe_formateurs: 4.1,
+                    moyen_materiel: 3.1,
+                    accompagnement: 4.1,
+                    global: 5.1,
                 }
             },
             meta: {
