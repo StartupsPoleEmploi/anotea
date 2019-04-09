@@ -1,17 +1,6 @@
 @import '../../../../styles/variables';
 
 .commentaire {
-  padding-bottom: 20px;
-
-  h3 {
-    color: $color-white;
-    font-weight: $font-weight-700;
-    font-size: 1.5rem;
-    line-height: 45px;
-    background-color: $color-blue;
-    padding-left: 13px;
-    margin: 0;
-  }
 
   .inner-row {
     margin-left: 0;
@@ -31,6 +20,7 @@
 
   .title {
     color: $color-black;
+    font-weight: $font-weight-700;
     font-size: 1rem;
     line-height: 19px;
     padding-bottom: 0.875rem;
@@ -58,5 +48,12 @@
       font-style: italic;
       line-height: 21px;
     }
+  }
+
+  .chars-count {
+	font-size: 0.75rem;
+	font-style: italic;
+	line-height: 16px;
+	text-align: right;
   }
 }
