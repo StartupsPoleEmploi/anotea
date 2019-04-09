@@ -72,15 +72,14 @@ module.exports = async db => {
                                             { $in: ['$formacode', '$$formacodes'] }
                                         ]
                                     },
-                                    {
-                                        $or: [
-                                            { $eq: ['$comment', null] },
-                                            { $eq: ['$published', true] },
-                                            { $eq: ['$rejected', true] },
-                                        ]
-                                    }
                                 ]
                             },
+                            $or: [
+                                { 'comment': { $exists: false } },
+                                { 'comment': null },
+                                { 'published': true },
+                                { 'rejected': true },
+                            ]
                         }
                     },
                     {
