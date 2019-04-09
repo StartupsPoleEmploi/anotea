@@ -10,7 +10,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
     it('should create collection with organismes from CSV file', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');;
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
 
         let stats = await generateOrganismesFromKairos(db, logger, csvFile);
 
@@ -37,5 +37,18 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             dateDebut: new Date('2017-09-05T00:00:00.000Z'),
             dateFin: new Date('2020-09-05T00:00:00.000Z'),
         });
+    });
+
+    it('should reject invalid file', async () => {
+
+        let db = await getTestDatabase();
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'invalid.csv');
+
+        try {
+            await generateOrganismesFromKairos(db, logger, csvFile);
+            assert.fail('Should have fail');
+        } catch (e) {
+            assert.deepStrictEqual(e.code, 'ENOENT');
+        }
     });
 }));

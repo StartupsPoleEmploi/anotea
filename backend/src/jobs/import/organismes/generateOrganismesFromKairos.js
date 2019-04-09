@@ -34,6 +34,7 @@ module.exports = async (db, logger, file) => {
 
     return new Promise((resolve, reject) => {
         fs.createReadStream(file)
+        .on('error', err => reject(err))
         .pipe(parse({
             delimiter: '|',
             quote: '',
