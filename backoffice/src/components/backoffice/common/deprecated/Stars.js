@@ -29,7 +29,6 @@ export default class Stars extends React.PureComponent {
             <span className="Stars" style={this.props.style}>
                 {
                     this.state.starArray.map((star, index) => {
-                        console.log(JSON.stringify({ meta: 'Stars.js:32', data: { note, index } }, null, 2));
                         let starClass = (note % 1 !== 0 && Math.ceil(note) === index + 1) ? 'fa-star-half-alt' : 'fa-star';
                         return (
                             <span
