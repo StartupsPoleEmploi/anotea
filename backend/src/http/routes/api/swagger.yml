@@ -111,6 +111,7 @@ responses:
       $ref: "#/definitions/OrganismeAuthUrl"
 
   CheckIfOrganismeIsEligibleResponse:
+    description: Contient les informations relatives à l'éligibilité de l'organisme
     schema:
       $ref: "#/definitions/CheckOrganismeEligibility"
 
@@ -454,11 +455,15 @@ paths:
         - in: query
           name: page
           description: Le numéro de la page
+          default: 0
+          minimum: 0
           type: number
           required: false
         - in: query
           name: items_par_page
           description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
           type: number
           required: false
       responses:
@@ -541,11 +546,21 @@ paths:
         - in: query
           name: page
           description: Le numéro de la page
+          default: 0
+          minimum: 0
           type: number
           required: false
         - in: query
           name: items_par_page
           description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
           type: number
           required: false
       security:
@@ -574,6 +589,12 @@ paths:
              (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
           type: string
           required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
       security:
         - Authorization: []
       responses:
@@ -633,11 +654,21 @@ paths:
         - in: query
           name: page
           description: Le numéro de la page
+          default: 0
+          minimum: 0
           type: number
           required: false
         - in: query
           name: items_par_page
           description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
           type: number
           required: false
       security:
@@ -666,6 +697,12 @@ paths:
              (ex. `id=14_AF_0000011111|14_SE_0000102222`)
           type: string
           required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
       security:
         - Authorization: []
       responses:
@@ -727,11 +764,21 @@ paths:
         - in: query
           name: page
           description: Le numéro de la page
+          default: 0
+          minimum: 0
           type: number
           required: false
         - in: query
           name: items_par_page
           description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
           type: number
           required: false
       security:
@@ -759,6 +806,12 @@ paths:
             L'identifiant d'un organisme correspond à son numéro de SIRET
           type: string
           required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
       security:
         - Authorization: []
       responses:

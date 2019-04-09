@@ -3,7 +3,7 @@ const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator, arrayOfValidator, notesValeursDecimalesValidator } = require('./utils/validators');
+const { paginationValidator, arrayOfValidator, notesDecimalesValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const createPaginationDTO = require('./dto/createPaginationDTO');
 const createFormationDTO = require('./dto/createFormationDTO');
@@ -24,7 +24,7 @@ module.exports = ({ db, middlewares }) => {
             nb_avis: Joi.number(),
             fields: arrayOfValidator(Joi.string().required()).default([]),
             ...paginationValidator(),
-            ...notesValeursDecimalesValidator(),
+            ...notesDecimalesValidator(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -45,7 +45,7 @@ module.exports = ({ db, middlewares }) => {
 
         res.json({
             formations: formations.map(formation => {
-                return createFormationDTO(formation, { notes_valeurs_decimales: parameters.notes_valeurs_decimales });
+                return createFormationDTO(formation, { notes_decimales: parameters.notes_decimales });
             }) || [],
             meta: {
                 pagination: createPaginationDTO(pagination, total)
@@ -57,7 +57,7 @@ module.exports = ({ db, middlewares }) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
-            ...notesValeursDecimalesValidator(),
+            ...notesDecimalesValidator(),
         }, { abortEarly: false });
 
         let formation = await collection.findOne({ _id: parameters.id });
@@ -67,7 +67,7 @@ module.exports = ({ db, middlewares }) => {
         }
 
 
-        res.json(createFormationDTO(formation, { notes_valeurs_decimales: parameters.notes_valeurs_decimales }));
+        res.json(createFormationDTO(formation, { notes_decimales: parameters.notes_decimales }));
 
     }));
 

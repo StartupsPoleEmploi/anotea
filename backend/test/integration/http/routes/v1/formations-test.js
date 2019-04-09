@@ -344,7 +344,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('formationsReconciliees', newFormation({ _id: '14_AF_0000010729' })),
         ]);
 
-        let response = await request(app).get('/api/v1/formations?notes_valeurs_decimales=true');
+        let response = await request(app).get('/api/v1/formations?notes_decimales=true');
         assert.deepStrictEqual(response.body.formations[0].score, {
             nb_avis: 1,
             notes: {
@@ -357,7 +357,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             }
         });
 
-        response = await request(app).get('/api/v1/formations/14_AF_0000010729?notes_valeurs_decimales=true');
+        response = await request(app).get('/api/v1/formations/14_AF_0000010729?notes_decimales=true');
         assert.deepStrictEqual(response.body.score, {
             nb_avis: 1,
             notes: {

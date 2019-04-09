@@ -300,7 +300,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('accounts', buildOrganismeAccount('11111111111111')),
         ]);
 
-        let response = await request(app).get('/api/v1/organismes-formateurs?notes_valeurs_decimales=true');
+        let response = await request(app).get('/api/v1/organismes-formateurs?notes_decimales=true');
         assert.deepStrictEqual(response.body.organismes_formateurs[0].score, {
             nb_avis: 15,
             notes: {
@@ -313,7 +313,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             }
         });
 
-        response = await request(app).get('/api/v1/organismes-formateurs/11111111111111?notes_valeurs_decimales=true');
+        response = await request(app).get('/api/v1/organismes-formateurs/11111111111111?notes_decimales=true');
         assert.deepStrictEqual(response.body.score, {
             nb_avis: 15,
             notes: {

@@ -373,7 +373,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_000010456' })),
         ]);
 
-        let response = await request(app).get('/api/v1/sessions?notes_valeurs_decimales=true');
+        let response = await request(app).get('/api/v1/sessions?notes_decimales=true');
         assert.deepStrictEqual(response.body.sessions[0].score, {
             nb_avis: 1,
             notes: {
@@ -386,7 +386,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             }
         });
 
-        response = await request(app).get('/api/v1/sessions/14_AF_0000010729|14_SE_0000109418|SE_000010456?notes_valeurs_decimales=true');
+        response = await request(app).get('/api/v1/sessions/14_AF_0000010729|14_SE_0000109418|SE_000010456?notes_decimales=true');
         assert.deepStrictEqual(response.body.score, {
             nb_avis: 1,
             notes: {
