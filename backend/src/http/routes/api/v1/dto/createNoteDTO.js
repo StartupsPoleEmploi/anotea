@@ -1,6 +1,6 @@
 module.exports = (data, options = {}) => {
 
-    const round = value => options.notes_valeurs_decimales ? value : Math.round(value);
+    const round = value => options.notes_decimales ? value : Math.round(value);
 
     return {
         accueil: round(data.accueil),

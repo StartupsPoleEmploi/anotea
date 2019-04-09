@@ -314,7 +314,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
         ]);
 
-        let response = await request(app).get('/api/v1/actions?notes_valeurs_decimales=true');
+        let response = await request(app).get('/api/v1/actions?notes_decimales=true');
         assert.deepStrictEqual(response.body.actions[0].score, {
             nb_avis: 1,
             notes: {
@@ -327,7 +327,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             }
         });
 
-        response = await request(app).get('/api/v1/actions/14_AF_0000010729|14_SE_0000109418?notes_valeurs_decimales=true');
+        response = await request(app).get('/api/v1/actions/14_AF_0000010729|14_SE_0000109418?notes_decimales=true');
         assert.deepStrictEqual(response.body.score, {
             nb_avis: 1,
             notes: {

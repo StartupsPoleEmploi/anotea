@@ -77,7 +77,7 @@ module.exports = ({ db, auth, middlewares }) => {
             url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&origin=kairos&access_token=${accessToken}`,
             meta: {
                 created,
-                organisme: createOrganismeFomateurDTO(organisme),
+                organisme: createOrganismeFomateurDTO(organisme, { notes_decimales: true }),
             }
         });
     });
@@ -100,7 +100,7 @@ module.exports = ({ db, auth, middlewares }) => {
         return res.json({
             eligible: !!_.get(organisme, 'meta.kairos.eligible') && _.get(organisme, 'score.nb_avis') > 0,
             meta: {
-                organisme: createOrganismeFomateurDTO(organisme)
+                organisme: createOrganismeFomateurDTO(organisme, { notes_decimales: true })
             }
         });
     }));

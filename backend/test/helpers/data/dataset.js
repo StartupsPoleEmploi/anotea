@@ -50,7 +50,7 @@ let newComment = (custom, date = getDateInThePast()) => {
             equipe_formateurs: 4,
             moyen_materiel: 2,
             accompagnement: 1,
-            global: 2
+            global: 2.4,
         },
         pseudo: randomize('pseudo'),
         comment: {
