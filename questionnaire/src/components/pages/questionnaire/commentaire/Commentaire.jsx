@@ -54,12 +54,11 @@ class Commentaire extends Component {
                     <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <div className="row inner-row field">
                             <div className="col-sm-12">
-                                <div className="title">Avez-vous quelque chose à ajouter ?</div>
                                 <textarea
                                     name="texte"
                                     value={this.state.texte}
                                     maxLength={200}
-                                    rows="2"
+                                    rows="3"
                                     className={`${!commentaire.texte.isValid ? 'badwords' : ''}`}
                                     placeholder="Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois."
                                     onBlur={this.onBlur}

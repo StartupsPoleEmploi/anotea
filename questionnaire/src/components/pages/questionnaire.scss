@@ -2,6 +2,13 @@
 
 .questionnaire {
 
+    h3 {
+        color: $color-blue;
+        font-size: 0.875rem;
+        font-weight: $font-weight-900;
+        line-height: 29px;
+    }
+
     .info-container {
         margin: auto;
 
@@ -46,6 +53,10 @@
     }
 
     .pageTwo {
+        h3 {
+            margin: 0.875rem;
+        }
+
         .go-back {
             color: $color-black;
             font-size: 14px;

@@ -48,7 +48,7 @@ export default class Questionnaire extends Component {
         accord: false,
         accordEntreprise: false,
         showErrorMessage: null,
-        submitButtonClicked: false,
+        goNextButtonClicked: false,
         submitting: false,
         page: 0
     };
@@ -71,7 +71,7 @@ export default class Questionnaire extends Component {
         if (this.isFormValid()) {
             this.setState({ showModal: true });
         } else {
-            this.setState({ submitButtonClicked: true }, () => this.scrollToTop());
+            this.setState({ goNextButtonClicked: true }, () => this.scrollToTop());
         }
     };
 
@@ -80,11 +80,15 @@ export default class Questionnaire extends Component {
     };
 
     goBack = () => {
-        this.setState({ page: 0 });
+        this.setState({ page: 0 }, () => this.scrollToTop());
     }
 
     goNext = () => {
-        this.setState({ page: 1 }); 
+        if (this.isFormValid()) {
+            this.setState({ page: 1 }, () => this.scrollToTop());
+        } else {
+            this.setState({ goNextButtonClicked: true }, () => this.scrollToTop());
+        }
     }
 
     submit = () => {
@@ -156,21 +160,23 @@ export default class Questionnaire extends Component {
                 {!this.state.error && this.props.stagiaire &&
                 <div className={`container ${this.state.page === 0 ? 'pageOne' : 'pageTwo'}`}>
 
-                    <Formation stagiaire={this.props.stagiaire} />
-
                     { this.state.page === 0 &&
                         <div>
+                            <Formation stagiaire={this.props.stagiaire} />
                             <Notes
                                 notes={this.state.notes}
                                 averageScore={this.state.averageScore}
                                 onChange={this.updateNotes}
-                                showErrorMessage={this.state.submitButtonClicked} />
+                                showErrorMessage={this.state.goNextButtonClicked} />
                             <div className="plusQuneDerniere">Plus qu&apos;une dernière étape.</div>
                         </div>
                     }
 
                     { this.state.page === 1 &&
                     <div>
+                        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                            <h3>Avez-vous quelque chose à ajouter ?</h3>
+                        </div>
                         <div className="info-container col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                             <div className="info">
                                 <i className="icon fas fa-info-circle"></i>
