@@ -4,7 +4,7 @@ const _ = require('lodash');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator,notesValeursDecimalesValidator} = require('./utils/validators');
+const { paginationValidator, notesDecimalesValidator } = require('./utils/validators');
 const createAvisDTO = require('./dto/createAvisDTO');
 const createPaginationDTO = require('./dto/createPaginationDTO');
 
@@ -62,7 +62,7 @@ module.exports = ({ db, middlewares }) => {
             certif_info: Joi.string(),
             formacode: Joi.string(),
             ...paginationValidator(),
-            ...notesValeursDecimalesValidator(),
+            ...notesDecimalesValidator(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -81,7 +81,7 @@ module.exports = ({ db, middlewares }) => {
         let [total, avis] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            avis: avis.map(a => createAvisDTO(a)),
+            avis: avis.map(a => createAvisDTO(a, { notes_decimales: parameters.notes_decimales })),
             meta: {
                 pagination: createPaginationDTO(pagination, total)
             },
@@ -90,8 +90,9 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/v1/avis/:id', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(req.params, {
+        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
+            ...notesDecimalesValidator(),
         }, { abortEarly: false });
 
         if (!ObjectID.isValid(parameters.id)) {
@@ -103,7 +104,7 @@ module.exports = ({ db, middlewares }) => {
         if (!avis) {
             throw Boom.notFound('Identifiant inconnu');
         }
-        res.json(createAvisDTO(avis));
+        res.json(createAvisDTO(avis, { notes_decimales: parameters.notes_decimales }));
     }));
 
     return router;
