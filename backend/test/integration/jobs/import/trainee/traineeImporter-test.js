@@ -166,15 +166,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         });
     });
 
-    it('can filter trainee by certifInfo id', async () => {
+    it('can filter trainee by certifInfo', async () => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);;
+        let handler = poleEmploiCSVHandler(db, regions);
 
         let results = await importer.importTrainee(csvFile, handler, {
-            certifInfo: '8122'
+            certifInfo: true
         });
 
         let doc = await db.collection('trainee').findOne();
@@ -182,8 +182,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         assert.deepStrictEqual(doc.trainee.email, 'email_1@pe.com');
         assert.deepStrictEqual(results, {
             invalid: 0,
-            ignored: 3,
-            imported: 1,
+            ignored: 1,
+            imported: 3,
             total: 4,
         });
     });
@@ -253,7 +253,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                     }
                 }];
             }
-        }));;
+        }));
 
         let results = await importer.importTrainee(csvFile, handler);
 
