@@ -368,15 +368,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateFormations(db);
 
         let session = await db.collection('formationsReconciliees').findOne();
-        assert.equal(session.avis.length, 1);
-        assert.equal(session.avis[0].comment, undefined);
+        assert.strictEqual(session.avis.length, 1);
+        assert.strictEqual(session.avis[0].comment, null);
     });
 
     it('should reconcile comment without commentaire (undefined)', async () => {
 
         let db = await getTestDatabase();
         let comment = newComment({
-            comment: undefined,
             training: {
                 formacode: '22403',
                 certifInfo: {
@@ -391,6 +390,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             },
         });
         delete comment.comment;
+        delete comment.published;
+        delete comment.rejected;
 
         await Promise.all([
             importIntercarif(),
@@ -401,7 +402,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let session = await db.collection('formationsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
-        assert.equal(session.avis[0].comment, undefined);
+        assert.strictEqual(session.avis[0].comment, undefined);
     });
 
     it('should ignore not yet published comment', async () => {
