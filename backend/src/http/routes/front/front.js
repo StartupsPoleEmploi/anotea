@@ -1,7 +1,7 @@
 const express = require('express');
 const externalLinks = require('./utils/externalLinks');
 
-module.exports = ({ db, configuration }) => {
+module.exports = ({ db, configuration, stats }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
@@ -31,29 +31,11 @@ module.exports = ({ db, configuration }) => {
     });
 
     router.get('/stats', async (req, res) => {
-
-        let computeOrganismesStats = async (query = {}) => {
-            let [nbOrganismes, actifs, hasAtLeastOneAvis] = await Promise.all([
-                db.collection('accounts').count({ 'profile': 'organisme', ...query }),
-                db.collection('accounts').count({
-                    'profile': 'organisme',
-                    'passwordHash': { $exists: true }, ...query
-                }),
-                db.collection('accounts').count({ 'profile': 'organisme', 'score.nb_avis': { $gt: 0 }, ...query }),
-            ]);
-
-            return { nbOrganismes, actifs, hasAtLeastOneAvis };
-        };
-
-        let [organismes, kairos] = await Promise.all([
-            computeOrganismesStats(),
-            computeOrganismesStats({ 'sources': { $in: ['kairos'] } }),
-        ]);
-
+        let results = await stats.computeOrganismesStats();
         res.render('front/stats', {
-            organismes,
+            organismes: results.organismes,
             kairos: {
-                ...kairos,
+                ...results.kairos,
                 kibanaDashboardUrl: 'https://137.74.30.34/app/kibana#/dashboard/d545e8a0-4738-11e9-a788-0de26b41fc5f?embed=true&_g=(refreshInterval%3A(display%3A\'30%20seconds\'%2Cpause%3A!f%2Csection%3A1%2Cvalue%3A30000)%2Ctime%3A(from%3Anow%2FM%2Cinterval%3Aauto%2Cmode%3Aquick%2Ctimezone%3AEurope%2FBerlin%2Cto%3Anow%2FM))',
             }
         });
