@@ -11,6 +11,7 @@ let createStreams = (name, { log }) => {
             name: 'pretty',
             level: log.level,
             stream: pretty,
+            close: () => ({}),
         };
     };
 
@@ -19,6 +20,7 @@ let createStreams = (name, { log }) => {
             name: 'json',
             level: log.level,
             stream: process.stdout,
+            close: () => ({}),
         };
     };
 
@@ -28,13 +30,14 @@ let createStreams = (name, { log }) => {
             host: log.fluentbit.host,
             port: log.fluentbit.port,
             timeout: 3.0,
-            reconnectInterval: 30000 // 30 sec
+            reconnectInterval: 10000 // 10 sec
         });
 
         return {
             name: 'fluentbit',
             level: log.level,
             stream: sender.toStream(name),
+            close: () => sender.end(err => err ? Promise.reject(err) : Promise.resolve()),
         };
     };
 
@@ -51,9 +54,31 @@ let createStreams = (name, { log }) => {
 
 module.exports = (name, configuration) => {
 
-    return bunyan.createLogger({
+    let streams = createStreams(name, configuration);
+    let logger = bunyan.createLogger({
         name,
         serializers: bunyan.stdSerializers,
-        streams: createStreams(name, configuration),
+        streams: streams,
     });
+
+    return {
+        fatal: function() {
+            logger.fatal(arguments);
+        },
+        error: function() {
+            logger.error(arguments);
+        },
+        info: function() {
+            logger.info(arguments);
+        },
+        debug: function() {
+            logger.debug(arguments);
+        },
+        trace: function() {
+            logger.trace(arguments);
+        },
+        close: () => {
+            return Promise.all(streams.map(stream => stream.close()));
+        }
+    };
 };
