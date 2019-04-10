@@ -1,4 +1,5 @@
 const moment = require('moment');
+const config = require('config');
 const createComponents = require('../components');
 const createLogger = require('../common/components/logger');
 
@@ -12,8 +13,8 @@ module.exports = {
         process.on('unhandledRejection', e => console.log(e));
         process.on('uncaughtException', e => console.log(e));
 
-        let components = await createComponents();
-        let logger = createLogger('anotea-job', components.configuration);
+        let logger = createLogger('jobs', config);
+        let components = await createComponents({ logger, configuration: config });
         const exit = error => {
             if (error) {
                 logger.error(error);

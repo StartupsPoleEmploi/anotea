@@ -23,8 +23,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/organismes-formateurs/${siret}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
             id: siret,
             siret: siret,
             numero: '14_OF_0000000123',
@@ -58,8 +58,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/organismes-formateurs/UNKNOWN`);
 
-        assert.equal(response.statusCode, 404);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 404);
+        assert.deepStrictEqual(response.body, {
             error: 'Not Found',
             message: 'Identifiant inconnu',
             statusCode: 404,
@@ -77,8 +77,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get('/api/v1/organismes-formateurs');
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.organismes_formateurs.length, 2);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.organismes_formateurs.length, 2);
         assert.ok(response.body.organismes_formateurs.find(of => of.id === '11111111111111'));
         assert.ok(response.body.organismes_formateurs.find(of => of.id === '22222222222222'));
     });
@@ -94,9 +94,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?id=11111111111111,22222222222222`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let organismes = response.body.organismes_formateurs;
-        assert.equal(organismes.length, 2);
+        assert.strictEqual(organismes.length, 2);
         assert.ok(organismes.find(s => s.id === '11111111111111'));
         assert.ok(organismes.find(s => s.id === '22222222222222'));
     });
@@ -112,9 +112,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?numero=OF_XX1,OF_XX2`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let organismes = response.body.organismes_formateurs;
-        assert.equal(organismes.length, 2);
+        assert.strictEqual(organismes.length, 2);
         assert.ok(organismes.find(s => s.numero === 'OF_XX1'));
         assert.ok(organismes.find(s => s.numero === 'OF_XX2'));
     });
@@ -130,9 +130,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?siret=11111111111111,22222222222222`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let organismes = response.body.organismes_formateurs;
-        assert.equal(organismes.length, 2);
+        assert.strictEqual(organismes.length, 2);
         assert.ok(organismes.find(s => s.siret === '11111111111111'));
         assert.ok(organismes.find(s => s.siret === '22222222222222'));
     });
@@ -157,9 +157,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?nb_avis=1`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let organismes = response.body.organismes_formateurs;
-        assert.equal(organismes.length, 1);
+        assert.strictEqual(organismes.length, 1);
         assert.ok(organismes.find(s => s.id === '11111111111111'));
     });
 
@@ -195,9 +195,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?lieu_de_formation=11`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let organismes = response.body.organismes_formateurs;
-        assert.equal(organismes.length, 1);
+        assert.strictEqual(organismes.length, 1);
         assert.ok(organismes.find(s => s.id === '11111111111111'));
     });
 
@@ -234,13 +234,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?lieu_de_formation=45000`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let organismes = response.body.organismes_formateurs;
-        assert.equal(organismes.length, 1);
+        assert.strictEqual(organismes.length, 1);
         assert.ok(organismes.find(s => s.id === '22222222222222'));
     });
 
-    it('can search though all sessions with pagination', async () => {
+    it('can search though all organismes with pagination', async () => {
 
         let app = await startServer();
         await Promise.all([
@@ -250,13 +250,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         ]);
 
         let response = await request(app).get(`/api/v1/organismes-formateurs?page=0&items_par_page=1`);
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.organismes_formateurs.length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.organismes_formateurs.length, 1);
 
         response = await request(app).get(`/api/v1/organismes-formateurs?page=1&items_par_page=1`);
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.organismes_formateurs.length, 1);
-        assert.deepEqual(response.body.meta.pagination, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.organismes_formateurs.length, 1);
+        assert.deepStrictEqual(response.body.meta.pagination, {
             page: 1,
             items_par_page: 1,
             total_items: 3,
@@ -264,7 +264,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('can search though all sessions with projection (blacklist)', async () => {
+    it('can search though all organismes with projection (blacklist)', async () => {
 
         let app = await startServer();
 
@@ -273,12 +273,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs?fields=-lieux_de_formation');
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.organismes_formateurs.length, 1);
-        assert.deepEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'raison_sociale', 'siret', 'numero', 'score']);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.organismes_formateurs.length, 1);
+        assert.deepStrictEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'raison_sociale', 'siret', 'numero', 'score']);
     });
 
-    it('can search though all sessions with projection (whitelist)', async () => {
+    it('can search though all organismes with projection (whitelist)', async () => {
 
         let app = await startServer();
 
@@ -287,9 +287,44 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs?fields=lieux_de_formation');
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.organismes_formateurs.length, 1);
-        assert.deepEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'lieux_de_formation']);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.organismes_formateurs.length, 1);
+        assert.deepStrictEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'lieux_de_formation']);
+    });
+
+    it('can get score with notes décimales', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('accounts', buildOrganismeAccount('11111111111111')),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs?notes_decimales=true');
+        assert.deepStrictEqual(response.body.organismes_formateurs[0].score, {
+            nb_avis: 15,
+            notes: {
+                accueil: 5.1,
+                contenu_formation: 5.1,
+                equipe_formateurs: 4.1,
+                moyen_materiel: 3.1,
+                accompagnement: 4.1,
+                global: 5.1,
+            }
+        });
+
+        response = await request(app).get('/api/v1/organismes-formateurs/11111111111111?notes_decimales=true');
+        assert.deepStrictEqual(response.body.score, {
+            nb_avis: 15,
+            notes: {
+                accueil: 5.1,
+                contenu_formation: 5.1,
+                equipe_formateurs: 4.1,
+                moyen_materiel: 3.1,
+                accompagnement: 4.1,
+                global: 5.1,
+            }
+        });
     });
 
 }));

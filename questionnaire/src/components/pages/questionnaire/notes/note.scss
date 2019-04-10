@@ -8,6 +8,10 @@
   @media (max-width: 575.98px) {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+
+    .stars-container {
+        padding-left: 0;
+    }
   }
 
   .title {
@@ -25,8 +29,10 @@
     line-height: 17px;
   }
 
-  &.odd {
-    background-color: $color-grey-5;
+  .row {
+      .col-sm-7 {
+          padding-left: 0px;
+      }
   }
 }
 

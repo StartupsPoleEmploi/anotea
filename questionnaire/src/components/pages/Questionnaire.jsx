@@ -48,8 +48,9 @@ export default class Questionnaire extends Component {
         accord: false,
         accordEntreprise: false,
         showErrorMessage: null,
-        submitButtonClicked: false,
+        goNextButtonClicked: false,
         submitting: false,
+        page: 0
     };
 
     scrollToTop = () => {
@@ -70,13 +71,25 @@ export default class Questionnaire extends Component {
         if (this.isFormValid()) {
             this.setState({ showModal: true });
         } else {
-            this.setState({ submitButtonClicked: true }, () => this.scrollToTop());
+            this.setState({ goNextButtonClicked: true }, () => this.scrollToTop());
         }
     };
 
     closeModal = () => {
         this.setState({ showModal: false });
     };
+
+    goBack = () => {
+        this.setState({ page: 0 }, () => this.scrollToTop());
+    }
+
+    goNext = () => {
+        if (this.isFormValid()) {
+            this.setState({ page: 1 }, () => this.scrollToTop());
+        } else {
+            this.setState({ goNextButtonClicked: true }, () => this.scrollToTop());
+        }
+    }
 
     submit = () => {
 
@@ -145,30 +158,70 @@ export default class Questionnaire extends Component {
             <div className="anotea questionnaire">
                 {false && <GridDisplayer />}
                 {!this.state.error && this.props.stagiaire &&
-                <div className="container">
-                    <Formation stagiaire={this.props.stagiaire} />
-                    <Notes
-                        notes={this.state.notes}
-                        averageScore={this.state.averageScore}
-                        onChange={this.updateNotes}
-                        showErrorMessage={this.state.submitButtonClicked} />
+                <div className={`container ${this.state.page === 0 ? 'pageOne' : 'pageTwo'}`}>
 
-                    <Commentaire
-                        commentaire={this.state.commentaire}
-                        onChange={this.updateCommentaire} />
+                    { this.state.page === 0 &&
+                        <div>
+                            <Formation stagiaire={this.props.stagiaire} />
+                            <Notes
+                                notes={this.state.notes}
+                                averageScore={this.state.averageScore}
+                                onChange={this.updateNotes}
+                                showErrorMessage={this.state.goNextButtonClicked} />
+                            <div className="plusQuneDerniere">Plus qu&apos;une dernière étape.</div>
+                        </div>
+                    }
 
-                    <Autorisations onChange={this.updateAccord} />
+                    { this.state.page === 1 &&
+                    <div>
+                        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                            <h3>Avez-vous quelque chose à ajouter ?</h3>
+                        </div>
+                        <div className="info-container col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                            <div className="info">
+                                <i className="icon fas fa-info-circle"></i>
+                                Cette partie n’est <strong>pas obligatoire</strong>, vous pouvez <strong>cliquer sur envoyer</strong> si vous ne souhaiter pas laisser de commentaire.
+                            </div>
+                        </div>
+                        <Commentaire
+                            commentaire={this.state.commentaire}
+                            onChange={this.updateCommentaire} />
+                        <Autorisations onChange={this.updateAccord} />
+                    </div>
+                    }
 
                     <div className="row">
                         <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                             <div className="d-flex justify-content-center">
-                                <Button
-                                    className="send-button"
-                                    size="large"
-                                    color="blue"
-                                    onClick={this.openModal}>
-                                    Envoyer
-                                </Button>
+                                { this.state.page === 0 &&
+                                    <div>
+                                        <Button
+                                            className="send-button"
+                                            size="large"
+                                            color="blue"
+                                            onClick={this.goNext}>
+                                            Suivant
+                                        </Button>
+                                    </div>
+                                }
+                                { this.state.page === 1 &&
+                                    <div>
+                                        <Button
+                                            className="go-back"
+                                            size="large"
+                                            color="blue"
+                                            onClick={this.goBack}>
+                                            Retour
+                                        </Button>
+                                        <Button
+                                            className="send-button"
+                                            size="large"
+                                            color="blue"
+                                            onClick={this.openModal}>
+                                            Envoyer
+                                        </Button>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>

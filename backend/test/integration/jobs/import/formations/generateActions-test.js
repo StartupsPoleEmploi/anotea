@@ -59,7 +59,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     equipe_formateurs: 4,
                     moyen_materiel: 2,
                     accompagnement: 1,
-                    global: 2
+                    global: 2.4,
                 }
             },
             formation: {
@@ -175,11 +175,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.deepStrictEqual(session.score, {
             nb_avis: 3,
             notes: {
-                accueil: 1,
+                accueil: 1.3,
                 contenu_formation: 1,
-                equipe_formateurs: 3,
-                moyen_materiel: 5,
-                accompagnement: 4,
+                equipe_formateurs: 2.7,
+                moyen_materiel: 4.7,
+                accompagnement: 3.7,
                 global: 5,
             }
         });
@@ -298,7 +298,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     equipe_formateurs: 4,
                     moyen_materiel: 2,
                     accompagnement: 1,
-                    global: 2
+                    global: 2.4,
                 }
             },
             formation: {
@@ -384,7 +384,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     equipe_formateurs: 4,
                     moyen_materiel: 2,
                     accompagnement: 1,
-                    global: 2
+                    global: 2.4,
                 }
             },
             formation: {

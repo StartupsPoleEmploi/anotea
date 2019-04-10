@@ -364,4 +364,40 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(Object.keys(response.body.sessions[0]), ['id', 'numero', 'region', 'score', 'meta']);
     });
 
+    it('can get score with notes décimales', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('intercarif', newIntercarif()),
+            insertIntoDatabase('sessionsReconciliees', newSession({ _id: '14_AF_0000010729|14_SE_0000109418|SE_000010456' })),
+        ]);
+
+        let response = await request(app).get('/api/v1/sessions?notes_decimales=true');
+        assert.deepStrictEqual(response.body.sessions[0].score, {
+            nb_avis: 1,
+            notes: {
+                accompagnement: 4.1,
+                accueil: 4.1,
+                contenu_formation: 4.1,
+                equipe_formateurs: 4.1,
+                global: 4.1,
+                moyen_materiel: 4.1,
+            }
+        });
+
+        response = await request(app).get('/api/v1/sessions/14_AF_0000010729|14_SE_0000109418|SE_000010456?notes_decimales=true');
+        assert.deepStrictEqual(response.body.score, {
+            nb_avis: 1,
+            notes: {
+                accompagnement: 4.1,
+                accueil: 4.1,
+                contenu_formation: 4.1,
+                equipe_formateurs: 4.1,
+                global: 4.1,
+                moyen_materiel: 4.1,
+            }
+        });
+    });
+
 }));

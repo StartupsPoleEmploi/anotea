@@ -1,3 +1,5 @@
+const $round = require('../../$round');
+
 const computeScore = async (db, siret) => {
     let results = await db.collection('comment').aggregate([
         {
@@ -30,12 +32,12 @@ const computeScore = async (db, siret) => {
                 _id: 0,
                 nb_avis: '$count',
                 notes: {
-                    accueil: '$accueil',
-                    contenu_formation: '$contenu_formation',
-                    equipe_formateurs: '$equipe_formateurs',
-                    moyen_materiel: '$moyen_materiel',
-                    accompagnement: '$accompagnement',
-                    global: '$global',
+                    accueil: $round('$accueil', 1),
+                    contenu_formation: $round('$contenu_formation', 1),
+                    equipe_formateurs: $round('$equipe_formateurs', 1),
+                    moyen_materiel: $round('$moyen_materiel', 1),
+                    accompagnement: $round('$accompagnement', 1),
+                    global: $round('$global', 1),
                 },
             }
         }
@@ -45,19 +47,7 @@ const computeScore = async (db, siret) => {
         return { nb_avis: 0 };
     }
 
-    let { nb_avis: nbAvis, notes } = results[0];
-    return {
-        nb_avis: nbAvis,
-        notes: {
-            //TODO wait for $round in Mongo 4.2
-            accueil: Math.round(notes.accueil),
-            contenu_formation: Math.round(notes.contenu_formation),
-            equipe_formateurs: Math.round(notes.equipe_formateurs),
-            moyen_materiel: Math.round(notes.moyen_materiel),
-            accompagnement: Math.round(notes.accompagnement),
-            global: Math.round(notes.global),
-        },
-    };
+    return results[0];
 };
 
 module.exports = async (db, logger) => {

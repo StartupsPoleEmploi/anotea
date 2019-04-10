@@ -2,11 +2,12 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const { paginationValidator, arrayOfValidator } = require('./utils/validators');
-const buildProjection = require('./utils/buildProjection');
-const convertToFormationDTO = require('./dto/convertToExposableFormation');
-const convertToPaginationDTO = require('./dto/convertToExposablePagination');
 const { tryAndCatch } = require('../../routes-utils');
+const { paginationValidator, arrayOfValidator, notesDecimalesValidator } = require('./utils/validators');
+const buildProjection = require('./utils/buildProjection');
+const createPaginationDTO = require('./dto/createPaginationDTO');
+const createFormationDTO = require('./dto/createFormationDTO');
+
 
 module.exports = ({ db, middlewares }) => {
 
@@ -18,11 +19,12 @@ module.exports = ({ db, middlewares }) => {
     router.get('/v1/formations', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
-            ...paginationValidator(),
             id: arrayOfValidator(Joi.string()),
             numero: arrayOfValidator(Joi.string()),
             nb_avis: Joi.number(),
             fields: arrayOfValidator(Joi.string().required()).default([]),
+            ...paginationValidator(),
+            ...notesDecimalesValidator(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -42,26 +44,30 @@ module.exports = ({ db, middlewares }) => {
         let [total, formations] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            formations: formations.map(formation => convertToFormationDTO(formation)) || [],
+            formations: formations.map(formation => {
+                return createFormationDTO(formation, { notes_decimales: parameters.notes_decimales });
+            }) || [],
             meta: {
-                pagination: convertToPaginationDTO(pagination, total)
+                pagination: createPaginationDTO(pagination, total)
             },
         });
     }));
 
     router.get('/v1/formations/:id', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(req.params, {
+        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
+            ...notesDecimalesValidator(),
         }, { abortEarly: false });
 
-        let session = await collection.findOne({ _id: parameters.id });
+        let formation = await collection.findOne({ _id: parameters.id });
 
-        if (!session) {
+        if (!formation) {
             throw Boom.notFound('Numéro de formation inconnu ou formation expirée');
         }
 
-        res.json(convertToFormationDTO(session));
+
+        res.json(createFormationDTO(formation, { notes_decimales: parameters.notes_decimales }));
 
     }));
 

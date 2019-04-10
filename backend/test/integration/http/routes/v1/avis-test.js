@@ -24,10 +24,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let avis = response.body.avis.filter(a => a.pseudo === pseudo);
-        assert.equal(avis.length, 1);
-        assert.deepEqual(avis[0], {
+        assert.strictEqual(avis.length, 1);
+        assert.deepStrictEqual(avis[0], {
             id: oid.toString(),
             pseudo,
             date: date.toJSON(),
@@ -79,7 +79,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             }
         });
 
-        assert.deepEqual(response.body.meta, {
+        assert.deepStrictEqual(response.body.meta, {
             pagination: {
                 page: 0,
                 items_par_page: 50,
@@ -107,8 +107,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis/${oid.toString()}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
             id: oid.toString(),
             pseudo,
             date: date.toJSON(),
@@ -167,8 +167,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis/${new ObjectID().toString()}`);
 
-        assert.equal(response.statusCode, 404);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 404);
+        assert.deepStrictEqual(response.body, {
             error: 'Not Found',
             message: 'Identifiant inconnu',
             statusCode: 404,
@@ -181,8 +181,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis/UNKNOWN`);
 
-        assert.equal(response.statusCode, 400);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
             error: 'Bad Request',
             message: 'Identifiant invalide',
             statusCode: 400,
@@ -210,8 +210,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis?organisme_formateur=${siret}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
     it('can search avis by lieu_de_formation', async () => {
@@ -235,8 +235,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis?lieu_de_formation=${codePostal}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
     it('can search avis by certif_info', async () => {
@@ -260,8 +260,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis?certif_info=${certifInfo}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
     it('can search avis by formacode', async () => {
@@ -283,10 +283,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis?formacode=${formacode}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let avis = response.body.avis.filter(a => a.pseudo === pseudo);
-        assert.equal(avis.length, 1);
-        assert.deepEqual(avis[0].formation.domaine_formation.formacodes[0], formacode);
+        assert.strictEqual(avis.length, 1);
+        assert.deepStrictEqual(avis[0].formation.domaine_formation.formacodes[0], formacode);
     });
 
     it('can search avis with partial code', async () => {
@@ -309,10 +309,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis?formacode=${partialFormacode}`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let avis = response.body.avis.filter(a => a.pseudo === pseudo);
-        assert.equal(avis.length, 1);
-        assert.deepEqual(avis[0].formation.domaine_formation.formacodes[0], formacode);
+        assert.strictEqual(avis.length, 1);
+        assert.deepStrictEqual(avis[0].formation.domaine_formation.formacodes[0], formacode);
     });
 
     it('can search avis with pagination', async () => {
@@ -326,17 +326,45 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         ]);
 
         let response = await request(app).get('/api/v1/avis?page=0&items_par_page=2');
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.length, 2);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 2);
 
         response = await request(app).get('/api/v1/avis?page=1&items_par_page=2');
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.length, 1);
-        assert.deepEqual(response.body.meta.pagination, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.meta.pagination, {
             page: 1,
             items_par_page: 2,
             total_items: 3,
             total_pages: 2,
+        });
+    });
+
+    it('can get score with notes décimales', async () => {
+
+        let app = await startServer();
+        let comment = newComment();
+
+        await insertIntoDatabase('comment', comment);
+
+        let response = await request(app).get('/api/v1/avis?notes_decimales=true');
+        assert.deepStrictEqual(response.body.avis[0].notes, {
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            accompagnement: 1,
+            global: 2.4,
+        });
+
+        response = await request(app).get(`/api/v1/avis/${comment._id}?notes_decimales=true`);
+        assert.deepStrictEqual(response.body.notes, {
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            accompagnement: 1,
+            global: 2.4,
         });
     });
 
@@ -354,10 +382,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         ]);
 
         let response = await request(app).get('/api/v1/avis');
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis[0].pseudo, pseudo1);
-        assert.equal(response.body.avis[1].pseudo, pseudo2);
-        assert.equal(response.body.avis[2].pseudo, pseudo3);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, pseudo1);
+        assert.strictEqual(response.body.avis[1].pseudo, pseudo2);
+        assert.strictEqual(response.body.avis[2].pseudo, pseudo3);
     });
 
     it('should return empty array when no avis can be found', async () => {
@@ -366,9 +394,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.length, 0);
-        assert.deepEqual(response.body.meta, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
+        assert.deepStrictEqual(response.body.meta, {
             pagination: {
                 page: 0,
                 items_par_page: 50,
@@ -391,8 +419,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
     it('should return avis with commentaire=null', async () => {
@@ -406,8 +434,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
     it('should not return avis not published yet', async () => {
@@ -422,8 +450,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis`);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(response.body.avis.filter(a => a.pseudo === pseudo).length, 0);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 0);
     });
 
     it('should return rejected avis (without pseudo and comment)', async () => {
@@ -440,10 +468,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let avis = response.body.avis.find(a => a.id === '12345');
         assert.ok(avis);
-        assert.deepEqual(avis.commentaire, undefined);
+        assert.deepStrictEqual(avis.commentaire, undefined);
     });
 
     it('should fail when parameters are invalid', async () => {
@@ -452,8 +480,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/avis?organisme_formateur=INVALID&lieu_de_formation=INVALID`);
 
-        assert.equal(response.statusCode, 400);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
             error: 'Bad Request',
             statusCode: 400,
             message: 'Erreur de validation',
@@ -510,11 +538,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get(`/api/v1/organisme_formateurs/${siret}/lieu_de_formations/${codePostal}/formations/${intitule}/avis`);
 
-        assert.equal(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 200);
         let avis = response.body.avis.filter(a => a.pseudo === 'test-user-intitule');
-        assert.equal(avis.length, 1);
-        assert.deepEqual(avis[0].formation.intitule, 'Développeur fullstack');
-        assert.deepEqual(avis[0].formation.action.lieu_de_formation.code_postal, codePostal);
-        assert.deepEqual(avis[0].formation.action.organisme_formateur.siret, siret);
+        assert.strictEqual(avis.length, 1);
+        assert.deepStrictEqual(avis[0].formation.intitule, 'Développeur fullstack');
+        assert.deepStrictEqual(avis[0].formation.action.lieu_de_formation.code_postal, codePostal);
+        assert.deepStrictEqual(avis[0].formation.action.organisme_formateur.siret, siret);
     });
 }));

@@ -42,6 +42,27 @@ responses:
     schema:
       $ref: "#/definitions/Avis"
 
+  FormationsResponse:
+    description: La liste des formations reconciliées
+    schema:
+      type: object
+      properties:
+        sessions:
+          type: array
+          items:
+            $ref: "#/definitions/Formation"
+        meta:
+          type: object
+          description: Informations complémentaires
+          properties:
+            pagination:
+              $ref: "#/definitions/Pagination"
+
+  FormationByIdResponse:
+    description: Une formation avec ses avis reconciliées et son score
+    schema:
+      $ref: "#/definitions/Formation"
+
   SessionsResponse:
     description: La liste des sessions reconciliées
     schema:
@@ -111,6 +132,7 @@ responses:
       $ref: "#/definitions/OrganismeAuthUrl"
 
   CheckIfOrganismeIsEligibleResponse:
+    description: Contient les informations relatives à l'éligibilité de l'organisme
     schema:
       $ref: "#/definitions/CheckOrganismeEligibility"
 
@@ -277,6 +299,49 @@ definitions:
                       fin:
                         type: string
 
+  Formation:
+    type: object
+    properties:
+      id:
+        type: string
+        description: L'identifiant unique de la formation
+      numero:
+        type: string
+        description: Le numéro de la formation
+      avis:
+        $ref: "#/definitions/Avis"
+      score:
+        $ref: "#/definitions/Score"
+      meta:
+        type: object
+        description: Informations complémentaires
+        properties:
+          reconciliation:
+            type: object
+            description: Données relatives à la reconciliation
+            properties:
+              certifinfos:
+                type: array
+                items:
+                  type: string
+              formacodes:
+                type: array
+                items:
+                  type: string
+              organisme_formateurs:
+                type: array
+                items:
+                  type: string
+          source:
+            type: object
+            description: Données relatives au catalogue utilisé comme source
+            properties:
+              numero_formation:
+                type: string
+              type:
+                type: string
+                description: Le type de catalague auxquel appartient la session
+
   Session:
     type: object
     properties:
@@ -286,6 +351,9 @@ definitions:
       numero:
         type: string
         description: Le numéro de la session
+      region:
+        type: string
+        description: Le code INSEE de la région
       avis:
         $ref: "#/definitions/Avis"
       score:
@@ -333,6 +401,9 @@ definitions:
       numero:
         type: string
         description: Le numéro de l'action
+      region:
+        type: string
+        description: Le code INSEE de la région
       avis:
         $ref: "#/definitions/Avis"
       score:
@@ -454,11 +525,21 @@ paths:
         - in: query
           name: page
           description: Le numéro de la page
+          default: 0
+          minimum: 0
           type: number
           required: false
         - in: query
           name: items_par_page
           description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
           type: number
           required: false
       responses:
@@ -482,11 +563,116 @@ paths:
           name: id
           type: string
           required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
       security:
         - Authorization: []
       responses:
         200:
           $ref: "#/responses/AvisByIdResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/responses/UnauthorizedErrorResponse"
+        404:
+          $ref: "#/responses/NotFoundErrorResponse"
+      tags:
+        - Publique
+
+  /v1/formations:
+    get:
+      description: >
+        Permet d'obtenir la liste de toutes les formations contenues dans l'intercarif avec pour chacune d'elles, les avis réconciliés et le score.
+        La réconcialition permet de rattacher des avis déposés sur des formations similaires.
+        Une formation est considérée comme similaire si elle possède au moins un FORMACODE ou un CERTIFINFOs identiquent à ceux de la formation dispensée.
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: id
+          description: >
+            Permet de filtrer la recherche avec un ou plusieurs identifiants de formations. L'identifiant d'une formation est de la forme suivante `numero_formation`
+          type: string
+          required: false
+        - in: query
+          name: numero
+          description: Permet de filtrer la recherche avec un ou plusieurs numéros de formations
+          type: string
+          required: false
+        - in: query
+          name: nb_avis
+          description: Permet de filtrer la recherche en renvoyant uniquement les formations ayant un nombre d'avis égal ou supérieur à la valeur spécifiée
+          type: string
+          required: false
+        - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=score` renvoie uniquement le champ score
+            `fields=-avis` renvoie tous sauf le champ avis
+          type: number
+          required: false
+        - in: query
+          name: page
+          description: Le numéro de la page
+          default: 0
+          minimum: 0
+          type: number
+          required: false
+        - in: query
+          name: items_par_page
+          description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
+      security:
+        - Authorization: []
+      responses:
+        200:
+          $ref: "#/responses/FormationsResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/responses/UnauthorizedErrorResponse"
+      tags:
+        - Publique
+
+  /v1/formations/:id:
+    get:
+      description: >
+        Permet d'obtenir une formation à partir de son identifiant
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: >
+            L'identifiant d'une formation est de la forme suivante `numero_formation`
+          type: string
+          required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
+      security:
+        - Authorization: []
+      responses:
+        200:
+          $ref: "#/responses/FormationByIdResponse"
         400:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
@@ -541,11 +727,21 @@ paths:
         - in: query
           name: page
           description: Le numéro de la page
+          default: 0
+          minimum: 0
           type: number
           required: false
         - in: query
           name: items_par_page
           description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
           type: number
           required: false
       security:
@@ -574,6 +770,12 @@ paths:
              (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
           type: string
           required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
       security:
         - Authorization: []
       responses:
@@ -633,11 +835,21 @@ paths:
         - in: query
           name: page
           description: Le numéro de la page
+          default: 0
+          minimum: 0
           type: number
           required: false
         - in: query
           name: items_par_page
           description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
           type: number
           required: false
       security:
@@ -666,6 +878,12 @@ paths:
              (ex. `id=14_AF_0000011111|14_SE_0000102222`)
           type: string
           required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
       security:
         - Authorization: []
       responses:
@@ -727,11 +945,21 @@ paths:
         - in: query
           name: page
           description: Le numéro de la page
+          default: 0
+          minimum: 0
           type: number
           required: false
         - in: query
           name: items_par_page
           description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
           type: number
           required: false
       security:
@@ -759,6 +987,12 @@ paths:
             L'identifiant d'un organisme correspond à son numéro de SIRET
           type: string
           required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
       security:
         - Authorization: []
       responses:

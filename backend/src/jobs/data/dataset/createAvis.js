@@ -84,7 +84,7 @@ const buildAvis = (session, custom) => {
             equipe_formateurs: 4,
             moyen_materiel: 2,
             accompagnement: 1,
-            global: 2
+            global: 2.1,
         },
         pseudo: faker.name.firstName(),
         comment: {

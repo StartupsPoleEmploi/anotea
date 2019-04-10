@@ -25,15 +25,13 @@ services:
     volumes:
       - ./backend:/opt/anotea/backend:ro
     environment:
-      - ANOTEA_LOG_JSON=true
       - ANOTEA_MONGODB_URI=mongodb://mongodb:27017/anotea?w=1
       - ANOTEA_SMTP_HOST=smtp
       - ANOTEA_SMTP_PORT=1025
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        tag: docker.backend
+      # Use Bunyan to sent logs to Fluentbit instead of Docker logging driver
+      - ANOTEA_LOG_TYPE=fluentbit
+      - ANOTEA_LOG_FLUENTBIT_HOST=fluentbit
+      - ANOTEA_LOG_FLUENTBIT_PORT=24224
     depends_on:
       - fluentbit
 

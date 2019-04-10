@@ -2,11 +2,11 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const { paginationValidator, arrayOfValidator } = require('./utils/validators');
-const buildProjection = require('./utils/buildProjection');
-const convertToExposableAction = require('./dto/convertToExposableAction');
-const convertToExposablePagination = require('./dto/convertToExposablePagination');
 const { tryAndCatch } = require('../../routes-utils');
+const { paginationValidator, arrayOfValidator, notesDecimalesValidator } = require('./utils/validators');
+const buildProjection = require('./utils/buildProjection');
+const createPaginationDTO = require('./dto/createPaginationDTO');
+const createActionDTO = require('./dto/createActionDTO');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -18,12 +18,13 @@ module.exports = ({ db, middlewares }) => {
     router.get('/v1/actions', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
-            ...paginationValidator(),
             id: arrayOfValidator(Joi.string()),
             numero: arrayOfValidator(Joi.string()),
             region: arrayOfValidator(Joi.string()),
             nb_avis: Joi.number(),
             fields: arrayOfValidator(Joi.string().required()).default([]),
+            ...paginationValidator(),
+            ...notesDecimalesValidator(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -44,26 +45,29 @@ module.exports = ({ db, middlewares }) => {
         let [total, actions] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            actions: actions.map(action => convertToExposableAction(action)) || [],
+            actions: actions.map(action => {
+                return createActionDTO(action, { notes_decimales: parameters.notes_decimales });
+            }) || [],
             meta: {
-                pagination: convertToExposablePagination(pagination, total)
+                pagination: createPaginationDTO(pagination, total)
             },
         });
     }));
 
     router.get('/v1/actions/:id', checkAuth, tryAndCatch(async (req, res) => {
 
-        const parameters = await Joi.validate(req.params, {
+        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
+            ...notesDecimalesValidator(),
         }, { abortEarly: false });
 
-        let session = await collection.findOne({ _id: parameters.id });
+        let action = await collection.findOne({ _id: parameters.id });
 
-        if (!session) {
+        if (!action) {
             throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
         }
 
-        res.json(convertToExposableAction(session));
+        res.json(createActionDTO(action, { notes_decimales: parameters.notes_decimales }));
 
     }));
 

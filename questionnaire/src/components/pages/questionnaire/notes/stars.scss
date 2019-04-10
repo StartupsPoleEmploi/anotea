@@ -8,6 +8,10 @@
     text-align: center;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
+
+    .star-tooltip {
+        float: right;
+    }
   }
 
   .buttons {
@@ -18,11 +22,12 @@
       outline: none;
       padding-left: 0;
       font-size: 1.25rem;
+      margin: 0;
+      padding-right: 0.4rem;
     }
 
-    .far.fa-star {
-      color: $color-black;
-      cursor: pointer;
+    .fas.fa-star.inactive {
+        color: $color-grey-50;
     }
 
     .fas.fa-star {
