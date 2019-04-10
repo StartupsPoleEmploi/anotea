@@ -13,7 +13,7 @@ module.exports = {
         process.on('unhandledRejection', e => console.log(e));
         process.on('uncaughtException', e => console.log(e));
 
-        let logger = createLogger('jobs', config);
+        let logger = createLogger('job', config);
         let components = await createComponents({ logger, configuration: config });
         const exit = error => {
             if (error) {
@@ -36,7 +36,7 @@ module.exports = {
                     data = results.map(r => r.toJSON ? r.toJSON() : r);
                 }
             }
-            logger.info({ type: 'job', ...data }, `Completed in ${duration}`);
+            logger.info({ type: 'script', ...data }, `Completed in ${duration}`);
             exit();
         } catch (e) {
             components.sentry.sendError(e);
