@@ -63,19 +63,19 @@ module.exports = (name, configuration) => {
 
     return {
         fatal: function() {
-            logger.fatal(arguments);
+            logger.fatal.apply(logger, arguments);
         },
         error: function() {
-            logger.error(arguments);
+            logger.error.apply(logger, arguments);
         },
         info: function() {
-            logger.info(arguments);
+            logger.info.apply(logger, arguments);
         },
         debug: function() {
-            logger.debug(arguments);
+            logger.debug.apply(logger, arguments);
         },
         trace: function() {
-            logger.trace(arguments);
+            logger.trace.apply(logger, arguments);
         },
         close: () => {
             return Promise.all(streams.map(stream => stream.close()));
