@@ -11,13 +11,13 @@ services:
   backoffice:
     build:
       args:
-        - ANOTEA_GOOGLE_ANALYTICS_ID:1234
+        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
         - ANOTEA_HOTJAR_ID=1234
 
   questionnaire:
     build:
       args:
-        - ANOTEA_GOOGLE_ANALYTICS_ID:1234
+        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
         - ANOTEA_HOTJAR_ID=1234
 
   backend:
