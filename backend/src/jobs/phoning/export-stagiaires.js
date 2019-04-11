@@ -9,7 +9,7 @@ const mailer = require('../../smtp/mailer');
 
 module.exports = (logger, db, configuration, codeRegion) => {
     return new Promise((resolve, reject) => {
-        let { avisRelaunchDelay, avisMaxRelaunch } = configuration.smtp.stagiaires;
+        let { avisRelaunchDelay } = configuration.smtp.stagiaires;
 
         logger.info('Generating CSV file...');
 
@@ -26,10 +26,6 @@ module.exports = (logger, db, configuration, codeRegion) => {
             $and: [
                 { mailSentDate: { $lte: moment().subtract(avisRelaunchDelay, 'days').toDate() } },
                 { mailSentDate: { $gte: moment().subtract(6, 'months').toDate() } },
-            ],
-            $or: [
-                { mailRetry: { $eq: null } },
-                { mailRetry: { $lt: parseInt(avisMaxRelaunch) } }
             ]
         }).transformStream({
             transform: stagiaire => {
