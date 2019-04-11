@@ -9,28 +9,6 @@
         line-height: 29px;
     }
 
-    .info-container {
-        margin: auto;
-
-        .info {
-            color: $color-blue;
-            font-size: 0.875rem;
-            line-height: 20px;
-            border-radius: 5px;
-            background-color: $color-blue-10;
-            padding: 10px;
-            margin: 10px;
-
-            .icon {
-                display: block;
-                float: left;
-                height: 100%;
-                margin-right: 5px;
-                padding: 4px;
-            }
-        }
-    }
-
     .plusQuneDerniere {
         height: 20px;
         color: $color-blue;
@@ -53,10 +31,6 @@
     }
 
     .pageTwo {
-        h3 {
-            margin: 0.875rem;
-        }
-
         .go-back {
             color: $color-black;
             font-size: 14px;

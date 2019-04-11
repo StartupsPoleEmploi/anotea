@@ -50,9 +50,12 @@
     }
   }
 
-  .chars-count {
+  .facultatif, .chars-count {
 	font-size: 0.75rem;
 	font-style: italic;
+  }
+
+  .chars-count {
 	line-height: 16px;
 	text-align: right;
   }

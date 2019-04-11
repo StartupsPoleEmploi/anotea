@@ -174,15 +174,6 @@ export default class Questionnaire extends Component {
 
                     { this.state.page === 1 &&
                     <div>
-                        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-                            <h3>Avez-vous quelque chose à ajouter ?</h3>
-                        </div>
-                        <div className="info-container col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-                            <div className="info">
-                                <i className="icon fas fa-info-circle"></i>
-                                Cette partie n’est <strong>pas obligatoire</strong>, vous pouvez <strong>cliquer sur envoyer</strong> si vous ne souhaitez pas laisser de commentaire.
-                            </div>
-                        </div>
                         <Commentaire
                             commentaire={this.state.commentaire}
                             onChange={this.updateCommentaire} />
