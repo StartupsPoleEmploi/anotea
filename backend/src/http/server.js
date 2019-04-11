@@ -35,32 +35,32 @@ module.exports = components => {
 
     //Public routes
     app.use('/api/', middlewares.addRateLimit(sentry));
-    app.use('/api', require('./routes/api/swagger')(httpComponents));
-    app.use('/api', require('./routes/api/v1/ping')(httpComponents));
-    app.use('/api', require('./routes/api/v1/avis')(httpComponents));
-    app.use('/api', require('./routes/api/v1/formations')(httpComponents));
-    app.use('/api', require('./routes/api/v1/actions')(httpComponents));
-    app.use('/api', require('./routes/api/v1/sessions')(httpComponents));
-    app.use('/api', require('./routes/api/v1/organismes-formateurs')(httpComponents));
-    app.use('/api', require('./routes/api/stats')(httpComponents));
-    app.use('/api', require('./routes/api/kairos')(httpComponents));
+    app.use('/api', require('./routes/api/swagger-routes')(httpComponents));
+    app.use('/api', require('./routes/api/v1/ping-routes')(httpComponents));
+    app.use('/api', require('./routes/api/v1/avis-routes')(httpComponents));
+    app.use('/api', require('./routes/api/v1/formations-routes')(httpComponents));
+    app.use('/api', require('./routes/api/v1/actions-routes')(httpComponents));
+    app.use('/api', require('./routes/api/v1/sessions-routes')(httpComponents));
+    app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
+    app.use('/api', require('./routes/api/stats-routes')(httpComponents));
+    app.use('/api', require('./routes/api/kairos-routes')(httpComponents));
 
     //Pubic routes with server-side rendering
-    app.use('/', require('./routes/front/front')(httpComponents));
-    app.use('/', require('./routes/front/mailing')(httpComponents));
+    app.use('/', require('./routes/front/front-routes')(httpComponents));
+    app.use('/', require('./routes/front/mailing-routes')(httpComponents));
 
     //Routes used by backoffice applications
-    app.use('/api', require('./routes/api/backoffice/auth/login')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/auth/forgottenPassword')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/moderateur/moderation')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/organismes/consultation')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/export')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/organismes/organisme')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/moderateur/gestion-organismes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/financeur/financeur')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/stats')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/auth/account')(httpComponents));
-    app.use('/api', require('./routes/front/questionnaire')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/auth/login-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/auth/forgottenPassword-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/moderateur/moderation-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/organismes/consultation-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/export-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/organismes/organisme-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/moderateur/gestion-organismes-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/financeur/financeur-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/stats-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/auth/account-routes')(httpComponents));
+    app.use('/api', require('./routes/front/questionnaire-routes')(httpComponents));
 
     // catch 404
     app.use(function(req, res) {
