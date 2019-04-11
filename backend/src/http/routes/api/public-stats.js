@@ -9,6 +9,7 @@ module.exports = ({ db, logger, regions }) => {
     const getOrganismesStats = async (regionName, codeRegion) => {
 
         let organismes = db.collection('accounts');
+        let avis = db.collection('comment');
         let filter = { 'profile': 'organisme', 'codeRegion': codeRegion };
         let [
                 nbOrganimesContactes, 
@@ -16,26 +17,35 @@ module.exports = ({ db, logger, regions }) => {
                 ouvertureMails,
                 // ouvertureLien,
                 organismesActifs,
-                // nbConnexion,
-                // avisNonLus,
-                // commentaireAvecReponse,
-                // avisAvecReponse,
-                // avisSignales 
+                avisNonLus,
+                avisModeres,
+                nbOrganismesReponses,
+                avisSignales 
                 
             ] = await Promise.all([
             organismes.countDocuments({ 'mailSentDate': { $ne: null}, ...filter }),
             organismes.countDocuments({ 'resend': true, ...filter }),
-            organismes.countDocuments({ 'tracking.firstRead': { $ne: null }, ...filter }),
+            organismes.countDocuments({ 'mailSentDate': { $ne: null}, 'tracking.firstRead': { $ne: null }, ...filter }),
             organismes.countDocuments({ 'passwordHash': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'published': true, $or: [ {'read': false}, {'read': {$ne: true}} ], 'codeRegion': codeRegion }),
+            avis.countDocuments({ 'moderated': true, 'rejected': false,'codeRegion': codeRegion }),
+            avis.countDocuments({ 'answer': {$ne: null}, 'codeRegion': codeRegion }),
+            avis.countDocuments({ 'reported': true, 'codeRegion': codeRegion }),
         ]);
 
         return {
+            avisNonLus: avisNonLus,
+            avisModeres: avisModeres,
+            avisSignales: avisSignales,
             region: regionName,
             nbOrganismesContactes: nbOrganimesContactes,
             mailsEnvoyes: relances + nbOrganimesContactes,
             taux: {
-                txOuvertureMails: `${Math.round((ouvertureMails * 100) / nbOrganimesContactes)}%`,
-                txOrganismesActifs: `${Math.round((organismesActifs * 100) / nbOrganimesContactes)}%`,
+                txOuvertureMails: ouvertureMails || nbOrganimesContactes !== 0 ? `${Math.round((ouvertureMails * 100) / nbOrganimesContactes)}%` : 0,
+                txOrganismesActifs: organismesActifs || nbOrganimesContactes !== 0 ? `${Math.round((organismesActifs * 100) / nbOrganimesContactes)}%` : 0,
+                txAvisNonLus: avisNonLus || avisModeres !== 0 ? `${Math.round((avisNonLus * 100) / avisModeres)}%` : 0,
+                txAvisAvecReponses: nbOrganismesReponses || avisModeres !==0 ? `${Math.round((nbOrganismesReponses * 100) / avisModeres)}%`: 0,
+                txAvisSignales: avisSignales || avisModeres !== 0 ? `${Math.round((avisSignales * 100) / avisModeres)}%`: 0,
             }
         };
     };
