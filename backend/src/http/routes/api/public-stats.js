@@ -44,8 +44,8 @@ module.exports = ({ db, logger, regions }) => {
                 txOuvertureMails: ouvertureMails || nbOrganimesContactes !== 0 ? `${Math.round((ouvertureMails * 100) / nbOrganimesContactes)}%` : 0,
                 txOrganismesActifs: organismesActifs || nbOrganimesContactes !== 0 ? `${Math.round((organismesActifs * 100) / nbOrganimesContactes)}%` : 0,
                 txAvisNonLus: avisNonLus || avisModeres !== 0 ? `${Math.round((avisNonLus * 100) / avisModeres)}%` : 0,
-                txAvisAvecReponses: nbOrganismesReponses || avisModeres !==0 ? `${Math.round((nbOrganismesReponses * 100) / avisModeres)}%`: 0,
-                txAvisSignales: avisSignales || avisModeres !== 0 ? `${Math.round((avisSignales * 100) / avisModeres)}%`: 0,
+                txAvisAvecReponses: nbOrganismesReponses || avisModeres !==0 ? `${Math.round((nbOrganismesReponses * 100) / avisModeres)}%` : 0,
+                txAvisSignales: avisSignales || avisModeres !== 0 ? `${Math.round((avisSignales * 100) / avisModeres)}%` : 0,
             }
         };
     };
@@ -56,14 +56,13 @@ module.exports = ({ db, logger, regions }) => {
         let filter = { 'codeRegion': codeRegion };
         let [
                 nbStagiairesContactes, 
-                mailEnvoyes,
+                relances,
             ] = await Promise.all([
                 avis.countDocuments({ 'mailSent': true, 'mailRetry': 0, ...filter }),
                 db.collection('trainee').aggregate([
                     {
                         $match: {
                             ...filter,
-                            'mailRetry': { $gt: 0 }
                         }
                     },
                     {
@@ -72,14 +71,14 @@ module.exports = ({ db, logger, regions }) => {
                             _id: { region: '$codeRegion' },
                             totalAmount: { $sum: '$mailRetry' },
                           }
-                      }
+                    },
                 ]).toArray()
         ]);
 
         return {
             region: regionName,
-            mailEnvoyes: mailEnvoyes,
             nbStagiairesContactes: nbStagiairesContactes,
+            mailEnvoyes: relances,
         };
     };
 
