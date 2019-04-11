@@ -50,6 +50,39 @@ module.exports = ({ db, logger, regions }) => {
         };
     };
 
+    const getAvisStats = async (regionName, codeRegion) => {
+
+        let avis = db.collection('trainee');
+        let filter = { 'codeRegion': codeRegion };
+        let [
+                nbStagiairesContactes, 
+                mailEnvoyes,
+            ] = await Promise.all([
+                avis.countDocuments({ 'mailSent': true, 'mailRetry': 0, ...filter }),
+                db.collection('trainee').aggregate([
+                    {
+                        $match: {
+                            ...filter,
+                            'mailRetry': { $gt: 0 }
+                        }
+                    },
+                    {
+                        $group:
+                          {
+                            _id: { region: '$codeRegion' },
+                            totalAmount: { $sum: '$mailRetry' },
+                          }
+                      }
+                ]).toArray()
+        ]);
+
+        return {
+            region: regionName,
+            mailEnvoyes: mailEnvoyes,
+            nbStagiairesContactes: nbStagiairesContactes,
+        };
+    };
+
     router.get('/public-stats/organismes.json', tryAndCatch(async (req, res) => {
 
         let organismes = await Promise.all(findActiveRegions().map(async region => {
@@ -57,6 +90,15 @@ module.exports = ({ db, logger, regions }) => {
         }));
 
         res.send(JSON.stringify(organismes, null, 4));
+    }));
+
+    router.get('/public-stats/avis.json', tryAndCatch(async (req, res) => {
+
+        let avis = await Promise.all(findActiveRegions().map(async region => {
+            return getAvisStats(region.nom, region.codeRegion);
+        }));
+
+        res.send(JSON.stringify(avis, null, 4));
     }));
 
     return router;
