@@ -137,6 +137,31 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.ok(doc);
     });
 
+    it('should reject invald code_postal in organisme responsable', async () => {
+
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+        await importIntercarif();
+
+        await generateOrganismesFromIntercarif(db, logger);
+        await generateOrganismesFromKairos(db, logger, csvFile);
+        await db.collection('intercarif_organismes_responsables').updateMany({}, { $set: { 'adresse.code_postal': '00000' } });
+
+        try {
+            await synchronizeOrganismesWithAccounts(db, logger, regions);
+            assert.fail('Should have fail');
+        } catch (e) {
+            assert.deepStrictEqual(e, {
+                total: 3,
+                updated: 0,
+                created: 3,
+                invalid: 1
+            });
+        }
+
+
+    });
+
     it('should create new organisme from kairos', async () => {
 
         let db = await getTestDatabase();

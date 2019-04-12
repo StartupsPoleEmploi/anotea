@@ -10,12 +10,41 @@ module.exports = async (db, logger, regions) => {
         invalid: 0,
     };
 
-    const buildAccountFromIntercarif = async data => {
+    const findRegion = data => {
         let { findRegionByPostalCode } = regions;
-        let adresse = data.lieux_de_formation ?
-            data.lieux_de_formation.find(l => l.adresse.code_postal).adresse : data.adresse;
+        let error = null;
+        let lieuxFieldName = 'lieux_de_formation';
+
+        if (data.adresse) {
+            //organisme responsable
+            try {
+                return findRegionByPostalCode(data.adresse.code_postal);
+            } catch (e) {
+                lieuxFieldName = 'organisme_formateurs.lieux_de_formation';
+                error = e;
+            }
+        }
+
+        let region = (_.get(data, lieuxFieldName) || []).reduce((acc, lieu) => {
+            if (!acc) {
+                try {
+                    acc = findRegionByPostalCode(lieu.adresse.code_postal);
+                } catch (e) {
+                    error = e;
+                }
+            }
+            return acc;
+        }, null);
+
+        if (!region) {
+            throw error;
+        }
+        return region;
+    };
+
+    const buildAccountFromIntercarif = async data => {
+
         let siret = `${parseInt(data.siret, 10)}`;
-        let region = findRegionByPostalCode(adresse.code_postal);
         let kairos = await db.collection('kairos_organismes').findOne({ siret });
 
         let document = {
@@ -26,7 +55,7 @@ module.exports = async (db, logger, regions) => {
             courriels: data.courriel ? [data.courriel] : [],
             token: uuid.v4(),
             creationDate: new Date(),
-            codeRegion: region.codeRegion,
+            codeRegion: findRegion(data).codeRegion,
             sources: ['intercarif'],
             profile: 'organisme',
             numero: data.numero,
