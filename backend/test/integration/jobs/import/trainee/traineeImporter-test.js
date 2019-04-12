@@ -16,7 +16,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let { regions } = await getComponents();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);;
+        let handler = poleEmploiCSVHandler(db, regions);
 
         await importer.importTrainee(csvFile, handler);
 
@@ -44,7 +44,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe_2018-11-20.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);;
+        let handler = poleEmploiCSVHandler(db, regions);
 
         await importer.importTrainee(csvFile, handler);
 
@@ -72,7 +72,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let { regions } = await getComponents();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);;
+        let handler = poleEmploiCSVHandler(db, regions);
 
         let results = await importer.importTrainee(csvFile, handler);
 
@@ -90,7 +90,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);;
+        let handler = poleEmploiCSVHandler(db, regions);
         await importer.importTrainee(csvFile, handler);
 
         let results = await importer.importTrainee(csvFile, handler);
@@ -109,7 +109,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);;
+        let handler = poleEmploiCSVHandler(db, regions);
         await importer.importTrainee(csvFile, handler);
 
         let results = await importer.importTrainee(csvFile, handler, { append: true });
@@ -136,7 +136,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-email.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);;
+        let handler = poleEmploiCSVHandler(db, regions);
 
         await importer.importTrainee(csvFile, handler);
 
@@ -149,7 +149,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);;
+        let handler = poleEmploiCSVHandler(db, regions);
 
         let results = await importer.importTrainee(csvFile, handler, {
             codeRegion: '2'
@@ -193,10 +193,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);;
+        let handler = poleEmploiCSVHandler(db, regions);
 
         let results = await importer.importTrainee(csvFile, handler, {
-            startDate: moment('2018-09-01 00Z').toDate(),
+            since: moment('2018-09-01 00Z').toDate(),
         });
 
         let doc = await db.collection('trainee').findOne();
@@ -214,7 +214,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-filtered.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);;
+        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
                 return [{

@@ -18,7 +18,7 @@ module.exports = (db, logger) => {
 
             const shouldBeImported = async trainee => {
                 let sameRegion = !filters.codeRegion || filters.codeRegion === trainee.codeRegion;
-                let isAfter = !filters.startDate || trainee.training.scheduledEndDate > filters.startDate;
+                let isAfter = !filters.since || trainee.training.scheduledEndDate > filters.since;
                 let haveCertifInfo = !filters.certifInfo || trainee.training.certifInfo.id !== '';
 
                 return sameRegion && isAfter && haveCertifInfo && await handler.shouldBeImported(trainee);
@@ -33,7 +33,7 @@ module.exports = (db, logger) => {
                     invalid: 0,
                 };
 
-                if (!filters.append && await db.collection('importTrainee').findOne({ hash })) {
+                if (!filters.append && await db.collection('importTrainee').findOne({ hash, filters })) {
                     logger.info(`CSV file ${file} already imported`);
                     return resolve(stats);
                 } else {
