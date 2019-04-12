@@ -36,11 +36,11 @@ module.exports = ({ db, logger, regions }) => {
             organismes.countDocuments({ 'resend': true, ...filter }),
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, ...filter }),
             organismes.countDocuments({ 'passwordHash': { $ne: null }, ...filter }),
-            avis.countDocuments({ 'published': true, $or: [ { 'read': false }, {'read': { $ne: true }} ], 'codeRegion': codeRegion }),
+            avis.countDocuments({ 'published': true, $or: [ { 'read': false }, {'read': { $ne: true }} ], codeRegion }),
             avis.countDocuments({ 'moderated': true, 'rejected': false, 'codeRegion': codeRegion }),
-            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, 'codeRegion': codeRegion }),
-            avis.countDocuments({ 'answer': { $ne: null }, 'codeRegion': codeRegion }),
-            avis.countDocuments({ 'reported': true, 'codeRegion': codeRegion }),
+            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, codeRegion }),
+            avis.countDocuments({ 'answer': { $ne: null }, codeRegion }),
+            avis.countDocuments({ 'reported': true, codeRegion }),
         ]);
 
         return {
