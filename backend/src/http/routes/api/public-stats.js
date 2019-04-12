@@ -10,7 +10,7 @@ module.exports = ({ db, logger, regions }) => {
 
         let organismes = db.collection('accounts');
         let avis = db.collection('comment');
-        let filter = { 'profile': 'organisme', 'codeRegion': codeRegion };
+        let filter = { 'profile': 'organisme', codeRegion };
         let [
                 nbOrganimesContactes, 
                 relances,
@@ -34,18 +34,15 @@ module.exports = ({ db, logger, regions }) => {
         ]);
 
         return {
-            avisNonLus: avisNonLus,
-            avisModeres: avisModeres,
-            avisSignales: avisSignales,
             region: regionName,
             nbOrganismesContactes: nbOrganimesContactes,
             mailsEnvoyes: relances + nbOrganimesContactes,
             taux: {
-                txOuvertureMails: ouvertureMails || nbOrganimesContactes !== 0 ? `${Math.round((ouvertureMails * 100) / nbOrganimesContactes)}%` : 0,
-                txOrganismesActifs: organismesActifs || nbOrganimesContactes !== 0 ? `${Math.round((organismesActifs * 100) / nbOrganimesContactes)}%` : 0,
-                txAvisNonLus: avisNonLus || avisModeres !== 0 ? `${Math.round((avisNonLus * 100) / avisModeres)}%` : 0,
-                txAvisAvecReponses: nbOrganismesReponses || avisModeres !==0 ? `${Math.round((nbOrganismesReponses * 100) / avisModeres)}%` : 0,
-                txAvisSignales: avisSignales || avisModeres !== 0 ? `${Math.round((avisSignales * 100) / avisModeres)}%` : 0,
+                txOuvertureMails: ouvertureMails && nbOrganimesContactes !== 0 ? `${Math.round((ouvertureMails * 100) / nbOrganimesContactes)}%` : 0,
+                txOrganismesActifs: organismesActifs && nbOrganimesContactes !== 0 ? `${Math.round((organismesActifs * 100) / nbOrganimesContactes)}%` : 0,
+                txAvisNonLus: avisNonLus && avisModeres !== 0 ? `${Math.round((avisNonLus * 100) / avisModeres)}%` : 0,
+                txAvisAvecReponses: nbOrganismesReponses && avisModeres !==0 ? `${Math.round((nbOrganismesReponses * 100) / avisModeres)}%` : 0,
+                txAvisSignales: avisSignales && avisModeres !== 0 ? `${Math.round((avisSignales * 100) / avisModeres)}%` : 0,
             }
         };
     };
@@ -53,10 +50,12 @@ module.exports = ({ db, logger, regions }) => {
     const getAvisStats = async (regionName, codeRegion) => {
 
         let avis = db.collection('trainee');
-        let filter = { 'codeRegion': codeRegion };
+        let filter = { codeRegion };
         let [
                 nbStagiairesContactes, 
                 relances,
+                nbMailsOuverts,
+                nbLiensCliques,
             ] = await Promise.all([
                 avis.countDocuments({ 'mailSent': true, 'mailRetry': 0, ...filter }),
                 db.collection('trainee').aggregate([
@@ -66,19 +65,29 @@ module.exports = ({ db, logger, regions }) => {
                         }
                     },
                     {
-                        $group:
-                          {
-                            _id: { region: '$codeRegion' },
+                        $group: {
+                            _id: null,
                             totalAmount: { $sum: '$mailRetry' },
-                          }
+                        }
                     },
-                ]).toArray()
+                    {
+                        $project: {
+                            _id: 0,
+                            totalAmount: 1,
+                        }
+                    },
+                ]).toArray(),
+                avis.countDocuments({ 'tracking.firstRead': {$ne: null} ,...filter }),
+                avis.countDocuments({ 'tracking.click': {$ne: null} ,...filter }),
         ]);
+        let nbMailEnvoyes = relances.length > 0 ? (relances[0].totalAmount + nbStagiairesContactes) : 0;
 
         return {
             region: regionName,
             nbStagiairesContactes: nbStagiairesContactes,
-            mailEnvoyes: relances,
+            nbMailEnvoyes: nbMailEnvoyes,
+            tauxOuvertureMail: nbMailsOuverts && nbMailEnvoyes !== 0 ? `${Math.round((nbMailsOuverts * 100) / nbMailEnvoyes)}%` : 0,
+            tauxLiensCliques: nbLiensCliques && nbMailsOuverts !== 0 ? `${Math.round((nbLiensCliques * 100) / nbMailsOuverts)}%` : 0,
         };
     };
 
@@ -88,7 +97,7 @@ module.exports = ({ db, logger, regions }) => {
             return getOrganismesStats(region.nom, region.codeRegion);
         }));
 
-        res.send(JSON.stringify(organismes, null, 4));
+        res.json(organismes);
     }));
 
     router.get('/public-stats/avis.json', tryAndCatch(async (req, res) => {
@@ -97,7 +106,7 @@ module.exports = ({ db, logger, regions }) => {
             return getAvisStats(region.nom, region.codeRegion);
         }));
 
-        res.send(JSON.stringify(avis, null, 4));
+        res.json(avis);
     }));
 
     return router;
