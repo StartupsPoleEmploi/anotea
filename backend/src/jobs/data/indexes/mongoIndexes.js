@@ -1,14 +1,19 @@
 module.exports = {
     trainee: db => {
         return Promise.all([
-            db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
-            db.collection('trainee').createIndex({ 'codeRegion': 1 }),
             db.collection('trainee').createIndex({ 'token': 1 }, { unique: true }),
+            db.collection('trainee').createIndex({ 'codeRegion': 1 }),
+            db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
+            db.collection('trainee').createIndex({ 'mailSent': 1 }),
+            db.collection('trainee').createIndex({ 'sourceIDF': 1 }),
+            db.collection('trainee').createIndex({ 'campaign': 1 }),
+            db.collection('trainee').createIndex({ 'unsubscribe': 1 }),
             db.collection('trainee').createIndex({ 'trainee.email': 1 }),
             db.collection('trainee').createIndex({ 'trainee.dnIndividuNational': 1 }),
             db.collection('trainee').createIndex({ 'training.codeFinanceur': 1 }),
-            //Used during import of stagiaires
-            db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.infoCarif.numeroSession': 1 }),
+            db.collection('trainee').createIndex({ 'training.organisation.siret': 1 }),
+            db.collection('trainee').createIndex({ 'training.scheduledEndDate': 1 }),
+            db.collection('trainee').createIndex({ 'training.infoCarif.numeroSession': 1 }),
         ]);
     },
     comment: db => {
