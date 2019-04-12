@@ -26,8 +26,9 @@ module.exports = ({ db, logger, regions }) => {
                 // ouvertureLien,
                 organismesActifs,
                 avisNonLus,
-                avisModeres,
-                nbOrganismesReponses,
+                avisModeresNonRejetes,
+                nbCommentairesAvecOrganismesReponses,
+                nbAvisAvecOrganismesReponses,
                 avisSignales 
                 
             ] = await Promise.all([
@@ -35,8 +36,9 @@ module.exports = ({ db, logger, regions }) => {
             organismes.countDocuments({ 'resend': true, ...filter }),
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, ...filter }),
             organismes.countDocuments({ 'passwordHash': { $ne: null }, ...filter }),
-            avis.countDocuments({ 'published': true, $or: [ {'read': false}, {'read': { $ne: true }} ], 'codeRegion': codeRegion }),
-            avis.countDocuments({ 'moderated': true, 'rejected': false,'codeRegion': codeRegion }),
+            avis.countDocuments({ 'published': true, $or: [ { 'read': false }, {'read': { $ne: true }} ], 'codeRegion': codeRegion }),
+            avis.countDocuments({ 'moderated': true, 'rejected': false, 'codeRegion': codeRegion }),
+            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, 'codeRegion': codeRegion }),
             avis.countDocuments({ 'answer': { $ne: null }, 'codeRegion': codeRegion }),
             avis.countDocuments({ 'reported': true, 'codeRegion': codeRegion }),
         ]);
@@ -46,11 +48,12 @@ module.exports = ({ db, logger, regions }) => {
             nbOrganismesContactes: nbOrganimesContactes,
             mailsEnvoyes: relances + nbOrganimesContactes,
             taux: {
-                txOuvertureMails: ouvertureMails && nbOrganimesContactes !== 0 ? `${Math.round((ouvertureMails * 100) / nbOrganimesContactes)}%` : 0,
-                txOrganismesActifs: organismesActifs && nbOrganimesContactes !== 0 ? `${Math.round((organismesActifs * 100) / nbOrganimesContactes)}%` : 0,
-                txAvisNonLus: avisNonLus && avisModeres !== 0 ? `${Math.round((avisNonLus * 100) / avisModeres)}%` : 0,
-                txAvisAvecReponses: nbOrganismesReponses && avisModeres !==0 ? `${Math.round((nbOrganismesReponses * 100) / avisModeres)}%` : 0,
-                txAvisSignales: avisSignales && avisModeres !== 0 ? `${Math.round((avisSignales * 100) / avisModeres)}%` : 0,
+                tauxOuvertureMails: calculateRate(ouvertureMails, nbOrganimesContactes),
+                tauxOrganismesActifs: calculateRate(organismesActifs, nbOrganimesContactes),
+                tauxAvisNonLus: calculateRate(avisNonLus, avisModeresNonRejetes),
+                tauxCommentairesAvecReponses: calculateRate(nbCommentairesAvecOrganismesReponses, avisModeresNonRejetes),
+                tauxAvisAvecReponses: calculateRate(nbAvisAvecOrganismesReponses, avisModeresNonRejetes),
+                tauxAvisSignales: calculateRate(avisSignales, avisModeresNonRejetes),
             }
         };
     };
