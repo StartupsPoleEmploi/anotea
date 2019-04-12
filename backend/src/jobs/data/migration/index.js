@@ -3,11 +3,10 @@
 
 const { execute } = require('../../job-utils');
 
-execute(async ({ db, logger }) => {
-    let [avis, stagiaires] = await Promise.all([
-        require('./remove-duplicated-documents')(db, logger, 'comment'),
-        require('./remove-duplicated-documents')(db, logger, 'trainee'),
+execute(async ({ db }) => {
+    let [fixInvalidReported] = await Promise.all([
+        require('./fix-invalid-reported')(db),
     ]);
 
-    return { avis, stagiaires };
+    return { fixInvalidReported };
 });
