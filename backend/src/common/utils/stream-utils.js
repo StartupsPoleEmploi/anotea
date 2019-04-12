@@ -1,13 +1,20 @@
+const _ = require('lodash');
 const { Transform } = require('stream');
 
 module.exports = {
-    transformObject: (callback, options = { ignoreFirstLine: false }) => {
+    transformObject: (callback, options = {
+        ignoreFirstLine: false,
+        ignoreEmpty: false,
+        readableObjectMode: true,
+        writableObjectMode: true
+    }) => {
         let lines = 0;
         return new Transform({
-            writableObjectMode: true,
-            readableObjectMode: true,
+            readableObjectMode: options.readableObjectMode !== undefined ? options.readableObjectMode : true,
+            writableObjectMode: options.writableObjectMode !== undefined ? options.writableObjectMode : true,
             transform: async function(data, encoding, next) {
-                if (options.ignoreFirstLine && lines++ === 0) {
+                if ((options.ignoreEmpty && _.isEmpty(data)) ||
+                    (options.ignoreFirstLine && lines++ === 0)) {
                     return next();
                 }
 
