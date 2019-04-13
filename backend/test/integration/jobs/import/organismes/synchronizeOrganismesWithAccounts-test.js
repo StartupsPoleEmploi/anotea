@@ -137,7 +137,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.ok(doc);
     });
 
-    it('should reject invald code_postal in organisme responsable', async () => {
+    it('should get code_postal from organismes_formateurs when organisme responsable code_postal is invalid', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
@@ -147,19 +147,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateOrganismesFromKairos(db, logger, csvFile);
         await db.collection('intercarif_organismes_responsables').updateMany({}, { $set: { 'adresse.code_postal': '00000' } });
 
-        try {
-            await synchronizeOrganismesWithAccounts(db, logger, regions);
-            assert.fail('Should have fail');
-        } catch (e) {
-            assert.deepStrictEqual(e, {
-                total: 3,
-                updated: 0,
-                created: 3,
-                invalid: 1
-            });
-        }
+        await synchronizeOrganismesWithAccounts(db, logger, regions);
 
-
+        let doc = await db.collection('accounts').findOne({ SIRET: 11111111111111 });
+        assert.deepStrictEqual(doc.codeRegion, '7');
     });
 
     it('should create new organisme from kairos', async () => {

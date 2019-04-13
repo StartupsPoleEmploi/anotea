@@ -1,8 +1,11 @@
 const uuid = require('node-uuid');
 const _ = require('lodash');
 
+const flatten = array => [].concat.apply([], array);
+
 module.exports = async (db, logger, regions) => {
 
+    let { findRegionByPostalCode } = regions;
     let stats = {
         total: 0,
         updated: 0,
@@ -11,21 +14,20 @@ module.exports = async (db, logger, regions) => {
     };
 
     const findRegion = data => {
-        let { findRegionByPostalCode } = regions;
         let error = null;
-        let lieuxFieldName = 'lieux_de_formation';
+        let lieuxDeFormation = data.lieux_de_formation;
 
-        if (data.adresse) {
+        if (data.organisme_formateurs) {
             //organisme responsable
             try {
                 return findRegionByPostalCode(data.adresse.code_postal);
             } catch (e) {
-                lieuxFieldName = 'organisme_formateurs.lieux_de_formation';
+                lieuxDeFormation = flatten(data.organisme_formateurs.map(o => o.lieux_de_formation));
                 error = e;
             }
         }
 
-        let region = (_.get(data, lieuxFieldName) || []).reduce((acc, lieu) => {
+        let region = lieuxDeFormation.reduce((acc, lieu) => {
             if (!acc) {
                 try {
                     acc = findRegionByPostalCode(lieu.adresse.code_postal);
