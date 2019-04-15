@@ -23,18 +23,19 @@ module.exports = ({ db, logger, regions }) => {
                 nbOrganimesContactes, 
                 relances,
                 ouvertureMails,
-                // ouvertureLien,
+                nbClicDansLien,
                 organismesActifs,
                 avisNonLus,
                 avisModeresNonRejetes,
                 nbCommentairesAvecOrganismesReponses,
                 nbAvisAvecOrganismesReponses,
-                avisSignales 
+                avisSignales
                 
             ] = await Promise.all([
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, ...filter }),
             organismes.countDocuments({ 'resend': true, ...filter }),
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, ...filter }),
+            organismes.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
             organismes.countDocuments({ 'passwordHash': { $ne: null }, ...filter }),
             avis.countDocuments({ 'published': true, $or: [ { 'read': false }, {'read': { $ne: true }} ], codeRegion }),
             avis.countDocuments({ 'moderated': true, 'rejected': false, 'codeRegion': codeRegion }),
@@ -47,14 +48,13 @@ module.exports = ({ db, logger, regions }) => {
             region: regionName,
             nbOrganismesContactes: nbOrganimesContactes,
             mailsEnvoyes: relances + nbOrganimesContactes,
-            taux: {
-                tauxOuvertureMails: calculateRate(ouvertureMails, nbOrganimesContactes),
-                tauxOrganismesActifs: calculateRate(organismesActifs, nbOrganimesContactes),
-                tauxAvisNonLus: calculateRate(avisNonLus, avisModeresNonRejetes),
-                tauxCommentairesAvecReponses: calculateRate(nbCommentairesAvecOrganismesReponses, avisModeresNonRejetes),
-                tauxAvisAvecReponses: calculateRate(nbAvisAvecOrganismesReponses, avisModeresNonRejetes),
-                tauxAvisSignales: calculateRate(avisSignales, avisModeresNonRejetes),
-            }
+            tauxOuvertureMails: calculateRate(ouvertureMails, nbOrganimesContactes),
+            tauxClicDansLien: calculateRate(nbClicDansLien, ouvertureMails),
+            tauxOrganismesActifs: calculateRate(organismesActifs, nbOrganimesContactes),
+            tauxAvisNonLus: calculateRate(avisNonLus, avisModeresNonRejetes),
+            tauxCommentairesAvecReponses: calculateRate(nbCommentairesAvecOrganismesReponses, avisModeresNonRejetes),
+            tauxAvisAvecReponses: calculateRate(nbAvisAvecOrganismesReponses, avisModeresNonRejetes),
+            tauxAvisSignales: calculateRate(avisSignales, avisModeresNonRejetes),
         };
     };
 
