@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-'use strict';
-
 const fs = require('fs');
 const cli = require('commander');
 const { encodeStream } = require('iconv-lite');
@@ -13,8 +10,6 @@ cli.description('Export organismes per active region')
 .parse(process.argv);
 
 execute(async ({ logger, db, regions }) => {
-
-    logger.info('Building email statistics displayed on financer dashboard');
 
     const generateCSV = ({ nom, codeRegion }) => {
         return new Promise((resolve, reject) => {
