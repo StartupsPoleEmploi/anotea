@@ -5,6 +5,8 @@ module.exports = ({ db, logger, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const { findActiveRegions } = regions;
+    const organismes = db.collection('accounts');
+    const avis = db.collection('comment');
 
     const calculateRate = (dividend, divisor) => {
         if (dividend && divisor !== 0) {
@@ -16,12 +18,10 @@ module.exports = ({ db, logger, regions }) => {
 
     const getOrganismesStats = async (regionName, codeRegion) => {
 
-        let organismes = db.collection('accounts');
-        let avis = db.collection('comment');
         let filter = { 'profile': 'organisme', codeRegion };
         let [
                 nbOrganimesContactes, 
-                relances,
+                nbRelances,
                 ouvertureMails,
                 nbClicDansLien,
                 organismesActifs,
@@ -35,7 +35,7 @@ module.exports = ({ db, logger, regions }) => {
             organismes.countDocuments({ 'resend': true, ...filter }),
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, ...filter }),
             organismes.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
-            organismes.countDocuments({ 'passwordHash': { $ne: null }, ...filter }),
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'passwordHash': { $ne: null }, ...filter }),
             avis.countDocuments({ 'published': true, $or: [ { 'read': false }, {'read': { $ne: true }} ], codeRegion }),
             avis.countDocuments({ 'moderated': true, 'rejected': false, 'codeRegion': codeRegion }),
             avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, codeRegion }),
@@ -46,7 +46,7 @@ module.exports = ({ db, logger, regions }) => {
         return {
             region: regionName,
             nbOrganismesContactes: nbOrganimesContactes,
-            mailsEnvoyes: relances + nbOrganimesContactes,
+            mailsEnvoyes: nbRelances + nbOrganimesContactes,
             tauxOuvertureMails: calculateRate(ouvertureMails, nbOrganimesContactes),
             tauxClicDansLien: calculateRate(nbClicDansLien, ouvertureMails),
             tauxOrganismesActifs: calculateRate(organismesActifs, nbOrganimesContactes),
@@ -57,10 +57,49 @@ module.exports = ({ db, logger, regions }) => {
         };
     };
 
+    const getNationalOrganismesStats = async () => {
+
+        let regions = findActiveRegions().map(region => { return region.codeRegion });
+        let filter = { 'profile': 'organisme', 'codeRegion': { $in: regions } } ;
+        let [
+                nbOrganimesContactes, 
+                nbRelances,
+                ouvertureMails,
+                nbClicDansLien,
+                organismesActifs,
+                avisNonLus,
+                avisModeresNonRejetes,
+                nbCommentairesAvecOrganismesReponses,
+                nbAvisAvecOrganismesReponses,
+                avisSignales
+            ] = await Promise.all([
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, ...filter }),
+            organismes.countDocuments({ 'resend': true, ...filter }),
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, ...filter }),
+            organismes.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'passwordHash': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'published': true, $or: [ { 'read': false }, {'read': { $ne: true }} ], 'codeRegion': { $in: regions } }),
+            avis.countDocuments({ 'moderated': true, 'rejected': false, 'codeRegion': { $in: regions } }),
+            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, 'codeRegion': { $in: regions } }),
+            avis.countDocuments({ 'answer': { $ne: null }, 'codeRegion': { $in: regions } }),
+            avis.countDocuments({ 'reported': true, 'codeRegion': { $in: regions } }),
+        ]);
+
+        return {
+            nbOrganismesContacteNational: nbOrganimesContactes,
+            mailsEnvoyesNational: nbRelances + nbOrganimesContactes,
+            tauxOuvertureMailsNational: calculateRate(ouvertureMails, nbOrganimesContactes),
+            tauxClicDansLienNational: calculateRate(nbClicDansLien, ouvertureMails),
+            tauxOrganismesActifsNational: calculateRate(organismesActifs, nbOrganimesContactes),
+            tauxAvisNonLusNational: calculateRate(avisNonLus, avisModeresNonRejetes),
+            tauxCommentairesAvecReponsesNational: calculateRate(nbCommentairesAvecOrganismesReponses, avisModeresNonRejetes),
+            tauxAvisAvecReponsesNational: calculateRate(nbAvisAvecOrganismesReponses, avisModeresNonRejetes),
+            tauxAvisSignalesNational: calculateRate(avisSignales, avisModeresNonRejetes),
+        };
+    };
+
     const getAvisStats = async (regionName, codeRegion) => {
 
-        let trainee = db.collection('trainee');
-        let avis = db.collection('comment');
         let filter = { codeRegion };
         let [
                 nbStagiairesContactes, 
@@ -127,18 +166,9 @@ module.exports = ({ db, logger, regions }) => {
             return getOrganismesStats(region.nom, region.codeRegion);
         }));
 
-        let nbOrganismesContactesNational = organismes.reduce(
-            ((accumulator, currentValue) => accumulator + currentValue.nbOrganismesContactes)
-            , 0);
+        let nationalOrganismes = await getNationalOrganismesStats();
 
-        let nbMailsEnvoyesNational = organismes.reduce(
-            ((accumulator, currentValue) => accumulator + currentValue.mailsEnvoyes)
-            , 0);
-
-        organismes.push(
-            {'mailsEnvoyesNational': nbOrganismesContactesNational}, 
-            {'nbMailsEnvoyesNational': nbMailsEnvoyesNational}
-        );
+        organismes.push(nationalOrganismes);
 
         res.json(organismes);
     }));
