@@ -30,7 +30,6 @@ module.exports = ({ db, logger, regions }) => {
                 nbCommentairesAvecOrganismesReponses,
                 nbAvisAvecOrganismesReponses,
                 avisSignales
-                
             ] = await Promise.all([
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, ...filter }),
             organismes.countDocuments({ 'resend': true, ...filter }),
@@ -127,6 +126,19 @@ module.exports = ({ db, logger, regions }) => {
         let organismes = await Promise.all(findActiveRegions().map(async region => {
             return getOrganismesStats(region.nom, region.codeRegion);
         }));
+
+        let nbOrganismesContactesNational = organismes.reduce(
+            ((accumulator, currentValue) => accumulator + currentValue.nbOrganismesContactes)
+            , 0);
+
+        let nbMailsEnvoyesNational = organismes.reduce(
+            ((accumulator, currentValue) => accumulator + currentValue.mailsEnvoyes)
+            , 0);
+
+        organismes.push(
+            {'mailsEnvoyesNational': nbOrganismesContactesNational}, 
+            {'nbMailsEnvoyesNational': nbMailsEnvoyesNational}
+        );
 
         res.json(organismes);
     }));
