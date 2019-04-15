@@ -10,6 +10,7 @@ import GridDisplayer from '../common/library/GridDisplayer';
 import Summary from './questionnaire/Summary';
 import Modal from '../common/library/Modal';
 import Button from '../common/library/Button';
+import ABTest from '../common/ABTest';
 import './questionnaire.scss';
 
 export default class Questionnaire extends Component {
@@ -195,41 +196,60 @@ export default class Questionnaire extends Component {
                                     </Button>
                                 </div>
                                 }
-                                { this.state.page === 1 &&
-                                    <div>
-                                        <Button
-                                            className="go-back"
-                                            size="large"
-                                            color="blue"
-                                            onClick={this.goBack}>
-                                            Retour
-                                        </Button>
-                                        <Button
-                                            className="send-button"
-                                            size="large"
-                                            color="blue"
-                                            onClick={this.openModal}>
-                                            Envoyer
-                                        </Button>
-                                    </div>
+                                {this.state.page === 1 &&
+                                <div>
+                                    <Button
+                                        className="go-back"
+                                        size="large"
+                                        color="blue"
+                                        onClick={this.goBack}>
+                                        Retour
+                                    </Button>
+                                    <ABTest
+                                        experimentId="8Kv-n0cHQQaTcz-fZWNu1w"
+                                        render={(variante, sendEvent) => {
+                                            if (variante === 1) {
+                                                return (
+                                                    <Button
+                                                        className="send-button"
+                                                        size="large"
+                                                        color="blue"
+                                                        onClick={() => sendEvent('click-button') && this.submit()}>
+                                                        Envoyer
+                                                    </Button>
+                                                );
+                                            }
+                                            return (
+                                                <div>
+                                                    {this.state.showModal &&
+                                                    <Modal
+                                                        title="Confirmer l&apos;envoi de l&apos;avis ?"
+                                                        body={
+                                                            <Summary
+                                                                averageScore={this.state.averageScore}
+                                                                commentaire={this.state.commentaire} />
+                                                        }
+                                                        onClose={this.closeModal}
+                                                        onConfirmed={() => sendEvent('click-button') && this.submit()} />
+                                                    }
+                                                    <Button
+                                                        className="send-button"
+                                                        size="large"
+                                                        color="blue"
+                                                        onClick={this.openModal}>
+                                                        Envoyer
+                                                    </Button>
+                                                </div>
+                                            );
+                                        }}
+                                    />
+                                </div>
                                 }
                             </div>
                         </div>
                     </div>
                     {this.state.showErrorMessage && <ErrorMessage />}
                 </div>
-                }
-
-                {this.state.showModal &&
-                <Modal
-                    title="Confirmer l&apos;envoi de l&apos;avis ?"
-                    body={
-                        <Summary
-                            averageScore={this.state.averageScore}
-                            commentaire={this.state.commentaire} />
-                    }
-                    onClose={this.closeModal}
-                    onConfirmed={this.submit} />
                 }
             </div>
         );
