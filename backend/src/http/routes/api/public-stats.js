@@ -5,8 +5,9 @@ module.exports = ({ db, logger, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const { findActiveRegions } = regions;
-    const organismes = db.collection('accounts');
     const avis = db.collection('comment');
+    const organismes = db.collection('accounts');
+    const trainee = db.collection('trainee');
 
     const calculateRate = (dividend, divisor) => {
         if (dividend && divisor !== 0) {
@@ -60,7 +61,7 @@ module.exports = ({ db, logger, regions }) => {
     const getNationalOrganismesStats = async () => {
 
         let regions = findActiveRegions().map(region => { return region.codeRegion });
-        let filter = { 'profile': 'organisme', 'codeRegion': { $in: regions } } ;
+        let filter = { 'profile': 'organisme', 'codeRegion': { $in: regions } };
         let [
                 nbOrganimesContactes, 
                 nbRelances,
@@ -99,7 +100,7 @@ module.exports = ({ db, logger, regions }) => {
     };
 
     const getAvisStats = async (regionName, codeRegion) => {
-
+        
         let filter = { codeRegion };
         let [
                 nbStagiairesContactes, 
@@ -150,13 +151,75 @@ module.exports = ({ db, logger, regions }) => {
             nbMailEnvoyes: nbMailEnvoyes,
             tauxOuvertureMail: calculateRate(nbMailsOuverts, nbMailEnvoyes),
             tauxLiensCliques: calculateRate(nbLiensCliques, nbMailsOuverts),
-            tauxQuestionnairesValidees: calculateRate(nbQuestionnairesValidees, nbLiensCliques),
+            tauxQuestionnairesValides: calculateRate(nbQuestionnairesValidees, nbLiensCliques),
             tauxAvisDeposes: calculateRate(nbQuestionnairesValidees, nbStagiairesContactes),
             tauxAvisAvecCommentaire: calculateRate(nbAvisAvecCommentaire, nbQuestionnairesValidees),
             nbCommentairesAModerer: nbCommentairesAModerer,
             tauxAvisPositifs: calculateRate(nbCommentairesPositifs, nbAvisAvecCommentaire),
             tauxAvisNegatifs: calculateRate(nbCommentairesNegatifs, nbAvisAvecCommentaire),
             tauxAvisRejetes: calculateRate(nbCommentairesRejetes , nbAvisAvecCommentaire),
+        };
+    };
+
+    const getNationalAvisStats = async () => {
+
+        let regions = findActiveRegions().map(region => { return region.codeRegion });
+        let filter = { 'codeRegion': { $in: regions } };
+        let [
+                nbStagiairesContactes, 
+                nbRelances,
+                nbMailsOuverts,
+                nbLiensCliques,
+                nbQuestionnairesValidees,
+                nbAvisAvecCommentaire,
+                nbCommentairesAModerer,
+                nbCommentairesPositifs,
+                nbCommentairesNegatifs,
+                nbCommentairesRejetes
+            ] = await Promise.all([
+                trainee.countDocuments({ 'mailSent': true, ...filter }),
+                db.collection('trainee').aggregate([
+                    {
+                        $match: {
+                            ...filter,
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            totalAmount: { $sum: '$mailRetry' },
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            totalAmount: 1,
+                        }
+                    },
+                ]).toArray(),
+                trainee.countDocuments({ 'tracking.firstRead': { $ne: null }, ...filter }),
+                trainee.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
+                trainee.countDocuments({ 'avisCreated': true, ...filter }),
+                avis.countDocuments({ 'comment': { $ne: null }, ...filter }),
+                avis.countDocuments({ 'comment': { $ne: null }, 'moderated': { $ne: true }, ...filter }),
+                avis.countDocuments({ 'comment': { $ne: null }, 'qualification': 'positif', ...filter }),
+                avis.countDocuments({ 'comment': { $ne: null }, 'qualification': 'négatif', ...filter }),
+                avis.countDocuments({ 'rejected': true, ...filter })
+        ]);
+        let nbMailEnvoyes = nbRelances.length > 0 ? (nbRelances[0].totalAmount + nbStagiairesContactes) : 0;
+
+        return {
+            nbStagiairesContactesNational: nbStagiairesContactes,
+            nbMailEnvoyesNational: nbMailEnvoyes,
+            tauxOuvertureMailNational: calculateRate(nbMailsOuverts, nbMailEnvoyes),
+            tauxLiensCliquesNational: calculateRate(nbLiensCliques, nbMailsOuverts),
+            tauxQuestionnairesValidesNational: calculateRate(nbQuestionnairesValidees, nbLiensCliques),
+            tauxAvisDeposesNational: calculateRate(nbQuestionnairesValidees, nbStagiairesContactes),
+            tauxAvisAvecCommentaireNational: calculateRate(nbAvisAvecCommentaire, nbQuestionnairesValidees),
+            nbCommentairesAModererNational: nbCommentairesAModerer,
+            tauxAvisPositifsNational: calculateRate(nbCommentairesPositifs, nbAvisAvecCommentaire),
+            tauxAvisNegatifsNational: calculateRate(nbCommentairesNegatifs, nbAvisAvecCommentaire),
+            tauxAvisRejetesNational: calculateRate(nbCommentairesRejetes , nbAvisAvecCommentaire),
         };
     };
 
@@ -178,6 +241,10 @@ module.exports = ({ db, logger, regions }) => {
         let avis = await Promise.all(findActiveRegions().map(async region => {
             return getAvisStats(region.nom, region.codeRegion);
         }));
+
+        let nationalAvis = await getNationalAvisStats();
+
+        avis.push(nationalAvis);
 
         res.json(avis);
     }));
