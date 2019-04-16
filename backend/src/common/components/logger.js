@@ -30,14 +30,18 @@ let createStreams = (name, { log }) => {
             host: log.fluentbit.host,
             port: log.fluentbit.port,
             timeout: 3.0,
-            reconnectInterval: 10000 // 10 sec
+            reconnectInterval: 10000, // 10 sec
         });
 
         return {
             name: 'fluentbit',
             level: log.level,
             stream: sender.toStream(name),
-            close: () => sender.end(err => err ? Promise.reject(err) : Promise.resolve()),
+            close: () => {
+                return new Promise((resolve, reject) => {
+                    sender.end('end', { message: 'Closing logger' }, err => err ? reject(err) : resolve());
+                });
+            }
         };
     };
 
