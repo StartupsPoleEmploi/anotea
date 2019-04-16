@@ -127,12 +127,6 @@ module.exports = ({ db, logger, regions }) => {
                             totalAmount: { $sum: '$mailRetry' },
                         }
                     },
-                    {
-                        $project: {
-                            _id: 0,
-                            totalAmount: 1,
-                        }
-                    },
                 ]).toArray(),
                 trainee.countDocuments({ 'tracking.firstRead': { $ne: null }, ...filter }),
                 trainee.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
@@ -188,12 +182,6 @@ module.exports = ({ db, logger, regions }) => {
                         $group: {
                             _id: null,
                             totalAmount: { $sum: '$mailRetry' },
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            totalAmount: 1,
                         }
                     },
                 ]).toArray(),
