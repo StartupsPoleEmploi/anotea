@@ -70,11 +70,6 @@ module.exports = (db, regions) => {
         shouldBeImported: async trainee => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
 
-            const count = await db.collection('trainee').countDocuments({
-                'trainee.email': trainee.trainee.email,
-                'training.infoCarif.numeroSession': trainee.training.infoCarif.numeroSession
-            });
-
             let filters = [];
             let codeFinanceurs = _.get(region, 'filters.code_financeurs', []);
             codeFinanceurs.forEach(code => {
@@ -84,7 +79,18 @@ module.exports = (db, regions) => {
                 });
             });
 
-            return count === 0 && trainee.trainee.emailValid && region && _.every(filters, filter => filter(trainee));
+            if (!(trainee.trainee.emailValid && region && _.every(filters, filter => filter(trainee)))) {
+                return false;
+            }
+
+            const count = await db.collection('trainee').countDocuments({
+                'trainee.email': trainee.trainee.email,
+                'training.infoCarif.numeroSession': trainee.training.infoCarif.numeroSession
+            });
+
+            return count === 0;
+
+
         },
         buildTrainee: async (record, campaign) => {
 
