@@ -18,15 +18,14 @@ execute(async ({ logger, db, regions }) => {
 
             output.write('id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n');
 
-            db.collection('comment').find({ codeRegion })
-            .pipe(transformObject(async avis => {
-                let [sessions, actions, formations] = await Promise.all([
-                    db.collection('sessionsReconciliees').countDocuments({ 'avis._id': avis._id }),
-                    db.collection('actionsReconciliees').countDocuments({ 'avis._id': avis._id }),
-                    db.collection('formationsReconciliees').countDocuments({ 'avis._id': avis._id }),
-                ]);
-                return sessions + actions + formations === 0 ? avis : {};
-            }))
+            db.collection('comment').find({
+                codeRegion,
+                $and: [
+                    { 'meta.reconciliation.0.formation': false },
+                    { 'meta.reconciliation.0.action': false },
+                    { 'meta.reconciliation.0.session': false },
+                ]
+            })
             .pipe(transformObject(async avis => {
 
                 return avis._id + ';' +

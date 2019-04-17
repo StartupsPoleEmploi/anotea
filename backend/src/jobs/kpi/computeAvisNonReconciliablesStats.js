@@ -1,33 +1,25 @@
-const cli = require('commander');
+const _ = require('lodash');
 const { execute } = require('../job-utils');
-const { transformObject } = require('../../common/utils/stream-utils');
-
-cli.description('Export organismes per active region')
-.parse(process.argv);
 
 execute(async ({ logger, db }) => {
 
     let computeStats = async () => {
 
-        //Building indexes only for this script
-        await Promise.all([
-            db.collection('sessionsReconciliees').createIndex({ 'avis._id': 1 }),
-            db.collection('actionsReconciliees').createIndex({ 'avis._id': 1 }),
-            db.collection('formationsReconciliees').createIndex({ 'avis._id': 1 }),
-        ]);
+        let groupBy = (aggregator, avis, value) => {
 
-        let aggregate = (aggregator, avis, value) => {
+            let reconciliations = _.get(avis, 'meta.reconciliations', []);
+            let reconciliable = reconciliations.length > 0 ? reconciliations[0].reconciliable : false;
 
             if (!aggregator[value]) {
                 aggregator[value] = {
                     value,
                     total: 1,
-                    reconciliable: avis.reconciliable ? 1 : 0,
-                    non_reconciliable: !avis.reconciliable ? 1 : 0,
+                    reconciliable: reconciliable ? 1 : 0,
+                    non_reconciliable: !reconciliable ? 1 : 0,
                 };
             } else {
                 aggregator[value].total++;
-                aggregator[value][avis.reconciliable ? 'reconciliable' : 'non_reconciliable']++;
+                aggregator[value][reconciliable ? 'reconciliable' : 'non_reconciliable']++;
             }
         };
 
@@ -41,20 +33,12 @@ execute(async ({ logger, db }) => {
             };
 
             db.collection('comment').find()
-            .pipe(transformObject(async avis => {
-                let [sessions, actions, formations] = await Promise.all([
-                    db.collection('sessionsReconciliees').countDocuments({ 'avis._id': avis._id }),
-                    db.collection('actionsReconciliees').countDocuments({ 'avis._id': avis._id }),
-                    db.collection('formationsReconciliees').countDocuments({ 'avis._id': avis._id }),
-                ]);
-                return { ...avis, reconciliable: sessions + actions + formations > 0 };
-            }))
             .on('data', avis => {
-                aggregate(stats.formacodes, avis, avis.training.formacode);
-                aggregate(stats.certifinfos, avis, avis.training.certifInfo.id);
-                aggregate(stats.sirets, avis, avis.training.organisation.siret);
-                aggregate(stats.lieux, avis, avis.training.place.postalCode);
-                aggregate(stats.regions, avis, avis.codeRegion);
+                groupBy(stats.formacodes, avis, avis.training.formacode);
+                groupBy(stats.certifinfos, avis, avis.training.certifInfo.id);
+                groupBy(stats.sirets, avis, avis.training.organisation.siret);
+                groupBy(stats.lieux, avis, avis.training.place.postalCode);
+                groupBy(stats.regions, avis, avis.codeRegion);
             })
             .on('error', e => reject(e))
             .on('finish', () => resolve(stats));
@@ -82,5 +66,4 @@ execute(async ({ logger, db }) => {
         lieux_non_reconciliables:
             Math.round((findNonReconciliables(stats.lieux).length / Object.keys(stats.lieux).length) * 100),
     });
-
 });
