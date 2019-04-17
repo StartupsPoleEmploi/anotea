@@ -87,7 +87,7 @@ class Remerciements extends Component {
                                             title="Visiter labonneformation.fr"
                                             target="_blank"
                                             rel="noopener noreferrer">
-                                            <img src="/img/labonneformation.jpg" alt="labonneformation" />
+                                            <img src="/img/labonneformation.png" alt="labonneformation" />
                                         </a>
                                     </div>
                                 </section>
