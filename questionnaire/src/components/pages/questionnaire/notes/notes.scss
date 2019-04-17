@@ -34,7 +34,9 @@
 
     &.missing {
       .note {
-        border: 1px solid $color-red;
+        margin-top: 5px;
+        padding-left: 1em;
+        border-radius: 5px;
         background-color: $color-red-10;
       }
     }
