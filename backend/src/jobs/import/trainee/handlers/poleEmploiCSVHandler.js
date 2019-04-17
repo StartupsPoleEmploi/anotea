@@ -70,13 +70,18 @@ module.exports = (db, regions) => {
         shouldBeImported: async trainee => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
 
-            let filters = [];
-            let codeFinanceurs = _.get(region, 'filters.code_financeurs', []);
-            codeFinanceurs.forEach(code => {
-                filters.push(trainee => {
-                    let includes = trainee.training.codeFinanceur.includes(code.replace('-', ''));
-                    return code.startsWith('-') ? !includes : includes;
-                });
+            let filters = _.get(region, 'filters', []).map(f => {
+                return trainee => {
+                    let included = true;
+                    if (f.excluded_code_financeurs) {
+                        included = _.intersection(trainee.training.codeFinanceur, f.excluded_code_financeurs).length === 0;
+                    }
+                    if (included && f.certifications !== undefined) {
+                        let isEmpty = _.isEmpty(trainee.training.certifInfo.id);
+                        included = f.certifications ? !isEmpty : isEmpty;
+                    }
+                    return included;
+                };
             });
 
             if (!(trainee.trainee.emailValid && region && _.every(filters, filter => filter(trainee)))) {

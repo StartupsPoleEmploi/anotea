@@ -171,19 +171,25 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
+        let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
+            findActiveRegions: () => {
+                return [{
+                    codeRegion: '2',
+                    filters: [
+                        { certifications: false }
+                    ]
+                }];
+            }
+        }));
 
-        let results = await importer.importTrainee(csvFile, handler, {
-            certifInfo: true
-        });
+        let results = await importer.importTrainee(csvFile, handler);
 
         let doc = await db.collection('trainee').findOne();
-        assert.ok(doc.trainee);
-        assert.deepStrictEqual(doc.trainee.email, 'email_1@pe.com');
+        assert.deepStrictEqual(doc, null);
         assert.deepStrictEqual(results, {
             invalid: 0,
-            ignored: 1,
-            imported: 3,
+            ignored: 4,
+            imported: 0,
             total: 4,
         });
     });
@@ -210,35 +216,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         });
     });
 
-    it('should filter trainee by code financeur (inclusion)', async () => {
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-filtered.csv');
-        let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
-            findActiveRegions: () => {
-                return [{
-                    codeRegion: '2',
-                    filters: {
-                        code_financeurs: ['4']
-                    }
-                }];
-            }
-        }));
-
-        let results = await importer.importTrainee(csvFile, handler);
-
-        let doc = await db.collection('trainee').findOne({ 'trainee.email': 'email@pe.com' });
-        assert.ok(doc.trainee);
-        assert.deepStrictEqual(doc.trainee.email, 'email@pe.com');
-        assert.deepStrictEqual(results, {
-            invalid: 0,
-            ignored: 1,
-            imported: 2,
-            total: 3,
-        });
-    });
-
     it('should filter trainee by code financeur (exclusion)', async () => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-filtered.csv');
@@ -248,9 +225,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
             findActiveRegions: () => {
                 return [{
                     codeRegion: '2',
-                    filters: {
-                        code_financeurs: ['-4']
-                    }
+                    filters: [
+                        { excluded_code_financeurs: ['4'] }
+                    ]
                 }];
             }
         }));
