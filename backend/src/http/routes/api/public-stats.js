@@ -1,7 +1,7 @@
 const express = require('express');
 const { tryAndCatch } = require('../routes-utils');
 
-module.exports = ({ db, logger, regions }) => {
+module.exports = ({ db, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     const { findActiveRegions } = regions;
@@ -21,17 +21,17 @@ module.exports = ({ db, logger, regions }) => {
 
         let filter = { 'profile': 'organisme', codeRegion };
         let [
-                nbOrganimesContactes, 
-                nbRelances,
-                ouvertureMails,
-                nbClicDansLien,
-                organismesActifs,
-                avisNonLus,
-                avisModeresNonRejetes,
-                nbCommentairesAvecOrganismesReponses,
-                nbAvisAvecOrganismesReponses,
-                avisSignales
-            ] = await Promise.all([
+            nbOrganimesContactes,
+            nbRelances,
+            ouvertureMails,
+            nbClicDansLien,
+            organismesActifs,
+            avisNonLus,
+            avisModeresNonRejetes,
+            nbCommentairesAvecOrganismesReponses,
+            nbAvisAvecOrganismesReponses,
+            avisSignales
+        ] = await Promise.all([
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, ...filter }),
             organismes.countDocuments({ 'resend': true, ...filter }),
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, ...filter }),
@@ -60,20 +60,20 @@ module.exports = ({ db, logger, regions }) => {
 
     const getNationalOrganismesStats = async () => {
 
-        let regions = findActiveRegions().map(region => { return region.codeRegion });
+        let regions = findActiveRegions().map(region => region.codeRegion);
         let filter = { 'profile': 'organisme', 'codeRegion': { $in: regions } };
         let [
-                nbOrganimesContactes, 
-                nbRelances,
-                ouvertureMails,
-                nbClicDansLien,
-                organismesActifs,
-                avisNonLus,
-                avisModeresNonRejetes,
-                nbCommentairesAvecOrganismesReponses,
-                nbAvisAvecOrganismesReponses,
-                avisSignales
-            ] = await Promise.all([
+            nbOrganimesContactes,
+            nbRelances,
+            ouvertureMails,
+            nbClicDansLien,
+            organismesActifs,
+            avisNonLus,
+            avisModeresNonRejetes,
+            nbCommentairesAvecOrganismesReponses,
+            nbAvisAvecOrganismesReponses,
+            avisSignales
+        ] = await Promise.all([
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, ...filter }),
             organismes.countDocuments({ 'resend': true, ...filter }),
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, ...filter }),
@@ -99,10 +99,10 @@ module.exports = ({ db, logger, regions }) => {
         };
     };
 
-    const getAvisStats = async (filter) => {
+    const getAvisStats = async filter => {
 
         let [
-            nbStagiairesContactes, 
+            nbStagiairesContactes,
             nbRelances,
             nbMailsOuverts,
             nbLiensCliques,
@@ -139,7 +139,7 @@ module.exports = ({ db, logger, regions }) => {
         let nbMailEnvoyes = nbRelances.length > 0 ? (nbRelances[0].totalAmount + nbStagiairesContactes) : 0;
 
         return {
-            nbStagiairesContactes: nbStagiairesContactes, 
+            nbStagiairesContactes: nbStagiairesContactes,
             nbMailEnvoyes: nbMailEnvoyes,
             nbMailsOuverts: nbMailsOuverts,
             nbLiensCliques: nbLiensCliques,
@@ -149,7 +149,7 @@ module.exports = ({ db, logger, regions }) => {
             nbCommentairesPositifs: nbCommentairesPositifs,
             nbCommentairesNegatifs: nbCommentairesNegatifs,
             nbCommentairesRejetes: nbCommentairesRejetes
-        }
+        };
     };
 
     const getRegionalAvisStats = async (regionName, codeRegion) => {
@@ -175,7 +175,7 @@ module.exports = ({ db, logger, regions }) => {
 
     const getNationalAvisStats = async () => {
 
-        let regions = findActiveRegions().map(region => { return region.codeRegion });
+        let regions = findActiveRegions().map(region => region.codeRegion);
         let filter = { 'codeRegion': { $in: regions } };
         let national = await getAvisStats(filter);
 
