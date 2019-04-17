@@ -15,7 +15,7 @@ class Remerciements extends Component {
         let { stagiaire, infosRegion } = this.props;
 
         return (
-            <div className="remerciements">
+            <div className="anotea remerciements">
                 <div className="container">
                     <Formation stagiaire={stagiaire} />
                     <div className="row">
