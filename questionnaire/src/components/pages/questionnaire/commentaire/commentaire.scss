@@ -37,7 +37,7 @@
     width: 100%;
 
     &.badwords {
-      border: solid 1px $color-red;
+      background-color: $color-red-10;
       color: $color-red;
     }
 
