@@ -70,30 +70,34 @@ module.exports = (db, regions) => {
         shouldBeImported: async trainee => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
 
-            let filters = _.get(region, 'filters', []).map(f => {
-                return trainee => {
-                    let included = true;
-                    if (f.excluded_code_financeurs) {
-                        included = _.intersection(trainee.training.codeFinanceur, f.excluded_code_financeurs).length === 0;
-                    }
-                    if (included && f.certifications !== undefined) {
-                        let isEmpty = _.isEmpty(trainee.training.certifInfo.id);
-                        included = f.certifications ? !isEmpty : isEmpty;
-                    }
-                    return included;
-                };
-            });
+            let isValid = trainee => region && trainee.trainee.emailValid;
 
-            if (!(trainee.trainee.emailValid && region && _.every(filters, filter => filter(trainee)))) {
-                return false;
-            }
+            let isIncluded = (trainee, filters) => {
+                if (_.isEmpty(filters)) {
+                    return true;
+                }
 
-            const count = await db.collection('trainee').countDocuments({
-                'trainee.email': trainee.trainee.email,
-                'training.infoCarif.numeroSession': trainee.training.infoCarif.numeroSession
-            });
+                let isConseilRegional = trainee.training.codeFinanceur.includes('2');
 
-            return count === 0;
+                if (isConseilRegional && filters.conseil_regional === 'excluded') {
+                    return false;
+                }
+                if (isConseilRegional && filters.conseil_regional === 'certifications_only') {
+                    return !_.isEmpty(trainee.training.certifInfo.id);
+                }
+                return true;
+            };
+
+            let doesNotExist = async trainee => {
+                let count = await db.collection('trainee').countDocuments({
+                    'trainee.email': trainee.trainee.email,
+                    'training.infoCarif.numeroSession': trainee.training.infoCarif.numeroSession
+                });
+
+                return count === 0;
+            };
+
+            return isValid(trainee) && isIncluded(trainee, region.filters) && (await doesNotExist(trainee));
 
 
         },
