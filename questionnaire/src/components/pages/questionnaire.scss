@@ -7,7 +7,7 @@
         font-size: 0.875rem;
         font-weight: $font-weight-900;
         line-height: 29px;
-        font-size: 24px;
+        font-size: 1.5rem;
     }
 
     .plusQuneDerniere {
@@ -43,7 +43,7 @@
 
         .go-back:hover {
             border: none;
-            background: none;
+            background-color: $color-grey-5;
         }
 
         .send-button {
@@ -54,7 +54,7 @@
 @media (max-width: 576px) {
     .questionnaire {
         h3 {
-            font-size: 18px;
+            font-size: 1.125rem;
         }
     }
 }
