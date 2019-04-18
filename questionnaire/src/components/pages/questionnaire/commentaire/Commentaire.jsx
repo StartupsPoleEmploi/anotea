@@ -63,7 +63,7 @@ class Commentaire extends Component {
                                     maxLength={200}
                                     rows="5"
                                     className={`${!commentaire.texte.isValid ? 'badwords' : ''}`}
-                                    placeholder="Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois."
+                                    placeholder="Partagez votre expérience pour éclairer les futurs stagiaires."
                                     onBlur={this.onBlur}
                                     onChange={this.onChange} />
                                 {!commentaire.texte.isValid && <Badwords />}
