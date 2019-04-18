@@ -165,7 +165,7 @@ module.exports = ({ db, regions }) => {
             nbCommentairesAModerer: regional.nbCommentairesAModerer,
             tauxAvisPositifs: calculateRate(regional.nbCommentairesPositifs, regional.nbAvisAvecCommentaire),
             tauxAvisNegatifs: calculateRate(regional.nbCommentairesNegatifs, regional.nbAvisAvecCommentaire),
-            tauxAvisRejetes: calculateRate(regional.nbCommentairesRejetes , regional.nbAvisAvecCommentaire),
+            tauxAvisRejetes: calculateRate(regional.nbCommentairesRejetes, regional.nbAvisAvecCommentaire),
         };
     };
 
@@ -186,7 +186,7 @@ module.exports = ({ db, regions }) => {
             nbCommentairesAModererNational: national.nbCommentairesAModerer,
             tauxAvisPositifsNational: calculateRate(national.nbCommentairesPositifs, national.nbAvisAvecCommentaire),
             tauxAvisNegatifsNational: calculateRate(national.nbCommentairesNegatifs, national.nbAvisAvecCommentaire),
-            tauxAvisRejetesNational: calculateRate(national.nbCommentairesRejetes , national.nbAvisAvecCommentaire),
+            tauxAvisRejetesNational: calculateRate(national.nbCommentairesRejetes, national.nbAvisAvecCommentaire),
         };
     };
 
