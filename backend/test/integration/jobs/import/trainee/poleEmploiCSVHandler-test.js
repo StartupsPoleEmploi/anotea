@@ -71,7 +71,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                     numeroAction: '14_SE_0000160070'
                 },
                 codeFinanceur: [
-                    '2',
+                    '4',
                     '7'
                 ],
                 niveauEntree: 6,

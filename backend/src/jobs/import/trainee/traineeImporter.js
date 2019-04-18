@@ -19,9 +19,8 @@ module.exports = (db, logger) => {
             const shouldBeImported = async trainee => {
                 let sameRegion = !filters.codeRegion || filters.codeRegion === trainee.codeRegion;
                 let isAfter = !filters.since || trainee.training.scheduledEndDate > filters.since;
-                let haveCertifInfo = !filters.certifInfo || trainee.training.certifInfo.id !== '';
 
-                return sameRegion && isAfter && haveCertifInfo && await handler.shouldBeImported(trainee);
+                return sameRegion && isAfter && await handler.shouldBeImported(trainee);
             };
 
             return new Promise(async (resolve, reject) => {
