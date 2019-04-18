@@ -17,9 +17,8 @@ module.exports = ({ db, regions }) => {
         }
     };
 
-    const getRegionalOrganismesStats = async (regionName, codeRegion) => {
+    const getOrganismesStats = async filter => {
 
-        let filter = { 'profile': 'organisme', codeRegion };
         let [
             nbOrganimesContactes,
             nbRelances,
@@ -32,70 +31,67 @@ module.exports = ({ db, regions }) => {
             nbAvisAvecOrganismesReponses,
             avisSignales
         ] = await Promise.all([
-            organismes.countDocuments({ 'mailSentDate': { $ne: null }, ...filter }),
-            organismes.countDocuments({ 'resend': true, ...filter }),
-            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, ...filter }),
-            organismes.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
-            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'passwordHash': { $ne: null }, ...filter }),
-            avis.countDocuments({ 'published': true, $or: [ { 'read': false }, {'read': { $ne: true }} ], codeRegion }),
-            avis.countDocuments({ 'moderated': true, 'rejected': false, 'codeRegion': codeRegion }),
-            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, codeRegion }),
-            avis.countDocuments({ 'answer': { $ne: null }, codeRegion }),
-            avis.countDocuments({ 'reported': true, codeRegion }),
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ 'resend': true, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ 'tracking.click': { $ne: null }, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'passwordHash': { $ne: null }, 'profile': 'organisme', ...filter }),
+            avis.countDocuments({ 'published': true, $or: [{ 'read': false }, { 'read': { $ne: true } }], ...filter }),
+            avis.countDocuments({ 'moderated': true, 'rejected': false, ...filter }),
+            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'answer': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'reported': true, ...filter }),
         ]);
 
         return {
+            nbOrganimesContactes: nbOrganimesContactes,
+            nbRelances: nbRelances,
+            ouvertureMails: ouvertureMails,
+            nbClicDansLien: nbClicDansLien,
+            organismesActifs: organismesActifs,
+            avisNonLus: avisNonLus,
+            avisModeresNonRejetes: avisModeresNonRejetes,
+            nbCommentairesAvecOrganismesReponses: nbCommentairesAvecOrganismesReponses,
+            nbAvisAvecOrganismesReponses: nbAvisAvecOrganismesReponses,
+            avisSignales: avisSignales
+        };
+    };
+
+    const getRegionalOrganismesStats = async (regionName, codeRegion) => {
+
+        let filter = { codeRegion };
+        let regional = await getOrganismesStats(filter);
+
+        return {
             region: regionName,
-            nbOrganismesContactes: nbOrganimesContactes,
-            mailsEnvoyes: nbRelances + nbOrganimesContactes,
-            tauxOuvertureMails: calculateRate(ouvertureMails, nbOrganimesContactes),
-            tauxClicDansLien: calculateRate(nbClicDansLien, ouvertureMails),
-            tauxOrganismesActifs: calculateRate(organismesActifs, nbOrganimesContactes),
-            tauxAvisNonLus: calculateRate(avisNonLus, avisModeresNonRejetes),
-            tauxCommentairesAvecReponses: calculateRate(nbCommentairesAvecOrganismesReponses, avisModeresNonRejetes),
-            tauxAvisAvecReponses: calculateRate(nbAvisAvecOrganismesReponses, avisModeresNonRejetes),
-            tauxAvisSignales: calculateRate(avisSignales, avisModeresNonRejetes),
+            nbOrganismesContactes: regional.nbOrganimesContactes,
+            mailsEnvoyes: regional.nbRelances + regional.nbOrganimesContactes,
+            tauxOuvertureMails: calculateRate(regional.ouvertureMails, regional.nbOrganimesContactes),
+            tauxClicDansLien: calculateRate(regional.nbClicDansLien, regional.ouvertureMails),
+            tauxOrganismesActifs: calculateRate(regional.organismesActifs, regional.nbOrganimesContactes),
+            tauxAvisNonLus: calculateRate(regional.avisNonLus, regional.avisModeresNonRejetes),
+            tauxCommentairesAvecReponses: calculateRate(regional.nbCommentairesAvecOrganismesReponses, regional.avisModeresNonRejetes),
+            tauxAvisAvecReponses: calculateRate(regional.nbAvisAvecOrganismesReponses, regional.avisModeresNonRejetes),
+            tauxAvisSignales: calculateRate(regional.avisSignales, regional.avisModeresNonRejetes),
         };
     };
 
     const getNationalOrganismesStats = async () => {
 
         let regions = findActiveRegions().map(region => region.codeRegion);
-        let filter = { 'profile': 'organisme', 'codeRegion': { $in: regions } };
-        let [
-            nbOrganimesContactes,
-            nbRelances,
-            ouvertureMails,
-            nbClicDansLien,
-            organismesActifs,
-            avisNonLus,
-            avisModeresNonRejetes,
-            nbCommentairesAvecOrganismesReponses,
-            nbAvisAvecOrganismesReponses,
-            avisSignales
-        ] = await Promise.all([
-            organismes.countDocuments({ 'mailSentDate': { $ne: null }, ...filter }),
-            organismes.countDocuments({ 'resend': true, ...filter }),
-            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, ...filter }),
-            organismes.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
-            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'passwordHash': { $ne: null }, ...filter }),
-            avis.countDocuments({ 'published': true, $or: [ { 'read': false }, {'read': { $ne: true }} ], 'codeRegion': { $in: regions } }),
-            avis.countDocuments({ 'moderated': true, 'rejected': false, 'codeRegion': { $in: regions } }),
-            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, 'codeRegion': { $in: regions } }),
-            avis.countDocuments({ 'answer': { $ne: null }, 'codeRegion': { $in: regions } }),
-            avis.countDocuments({ 'reported': true, 'codeRegion': { $in: regions } }),
-        ]);
+        let filter = { 'codeRegion': { $in: regions } };
+        let national = await getOrganismesStats(filter);
 
         return {
-            nbOrganismesContacteNational: nbOrganimesContactes,
-            mailsEnvoyesNational: nbRelances + nbOrganimesContactes,
-            tauxOuvertureMailsNational: calculateRate(ouvertureMails, nbOrganimesContactes),
-            tauxClicDansLienNational: calculateRate(nbClicDansLien, ouvertureMails),
-            tauxOrganismesActifsNational: calculateRate(organismesActifs, nbOrganimesContactes),
-            tauxAvisNonLusNational: calculateRate(avisNonLus, avisModeresNonRejetes),
-            tauxCommentairesAvecReponsesNational: calculateRate(nbCommentairesAvecOrganismesReponses, avisModeresNonRejetes),
-            tauxAvisAvecReponsesNational: calculateRate(nbAvisAvecOrganismesReponses, avisModeresNonRejetes),
-            tauxAvisSignalesNational: calculateRate(avisSignales, avisModeresNonRejetes),
+            nbOrganismesContacteNational: national.nbOrganimesContactes,
+            mailsEnvoyesNational: national.nbRelances + national.nbOrganimesContactes,
+            tauxOuvertureMailsNational: calculateRate(national.ouvertureMails, national.nbOrganimesContactes),
+            tauxClicDansLienNational: calculateRate(national.nbClicDansLien, national.ouvertureMails),
+            tauxOrganismesActifsNational: calculateRate(national.organismesActifs, national.nbOrganimesContactes),
+            tauxAvisNonLusNational: calculateRate(national.avisNonLus, national.avisModeresNonRejetes),
+            tauxCommentairesAvecReponsesNational: calculateRate(national.nbCommentairesAvecOrganismesReponses, national.avisModeresNonRejetes),
+            tauxAvisAvecReponsesNational: calculateRate(national.nbAvisAvecOrganismesReponses, national.avisModeresNonRejetes),
+            tauxAvisSignalesNational: calculateRate(national.avisSignales, national.avisModeresNonRejetes),
         };
     };
 
