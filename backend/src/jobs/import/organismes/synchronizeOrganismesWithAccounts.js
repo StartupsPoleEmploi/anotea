@@ -1,8 +1,11 @@
 const uuid = require('node-uuid');
 const _ = require('lodash');
 
+const flatten = array => [].concat.apply([], array);
+
 module.exports = async (db, logger, regions) => {
 
+    let { findRegionByPostalCode } = regions;
     let stats = {
         total: 0,
         updated: 0,
@@ -10,12 +13,40 @@ module.exports = async (db, logger, regions) => {
         invalid: 0,
     };
 
+    const findRegion = data => {
+        let error = null;
+        let lieuxDeFormation = data.lieux_de_formation;
+
+        if (data.organisme_formateurs) {
+            //organisme responsable
+            try {
+                return findRegionByPostalCode(data.adresse.code_postal);
+            } catch (e) {
+                lieuxDeFormation = flatten(data.organisme_formateurs.map(o => o.lieux_de_formation));
+                error = e;
+            }
+        }
+
+        let region = lieuxDeFormation.reduce((acc, lieu) => {
+            if (!acc) {
+                try {
+                    acc = findRegionByPostalCode(lieu.adresse.code_postal);
+                } catch (e) {
+                    error = e;
+                }
+            }
+            return acc;
+        }, null);
+
+        if (!region) {
+            throw error;
+        }
+        return region;
+    };
+
     const buildAccountFromIntercarif = async data => {
-        let { findRegionByPostalCode } = regions;
-        let adresse = data.lieux_de_formation ?
-            data.lieux_de_formation.find(l => l.adresse.code_postal).adresse : data.adresse;
+
         let siret = `${parseInt(data.siret, 10)}`;
-        let region = findRegionByPostalCode(adresse.code_postal);
         let kairos = await db.collection('kairos_organismes').findOne({ siret });
 
         let document = {
@@ -26,7 +57,7 @@ module.exports = async (db, logger, regions) => {
             courriels: data.courriel ? [data.courriel] : [],
             token: uuid.v4(),
             creationDate: new Date(),
-            codeRegion: region.codeRegion,
+            codeRegion: findRegion(data).codeRegion,
             sources: ['intercarif'],
             profile: 'organisme',
             numero: data.numero,

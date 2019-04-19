@@ -70,21 +70,36 @@ module.exports = (db, regions) => {
         shouldBeImported: async trainee => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
 
-            const count = await db.collection('trainee').countDocuments({
-                'trainee.email': trainee.trainee.email,
-                'training.infoCarif.numeroSession': trainee.training.infoCarif.numeroSession
-            });
+            let isValid = trainee => region && trainee.trainee.emailValid;
 
-            let filters = [];
-            let codeFinanceurs = _.get(region, 'filters.code_financeurs', []);
-            codeFinanceurs.forEach(code => {
-                filters.push(trainee => {
-                    let includes = trainee.training.codeFinanceur.includes(code.replace('-', ''));
-                    return code.startsWith('-') ? !includes : includes;
+            let isIncluded = (trainee, filters) => {
+                if (_.isEmpty(filters)) {
+                    return true;
+                }
+
+                let isConseilRegional = trainee.training.codeFinanceur.includes('2');
+
+                if (isConseilRegional && filters.conseil_regional === 'excluded') {
+                    return false;
+                }
+                if (isConseilRegional && filters.conseil_regional === 'certifications_only') {
+                    return !_.isEmpty(trainee.training.certifInfo.id);
+                }
+                return true;
+            };
+
+            let doesNotExist = async trainee => {
+                let count = await db.collection('trainee').countDocuments({
+                    'trainee.email': trainee.trainee.email,
+                    'training.infoCarif.numeroSession': trainee.training.infoCarif.numeroSession
                 });
-            });
 
-            return count === 0 && trainee.trainee.emailValid && region && _.every(filters, filter => filter(trainee));
+                return count === 0;
+            };
+
+            return isValid(trainee) && isIncluded(trainee, region.filters) && (await doesNotExist(trainee));
+
+
         },
         buildTrainee: async (record, campaign) => {
 

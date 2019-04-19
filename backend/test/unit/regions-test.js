@@ -19,6 +19,7 @@ describe(__filename, () => {
             codeRegion: '17',
             codeINSEE: '52',
             departements: ['44', '53', '49', '85', '72'],
+            filters: {},
             mailing: {
                 stagiaires: {
                     avis: true
@@ -50,6 +51,7 @@ describe(__filename, () => {
             codeRegion: '17',
             codeINSEE: '52',
             departements: ['44', '53', '49', '85', '72'],
+            filters: {},
             mailing: {
                 stagiaires: {
                     avis: true

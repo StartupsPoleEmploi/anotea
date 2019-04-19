@@ -1,7 +1,4 @@
-#!/usr/bin/env node
-'use strict';
-
-const { execute } = require('../../job-utils');
+const { execute } = require('../job-utils');
 
 execute(async ({ db }) => {
     let [nbFormations, nbFormationsCertifiantes, nbSessions, nbSessionsCertifiantes, nbSessionsCertifiantesAvecAvis] =

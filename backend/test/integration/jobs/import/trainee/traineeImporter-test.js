@@ -166,28 +166,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         });
     });
 
-    it('can filter trainee by certifInfo', async () => {
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
-        let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, regions);
-
-        let results = await importer.importTrainee(csvFile, handler, {
-            certifInfo: true
-        });
-
-        let doc = await db.collection('trainee').findOne();
-        assert.ok(doc.trainee);
-        assert.deepStrictEqual(doc.trainee.email, 'email_1@pe.com');
-        assert.deepStrictEqual(results, {
-            invalid: 0,
-            ignored: 1,
-            imported: 3,
-            total: 4,
-        });
-    });
-
     it('can filter trainee by session date', async () => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
@@ -210,9 +188,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         });
     });
 
-    it('should filter trainee by code financeur (inclusion)', async () => {
+    it('should filter trainee with conseil regional filter (excluded)', async () => {
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-filtered.csv');
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-conseil-regional.csv');
         let { regions } = await getComponents();
         let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
@@ -220,36 +198,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
                 return [{
                     codeRegion: '2',
                     filters: {
-                        code_financeurs: ['4']
-                    }
-                }];
-            }
-        }));
-
-        let results = await importer.importTrainee(csvFile, handler);
-
-        let doc = await db.collection('trainee').findOne({ 'trainee.email': 'email@pe.com' });
-        assert.ok(doc.trainee);
-        assert.deepStrictEqual(doc.trainee.email, 'email@pe.com');
-        assert.deepStrictEqual(results, {
-            invalid: 0,
-            ignored: 1,
-            imported: 2,
-            total: 3,
-        });
-    });
-
-    it('should filter trainee by code financeur (exclusion)', async () => {
-        let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-filtered.csv');
-        let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
-        let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
-            findActiveRegions: () => {
-                return [{
-                    codeRegion: '2',
-                    filters: {
-                        code_financeurs: ['-4']
+                        conseil_regional: 'excluded'
                     }
                 }];
             }
@@ -263,6 +212,35 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
             invalid: 0,
             ignored: 2,
             imported: 1,
+            total: 3,
+        });
+    });
+
+
+    it('should filter trainee with conseil regional filter (certifications_only)', async () => {
+        let db = await getTestDatabase();
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-non-certifiantes.csv');
+        let { regions } = await getComponents();
+        let importer = traineeImporter(db, logger);
+        let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
+            findActiveRegions: () => {
+                return [{
+                    codeRegion: '2',
+                    filters: {
+                        conseil_regional: 'certifications_only'
+                    }
+                }];
+            }
+        }));
+
+        let results = await importer.importTrainee(csvFile, handler);
+
+        let doc = await db.collection('trainee').findOne();
+        assert.deepStrictEqual(doc.trainee.email, 'email_4@pe.fr');
+        assert.deepStrictEqual(results, {
+            invalid: 0,
+            ignored: 1,
+            imported: 2,
             total: 3,
         });
     });
