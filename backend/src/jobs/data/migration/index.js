@@ -3,6 +3,8 @@
 
 const { execute } = require('../../job-utils');
 
-execute(async ({ db }) => {
+const removeEmoji = require('./removeEmoji');
 
+execute(async ({ db }) => {
+    await removeEmoji(db);
 });
