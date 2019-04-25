@@ -29,6 +29,17 @@ services:
     depends_on:
       - backend
 
+  questionnaire:
+    image: anotea_widget
+    container_name: anotea_widget
+    build:
+      context: widget
+      args:
+        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
+        - ANOTEA_HOTJAR_ID=1234
+    depends_on:
+      - backend
+
   backend:
     image: anotea_backend
     container_name: anotea_backend
