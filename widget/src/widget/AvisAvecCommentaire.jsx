@@ -28,29 +28,47 @@ class AvisAvecCommentaire extends Component {
                 <style>{styles}</style>
                 {this.state.avis[this.state.page] &&
                     <div>
-
-                        <span className="line" />
-                        <h2>{this.state.avis.length} commentaires</h2>
-                        <span className="line" />
-
-                        <div>
-                            { this.state.page > 0 &&
-                                <span className="fas fa-chevron-left nav" onClick={this.goto.bind(this, -1)}></span>
-                            }
-
-                            <div className="avis">
-                                <Stars value={this.state.avis[this.state.page].notes.global} /> <span className="pseudo">par {this.state.avis[this.state.page].pseudo ? this.state.avis[this.state.page].pseudo : 'un stagiaire'}</span>
-                                <div className="date">Le {moment(this.state.avis[this.state.page].date).format('DD/MM/YYYY')}</div>
-                                <h3 className="titre">{this.state.avis[this.state.page].commentaire.titre}</h3>
-                                <span className="texte">{this.state.avis[this.state.page].commentaire.texte}</span>
-                            </div>
-
-                            { this.state.page < this.state.avis.length - 1 &&
-                                <span className="fas fa-chevron-right nav" onClick={this.goto.bind(this, 1)}></span>
-                            }
+                        <div className="commentaires-header">
+                            <span className="line" />
+                            <h2>{this.state.avis.length} commentaires</h2>
+                            <span className="line" />
                         </div>
 
-                        <div className="pageIndicator">{this.state.page + 1} sur {this.state.avis.length}</div>
+                        <div>
+                            <div className="avis">
+                                <div className="head-avis"><Stars value={this.state.avis[this.state.page].notes.global} /> <span className="pseudo">par {this.state.avis[this.state.page].pseudo ? this.state.avis[this.state.page].pseudo : 'un stagiaire'}</span></div>
+                                
+                                { this.state.avis[this.state.page].commentaire.titre &&
+                                    <h3 className="titre">{this.state.avis[this.state.page].commentaire.titre}</h3>
+                                }
+
+                                { this.state.avis[this.state.page].commentaire.texte &&
+                                    <div className="texte">{this.state.avis[this.state.page].commentaire.texte}</div>
+                                }
+
+                                <div className="date">Session du {moment(this.state.avis[this.state.page].startDate).format('DD/MM/YYYY')}
+                                 {this.state.avis[this.state.page].startDate !==  this.state.avis[this.state.page].scheduledEndDate &&
+                                    <span>au {moment(this.state.avis[this.state.page].scheduledEndDate).format('DD/MM/YYYY')}</span>
+                                 }
+                                 </div>
+                            </div>
+
+                            <div className="pagination">
+                                <div className="nav-left">
+                                    { this.state.page > 0 &&
+                                        <span className="fas fa-chevron-left nav" onClick={this.goto.bind(this, -1)}></span>
+                                    }
+                                </div>
+
+                                <span className="pageIndicator">{this.state.page + 1} sur {this.state.avis.length}</span>
+
+                                <div className="nav-right">
+                                    { this.state.page < this.state.avis.length - 1 &&
+                                        <span className="fas fa-chevron-right nav" onClick={this.goto.bind(this, 1)}></span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 }
             </div>

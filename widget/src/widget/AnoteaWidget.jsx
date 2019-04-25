@@ -62,14 +62,18 @@ class AnoteaWidget extends Component {
                 <style>{styles}</style>
                 <h1 className="title">Avis d'anciens stagiaires</h1>
 
+                <div className="verified">
+                    vérifiés par <img src={`/img/poleemploi.png`} alt="logo Pôle Emploi" />
+                </div>
+
                 {this.state.score &&
                     <div className="score">
                         <div className="average">
                             <span className="rate">{this.state.average}</span>
-                            <span className="total"> / 5</span>
-                        </div>
-                        <span className="avis-count">d'après {this.state.score.nb_avis} avis</span>
-
+                            <span className="total">/5 <span class="fas fa-star active" style={{width: '14px', height: '14px'}}></span></span>
+                            <span className="avis-count">{this.state.score.nb_avis} notes</span>
+                        </div>                     
+ 
                         <ul className="notes">
                             <li>
                                 <span className="label">Accueil</span> <Stars value={this.state.score.notes.accueil} />
@@ -91,6 +95,11 @@ class AnoteaWidget extends Component {
                 }
 
                 <AvisAvecCommentaire avis={this.state.avis && this.state.avis.filter(avis => avis.commentaire)} />
+
+                <div className="propulsed">
+                    Propulsé par <img src={`/img/logo_Anotea_Horizontal_baseline2.png`} alt="logo Anotea" />
+                </div>
+
             </div>
         );
     }

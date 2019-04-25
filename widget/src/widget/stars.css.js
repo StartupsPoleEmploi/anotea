@@ -1,6 +1,6 @@
 const style = `
 .fas.fa-star.active {
-    color: #FCB42B;
+    color: #F26930;
 }
 
 .fas.fa-star {
