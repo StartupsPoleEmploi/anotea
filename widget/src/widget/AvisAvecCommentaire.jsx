@@ -35,15 +35,17 @@ class AvisAvecCommentaire extends Component {
 
                         <div>
                             <div className="avis">
-                                <div className="head-avis"><Stars value={this.state.avis[this.state.page].notes.global} /> <span className="pseudo">par {this.state.avis[this.state.page].pseudo ? this.state.avis[this.state.page].pseudo : 'un stagiaire'}</span></div>
-                                
-                                { this.state.avis[this.state.page].commentaire.titre &&
-                                    <h3 className="titre">{this.state.avis[this.state.page].commentaire.titre}</h3>
-                                }
+                                <div className="container">
+                                    <div className="head-avis"><Stars value={this.state.avis[this.state.page].notes.global} /> <span className="pseudo">par {this.state.avis[this.state.page].pseudo ? this.state.avis[this.state.page].pseudo : 'un stagiaire'}</span></div>
+                                    
+                                    { this.state.avis[this.state.page].commentaire.titre &&
+                                        <h3 className="titre">{this.state.avis[this.state.page].commentaire.titre}</h3>
+                                    }
 
-                                { this.state.avis[this.state.page].commentaire.texte &&
-                                    <div className="texte">{this.state.avis[this.state.page].commentaire.texte}</div>
-                                }
+                                    { this.state.avis[this.state.page].commentaire.texte &&
+                                        <div className="texte">{this.state.avis[this.state.page].commentaire.texte}</div>
+                                    }
+                                </div>
 
                                 <div className="date">Session du {moment(this.state.avis[this.state.page].startDate).format('DD/MM/YYYY')}
                                  {this.state.avis[this.state.page].startDate !==  this.state.avis[this.state.page].scheduledEndDate &&
@@ -59,13 +61,13 @@ class AvisAvecCommentaire extends Component {
                                     }
                                 </div>
 
-                                <span className="pageIndicator">{this.state.page + 1} sur {this.state.avis.length}</span>
-
                                 <div className="nav-right">
                                     { this.state.page < this.state.avis.length - 1 &&
                                         <span className="fas fa-chevron-right nav" onClick={this.goto.bind(this, 1)}></span>
                                     }
                                 </div>
+
+                                <span className="pageIndicator">{this.state.page + 1} sur {this.state.avis.length}</span>
                             </div>
                         </div>
                     </div>

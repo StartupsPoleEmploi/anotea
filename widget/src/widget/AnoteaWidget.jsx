@@ -78,7 +78,7 @@ class AnoteaWidget extends Component {
 
     render() {
         return (
-            <div className="anotea-widget" style={this.getStyle()}>
+            <div className={`anotea-widget ${this.props.layout === 'large' ? 'large' : ''}`} style={this.getStyle()}>
                 <style>{styles}</style>
                 <div className="col1">
                     <h1 className="title">Avis d'anciens stagiaires</h1>

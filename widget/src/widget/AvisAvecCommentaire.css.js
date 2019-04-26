@@ -35,6 +35,10 @@ h2 {
     font-size: 0.7em;
 }
 
+.avis .container {
+    height: 200px;
+}
+
 .pseudo {
 	opacity: 0.87;
 	color: #24303A;
@@ -69,28 +73,35 @@ h2 {
     text-align: center;
     font-weight: normal;
     margin: 10px;
+    clear: both;
+    position: relative;
+    top: -40px;
 }
 
 .pagination {
-    margin: auto;
-    width: fit-content;
-    padding: 15px;
+    width: 100%;
 }
 
 .pagination .nav {
     border: 1px solid #C8CBCE;
     border-radius: 5px;
     color: #C8CBCE;
-    padding: 10px 15px;
+    padding: 5px 9px;
+    margin: 15px;
+}
+
+.pagination .nav-right {
+    float: right;
 }
 
 .pagination .nav-left, .pagination .nav-right {
     display: inline-block;
-    width: 45px;
 }
 
 .pagination .pageIndicator {
-    display: inline-block;
+    display: block;
+    margin: auto;
+    width: fit-content;
 }
 
 .line {

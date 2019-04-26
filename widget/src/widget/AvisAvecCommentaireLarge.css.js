@@ -69,6 +69,11 @@ h2 {
     margin-bottom: 15px;
 }
 
+.pagination {
+    margin: auto;
+    width: fit-content;
+}
+
 .pageIndicator:first-child {
     border-radius: 4px 0px 0px 4px;
 }

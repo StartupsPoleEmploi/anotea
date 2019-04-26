@@ -13,7 +13,7 @@ const style = `
 
 .verified, .propulsed {
     color: rgba(36, 48, 58, 0.6);
-    font-size: 0.8em;
+    font-size: 0.7em;
     font-weight: normal;
     text-align: center;
     margin-top: 10px;
@@ -42,6 +42,10 @@ h1.title {
     margin: 10px;
 }
 
+.anotea-widget.large .average { 
+    margin-right: 0px;
+}
+
 .average .rate {
 	color: #24303A;
 	font-size: 1.7em;
@@ -66,15 +70,15 @@ h1.title {
 	color: rgba(36, 48, 58, 0.6);
 	font-size: 0.8em;
 	line-height: 20px;
-    text-align: right;
-    float: right;
+    left: 180px;
     line-height: 46px;
+    position: absolute;
     font-weight: normal;
 }
 
 .notes {
 	color: #91979C;
-	font-size: 16px;
+    font-size: 0.7em;
     line-height: 28px;
     text-align: left;
     padding: 0px;
@@ -85,6 +89,7 @@ h1.title {
 .notes .label {
     width: 150px;
     display: inline-block;
+    font-weight: normal;
 }
 
 @media screen and (max-width: 600px) {
