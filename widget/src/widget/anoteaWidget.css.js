@@ -1,9 +1,17 @@
 const style = `
 .anotea-widget {
     font-family: 'Lato';
-    width: 300px;
     border: 1px black solid;
     padding: 20px 0px 20px 0px;
+    width: fit-content;
+}
+
+.col1, .col2 {
+    display: inline-block;
+}
+
+.col1 {
+
 }
 
 .verified, .propulsed {
@@ -34,7 +42,6 @@ h1.title {
 .average {
     background-color: #F4F4F5;
     padding: 20px;
-    width: 80%;
     margin: 10px;
 }
 
@@ -81,24 +88,6 @@ h1.title {
 .notes .label {
     width: 150px;
     display: inline-block;
-}
-
-.pagination {
-    padding: 15px;
-}
-.pagination .nav {
-    border: 1px solid #C8CBCE;
-    border-radius: 5px;
-    color: #C8CBCE;
-    padding: 10px 15px;
-}
-.pagination .nav-left, .pagination .nav-right {
-    display: inline-block;
-    width: 45px;
-}
-.pagination .pageIndicator {
-    display: inline-block;
-    width: 179px;
 }
 
 @media screen and (max-width: 600px) {

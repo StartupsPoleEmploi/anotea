@@ -7,7 +7,7 @@ class WidgetAnotea extends HTMLElement {
         const widget = document.createElement('div');
         this.appendChild(widget);
         const shadowRoot = widget.attachShadow({mode: 'closed'});
-        ReactDOM.render(<AnoteaWidget niveau={this.getAttribute('niveau')} siret={this.getAttribute('siret')} numeroAction={this.getAttribute('numeroAction')} />, shadowRoot);
+        ReactDOM.render(<AnoteaWidget layout={this.getAttribute('layout')} width={this.getAttribute('width')} niveau={this.getAttribute('niveau')} siret={this.getAttribute('siret')} numeroAction={this.getAttribute('numeroAction')} />, shadowRoot);
     }
 }
 

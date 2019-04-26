@@ -5,13 +5,18 @@ h2 {
 	font-weight: bold;
 	line-height: 15px;
     text-transform: uppercase;
-    display: inline;
-    margin: 12px;
+    position: relative;
+    top: -22px;
+    background-color: white;
+    padding: 5px;
+    text-align: center;
+    width: fit-content;
+    margin: auto;
 }
 
 .commentaires-header {
-    width: 100%;
-    padding: 0px 0px 0px 18px;
+    height: 25px;
+    margin: 0px 18px 0px 18px;
 }
 
 .avis {
@@ -63,12 +68,35 @@ h2 {
 	line-height: 16px;
     text-align: center;
     font-weight: normal;
+    margin: 10px;
+}
+
+.pagination {
+    margin: auto;
+    width: fit-content;
+    padding: 15px;
+}
+
+.pagination .nav {
+    border: 1px solid #C8CBCE;
+    border-radius: 5px;
+    color: #C8CBCE;
+    padding: 10px 15px;
+}
+
+.pagination .nav-left, .pagination .nav-right {
+    display: inline-block;
+    width: 45px;
+}
+
+.pagination .pageIndicator {
+    display: inline-block;
 }
 
 .line {
 	box-sizing: border-box;
 	height: 1px;
-	width: 60px;
+	width: 100%;
     border: 1px solid #C8CBCE;
     display: inline-block;
     position: relative;

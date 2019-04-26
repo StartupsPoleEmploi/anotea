@@ -13,7 +13,6 @@
         h1, h2, h3 {
             color: red;
             font-weight: bold;
-            font-size: 20px;
         }
         body {
             font-family: monospace;
@@ -31,8 +30,24 @@
     <h1>Lorem ipsum</h1>
     
     <p>dolor sit amet, consectetur adipiscing elit. Maecenas eu tristique lorem. Nam sodales vitae sapien at sollicitudin. Quisque id gravida turpis. In tincidunt urna felis, id ornare nisl vestibulum ut. Fusce fringilla elit felis, eu tincidunt justo egestas a. Cras eget justo vitae arcu elementum luctus. Nullam eu porta est. In fermentum nisl vitae orci sodales efficitur. Nunc rhoncus et nunc molestie lacinia. Sed sit amet tristique velit.</p>
+
+    <h2>Version large</h2>
+
+    <h3>Largeur par défaut (prend l'espace disponible)</h3>
+
+    <widget-anotea class="widgetAnotea" niveau="organisme" siret="13001727000567" layout="large"></widget-anotea>
     
-    <widget-anotea class="widgetAnotea" niveau="organisme" siret="13001727000567"></widget-anotea>
-    <widget-anotea class="widgetAnotea" niveau="actionFormation" numeroAction="01_29673"></widget-anotea>
+    <h3>Largeur spécifiée à 700px</h3>
+
+    <widget-anotea class="widgetAnotea" niveau="actionFormation" numeroAction="01_29673" layout="large" width="700"></widget-anotea>
+
+    <h2>Version étroite</h2>
+
+    <h3>Largeur par défaut (300px)</h3>
+    <widget-anotea class="widgetAnotea" niveau="organisme" siret="13001727000567" layout="small"></widget-anotea>
+    
+    <h3>Largeur spécifiée à 400px</h3>
+    
+    <widget-anotea class="widgetAnotea" niveau="actionFormation" numeroAction="01_29673" layout="small" width="400"></widget-anotea>
   </body>
 </html>

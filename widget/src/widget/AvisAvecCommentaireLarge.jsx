@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import moment from 'moment';
 
 import Stars from './Stars';
+import Verified from './Verified';
 
-import styles from './AvisAvecCommentaire.css.js';
+import styles from './AvisAvecCommentaireLarge.css.js';
 
-class AvisAvecCommentaire extends Component {
+const PAGE_SIZE = 3;
+
+class AvisAvecCommentaireLarge extends Component {
 
     state = {
         avis: [],
@@ -24,14 +27,15 @@ class AvisAvecCommentaire extends Component {
 
     render() {
         return (
-            <div className="avis-avec-commentaire">
+            <div className="avis-avec-commentaire large" style={{width: `${this.props.width}px`}}>
                 <style>{styles}</style>
                 {this.state.avis[this.state.page] &&
                     <div>
                         <div className="commentaires-header">
-                            <span className="line" />
                             <h2>{this.state.avis.length} commentaires</h2>
                         </div>
+
+                        <Verified />
 
                         <div>
                             <div className="avis">
@@ -59,7 +63,7 @@ class AvisAvecCommentaire extends Component {
                                     }
                                 </div>
 
-                                <span className="pageIndicator">{this.state.page + 1} sur {this.state.avis.length}</span>
+                                <span className="pageIndicator">{this.state.page + 1} sur {Math.ceil(this.state.avis.length / PAGE_SIZE)}</span>
 
                                 <div className="nav-right">
                                     { this.state.page < this.state.avis.length - 1 &&
@@ -75,4 +79,4 @@ class AvisAvecCommentaire extends Component {
     }
 }
 
-export default AvisAvecCommentaire;
+export default AvisAvecCommentaireLarge;
