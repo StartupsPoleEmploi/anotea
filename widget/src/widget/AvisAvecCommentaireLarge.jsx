@@ -21,9 +21,44 @@ class AvisAvecCommentaireLarge extends Component {
         }
     }
 
-    goto = step => {
-        this.setState({page: this.state.page + step })
+    goto = page => {
+        this.setState({page: page })
     }
+
+    pageCount = () => {
+        return Math.ceil(this.state.avis.length / PAGE_SIZE);
+    }
+
+    getPagesBefore = () => {
+        let array = [];
+        if (this.state.page - 2 > 0) {
+            array.push(1);
+            if (this.state.page - 2 > 1) {
+                array.push('...');
+            }
+        }
+
+        for (let i=Math.max(this.state.page - 2, 0);i<this.state.page;i++) {
+            array.push(i + 1);
+        }
+        return array;
+    }
+
+    getPagesAfter = () => {
+        let array = [];
+        for (let i=Math.min(this.state.page + 2, this.pageCount() - 1);i>this.state.page;i--) {
+            array.push(i + 1);
+        }
+        array.reverse();
+        if (this.state.page + 2 < this.pageCount() - 1) {
+            if (this.state.page + 2 < this.pageCount() - 2) {
+                array.push('...');
+            }
+            array.push(this.pageCount());
+        }
+        return array;
+    }
+
 
     render() {
         return (
@@ -38,38 +73,38 @@ class AvisAvecCommentaireLarge extends Component {
                         <Verified />
 
                         <div>
-                            <div className="avis">
-                                <div className="head-avis"><Stars value={this.state.avis[this.state.page].notes.global} /> <span className="pseudo">par {this.state.avis[this.state.page].pseudo ? this.state.avis[this.state.page].pseudo : 'un stagiaire'}</span></div>
-                                
-                                { this.state.avis[this.state.page].commentaire.titre &&
-                                    <h3 className="titre">{this.state.avis[this.state.page].commentaire.titre}</h3>
-                                }
+                            { this.state.avis.slice(this.state.page * PAGE_SIZE, this.state.page * PAGE_SIZE + PAGE_SIZE).map(avis => 
+                                <div className="avis">
+                                    <div className="head-avis"><Stars value={avis.notes.global} /> <span className="pseudo">par {avis.pseudo ? avis.pseudo : 'un stagiaire'}</span></div>
+                                    
+                                    { avis.commentaire.titre &&
+                                        <h3 className="titre">{avis.commentaire.titre}</h3>
+                                    }
 
-                                { this.state.avis[this.state.page].commentaire.texte &&
-                                    <div className="texte">{this.state.avis[this.state.page].commentaire.texte}</div>
-                                }
+                                    { avis.commentaire.texte &&
+                                        <div className="texte">{avis.commentaire.texte}</div>
+                                    }
 
-                                <div className="date">Session du {moment(this.state.avis[this.state.page].startDate).format('DD/MM/YYYY')}
-                                 {this.state.avis[this.state.page].startDate !==  this.state.avis[this.state.page].scheduledEndDate &&
-                                    <span>au {moment(this.state.avis[this.state.page].scheduledEndDate).format('DD/MM/YYYY')}</span>
-                                 }
-                                 </div>
-                            </div>
+                                    <div className="date">Session du {moment(avis.startDate).format('DD/MM/YYYY')}
+                                    {avis.startDate !==  avis.scheduledEndDate &&
+                                        <span>au {moment(avis.scheduledEndDate).format('DD/MM/YYYY')}</span>
+                                    }
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="pagination">
-                                <div className="nav-left">
-                                    { this.state.page > 0 &&
-                                        <span className="fas fa-chevron-left nav" onClick={this.goto.bind(this, -1)}></span>
-                                    }
-                                </div>
-
-                                <span className="pageIndicator">{this.state.page + 1} sur {Math.ceil(this.state.avis.length / PAGE_SIZE)}</span>
-
-                                <div className="nav-right">
-                                    { this.state.page < this.state.avis.length - 1 &&
-                                        <span className="fas fa-chevron-right nav" onClick={this.goto.bind(this, 1)}></span>
-                                    }
-                                </div>
+                                {
+                                    this.getPagesBefore().map(page =>
+                                        <span className="pageIndicator"onClick={!isNaN(page) && this.goto.bind(this, page - 1)}>{page}</span>
+                                    )
+                                }
+                                <span className="pageIndicator current">{this.state.page + 1}</span>
+                                {
+                                    this.getPagesAfter().map(page =>
+                                        <span className="pageIndicator" onClick={!isNaN(page) && this.goto.bind(this, page - 1)}>{page}</span>
+                                    )
+                                }
                             </div>
                         </div>
                     </div>

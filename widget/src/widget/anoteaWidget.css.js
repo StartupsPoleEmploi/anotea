@@ -4,14 +4,11 @@ const style = `
     border: 1px black solid;
     padding: 20px 0px 20px 0px;
     width: fit-content;
+    display: table;
 }
 
 .col1, .col2 {
-    display: inline-block;
-}
-
-.col1 {
-
+    display: table-cell;
 }
 
 .verified, .propulsed {

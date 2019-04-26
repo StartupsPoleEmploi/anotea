@@ -69,13 +69,31 @@ h2 {
     margin-bottom: 15px;
 }
 
+.pageIndicator:first-child {
+    border-radius: 4px 0px 0px 4px;
+}
+
+
+.pageIndicator:last-child {
+    border-radius: 0px 4px 4px 0px;
+}
+
 .pageIndicator {
-	height: 16px;
-	color: #24303A;
-	font-size: 12px;
-	line-height: 16px;
+	height: 38px;
+	width: 41px;
+	border: 1px solid #F4F4F4;
+    background-color: #FFFFFF;
+    display: inline-block;
+	color: #8E9093;
+	font-size: 14px;
+	line-height: 38px;
     text-align: center;
-    font-weight: normal;
+    margin: 0px;
+    cursor: pointer;
+}
+
+.pageIndicator.current {
+    background-color: #F4F4F4;
 }
 
 .line {
