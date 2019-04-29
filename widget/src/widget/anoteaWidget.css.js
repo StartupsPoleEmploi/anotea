@@ -1,7 +1,6 @@
 const style = `
 .anotea-widget {
     font-family: 'Lato';
-    border: 1px black solid;
     padding: 20px 0px 20px 0px;
     width: fit-content;
     display: table;
