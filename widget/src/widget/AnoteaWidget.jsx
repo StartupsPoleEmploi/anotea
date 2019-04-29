@@ -78,8 +78,10 @@ class AnoteaWidget extends Component {
 
     render() {
         return (
+            
             <div className={`anotea-widget ${this.props.layout === 'large' ? 'large' : ''}`} style={this.getStyle()}>
                 <style>{styles}</style>
+                { this.state.score &&
                 <div className="col1">
                     <h1 className="title">Avis d'anciens stagiaires</h1>
 
@@ -87,7 +89,7 @@ class AnoteaWidget extends Component {
                         <Verified />
                     }
 
-                    {this.state.score &&
+                    
                         <div className="score">
                             <div className="average">
                                 <span className="rate">{this.state.average}</span>
@@ -113,7 +115,7 @@ class AnoteaWidget extends Component {
                                 </li>
                             </ul>
                         </div>
-                    }
+                    
                     { this.props.layout !== "large" &&
                         <AvisAvecCommentaire avis={this.state.avis && this.state.avis.filter(avis => avis.commentaire)} />
                     }
@@ -122,14 +124,15 @@ class AnoteaWidget extends Component {
                         Propulsé par <img src={`/img/logo_Anotea_Horizontal_baseline2.png`} alt="logo Anotea" />
                     </div>
                 </div>
-                
-                { this.props.layout === "large" &&
+                }
+                { this.state.score && this.props.layout === "large" &&
                     <div className="col2">
                         <AvisAvecCommentaireLarge width={this.props.width - 260} avis={this.state.avis && this.state.avis.filter(avis => avis.commentaire)} />
                     </div>
                 }
                 <div class="spacer" style={{clear: 'both'}}></div>
             </div>
+            
         );
     }
 }
