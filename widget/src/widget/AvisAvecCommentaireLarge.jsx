@@ -15,6 +15,11 @@ class AvisAvecCommentaireLarge extends Component {
         page: 0
     }
 
+    constructor(props) {
+        super();
+        this.state.avis = props.avis;
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.avis) {
             this.setState({ avis: nextProps.avis });

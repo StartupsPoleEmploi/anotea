@@ -60,16 +60,16 @@ class AnoteaWidget extends Component {
 
     getStyle = () => {
         if (this.props.layout === 'large') {
-            if ( this.props.width) {
-                return {width: `${this.props.width}px`, whiteSpace: 'nowrap'};
+            if (this.props.width) {
+                return { width: `${this.props.width}px`, whiteSpace: 'nowrap' };
             } else {
-                return {whiteSpace: 'nowrap'};
+                return { whiteSpace: 'nowrap' };
             }
         } else if (this.props.layout !== 'large') {
             if (this.props.width) {
-                return {width: `${this.props.width}px`};
+                return { width: `${this.props.width}px` };
             } else {
-                return {width: '300px'};
+                return { width: '300px' };
             }
         } else {
             return {};
@@ -78,25 +78,25 @@ class AnoteaWidget extends Component {
 
     render() {
         return (
-            
+
             <div className={`anotea-widget ${this.props.layout === 'large' ? 'large' : ''}`} style={this.getStyle()}>
                 <style>{styles}</style>
-                { this.state.score &&
-                <div className="col1">
-                    <h1 className="title">Avis d'anciens stagiaires</h1>
+                {this.state.score &&
+                    <div className="col1">
+                        <h1 className="title">Avis d'anciens stagiaires</h1>
 
-                    { this.props.layout !== "large" &&
-                        <Verified />
-                    }
+                        {this.props.layout !== "large" &&
+                            <Verified />
+                        }
 
-                    
+
                         <div className="score">
                             <div className="average">
                                 <span className="rate">{this.state.average}</span>
-                                <span className="total">/5 <span class="fas fa-star active" style={{width: '14px', height: '14px'}}></span></span>
+                                <span className="total">/5 <span class="fas fa-star active" style={{ width: '14px', height: '14px' }}></span></span>
                                 <span className="avis-count">{this.state.score.nb_avis} notes</span>
-                            </div>                     
-    
+                            </div>
+
                             <ul className="notes">
                                 <li>
                                     <span className="label">Accueil</span> <Stars value={this.state.score.notes.accueil} />
@@ -115,24 +115,24 @@ class AnoteaWidget extends Component {
                                 </li>
                             </ul>
                         </div>
-                    
-                    { this.props.layout !== "large" &&
-                        <AvisAvecCommentaire avis={this.state.avis && this.state.avis.filter(avis => avis.commentaire)} />
-                    }
 
-                    <div className="propulsed">
-                        Propulsé par <img src={`/img/logo_Anotea_Horizontal_baseline2.png`} alt="logo Anotea" />
+                        {this.props.layout !== "large" &&
+                            <AvisAvecCommentaire avis={this.state.avis && this.state.avis.filter(avis => avis.commentaire)} />
+                        }
+
+                        <div className="propulsed">
+                            Propulsé par <img src={`/img/logo_Anotea_Horizontal_baseline2.png`} alt="logo Anotea" />
+                        </div>
                     </div>
-                </div>
                 }
-                { this.state.score && this.props.layout === "large" &&
+                {this.state.score && this.props.layout === "large" &&
                     <div className="col2">
                         <AvisAvecCommentaireLarge width={this.props.width - 260} avis={this.state.avis && this.state.avis.filter(avis => avis.commentaire)} />
                     </div>
                 }
-                <div class="spacer" style={{clear: 'both'}}></div>
+                <div class="spacer" style={{ clear: 'both' }}></div>
             </div>
-            
+
         );
     }
 }
