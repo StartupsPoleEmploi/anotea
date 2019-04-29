@@ -1,14 +1,19 @@
 module.exports = {
     trainee: db => {
         return Promise.all([
-            db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
-            db.collection('trainee').createIndex({ 'codeRegion': 1 }),
             db.collection('trainee').createIndex({ 'token': 1 }, { unique: true }),
+            db.collection('trainee').createIndex({ 'codeRegion': 1 }),
+            db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
+            db.collection('trainee').createIndex({ 'mailSent': 1 }),
+            db.collection('trainee').createIndex({ 'sourceIDF': 1 }),
+            db.collection('trainee').createIndex({ 'campaign': 1 }),
+            db.collection('trainee').createIndex({ 'unsubscribe': 1 }),
             db.collection('trainee').createIndex({ 'trainee.email': 1 }),
             db.collection('trainee').createIndex({ 'trainee.dnIndividuNational': 1 }),
             db.collection('trainee').createIndex({ 'training.codeFinanceur': 1 }),
-            //Used during import of stagiaires
-            db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.infoCarif.numeroSession': 1 }),
+            db.collection('trainee').createIndex({ 'training.organisation.siret': 1 }),
+            db.collection('trainee').createIndex({ 'training.scheduledEndDate': 1 }),
+            db.collection('trainee').createIndex({ 'training.infoCarif.numeroSession': 1 }),
         ]);
     },
     comment: db => {
@@ -33,6 +38,7 @@ module.exports = {
             db.collection('comment').createIndex({ 'reponse.lastModerationAction': 1 }),
             db.collection('comment').createIndex({ 'reponse.status': 1 }),
             db.collection('comment').createIndex({ 'reponse.date': 1 }),
+            db.collection('comment').createIndex({ 'meta.reconciliation': 1 }),
         ]);
     },
     accounts: db => {
@@ -53,6 +59,7 @@ module.exports = {
             db.collection('formationsReconciliees').createIndex({ 'region': 1 }),
             db.collection('formationsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('formationsReconciliees').createIndex({ 'score.nb_avis': 1 }),
+            db.collection('formationsReconciliees').createIndex({ 'avis._id': 1 }),
         ]);
     },
     actionsReconciliees: db => {
@@ -61,6 +68,7 @@ module.exports = {
             db.collection('actionsReconciliees').createIndex({ 'region': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
+            db.collection('actionsReconciliees').createIndex({ 'avis._id': 1 }),
         ]);
     },
     sessionsReconciliees: db => {
@@ -69,6 +77,7 @@ module.exports = {
             db.collection('sessionsReconciliees').createIndex({ 'region': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
+            db.collection('sessionsReconciliees').createIndex({ 'avis._id': 1 }),
         ]);
     },
     events: db => {

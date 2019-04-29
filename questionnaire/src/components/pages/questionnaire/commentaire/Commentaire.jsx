@@ -13,7 +13,8 @@ class Commentaire extends Component {
     };
 
     state = {
-        texte: ''
+        texte: '',
+        titre: ''
     };
 
     constructor(props) {
@@ -26,7 +27,8 @@ class Commentaire extends Component {
         };
 
         this.badwordValidators = {
-            texte: createBadwordsDebouncer('texte')
+            texte: createBadwordsDebouncer('texte'),
+            titre: createBadwordsDebouncer('titre'),
         };
     }
 
@@ -54,17 +56,39 @@ class Commentaire extends Component {
                     <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <div className="row inner-row field">
                             <div className="col-sm-12">
+                                <h3>Commentaire</h3>
                                 <textarea
                                     name="texte"
                                     value={this.state.texte}
                                     maxLength={200}
-                                    rows="3"
+                                    rows="5"
                                     className={`${!commentaire.texte.isValid ? 'badwords' : ''}`}
-                                    placeholder="Dites nous ce que vous auriez aimé savoir avant de rentrer en formation. Restez courtois."
+                                    placeholder="Partagez votre expérience pour éclairer les futurs stagiaires."
                                     onBlur={this.onBlur}
                                     onChange={this.onChange} />
                                 {!commentaire.texte.isValid && <Badwords />}
                                 <div className="chars-count">Il vous reste {200-this.state.texte.length} caractères.</div>
+                            </div>
+                        </div>
+                        <div className="row inner-row field">
+                            <div className="col-sm-12">
+                                <h3>Titre du commentaire*</h3>
+                                <input
+                                    type="text"
+                                    name="titre"
+                                    value={this.state.titre}
+                                    maxLength={50}
+                                    className={`${!commentaire.titre.isValid ? 'badwords' : ''}`}
+                                    placeholder="Le titre permet d’avoir un résumé de votre expérience de la formation."
+                                    onBlur={this.onBlur}
+                                    onChange={this.onChange} />
+                                {!commentaire.titre.isValid && <Badwords />}
+                                <div className="chars-count">Il vous reste {50-this.state.titre.length} caractères.</div>
+                            </div>
+                        </div>
+                        <div className="row inner-row field">
+                            <div className="col-sm-12 facultatif">
+                                * facultatif
                             </div>
                         </div>
                     </div>

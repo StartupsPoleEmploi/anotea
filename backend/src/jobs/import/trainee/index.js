@@ -40,8 +40,7 @@ execute(async ({ logger, db, exit, regions, mailer }) => {
     .option('-s, --source [name]', 'Source to import (PE or IDF)')
     .option('-f, --file [file]', 'The CSV file to import')
     .option('-r, --region [codeRegion]', 'Code region to filter')
-    .option('--certifinfo', 'Import only trainee with at least one code certifInfo')
-    .option('-s, --since [startDate]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
+    .option('-s, --since [since]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
     .option('--append', 'Append stagiaires to an existing campaign')
     .option('-d, --dry-run', 'Execute this script in dry mode', () => {
         dryRun = true;
@@ -62,7 +61,7 @@ execute(async ({ logger, db, exit, regions, mailer }) => {
     }
 
     if (cli.since && !cli.since.isValid()) {
-        return exit('startDate is invalid, please use format \'YYYY-MM-DD\'');
+        return exit('since is invalid, please use format \'YYYY-MM-DD\'');
     }
 
     let importer = createImporter(db, logger);
@@ -70,9 +69,8 @@ execute(async ({ logger, db, exit, regions, mailer }) => {
     let handler = createHandler(db, regions);
     let filters = {
         codeRegion: cli.region,
-        startDate: cli.since && cli.since.toDate(),
+        since: cli.since && cli.since.toDate(),
         append: cli.append,
-        certifInfo: cli.certifInfo
     };
 
     if (dryRun === true) {

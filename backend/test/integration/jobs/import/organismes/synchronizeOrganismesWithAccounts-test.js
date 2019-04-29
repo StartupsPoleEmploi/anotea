@@ -137,6 +137,22 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.ok(doc);
     });
 
+    it('should get code_postal from organismes_formateurs when organisme responsable code_postal is invalid', async () => {
+
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+        await importIntercarif();
+
+        await generateOrganismesFromIntercarif(db, logger);
+        await generateOrganismesFromKairos(db, logger, csvFile);
+        await db.collection('intercarif_organismes_responsables').updateMany({}, { $set: { 'adresse.code_postal': '00000' } });
+
+        await synchronizeOrganismesWithAccounts(db, logger, regions);
+
+        let doc = await db.collection('accounts').findOne({ SIRET: 11111111111111 });
+        assert.deepStrictEqual(doc.codeRegion, '7');
+    });
+
     it('should create new organisme from kairos', async () => {
 
         let db = await getTestDatabase();

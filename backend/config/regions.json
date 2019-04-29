@@ -6,7 +6,7 @@
     "codeINSEE": "84",
     "departements": ["03", "07", "15", "26", "43", "74", "38", "01", "42", "63", "73", "69"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -25,7 +25,7 @@
     "codeINSEE": "27",
     "departements": ["21", "25", "39", "58", "71", "90", "89", "70"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -44,7 +44,7 @@
     "codeINSEE": "53",
     "departements": ["22", "29", "35", "56"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -63,7 +63,7 @@
     "codeINSEE": "24",
     "departements": ["28", "36", "37", "41", "45", "18"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -82,7 +82,7 @@
     "codeINSEE": "94",
     "departements": ["20"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -101,7 +101,7 @@
     "codeINSEE": "44",
     "departements": ["68", "08", "10", "52", "67", "51", "54", "55", "88", "57"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -120,7 +120,7 @@
     "codeINSEE": "01",
     "departements": ["971", "977", "970", "975", "978"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -139,7 +139,7 @@
     "codeINSEE": "03",
     "departements": ["973"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -158,7 +158,7 @@
     "codeINSEE": "32",
     "departements": ["02", "59", "62", "60", "80"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -176,6 +176,7 @@
     "codeINSEE": "11",
     "active": true,
     "departements": ["91", "92", "75", "93", "77", "95", "94", "78"],
+    "filters": {},
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -193,7 +194,7 @@
     "codeINSEE": "04",
     "departements": ["974", "976"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -212,7 +213,7 @@
     "codeINSEE": "02",
     "departements": ["972"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -231,7 +232,7 @@
     "codeINSEE": "28",
     "departements": ["14", "27", "27", "50", "76", "61"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -250,7 +251,7 @@
     "codeINSEE": "75",
     "departements": ["19", "16", "17", "23", "79", "24", "24", "33", "87", "40", "47", "64", "86", "33"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {
@@ -269,7 +270,7 @@
     "codeINSEE": "76",
     "departements": ["32", "09", "11", "12", "30", "31", "34", "65", "46", "48", "66", "81", "82"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "certifications_only"
     },
     "mailing": {
       "stagiaires": {
@@ -287,6 +288,7 @@
     "codeRegion": "17",
     "codeINSEE": "52",
     "departements": ["44", "53", "49", "85", "72"],
+    "filters": {},
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -304,7 +306,7 @@
     "codeINSEE": "93",
     "departements": ["04", "13", "06", "83", "84", "05"],
     "filters": {
-      "code_financeurs": ["-2"]
+      "conseil_regional": "excluded"
     },
     "mailing": {
       "stagiaires": {

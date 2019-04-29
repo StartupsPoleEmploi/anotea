@@ -15,14 +15,15 @@ module.exports = {
 
         let logger = createLogger('job', config);
         let components = await createComponents({ logger, configuration: config });
-        const exit = error => {
+        const exit = async error => {
             if (error) {
                 logger.error(error);
             }
+            await logger.close();
             return components.client.close(() => error && process.exit(1));
         };
 
-        let jobComponents = Object.assign({}, components, { logger, exit });
+        let jobComponents = Object.assign({}, components, { exit });
 
         try {
             let launchTime = new Date().getTime();

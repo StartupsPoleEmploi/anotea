@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-'use strict';
-
 const fs = require('fs');
 const cli = require('commander');
 const { encodeStream } = require('iconv-lite');

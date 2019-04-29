@@ -55,7 +55,7 @@ export default class Organisme extends React.Component {
                 {!this.state.showEdition &&
                 <div className="col-xs-8 col-sm-4 col-md-3">
                     <p className="email">
-                        {organisme.editedCourriel ? organisme.editedCourriel : organisme.courriel}
+                        {organisme.editedCourriel || organisme.kairosCourriel || organisme.courriel}
                     </p>
                 </div>
                 }

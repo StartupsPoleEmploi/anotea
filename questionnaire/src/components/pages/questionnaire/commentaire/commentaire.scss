@@ -26,7 +26,7 @@
     padding-bottom: 0.875rem;
   }
 
-  textarea, input {
+  textarea, input[type=text] {
     border-radius: 5px;
     border: none;
     resize: none;
@@ -37,7 +37,7 @@
     width: 100%;
 
     &.badwords {
-      border: solid 1px $color-red;
+      background-color: $color-red-10;
       color: $color-red;
     }
 
@@ -50,10 +50,17 @@
     }
   }
 
-  .chars-count {
+  input[type=text] {
+    margin-bottom: 0.5em;
+  }
+
+  .facultatif, .chars-count {
 	font-size: 0.75rem;
 	font-style: italic;
+  }
+
+  .chars-count {
 	line-height: 16px;
-	text-align: right;
+    text-align: right;
   }
 }

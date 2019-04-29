@@ -81,7 +81,7 @@ export default class Questionnaire extends Component {
 
     goBack = () => {
         this.setState({ page: 0 }, () => this.scrollToTop());
-    }
+    };
 
     goNext = () => {
         if (this.isFormValid()) {
@@ -89,7 +89,7 @@ export default class Questionnaire extends Component {
         } else {
             this.setState({ goNextButtonClicked: true }, () => this.scrollToTop());
         }
-    }
+    };
 
     submit = () => {
 
@@ -160,29 +160,20 @@ export default class Questionnaire extends Component {
                 {!this.state.error && this.props.stagiaire &&
                 <div className={`container ${this.state.page === 0 ? 'pageOne' : 'pageTwo'}`}>
 
-                    { this.state.page === 0 &&
-                        <div>
-                            <Formation stagiaire={this.props.stagiaire} />
-                            <Notes
-                                notes={this.state.notes}
-                                averageScore={this.state.averageScore}
-                                onChange={this.updateNotes}
-                                showErrorMessage={this.state.goNextButtonClicked} />
-                            <div className="plusQuneDerniere">Plus qu&apos;une dernière étape.</div>
-                        </div>
+                    {this.state.page === 0 &&
+                    <div>
+                        <Formation stagiaire={this.props.stagiaire} />
+                        <Notes
+                            notes={this.state.notes}
+                            averageScore={this.state.averageScore}
+                            onChange={this.updateNotes}
+                            showErrorMessage={this.state.goNextButtonClicked} />
+                        <div className="plusQuneDerniere">Plus qu&apos;une dernière étape.</div>
+                    </div>
                     }
 
-                    { this.state.page === 1 &&
+                    {this.state.page === 1 &&
                     <div>
-                        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-                            <h3>Avez-vous quelque chose à ajouter ?</h3>
-                        </div>
-                        <div className="info-container col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-                            <div className="info">
-                                <i className="icon fas fa-info-circle"></i>
-                                Cette partie n’est <strong>pas obligatoire</strong>, vous pouvez <strong>cliquer sur envoyer</strong> si vous ne souhaitez pas laisser de commentaire.
-                            </div>
-                        </div>
                         <Commentaire
                             commentaire={this.state.commentaire}
                             onChange={this.updateCommentaire} />
@@ -193,16 +184,16 @@ export default class Questionnaire extends Component {
                     <div className="row">
                         <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                             <div className="d-flex justify-content-center">
-                                { this.state.page === 0 &&
-                                    <div>
-                                        <Button
-                                            className="send-button"
-                                            size="large"
-                                            color="blue"
-                                            onClick={this.goNext}>
-                                            Suivant
-                                        </Button>
-                                    </div>
+                                {this.state.page === 0 &&
+                                <div>
+                                    <Button
+                                        className="send-button"
+                                        size="large"
+                                        color="blue"
+                                        onClick={this.goNext}>
+                                        Suivant
+                                    </Button>
+                                </div>
                                 }
                                 { this.state.page === 1 &&
                                     <div>
