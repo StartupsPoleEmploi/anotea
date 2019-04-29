@@ -30,19 +30,23 @@ export default class DeprecatedHeader extends React.PureComponent {
                             null
                     }
                 </NavLink>
-                {props.profile === 'organisme' && <a className="helpLink float-right"
-                                                     href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide</a>}
+                {props.profile === 'organisme' &&
+                    <a className="helpLink float-right"
+                        href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide
+                    </a>
+                }
 
                 {props.loggedIn &&
-                <div>
-                    <NavLink to="/mon-compte" className="account-link"
-                             activeClassName="active">
-                        <span className="fas fa-cog" />
-                    </NavLink>
-                    <Logout handleLogout={props.handleLogout} />
-                </div>
+                    <div>
+                        <NavLink to="/mon-compte"
+                            className="account-link"
+                            activeClassName="active">
+                            <span className="fas fa-cog" />
+                        </NavLink>
+                        <Logout handleLogout={props.handleLogout} />
+                    </div>
                 }
             </div>
         );
     }
-};
+}

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
 
 import { login } from '../backoffice/account/service/loginService';
@@ -57,29 +56,31 @@ export default class LoginForm extends React.Component {
                 <div className="block">
                     <h4>Connexion</h4>
                     {this.state.errorLogin &&
-                    <div className="alert alert-danger">Vos identifiants ne sont pas reconnus, merci de
-                        recommencer.</div>}
+                        <div className="alert alert-danger">Vos identifiants ne sont pas reconnus, merci de
+                            recommencer.
+                        </div>
+                    }
 
                     <div className="identifiant">
                         <h1>Identifiant</h1>
                         <input type="text"
-                               id="username"
-                               value={this.state.username}
-                               className="form-control input-sm"
-                               placeholder="Entrez votre SIRET"
-                               onChange={this.handleLoginUsernameChange}
-                               onKeyPress={this.handleKeyPress} />
+                            id="username"
+                            value={this.state.username}
+                            className="form-control input-sm"
+                            placeholder="Entrez votre SIRET"
+                            onChange={this.handleLoginUsernameChange}
+                            onKeyPress={this.handleKeyPress} />
                     </div>
 
                     <div className="mot-de-passe">
                         <h1>Mot de passe</h1>
                         <input type="password"
-                               id="password"
-                               value={this.state.password}
-                               className="form-control input-sm"
-                               placeholder="Entrez votre mot de passe"
-                               onChange={this.handleLoginPasswordChange}
-                               onKeyPress={this.handleKeyPress} />
+                            id="password"
+                            value={this.state.password}
+                            className="form-control input-sm"
+                            placeholder="Entrez votre mot de passe"
+                            onChange={this.handleLoginPasswordChange}
+                            onKeyPress={this.handleKeyPress} />
                     </div>
 
                     <div className="loginHelp">
