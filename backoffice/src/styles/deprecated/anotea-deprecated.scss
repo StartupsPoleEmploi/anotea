@@ -14,13 +14,13 @@
   }
 
   .App-logo {
-    background-color: white;
-    border-radius: 20px;
-    padding: 10px;
+    background-color: #384EAA;
+    width: 120px;
+    height: 57px;
   }
 
   .App-header {
-    background-color: #222;
+    background-color: #384EAA;
     height: 130px;
     padding: 20px;
     color: white;
@@ -172,24 +172,43 @@
     font: normal 14px Roboto, arial, sans-serif;
   }
 
-  .loginForm h1, .forgottenPassword h1 {
+  .loginForm {
+    background-color: #384EAA;
+  }
+
+  .loginForm h1 {
     text-align: center;
-    margin-top: 50px;
+  	color: #FFFFFF;
+    margin-bottom: 60px;
+    color: #FFFFFF;
+    font-family: Lato;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 35px;
+  }
+
+  .forgottenPassword h1 {
+    text-align: center;
   }
 
   .loginForm .block {
-    margin-top: 40px;
-    width: 250px;
+    margin: auto;
+    margin-bottom: 279px;
+    height: auto;
+    width: 21.875em;
+    border-radius: 5px;
+  	background-color: #fff;
+  	box-shadow: 0 2px 4px 0 rgba(17,24,30,0.1);
   }
 
-  .loginForm .block, .forgottenPassword .block {
+  .forgottenPassword .block {
     margin: auto;
     background-color: #EDEDED;
     padding-top: 10px;
     padding-bottom: 20px;
     padding-left: 20px;
     padding-right: 20px;
-    border-radius: 15px;
+    border-radius: 5px;
     border-color: #d2d2d2;
     border-width: 5px;
     box-shadow: 0 1px 0 #cfcfcf;
@@ -230,16 +249,43 @@
     text-align: center;
   }
 
-  .loginForm .block h4, .forgottenPassword .block h4 {
+  .loginForm .block h4 {
+    padding-top: 32px;
+  	color: #384EAA;
+  	text-align: center;
+    font-family: Lato;
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 29px;
+  }
+
+  .forgottenPassword .block h4 {
     border: 0 solid #fff;
     border-bottom-width: 1px;
     padding-bottom: 10px;
     text-align: center;
   }
 
+  .identifiant h1, .mot-de-passe h1 {
+    margin-left: 16px;
+    margin-top: 29px;
+    margin-bottom: 8px;
+  	height: 19px;
+  	color: #24303A;
+    text-align: left;
+  	font-family: Lato;
+  	font-size: 16px;
+  	font-weight: bold;
+  	line-height: 19px;
+  }
+
   .loginForm .block .form-control, .forgottenPassword .block .form-control {
-    border-radius: 10px;
-    margin: 10px 0px 10px 0px;
+    border-radius: 5px;
+    margin: 10px 16px 10px 16px;
+    width: 19.875em;
+    height: 40px;
+    background-color: #f4f4f5;
+    border: none;
   }
 
   .loginForm .block .wrapper, .loginForm .loginHelp, .forgottenPassword .block .wrapper, .loginForm .loginHelp {
@@ -247,7 +293,36 @@
   }
 
   .loginForm .loginHelp, .forgottenPassword .loginHelp {
-    margin-top: 20px;
+    margin-top: 26px;
+    height: 40px;
+    color: #384EAA;
+  	font-family: Lato;
+  	font-size: 14px;
+  	line-height: 17px;
+  }
+
+  .loginForm .loginHelp .btn {
+    text-decoration: underline;
+  }
+
+  .loginForm .block .wrapper {
+    margin-top: 10px;
+  }
+
+  .wrapper .group-btn .btn {
+    margin-bottom: 25px;
+    height: 40px;
+    width: 7.750em;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #384EAA;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #EBEDF6;
+    cursor: pointer;
+    text-transform: uppercase;
   }
 
   .main {

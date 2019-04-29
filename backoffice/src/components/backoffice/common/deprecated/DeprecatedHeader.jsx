@@ -1,6 +1,7 @@
 import React from 'react';
 import Logout from './Logout';
 import './header.css';
+import logo from '../../common/Header.svg';
 import { NavLink } from 'react-router-dom';
 
 import financeurs from './../../constantes/financeurs';
@@ -21,12 +22,12 @@ export default class DeprecatedHeader extends React.PureComponent {
         return (
             <div className="App-header">
                 <NavLink to="/">
-                    <img src={`${process.env.PUBLIC_URL}/images/logo.png`} className="App-logo" alt="logo" />
+                    <img src={logo} className="App-logo" alt="logo" />
                     {props.profile === 'organisme' ? <h5 className="label h5">{props.raisonSociale}</h5> :
                         props.profile === 'financeur' ?
                             <h1>Espace
                                 Financeur {this.getLabel(props.codeFinanceur)} {this.getRegionName(props.codeRegion)}</h1> :
-                            <h1>Espace Anotea</h1>
+                            null
                     }
                 </NavLink>
                 {props.profile === 'organisme' && <a className="helpLink float-right"

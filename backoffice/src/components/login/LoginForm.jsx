@@ -53,42 +53,50 @@ export default class LoginForm extends React.Component {
     render() {
         return (
             <div className="loginForm">
-                <h1>Espace Anotea</h1>
+                <h1>Votre espace Anotéa</h1>
                 <div className="block">
                     <h4>Connexion</h4>
                     {this.state.errorLogin &&
                     <div className="alert alert-danger">Vos identifiants ne sont pas reconnus, merci de
                         recommencer.</div>}
 
-                    <input type="text"
-                           id="username"
-                           value={this.state.username}
-                           className="form-control input-sm"
-                           placeholder="Numéro de SIRET"
-                           onChange={this.handleLoginUsernameChange}
-                           onKeyPress={this.handleKeyPress} />
+                    <div className="identifiant">
+                        <h1>Identifiant</h1>
+                        <input type="text"
+                               id="username"
+                               value={this.state.username}
+                               className="form-control input-sm"
+                               placeholder="Entrez votre SIRET"
+                               onChange={this.handleLoginUsernameChange}
+                               onKeyPress={this.handleKeyPress} />
+                    </div>
 
-                    <input type="password"
-                           id="password"
-                           value={this.state.password}
-                           className="form-control input-sm"
-                           placeholder="votre mot de passe"
-                           onChange={this.handleLoginPasswordChange}
-                           onKeyPress={this.handleKeyPress} />
+                    <div className="mot-de-passe">
+                        <h1>Mot de passe</h1>
+                        <input type="password"
+                               id="password"
+                               value={this.state.password}
+                               className="form-control input-sm"
+                               placeholder="Entrez votre mot de passe"
+                               onChange={this.handleLoginPasswordChange}
+                               onKeyPress={this.handleKeyPress} />
+                    </div>
+
+                    <div className="loginHelp">
+                        <button type="button" className="btn btn-link" onClick={this.handleForgottenPassword}>Mot de passe
+                            oublié
+                        </button>
+                    </div>
 
                     <div className="wrapper">
                         <span className="group-btn">
                             <button onClick={this.handleLogin} className="btn btn-primary btn-md">
-                                Se connecter <span className="fas fa-sign-in-alt" />
+                                Confirmer
                             </button>
                         </span>
                     </div>
                 </div>
-                <div className="loginHelp">
-                    <button type="button" className="btn btn-link" onClick={this.handleForgottenPassword}>Mot de passe
-                        oublié?
-                    </button>
-                </div>
+                <br/>
             </div>
         );
     }
