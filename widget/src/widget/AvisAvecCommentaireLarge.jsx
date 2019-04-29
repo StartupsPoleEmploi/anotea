@@ -59,54 +59,62 @@ class AvisAvecCommentaireLarge extends Component {
         return array;
     }
 
-
     render() {
         return (
             <div className="avis-avec-commentaire large" style={{width: `${this.props.width}px`}}>
                 <style>{styles}</style>
-                {this.state.avis[this.state.page] &&
+
                     <div>
                         <div className="commentaires-header">
                             <h2>{this.state.avis.length} commentaires</h2>
                         </div>
-
+                        
                         <Verified />
 
-                        <div>
-                            { this.state.avis.slice(this.state.page * PAGE_SIZE, this.state.page * PAGE_SIZE + PAGE_SIZE).map(avis => 
-                                <div className="avis">
-                                    <div className="head-avis"><Stars value={avis.notes.global} /> <span className="pseudo">par {avis.pseudo ? avis.pseudo : 'un stagiaire'}</span></div>
-                                    
-                                    { avis.commentaire.titre &&
-                                        <h3 className="titre">{avis.commentaire.titre}</h3>
-                                    }
+                        { this.state.avis[this.state.page] &&
+                            <div>
+                                {this.state.avis.slice(this.state.page * PAGE_SIZE, this.state.page * PAGE_SIZE + PAGE_SIZE).map(avis =>
+                                    <div className="avis">
+                                        <div className="head-avis"><Stars value={avis.notes.global} /> <span className="pseudo">par {avis.pseudo ? avis.pseudo : 'un stagiaire'}</span></div>
 
-                                    { avis.commentaire.texte &&
-                                        <div className="texte">{avis.commentaire.texte}</div>
-                                    }
+                                        {avis.commentaire.titre &&
+                                            <h3 className="titre">{avis.commentaire.titre}</h3>
+                                        }
 
-                                    <div className="date">Session du {moment(avis.startDate).format('DD/MM/YYYY')}
-                                    {avis.startDate !==  avis.scheduledEndDate &&
-                                        <span>au {moment(avis.scheduledEndDate).format('DD/MM/YYYY')}</span>
-                                    }
+                                        {avis.commentaire.texte &&
+                                            <div className="texte">{avis.commentaire.texte}</div>
+                                        }
+
+                                        <div className="date">Session du {moment(avis.startDate).format('DD/MM/YYYY')}
+                                            {avis.startDate !== avis.scheduledEndDate &&
+                                                <span>au {moment(avis.scheduledEndDate).format('DD/MM/YYYY')}</span>
+                                            }
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                            <div className="pagination">
-                                {
-                                    this.getPagesBefore().map(page =>
-                                        <span className="pageIndicator"onClick={!isNaN(page) && this.goto.bind(this, page - 1)}>{page}</span>
-                                    )
-                                }
-                                <span className="pageIndicator current">{this.state.page + 1}</span>
-                                {
-                                    this.getPagesAfter().map(page =>
-                                        <span className="pageIndicator" onClick={!isNaN(page) && this.goto.bind(this, page - 1)}>{page}</span>
-                                    )
+                                {this.pageCount() > 1 &&
+                                    <div className="pagination">
+                                        {
+                                            this.getPagesBefore().map(page =>
+                                                <span className="pageIndicator" onClick={!isNaN(page) && this.goto.bind(this, page - 1)}>{page}</span>
+                                            )
+                                        }
+                                        <span className="pageIndicator current">{this.state.page + 1}</span>
+                                        {
+                                            this.getPagesAfter().map(page =>
+                                                <span className="pageIndicator" onClick={!isNaN(page) && this.goto.bind(this, page - 1)}>{page}</span>
+                                            )
+                                        }
+                                    </div>
                                 }
                             </div>
-                        </div>
+                        }
+                </div>
+                
+                { this.state.avis.length === 0 &&
+                    <div className="pas-commentaire">
+                    Il n'y a pas de commentaire sur cette formation pour le moment.
                     </div>
                 }
             </div>

@@ -54,23 +54,29 @@ class AvisAvecCommentaire extends Component {
                                  </div>
                             </div>
 
-                            <div className="pagination">
-                                <div className="nav-left">
-                                    { this.state.page > 0 &&
-                                        <span className="fas fa-chevron-left nav" onClick={this.goto.bind(this, -1)}></span>
-                                    }
-                                </div>
+                            { this.state.avis.length > 1 &&
+                                <div className="pagination">
+                                    <div className="nav-left">
+                                        { this.state.page > 0 &&
+                                            <span className="fas fa-chevron-left nav" onClick={this.goto.bind(this, -1)}></span>
+                                        }
+                                    </div>
 
-                                <div className="nav-right">
-                                    { this.state.page < this.state.avis.length - 1 &&
-                                        <span className="fas fa-chevron-right nav" onClick={this.goto.bind(this, 1)}></span>
-                                    }
-                                </div>
+                                    <div className="nav-right">
+                                        { this.state.page < this.state.avis.length - 1 &&
+                                            <span className="fas fa-chevron-right nav" onClick={this.goto.bind(this, 1)}></span>
+                                        }
+                                    </div>
 
-                                <span className="pageIndicator">{this.state.page + 1} sur {this.state.avis.length}</span>
-                            </div>
+                                    <span className="pageIndicator">{this.state.page + 1} sur {this.state.avis.length}</span>
+                                </div>
+                            }
                         </div>
                     </div>
+                }
+
+                { this.state.avis.length === 0 &&
+                    <div className="pas-commentaire">Il n'y a pas de commentaire sur cette formation pour le moment.</div>
                 }
             </div>
         );

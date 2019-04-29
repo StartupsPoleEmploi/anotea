@@ -122,5 +122,15 @@ h2 {
     line-height: 16px;
     border-top: 1px solid #C8CBCE;
     padding: 8px 16px;
-}`;
+}
+
+.pas-commentaire {
+    color: rgba(36, 48, 58, 0.6);
+    font-size: 0.8em;
+    font-weight: normal;
+    margin: 15px;
+    text-align: center;
+    margin-top: 120px;
+}
+`;
 export default style;
