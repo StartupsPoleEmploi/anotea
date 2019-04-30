@@ -286,15 +286,25 @@
     margin-top: 16px;
   }
 
-  .forgottenPassword .block .error {
+  .loginForm .block .error, .forgottenPassword .block .error {
     background-color: #FBEAEA;
     border-radius: 5px;
-    margin: 10px 16px 10px 16px;
+    margin: 10px 16px 0px 16px;
     width: 19.875em;
     height: 40px;
     border: none;
     color: #DD3433;
     padding: .5rem;
+  }
+
+  .password-error {
+    background-color: #FBEAEA;
+    border-radius: 5px;
+    margin: 10px 16px 0px 16px;
+    width: 19.875em;
+    height: 40px;
+    border: none;
+    padding: .8rem;
   }
 
   .loginForm .block .form-control, .forgottenPassword .block .form-control {

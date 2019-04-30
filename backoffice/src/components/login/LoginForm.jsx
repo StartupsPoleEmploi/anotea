@@ -15,6 +15,7 @@ export default class LoginForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            badPassword: false,
             errorLogin: false,
             username: '',
             password: ''
@@ -35,7 +36,7 @@ export default class LoginForm extends React.Component {
     }
 
     handleLoginPasswordChange = evt => {
-        this.setState({ errorLogin: false });
+        this.setState({ badPassword: false });
         this.setState({ password: evt.target.value });
     }
 
@@ -46,12 +47,26 @@ export default class LoginForm extends React.Component {
             this.setState({ errorLogin: false, loggedIn: true });
             this.handleLoggedIn(result);
         })
-        .catch(() => {
-            this.setState({ errorLogin: true });
+        .catch(e => {
+            if (e.message === 'Invalid token specified') {
+                this.setState({ errorLogin: true });
+            } else {
+                this.setState({ badPassword: true });
+            }
         });
     }
 
     render() {
+        let inputIdentifiantClassName = 'form-control input-sm';
+        if (this.state.errorLogin) {
+            inputIdentifiantClassName = 'error';
+        }
+
+        let inputPasswordClassName = 'form-control input-sm';
+        if (this.state.badPassword) {
+            inputPasswordClassName = 'password-error';
+        }
+
         return (
             <div className="loginForm">
                 <h1>Votre espace Anotéa</h1>
@@ -63,7 +78,7 @@ export default class LoginForm extends React.Component {
                         <input type="text"
                             id="username"
                             value={this.state.username}
-                            className="form-control input-sm"
+                            className={inputIdentifiantClassName}
                             placeholder="Entrez votre SIRET"
                             onChange={this.handleLoginUsernameChange}
                             onKeyPress={this.handleKeyPress} />
@@ -77,12 +92,12 @@ export default class LoginForm extends React.Component {
                         <input type="password"
                             id="password"
                             value={this.state.password}
-                            className="form-control input-sm"
+                            className={inputPasswordClassName}
                             placeholder="Entrez votre mot de passe"
                             onChange={this.handleLoginPasswordChange}
                             onKeyPress={this.handleKeyPress} />
                     </div>
-                    {this.state.errorLogin &&
+                    {this.state.badPassword &&
                         <p className="bad-credential">Votre mot de passe est erroné.</p>
                     }
 
