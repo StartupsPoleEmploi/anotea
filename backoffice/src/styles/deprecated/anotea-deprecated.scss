@@ -215,13 +215,22 @@
     padding-left: 40px;
   }
 
-  .forgottenPassword .asked, .forgottenPassword .passwordLost {
+  .forgottenPassword .passwordLost {
     margin: auto;
     width: 50%;
   }
 
   .forgottenPassword .asked {
-    margin-top: 60px;
+    margin: auto;
+    background-color: #E3F1EC;
+    height: 56px;	
+    padding: 1rem;
+    border-radius: 5px;
+    color: #007E54;
+    font-size: 14px;
+    line-height: 24px;
+    font-family: Lato;
+    width: 25em;
   }
 
   .forgottenPassword .passwordLost {
