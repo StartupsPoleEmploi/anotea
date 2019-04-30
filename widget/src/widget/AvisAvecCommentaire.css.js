@@ -47,7 +47,7 @@ h2 {
     font-weight: normal;
 }
 
-.avis .titre {
+.avis .titre, .answer .titre {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
@@ -56,13 +56,13 @@ h2 {
     margin: 5px 0px;
 }
 
-.avis .texte {
+.avis .texte, .answer .texte {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
     line-height: 20px;
     font-weight: normal;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .pageIndicator {

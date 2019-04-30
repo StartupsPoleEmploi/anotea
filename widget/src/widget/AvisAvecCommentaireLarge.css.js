@@ -36,7 +36,7 @@ h2 {
 }
 
 .avis > * {
-    padding: 0px 5px;
+    padding: 0px 10px;
 }
 
 .avis .stars {
@@ -51,7 +51,7 @@ h2 {
     font-weight: normal;
 }
 
-.avis .titre {
+.avis .titre, .answer .titre {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
@@ -60,13 +60,13 @@ h2 {
     margin: 5px 0px;
 }
 
-.avis .texte {
+.avis .texte, .answer .texte {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
     line-height: 20px;
     font-weight: normal;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .pagination {
@@ -132,5 +132,11 @@ h2 {
     text-align: center;
     margin-top: 120px;
 }
+
+.answer {
+    border-left: 1px solid black;
+    margin-left: 10px;
+}
+
 `;
 export default style;

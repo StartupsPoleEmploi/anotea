@@ -82,12 +82,19 @@ class AvisAvecCommentaireLarge extends Component {
                                     <div className="avis">
                                         <div className="head-avis"><Stars value={avis.notes.global} /> <span className="pseudo">par {avis.pseudo ? avis.pseudo : 'un stagiaire'}</span></div>
 
-                                        {avis.commentaire.titre &&
+                                        { avis.commentaire.titre &&
                                             <h3 className="titre">{avis.commentaire.titre}</h3>
                                         }
 
-                                        {avis.commentaire.texte &&
+                                        { avis.commentaire.texte &&
                                             <div className="texte">{avis.commentaire.texte}</div>
+                                        }
+
+                                        { avis.commentaire.reponse && 
+                                            <div className="answer">
+                                                <div className="titre">Réponse de l'organisme</div>
+                                                <div className="texte">{ avis.commentaire.reponse }</div>
+                                            </div>
                                         }
 
                                         <div className="date">Session du {moment(avis.startDate).format('DD/MM/YYYY')}

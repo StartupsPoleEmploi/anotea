@@ -50,6 +50,14 @@ class AvisAvecCommentaire extends Component {
                                     { this.state.avis[this.state.page].commentaire.texte &&
                                         <div className="texte">{this.state.avis[this.state.page].commentaire.texte}</div>
                                     }
+
+                                    { this.state.avis.commentaire.reponse && 
+                                        <div className="answer">
+                                            <div className="titre">Réponse de l'organisme</div>
+                                            <div className="texte">{ this.state.avis.commentaire.reponse }</div>
+                                        </div>
+                                    }
+
                                 </div>
 
                                 <div className="date">Session du {moment(this.state.avis[this.state.page].startDate).format('DD/MM/YYYY')}
