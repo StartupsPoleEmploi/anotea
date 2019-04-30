@@ -36,6 +36,7 @@ export default class ForgottenPassword extends React.Component {
     }
 
     handleUsernameChange = evt => {
+        this.setState({ error: false });
         this.setState({ username: evt.target.value });
     };
 
