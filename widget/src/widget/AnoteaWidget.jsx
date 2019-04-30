@@ -93,7 +93,7 @@ class AnoteaWidget extends Component {
                         <div className="score">
                             <div className="average">
                                 <span className="rate">{this.state.average}</span>
-                                <span className="total">/5 <span class="fas fa-star active" style={{ width: '14px', height: '14px' }}></span></span>
+                                <span className="total">/5 <span className="fas fa-star active" style={{ width: '14px', height: '14px' }}></span></span>
                                 <span className="avis-count">{this.state.score.nb_avis} notes</span>
                             </div>
 
@@ -130,7 +130,7 @@ class AnoteaWidget extends Component {
                         <AvisAvecCommentaireLarge width={this.props.width - 260} avis={this.state.avis && this.state.avis.filter(avis => avis.commentaire)} />
                     </div>
                 }
-                <div class="spacer" style={{ clear: 'both' }}></div>
+                <div className="spacer" style={{ clear: 'both' }}></div>
             </div>
 
         );

@@ -108,7 +108,7 @@ class AvisAvecCommentaireLarge extends Component {
                                         <span className="pageIndicator current">{this.state.page + 1}</span>
                                         {
                                             this.getPagesAfter().map(page =>
-                                                <span className="pageIndicator" onClick={!isNaN(page) && this.goto.bind(this, page - 1)}>{page}</span>
+                                                <span className="pageIndicator" onClick={!isNaN(page) ? this.goto.bind(this, page - 1) : undefined}>{page}</span>
                                             )
                                         }
                                     </div>

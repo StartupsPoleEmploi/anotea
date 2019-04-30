@@ -57,7 +57,7 @@ class AnoteaTinyWidget extends Component {
                         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous"></link>
                         <div className="average">
                             <span className="rate">{this.state.average}</span>
-                            <span className="total">/5 <span class="fas fa-star active" style={{width: '14px', height: '14px'}}></span></span>
+                            <span className="total">/5 <span className="fas fa-star active" style={{width: '14px', height: '14px'}}></span></span>
                         </div>
                     
                         <div className="avis-count">
