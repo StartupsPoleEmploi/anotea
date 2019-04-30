@@ -51,7 +51,7 @@ class AvisAvecCommentaire extends Component {
                                         <div className="texte">{this.state.avis[this.state.page].commentaire.texte}</div>
                                     }
 
-                                    { this.state.avis.commentaire.reponse && 
+                                    { this.state.avis[this.state.page].commentaire.reponse && 
                                         <div className="answer">
                                             <div className="titre">Réponse de l'organisme</div>
                                             <div className="texte">{ this.state.avis.commentaire.reponse }</div>
