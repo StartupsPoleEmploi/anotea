@@ -299,7 +299,7 @@
 
   .loginForm .block .form-control, .forgottenPassword .block .form-control {
     border-radius: 5px;
-    margin: 10px 16px 10px 16px;
+    margin: 10px 16px 0px 16px;
     width: 19.875em;
     height: 40px;
     background-color: #f4f4f5;
@@ -341,6 +341,15 @@
     background-color: #EBEDF6;
     cursor: pointer;
     text-transform: uppercase;
+  }
+
+  .bad-credential {
+    color: #DD3433;
+    width: 19.875em;
+    height: 16px;
+    font-size: 12px;
+    margin-left: 16px;
+    font-family: Lato;
   }
 
   .main {

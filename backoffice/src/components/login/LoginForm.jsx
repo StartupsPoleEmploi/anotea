@@ -30,10 +30,12 @@ export default class LoginForm extends React.Component {
     }
 
     handleLoginUsernameChange = evt => {
+        this.setState({ errorLogin: false });
         this.setState({ username: evt.target.value });
     }
 
     handleLoginPasswordChange = evt => {
+        this.setState({ errorLogin: false });
         this.setState({ password: evt.target.value });
     }
 
@@ -55,11 +57,6 @@ export default class LoginForm extends React.Component {
                 <h1>Votre espace Anotéa</h1>
                 <div className="block">
                     <h4>Connexion</h4>
-                    {this.state.errorLogin &&
-                        <div className="alert alert-danger">Vos identifiants ne sont pas reconnus, merci de
-                            recommencer.
-                        </div>
-                    }
 
                     <div className="identifiant">
                         <h1>Identifiant</h1>
@@ -71,6 +68,9 @@ export default class LoginForm extends React.Component {
                             onChange={this.handleLoginUsernameChange}
                             onKeyPress={this.handleKeyPress} />
                     </div>
+                    {this.state.errorLogin &&
+                        <p className="bad-credential">Votre identifiant est incorrect.</p>
+                    }
 
                     <div className="mot-de-passe">
                         <h1>Mot de passe</h1>
@@ -82,6 +82,9 @@ export default class LoginForm extends React.Component {
                             onChange={this.handleLoginPasswordChange}
                             onKeyPress={this.handleKeyPress} />
                     </div>
+                    {this.state.errorLogin &&
+                        <p className="bad-credential">Votre mot de passe est erroné.</p>
+                    }
 
                     <div className="loginHelp">
                         <button type="button" className="btn btn-link" onClick={this.handleForgottenPassword}>Mot de passe
