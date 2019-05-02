@@ -91,9 +91,6 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
 
         try {
             let account = await db.collection('accounts').findOne({ courriel: identifier });
-            if (!account) {
-                return res.status(200).send({ 'message': 'Not found' });
-            }
             if (account !== null && await checkPassword(password, account.passwordHash, configuration)) {
                 await rehashPassword(account, password);
                 token = await handleAccount(req, res, account);

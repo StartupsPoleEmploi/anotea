@@ -16,7 +16,6 @@ export default class LoginForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            badPassword: false,
             errorLogin: false,
             username: '',
             password: ''
@@ -48,12 +47,8 @@ export default class LoginForm extends React.Component {
             this.setState({ errorLogin: false, loggedIn: true });
             this.handleLoggedIn(result);
         })
-        .catch(e => {
-            if (e.message === 'Invalid token specified') {
-                this.setState({ errorLogin: true });
-            } else {
-                this.setState({ badPassword: true });
-            }
+        .catch(() => {
+            this.setState({ errorLogin: true });
         });
     }
 
@@ -98,7 +93,7 @@ export default class LoginForm extends React.Component {
                             onChange={this.handleLoginPasswordChange}
                             onKeyPress={this.handleKeyPress} />
                     </div>
-                    {this.state.badPassword &&
+                    {this.state.errorLogin &&
                         <p className="bad-credential">Votre mot de passe est erroné.</p>
                     }
 
