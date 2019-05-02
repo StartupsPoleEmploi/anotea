@@ -7,6 +7,7 @@ import {
     checkIfPasswordTokenExists
 } from '../backoffice/account/service/forgottenPasswordService';
 import { isPasswordStrongEnough, checkConfirm, passwordIsOK } from '../../utils/validation';
+import './ForgottenPassword.scss';
 
 export default class ForgottenPassword extends React.Component {
 
@@ -98,7 +99,7 @@ export default class ForgottenPassword extends React.Component {
                         </div>
 
                         <p className="clarification">L&apos;adresse e-mail est celle sur laquelle vous avez reçu la
-                            proposition de création de compte Anotéa, si vous ne la connaissez pas.</p>
+                            proposition de création de compte Anotéa, si vous ne la connaissez pas, contactez nous.</p>
 
                         <div className="wrapper">
                             <span className="group-btn">
