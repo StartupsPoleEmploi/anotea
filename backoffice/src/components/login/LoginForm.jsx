@@ -59,7 +59,7 @@ export default class LoginForm extends React.Component {
         }
 
         let inputPasswordClassName = 'form-control input-sm';
-        if (this.state.badPassword) {
+        if (this.state.errorLogin) {
             inputPasswordClassName = 'password-error';
         }
 
