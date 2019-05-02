@@ -36,7 +36,7 @@ export default class LoginForm extends React.Component {
     }
 
     handleLoginPasswordChange = evt => {
-        this.setState({ badPassword: false });
+        this.setState({ errorLogin: false });
         this.setState({ password: evt.target.value });
     }
 
