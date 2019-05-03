@@ -27,7 +27,7 @@ export default class DeprecatedHeader extends React.PureComponent {
                         props.profile === 'financeur' ?
                             <h1>Espace
                                 Financeur {this.getLabel(props.codeFinanceur)} {this.getRegionName(props.codeRegion)}</h1> :
-                            null
+                            ''
                     }
                 </NavLink>
                 {props.profile === 'organisme' &&
