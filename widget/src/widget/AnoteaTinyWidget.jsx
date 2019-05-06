@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getOrganismeStats, getOrganismeAvis, getActionsFormationStats } from '../lib/avisService';
+import { getOrganismeStats, getOrganismeAvis, getActionsFormationStats, getSessionsFormationStats, getFormationsStats } from '../lib/avisService';
 
 import styles from './anoteaTinyWidget.css.js';
 
@@ -35,6 +35,22 @@ class AnoteaTinyWidget extends Component {
         if (result.actions.length > 0) {
             this.setState({ score: result.actions[0].score, avis: result.actions[0].avis, average: this.getAverage(result.actions[0].avis) });
         }
+    }
+
+    loadSessionsFormationInfo = async id => {
+        let result = await getSessionsFormationStats(id);
+
+        if (result.sessions.length > 0) {
+            this.setState({ score: result.sessions[0].score, avis: result.sessions[0].avis, average: this.getAverage(result.sessions[0].avis) });
+        }
+    }
+
+    loadFormationInfo = async id => {
+        let result = await getFormationsStats(id);
+
+        if (result.formations.length > 0) {
+            this.setState({ score: result.formations[0].score, avis: result.formations[0].avis, average: this.getAverage(result.formations[0].avis) });
+        } 
     }
 
     getAverage = avis => {

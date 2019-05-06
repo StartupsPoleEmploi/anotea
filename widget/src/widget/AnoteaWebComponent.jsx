@@ -53,7 +53,9 @@ class WidgetAnotea extends HTMLElement {
             ReactDOM.render(<AnoteaTinyWidget
                 niveau={this.getAttribute('niveau')}
                 siret={this.getAttribute('siret')}
-                numeroAction={this.getAttribute('numeroAction')} />, root);
+                numeroAction={this.getAttribute('numeroAction')}
+                numeroSession={this.getAttribute('numeroSession')}
+                numeroFormation={this.getAttribute('numeroFormation')} />, root);
         } else {
             this.renderWidget();
         }
