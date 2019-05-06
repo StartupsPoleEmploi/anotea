@@ -29,7 +29,7 @@ services:
     depends_on:
       - backend
 
-  questionnaire:
+  widget:
     image: anotea_widget
     container_name: anotea_widget
     build:
