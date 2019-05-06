@@ -2,6 +2,7 @@ const style = `
 .anotea-tiny-widget {
     width: fit-content;
     text-align: center;
+    height: 70px;
 }
 .fas.fa-star.active {
     color: #F26930;
