@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getOrganismeStats, getOrganismeAvis, getActionFormationStats, getSessionsFormationStats, getFormationStats } from '../lib/avisService';
+import { getOrganismeStats, getOrganismeAvis, getActionsFormationStats, getSessionsFormationStats, getFormationsStats } from '../lib/avisService';
 
 import AvisAvecCommentaire from './AvisAvecCommentaire';
 import AvisAvecCommentaireLarge from './AvisAvecCommentaireLarge';
@@ -26,12 +26,13 @@ class AnoteaWidget extends Component {
         this.state = { niveau: props.niveau, siret: props.siret, numeroAction: props.numeroAction, numeroSession: props.numeroSession, numeroFormation: props.numeroFormation }
         if (this.state.niveau === 'organisme') {
             this.loadOrganismeInfo(this.state.siret);
-        } else if (this.state.niveau === 'organisme')  {
+        } else if (this.state.niveau === 'actionFormation')  {
             this.loadActionFormationInfo(this.state.numeroAction);
-        } else if (this.state.niveau === 'sessions')  {
+        } else if (this.state.niveau === 'sessionsFormation')  {
+            console.log("coucou", this.state.numeroSession)
             this.loadSessionsFormationInfo(this.state.numeroSession);
         } else if (this.state.niveau === 'formation')  {
-            this.getFormationStats(this.state.numeroFormation);
+            this.loadFormationInfo(this.state.numeroFormation);
         }
     }
 
@@ -54,7 +55,7 @@ class AnoteaWidget extends Component {
     }
 
     loadActionFormationInfo = async numeroAction => {
-        let result = await getActionFormationStats(numeroAction);
+        let result = await getActionsFormationStats(numeroAction);
 
         if (result.actions.length > 0) {
             this.setState({ score: result.actions[0].score, avis: result.actions[0].avis, average: this.getAverage(result.actions[0].avis) });
@@ -70,11 +71,11 @@ class AnoteaWidget extends Component {
     }
 
     loadFormationInfo = async id => {
-        let result = await getSessionsFormationStats(id);
+        let result = await getFormationsStats(id);
 
-        if (result.sessions.length > 0) {
-            this.setState({ score: result.sessions[0].score, avis: result.sessions[0].avis, average: this.getAverage(result.sessions[0].avis) });
-        }
+        if (result.formations.length > 0) {
+            this.setState({ score: result.formations[0].score, avis: result.formations[0].avis, average: this.getAverage(result.formations[0].avis) });
+        } 
     }
 
     getStyle = () => {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-import { getOrganismeStats, getOrganismeAvis } from '../lib/avisService';
-import { getActionFormationStats } from '../lib/avisService';
+import { getOrganismeStats, getOrganismeAvis, getActionsFormationStats } from '../lib/avisService';
 
 import styles from './anoteaTinyWidget.css.js';
 
@@ -31,7 +30,7 @@ class AnoteaTinyWidget extends Component {
     }
 
     loadActionFormationInfo = async numeroAction => {
-        let result = await getActionFormationStats(numeroAction);
+        let result = await getActionsFormationStats(numeroAction);
 
         if (result.actions.length > 0) {
             this.setState({ score: result.actions[0].score, avis: result.actions[0].avis, average: this.getAverage(result.actions[0].avis) });

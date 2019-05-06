@@ -78,8 +78,8 @@ class AvisAvecCommentaireLarge extends Component {
 
                         { this.state.avis[this.state.page] &&
                             <div>
-                                {this.state.avis.slice(this.state.page * PAGE_SIZE, this.state.page * PAGE_SIZE + PAGE_SIZE).map(avis =>
-                                    <div className="avis">
+                                {this.state.avis.slice(this.state.page * PAGE_SIZE, this.state.page * PAGE_SIZE + PAGE_SIZE).map((avis, key) =>
+                                    <div className="avis" key={key}>
                                         <div className="head-avis"><Stars value={avis.notes.global} /> <span className="pseudo">par {avis.pseudo ? avis.pseudo : 'un stagiaire'}</span></div>
 
                                         { avis.commentaire.titre &&
@@ -114,8 +114,8 @@ class AvisAvecCommentaireLarge extends Component {
                                         }
                                         <span className="pageIndicator current">{this.state.page + 1}</span>
                                         {
-                                            this.getPagesAfter().map(page =>
-                                                <span className="pageIndicator" onClick={!isNaN(page) ? this.goto.bind(this, page - 1) : undefined}>{page}</span>
+                                            this.getPagesAfter().map((page, key) =>
+                                                <span className="pageIndicator" key={key} onClick={!isNaN(page) ? this.goto.bind(this, page - 1) : undefined}>{page}</span>
                                             )
                                         }
                                     </div>

@@ -12,7 +12,7 @@ class WidgetAnotea extends HTMLElement {
         if(layout === 'tiny') {
             ReactDOM.render(<AnoteaTinyWidget width={this.getAttribute('width')} niveau={this.getAttribute('niveau')} siret={this.getAttribute('siret')} numeroAction={this.getAttribute('numeroAction')} />, shadowRoot);
         } else {
-            ReactDOM.render(<AnoteaWidget layout={layout} niveau={this.getAttribute('niveau')} siret={this.getAttribute('siret')} numeroAction={this.getAttribute('numeroAction')} />, shadowRoot);
+            ReactDOM.render(<AnoteaWidget layout={layout} niveau={this.getAttribute('niveau')} siret={this.getAttribute('siret')} numeroAction={this.getAttribute('numeroAction')} numeroSession={this.getAttribute('numeroSession')} numeroFormation={this.getAttribute('numeroFormation')} />, shadowRoot);
         }
     }
 }
