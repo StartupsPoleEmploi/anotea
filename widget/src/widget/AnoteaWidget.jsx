@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getOrganismeStats, getOrganismeAvis, getActionFormationStats, getSessionsFormationStats } from '../lib/avisService';
+import { getOrganismeStats, getOrganismeAvis, getActionFormationStats, getSessionsFormationStats, getFormationStats } from '../lib/avisService';
 
 import AvisAvecCommentaire from './AvisAvecCommentaire';
 import AvisAvecCommentaireLarge from './AvisAvecCommentaireLarge';
@@ -23,13 +23,15 @@ class AnoteaWidget extends Component {
 
     constructor(props) {
         super();
-        this.state = { niveau: props.niveau, siret: props.siret, numeroAction: props.numeroAction }
+        this.state = { niveau: props.niveau, siret: props.siret, numeroAction: props.numeroAction, numeroSession: props.numeroSession, numeroFormation: props.numeroFormation }
         if (this.state.niveau === 'organisme') {
             this.loadOrganismeInfo(this.state.siret);
         } else if (this.state.niveau === 'organisme')  {
             this.loadActionFormationInfo(this.state.numeroAction);
         } else if (this.state.niveau === 'sessions')  {
-            this.loadSessionsFormationInfo(this.state.numeroAction);
+            this.loadSessionsFormationInfo(this.state.numeroSession);
+        } else if (this.state.niveau === 'formation')  {
+            this.getFormationStats(this.state.numeroFormation);
         }
     }
 
@@ -60,6 +62,14 @@ class AnoteaWidget extends Component {
     }
 
     loadSessionsFormationInfo = async id => {
+        let result = await getSessionsFormationStats(id);
+
+        if (result.sessions.length > 0) {
+            this.setState({ score: result.sessions[0].score, avis: result.sessions[0].avis, average: this.getAverage(result.sessions[0].avis) });
+        }
+    }
+
+    loadFormationInfo = async id => {
         let result = await getSessionsFormationStats(id);
 
         if (result.sessions.length > 0) {
