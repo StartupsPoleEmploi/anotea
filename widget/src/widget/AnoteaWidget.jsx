@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-import { getOrganismeStats, getOrganismeAvis } from '../lib/avisService';
-import { getActionFormationStats } from '../lib/avisService';
+import { getOrganismeStats, getOrganismeAvis, getActionFormationStats, getSessionsFormationStats } from '../lib/avisService';
 
 import AvisAvecCommentaire from './AvisAvecCommentaire';
 import AvisAvecCommentaireLarge from './AvisAvecCommentaireLarge';
@@ -27,8 +26,10 @@ class AnoteaWidget extends Component {
         this.state = { niveau: props.niveau, siret: props.siret, numeroAction: props.numeroAction }
         if (this.state.niveau === 'organisme') {
             this.loadOrganismeInfo(this.state.siret);
-        } else {
+        } else if (this.state.niveau === 'organisme')  {
             this.loadActionFormationInfo(this.state.numeroAction);
+        } else if (this.state.niveau === 'sessions')  {
+            this.loadSessionsFormationInfo(this.state.numeroAction);
         }
     }
 
@@ -55,6 +56,14 @@ class AnoteaWidget extends Component {
 
         if (result.actions.length > 0) {
             this.setState({ score: result.actions[0].score, avis: result.actions[0].avis, average: this.getAverage(result.actions[0].avis) });
+        }
+    }
+
+    loadSessionsFormationInfo = async id => {
+        let result = await getSessionsFormationStats(id);
+
+        if (result.sessions.length > 0) {
+            this.setState({ score: result.sessions[0].score, avis: result.sessions[0].avis, average: this.getAverage(result.sessions[0].avis) });
         }
     }
 
