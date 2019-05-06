@@ -29,7 +29,6 @@ class AnoteaWidget extends Component {
         } else if (this.state.niveau === 'actionFormation')  {
             this.loadActionFormationInfo(this.state.numeroAction);
         } else if (this.state.niveau === 'sessionsFormation')  {
-            console.log("coucou", this.state.numeroSession)
             this.loadSessionsFormationInfo(this.state.numeroSession);
         } else if (this.state.niveau === 'formation')  {
             this.loadFormationInfo(this.state.numeroFormation);
