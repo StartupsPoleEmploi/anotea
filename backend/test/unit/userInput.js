@@ -24,6 +24,6 @@ describe('Sanitize user input', function() {
     });
 
     it('should remove emoj', () => {
-        assert.equal(sanitize('trop rigolo 😂😂😂'), 'trop rigolo ');
+        assert.equal(sanitize('trop rigolo 😂😂😂✌✌'), 'trop rigolo ');
     });
 });
