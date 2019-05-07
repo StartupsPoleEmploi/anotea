@@ -9,7 +9,7 @@ const synchronizeOrganismesWithAccounts = require('./synchronizeOrganismesWithAc
 const computeOrganismesScore = require('./computeOrganismesScore');
 
 cli.description('Import accounts from Intercarif and Kairos')
-.option('-i, --import [import]', 'The CSV file to import')
+.option('--file [file]', 'The CSV file to import')
 .parse(process.argv);
 
 execute(async ({ logger, db, regions }) => {
@@ -19,9 +19,9 @@ execute(async ({ logger, db, regions }) => {
     let imported = {};
     imported.intercarif = await generateOrganismesFromIntercarif(db, logger);
 
-    if (cli.import) {
+    if (cli.file) {
         logger.info('Generating organismes data from kairos...');
-        imported.kairos = await generateOrganismesFromKairos(db, logger, cli.import);
+        imported.kairos = await generateOrganismesFromKairos(db, logger, cli.file);
     }
 
     logger.info('Synchronizing organismes with existing ones...');
