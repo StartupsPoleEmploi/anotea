@@ -83,6 +83,7 @@ class AnoteaWidget extends Component {
         return (
 
             <div className={`anotea-widget ${this.props.layout === 'large' ? 'large' : ''}`} style={this.getStyle()}>
+                <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous"></link>
                 <style>{styles}</style>
                 {this.state.score &&
                     <div className="col1">
