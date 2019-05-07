@@ -33,13 +33,19 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
             delay: cli.delay,
         });
 
-        sendSlackNotification(cli.slackWebhookUrl, {
-            text: `${results.sent} emails stagiaires envoyés pour la campagne ${cli.campaign || 'tous'} ` +
-                `(Nombre d'erreurs : ${results.error})`,
+        sendSlackNotification({
+            webhookUrl: cli.slackWebhookUrl,
+            message: {
+                text: `${results.sent} emails stagiaires envoyés pour la campagne ${cli.campaign || 'tous'} ` +
+                    `(Nombre d'erreurs : ${results.error})`,
+            },
         });
     } catch (e) {
-        sendSlackNotification(cli.slackWebhookUrl, {
-            text: `Les emails stagiaires pour la campagne ${cli.campaign || 'tous'} n'ont pas pu être envoyés`,
+        sendSlackNotification({
+            webhookUrl: cli.slackWebhookUrl,
+            message: {
+                text: `Les emails stagiaires pour la campagne ${cli.campaign || 'tous'} n'ont pas pu être envoyés`,
+            },
         });
         throw e;
     }
