@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getOrganismeStats, getOrganismeAvis, getActionsFormationStats, getSessionsFormationStats, getFormationsStats } from '../lib/avisService';
+import { getOrganismesFormateurs, getAvis, getActions, getFormations } from '../lib/avisService';
 
 import AvisAvecCommentaire from './AvisAvecCommentaire';
 import AvisAvecCommentaireLarge from './AvisAvecCommentaireLarge';
@@ -13,7 +13,7 @@ import styles from './anoteaWidget.css.js';
 class AnoteaWidget extends Component {
 
     state = {
-        niveau: null,
+        type: null,
         siret: null,
         numeroAction: null,
         score: null,
@@ -23,57 +23,41 @@ class AnoteaWidget extends Component {
 
     constructor(props) {
         super();
-        this.state = { niveau: props.niveau, siret: props.siret, numeroAction: props.numeroAction, numeroSession: props.numeroSession, numeroFormation: props.numeroFormation }
-        if (this.state.niveau === 'organisme') {
+        this.state = { type: props.type, siret: props.siret, numeroAction: props.numeroAction, numeroFormation: props.numeroFormation }
+        if (this.state.type === 'organisme') {
             this.loadOrganismeInfo(this.state.siret);
-        } else if (this.state.niveau === 'actionFormation')  {
+        } else if (this.state.type === 'action')  {
             this.loadActionFormationInfo(this.state.numeroAction);
-        } else if (this.state.niveau === 'sessionsFormation')  {
-            this.loadSessionsFormationInfo(this.state.numeroSession);
-        } else if (this.state.niveau === 'formation')  {
+        } else if (this.state.type === 'formation')  {
             this.loadFormationInfo(this.state.numeroFormation);
         }
     }
 
-    getAverage = avis => {
-        let sum = 0;
-        avis.forEach(avis => {
-            sum += avis.notes.global;
-        })
-        let average = Math.round(sum * 10 / avis.length) / 10;
-
-        return `${average}`.replace('.', ',');
-    }
+    getAverage = note => `${note}`.replace('.', ',');
 
     loadOrganismeInfo = async siret => {
-        let stats = await getOrganismeStats(siret);
-        let avis = await getOrganismeAvis(siret);
+        let [stats, avis] = await Promise.all([
+            getOrganismesFormateurs(siret),
+            getAvis(siret)
+        ]);
         if (stats.organismes_formateurs.length > 0) {
-            this.setState({ score: stats.organismes_formateurs[0].score, avis: avis.avis, average: this.getAverage(avis.avis) });
+            this.setState({ score: stats.organismes_formateurs[0].score, avis: avis.avis, average: this.getAverage(stats.organismes_formateurs[0].score.notes.global) });
         }
     }
 
     loadActionFormationInfo = async numeroAction => {
-        let result = await getActionsFormationStats(numeroAction);
+        let result = await getActions(numeroAction);
 
         if (result.actions.length > 0) {
-            this.setState({ score: result.actions[0].score, avis: result.actions[0].avis, average: this.getAverage(result.actions[0].avis) });
-        }
-    }
-
-    loadSessionsFormationInfo = async id => {
-        let result = await getSessionsFormationStats(id);
-
-        if (result.sessions.length > 0) {
-            this.setState({ score: result.sessions[0].score, avis: result.sessions[0].avis, average: this.getAverage(result.sessions[0].avis) });
+            this.setState({ score: result.actions[0].score, avis: result.actions[0].avis, average: this.getAverage(result.actions[0].score.notes.global) });
         }
     }
 
     loadFormationInfo = async id => {
-        let result = await getFormationsStats(id);
+        let result = await getFormations(id);
 
         if (result.formations.length > 0) {
-            this.setState({ score: result.formations[0].score, avis: result.formations[0].avis, average: this.getAverage(result.formations[0].avis) });
+            this.setState({ score: result.formations[0].score, avis: result.formations[0].avis, average: this.getAverage(result.formations[0].score.notes.global) });
         } 
     }
 

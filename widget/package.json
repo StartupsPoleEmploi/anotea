@@ -15,8 +15,7 @@
   "homepage": "https://anotea.pole-emploi.fr/widget",
   "dependencies": {
     "@webcomponents/webcomponentsjs": "2.2.7",
-    "i": "^0.3.6",
-    "moment": "^2.24.0",
+    "moment": "2.24.0",
     "npm": "^6.9.0",
     "react": "16.8.5",
     "react-dom": "16.8.5",
@@ -49,8 +48,5 @@
       "from": "node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js",
       "to": "public/vendor/webcomponents-bundle.js"
     }
-  ],
-  "devDependencies": {
-    "@fortawesome/fontawesome-free": "5.7.0"
-  }
+  ]
 }

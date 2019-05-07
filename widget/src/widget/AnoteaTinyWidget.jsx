@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
-import { getOrganismeStats, getOrganismeAvis, getActionsFormationStats, getSessionsFormationStats, getFormationsStats } from '../lib/avisService';
+import { getOrganismesFormateurs, getAvis, getActions, getFormations } from '../lib/avisService';
 
 import styles from './anoteaTinyWidget.css.js';
+
+import '../css/fa.css';
 
 class AnoteaTinyWidget extends Component {
 
@@ -14,62 +16,48 @@ class AnoteaTinyWidget extends Component {
 
     constructor(props) {
         super();
-        if (props.niveau === 'organisme') {
+        if (props.type === 'organisme') {
             this.loadOrganismeInfo(props.siret);
         } else {
             this.loadActionFormationInfo(props.numeroAction);
         }
     }
 
+    getAverage = note => `${note}`.replace('.', ',');
+
     loadOrganismeInfo = async siret => {
-        let stats = await getOrganismeStats(siret);
-        let avis = await getOrganismeAvis(siret);
+        let [stats, avis] = await Promise.all([
+            getOrganismesFormateurs(siret),
+            getAvis(siret)
+        ]);
         if (stats.organismes_formateurs.length > 0) {
-            this.setState({ score: stats.organismes_formateurs[0].score, avis: avis.avis, average: this.getAverage(avis.avis) });
+            this.setState({ score: stats.organismes_formateurs[0].score, avis: avis.avis, average: this.getAverage(stats.organismes_formateurs[0].score.notes.global) });
         }
     }
 
     loadActionFormationInfo = async numeroAction => {
-        let result = await getActionsFormationStats(numeroAction);
+        let result = await getActions(numeroAction);
 
         if (result.actions.length > 0) {
-            this.setState({ score: result.actions[0].score, avis: result.actions[0].avis, average: this.getAverage(result.actions[0].avis) });
-        }
-    }
-
-    loadSessionsFormationInfo = async id => {
-        let result = await getSessionsFormationStats(id);
-
-        if (result.sessions.length > 0) {
-            this.setState({ score: result.sessions[0].score, avis: result.sessions[0].avis, average: this.getAverage(result.sessions[0].avis) });
+            this.setState({ score: result.actions[0].score, avis: result.actions[0].avis, average: this.getAverage(result.actions[0].score.notes.global) });
         }
     }
 
     loadFormationInfo = async id => {
-        let result = await getFormationsStats(id);
+        let result = await getFormations(id);
 
         if (result.formations.length > 0) {
-            this.setState({ score: result.formations[0].score, avis: result.formations[0].avis, average: this.getAverage(result.formations[0].avis) });
+            this.setState({ score: result.formations[0].score, avis: result.formations[0].avis, average: this.getAverage(result.formations[0].score.notes.global) });
         } 
-    }
-
-    getAverage = avis => {
-        let sum = 0;
-        avis.forEach(avis => {
-            sum += avis.notes.global;
-        })
-        let average = Math.round(sum * 10 / avis.length) / 10;
-
-        return `${average}`.replace('.', ',');
     }
 
     render() {
         return (
             <div className='anotea-tiny-widget'>
+                <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous"></link>
                 <style>{styles}</style>
                 { this.state.score &&
                     <div>
-                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous"></link>
                         <div className="average">
                             <span className="rate">{this.state.average}</span>
                             <span className="total">/5 <span className="fas fa-star active" style={{width: '14px', height: '14px'}}></span></span>

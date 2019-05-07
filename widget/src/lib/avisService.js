@@ -1,11 +1,9 @@
 import { _get } from '../utils/http-client';
 
-export const getOrganismeStats = siret => _get(`/organismes-formateurs?siret=${siret}`);
+export const getOrganismesFormateurs = siret => _get(`/organismes-formateurs?siret=${siret}&notes_decimales=true`);
 
-export const getOrganismeAvis = siret => _get(`/avis?organisme_formateur=${siret}`);
+export const getAvis = siret => _get(`/avis?organisme_formateur=${siret}&notes_decimales=true`);
 
-export const getActionsFormationStats = numeroAction => _get(`/actions?numero=${numeroAction}`);
+export const getActions = numeroAction => _get(`/actions?numero=${numeroAction}&notes_decimales=true`);
 
-export const getSessionsFormationStats = id => _get(`/sessions?id=${id}`);
-
-export const getFormationsStats = id => _get(`/formations?id=${id}`);
+export const getFormations = id => _get(`/formations?id=${id}&notes_decimales=true`);

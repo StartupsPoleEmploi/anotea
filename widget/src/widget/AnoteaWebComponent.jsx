@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import AnoteaWidget from './AnoteaWidget';
 import AnoteaTinyWidget from './AnoteaTinyWidget';
 
+import '../css/fa.css';
+
+
 class WidgetAnotea extends HTMLElement {
 
     node = null;
@@ -11,7 +14,6 @@ class WidgetAnotea extends HTMLElement {
 
     createRoot = () => {
         if (this.node !== null) {
-            console.log("remove")
             this.node.remove();
         }
         this.node = document.createElement('div');
@@ -26,7 +28,7 @@ class WidgetAnotea extends HTMLElement {
         ReactDOM.render(<AnoteaWidget
             width={this.getAttribute('width')}
             layout={layout}
-            niveau={this.getAttribute('niveau')}
+            type={this.getAttribute('type')}
             siret={this.getAttribute('siret')}
             numeroAction={this.getAttribute('numeroAction')}
             numeroSession={this.getAttribute('numeroSession')}
@@ -51,7 +53,7 @@ class WidgetAnotea extends HTMLElement {
         if(this.layout === 'tiny') {
             let root = this.createRoot();
             ReactDOM.render(<AnoteaTinyWidget
-                niveau={this.getAttribute('niveau')}
+                type={this.getAttribute('type')}
                 siret={this.getAttribute('siret')}
                 numeroAction={this.getAttribute('numeroAction')}
                 numeroSession={this.getAttribute('numeroSession')}
@@ -62,4 +64,4 @@ class WidgetAnotea extends HTMLElement {
     }
 }
 
-customElements.define('widget-anotea', WidgetAnotea);
+customElements.define('anotea-widget', WidgetAnotea);

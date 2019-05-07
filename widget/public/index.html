@@ -1,70 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="description" content="Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web." />
+
     <title>Anotea - Documentation Widget</title>
+
     <script src="%PUBLIC_URL%/vendor/webcomponents-bundle.js"></script>
     <script src="%PUBLIC_URL%/vendor/custom-elements-es5-adapter.js"></script>
-    <script>if (!window.customElements) { document.write("erreur: navigateur non supporté"); } </script>
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous">
-    </link>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
         <link rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-light.min.css">
+    
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+
     <script>hljs.initHighlightingOnLoad();</script>
-    <style>
-        body {
-            padding: 0px;
-            font-family: Lato;
-        }    
-        .alert, .table {
-            width: fit-content;
-        }
-        code, pre {
-            width: fit-content;
-            height: fit-content;
-            margin: 0;
-        }
-        header {
-            background-color: #384eaa;
-            height: 150px;
-        }
-
-        header .logo {
-            margin: 10px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 60px;
-            color: #fff;
-            font-size: 32px;
-            font-weight: 900;
-            line-height: 35px;
-        }
-
-        h2 {
-            margin: 1em 0em 0.5em 0em;
-        }
-
-        h3 {
-            font-size: 1.5em;
-            font-weight: 300;
-        }
-
-        section {
-            margin: 50px 200px 50px 200px;
-        }
-    </style>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -77,7 +37,7 @@
         <h2>Documentation Widget</h2>
 
         <p>
-            Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web.
+            Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web. Il a été développé en tant que composant HTML5 (webcomponents) et supporte donc tout les navigateurs modernes et Internet Explorer dans une version 11 minimum.
         </p>
 
         <div class="alert alert-success" role="alert">
@@ -89,28 +49,28 @@
 
         <h3>Version large</h3>
 
-        <widget-anotea class="widgetAnotea" niveau="organisme" siret="18720092800112" layout="large"></widget-anotea>
+        <anotea-widget  class="widgetAnotea" type="organisme" siret="18720092800112" layout="large"></anotea-widget >
 
         <h3>Version étroite</h3>
 
-        <widget-anotea class="widgetAnotea" niveau="organisme" siret="13001727000567" layout="small"></widget-anotea>
+        <anotea-widget  class="widgetAnotea" type="organisme" siret="13001727000567" layout="small"></anotea-widget >
 
         <h3>Version réduite</h3>
 
-        <widget-anotea class="tinyWidgetAnotea" niveau="organisme" siret="18720092800112" layout="tiny"></widget-anotea>
+        <anotea-widget  class="tinyWidgetAnotea" type="organisme" siret="18720092800112" layout="tiny"></anotea-widget >
 
         <h2>Code d'intégration</h2>
 
         <p>Positionner le code suivant à l'emplacement où vous souhaiter afficher le widget dans votre page HTML:</p>
 
         <pre>
-            <code class="html">&lt;widget-anotea class=&quot;widgetAnotea&quot; niveau=&quot;organisme&quot; siret=&quot;18720092800112&quot; layout=&quot;large&quot;&gt;&lt;/widget-anotea&gt;</code>
+            <code class="html">&lt;anotea-widget  class=&quot;widgetAnotea&quot; type=&quot;organisme&quot; siret=&quot;18720092800112&quot; layout=&quot;large&quot;&gt;&lt;/widget-anotea&gt;</code>
         </pre>
 
         <p>En bas de votre page HTML, insérez les balises suivantes :</p>
 
         <pre>
-            <code class="html">&lt;script src=&quot;https://anotea.pole-emploi.fr/widget//vendor/webcomponents-bundle.js&quot;&gt;&lt;/script&gt;<br />&lt;script src=&quot;https://anotea.pole-emploi.fr/widget/vendor/custom-elements-es5-adapter.js&quot;&gt;&lt;/script&gt;<br />&lt;link rel=&quot;stylesheet&quot; href=&quot;https://use.fontawesome.com/releases/v5.8.1/css/all.css&quot; integrity=&quot;sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf&quot; crossOrigin=&quot;anonymous&quot;&gt;&lt;/link&gt;</code>
+            <code class="html">&lt;script src=&quot;https://anotea.pole-emploi.fr/widget/anotea-widget.js&quot;&gt;&lt;/script&gt;</code>
         </pre>
 
         <h2>Paramétrage de l'affichage</h2>
@@ -157,20 +117,20 @@
             </thead>
             <tbody>
                 <tr>
-                    <th scope="row">niveau</th>
-                    <td>Le niveau sur lequel afficher les avis. Choix possible : <code>organisme</code>, <code>actionFormation</code>, <code>formation</code></td>
+                    <th scope="row">type</th>
+                    <td>Le type de donnée sur lequel afficher les avis. Choix possible : <code>organisme</code>, <code>action</code>, <code>formation</code></td>
                 </tr>
                 <tr>
                     <th scope="row">siret</th>
-                    <td>Obligatoire si le niveau est <code>organisme</code>.</td>
+                    <td>Obligatoire si le type est <code>organisme</code>.</td>
                 </tr>
                 <tr>
                     <th scope="row">numeroAction</th>
-                    <td>Obligatoire si le niveau est <code>actionFormation</code>.</td>
+                    <td>Obligatoire si le type est <code>action</code>.</td>
                 </tr>
                 <tr>
                     <th scope="row">numeroFormation</th>
-                    <td>Obligatoire si le niveau est <code>formation</code>.</td>
+                    <td>Obligatoire si le type est <code>formation</code>.</td>
                 </tr>
             </tbody>
         </table>
