@@ -69,9 +69,9 @@ h1.title {
 	color: rgba(36, 48, 58, 0.6);
 	font-size: 0.8em;
 	line-height: 20px;
-    left: 180px;
+    left: 80px;
     line-height: 46px;
-    position: absolute;
+    position: relative;
     font-weight: normal;
 }
 
