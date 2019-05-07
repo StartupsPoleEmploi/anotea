@@ -4,8 +4,6 @@ import { getOrganismesFormateurs, getAvis, getActions, getFormations } from '../
 
 import styles from './anoteaTinyWidget.css.js';
 
-import '../css/fa.css';
-
 class AnoteaTinyWidget extends Component {
 
     state = {

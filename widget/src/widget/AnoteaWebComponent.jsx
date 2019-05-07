@@ -3,9 +3,6 @@ import ReactDOM from 'react-dom';
 import AnoteaWidget from './AnoteaWidget';
 import AnoteaTinyWidget from './AnoteaTinyWidget';
 
-import '../css/fa.css';
-
-
 class WidgetAnotea extends HTMLElement {
 
     node = null;
