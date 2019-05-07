@@ -2,6 +2,7 @@ const moment = require('moment');
 const config = require('config');
 const createComponents = require('../components');
 const createLogger = require('../common/components/logger');
+const { IncomingWebhook } = require('@slack/webhook');
 
 module.exports = {
     delay: milliseconds => {
@@ -20,10 +21,20 @@ module.exports = {
                 logger.error(error);
             }
             await logger.close();
-            return components.client.close(() => error && process.exit(1));
+            return components.client.close(() => {
+                if (error) {
+                    process.exitCode = 1;
+                }
+            });
         };
 
-        let jobComponents = Object.assign({}, components, { exit });
+        let jobComponents = Object.assign({}, components, {
+            exit,
+            sendSlackNotification: (webhookUrl, data) => {
+                const webhook = new IncomingWebhook(webhookUrl);
+                return webhook.send(data);
+            }
+        });
 
         try {
             let launchTime = new Date().getTime();

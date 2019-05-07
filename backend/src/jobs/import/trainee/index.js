@@ -15,7 +15,20 @@ const sources = {
     'IDF': 'ileDeFrance',
 };
 
-execute(async ({ logger, db, exit, regions, mailer }) => {
+let dryRun = false;
+cli.description('launch trainee import')
+.option('-s, --source [name]', 'Source to import (PE or IDF)')
+.option('-f, --file [file]', 'The CSV file to import')
+.option('-r, --region [codeRegion]', 'Code region to filter')
+.option('-s, --since [since]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
+.option('--append', 'Append stagiaires to an existing campaign')
+.option('--slackWebhookUrl [slackWebhookUrl]', 'Send a slack notification when job is finished')
+.option('-d, --dry-run', 'Execute this script in dry mode', () => {
+    dryRun = true;
+}, false)
+.parse(process.argv);
+
+execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
 
     const handleValidationError = (validationError, csvOptions) => {
         let { line, type } = validationError;
@@ -34,18 +47,6 @@ execute(async ({ logger, db, exit, regions, mailer }) => {
             source: cli.source
         }, () => ({}), e => exit(e));
     };
-
-    let dryRun = false;
-    cli.description('launch trainee import')
-    .option('-s, --source [name]', 'Source to import (PE or IDF)')
-    .option('-f, --file [file]', 'The CSV file to import')
-    .option('-r, --region [codeRegion]', 'Code region to filter')
-    .option('-s, --since [since]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
-    .option('--append', 'Append stagiaires to an existing campaign')
-    .option('-d, --dry-run', 'Execute this script in dry mode', () => {
-        dryRun = true;
-    }, false)
-    .parse(process.argv);
 
     let allowedSources = Object.keys(sources);
     if (cli.source === undefined || !allowedSources.includes(cli.source)) {
@@ -82,6 +83,19 @@ execute(async ({ logger, db, exit, regions, mailer }) => {
     } else {
         logger.info(`Importing source ${cli.source} from file ${cli.file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
 
-        return importer.importTrainee(cli.file, handler, filters);
+
+        try {
+            let results = await importer.importTrainee(cli.file, handler, filters);
+
+            sendSlackNotification(cli.slackWebhookUrl, {
+                text: `${results.imported} stagiaires importés pour le fichier ${cli.file} ` +
+                    `(Ignorés : ${results.ignored}, Nombre d'erreurs : ${results.invalid})`,
+            });
+        } catch (e) {
+            sendSlackNotification(cli.slackWebhookUrl, {
+                text: `Le fichier stagiaires ${cli.file} n'a pas pu être importé`,
+            });
+            throw e;
+        }
     }
 });
