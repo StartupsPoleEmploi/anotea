@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { transformObject } = require('../../../common/utils/stream-utils');
+const { ignoreFirstLine } = require('../../../common/utils/stream-utils');
 const parse = require('csv-parse');
 
 let loadCertifinfos = file => {
@@ -20,7 +20,7 @@ let loadCertifinfos = file => {
                 'cer3_etat',
             ],
         }))
-        .pipe(transformObject(async data => data, { ignoreFirstLine: true }))
+        .pipe(ignoreFirstLine())
         .on('data', data => {
             mapping[data.cer3_code] = data.cer3_codenew;
         })
