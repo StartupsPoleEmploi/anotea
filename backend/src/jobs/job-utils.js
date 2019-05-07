@@ -31,8 +31,10 @@ module.exports = {
         let jobComponents = Object.assign({}, components, {
             exit,
             sendSlackNotification: options => {
-                const webhook = new IncomingWebhook(options.webhookUrl);
-                return webhook.send(options.message);
+                if (options.webhookUrl) {
+                    let webhook = new IncomingWebhook(options.webhookUrl);
+                    return webhook.send(options.message);
+                }
             }
         });
 
