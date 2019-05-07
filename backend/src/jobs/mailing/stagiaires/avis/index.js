@@ -11,9 +11,10 @@ cli.description('send email campaign')
 .option('-t, --type [type]', 'resend,retry,send (default: send))', capitalizeFirstLetter)
 .option('-l, --limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
 .option('-d, --delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
+.option('--slackWebhookUrl [slackWebhookUrl]', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
-execute(({ logger, db, configuration, mailer, regions }) => {
+execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotification }) => {
 
     let type = cli.type || 'Send';
     let traineeMailer = new TraineeMailer(db, logger, mailer);
@@ -26,8 +27,20 @@ execute(({ logger, db, configuration, mailer, regions }) => {
 
     logger.info(`Sending emails to stagiaires (${type})...`);
 
-    return traineeMailer.sendEmails(action, {
-        limit: cli.limit,
-        delay: cli.delay,
-    });
+    try {
+        let results = await traineeMailer.sendEmails(action, {
+            limit: cli.limit,
+            delay: cli.delay,
+        });
+
+        sendSlackNotification(cli.slackWebhookUrl, {
+            text: `${results.sent} emails stagiaires envoyés pour la campagne ${cli.campaign || 'tous'} ` +
+                `(Nombre d'erreurs : ${results.error})`,
+        });
+    } catch (e) {
+        sendSlackNotification(cli.slackWebhookUrl, {
+            text: `Les emails stagiaires pour la campagne ${cli.campaign || 'tous'} n'ont pas pu être envoyés`,
+        });
+        throw e;
+    }
 });
