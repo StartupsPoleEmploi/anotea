@@ -52,6 +52,7 @@ class AnoteaTinyWidget extends Component {
     render() {
         return (
             <div className='anotea-tiny-widget'>
+                <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet"></link>
                 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous"></link>
                 <style>{styles}</style>
                 { this.state.score &&

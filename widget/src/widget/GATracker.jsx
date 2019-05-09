@@ -11,7 +11,7 @@ export default class GATracker extends Component {
         gtag('config', this.getID());
     }
 
-    getID = () => process.env.ANOTEA_WIDGET_GOOGLE_ANALYTICS_ID;
+    getID = () => process.env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID;
 
     render() {
         return (
