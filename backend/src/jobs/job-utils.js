@@ -9,7 +9,7 @@ module.exports = {
         return new Promise(resolve => setTimeout(() => resolve(), milliseconds));
     },
     capitalizeFirstLetter: string => string.charAt(0).toUpperCase() + string.slice(1),
-    execute: async job => {
+    execute: async (job, options = {}) => {
 
         process.on('unhandledRejection', e => console.log(e));
         process.on('uncaughtException', e => console.log(e));
@@ -30,12 +30,10 @@ module.exports = {
 
         let jobComponents = Object.assign({}, components, {
             exit,
-            sendSlackNotification: options => {
-                if (options.webhookUrl) {
-                    let webhook = new IncomingWebhook(options.webhookUrl);
-                    return webhook.send(options.message);
-                } else {
-                    logger.info(options.message);
+            sendSlackNotification: message => {
+                if (options.slack) {
+                    let webhook = new IncomingWebhook(components.configuration.slack.webhookUrl);
+                    return webhook.send(message);
                 }
             }
         });

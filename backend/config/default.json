@@ -69,5 +69,8 @@
   },
   "front": {
     "googleSiteVerification": "12345"
+  },
+  "slack": {
+    "webhookUrl": "1234"
   }
 }
