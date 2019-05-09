@@ -34,6 +34,8 @@ module.exports = {
                 if (options.webhookUrl) {
                     let webhook = new IncomingWebhook(options.webhookUrl);
                     return webhook.send(options.message);
+                } else {
+                    logger.info(options.message);
                 }
             }
         });
