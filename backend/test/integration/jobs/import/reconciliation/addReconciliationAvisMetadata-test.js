@@ -2,8 +2,8 @@ const assert = require('assert');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
-const generateActions = require('../../../../../src/jobs/import/formations/generateActions');
-const addReconciliationAvisMetadata = require('../../../../../src/jobs/import/formations/addReconciliationAvisMetadata');
+const generateActions = require('../../../../../src/jobs/import/reconciliation/generateActions');
+const addReconciliationAvisMetadata = require('../../../../../src/jobs/import/reconciliation/addReconciliationAvisMetadata');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 

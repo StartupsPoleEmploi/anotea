@@ -1,11 +1,11 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
-const generateSessions = require('../../../../../src/jobs/import/formations/generateSessions');
+const generateActions = require('../../../../../src/jobs/import/reconciliation/generateActions');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
-    it('should reconcile sessions with comments', async () => {
+    it('should reconcile actions with comments', async () => {
 
         let db = await getTestDatabase();
         let date = new Date();
@@ -30,14 +30,26 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db);
+        await generateActions(db);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
-            numero: 'SE_XXXXXX',
+            _id: 'F_XX_XX|AC_XX_XXXXXX',
+            numero: 'AC_XX_XXXXXX',
             region: '11',
             code_region: '11',
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
+            },
+            organisme_financeurs: [
+                '2'
+            ],
+            organisme_formateur: {
+                raison_sociale: 'Anotea Formation Paris',
+                siret: '22222222222222',
+                numero: 'OF_XXX'
+            },
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -64,27 +76,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     raison_sociale: 'Centre de formation Anotéa',
                     siret: '11111111111111',
                 },
-                action: {
-                    numero: 'AC_XX_XXXXXX',
-                    lieu_de_formation: {
-                        code_postal: '75019',
-                        ville: 'Paris'
-                    },
-                    organisme_financeurs: [
-                        '2'
-                    ],
-                    organisme_formateur: {
-                        raison_sociale: 'Anotea Formation Paris',
-                        siret: '22222222222222',
-                        numero: 'OF_XXX'
-                    }
-                }
             },
             meta: {
                 source: {
                     numero_action: 'AC_XX_XXXXXX',
                     numero_formation: 'F_XX_XX',
-                    numero_session: 'SE_XXXXXX',
                     type: 'intercarif',
                 },
                 reconciliation: {
@@ -97,8 +93,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         });
     });
 
-
-    it('should round notes during reconcile', async () => {
+    it('should round notes during reconciliation', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
@@ -174,9 +169,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db);
+        await generateActions(db);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(session.score, {
             nb_avis: 3,
             notes: {
@@ -197,14 +192,26 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await generateSessions(db);
+        await generateActions(db);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
-            numero: 'SE_XXXXXX',
+            _id: 'F_XX_XX|AC_XX_XXXXXX',
+            numero: 'AC_XX_XXXXXX',
             region: '11',
             code_region: '11',
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
+            },
+            organisme_financeurs: [
+                '2'
+            ],
+            organisme_formateur: {
+                raison_sociale: 'Anotea Formation Paris',
+                siret: '22222222222222',
+                numero: 'OF_XXX'
+            },
             avis: [],
             score: {
                 nb_avis: 0
@@ -223,27 +230,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     raison_sociale: 'Centre de formation Anotéa',
                     siret: '11111111111111',
                 },
-                action: {
-                    numero: 'AC_XX_XXXXXX',
-                    lieu_de_formation: {
-                        code_postal: '75019',
-                        ville: 'Paris'
-                    },
-                    organisme_financeurs: [
-                        '2'
-                    ],
-                    organisme_formateur: {
-                        raison_sociale: 'Anotea Formation Paris',
-                        siret: '22222222222222',
-                        numero: 'OF_XXX'
-                    }
-                }
             },
             meta: {
                 source: {
                     numero_action: 'AC_XX_XXXXXX',
                     numero_formation: 'F_XX_XX',
-                    numero_session: 'SE_XXXXXX',
                     type: 'intercarif',
                 },
                 reconciliation: {
@@ -278,14 +269,26 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db);
+        await generateActions(db);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
-            numero: 'SE_XXXXXX',
+            _id: 'F_XX_XX|AC_XX_XXXXXX',
+            numero: 'AC_XX_XXXXXX',
             region: '11',
             code_region: '11',
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
+            },
+            organisme_financeurs: [
+                '2'
+            ],
+            organisme_formateur: {
+                raison_sociale: 'Anotea Formation Paris',
+                siret: '22222222222222',
+                numero: 'OF_XXX'
+            },
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -312,27 +315,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     raison_sociale: 'Centre de formation Anotéa',
                     siret: '11111111111111',
                 },
-                action: {
-                    numero: 'AC_XX_XXXXXX',
-                    lieu_de_formation: {
-                        code_postal: '75019',
-                        ville: 'Paris'
-                    },
-                    organisme_financeurs: [
-                        '2'
-                    ],
-                    organisme_formateur: {
-                        raison_sociale: 'Anotea Formation Paris',
-                        siret: '22222222222222',
-                        numero: 'OF_XXX'
-                    }
-                }
             },
             meta: {
                 source: {
                     numero_action: 'AC_XX_XXXXXX',
                     numero_formation: 'F_XX_XX',
-                    numero_session: 'SE_XXXXXX',
                     type: 'intercarif',
                 },
                 reconciliation: {
@@ -368,14 +355,26 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db);
+        await generateActions(db);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
-            numero: 'SE_XXXXXX',
+            _id: 'F_XX_XX|AC_XX_XXXXXX',
+            numero: 'AC_XX_XXXXXX',
             region: '11',
             code_region: '11',
+            lieu_de_formation: {
+                code_postal: '75019',
+                ville: 'Paris'
+            },
+            organisme_financeurs: [
+                '2'
+            ],
+            organisme_formateur: {
+                raison_sociale: 'Anotea Formation Paris',
+                siret: '22222222222222',
+                numero: 'OF_XXX'
+            },
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -402,27 +401,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     raison_sociale: 'Centre de formation Anotéa',
                     siret: '11111111111111',
                 },
-                action: {
-                    numero: 'AC_XX_XXXXXX',
-                    lieu_de_formation: {
-                        code_postal: '75019',
-                        ville: 'Paris'
-                    },
-                    organisme_financeurs: [
-                        '2'
-                    ],
-                    organisme_formateur: {
-                        raison_sociale: 'Anotea Formation Paris',
-                        siret: '22222222222222',
-                        numero: 'OF_XXX'
-                    }
-                }
             },
             meta: {
                 source: {
                     numero_action: 'AC_XX_XXXXXX',
                     numero_formation: 'F_XX_XX',
-                    numero_session: 'SE_XXXXXX',
                     type: 'intercarif',
                 },
                 reconciliation: {
@@ -457,9 +440,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db);
+        await generateActions(db);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
         assert.strictEqual(session.avis[0].comment, null);
     });
@@ -485,15 +468,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         delete comment.published;
         delete comment.rejected;
 
-
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db);
+        await generateActions(db);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
         assert.strictEqual(session.avis[0].comment, undefined);
     });
@@ -520,9 +502,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db);
+        await generateActions(db);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(session.avis, []);
     });
 
@@ -553,9 +535,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db);
+        await generateActions(db);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
         assert.strictEqual(session.avis[0].rejected, true);
     });
