@@ -53,7 +53,7 @@ export default class AdviceRates extends React.Component {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-6 description">Moyens</div>
+                        <div className="col-md-6 description">Matériels</div>
                         <div className="col-md-6 starsContainer"><Stars
                             value={this.state.rates ? this.state.rates.moyen_materiel : null} /></div>
                     </div>

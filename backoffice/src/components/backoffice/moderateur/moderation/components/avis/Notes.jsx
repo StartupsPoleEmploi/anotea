@@ -65,7 +65,7 @@ export default class Notes extends React.Component {
                     {this.createNote('Accueil', avis.rates.accueil)}
                     {this.createNote('Contenu', avis.rates.contenu_formation)}
                     {this.createNote('Formateurs', avis.rates.equipe_formateurs)}
-                    {this.createNote('Moyens', avis.rates.moyen_materiel)}
+                    {this.createNote('Matériels', avis.rates.moyen_materiel)}
                     {this.createNote('Accompagnement', avis.rates.accompagnement)}
                 </div>
                 }

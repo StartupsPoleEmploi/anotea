@@ -91,7 +91,7 @@ export default class SessionStats extends React.Component {
                                     <div className="col-md-3">{this.data.ratesAverage.equipe_formateurs}/5</div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-5">Moyens</div>
+                                    <div className="col-md-5">Matériels</div>
                                     <div className="col-md-4"><Stars
                                         value={Math.round(this.data.ratesAverage.moyen_materiel)} />
                                     </div>
