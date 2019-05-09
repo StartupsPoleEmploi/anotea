@@ -112,7 +112,7 @@ class AnoteaWidget extends Component {
                                     <span className="label">Formateurs</span> <Stars value={this.state.score.notes.equipe_formateurs} />
                                 </li>
                                 <li>
-                                    <span className="label">Moyens</span> <Stars value={this.state.score.notes.moyen_materiel} />
+                                    <span className="label">Matériels</span> <Stars value={this.state.score.notes.moyen_materiel} />
                                 </li>
                                 <li>
                                     <span className="label">Accompagnement</span> <Stars value={this.state.score.notes.accompagnement} />
