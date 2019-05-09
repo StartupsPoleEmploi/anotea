@@ -57,13 +57,6 @@ services:
     container_name: anotea_smtp
     ports:
       - 8024:8025
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        tag: docker.smtp
-    depends_on:
-      - fluentbit
 
   ###########
   #EFK stack
