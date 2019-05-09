@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 
 import Stars from './Stars';
+import ContactStagiaire from './ContactStagiaire';
 
 import styles from './AvisAvecCommentaire.css.js';
 
@@ -91,6 +92,8 @@ class AvisAvecCommentaire extends Component {
                 { this.state.avis.length === 0 &&
                     <div className="pas-commentaire">Il n'y a pas de commentaire sur cette formation pour le moment.</div>
                 }
+
+                <ContactStagiaire />
             </div>
         );
     }

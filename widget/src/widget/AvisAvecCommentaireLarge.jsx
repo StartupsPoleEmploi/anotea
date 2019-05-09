@@ -3,6 +3,7 @@ import moment from 'moment';
 
 import Stars from './Stars';
 import Verified from './Verified';
+import ContactStagiaire from './ContactStagiaire';
 
 import styles from './AvisAvecCommentaireLarge.css.js';
 
@@ -129,6 +130,8 @@ class AvisAvecCommentaireLarge extends Component {
                     Il n'y a pas de commentaire sur cette formation pour le moment.
                     </div>
                 }
+
+                <ContactStagiaire />
             </div>
         );
     }
