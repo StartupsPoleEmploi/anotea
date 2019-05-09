@@ -26,7 +26,7 @@ COPY ./ /opt/anotea/widget
 WORKDIR /opt/anotea/widget
 
 #Build project
-RUN REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID=${ANOTEA_GOOGLE_ANALYTICS_ID} \
+RUN REACT_APP_ANOTEA_WIDGET_GOOGLE_ANALYTICS_ID=${ANOTEA_WIDGET_GOOGLE_ANALYTICS_ID} \
     REACT_APP_ANOTEA_HOTJAR_ID=${ANOTEA_HOTJAR_ID} \
     npm run build &&  mv build/* /usr/share/nginx/html
 

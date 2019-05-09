@@ -3,6 +3,7 @@ import moment from 'moment';
 
 import Stars from './Stars';
 import ContactStagiaire from './ContactStagiaire';
+import GATracker from './GATracker';
 
 import styles from './AvisAvecCommentaire.css.js';
 
@@ -94,6 +95,7 @@ class AvisAvecCommentaire extends Component {
                 }
 
                 <ContactStagiaire />
+                <GATracker />
             </div>
         );
     }
