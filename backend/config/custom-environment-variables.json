@@ -50,6 +50,6 @@
     "googleSiteVerification": "ANOTEA_FRONT_GOOGLE_SITE_VERIFICATION"
   },
   "slack": {
-    "webhookUrl": "SLACK_WEBHOOK_URL"
+    "webhookUrl": "ANOTEA_SLACK_WEBHOOK_URL"
   }
 }
