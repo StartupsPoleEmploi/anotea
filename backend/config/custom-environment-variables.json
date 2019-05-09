@@ -42,7 +42,9 @@
   },
   "smtp": {
     "host": "ANOTEA_SMTP_HOST",
-    "port": "ANOTEA_SMTP_PORT"
+    "port": "ANOTEA_SMTP_PORT",
+    "user": "ANOTEA_SMTP_USER",
+    "password": "ANOTEA_SMTP_PASSWORD"
   },
   "front": {
     "googleSiteVerification": "ANOTEA_FRONT_GOOGLE_SITE_VERIFICATION"
