@@ -97,7 +97,11 @@ class NotificationMailer {
     }
 
     async sendEmails(options = {}) {
-        let total = 0;
+        let stats = {
+            total: 0,
+            sent: 0,
+            error: 0,
+        };
         let cursor = await this._findOrganismes(options.codeRegions);
         if (options.limit) {
             cursor.limit(options.limit);
@@ -106,6 +110,7 @@ class NotificationMailer {
 
         while (await cursor.hasNext()) {
             let { organisme, status } = await cursor.next();
+            stats.total++;
             try {
                 this.logger.info(`Sending email to ${organisme.courriel}`);
                 await this._sendEmail(organisme, status);
@@ -113,14 +118,13 @@ class NotificationMailer {
                 if (options.delay) {
                     await delay(options.delay);
                 }
-                total++;
+                stats.sent++;
             } catch (e) {
                 this.logger.error('Unable to send email: ', e);
+                stats.error++;
             }
         }
-        return {
-            mailSent: total
-        };
+        return stats;
     }
 
 }

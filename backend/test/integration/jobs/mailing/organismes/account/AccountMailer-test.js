@@ -35,8 +35,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
         let results = await accountMailer.sendEmailBySiret('31705038300064');
 
-        assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(emailsSent, [{
+        assert.deepStrictEqual(results, {
+            total: 1,
+            sent: 1,
+            error: 0,
+        });
+        assert.deepStrictEqual(emailsSent, [{
             to: 'new@organisme.fr'
         }]);
     });
@@ -50,8 +54,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await accountMailer.sendEmails(dummyAction);
 
-        assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(emailsSent, [{
+        assert.deepStrictEqual(results, {
+            total: 1,
+            sent: 1,
+            error: 0,
+        });
+        assert.deepStrictEqual(emailsSent, [{
             to: 'new@organisme.fr'
         }]);
     });
@@ -70,9 +78,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
         assert.ok(organisme.mailSentDate);
-        assert.deepEqual(organisme.resend, false);
-        assert.deepEqual(organisme.mailError, undefined);
-        assert.deepEqual(organisme.mailErrorDetail, undefined);
+        assert.deepStrictEqual(organisme.resend, false);
+        assert.deepStrictEqual(organisme.mailError, undefined);
+        assert.deepStrictEqual(organisme.mailErrorDetail, undefined);
     });
 
     it('should update set resend property to true on resend', async () => {
@@ -88,7 +96,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await accountMailer.sendEmails(dummyAction);
 
         let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
-        assert.deepEqual(organisme.resend, true);
+        assert.deepStrictEqual(organisme.resend, true);
     });
 
 
@@ -103,8 +111,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             assert.fail();
         } catch (e) {
             let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
-            assert.deepEqual(organisme.mailError, 'smtpError');
-            assert.deepEqual(organisme.mailErrorDetail, 'timeout');
+            assert.deepStrictEqual(organisme.mailError, 'smtpError');
+            assert.deepStrictEqual(organisme.mailErrorDetail, 'timeout');
         }
     });
 }));

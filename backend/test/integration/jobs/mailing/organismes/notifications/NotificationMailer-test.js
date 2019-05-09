@@ -52,8 +52,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await notificationMailer.sendEmails();
 
-        assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(spy, [{
+        assert.deepStrictEqual(results, {
+            total: 1,
+            sent: 1,
+            error: 0,
+        });
+        assert.deepStrictEqual(spy, [{
             to: 'new@organisme.fr'
         }]);
         let organisme = await db.collection('accounts').findOne({ _id: 31705038300064 });
@@ -96,8 +100,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await notificationMailer.sendEmails();
 
-        assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(spy, [{
+        assert.deepStrictEqual(results, {
+            total: 1,
+            sent: 1,
+            error: 0,
+        });
+        assert.deepStrictEqual(spy, [{
             to: 'new@organisme.fr'
         }]);
         let organisme = await db.collection('accounts').findOne({ _id: 31705038300064 });
@@ -125,7 +133,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await notificationMailer.sendEmails();
 
-        assert.deepEqual(results, { mailSent: 0 });
+        assert.deepStrictEqual(results, {
+            total: 0,
+            sent: 0,
+            error: 0,
+        });
     });
 
     it('should ignore organisme with less than 5 comments not read yet', async () => {
@@ -162,7 +174,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await notificationMailer.sendEmails();
 
-        assert.deepEqual(results, { mailSent: 0 });
+        assert.deepStrictEqual(results, {
+            total: 0,
+            sent: 0,
+            error: 0,
+        });
     });
 
     it('should ignore organisme when an email has been sent since less than 15 days', async () => {
@@ -200,6 +216,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await notificationMailer.sendEmails();
 
-        assert.deepEqual(results, { mailSent: 0 });
+        assert.deepStrictEqual(results, {
+            total: 0,
+            sent: 0,
+            error: 0,
+        });
     });
 }));
