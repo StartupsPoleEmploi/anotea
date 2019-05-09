@@ -20,6 +20,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
                 integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
                 crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
         <style>
             .anotea {
                 font-size: 1rem;
@@ -64,21 +65,25 @@
                                         <tbody>
                                             <tr>
                                                 <th scope="row">Nombre d'organismes</th>
-                                                <td><%= organismes.nbOrganismes %></td>
-                                                <td><%= kairos.nbOrganismes %></td>
+                                                <td><%= data.organismes.organismes.nbOrganismes %></td>
+                                                <td><%= data.organismes.kairos.nbOrganismes %></td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Nombre d'organismes actifs</th>
-                                                <td><%= organismes.actifs %></td>
-                                                <td><%= kairos.actifs %></td>
+                                                <td><%= data.organismes.organismes.actifs %></td>
+                                                <td><%= data.organismes.kairos.actifs %></td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Nombre d'organismes ayant au moins un avis</th>
-                                                <td><%= organismes.hasAtLeastOneAvis %></td>
-                                                <td><%= kairos.hasAtLeastOneAvis %></td>
+                                                <td><%= data.organismes.organismes.hasAtLeastOneAvis %></td>
+                                                <td><%= data.organismes.kairos.hasAtLeastOneAvis %></td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <p>Regions</p>
+                                    <pre class="prettyprint">
+                                        <%- JSON.stringify(data.organismes.regions, null, 2) %>
+                                    </pre>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +97,7 @@
                                     <div class="embed-responsive embed-responsive-16by9">
                                         <iframe
                                                 class="embed-responsive-item"
-                                                src="<%= kairos.kibanaDashboardUrl %>"
+                                                src="<%= data.organismes.kairos.kibanaDashboardUrl %>"
                                         ></iframe>
                                     </div>
                                 </div>
@@ -101,9 +106,55 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Avis
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <pre class="prettyprint">
+                                        <%- JSON.stringify(data.avis, null, 2) %>
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Formation
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <pre class="prettyprint">
+                                        <%- JSON.stringify(data.formations, null, 2) %>
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Session
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <pre class="prettyprint">
+                                        <%- JSON.stringify(data.sessions, null, 2) %>
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-
         </section>
     </body>
 
