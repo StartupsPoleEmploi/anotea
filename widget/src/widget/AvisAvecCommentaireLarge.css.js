@@ -4,7 +4,7 @@ const style = `
     white-space: normal;
 }
 
-h2 {
+.avis-avec-commentaire.large h2 {
     color: #24303A;
 	font-size: 0.7em;
 	font-weight: bold;
@@ -27,7 +27,7 @@ h2 {
     margin-right: 20px;
 }
 
-.avis {
+.avis-avec-commentaire.large .avis {
     border: 1px solid #C8CBCE;
 	border-radius: 5px;
     background-color: white;
@@ -35,15 +35,15 @@ h2 {
     margin: 15px;
 }
 
-.avis > * {
+.avis-avec-commentaire.large .avis > * {
     padding: 0px 10px;
 }
 
-.avis .stars {
+.avis-avec-commentaire.large .avis .stars {
     font-size: 0.7em;
 }
 
-.pseudo {
+.avis-avec-commentaire.large .pseudo {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
@@ -51,7 +51,7 @@ h2 {
     font-weight: normal;
 }
 
-.avis .titre, .answer .titre {
+.avis-avec-commentaire.large .avis .titre, .answer .titre {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
@@ -60,7 +60,7 @@ h2 {
     margin: 5px 0px;
 }
 
-.avis .texte, .answer .texte {
+.avis-avec-commentaire.large .avis .texte, .answer .texte {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
@@ -69,21 +69,21 @@ h2 {
     margin-bottom: 10px;
 }
 
-.pagination {
+.avis-avec-commentaire.large .pagination {
     margin: auto;
     width: fit-content;
 }
 
-.pageIndicator:first-child {
+.avis-avec-commentaire.large .pageIndicator:first-child {
     border-radius: 4px 0px 0px 4px;
 }
 
 
-.pageIndicator:last-child {
+.avis-avec-commentaire.large .pageIndicator:last-child {
     border-radius: 0px 4px 4px 0px;
 }
 
-.pageIndicator {
+.avis-avec-commentaire.large .pageIndicator {
 	height: 38px;
 	width: 41px;
 	border: 1px solid #F4F4F4;
@@ -97,11 +97,11 @@ h2 {
     cursor: pointer;
 }
 
-.pageIndicator.current {
+.avis-avec-commentaire.large .pageIndicator.current {
     background-color: #F4F4F4;
 }
 
-.line {
+.avis-avec-commentaire.large .line {
 	box-sizing: border-box;
 	height: 1px;
 	width: 60px;
@@ -111,11 +111,11 @@ h2 {
     top: -3px;
 }
 
-.nav {
+.avis-avec-commentaire.large .nav {
     cursor: pointer;
 }
 
-.date {
+.avis-avec-commentaire.large .date {
 	opacity: 0.87;
 	color: #91979C;
 	font-size: 12px;
@@ -124,7 +124,7 @@ h2 {
     padding: 8px 16px;
 }
 
-.pas-commentaire {
+.avis-avec-commentaire.large .pas-commentaire {
     color: rgba(36, 48, 58, 0.6);
     font-size: 0.8em;
     font-weight: normal;
@@ -133,7 +133,7 @@ h2 {
     margin-top: 120px;
 }
 
-.answer {
+.avis-avec-commentaire.large .answer {
     border-left: 1px solid black;
     margin-left: 10px;
 }
