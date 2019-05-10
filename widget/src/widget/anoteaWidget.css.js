@@ -6,11 +6,11 @@ const style = `
     display: table;
 }
 
-.col1, .col2 {
+.anotea-widget .col1, .col2 {
     display: table-cell;
 }
 
-.verified, .propulsed {
+.anotea-widget.verified, .propulsed {
     color: rgba(36, 48, 58, 0.6);
     font-size: 0.7em;
     font-weight: normal;
@@ -18,11 +18,11 @@ const style = `
     margin-top: 10px;
 }
 
-.verified img, .propulsed img {
+.anotea-widget .verified img, .anotea-widget .propulsed img {
     height: 26px;
 }
 
-h1.title {
+.anotea-widget h1.title {
 	color: #000000;
 	font-size: 18px;
 	font-weight: bold;
@@ -31,11 +31,11 @@ h1.title {
     margin: 0;
 }
 
-.score {
+.anotea-widget .score {
     margin-top: 20px;
 }
 
-.average {
+.anotea-widget .average {
     background-color: #F4F4F5;
     padding: 20px;
     margin: 10px;
@@ -45,25 +45,25 @@ h1.title {
     margin-right: 0px;
 }
 
-.average .rate {
+.anotea-widget .average .rate {
 	color: #24303A;
 	font-size: 1.7em;
 	font-weight: 900;
 	line-height: 35px;
 }
 
-.average .total {
+.anotea-widget .average .total {
 	color: #91979C; 
 	font-size: 0.85em;
 	font-weight: 900;
     line-height: 29px;
     font-weight: normal;
 }
-.average .fas.fa-star.active {
+.anotea-widget .average .fas.fa-star.active {
     font-size: 0.6em;
 }
 
-.avis-count {
+.anotea-widget .avis-count {
 	height: 20px;
 	width: 90px;
 	color: rgba(36, 48, 58, 0.6);
@@ -75,7 +75,7 @@ h1.title {
     font-weight: normal;
 }
 
-.notes {
+.anotea-widget .notes {
 	color: #91979C;
     font-size: 0.7em;
     line-height: 28px;
@@ -85,14 +85,14 @@ h1.title {
     margin-left: 15px;
 }
 
-.notes .label {
+.anotea-widget .notes .label {
     width: 150px;
     display: inline-block;
     font-weight: normal;
 }
 
 @media screen and (max-width: 600px) {
-    .notes {
+    .anotea-widget .notes {
         display: none;
     }
 }

@@ -1,5 +1,5 @@
 const style = `
-h2 {
+.avis-avec-commentaire.small h2 {
     color: #24303A;
 	font-size: 0.7em;
 	font-weight: bold;
@@ -14,12 +14,12 @@ h2 {
     margin: auto;
 }
 
-.commentaires-header {
+.avis-avec-commentaire.small .commentaires-header {
     height: 25px;
     margin: 0px 18px 0px 18px;
 }
 
-.avis {
+.avis-avec-commentaire.small .avis {
     border: 1px solid #C8CBCE;
 	border-radius: 5px;
     background-color: white;
@@ -27,19 +27,19 @@ h2 {
     margin: 15px;
 }
 
-.avis > * {
+.avis-avec-commentaire.small .avis > * {
     padding: 0px 5px;
 }
 
-.avis .stars {
+.avis-avec-commentaire.small .avis .stars {
     font-size: 0.7em;
 }
 
-.avis .container {
+.avis-avec-commentaire.small .avis .container {
     height: 200px;
 }
 
-.pseudo {
+.avis-avec-commentaire.small .pseudo {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
@@ -47,7 +47,7 @@ h2 {
     font-weight: normal;
 }
 
-.avis .titre, .answer .titre {
+.avis-avec-commentaire.small .avis .titre, .avis-avec-commentaire.small .answer .titre {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
@@ -56,7 +56,7 @@ h2 {
     margin: 5px 0px;
 }
 
-.avis .texte, .answer .texte {
+.avis-avec-commentaire.small .avis .texte, .avis-avec-commentaire.small.answer .texte {
 	opacity: 0.87;
 	color: #24303A;
 	font-size: 14px;
@@ -65,7 +65,7 @@ h2 {
     margin-bottom: 10px;
 }
 
-.pageIndicator {
+.avis-avec-commentaire.small .pageIndicator {
 	height: 16px;
 	color: #24303A;
 	font-size: 12px;
@@ -78,11 +78,11 @@ h2 {
     top: -40px;
 }
 
-.pagination {
+.avis-avec-commentaire.small .pagination {
     width: 100%;
 }
 
-.pagination .nav {
+.avis-avec-commentaire.small .pagination .nav {
     border: 1px solid #C8CBCE;
     border-radius: 5px;
     color: #C8CBCE;
@@ -90,21 +90,21 @@ h2 {
     margin: 15px;
 }
 
-.pagination .nav-right {
+.avis-avec-commentaire.small .pagination .nav-right {
     float: right;
 }
 
-.pagination .nav-left, .pagination .nav-right {
+.avis-avec-commentaire.small .pagination .nav-left, .avis-avec-commentaire.small .pagination .nav-right {
     display: inline-block;
 }
 
-.pagination .pageIndicator {
+.avis-avec-commentaire.small .pagination .pageIndicator {
     display: block;
     margin: auto;
     width: fit-content;
 }
 
-.line {
+.avis-avec-commentaire.small .line {
 	box-sizing: border-box;
 	height: 1px;
 	width: 100%;
@@ -114,11 +114,11 @@ h2 {
     top: -3px;
 }
 
-.nav {
+.avis-avec-commentaire.small .nav {
     cursor: pointer;
 }
 
-.date {
+.avis-avec-commentaire.small .date {
 	opacity: 0.87;
 	color: #91979C;
 	font-size: 12px;
@@ -127,7 +127,7 @@ h2 {
     padding: 8px 16px;
 }
 
-.pas-commentaire {
+.avis-avec-commentaire.small .pas-commentaire {
     color: rgba(36, 48, 58, 0.6);
     font-size: 0.7em;
     font-weight: normal;

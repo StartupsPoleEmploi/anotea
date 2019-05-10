@@ -31,7 +31,7 @@ class AvisAvecCommentaire extends Component {
 
     render() {
         return (
-            <div className="avis-avec-commentaire">
+            <div className="avis-avec-commentaire small">
                 <style>{styles}</style>
                 {this.state.avis[this.state.page] &&
                     <div>
