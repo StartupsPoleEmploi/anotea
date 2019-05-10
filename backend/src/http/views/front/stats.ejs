@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="fr">
 
     <head>
         <meta charset="utf-8">
@@ -50,37 +50,6 @@
                 <h2>Organismes</h2>
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-header">Global</div>
-                            <div class="card-body">
-                                <div class="card-text">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Type</th>
-                                                <th scope="col">Nombre d'organismes</th>
-                                                <th scope="col">Nombre d'organismes actifs</th>
-                                                <th scope="col">Nombre d'organismes ayant au moins un avis</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Tous</td>
-                                                <td><%= data.organismes.organismes.nbOrganismes %></td>
-                                                <td><%= data.organismes.organismes.actifs %></td>
-                                                <td><%= data.organismes.organismes.hasAtLeastOneAvis %></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Kairos</td>
-                                                <td><%= data.organismes.kairos.nbOrganismes %></td>
-                                                <td><%= data.organismes.kairos.actifs %></td>
-                                                <td><%= data.organismes.kairos.hasAtLeastOneAvis %></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="card">
                             <div class="card-header">Par région</div>
@@ -92,11 +61,11 @@
                                                 <th scope="col">Region</th>
                                                 <th scope="col">Nombre d'organismes</th>
                                                 <th scope="col">Nombre d'organismes actifs</th>
-                                                <th scope="col">Taux d'organismes avec avis</th>
+                                                <th scope="col">Organismes avec avis</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <% data.organismes.regions.forEach(function(element) { %>
+                                            <% data.organismes.forEach(function(element) { %>
                                                 <tr>
                                                     <td><%= element.region %></td>
                                                     <td><%= element.nbOrganimes %></td>
@@ -114,12 +83,32 @@
                             <div class="card-header">
                                 Kairos
                             </div>
-                            <div class="card-body px-0 py-0">
-                                <div class="kibana text-center">
+                            <div class="card-body">
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Type</th>
+                                            <th scope="col">Nombre d'organismes</th>
+                                            <th scope="col">Nombre d'organismes actifs</th>
+                                            <th scope="col">Nombre d'organismes ayant au moins un avis</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Kairos</td>
+                                            <td><%= data.kairos.nbOrganismes %></td>
+                                            <td><%= data.kairos.actifs %></td>
+                                            <td><%= data.kairos.hasAtLeastOneAvis %></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="kibana text-center  px-0 py-0">
                                     <div class="embed-responsive embed-responsive-16by9">
                                         <iframe
                                                 class="embed-responsive-item"
-                                                src="<%= data.organismes.kairos.kibanaDashboardUrl %>"
+                                                src="<%= data.kairos.kibanaDashboardUrl %>"
                                         ></iframe>
                                     </div>
                                 </div>
@@ -141,9 +130,9 @@
                                             <tr>
                                                 <th scope="col">Region</th>
                                                 <th scope="col">Nombre d'avis</th>
-                                                <th scope="col">Avis Restitutables Formation</th>
-                                                <th scope="col">Avis Restitutables Action</th>
-                                                <th scope="col">Avis Restitutables Session</th>
+                                                <th scope="col">Avis restituables Formation</th>
+                                                <th scope="col">Avis restituables Action</th>
+                                                <th scope="col">Avis restituables Session</th>
                                             </tr>
                                         </thead>
                                         <tbody>
