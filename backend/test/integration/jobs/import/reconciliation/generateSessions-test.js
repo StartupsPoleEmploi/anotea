@@ -34,6 +34,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
+        delete session.meta.import_date;
         assert.deepStrictEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
@@ -203,6 +204,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
+        delete session.meta.import_date;
         assert.deepStrictEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
@@ -284,6 +286,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
+        delete session.meta.import_date;
         assert.deepStrictEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',
@@ -376,6 +379,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await generateSessions(db);
 
         let session = await db.collection('sessionsReconciliees').findOne();
+        delete session.meta.import_date;
         assert.deepStrictEqual(session, {
             _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             numero: 'SE_XXXXXX',

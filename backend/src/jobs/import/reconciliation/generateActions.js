@@ -4,13 +4,11 @@ const findAvisReconciliables = require('./utils/findAvisReconciliables');
 
 const flatten = array => [].concat.apply([], array);
 
-module.exports = async db => {
-
-    await db.collection('actionsReconciliees').removeMany({});
+module.exports = db => {
 
     return new Promise((resolve, reject) => {
 
-        let inserted = 0;
+        let imported = 0;
 
         db.collection('intercarif').find()
         .pipe(transformObject(async formation => {
@@ -30,8 +28,9 @@ module.exports = async db => {
                             lieu_de_formation: action.lieu_de_formation.coordonnees.adresse.codepostal,
                         });
 
-                        return db.collection('actionsReconciliees').insertOne({
-                            _id: `${formation._attributes.numero}|${action._attributes.numero}`,
+                        let id = `${formation._attributes.numero}|${action._attributes.numero}`;
+                        return db.collection('actionsReconciliees').replaceOne({ _id: id }, {
+                            _id: id,
                             numero: action._attributes.numero,
                             lieu_de_formation: {
                                 code_postal: action.lieu_de_formation.coordonnees.adresse.codepostal,
@@ -64,6 +63,7 @@ module.exports = async db => {
                                 },
                             },
                             meta: {
+                                import_date: new Date(),
                                 source: {//TODO remove source field in v2
                                     numero_formation: formation._attributes.numero,
                                     numero_action: action._attributes.numero,
@@ -77,7 +77,7 @@ module.exports = async db => {
                                     formacodes: formation._meta.formacodes,
                                 },
                             },
-                        });
+                        }, { upsert: true });
 
                     })(),
                 ];
@@ -88,10 +88,10 @@ module.exports = async db => {
             return { inserted: promises.length };
         }))
         .on('data', data => {
-            inserted += data.inserted;
+            imported += data.inserted;
         })
         .on('error', e => reject(e))
-        .on('finish', () => resolve({ imported: inserted }));
+        .on('finish', () => resolve({ imported }));
     });
 };
 

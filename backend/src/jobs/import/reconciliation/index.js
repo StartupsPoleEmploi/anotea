@@ -7,20 +7,25 @@ const generateFormations = require('./generateFormations');
 const generateActions = require('./generateActions');
 const generateSessions = require('./generateSessions');
 const addReconciliationAvisMetadata = require('./addReconciliationAvisMetadata');
+const removePreviousImports = require('./removePreviousImports');
 
 cli.description('Reconciling sessions/actions with comments...')
 .parse(process.argv);
 
 execute(async ({ logger, db }) => {
 
-    logger.info(`Reconcile avis with intercarif...`);
+    logger.info(`Reconciling avis with intercarif...`);
     let [formations, actions, sessions] = await Promise.all([
         generateFormations(db),
         generateActions(db),
         generateSessions(db),
     ]);
 
-    await addReconciliationAvisMetadata(db);
+    logger.info(`Running post-process tasks...`);
+    await Promise.all([
+        addReconciliationAvisMetadata(db),
+        removePreviousImports(db),
+    ]);
 
     return { formations, actions, sessions };
 });
