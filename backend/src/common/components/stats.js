@@ -17,9 +17,9 @@ module.exports = (db, regions) => {
             region: regionName,
             nbAvis,
             avisRestitutables: {
-                'api-route-formations': `${Math.ceil((formation * 100) / nbAvis)}%`,
-                'api-route-actions': `${Math.ceil((action * 100) / nbAvis)}%`,
-                'api-route-sessions': `${Math.ceil((session * 100) / nbAvis)}%`,
+                'apiRouteFormations': `${Math.ceil((formation * 100) / nbAvis)}%`,
+                'apiRouteActions': `${Math.ceil((action * 100) / nbAvis)}%`,
+                'apiRouteSessions': `${Math.ceil((session * 100) / nbAvis)}%`,
             },
         };
     };
@@ -123,11 +123,9 @@ module.exports = (db, regions) => {
             ]);
 
             return {
+                nbFormations,
                 formationsAvecAuMoinsUnAvis: `${Math.ceil((nbFormationAvecAuMoinsUnAvis * 100) / nbFormations)}%`,
                 formationsAvecAuMoinsTroisAvis: `${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbFormations)}%`,
-                meta: {
-                    nbFormations,
-                },
             };
         },
         computeMailingStats: (codeRegion, codeFinanceur) => {
