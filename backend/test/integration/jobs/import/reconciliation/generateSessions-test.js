@@ -1,11 +1,11 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
-const generateFormations = require('../../../../../src/jobs/import/formations/generateFormations');
+const generateSessions = require('../../../../../src/jobs/import/reconciliation/generateSessions');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
-    it('should reconcile formation with comments', async () => {
+    it('should reconcile sessions with comments', async () => {
 
         let db = await getTestDatabase();
         let date = new Date();
@@ -30,24 +30,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateFormations(db);
+        await generateSessions(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
+        let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX',
-            numero: 'F_XX_XX',
-            intitule: 'Développeur web',
-            domaine_formation: {
-                formacodes: ['22403']
-            },
-            certifications: {
-                certifinfos: ['80735']
-            },
-            organisme_responsable: {
-                numero: 'OR_XX_XXX',
-                raison_sociale: 'Centre de formation Anotéa',
-                siret: '11111111111111',
-            },
+            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
+            numero: 'SE_XXXXXX',
+            region: '11',
+            code_region: '11',
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -60,13 +50,46 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     global: 2.4,
                 }
             },
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur web',
+                domaine_formation: {
+                    formacodes: ['22403']
+                },
+                certifications: {
+                    certifinfos: ['80735']
+                },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
+                },
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                        ville: 'Paris'
+                    },
+                    organisme_financeurs: [
+                        '2'
+                    ],
+                    organisme_formateur: {
+                        raison_sociale: 'Anotea Formation Paris',
+                        siret: '22222222222222',
+                        numero: 'OF_XXX'
+                    }
+                }
+            },
             meta: {
                 source: {
+                    numero_action: 'AC_XX_XXXXXX',
                     numero_formation: 'F_XX_XX',
+                    numero_session: 'SE_XXXXXX',
                     type: 'intercarif',
                 },
                 reconciliation: {
-                    organisme_formateurs: ['22222222222222'],
+                    organisme_formateur: '22222222222222',
+                    lieu_de_formation: '75019',
                     certifinfos: ['80735'],
                     formacodes: ['22403']
                 },
@@ -151,9 +174,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateFormations(db);
+        await generateSessions(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
+        let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.score, {
             nb_avis: 3,
             notes: {
@@ -174,35 +197,58 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await generateFormations(db);
+        await generateSessions(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
+        let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX',
-            numero: 'F_XX_XX',
-            intitule: 'Développeur web',
-            domaine_formation: {
-                formacodes: ['22403']
-            },
-            certifications: {
-                certifinfos: ['80735']
-            },
-            organisme_responsable: {
-                numero: 'OR_XX_XXX',
-                raison_sociale: 'Centre de formation Anotéa',
-                siret: '11111111111111',
-            },
+            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
+            numero: 'SE_XXXXXX',
+            region: '11',
+            code_region: '11',
             avis: [],
             score: {
                 nb_avis: 0
             },
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur web',
+                domaine_formation: {
+                    formacodes: ['22403']
+                },
+                certifications: {
+                    certifinfos: ['80735']
+                },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
+                },
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                        ville: 'Paris'
+                    },
+                    organisme_financeurs: [
+                        '2'
+                    ],
+                    organisme_formateur: {
+                        raison_sociale: 'Anotea Formation Paris',
+                        siret: '22222222222222',
+                        numero: 'OF_XXX'
+                    }
+                }
+            },
             meta: {
                 source: {
+                    numero_action: 'AC_XX_XXXXXX',
                     numero_formation: 'F_XX_XX',
+                    numero_session: 'SE_XXXXXX',
                     type: 'intercarif',
                 },
                 reconciliation: {
-                    organisme_formateurs: ['22222222222222'],
+                    organisme_formateur: '22222222222222',
+                    lieu_de_formation: '75019',
                     formacodes: ['22403'],
                     certifinfos: ['80735']
                 },
@@ -232,24 +278,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateFormations(db);
+        await generateSessions(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
+        let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX',
-            numero: 'F_XX_XX',
-            intitule: 'Développeur web',
-            domaine_formation: {
-                formacodes: ['22403']
-            },
-            certifications: {
-                certifinfos: ['80735']
-            },
-            organisme_responsable: {
-                numero: 'OR_XX_XXX',
-                raison_sociale: 'Centre de formation Anotéa',
-                siret: '11111111111111',
-            },
+            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
+            numero: 'SE_XXXXXX',
+            region: '11',
+            code_region: '11',
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -262,13 +298,46 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     global: 2.4,
                 }
             },
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur web',
+                domaine_formation: {
+                    formacodes: ['22403']
+                },
+                certifications: {
+                    certifinfos: ['80735']
+                },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
+                },
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                        ville: 'Paris'
+                    },
+                    organisme_financeurs: [
+                        '2'
+                    ],
+                    organisme_formateur: {
+                        raison_sociale: 'Anotea Formation Paris',
+                        siret: '22222222222222',
+                        numero: 'OF_XXX'
+                    }
+                }
+            },
             meta: {
                 source: {
+                    numero_action: 'AC_XX_XXXXXX',
                     numero_formation: 'F_XX_XX',
+                    numero_session: 'SE_XXXXXX',
                     type: 'intercarif',
                 },
                 reconciliation: {
-                    organisme_formateurs: ['22222222222222'],
+                    organisme_formateur: '22222222222222',
+                    lieu_de_formation: '75019',
                     certifinfos: ['80735'],
                     formacodes: ['22403']
                 },
@@ -299,24 +368,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateFormations(db);
+        await generateSessions(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
+        let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX',
-            numero: 'F_XX_XX',
-            intitule: 'Développeur web',
-            domaine_formation: {
-                formacodes: ['22403']
-            },
-            certifications: {
-                certifinfos: ['80735']
-            },
-            organisme_responsable: {
-                numero: 'OR_XX_XXX',
-                raison_sociale: 'Centre de formation Anotéa',
-                siret: '11111111111111',
-            },
+            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
+            numero: 'SE_XXXXXX',
+            region: '11',
+            code_region: '11',
             avis: [comment],
             score: {
                 nb_avis: 1,
@@ -329,13 +388,46 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     global: 2.4,
                 }
             },
+            formation: {
+                numero: 'F_XX_XX',
+                intitule: 'Développeur web',
+                domaine_formation: {
+                    formacodes: ['22403']
+                },
+                certifications: {
+                    certifinfos: ['80735']
+                },
+                organisme_responsable: {
+                    numero: 'OR_XX_XXX',
+                    raison_sociale: 'Centre de formation Anotéa',
+                    siret: '11111111111111',
+                },
+                action: {
+                    numero: 'AC_XX_XXXXXX',
+                    lieu_de_formation: {
+                        code_postal: '75019',
+                        ville: 'Paris'
+                    },
+                    organisme_financeurs: [
+                        '2'
+                    ],
+                    organisme_formateur: {
+                        raison_sociale: 'Anotea Formation Paris',
+                        siret: '22222222222222',
+                        numero: 'OF_XXX'
+                    }
+                }
+            },
             meta: {
                 source: {
+                    numero_action: 'AC_XX_XXXXXX',
                     numero_formation: 'F_XX_XX',
+                    numero_session: 'SE_XXXXXX',
                     type: 'intercarif',
                 },
                 reconciliation: {
-                    organisme_formateurs: ['22222222222222'],
+                    organisme_formateur: '22222222222222',
+                    lieu_de_formation: '75019',
                     certifinfos: ['80735'],
                     formacodes: ['22403']
                 },
@@ -365,9 +457,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateFormations(db);
+        await generateSessions(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
+        let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
         assert.strictEqual(session.avis[0].comment, null);
     });
@@ -393,14 +485,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         delete comment.published;
         delete comment.rejected;
 
+
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateFormations(db);
+        await generateSessions(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
+        let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
         assert.strictEqual(session.avis[0].comment, undefined);
     });
@@ -427,9 +520,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateFormations(db);
+        await generateSessions(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
+        let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.avis, []);
     });
 
@@ -460,9 +553,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateFormations(db);
+        await generateSessions(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
+        let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
         assert.strictEqual(session.avis[0].rejected, true);
     });
