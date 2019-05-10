@@ -30,8 +30,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', avisReconciliable),
         ]);
-
         await generateActions(db);
+
         await addReconciliationAvisMetadata(db);
 
         let avis = await db.collection('comment').findOne();
@@ -62,8 +62,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', avisNonReconciliable),
         ]);
-
         await generateActions(db);
+
         await addReconciliationAvisMetadata(db);
 
         let avis = await db.collection('comment').findOne();

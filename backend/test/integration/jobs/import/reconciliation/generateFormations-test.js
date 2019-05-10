@@ -33,8 +33,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateFormations(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
-        assert.deepStrictEqual(session, {
+        let formation = await db.collection('formationsReconciliees').findOne();
+        delete formation.meta.import_date;
+        assert.deepStrictEqual(formation, {
             _id: 'F_XX_XX',
             numero: 'F_XX_XX',
             intitule: 'Développeur web',
@@ -156,8 +157,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateFormations(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
-        assert.deepStrictEqual(session.score, {
+        let formation = await db.collection('formationsReconciliees').findOne();
+        assert.deepStrictEqual(formation.score, {
             nb_avis: 3,
             notes: {
                 accueil: 1.3,
@@ -179,8 +180,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateFormations(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
-        assert.deepStrictEqual(session, {
+        let formation = await db.collection('formationsReconciliees').findOne();
+        delete formation.meta.import_date;
+        assert.deepStrictEqual(formation, {
             _id: 'F_XX_XX',
             numero: 'F_XX_XX',
             intitule: 'Développeur web',
@@ -237,8 +239,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateFormations(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
-        assert.deepStrictEqual(session, {
+        let formation = await db.collection('formationsReconciliees').findOne();
+        delete formation.meta.import_date;
+        assert.deepStrictEqual(formation, {
             _id: 'F_XX_XX',
             numero: 'F_XX_XX',
             intitule: 'Développeur web',
@@ -306,8 +309,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateFormations(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
-        assert.deepStrictEqual(session, {
+        let formation = await db.collection('formationsReconciliees').findOne();
+        delete formation.meta.import_date;
+        assert.deepStrictEqual(formation, {
             _id: 'F_XX_XX',
             numero: 'F_XX_XX',
             intitule: 'Développeur web',
@@ -374,9 +378,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateFormations(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
-        assert.strictEqual(session.avis.length, 1);
-        assert.strictEqual(session.avis[0].comment, null);
+        let formation = await db.collection('formationsReconciliees').findOne();
+        assert.strictEqual(formation.avis.length, 1);
+        assert.strictEqual(formation.avis[0].comment, null);
     });
 
     it('should reconcile comment without commentaire (undefined)', async () => {
@@ -407,9 +411,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateFormations(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
-        assert.strictEqual(session.avis.length, 1);
-        assert.strictEqual(session.avis[0].comment, undefined);
+        let formation = await db.collection('formationsReconciliees').findOne();
+        assert.strictEqual(formation.avis.length, 1);
+        assert.strictEqual(formation.avis[0].comment, undefined);
     });
 
     it('should ignore not yet published comment', async () => {
@@ -436,8 +440,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateFormations(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
-        assert.deepStrictEqual(session.avis, []);
+        let formation = await db.collection('formationsReconciliees').findOne();
+        assert.deepStrictEqual(formation.avis, []);
     });
 
     it('should reconcile rejected comment', async () => {
@@ -469,8 +473,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateFormations(db);
 
-        let session = await db.collection('formationsReconciliees').findOne();
-        assert.strictEqual(session.avis.length, 1);
-        assert.strictEqual(session.avis[0].rejected, true);
+        let formation = await db.collection('formationsReconciliees').findOne();
+        assert.strictEqual(formation.avis.length, 1);
+        assert.strictEqual(formation.avis[0].rejected, true);
     });
 }));

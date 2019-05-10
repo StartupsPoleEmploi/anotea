@@ -33,8 +33,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateActions(db);
 
-        let session = await db.collection('actionsReconciliees').findOne();
-        assert.deepStrictEqual(session, {
+        let action = await db.collection('actionsReconciliees').findOne();
+        delete action.meta.import_date;
+        assert.deepStrictEqual(action, {
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
             region: '11',
@@ -172,8 +173,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateActions(db);
 
-        let session = await db.collection('actionsReconciliees').findOne();
-        assert.deepStrictEqual(session.score, {
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(action.score, {
             nb_avis: 3,
             notes: {
                 accueil: 1.3,
@@ -195,8 +196,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateActions(db);
 
-        let session = await db.collection('actionsReconciliees').findOne();
-        assert.deepStrictEqual(session, {
+        let action = await db.collection('actionsReconciliees').findOne();
+        delete action.meta.import_date;
+        assert.deepStrictEqual(action, {
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
             region: '11',
@@ -272,8 +274,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateActions(db);
 
-        let session = await db.collection('actionsReconciliees').findOne();
-        assert.deepStrictEqual(session, {
+        let action = await db.collection('actionsReconciliees').findOne();
+        delete action.meta.import_date;
+        assert.deepStrictEqual(action, {
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
             region: '11',
@@ -358,8 +361,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateActions(db);
 
-        let session = await db.collection('actionsReconciliees').findOne();
-        assert.deepStrictEqual(session, {
+        let action = await db.collection('actionsReconciliees').findOne();
+        delete action.meta.import_date;
+        assert.deepStrictEqual(action, {
             _id: 'F_XX_XX|AC_XX_XXXXXX',
             numero: 'AC_XX_XXXXXX',
             region: '11',
@@ -445,9 +449,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateActions(db);
 
-        let session = await db.collection('actionsReconciliees').findOne();
-        assert.strictEqual(session.avis.length, 1);
-        assert.strictEqual(session.avis[0].comment, null);
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.strictEqual(action.avis.length, 1);
+        assert.strictEqual(action.avis[0].comment, null);
     });
 
     it('should reconcile comment without commentaire (undefined)', async () => {
@@ -478,9 +482,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateActions(db);
 
-        let session = await db.collection('actionsReconciliees').findOne();
-        assert.strictEqual(session.avis.length, 1);
-        assert.strictEqual(session.avis[0].comment, undefined);
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.strictEqual(action.avis.length, 1);
+        assert.strictEqual(action.avis[0].comment, undefined);
     });
 
     it('should ignore not yet published comment', async () => {
@@ -507,8 +511,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateActions(db);
 
-        let session = await db.collection('actionsReconciliees').findOne();
-        assert.deepStrictEqual(session.avis, []);
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(action.avis, []);
     });
 
     it('should reconcile rejected comment', async () => {
@@ -540,8 +544,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await generateActions(db);
 
-        let session = await db.collection('actionsReconciliees').findOne();
-        assert.strictEqual(session.avis.length, 1);
-        assert.strictEqual(session.avis[0].rejected, true);
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.strictEqual(action.avis.length, 1);
+        assert.strictEqual(action.avis[0].rejected, true);
     });
 }));

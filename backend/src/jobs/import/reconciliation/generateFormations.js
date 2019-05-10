@@ -2,13 +2,11 @@ const { transformObject } = require('../../../common/utils/stream-utils');
 const computeScore = require('./utils/computeScore');
 const findAvisReconciliables = require('./utils/findAvisReconciliables');
 
-module.exports = async db => {
-
-    await db.collection('formationsReconciliees').removeMany({});
+module.exports = db => {
 
     return new Promise((resolve, reject) => {
 
-        let inserted = 0;
+        let imported = 0;
 
         db.collection('intercarif').find()
         .pipe(transformObject(async formation => {
@@ -22,8 +20,9 @@ module.exports = async db => {
 
             let avis = await findAvisReconciliables(db, formation, { sirets });
 
-            await db.collection('formationsReconciliees').insertOne({
-                _id: `${formation._attributes.numero}`,
+            let id = formation._attributes.numero;
+            await db.collection('formationsReconciliees').replaceOne({ _id: id }, {
+                _id: id,
                 numero: formation._attributes.numero,
                 intitule: formation.intitule_formation,
                 domaine_formation: {
@@ -40,6 +39,7 @@ module.exports = async db => {
                 avis: avis || [],
                 score: computeScore(avis),
                 meta: {
+                    import_date: new Date(),
                     source: {//TODO remove source field in v2
                         numero_formation: formation._attributes.numero,
                         type: 'intercarif',
@@ -51,15 +51,15 @@ module.exports = async db => {
                         formacodes: formation._meta.formacodes,
                     },
                 },
-            });
+            }, { upsert: true });
 
-            return { inserted: ++inserted };
+            return { inserted: 1 };
         }))
         .on('data', data => {
-            inserted += data.inserted;
+            imported += data.inserted;
         })
         .on('error', e => reject(e))
-        .on('finish', () => resolve({ imported: inserted }));
+        .on('finish', () => resolve({ imported }));
     });
 };
 
