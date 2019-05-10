@@ -38,7 +38,7 @@ module.exports = {
             db.collection('comment').createIndex({ 'reponse.lastModerationAction': 1 }),
             db.collection('comment').createIndex({ 'reponse.status': 1 }),
             db.collection('comment').createIndex({ 'reponse.date': 1 }),
-            db.collection('comment').createIndex({ 'meta.reconciliation': 1 }),
+            db.collection('comment').createIndex({ 'meta.reconciliations': 1 }),
         ]);
     },
     accounts: db => {

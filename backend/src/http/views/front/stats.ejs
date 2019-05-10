@@ -20,6 +20,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
                 integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
                 crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
         <style>
             .anotea {
                 font-size: 1rem;
@@ -45,38 +46,64 @@
                         <h1 class="d-flex justify-content-center">Statistiques Anotea</h1>
                     </div>
                 </div>
+
+                <h2>Organismes</h2>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="card">
-                            <div class="card-header">
-                                Organismes
-                            </div>
+                            <div class="card-header">Global</div>
                             <div class="card-body">
                                 <div class="card-text">
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Tous</th>
-                                                <th scope="col">Kairos</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Nombre d'organismes</th>
+                                                <th scope="col">Nombre d'organismes actifs</th>
+                                                <th scope="col">Nombre d'organismes ayant au moins un avis</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <th scope="row">Nombre d'organismes</th>
-                                                <td><%= organismes.nbOrganismes %></td>
-                                                <td><%= kairos.nbOrganismes %></td>
+                                                <td>Tous</td>
+                                                <td><%= data.organismes.organismes.nbOrganismes %></td>
+                                                <td><%= data.organismes.organismes.actifs %></td>
+                                                <td><%= data.organismes.organismes.hasAtLeastOneAvis %></td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Nombre d'organismes actifs</th>
-                                                <td><%= organismes.actifs %></td>
-                                                <td><%= kairos.actifs %></td>
+                                                <td>Kairos</td>
+                                                <td><%= data.organismes.kairos.nbOrganismes %></td>
+                                                <td><%= data.organismes.kairos.actifs %></td>
+                                                <td><%= data.organismes.kairos.hasAtLeastOneAvis %></td>
                                             </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">Par région</div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <table class="table">
+                                        <thead>
                                             <tr>
-                                                <th scope="row">Nombre d'organismes ayant au moins un avis</th>
-                                                <td><%= organismes.hasAtLeastOneAvis %></td>
-                                                <td><%= kairos.hasAtLeastOneAvis %></td>
+                                                <th scope="col">Region</th>
+                                                <th scope="col">Nombre d'organismes</th>
+                                                <th scope="col">Nombre d'organismes actifs</th>
+                                                <th scope="col">Taux d'organismes avec avis</th>
                                             </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% data.organismes.regions.forEach(function(element) { %>
+                                                <tr>
+                                                    <td><%= element.region %></td>
+                                                    <td><%= element.nbOrganimes %></td>
+                                                    <td><%= element.nbOrganismesActifs %></td>
+                                                    <td><%= element.organismesAvecAuMoinsUnAvis %></td>
+                                                </tr>
+                                            <% }); %>
                                         </tbody>
                                     </table>
                                 </div>
@@ -92,7 +119,7 @@
                                     <div class="embed-responsive embed-responsive-16by9">
                                         <iframe
                                                 class="embed-responsive-item"
-                                                src="<%= kairos.kibanaDashboardUrl %>"
+                                                src="<%= data.organismes.kairos.kibanaDashboardUrl %>"
                                         ></iframe>
                                     </div>
                                 </div>
@@ -101,9 +128,104 @@
                         </div>
                     </div>
                 </div>
+
+                <h2>Avis</h2>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">Par région</div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Region</th>
+                                                <th scope="col">Nombre d'avis</th>
+                                                <th scope="col">Avis Restitutables Formation</th>
+                                                <th scope="col">Avis Restitutables Action</th>
+                                                <th scope="col">Avis Restitutables Session</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% data.avis.forEach(function(element) { %>
+                                                <tr>
+                                                    <td><%= element.region %></td>
+                                                    <td><%= element.nbAvis %></td>
+                                                    <td><%= element.avisRestitutables.apiRouteFormations %></td>
+                                                    <td><%= element.avisRestitutables.apiRouteActions %></td>
+                                                    <td><%= element.avisRestitutables.apiRouteSessions %></td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Formations</h2>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">Global</div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Nombre de formations</th>
+                                                <th scope="col">Formations avec au moins un avis</th>
+                                                <th scope="col">Formations avec au moins trois avis</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><%= data.formations.nbFormations %></td>
+                                                <td><%= data.formations.formationsAvecAuMoinsUnAvis %></td>
+                                                <td><%= data.formations.formationsAvecAuMoinsTroisAvis %></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Sessions</h2>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">Par région</div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Region</th>
+                                                <th scope="col">Nombre de sessions</th>
+                                                <th scope="col">Sessions avec au moins un avis</th>
+                                                <th scope="col">Sessions avec au moins trois avis</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% data.sessions.forEach(function(element) { %>
+                                                <tr>
+                                                    <td><%= element.region %></td>
+                                                    <td><%= element.nbSessions %></td>
+                                                    <td><%= element.sessionsAvecAuMoinsUnAvis %></td>
+                                                    <td><%= element.sessionsAvecAuMoinsTroisAvis %></td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-
         </section>
     </body>
 
