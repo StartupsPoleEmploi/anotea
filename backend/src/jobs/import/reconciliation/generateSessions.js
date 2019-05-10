@@ -11,6 +11,17 @@ module.exports = db => {
         let imported = 0;
 
         db.collection('intercarif').find()
+        .project({
+            '_attributes': 1,
+            '_meta': 1,
+            'intitule_formation': 1,
+            'organisme_formation_responsable': 1,
+            'actions._attributes': 1,
+            'actions.organisme_formateur': 1,
+            'actions.organisme_financeurs': 1,
+            'actions.lieu_de_formation': 1,
+            'actions.sessions._attributes': 1,
+        })
         .pipe(transformObject(async formation => {
 
             let promises = formation.actions.reduce((acc, action) => {

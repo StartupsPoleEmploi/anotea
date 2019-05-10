@@ -9,6 +9,13 @@ module.exports = db => {
         let imported = 0;
 
         db.collection('intercarif').find()
+        .project({
+            '_attributes': 1,
+            '_meta': 1,
+            'intitule_formation': 1,
+            'organisme_formation_responsable': 1,
+            'actions.organisme_formateur': 1,
+        })
         .pipe(transformObject(async formation => {
 
             let sirets = formation.actions.reduce((acc, action) => {
