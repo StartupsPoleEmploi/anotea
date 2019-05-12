@@ -67,11 +67,17 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await addReconciliationAvisMetadata(db);
 
         let avis = await db.collection('comment').findOne();
+        assert.deepStrictEqual(_.omit(avis.meta.reconciliation, ['date']), {
+            reconciliable: false,
+            formation: false,
+            action: false,
+            session: false,
+        });
         assert.ok(avis.meta.reconciliations);
-        let reconciliation = avis.meta.reconciliations[0];
-        assert.ok(reconciliation);
-        assert.ok(reconciliation.date);
-        assert.deepStrictEqual(_.omit(reconciliation, ['date']), {
+        let lastReconciliation = avis.meta.reconciliations[0];
+        assert.ok(lastReconciliation);
+        assert.ok(lastReconciliation.date);
+        assert.deepStrictEqual(_.omit(lastReconciliation, ['date']), {
             reconciliable: false,
             formation: false,
             action: false,

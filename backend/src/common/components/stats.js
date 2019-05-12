@@ -8,9 +8,9 @@ module.exports = (db, regions) => {
 
         let [nbAvis, formation, action, session] = await Promise.all([
             avis.countDocuments({ 'codeRegion': { $in: codeRegions } }),
-            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliations.formation': true }),
-            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliations.action': true }),
-            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliations.session': true }),
+            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliation.formation': true }),
+            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliation.action': true }),
+            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliation.session': true }),
         ]);
 
         return {
