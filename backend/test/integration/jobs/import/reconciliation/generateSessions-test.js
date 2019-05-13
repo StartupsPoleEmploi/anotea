@@ -1,4 +1,5 @@
 const assert = require('assert');
+const logger = require('../../../../helpers/test-logger');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
@@ -31,7 +32,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db);
+        await generateSessions(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         delete session.meta.import_date;
@@ -178,7 +179,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db);
+        await generateSessions(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.score, {
@@ -201,7 +202,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await generateSessions(db);
+        await generateSessions(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         delete session.meta.import_date;
@@ -283,7 +284,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db);
+        await generateSessions(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         delete session.meta.import_date;
@@ -376,7 +377,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db);
+        await generateSessions(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         delete session.meta.import_date;
@@ -468,7 +469,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db);
+        await generateSessions(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
@@ -502,7 +503,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateSessions(db);
+        await generateSessions(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
@@ -531,7 +532,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db);
+        await generateSessions(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.avis, []);
@@ -564,7 +565,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateSessions(db);
+        await generateSessions(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);

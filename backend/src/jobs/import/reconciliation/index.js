@@ -12,7 +12,7 @@ const removePreviousImports = require('./removePreviousImports');
 cli.description('Reconciling sessions/actions with comments...')
 .parse(process.argv);
 
-execute(async ({ logger, db }) => {
+execute(async ({ db, logger }) => {
 
     logger.info(`Reconciling avis with intercarif...`);
     let [formations, actions, sessions] = await Promise.all([

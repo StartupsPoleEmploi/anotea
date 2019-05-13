@@ -1,14 +1,19 @@
 const { transformObject } = require('../../../common/utils/stream-utils');
+const { delay } = require('../../job-utils');
 const computeScore = require('./utils/computeScore');
 const findAvisReconciliables = require('./utils/findAvisReconciliables');
 
-module.exports = db => {
+module.exports = (db, logger) => {
 
     return new Promise((resolve, reject) => {
 
-        let imported = 0;
+        let stats = {
+            imported: 0,
+            error: 0,
+        };
 
         db.collection('intercarif').find()
+        .batchSize(10)
         .project({
             '_attributes': 1,
             '_meta': 1,
@@ -58,15 +63,19 @@ module.exports = db => {
                         formacodes: formation._meta.formacodes,
                     },
                 },
-            }, { upsert: true });
+            }, { upsert: true })
+            .catch(e => {
+                logger.error(`Unable to import formation ${id}`, e);
+                return stats.error++;
+            });
 
-            return { inserted: 1 };
+            return 1;
         }))
         .on('data', data => {
-            imported += data.inserted;
+            stats.imported += data;
         })
         .on('error', e => reject(e))
-        .on('finish', () => resolve({ imported }));
+        .on('finish', () => stats.error ? reject(stats) : resolve(stats));
     });
 };
 

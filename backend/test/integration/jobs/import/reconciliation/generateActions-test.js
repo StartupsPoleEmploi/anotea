@@ -1,4 +1,5 @@
 const assert = require('assert');
+const logger = require('../../../../helpers/test-logger');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
@@ -31,7 +32,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateActions(db);
+        await generateActions(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         delete action.meta.import_date;
@@ -171,7 +172,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateActions(db);
+        await generateActions(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.score, {
@@ -194,7 +195,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await generateActions(db);
+        await generateActions(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         delete action.meta.import_date;
@@ -272,7 +273,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateActions(db);
+        await generateActions(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         delete action.meta.import_date;
@@ -359,7 +360,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateActions(db);
+        await generateActions(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         delete action.meta.import_date;
@@ -447,7 +448,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateActions(db);
+        await generateActions(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(action.avis.length, 1);
@@ -480,7 +481,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateActions(db);
+        await generateActions(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(action.avis.length, 1);
@@ -509,7 +510,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateActions(db);
+        await generateActions(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.avis, []);
@@ -542,7 +543,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateActions(db);
+        await generateActions(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(action.avis.length, 1);
