@@ -22,7 +22,7 @@ cli.description('launch trainee import')
 .option('-r, --region [codeRegion]', 'Code region to filter')
 .option('-s, --since [since]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
 .option('--append', 'Append stagiaires to an existing campaign')
-.option('--slackWebhookUrl [slackWebhookUrl]', 'Send a slack notification when job is finished')
+.option('--slack', 'Send a slack notification when job is finished')
 .option('-d, --dry-run', 'Execute this script in dry mode', () => {
     dryRun = true;
 }, false)
@@ -104,4 +104,4 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
             throw e;
         }
     }
-});
+}, { slack: cli.slack });
