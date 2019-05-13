@@ -45,6 +45,3 @@ services:
     container_name: anotea_backend
     build:
       context: backend
-    depends_on:
-      - mongodb
-      - smtp
