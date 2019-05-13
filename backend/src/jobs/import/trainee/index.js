@@ -88,18 +88,12 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
             let results = await importer.importTrainee(cli.file, handler, filters);
 
             sendSlackNotification({
-                webhookUrl: cli.slackWebhookUrl,
-                message: {
-                    text: `${results.imported} stagiaires importés pour le fichier ${cli.file} ` +
-                        `(Ignorés : ${results.ignored}, Nombre d'erreurs : ${results.invalid})`,
-                },
+                text: `${results.imported} stagiaires importés pour le fichier ${cli.file} ` +
+                    `(Ignorés : ${results.ignored}, Nombre d'erreurs : ${results.invalid})`,
             });
         } catch (e) {
             sendSlackNotification({
-                webhookUrl: cli.slackWebhookUrl,
-                message: {
-                    text: `Le fichier stagiaires ${cli.file} n'a pas pu être importé`,
-                },
+                text: `Le fichier stagiaires ${cli.file} n'a pas pu être importé`,
             });
             throw e;
         }
