@@ -150,7 +150,7 @@ class AnoteaWidget extends Component {
                     }
 
                     <div className="propulsed">
-                        Propulsé par <img src={`/img/logo_Anotea_Horizontal_baseline2.png`} alt="logo Anotea" />
+                        Propulsé par <img src={`/images/logo.png`} alt="logo Anotea" />
                     </div>
                 </div>
                 }
