@@ -15,7 +15,7 @@ class WidgetAnotea extends HTMLElement {
         }
         this.node = document.createElement('div');
         this.appendChild(this.node);
-        return this.node.attachShadow({mode: 'closed'});
+        return this.node.attachShadow({ mode: 'closed' });
     }
 
 
@@ -32,8 +32,8 @@ class WidgetAnotea extends HTMLElement {
             numeroFormation={this.getAttribute('numeroFormation')} />, this.root);
     }
 
-    renderWidget = () => {         
-        if(this.getAttribute('layout') === 'large') {
+    renderWidget = () => {
+        if (this.getAttribute('layout') === 'large') {
             if (window.innerWidth > 780 && this.currentLayout !== 'large') {
                 this.doRender('large');
             } else if (window.innerWidth <= 780 && this.currentLayout !== 'small') {
@@ -47,7 +47,7 @@ class WidgetAnotea extends HTMLElement {
     connectedCallback() {
         window.onresize = this.renderWidget;
         this.layout = this.getAttribute('layout');
-        if(this.layout === 'tiny') {
+        if (this.layout === 'tiny') {
             let root = this.createRoot();
             ReactDOM.render(<AnoteaTinyWidget
                 type={this.getAttribute('type')}

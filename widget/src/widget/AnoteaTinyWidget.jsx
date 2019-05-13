@@ -29,7 +29,11 @@ class AnoteaTinyWidget extends Component {
             getAvis(siret)
         ]);
         if (stats.organismes_formateurs.length > 0) {
-            this.setState({ score: stats.organismes_formateurs[0].score, avis: avis.avis, average: this.getAverage(stats.organismes_formateurs[0].score.notes.global) });
+            this.setState({
+                score: stats.organismes_formateurs[0].score,
+                avis: avis.avis,
+                average: this.getAverage(stats.organismes_formateurs[0].score.notes.global)
+            });
         }
     }
 
@@ -37,7 +41,11 @@ class AnoteaTinyWidget extends Component {
         let result = await getActions(numeroAction);
 
         if (result.actions.length > 0) {
-            this.setState({ score: result.actions[0].score, avis: result.actions[0].avis, average: this.getAverage(result.actions[0].score.notes.global) });
+            this.setState({
+                score: result.actions[0].score,
+                avis: result.actions[0].avis,
+                average: this.getAverage(result.actions[0].score.notes.global)
+            });
         }
     }
 
@@ -45,30 +53,37 @@ class AnoteaTinyWidget extends Component {
         let result = await getFormations(id);
 
         if (result.formations.length > 0) {
-            this.setState({ score: result.formations[0].score, avis: result.formations[0].avis, average: this.getAverage(result.formations[0].score.notes.global) });
-        } 
+            this.setState({
+                score: result.formations[0].score,
+                avis: result.formations[0].avis,
+                average: this.getAverage(result.formations[0].score.notes.global)
+            });
+        }
     }
 
     render() {
         return (
             <div className='anotea-tiny-widget'>
                 <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet"></link>
-                <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous"></link>
+                <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+                      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+                      crossOrigin="anonymous"></link>
                 <style>{styles}</style>
-                { this.state.score &&
-                    <div>
-                        <div className="average">
-                            <span className="rate">{this.state.average}</span>
-                            <span className="total">/5 <span className="fas fa-star active" style={{width: '14px', height: '14px'}}></span></span>
-                        </div>
-                    
-                        <div className="avis-count">
-                            {this.state.score.nb_avis} notes
-                        </div>
+                {this.state.score &&
+                <div>
+                    <div className="average">
+                        <span className="rate">{this.state.average}</span>
+                        <span className="total">/5 <span className="fas fa-star active"
+                                                         style={{ width: '14px', height: '14px' }}></span></span>
                     </div>
+
+                    <div className="avis-count">
+                        {this.state.score.nb_avis} notes
+                    </div>
+                </div>
                 }
-                { !this.state.score &&
-                    <span>0 avis</span>
+                {!this.state.score &&
+                <span>0 avis</span>
                 }
             </div>
         )

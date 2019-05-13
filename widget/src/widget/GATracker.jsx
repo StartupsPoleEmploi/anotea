@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 
 export default class GATracker extends Component {
@@ -6,7 +5,11 @@ export default class GATracker extends Component {
     constructor() {
         super();
         window.dataLayer = window.dataLayer || [];
-        function gtag(){window.dataLayer.push(arguments);}
+
+        function gtag() {
+            window.dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
         gtag('config', this.getID());
     }
