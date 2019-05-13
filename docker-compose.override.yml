@@ -35,6 +35,8 @@ services:
       - ANOTEA_LOG_FLUENTBIT_PORT=24224
     depends_on:
       - fluentbit
+      - mongodb
+      - smtp
 
   mongodb:
     image: mongo:4.0.4-xenial
