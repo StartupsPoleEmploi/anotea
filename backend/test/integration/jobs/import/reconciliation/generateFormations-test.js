@@ -1,4 +1,5 @@
 const assert = require('assert');
+const logger = require('../../../../helpers/test-logger');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
@@ -31,7 +32,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateFormations(db);
+        await generateFormations(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         delete formation.meta.import_date;
@@ -155,7 +156,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateFormations(db);
+        await generateFormations(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.deepStrictEqual(formation.score, {
@@ -178,7 +179,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await generateFormations(db);
+        await generateFormations(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         delete formation.meta.import_date;
@@ -237,7 +238,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateFormations(db);
+        await generateFormations(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         delete formation.meta.import_date;
@@ -307,7 +308,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateFormations(db);
+        await generateFormations(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         delete formation.meta.import_date;
@@ -376,7 +377,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateFormations(db);
+        await generateFormations(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.strictEqual(formation.avis.length, 1);
@@ -409,7 +410,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await generateFormations(db);
+        await generateFormations(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.strictEqual(formation.avis.length, 1);
@@ -438,7 +439,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateFormations(db);
+        await generateFormations(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.deepStrictEqual(formation.avis, []);
@@ -471,7 +472,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await generateFormations(db);
+        await generateFormations(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.strictEqual(formation.avis.length, 1);

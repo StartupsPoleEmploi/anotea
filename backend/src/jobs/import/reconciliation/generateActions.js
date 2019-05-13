@@ -4,11 +4,14 @@ const findAvisReconciliables = require('./utils/findAvisReconciliables');
 
 const flatten = array => [].concat.apply([], array);
 
-module.exports = db => {
+module.exports = (db, logger) => {
 
     return new Promise((resolve, reject) => {
 
-        let imported = 0;
+        let stats = {
+            imported: 0,
+            error: 0,
+        };
 
         db.collection('intercarif').find()
         .project({
@@ -33,12 +36,13 @@ module.exports = db => {
                     ...acc,
                     (async () => {
 
+                        stats.imported++;
+                        let id = `${formation._attributes.numero}|${action._attributes.numero}`;
                         let avis = await findAvisReconciliables(db, formation, {
                             sirets: [action.organisme_formateur.siret_formateur.siret],
                             lieu_de_formation: action.lieu_de_formation.coordonnees.adresse.codepostal,
                         });
 
-                        let id = `${formation._attributes.numero}|${action._attributes.numero}`;
                         return db.collection('actionsReconciliees').replaceOne({ _id: id }, {
                             _id: id,
                             numero: action._attributes.numero,
@@ -87,21 +91,25 @@ module.exports = db => {
                                     formacodes: formation._meta.formacodes,
                                 },
                             },
-                        }, { upsert: true });
-
+                        }, { upsert: true })
+                        .catch(e => {
+                            logger.error(`Unable to import action ${id}`, e);
+                            return stats.error++;
+                        });
                     })(),
                 ];
             }, []);
 
             await Promise.all(flatten(promises));
 
-            return { inserted: promises.length };
+            return promises.length;
+
         }))
         .on('data', data => {
-            imported += data.inserted;
+            stats.imported += data;
         })
         .on('error', e => reject(e))
-        .on('finish', () => resolve({ imported }));
+        .on('finish', () => stats.error ? reject(stats) : resolve(stats));
     });
 };
 
