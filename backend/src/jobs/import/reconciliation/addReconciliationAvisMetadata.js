@@ -12,24 +12,27 @@ module.exports = async db => {
                 db.collection('formationsReconciliees').countDocuments({ 'avis._id': avis._id }),
             ]);
 
-            return db.collection('comment').updateOne({ _id: avis._id }, {
+            let reconciliation = {
+                date: new Date(),
+                reconciliable: nbFormations + nbActions + nbSessions > 0,
+                formation: nbFormations > 0,
+                action: nbActions > 0,
+                session: nbSessions > 0,
+            };
+
+            await db.collection('comment').updateOne({ _id: avis._id }, {
+                $set: {
+                    'meta.reconciliation': reconciliation,
+                },
                 $push: {
                     'meta.reconciliations': {
-                        $each: [{
-                            date: new Date(),
-                            reconciliable: nbFormations + nbActions + nbSessions > 0,
-                            formation: nbFormations > 0,
-                            action: nbActions > 0,
-                            session: nbSessions > 0,
-                        }],
+                        $each: [reconciliation],
                         $slice: 365,
                     },
                 }
             });
         }))
-        .on('data', () => {
-            updated++;
-        })
+        .on('data', () => updated++)
         .on('error', e => reject(e))
         .on('finish', () => resolve({ updated }));
     });

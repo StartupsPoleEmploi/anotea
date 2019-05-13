@@ -46,7 +46,11 @@ class AccountMailer {
     }
 
     async sendEmails(action, options = {}) {
-        let total = 0;
+        let stats = {
+            total: 0,
+            sent: 0,
+            error: 0,
+        };
         let cursor = await this.db.collection('accounts').find(action.getQuery());
         if (options.limit) {
             cursor.limit(options.limit);
@@ -57,32 +61,31 @@ class AccountMailer {
             let organisme = await cursor.next();
             this.logger.debug('Sending email to', organisme);
 
-            total++;
+            stats.total++;
             try {
                 await this._sendEmail(organisme);
 
                 if (options.delay) {
                     await delay(options.delay);
                 }
+                stats.sent++;
             } catch (err) {
                 this.logger.error(err);
+                stats.error++;
             }
         }
-        return {
-            mailSent: total
-        };
+        return stats;
     }
 
     async sendEmailBySiret(siret) {
         let organisme = await this.db.collection('accounts').findOne({ 'meta.siretAsString': siret });
         try {
             await this._sendEmail(organisme);
+            return { total: 1, sent: 1, error: 0 };
         } catch (e) {
             await this._onError(e, organisme);
+            return { total: 1, sent: 0, error: 1 };
         }
-        return {
-            mailSent: 1
-        };
     }
 }
 

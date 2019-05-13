@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web." />
+
+    <title>Anotea - Documentation Widget</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+
+    <!-- old browser support -->
+    <script src="%PUBLIC_URL%/vendor/webcomponents-bundle.js"></script>
+    <script src="%PUBLIC_URL%/vendor/custom-elements-es5-adapter.js"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.fr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.3/es6-shim.min.js"></script>
+
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+        <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-light.min.css">
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous"></link>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <link rel="stylesheet" href="%PUBLIC_URL%/style.css">
+</head>
+
+<body>
+    <header>
+        <img class="logo" src="%PUBLIC_URL%/logo.svg" />
+        <h1>Espace développeur Anotéa</h1>
+    </header>
+
+    <section>
+        <h2>Documentation Widget</h2>
+
+        <p>
+            Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web. Il a été développé en tant que composant HTML5 (webcomponents) et supporte donc tous les navigateurs modernes et Internet Explorer dans une version 11 minimum.
+        </p>
+
+        <div class="alert alert-success" role="alert">
+            <i class="fa fa-question-circle"></i> Vous avez une question ? Consultez <a href="https://anotea.pole-emploi.fr/faq">notre
+                FAQ</a>.
+        </div>
+
+        <h2>Exemples</h2>
+
+        <h3>Version large</h3>
+
+        <anotea-widget  class="widgetAnotea" type="organisme" siret="18720092800112" layout="large"></anotea-widget >
+
+        <h3>Version étroite</h3>
+
+        <anotea-widget  class="widgetAnotea" type="organisme" siret="13001727000567" layout="small"></anotea-widget >
+
+        <h3>Version réduite</h3>
+
+        <anotea-widget  class="tinyWidgetAnotea" type="organisme" siret="18720092800112" layout="tiny"></anotea-widget >
+
+        <h2>Code d'intégration</h2>
+
+        <p>Positionner le code suivant à l'emplacement où vous souhaiter afficher le widget dans votre page HTML:</p>
+
+        <pre>
+            <code class="html">&lt;anotea-widget  class=&quot;widgetAnotea&quot; type=&quot;organisme&quot; siret=&quot;18720092800112&quot; layout=&quot;large&quot;&gt;&lt;/widget-anotea&gt;</code>
+        </pre>
+
+        <p>En bas de votre page HTML, insérez les balises suivantes :</p>
+
+        <pre>
+            <code class="html">&lt;script src=&quot;https://anotea.pole-emploi.fr/widget/anotea-widget.js&quot;&gt;&lt;/script&gt;</code>
+        </pre>
+
+        <h2>Paramétrage de l'affichage</h2>
+
+        <p>Vous pouvez modifier les éléments suivants :</p>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Paramètre</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Valeur par défaut</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">class</th>
+                    <td>La classe CSS à utilisé pour le noeud HTML.</td>
+                    <td>Aucune</td>
+                </tr>
+                <tr>
+                    <th scope="row">layout</th>
+                    <td>La disposition du widget. Les valeurs possibles sont <code>large</code>, <code>small</code> et <code>tiny</code>.</td>
+                    <td>large</td>
+                </tr>
+                <tr>
+                    <th scope="row">width</th>
+                    <td>La largeur du widget en pixels.</td>
+                    <td><code>300</code> en version étroite sinon prend tout l'espace disponible</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Paramétrage des données</h2>
+
+        <p>Vous pouvez modifier les éléments suivants :</p>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Paramètre</th>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">type</th>
+                    <td>Le type de donnée sur lequel afficher les avis. Choix possible : <code>organisme</code>, <code>action</code>, <code>formation</code></td>
+                </tr>
+                <tr>
+                    <th scope="row">siret</th>
+                    <td>Obligatoire si le type est <code>organisme</code>.</td>
+                </tr>
+                <tr>
+                    <th scope="row">numeroAction</th>
+                    <td>Obligatoire si le type est <code>action</code>.</td>
+                </tr>
+                <tr>
+                    <th scope="row">numeroFormation</th>
+                    <td>Obligatoire si le type est <code>formation</code>.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            S'il n'y a aucun avis alors le widget ne sera pas affiché, à l'exception
+            de la disposition tiny qui affichera le texte : <code>0 avis</code>.
+        </p>
+
+        <div class="alert alert-success" role="alert">
+            <i class="fa fa-info-circle"></i> Vous souhaitez aller plus loin ? Vous pouvez utiliser <a href="https://www.emploi-store-dev.fr/portail-developpeur/detailapicatalogue/anotea-notes-et-avis-sur-les-formations-v1;jsessionid=8ZSRilFzCR3nQ1x-b_SvZcJQClNyFc6_cymOPLrYYnAu-6aIyPii!-2059839056?id=5b61aa65f085a9d152a0ca2e">notre API</a> afin de mettre en oeuvre une intégration sur mesure.
+        </div>
+    </section>
+</body>
+
+</html>

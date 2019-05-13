@@ -2,13 +2,14 @@ const moment = require('moment');
 const config = require('config');
 const createComponents = require('../components');
 const createLogger = require('../common/components/logger');
+const { IncomingWebhook } = require('@slack/webhook');
 
 module.exports = {
     delay: milliseconds => {
         return new Promise(resolve => setTimeout(() => resolve(), milliseconds));
     },
     capitalizeFirstLetter: string => string.charAt(0).toUpperCase() + string.slice(1),
-    execute: async job => {
+    execute: async (job, options = {}) => {
 
         process.on('unhandledRejection', e => console.log(e));
         process.on('uncaughtException', e => console.log(e));
@@ -20,10 +21,22 @@ module.exports = {
                 logger.error(error);
             }
             await logger.close();
-            return components.client.close(() => error && process.exit(1));
+            return components.client.close(() => {
+                if (error) {
+                    process.exitCode = 1;
+                }
+            });
         };
 
-        let jobComponents = Object.assign({}, components, { exit });
+        let jobComponents = Object.assign({}, components, {
+            exit,
+            sendSlackNotification: message => {
+                if (options.slack) {
+                    let webhook = new IncomingWebhook(components.configuration.slack.webhookUrl);
+                    return webhook.send(message);
+                }
+            }
+        });
 
         try {
             let launchTime = new Date().getTime();

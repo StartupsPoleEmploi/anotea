@@ -2,45 +2,43 @@ module.exports = (db, regions) => {
 
     let { findActiveRegions } = regions;
 
-    let computeRegionalSessionStats = async (regionName, codeRegions) => {
+    let computeRegionalAvisStats = async (regionName, codeRegions) => {
 
-        let sessionsReconciliees = db.collection('sessionsReconciliees');
+        let avis = db.collection('comment');
 
-        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis, nbAvis, restituables] = await Promise.all([
-            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
-            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
-            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 3 } }),
-            db.collection('comment').countDocuments({ codeRegion: { $in: codeRegions } }),
-            db.collection('sessionsReconciliees').aggregate([
-                {
-                    $match: {
-                        code_region: { $in: codeRegions },
-                    }
-                },
-                {
-                    $unwind: '$avis'
-                },
-                {
-                    $group: {
-                        _id: '$avis._id',
-                    }
-                },
-                {
-                    $count: 'nbAvisRestituables'
-                }
-            ]).toArray()
+        let [nbAvis, formation, action, session] = await Promise.all([
+            avis.countDocuments({ 'codeRegion': { $in: codeRegions } }),
+            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliation.formation': true }),
+            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliation.action': true }),
+            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliation.session': true }),
         ]);
 
         return {
             region: regionName,
+            nbAvis,
+            avisRestitutables: {
+                'apiRouteFormations': `${Math.ceil((formation * 100) / nbAvis)}%`,
+                'apiRouteActions': `${Math.ceil((action * 100) / nbAvis)}%`,
+                'apiRouteSessions': `${Math.ceil((session * 100) / nbAvis)}%`,
+            },
+        };
+    };
+
+    let computeRegionalSessionStats = async (regionName, codeRegions) => {
+
+        let sessionsReconciliees = db.collection('sessionsReconciliees');
+
+        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis] = await Promise.all([
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
+            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 3 } }),
+        ]);
+
+        return {
+            region: regionName,
+            nbSessions,
             sessionsAvecAuMoinsUnAvis: `${Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions)}%`,
             sessionsAvecAuMoinsTroisAvis: `${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbSessions)}%`,
-            avisRestituables: restituables.length > 0 ? `${Math.ceil((restituables[0].nbAvisRestituables * 100) / nbAvis)}%` : 0,
-            meta: {
-                nbSessions,
-                nbSessionsAvecAuMoinsUnAvis,
-                nbAvis,
-            },
         };
     };
 
@@ -64,12 +62,10 @@ module.exports = (db, regions) => {
 
         return {
             region: regionName,
+            nbOrganimes,
+            nbOrganismesActifs,
+            nbOrganismesAvecAvis,
             organismesAvecAuMoinsUnAvis: `${Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes)}%`,
-            meta: {
-                nbOrganimes,
-                nbOrganismesActifs,
-                nbOrganismesAvecAvis,
-            }
         };
     };
 
@@ -98,15 +94,39 @@ module.exports = (db, regions) => {
 
             return { organismes, kairos, regions };
         },
-        computeSessionStats: async () => {
+        computeAvisStats: () => {
             let regions = findActiveRegions();
-            let sessions = await Promise.all(regions.map(async region => {
-                return computeRegionalSessionStats(region.nom, [region.codeRegion]);
-            }));
+            return Promise.all([
+                computeRegionalAvisStats('Toutes', regions.map(region => region.codeRegion)),
+                ...regions.map(async region => {
+                    return computeRegionalAvisStats(region.nom, [region.codeRegion]);
+                })
+            ]);
+        },
+        computeSessionsStats: () => {
+            let regions = findActiveRegions();
+            return Promise.all([
+                computeRegionalSessionStats('Toutes', regions.map(region => region.codeRegion)),
+                ...regions.map(async region => {
+                    return computeRegionalSessionStats(region.nom, [region.codeRegion]);
+                })
+            ]);
+        },
+        computeFormationsStats: async () => {
 
-            sessions.push(await computeRegionalSessionStats('Toutes', regions.map(region => region.codeRegion)));
+            let formationsReconciliees = db.collection('formationsReconciliees');
 
-            return sessions;
+            let [nbFormations, nbFormationAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis] = await Promise.all([
+                formationsReconciliees.countDocuments({}),
+                formationsReconciliees.countDocuments({ 'score.nb_avis': { $gte: 1 } }),
+                formationsReconciliees.countDocuments({ 'score.nb_avis': { $gte: 3 } }),
+            ]);
+
+            return {
+                nbFormations,
+                formationsAvecAuMoinsUnAvis: `${Math.ceil((nbFormationAvecAuMoinsUnAvis * 100) / nbFormations)}%`,
+                formationsAvecAuMoinsTroisAvis: `${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbFormations)}%`,
+            };
         },
         computeMailingStats: (codeRegion, codeFinanceur) => {
 

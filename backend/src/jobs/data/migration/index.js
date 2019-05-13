@@ -3,10 +3,8 @@
 
 const { execute } = require('../../job-utils');
 
-execute(async ({ db }) => {
-    let [fixInvalidReported] = await Promise.all([
-        require('./fix-invalid-reported')(db),
-    ]);
+const removeEmoji = require('./removeEmoji');
 
-    return { fixInvalidReported };
+execute(async ({ db }) => {
+    await removeEmoji(db);
 });

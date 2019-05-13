@@ -45,8 +45,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await accountMailer.sendEmails(action);
 
-        assert.deepEqual(results, { mailSent: 1 });
-        assert.deepEqual(emailsSent, [{ to: 'new@organisme.fr' }]);
+        assert.deepStrictEqual(results, {
+            total: 1,
+            sent: 1,
+            error: 0,
+        });
+        assert.deepStrictEqual(emailsSent, [{ to: 'new@organisme.fr' }]);
     });
 
     it('should send email only to organismes in active regions', async () => {
@@ -75,7 +79,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         });
         let results = await accountMailer.sendEmails(action);
 
-        assert.deepEqual(results, { mailSent: 0 });
+        assert.deepStrictEqual(results, {
+            total: 0,
+            sent: 0,
+            error: 0,
+        });
     });
 
 }));

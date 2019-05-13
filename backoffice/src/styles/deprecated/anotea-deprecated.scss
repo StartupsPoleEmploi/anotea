@@ -7,6 +7,7 @@
     margin: 0;
     padding: 0;
     font-family: sans-serif;
+    margin: auto;
   }
 
   .hidden {
@@ -14,13 +15,13 @@
   }
 
   .App-logo {
-    background-color: white;
-    border-radius: 20px;
-    padding: 10px;
+    background-color: #384EAA;
+    width: 120px;
+    height: 57px;
   }
 
   .App-header {
-    background-color: #222;
+    background-color: #384EAA;
     height: 130px;
     padding: 20px;
     color: white;
@@ -171,85 +172,7 @@
     -webkit-font-smoothing: antialiased;
     font: normal 14px Roboto, arial, sans-serif;
   }
-
-  .loginForm h1, .forgottenPassword h1 {
-    text-align: center;
-    margin-top: 50px;
-  }
-
-  .loginForm .block {
-    margin-top: 40px;
-    width: 250px;
-  }
-
-  .loginForm .block, .forgottenPassword .block {
-    margin: auto;
-    background-color: #EDEDED;
-    padding-top: 10px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 15px;
-    border-color: #d2d2d2;
-    border-width: 5px;
-    box-shadow: 0 1px 0 #cfcfcf;
-  }
-
-  .forgottenPassword .content {
-    margin: auto;
-    margin-top: 30px;
-    width: 70%;
-  }
-
-  .forgottenPassword .block, .forgottenPassword .info {
-    display: inline-block;
-  }
-
-  .forgottenPassword .block {
-    margin-top: 20px;
-  }
-
-  .forgottenPassword .info {
-    padding-left: 40px;
-  }
-
-  .forgottenPassword .asked, .forgottenPassword .passwordLost {
-    margin: auto;
-    width: 50%;
-  }
-
-  .forgottenPassword .asked {
-    margin-top: 60px;
-  }
-
-  .forgottenPassword .passwordLost {
-    display: inherit;
-  }
-
-  .forgottenPassword .passwordChanged {
-    text-align: center;
-  }
-
-  .loginForm .block h4, .forgottenPassword .block h4 {
-    border: 0 solid #fff;
-    border-bottom-width: 1px;
-    padding-bottom: 10px;
-    text-align: center;
-  }
-
-  .loginForm .block .form-control, .forgottenPassword .block .form-control {
-    border-radius: 10px;
-    margin: 10px 0px 10px 0px;
-  }
-
-  .loginForm .block .wrapper, .loginForm .loginHelp, .forgottenPassword .block .wrapper, .loginForm .loginHelp {
-    text-align: center;
-  }
-
-  .loginForm .loginHelp, .forgottenPassword .loginHelp {
-    margin-top: 20px;
-  }
-
+  
   .main {
     width: 80%;
     margin: auto;

@@ -2,8 +2,8 @@ const assert = require('assert');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
-const generateActions = require('../../../../../src/jobs/import/formations/generateActions');
-const addReconciliationAvisMetadata = require('../../../../../src/jobs/import/formations/addReconciliationAvisMetadata');
+const generateActions = require('../../../../../src/jobs/import/reconciliation/generateActions');
+const addReconciliationAvisMetadata = require('../../../../../src/jobs/import/reconciliation/addReconciliationAvisMetadata');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
@@ -67,11 +67,17 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await addReconciliationAvisMetadata(db);
 
         let avis = await db.collection('comment').findOne();
+        assert.deepStrictEqual(_.omit(avis.meta.reconciliation, ['date']), {
+            reconciliable: false,
+            formation: false,
+            action: false,
+            session: false,
+        });
         assert.ok(avis.meta.reconciliations);
-        let reconciliation = avis.meta.reconciliations[0];
-        assert.ok(reconciliation);
-        assert.ok(reconciliation.date);
-        assert.deepStrictEqual(_.omit(reconciliation, ['date']), {
+        let lastReconciliation = avis.meta.reconciliations[0];
+        assert.ok(lastReconciliation);
+        assert.ok(lastReconciliation.date);
+        assert.deepStrictEqual(_.omit(lastReconciliation, ['date']), {
             reconciliable: false,
             formation: false,
             action: false,
