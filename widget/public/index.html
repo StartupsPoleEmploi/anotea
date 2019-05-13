@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
     <head>
+        <title>Anotea - Documentation Widget</title>
+
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="description" content="Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web." />
 
-        <title>Anotea - Documentation Widget</title>
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900">
         <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
         <link rel="stylesheet" href="%PUBLIC_URL%/style.css">
-        <link rel="stylesheet"
-              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-              crossorigin="anonymous">
         <link rel="stylesheet"
               href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -25,11 +22,7 @@
 
         <script crossorigin="anonymous"
                 src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Cfetch%2CIntl"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-                crossorigin="anonymous"></script>
-        <script src="%PUBLIC_URL%/vendor/webcomponents-bundle.js"></script>
-        <script src="%PUBLIC_URL%/vendor/custom-elements-es5-adapter.js"></script>
+        <script src="%PUBLIC_URL%/vendors/webcomponentsjs/webcomponents-bundle.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script>
 
@@ -58,22 +51,22 @@
 
             <h3>Version large</h3>
 
-            <anotea-widget class="widgetAnotea" type="organisme" siret="18720092800112" layout="large"></anotea-widget>
+            <anotea-widget type="organisme" siret="18720092800112" layout="large"></anotea-widget>
 
             <h3>Version étroite</h3>
 
-            <anotea-widget class="widgetAnotea" type="organisme" siret="13001727000567" layout="small"></anotea-widget>
+            <anotea-widget type="organisme" siret="13001727000567" layout="small"></anotea-widget>
 
             <h3>Version réduite</h3>
 
-            <anotea-widget class="tinyWidgetAnotea" type="organisme" siret="18720092800112" layout="tiny"></anotea-widget>
+            <anotea-widget type="organisme" siret="18720092800112" layout="tiny"></anotea-widget>
 
             <h2>Code d'intégration</h2>
 
             <p>Positionner le code suivant à l'emplacement où vous souhaiter afficher le widget dans votre page HTML:</p>
 
             <pre>
-            <code class="html">&lt;anotea-widget  class=&quot;widgetAnotea&quot; type=&quot;organisme&quot; siret=&quot;18720092800112&quot; layout=&quot;large&quot;&gt;&lt;/widget-anotea&gt;</code>
+            <code class="html">&lt;anotea-widget type=&quot;organisme&quot; siret=&quot;18720092800112&quot; layout=&quot;large&quot;&gt;&lt;/widget-anotea&gt;</code>
         </pre>
 
             <p>En bas de votre page HTML, insérez les balises suivantes :</p>

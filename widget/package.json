@@ -43,11 +43,15 @@
   "vendorCopy": [
     {
       "from": "node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
-      "to": "public/vendor/custom-elements-es5-adapter.js"
+      "to": "public/vendors/webcomponentsjs/custom-elements-es5-adapter.js"
     },
     {
       "from": "node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js",
-      "to": "public/vendor/webcomponents-bundle.js"
+      "to": "public/vendors/webcomponentsjs/webcomponents-bundle.js"
+    },
+    {
+      "from": "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js",
+      "to": "public/vendors/webcomponentsjs/webcomponents-loader.js"
     }
   ]
 }
