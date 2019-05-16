@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import AnoteaWidget from "./widget/AnoteaWidget";
-import AnoteaScoreWidget from "./widget/AnoteaScoreWidget";
+import ScoreWidget from "./widget/ScoreWidget";
 import './widget/widget.scss';
+import './App.scss';
 
 class App extends Component {
 
@@ -20,7 +21,7 @@ class App extends Component {
 
     createScoreWidget = () => {
         return (
-            <AnoteaScoreWidget
+            <ScoreWidget
                 type={this.props.type}
                 siret={this.props.siret}
                 numeroAction={this.props.numeroAction}
@@ -32,11 +33,11 @@ class App extends Component {
     render() {
         switch (this.props.layout) {
             case 'score':
-                return this.createScoreWidget();
+                return <div className="anotea">{this.createScoreWidget()}</div>;
             case 'liste':
-                return this.createWidget('liste');
+                return <div className="anotea">{this.createWidget('liste')}</div>;
             default:
-                return this.createWidget('carrousel');
+                return <div className="anotea">{this.createWidget('carrousel')}</div>;
         }
     }
 
