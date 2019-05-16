@@ -1,0 +1,27 @@
+@import '../styles/variables';
+
+.ScoreWidget {
+
+  text-align: center;
+  min-height: 80px;
+
+  .score {
+    font-weight: $font-weight-900;
+    font-size: 2.18rem;
+  }
+
+  .total {
+    padding-left: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .star {
+    padding-left: 0.25rem;
+    color: $color-orange;
+    font-size: 0.875rem;
+  }
+
+  .nb_avis {
+    font-size: 0.875rem;
+  }
+}

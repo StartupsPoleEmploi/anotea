@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import AnoteaWidget from "./widget/AnoteaWidget";
-import ScoreWidget from "./widget/ScoreWidget";
-import './widget/widget.scss';
+import AnoteaWidget from "./widgets/AnoteaWidget";
+import ScoreWidget from "./widgets/ScoreWidget";
 import './App.scss';
+import './styles/widget.scss';
 
 class App extends Component {
 

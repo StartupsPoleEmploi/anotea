@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getOrganismesFormateurs, getAvis, getActions, getFormations } from './services/avisService';
+import { getOrganismesFormateurs, getAvis, getActions, getFormations } from '../services/avisService';
 import AvisCarrousel from './components/AvisCarrousel';
 import AvisList from './components/AvisList';
 import Stars from './components/Stars';

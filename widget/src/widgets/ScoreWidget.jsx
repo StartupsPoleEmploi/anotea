@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { getOrganismesFormateurs, getAvis, getActions, getFormations } from './services/avisService';
+import { getOrganismesFormateurs, getAvis, getActions, getFormations } from '../services/avisService';
+import './ScoreWidget.scss'
 
-class AnoteaScoreWidget extends Component {
+class ScoreWidget extends Component {
 
     state = {
         score: null,
@@ -60,28 +61,33 @@ class AnoteaScoreWidget extends Component {
 
     render() {
         return (
-            <div className='anotea-tiny-widget'>
-                {this.state.score &&
-                <div>
-                    <div className="average">
-                        <span className="rate">{this.state.average}</span>
-                        <span className="total">/5
-                            <span className="fas fa-star active" style={{ width: '14px', height: '14px' }}></span>
-                        </span>
-                    </div>
+            <div className='ScoreWidget'>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col align-self-center">
+                            {this.state.score &&
+                            <div>
+                                <div className="average">
+                                    <span className="score">{this.state.average}</span>
+                                    <span className="total">/5</span>
+                                    <i className="star fas fa-star"></i>
+                                </div>
 
-                    <div className="avis-count">
-                        {this.state.score.nb_avis} notes
+                                <div className="nb_avis">
+                                    {this.state.score.nb_avis} notes
+                                </div>
+                            </div>
+                            }
+                            {!this.state.score &&
+                            <span>0 avis</span>
+                            }
+                        </div>
                     </div>
                 </div>
-                }
-                {!this.state.score &&
-                <span>0 avis</span>
-                }
             </div>
         )
     }
 
 }
 
-export default AnoteaScoreWidget;
+export default ScoreWidget;

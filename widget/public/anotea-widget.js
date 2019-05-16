@@ -1,7 +1,7 @@
 (function() {
 
     var getStyles = function() {
-        var css = '.anotea-widget{position:relative}.anotea-widget::before{display:block;content:""}.anotea-widget iframe{position:absolute;top:0;bottom:0;left:0;width:100%;height:100%;border:0}';
+        var css = '.anotea-widget{overflow: hidden; position:relative}.anotea-widget::before{display:block;content:""}.anotea-widget iframe{position:absolute;top:0;bottom:0;left:0;width:100%;height:100%;border:0}';
 
         var style = document.createElement('style');
         if (style.styleSheet) {
@@ -26,7 +26,9 @@
             var layout = widget.getAttribute('data-layout');
             var iframe = document.createElement('iframe');
 
-            widget.style.cssText = layout === 'score' ? 'min-height:60px; min-width:100px' : 'min-height:200px; min-width:300px';
+            widget.style.cssText = layout === 'score' ?
+                'min-height:80px; min-width:140px' :
+                'min-height:300px; min-width:300px';
             iframe.src = 'http://localhost:3001' +
                 '?type=' + type +
                 '&siret=' + siret +
