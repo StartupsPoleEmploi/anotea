@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
+import { getOrganismesFormateurs, getAvis, getActions, getFormations } from './services/avisService';
+import Star from "./icons/Star";
 
-import { getOrganismesFormateurs, getAvis, getActions, getFormations } from '../lib/avisService';
-
-import styles from './anoteaTinyWidget.css.js';
-
-class AnoteaTinyWidget extends Component {
+class AnoteaScoreWidget extends Component {
 
     state = {
         score: null,
         avis: [],
         average: 0
-    }
+    };
 
     constructor(props) {
         super();
@@ -35,7 +33,7 @@ class AnoteaTinyWidget extends Component {
                 average: this.getAverage(stats.organismes_formateurs[0].score.notes.global)
             });
         }
-    }
+    };
 
     loadActionFormationInfo = async numeroAction => {
         let result = await getActions(numeroAction);
@@ -47,7 +45,7 @@ class AnoteaTinyWidget extends Component {
                 average: this.getAverage(result.actions[0].score.notes.global)
             });
         }
-    }
+    };
 
     loadFormationInfo = async id => {
         let result = await getFormations(id);
@@ -59,22 +57,18 @@ class AnoteaTinyWidget extends Component {
                 average: this.getAverage(result.formations[0].score.notes.global)
             });
         }
-    }
+    };
 
     render() {
         return (
             <div className='anotea-tiny-widget'>
-                <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet"></link>
-                <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-                      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
-                      crossOrigin="anonymous"></link>
-                <style>{styles}</style>
                 {this.state.score &&
                 <div>
                     <div className="average">
                         <span className="rate">{this.state.average}</span>
-                        <span className="total">/5 <span className="fas fa-star active"
-                                                         style={{ width: '14px', height: '14px' }}></span></span>
+                        <span className="total">/5
+                            <Star active={true} />
+                        </span>
                     </div>
 
                     <div className="avis-count">
@@ -89,6 +83,6 @@ class AnoteaTinyWidget extends Component {
         )
     }
 
-};
+}
 
-export default AnoteaTinyWidget;
+export default AnoteaScoreWidget;

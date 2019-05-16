@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
-import moment from 'moment';
-
+import moment from 'moment/moment';
 import Stars from './Stars';
 import Verified from './Verified';
-import ContactStagiaire from './ContactStagiaire';
 import GATracker from './GATracker';
-
-import styles from './AvisAvecCommentaireLarge.css.js';
 
 const PAGE_SIZE = 3;
 
-class AvisAvecCommentaireLarge extends Component {
+class AvisList extends Component {
 
     state = {
         avis: [],
@@ -68,9 +64,7 @@ class AvisAvecCommentaireLarge extends Component {
 
     render() {
         return (
-            <div className="avis-avec-commentaire large" style={{ width: `${this.props.width}px` }}>
-                <style>{styles}</style>
-
+            <div className="avis-avec-commentaire list" style={{ width: `${this.props.width}px` }}>
                 <div>
                     <div className="commentaires-header">
                         <h2>{this.state.avis.length} commentaires</h2>
@@ -135,11 +129,10 @@ class AvisAvecCommentaireLarge extends Component {
                 </div>
                 }
 
-                <ContactStagiaire />
                 <GATracker />
             </div>
         );
     }
 }
 
-export default AvisAvecCommentaireLarge;
+export default AvisList;

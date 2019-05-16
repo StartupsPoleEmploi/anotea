@@ -1,4 +1,4 @@
-import { _get } from '../utils/http-client';
+import { _get } from './http-client';
 
 export const getOrganismesFormateurs = siret => _get(`/organismes-formateurs?siret=${siret}&notes_decimales=true`);
 

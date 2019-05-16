@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
-import moment from 'moment';
-
+import moment from 'moment/moment';
 import Stars from './Stars';
-import ContactStagiaire from './ContactStagiaire';
 import GATracker from './GATracker';
 
-import styles from './AvisAvecCommentaire.css.js';
-
-class AvisAvecCommentaire extends Component {
+class AvisCarrousel extends Component {
 
     state = {
         avis: [],
         page: 0
-    }
+    };
 
     constructor(props) {
         super();
@@ -27,12 +23,11 @@ class AvisAvecCommentaire extends Component {
 
     goto = step => {
         this.setState({ page: this.state.page + step })
-    }
+    };
 
     render() {
         return (
-            <div className="avis-avec-commentaire small">
-                <style>{styles}</style>
+            <div className="avis-avec-commentaire carrousel">
                 {this.state.avis[this.state.page] &&
                 <div>
                     <div className="commentaires-header">
@@ -77,13 +72,13 @@ class AvisAvecCommentaire extends Component {
                         <div className="pagination">
                             <div className="nav-left">
                                 {this.state.page > 0 &&
-                                <span className="fas fa-chevron-left nav" onClick={this.goto.bind(this, -1)}></span>
+                                <span className="nav" onClick={() => this.goto(1)}>test</span>
                                 }
                             </div>
 
                             <div className="nav-right">
                                 {this.state.page < this.state.avis.length - 1 &&
-                                <span className="fas fa-chevron-right nav" onClick={this.goto.bind(this, 1)}></span>
+                                <span className="nav" onClick={() => this.goto(1)}>test 2</span>
                                 }
                             </div>
 
@@ -98,11 +93,10 @@ class AvisAvecCommentaire extends Component {
                 <div className="pas-commentaire">Il n'y a pas de commentaire sur cette formation pour le moment.</div>
                 }
 
-                <ContactStagiaire />
                 <GATracker />
             </div>
         );
     }
 }
 
-export default AvisAvecCommentaire;
+export default AvisCarrousel;

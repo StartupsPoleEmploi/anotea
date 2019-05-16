@@ -1,7 +1,7 @@
 body {
     padding: 0px;
-    font-family: Lato;
-}    
+    //font-family: Lato;
+}
 .alert, .table {
     width: fit-content;
 }

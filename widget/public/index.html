@@ -6,67 +6,61 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="description" content="Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web." />
 
-
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900">
-        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
         <link rel="stylesheet" href="%PUBLIC_URL%/style.css">
-        <link rel="stylesheet"
-              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-              crossorigin="anonymous">
-        <link rel="stylesheet"
-              href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-              integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
-              crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-light.min.css">
-
-        <script crossorigin="anonymous"
-                src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Cfetch%2CIntl"></script>
-        <script src="%PUBLIC_URL%/vendors/webcomponentsjs/webcomponents-bundle.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
-        <script>hljs.initHighlightingOnLoad();</script>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
     </head>
 
     <body>
         <header>
             <img class="logo" src="%PUBLIC_URL%/logo.svg" />
-            <h1>Espace développeur Anotéa</h1>
+            <h1>Widget Anotéa</h1>
         </header>
 
         <section>
-            <h2>Documentation Widget</h2>
-
             <p>
-                Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web. Il a été développé en tant que
-                composant HTML5 (webcomponents) et supporte donc tous les navigateurs modernes et Internet Explorer dans une version 11 minimum.
+                Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web.
+                Il a été développé en tant que composant HTML5 (webcomponents) et supporte donc tous les navigateurs modernes
+                et Internet Explorer dans une version 11 minimum.
             </p>
 
             <div class="alert alert-success" role="alert">
-                <i class="fa fa-question-circle"></i> Vous avez une question ? Consultez <a href="https://anotea.pole-emploi.fr/faq">notre
-                FAQ</a>.
+                <i class="fa fa-question-circle"></i> Vous avez une question ? Consultez
+                <a href="https://anotea.pole-emploi.fr/faq">notre FAQ</a>.
+            </div>
+        </section>
+
+        <section>
+            <div class="py-3">
+                <h2>Score</h2>
+                <div class="row justify-content-md-center">
+                    <anotea-widget type="organisme" siret="18720092800112" layout="score"></anotea-widget>
+                </div>
             </div>
 
-            <h2>Exemples</h2>
+            <div class="py-3">
+                <h2>Carrousel</h2>
+                <div class="row justify-content-md-center">
+                    <anotea-widget type="organisme" siret="13001727000567" layout="carrousel"></anotea-widget>
+                </div>
+            </div>
 
-            <h3>Version large</h3>
+            <div class="py-3">
+                <h2>Liste</h2>
+                <div class="row justify-content-md-center">
+                    <anotea-widget type="organisme" siret="18720092800112" layout="liste"></anotea-widget>
+                </div>
+            </div>
+        </section>
 
-            <anotea-widget type="organisme" siret="18720092800112" layout="large"></anotea-widget>
-
-            <h3>Version étroite</h3>
-
-            <anotea-widget type="organisme" siret="13001727000567" layout="small"></anotea-widget>
-
-            <h3>Version réduite</h3>
-
-            <anotea-widget type="organisme" siret="18720092800112" layout="tiny"></anotea-widget>
-
+        <section>
             <h2>Code d'intégration</h2>
 
             <p>Positionner le code suivant à l'emplacement où vous souhaiter afficher le widget dans votre page HTML:</p>
 
             <pre>
-            <code class="html">&lt;anotea-widget type=&quot;organisme&quot; siret=&quot;18720092800112&quot; layout=&quot;large&quot;&gt;&lt;/widget-anotea&gt;</code>
+            <code class="html">&lt;anotea-widget type=&quot;organisme&quot; siret=&quot;18720092800112&quot; layout=&quot;large&quot;/&gt;</code>
         </pre>
 
             <p>En bas de votre page HTML, insérez les balises suivantes :</p>
@@ -149,6 +143,8 @@
                 API</a> afin de mettre en oeuvre une intégration sur mesure.
             </div>
         </section>
+
+        <script>hljs.initHighlightingOnLoad();</script>
     </body>
 
 </html>
