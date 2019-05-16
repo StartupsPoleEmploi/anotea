@@ -14,25 +14,17 @@
   ],
   "homepage": "https://anotea.pole-emploi.fr/widget",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "5.8.2",
-    "@fortawesome/fontawesome-svg-core": "1.2.18",
-    "@fortawesome/free-solid-svg-icons": "5.8.2",
-    "@fortawesome/react-fontawesome": "0.1.4",
-    "@webcomponents/webcomponentsjs": "2.2.7",
     "moment": "2.24.0",
     "npm": "6.9.0",
+    "query-string": "6.5.0",
     "react": "16.8.5",
-    "react-app-polyfill": "1.0.1",
     "react-dom": "16.8.5",
-    "react-scripts": "2.1.8",
-    "react-web-component": "1.3.0",
-    "webfontloader": "1.6.28"
+    "react-scripts": "2.1.8"
   },
   "scripts": {
-    "postinstall": "vendor-copy",
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -44,14 +36,7 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "vendorCopy": [
-    {
-      "from": "node_modules/@fortawesome/fontawesome-free/css/svg-with-js.css",
-      "to": "public/vendors/fontawesome/css/svg-with-js.css"
-    }
-  ],
   "devDependencies": {
-    "react-app-rewired": "2.1.3",
-    "vendor-copy": "2.0.0"
+    "node-sass-chokidar": "1.3.4"
   }
 }

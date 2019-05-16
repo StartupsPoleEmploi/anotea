@@ -4,7 +4,6 @@ import AvisCarrousel from './components/AvisCarrousel';
 import AvisList from './components/AvisList';
 import Stars from './components/Stars';
 import Verified from './components/Verified';
-import Star from './icons/Star';
 
 class AnoteaWidget extends Component {
 
@@ -110,8 +109,8 @@ class AnoteaWidget extends Component {
                             <div className="average">
                                 <span className="rate">{this.state.average}</span>
                                 <span className="total">/5
-                                <Star active={true} />
-                            </span>
+                                    <span className="fas fa-star active" style={{ width: '14px', height: '14px' }}></span>
+                                </span>
                                 <span className="avis-count">{this.state.score.nb_avis} notes</span>
                             </div>
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { getOrganismesFormateurs, getAvis, getActions, getFormations } from './services/avisService';
-import Star from "./icons/Star";
 
 class AnoteaScoreWidget extends Component {
 
@@ -67,7 +66,7 @@ class AnoteaScoreWidget extends Component {
                     <div className="average">
                         <span className="rate">{this.state.average}</span>
                         <span className="total">/5
-                            <Star active={true} />
+                            <span className="fas fa-star active" style={{ width: '14px', height: '14px' }}></span>
                         </span>
                     </div>
 

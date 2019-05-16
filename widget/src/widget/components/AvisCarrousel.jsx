@@ -72,13 +72,13 @@ class AvisCarrousel extends Component {
                         <div className="pagination">
                             <div className="nav-left">
                                 {this.state.page > 0 &&
-                                <span className="nav" onClick={() => this.goto(1)}>test</span>
+                                <span className="fas fa-chevron-left nav" onClick={this.goto.bind(this, -1)}></span>
                                 }
                             </div>
 
                             <div className="nav-right">
                                 {this.state.page < this.state.avis.length - 1 &&
-                                <span className="nav" onClick={() => this.goto(1)}>test 2</span>
+                                <span className="fas fa-chevron-right nav" onClick={this.goto.bind(this, 1)}></span>
                                 }
                             </div>
 
