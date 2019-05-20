@@ -8,7 +8,7 @@ export const getOrganismesFormateur = async siret => {
         _get(`/api/v1/avis?${queryString.stringify({
             organisme_formateur: siret,
             notes_decimales: true,
-            avis_avec_commentaire: true,
+            avec_commentaires_uniquement: true,
             items_par_page: 250,
         })}`)
     ]);
