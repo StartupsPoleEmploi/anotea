@@ -1,4 +1,5 @@
 const assert = require('assert');
+const _ = require('lodash');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
 const generateFormations = require('../../../../../src/jobs/import/reconciliation/generateFormations');
@@ -48,7 +49,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 raison_sociale: 'Centre de formation Anotéa',
                 siret: '11111111111111',
             },
-            avis: [comment],
+            avis: [
+                _.omit(comment, ['unsubscribe', 'mailSent', 'mailSentDate', 'tracking', 'accord', 'meta', 'campaign'])
+            ],
             score: {
                 nb_avis: 1,
                 notes: {
@@ -250,7 +253,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 raison_sociale: 'Centre de formation Anotéa',
                 siret: '11111111111111',
             },
-            avis: [comment],
+            avis: [
+                _.omit(comment, ['unsubscribe', 'mailSent', 'mailSentDate', 'tracking', 'accord', 'meta', 'campaign'])
+            ],
             score: {
                 nb_avis: 1,
                 notes: {
@@ -317,7 +322,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 raison_sociale: 'Centre de formation Anotéa',
                 siret: '11111111111111',
             },
-            avis: [comment],
+            avis: [
+                _.omit(comment, ['unsubscribe', 'mailSent', 'mailSentDate', 'tracking', 'accord', 'meta', 'campaign'])
+            ],
             score: {
                 nb_avis: 1,
                 notes: {

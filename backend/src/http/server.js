@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const Boom = require('boom');
 const createMiddlewares = require('./middlewares');
+const compression = require('compression');
 
 module.exports = components => {
 
@@ -19,6 +20,7 @@ module.exports = components => {
     app.set('view engine', 'ejs');
     app.set('views', path.join(__dirname, 'views'));
 
+    app.use(compression());
     app.use(middlewares.addRequestId());
     app.use(middlewares.logHttpRequests());
     app.use(middlewares.allowCORS());
