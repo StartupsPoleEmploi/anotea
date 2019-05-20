@@ -52,6 +52,17 @@ module.exports = async db => {
                 },
                 pipeline: [
                     {
+                        $project: {
+                            campaign: 0,
+                            unsubscribe: 0,
+                            mailSent: 0,
+                            mailSentDate: 0,
+                            tracking: 0,
+                            accord: 0,
+                            meta: 0,
+                        }
+                    },
+                    {
                         $match: {
                             $expr: {
                                 $and: [
