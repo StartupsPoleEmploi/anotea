@@ -1,0 +1,11 @@
+@import '../../styles/variables';
+
+.Stars {
+
+  font-size: 0.875rem;
+  color: $color-grey-50;
+
+  .active {
+    color: $color-orange;
+  }
+}

@@ -1,0 +1,56 @@
+@import '../../styles/variables';
+
+.Avis {
+  border: 1px solid $color-grey-25;
+  border-radius: 5px;
+  font-size: 0.875rem;
+
+  .stagiaire {
+    padding: 0.5rem 1rem;
+
+    .par {
+      opacity: 0.6;
+      padding-left: 0.5rem;
+    }
+
+    .pseudo {
+      padding-left: 0.5rem;
+    }
+  }
+
+  .titre {
+    padding: 0.25rem 1rem;
+    font-weight: $font-weight-700;
+    min-height: 30px;
+  }
+
+  .texte {
+    padding: 0.25rem 1rem 0.5rem 1rem;
+    color: $color-black-60;
+    min-height: 3.75rem;
+  }
+
+  .reponse {
+
+    padding: 0.25rem 1rem 1rem 1rem;
+
+    .titre, .texte {
+      padding-left: 0.5rem;
+      padding-right: 1rem;
+      border-left: 1px solid $color-black;
+    }
+
+    .texte {
+      min-height: 40px;
+    }
+
+  }
+
+  .date {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid $color-grey-25;
+    font-size: 0.75rem;
+    color: $color-grey-50;
+  }
+
+}

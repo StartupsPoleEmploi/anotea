@@ -92,27 +92,6 @@
   font-weight: normal;
 }
 
-.anotea-widget .notes {
-  color: #91979C;
-  font-size: 0.7em;
-  line-height: 28px;
-  text-align: left;
-  padding: 0px;
-  list-style: none;
-  margin-left: 15px;
-}
-
-.anotea-widget .notes .label {
-  width: 150px;
-  display: inline-block;
-  font-weight: normal;
-}
-
-@media screen and (max-width: 600px) {
-  .anotea-widget .notes {
-    display: none;
-  }
-}
 
 .avis-avec-commentaire.carrousel h2 {
   color: #24303A;
