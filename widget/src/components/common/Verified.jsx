@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from './images/logo-pole-emploi.png';
 import './Verified.scss';
 
 export default function Verified() {
@@ -7,7 +8,7 @@ export default function Verified() {
             <span>vérifiés par</span>
             <img
                 className="logo"
-                src={`/images/poleemploi.png`}
+                src={logo}
                 alt="logo Pôle Emploi" />
         </div>
     );

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Anotea - Documentation Widget</title>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="description"
+              content="Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web." />
+
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="http://localhost:3001/js/anotea-widget.js"></script>
+        <style>
+            body {
+                font-size: 1em;
+                font-family: 'Lato', sans-serif;
+                font-weight: 400;
+            }
+
+            .header {
+                background-color: #384eaa;
+                color: white;
+                padding: 1.25rem;
+            }
+
+            .grid-displayer {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 10000;
+                pointer-events: none;
+                opacity: .1;
+            }
+
+            .grid-displayer span {
+                display: block;
+                height: 100vh;
+                background: rgba(128, 128, 128, 1);
+            }
+
+            .widget {
+                border: 1px solid #C8CBCE;
+                border-radius: 5px;
+                padding: 1rem;
+                margin: 2rem 0.25rem;
+            }
+
+            .description {
+                font-size: 0.875rem;
+                color: #91979C;
+            }
+
+            .integration {
+                font-size: 0.75rem;
+                color: #91979C;
+            }
+
+            .integration a {
+                color: #91979C;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div class="header container-fluid">
+            <header>
+                <img alt="logo" class="logo" src="/img/logo.svg" />
+                <h1 class="text-center py-3">Exemples d'intégration du widget Anotéa</h1>
+            </header>
+        </div>
+        <div class="container">
+
+            <section>
+                <div class="widget">
+                    <h3 id="score">Score</h3>
+                    <p class="description">
+                        Affiche le score et le nombre de notes
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <div
+                                    class="anotea-widget"
+                                    data-type="organisme"
+                                    data-format="score"
+                                    data-identifiant="18720092800112">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="integration text-right">
+                        <a href="https://github.com/StartupsPoleEmploi/anotea/blob/master/WIDGET.md">Documentation
+                            technique</a>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h3 id="carrousel">Carrousel</h3>
+                    <p class="description">
+                        Affiche le score et son détails ainsi que la liste des avis sous forme de carrousel
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <div
+                                    class="anotea-widget"
+                                    data-type="organisme"
+                                    data-format="carrousel"
+                                    data-identifiant="18720092800112">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="integration text-right">
+                        <a href="https://github.com/StartupsPoleEmploi/anotea/blob/master/WIDGET.md">Documentation
+                            technique</a>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h3 id="liste">Liste</h3>
+                    <p class="description">
+                        Affiche le score et son détails ainsi que la liste des avis sous forme de liste
+                    </p>
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <div
+                                    class="anotea-widget"
+                                    data-type="organisme"
+                                    data-format="liste"
+                                    data-options="contact-stagiaire"
+                                    data-identifiant="18720092800112">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="integration text-right">
+                        <a href="https://github.com/StartupsPoleEmploi/anotea/blob/master/WIDGET.md">Documentation
+                            technique</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="grid-displayer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                </div>
+            </div>
+        </div>
+
+        <script>hljs.initHighlightingOnLoad();</script>
+    </body>
+
+</html>

@@ -14,10 +14,11 @@ Vous êtes donc certains que les avis que vous consultez sont fiables.
 
 [![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=cDdFS0VEeVkwNGplNWRRZTc3ajFXakk3Z1FYS1VXOVdDbHU1K0F0TDlYTT0tLWJJU1RoSk9YZzliWURyODU5a0xRZEE9PQ==--891e4fe6e282b4d38005ce6116797dbf12e80496)](https://www.browserstack.com/automate/public-build/cDdFS0VEeVkwNGplNWRRZTc3ajFXakk3Z1FYS1VXOVdDbHU1K0F0TDlYTT0tLWJJU1RoSk9YZzliWURyODU5a0xRZEE9PQ==--891e4fe6e282b4d38005ce6116797dbf12e80496)
 
-Anotea est composé de trois projets : 
+Anotea est composé de quatre projets : 
 - `backend` qui contient un serveur node.js et expose des serveurs via [une API](API.md)
 - `backoffice` qui contient une Single Page Application en React fournissant des outils de modération d'avis
 - `questionnaire` qui contient une Single Page Application en React permettant aux stagiaires de donner leur avis.
+- `widget` qui contient [un composant](WIDGET.md) permettant d'afficher facilement les avis des stagiaires sur un site web .
 
 ### Démarrer l'application 
 
