@@ -115,7 +115,7 @@
   },
   {
     "nom": "Guadeloupe",
-    "active": false,
+    "active": true,
     "codeRegion": "8",
     "codeINSEE": "01",
     "departements": ["971", "977", "970", "975", "978"],
@@ -124,7 +124,7 @@
     },
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
