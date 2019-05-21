@@ -16,7 +16,7 @@ export default class ScoreWidget extends Component {
         }
 
         return (
-            <div className="AnoteaWidget">
+            <div className="ScoreWidget">
                 <div className="row my-3">
                     <div className="col-12">
                         <Score score={score} />

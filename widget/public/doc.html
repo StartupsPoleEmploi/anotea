@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Anotea - Documentation Widget</title>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="description" content="Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web." />
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-light.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+        <script src="js/anotea-widget.js"></script>
+        <style>
+            .grid-displayer {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 10000;
+                pointer-events: none;
+                opacity: .1;
+            }
+
+            .grid-displayer span {
+                display: block;
+                height: 100vh;
+                background: rgba(128, 128, 128, 1);
+            }
+
+            .widget {
+                border: 1px solid #C8CBCE;
+                border-radius: 5px;
+                padding: 1rem;
+                margin: 2rem 0.25rem;
+            }
+
+            pre {
+                margin: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <img alt="logo" class="logo" src="/logo.svg" />
+                <h1 class="text-center py-3">Anotéa</h1>
+            </header>
+
+            <section>
+                <p>
+                    Le widget Anotea permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web. Il est possible de lister les avis pour un organisme, une formation ou une action/session de formation.
+                </p>
+                <p>Il existe en trois formats (<a href="#score">score</a>, <a href="#carrousel">carrousel</a> et <a href="#liste">liste</a> ) et supporte
+                    tous les navigateurs modernes dont Internet Explorer dans une version 11 minimum.</p>
+
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-question-circle"></i> Vous avez une question ? Consultez
+                    <a href="https://anotea.pole-emploi.fr/faq">notre FAQ</a>.
+                </div>
+            </section>
+
+            <section>
+                <h2>Formats</h2>
+
+
+                <div class="widget">
+                    <h3 id="score">Score</h3>
+
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <div class="anotea-widget" data-type="organisme" data-format="score" data-identifiant="18720092800112"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h3 id="carrousel">Carroussel</h3>
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <div class="anotea-widget" data-type="organisme" data-format="carrousel" data-identifiant="18720092800112"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h3 id="liste">Liste</h3>
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <div class="anotea-widget" data-type="organisme" data-format="liste" data-identifiant="18720092800112"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section>
+                <h2>Code d'intégration</h2>
+
+                <p>Insérez la balise suivante dans la balise <code>&lt;head&gt;</code> ou directement dans la balise <code>&lt;body&gt;</code></p>
+
+                <pre>
+                    <code class="html">&lt;script src=&quot;https://anotea.pole-emploi.fr/widget/anotea-widget.js&quot;&gt;&lt;/script&gt;</code>
+                </pre>
+
+                <p>Positionner le code suivant à l'emplacement où vous souhaiter afficher le widget dans votre page HTML:</p>
+
+                <pre>
+                    <code class="html">&lt;div class=&quot;anotea-widget&quot; data-type=&quot;organisme|formation|action|session&quot; data-format=&quot;score|carrousel|liste&quot; data-identifiant=&quot;siret|numero&quot;&gt;&lt;/div&gt;</code>
+                </pre>
+
+
+                <h2>Paramétrage des données</h2>
+
+                <p>Vous pouvez modifier les éléments suivants :</p>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Paramètre</th>
+                            <th scope="col">Valeurs</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">type</th>
+                            <td>organisme|formation|action|session</td>
+                            <td>Obligatoire</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">identifiant</th>
+                            <td>Le siret ou le numéro de la formation/action/session</td>
+                            <td>Obligatoire</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">format</th>
+                            <td>Le format d'affichage (score|carrousel|liste)</td>
+                            <td>Optionnel (default: liste)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-info-circle"></i> Vous souhaitez aller plus loin ? Vous pouvez utiliser <a
+                        href="https://www.emploi-store-dev.fr/portail-developpeur/detailapicatalogue/anotea-notes-et-avis-sur-les-formations-v1;jsessionid=8ZSRilFzCR3nQ1x-b_SvZcJQClNyFc6_cymOPLrYYnAu-6aIyPii!-2059839056?id=5b61aa65f085a9d152a0ca2e">notre
+                    API</a> afin de mettre en oeuvre une intégration sur mesure.
+                </div>
+            </section>
+        </div>
+
+        <div class="grid-displayer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                    <div class="col-sm-1"><span></span></div>
+                </div>
+            </div>
+        </div>
+
+        <script>hljs.initHighlightingOnLoad();</script>
+    </body>
+
+</html>

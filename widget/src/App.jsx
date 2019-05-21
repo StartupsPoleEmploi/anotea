@@ -11,16 +11,15 @@ import './App.scss';
 class App extends Component {
 
     static propTypes = {
-        layout: PropTypes.string.isRequired,
-        siret: PropTypes.string,
-        formation: PropTypes.string,
-        action: PropTypes.string,
-        session: PropTypes.string,
+        format: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        identifiant: PropTypes.string.isRequired,
     };
 
     constructor() {
         super();
         this.state = {
+            error: false,
             score: {
                 nb_avis: 0,
                 notes: {
@@ -48,30 +47,40 @@ class App extends Component {
     }
 
     async componentDidMount() {
-        let { siret, formation, action, session } = this.props;
+        let { type, identifiant } = this.props;
 
-        let results = null;
-        if (siret) {
-            results = await getOrganismesFormateur(siret);
-        } else if (formation) {
-            results = await getFormation(formation);
-        } else if (action) {
-            results = await getAction(action);
-        } else {
-            results = await getSession(session);
+        let fetch = null;
+        switch (type) {
+            case 'organisme':
+                fetch = () => getOrganismesFormateur(identifiant);
+                break;
+            case 'formation':
+                fetch = () => getFormation(identifiant);
+                break;
+            case 'action':
+                fetch = () => getAction(identifiant);
+                break;
+            case 'session':
+                fetch = () => getSession(identifiant);
+                break;
+            default:
+                fetch = () => ({ error: true });
         }
 
+        let results = await fetch();
         this.setState({ ...results });
     }
 
     render() {
 
-        let { layout } = this.props;
+        if (this.state.error) {
+            return (<div className="anotea">Une erreur est survenue</div>);
+        }
 
         let widget = null;
-        if (layout === 'score') {
+        if (this.props.format === 'score') {
             widget = <ScoreWidget {...this.state} />;
-        } else if (layout === 'carrousel') {
+        } else if (this.props.format === 'carrousel') {
             widget = <CarrouselWidget {...this.state} />;
         } else {
             widget = (
@@ -98,8 +107,9 @@ class App extends Component {
 }
 
 App.defaultProps = {
-    siret: '13002087800018',
-    layout: 'liste',
+    format: 'liste',
+    type: 'organisme',
+    identifiant: '13002087800018',
 };
 
 export default App;
