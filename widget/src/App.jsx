@@ -87,16 +87,7 @@ class App extends Component {
             widget = <CarrouselWidget {...this.state} />;
         } else {
             widget = (
-                <div>
-                    <div className="d-none d-md-block">
-                        <ListeWidget {...this.state}
-                                     showContactStagiaire={options.indexOf('contact-stagiaire') !== -1} />
-                    </div>
-                    <div className="d-sm-block d-md-none">
-                        <CarrouselWidget {...this.state} />
-                    </div>
-                </div>
-            );
+                <ListeWidget {...this.state} showContactStagiaire={options.indexOf('contact-stagiaire') !== -1} />);
         }
 
         return (

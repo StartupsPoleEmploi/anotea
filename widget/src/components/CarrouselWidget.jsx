@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Score from './common/Score';
 import Notes from './common/Notes';
 import Verified from './common/Verified';
-import Footer from './common/Footer';
+import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
 import Button from './common/library/Button';
@@ -116,7 +116,7 @@ export default class CarrouselWidget extends Component {
 
                 <div className="row my-3">
                     <div className="col-12 text-center">
-                        <Footer />
+                        <Propulsed />
                     </div>
                 </div>
             </div>
