@@ -27,7 +27,7 @@
     "webfontloader": "1.6.28"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3002 react-scripts start",
     "build": "react-scripts build && uglifyjs build/js/anotea-widget.js --source-map --output build/js/anotea-widget.min.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
