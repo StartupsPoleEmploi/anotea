@@ -11,7 +11,7 @@ Vous pouvez consulter des exemples d'intégration du widget à l'url suivante [h
 Insérez la balise suivante dans la balise `<header>` ou directement dans le `<body>.`
 
 ```html
-<script src="https://anotea.pole-emploi.fr/widget/anotea-widget.js"></script>
+<script src="https://anotea.pole-emploi.fr/widget/anotea-widget.min.js"></script>
 ```
 
 Positionner le code suivant à l'emplacement où vous souhaiter afficher le widget dans votre page HTML:
