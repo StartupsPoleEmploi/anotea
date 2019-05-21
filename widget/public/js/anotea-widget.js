@@ -18,6 +18,7 @@
 
     function createIFrame(widget) {
 
+        var baseUrl = window.location.href.indexOf('localhost') !== -1 ? 'http://localhost:3001' : window.location.href;
         var format = widget.getAttribute('data-format');
         var type = widget.getAttribute('data-type');
         var identifiant = widget.getAttribute('data-identifiant');
@@ -27,7 +28,7 @@
         iframe.className = 'anotea-widget-iframe';
         iframe.scrolling = 'no';
         iframe.frameBorder = '0';
-        iframe.src = 'http://localhost:3001' +
+        iframe.src = baseUrl +
             '?format=' + format +
             '&type=' + type +
             '&identifiant=' + identifiant +
