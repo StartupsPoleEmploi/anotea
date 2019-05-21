@@ -14,40 +14,36 @@
   ],
   "homepage": "https://anotea.pole-emploi.fr/widget",
   "dependencies": {
-    "@webcomponents/webcomponentsjs": "2.2.7",
+    "@fortawesome/fontawesome-free": "5.8.2",
+    "bootstrap": "4.3.1",
     "moment": "2.24.0",
-    "npm": "^6.9.0",
+    "npm": "6.9.0",
+    "query-string": "6.5.0",
     "react": "16.8.5",
+    "react-app-polyfill": "1.0.1",
     "react-dom": "16.8.5",
     "react-scripts": "2.1.8",
-    "react-web-component": "1.3.0",
-    "vendor-copy": "2.0.0",
-    "whatwg-fetch": "3.0.0"
+    "webfontloader": "1.6.28"
   },
   "scripts": {
-    "postinstall": "vendor-copy",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serve": "serve public/"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
+  "devDependencies": {
+    "node-sass-chokidar": "1.3.4",
+    "serve": "11.0.0"
+  },
+  "proxy": "http://localhost:8080/",
   "browserslist": [
     ">0.2%",
     "not dead",
-    "not ie <= 11",
+    "not ie < 11",
     "not op_mini all"
-  ],
-  "vendorCopy": [
-    {
-      "from": "node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
-      "to": "public/vendor/custom-elements-es5-adapter.js"
-    },
-    {
-      "from": "node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js",
-      "to": "public/vendor/webcomponents-bundle.js"
-    }
   ]
 }

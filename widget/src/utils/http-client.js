@@ -8,7 +8,6 @@ class HTTPError extends Error {
     }
 }
 
-const baseUrl = 'https://anotea.pole-emploi.fr/api/v1';
 const emitter = new EventEmitter();
 const handleResponse = (path, response) => {
     let statusCode = response.status;
@@ -20,7 +19,7 @@ const handleResponse = (path, response) => {
 };
 
 export const _get = path => {
-    return fetch(`${baseUrl}${path}`, {
+    return fetch(path, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -30,39 +29,3 @@ export const _get = path => {
     .then(res => handleResponse(path, res));
 };
 
-export const _post = (path, body) => {
-    return fetch(`${baseUrl}${path}`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-    })
-    .then(res => handleResponse(path, res));
-};
-
-export const _put = (path, body = {}) => {
-    return fetch(`${baseUrl}${path}`, {
-        method: 'PUT',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-    })
-    .then(res => handleResponse(path, res));
-};
-
-export const _delete = path => {
-    return fetch(`${baseUrl}${path}`, {
-        method: 'DELETE',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(res => handleResponse(path, res));
-};
-
-export const subscribeToHttpEvent = (eventName, callback) => emitter.on(eventName, callback);

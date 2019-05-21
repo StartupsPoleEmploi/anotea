@@ -1,0 +1,11 @@
+@import '../../styles/variables';
+
+.ContactStagiaire {
+
+  button {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    border: 1px solid $color-grey-25;
+    padding: 0.5rem 1rem;
+  }
+}

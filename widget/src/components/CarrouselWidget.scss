@@ -1,0 +1,49 @@
+@import '../styles/variables';
+
+.CarrouselWidget {
+
+  .empty {
+    opacity: 0.8;
+  }
+
+  .carrousel {
+    .summary {
+      margin-bottom: 1.5rem;
+      width: 100%;
+      text-align: center;
+      border-bottom: 1px solid #000;
+      border-bottom-color: $color-grey-25;
+      line-height: 0.1em;
+
+      span {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        background: #fff;
+        padding: 0 10px;
+      }
+    }
+
+    .pagination {
+      font-size: 0.75rem;
+
+      .nav {
+        opacity: 0.6;
+        border: 1px solid $color-grey-25;
+        border-radius: 5px;
+        padding: 0.5rem 1rem;
+
+        &:hover,
+        &:focus {
+          cursor: pointer;
+          font-weight: $font-weight-700;
+          opacity: 1;
+          transition: opacity 0.2s linear;
+        }
+
+        &.inactive {
+          visibility: hidden;
+        }
+      }
+    }
+  }
+}

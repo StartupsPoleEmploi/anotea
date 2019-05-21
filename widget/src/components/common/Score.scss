@@ -1,0 +1,28 @@
+@import '../../styles/variables';
+
+.Score {
+
+  border: 1px solid $color-grey-5;
+  border-radius: 5px;
+  background-color: $color-grey-5;
+
+  .moyenne {
+    font-weight: $font-weight-900;
+    font-size: 2rem;
+  }
+
+  .total {
+    padding-left: 0.5rem;
+  }
+
+  .star {
+    padding-left: 0.25rem;
+    color: $color-orange;
+    font-size: 0.875rem;
+  }
+
+  .nb-avis {
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+}
