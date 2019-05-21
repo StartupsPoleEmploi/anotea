@@ -39,7 +39,7 @@ class Autorisations extends Component {
                                 name="accord"
                                 className="input-accord"
                                 onChange={this.onChange} />
-                            <span>J&apos;autorise les futur(e)s stagiaires à me <strong>questionner</strong> sur cette formation.</span>
+                            <span>J&apos;autorise les futur(e)s stagiaires à me <strong>questionner</strong> sur cette formation, de manière anonyme.</span>
                         </div>
                     </div>
                 </div>
