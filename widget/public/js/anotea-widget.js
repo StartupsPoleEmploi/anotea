@@ -50,10 +50,10 @@
                     widget.style.cssText = 'min-height:130px; min-width:250px';
                     break;
                 case 'carrousel':
-                    widget.style.cssText = 'min-height:700px; min-width:300px';
+                    widget.style.cssText = 'min-height:800px; min-width:300px';
                     break;
                 default:
-                    widget.style.cssText = 'min-height:800px; min-width:300px';
+                    widget.style.cssText = 'min-height:1000px; min-width:300px';
             }
 
         }
