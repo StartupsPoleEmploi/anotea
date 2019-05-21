@@ -7,3 +7,4 @@
 docker-compose.local.yml
 .data
 .env/
+public/vendors

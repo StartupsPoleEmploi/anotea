@@ -1,7 +1,4 @@
 FROM nginx:latest
-ARG ANOTEA_GOOGLE_ANALYTICS_ID
-ARG ANOTEA_HOTJAR_ID
-
 RUN apt-get update \
     && apt-get install -y curl \
     && apt-get -y autoclean
@@ -26,6 +23,8 @@ COPY ./ /opt/anotea/backoffice
 WORKDIR /opt/anotea/backoffice
 
 #Build project
+ARG ANOTEA_GOOGLE_ANALYTICS_ID
+ARG ANOTEA_HOTJAR_ID
 RUN REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID=${ANOTEA_GOOGLE_ANALYTICS_ID} \
     REACT_APP_ANOTEA_HOTJAR_ID=${ANOTEA_HOTJAR_ID} \
     npm run build &&  mv build/* /usr/share/nginx/html

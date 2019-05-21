@@ -30,6 +30,14 @@ const buildAvisQuery = filters => {
             let code = filter.formacode;
             query['formacode'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
         }
+
+        if (filter.avec_commentaires_uniquement) {
+            query['$and'] = [
+                { comment: { $exists: filter.avec_commentaires_uniquement } },
+                { rejected: false },
+            ];
+        }
+
         return query;
     });
 
@@ -61,12 +69,14 @@ module.exports = ({ db, middlewares }) => {
             lieu_de_formation: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/),
             certif_info: Joi.string(),
             formacode: Joi.string(),
+            avec_commentaires_uniquement: Joi.boolean(),
             ...paginationValidator(),
             ...notesDecimalesValidator(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
-        let filters = _.pick(parameters, ['organisme_formateur', 'lieu_de_formation', 'certif_info', 'formacode']);
+        let filters = _.pick(parameters,
+            ['organisme_formateur', 'lieu_de_formation', 'certif_info', 'formacode', 'avec_commentaires_uniquement']);
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
         let query = buildAvisQuery(filters);

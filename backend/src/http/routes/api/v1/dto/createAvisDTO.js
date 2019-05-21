@@ -1,17 +1,14 @@
 const _ = require('lodash');
 const createNoteDTO = require('./createNoteDTO');
 
-const convertCommentaire = comment => {
-    if (!comment.comment || comment.rejected) {
-        return undefined;
-    }
+const convertCommentaire = data => {
 
-    let texte = _.isEmpty(comment.comment.text) ? undefined : comment.comment.text;
+    let texte = _.isEmpty(data.comment.text) ? undefined : data.comment.text;
 
     return {
-        titre: (comment.titleMasked || _.isEmpty(comment.comment.title)) ? undefined : comment.comment.title,
-        texte: comment.editedComment ? comment.editedComment.text : texte,
-        reponse: comment.reponse && comment.reponse.status === 'published' ? comment.reponse.text : undefined,
+        titre: (data.titleMasked || _.isEmpty(data.comment.title)) ? undefined : data.comment.title,
+        texte: data.editedComment ? data.editedComment.text : texte,
+        reponse: data.reponse && data.reponse.status === 'published' ? data.reponse.text : undefined,
     };
 };
 
@@ -23,7 +20,7 @@ module.exports = (data, options = {}) => {
         id: data._id,
         pseudo: (data.pseudoMasked || data.rejected || _.isEmpty(data.pseudo)) ? undefined : data.pseudo,
         date: data.date ? data.date : data._id.getTimestamp(),
-        commentaire: convertCommentaire(data),
+        commentaire: data.comment && !data.rejected ? convertCommentaire(data) : undefined,
         notes: createNoteDTO(rates, options),
         formation: {
             numero: training.idFormation,
