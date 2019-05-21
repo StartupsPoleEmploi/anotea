@@ -91,6 +91,8 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
                 text: `${results.imported} stagiaires importés pour le fichier ${cli.file} ` +
                     `(Ignorés : ${results.ignored}, Nombre d'erreurs : ${results.invalid})`,
             });
+
+            return results;
         } catch (e) {
             sendSlackNotification({
                 text: `Le fichier stagiaires ${cli.file} n'a pas pu être importé`,
