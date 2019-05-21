@@ -7,6 +7,7 @@ import Footer from './common/Footer';
 import Header from './common/Header';
 import Avis from './common/Avis';
 import './ListeWidget.scss';
+import ContactStagiaire from "./common/ContactStagiaire";
 
 const PAGE_SIZE = 3;
 
@@ -15,6 +16,7 @@ export default class ListeWidget extends Component {
     static propTypes = {
         score: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
+        showContactStagiaire: PropTypes.bool,
     };
 
     state = {
@@ -110,6 +112,11 @@ export default class ListeWidget extends Component {
                             {this.getCurrentPage() + 1}
                         </span>
                         {this.getPagesAfter()}
+                    </div>
+                    }
+                    {this.props.showContactStagiaire &&
+                    <div className="d-flex justify-content-center py-2">
+                        <ContactStagiaire />
                     </div>
                     }
                 </div>

@@ -14,6 +14,7 @@ class App extends Component {
         format: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
         identifiant: PropTypes.string.isRequired,
+        options: PropTypes.string,
     };
 
     constructor() {
@@ -73,20 +74,23 @@ class App extends Component {
 
     render() {
 
+        let { format, options = '' } = this.props;
+
         if (this.state.error) {
             return (<div className="anotea">Une erreur est survenue</div>);
         }
 
         let widget = null;
-        if (this.props.format === 'score') {
+        if (format === 'score') {
             widget = <ScoreWidget {...this.state} />;
-        } else if (this.props.format === 'carrousel') {
+        } else if (format === 'carrousel') {
             widget = <CarrouselWidget {...this.state} />;
         } else {
             widget = (
                 <div>
                     <div className="d-none d-md-block">
-                        <ListeWidget {...this.state} />
+                        <ListeWidget {...this.state}
+                                     showContactStagiaire={options.indexOf('contact-stagiaire') !== -1} />
                     </div>
                     <div className="d-sm-block d-md-none">
                         <CarrouselWidget {...this.state} />

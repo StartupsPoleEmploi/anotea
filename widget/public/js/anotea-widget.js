@@ -21,15 +21,17 @@
         var format = widget.getAttribute('data-format');
         var type = widget.getAttribute('data-type');
         var identifiant = widget.getAttribute('data-identifiant');
+        var options = widget.getAttribute('data-options');
 
         var iframe = document.createElement('iframe');
         iframe.className = 'anotea-widget-iframe';
         iframe.scrolling = 'no';
         iframe.frameBorder = '0';
-        iframe.src = '/index.html' +
+        iframe.src = 'http://localhost:3001' +
             '?format=' + format +
             '&type=' + type +
-            '&identifiant=' + identifiant;
+            '&identifiant=' + identifiant +
+            '&options=' + options;
         return iframe;
     }
 
@@ -41,9 +43,18 @@
             var widget = widgets[i];
             widget.appendChild(getStyles());
             widget.appendChild(createIFrame(widget));
-            widget.style.cssText = widget.getAttribute('data-format') === 'score' ?
-                'min-height:130px; min-width:250px' :
-                'min-height:700px; min-width:300px';
+
+            switch (widget.getAttribute('data-format')) {
+                case 'score':
+                    widget.style.cssText = 'min-height:130px; min-width:250px';
+                    break;
+                case 'carrousel':
+                    widget.style.cssText = 'min-height:700px; min-width:300px';
+                    break;
+                default:
+                    widget.style.cssText = 'min-height:800px; min-width:300px';
+            }
+
         }
     });
 })();
