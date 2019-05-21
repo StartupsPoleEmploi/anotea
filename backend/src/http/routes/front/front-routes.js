@@ -31,6 +31,10 @@ module.exports = ({ db, configuration, stats }) => {
         res.render('front/faq');
     });
 
+    router.get('/doc/widget', (req, res) => {
+        res.render('front/doc/widget');
+    });
+
     router.get('/stats', async (req, res) => {
         let [avis, formations, sessions, organismes] = await Promise.all([
             stats.computeAvisStats(),
