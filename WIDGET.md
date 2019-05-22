@@ -1,14 +1,17 @@
 # WIDGET
 
-Le widget Anotea permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web. Il est possible de lister les avis pour un organisme, une formation ou une action/session de formation.
+
+## Présentation
+
+Le widget Anotea permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web. Il est possible de lister les avis pour un organisme, une formation, une action ou une session de formation.
 
 Il existe en trois formats (`score`, `carrousel`, `liste` ) et supporte tous les navigateurs modernes dont Internet Explorer dans une version 11 minimum.
 
 Vous pouvez consulter des exemples d'intégration du widget à l'url suivante [https://anotea.pole-emploi.fr/doc/widget](https://anotea.pole-emploi.fr/doc/widget)
 
-### Intégration du widget
+## Intégration du widget
 
-Insérez la balise suivante dans la balise `<header>` ou directement dans le `<body>.`
+Insérez la balise suivante dans la balise `<head>` ou directement dans le `<body>.`
 
 ```html
 <script src="https://anotea.pole-emploi.fr/widget/anotea-widget.min.js"></script>
@@ -20,7 +23,6 @@ Positionner le code suivant à l'emplacement où vous souhaiter afficher le widg
 <div class="anotea-widget" data-type="organisme|formation|action|session" data-format="score|carrousel|liste" data-identifiant="siret|numero"></div>"
 ```
 
-
 ### Paramétrage des données
 
 | Paramètre     | Valeurs                                                   |                               |
@@ -30,3 +32,24 @@ Positionner le code suivant à l'emplacement où vous souhaiter afficher le widg
 | format        | Le format d'affichage (score,carrousel,liste)             | Optionnel (default: liste)    |
 
 
+### Exemples
+
+Affichage au format score pour un organisme
+```html
+<div class="anotea-widget" data-type="organisme" data-format="score" data-identifiant="22222222222222"></div>"
+ ```
+
+ Affichage au format carrousel pour une formation
+```html
+<div class="anotea-widget" data-type="formation" data-format="carrousel" data-identifiant="14_AF_0000000000"></div>"
+ ```
+ 
+ Affichage au format carrousel pour une action de formation
+```html
+<div class="anotea-widget" data-type="action" data-format="carrousel" data-identifiant="14_AF_0000000000|14_SE_0000000000"></div>"
+ ```
+ 
+ Affichage au format liste pour une session de formation
+```html
+<div class="anotea-widget" data-type="action" data-format="carrousel" data-identifiant="14_AF_0000000000|14_SE_0000000000||SE_0000000000"></div>"
+ ```
