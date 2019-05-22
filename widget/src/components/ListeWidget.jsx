@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Score from './common/Score';
 import Notes from './common/Notes';
 import Verified from './common/Verified';
-import Footer from './common/Footer';
+import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
+import ContactStagiaire from './common/ContactStagiaire';
 import './ListeWidget.scss';
-import ContactStagiaire from "./common/ContactStagiaire";
 
 const PAGE_SIZE = 3;
 
@@ -135,25 +135,31 @@ export default class ListeWidget extends Component {
             <div className="ListeWidget">
 
                 <div className="row my-3">
-                    <div className="col-6">
-                        <Header />
-                    </div>
-                    <div className="col-6 d-flex justify-content-between align-items-center">
-                        <span className="summary">{this.props.results.meta.pagination.total_items} commentaires</span>
-                        <Verified />
-                    </div>
-                </div>
-
-                <div className="row my-3">
-                    <div className="col-6">
+                    <div className="col-sm-6">
+                        <div className="line py-2">
+                            <Header />
+                        </div>
                         <Score score={score} className="mb-3" />
                         <Notes notes={score.notes} />
-                        <div className="d-flex justify-content-center mt-3">
-                            <Footer />
+                        <div className="d-none d-sm-block">
+                            <div className="d-flex justify-content-center mt-3">
+                                <Propulsed />
+                            </div>
                         </div>
                     </div>
-                    <div className="col-6">
+                    <div className="col-sm-6">
+                        <div className="line d-flex justify-content-between align-items-center py-2">
+                            <div className="summary">
+                                {this.props.results.meta.pagination.total_items} commentaires
+                            </div>
+                            <Verified />
+                        </div>
                         {this.getListe()}
+                        <div className="d-flex justify-content-center mt-3">
+                            <div className="d-xs-block d-sm-none">
+                                <Propulsed />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
