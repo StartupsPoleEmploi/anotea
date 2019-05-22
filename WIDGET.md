@@ -5,7 +5,7 @@
 
 Le widget Anotea permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web. Il est possible de lister les avis pour un organisme, une formation, une action ou une session de formation.
 
-Il existe en trois formats (`score`, `carrousel`, `liste` ) et supporte tous les navigateurs modernes dont Internet Explorer dans une version 11 minimum.
+Il existe en trois formats (`score`, `carrousel`, `liste` ) et supporte tous les navigateurs modernes (Firefox 32+, Chrome 37+, Opera 30+, Safari OS X, Internet Explorer 11+).
 
 Vous pouvez consulter des exemples d'intégration du widget à l'url suivante [https://anotea.pole-emploi.fr/doc/widget](https://anotea.pole-emploi.fr/doc/widget)
 
@@ -51,5 +51,5 @@ Affichage au format score pour un organisme
  
  Affichage au format liste pour une session de formation
 ```html
-<div class="anotea-widget" data-type="action" data-format="carrousel" data-identifiant="14_AF_0000000000|14_SE_0000000000||SE_0000000000"></div>"
+<div class="anotea-widget" data-type="action" data-format="carrousel" data-identifiant="14_AF_0000000000|14_SE_0000000000|SE_0000000000"></div>"
  ```
