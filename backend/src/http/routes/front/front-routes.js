@@ -36,11 +36,12 @@ module.exports = ({ db, configuration, stats }) => {
     });
 
     router.get('/stats', async (req, res) => {
-        let [avis, formations, sessions, organismes] = await Promise.all([
+        let [avis, formations, sessions, organismes, kairos] = await Promise.all([
             stats.computeAvisStats(),
             stats.computeFormationsStats(),
             stats.computeSessionsStats(),
             stats.computeOrganismesStats(),
+            stats.computeKairosStats(),
         ]);
 
         res.render('front/stats', {
@@ -48,12 +49,12 @@ module.exports = ({ db, configuration, stats }) => {
                 avis,
                 formations,
                 sessions,
-                organismes: _.merge(organismes, {
-                    kairos: {
-                        kibanaDashboardUrl: 'https://137.74.30.34/app/kibana#/dashboard/d545e8a0-4738-11e9-a788-0de26b41fc5f?embed=true&_g=(refreshInterval%3A(display%3A\'30%20seconds\'%2Cpause%3A!f%2Csection%3A1%2Cvalue%3A30000)%2Ctime%3A(from%3Anow%2FM%2Cinterval%3Aauto%2Cmode%3Aquick%2Ctimezone%3AEurope%2FBerlin%2Cto%3Anow%2FM))',
-                    }
-                })
+                organismes,
+                kairos: {
+                    ...kairos,
+                    kibanaDashboardUrl: 'https://137.74.30.34/app/kibana#/dashboard/d545e8a0-4738-11e9-a788-0de26b41fc5f?embed=true&_g=(refreshInterval%3A(display%3A\'30%20seconds\'%2Cpause%3A!f%2Csection%3A1%2Cvalue%3A30000)%2Ctime%3A(from%3Anow%2FM%2Cinterval%3Aauto%2Cmode%3Aquick%2Ctimezone%3AEurope%2FBerlin%2Cto%3Anow%2FM))',
 
+                },
             }
         });
     });

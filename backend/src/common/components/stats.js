@@ -42,21 +42,24 @@ module.exports = (db, regions) => {
         };
     };
 
-    let computeRegionalOrganismesStats = async (regionName, codeRegion) => {
+    let computeRegionalOrganismesStats = async (regionName, codeRegions) => {
 
         let organismes = db.collection('accounts');
 
         let [nbOrganimes, nbOrganismesAvecAvis, nbOrganismesActifs] = await Promise.all([
-            organismes.countDocuments({ 'profile': 'organisme', 'codeRegion': codeRegion }),
+            organismes.countDocuments({
+                'profile': 'organisme',
+                'codeRegion': { $in: codeRegions },
+            }),
             organismes.countDocuments({
                 'profile': 'organisme',
                 'score.nb_avis': { $gte: 1 },
-                'codeRegion': codeRegion
+                'codeRegion': { $in: codeRegions },
             }),
             organismes.countDocuments({
                 'profile': 'organisme',
                 'passwordHash': { $ne: null },
-                'codeRegion': codeRegion
+                'codeRegion': { $in: codeRegions },
             }),
         ]);
 
@@ -69,47 +72,51 @@ module.exports = (db, regions) => {
         };
     };
 
+    let computeKairosStats = async () => {
+        let [nbOrganismes, actifs, hasAtLeastOneAvis] = await Promise.all([
+            db.collection('accounts').count({
+                'profile': 'organisme',
+                'sources': { $in: ['kairos'] }
+            }),
+            db.collection('accounts').count({
+                'profile': 'organisme',
+                'passwordHash': { $exists: true },
+                'sources': { $in: ['kairos'] }
+            }),
+            db.collection('accounts').count({
+                'profile': 'organisme',
+                'score.nb_avis': { $gt: 0 },
+                'sources': { $in: ['kairos'] }
+            }),
+        ]);
+
+        return { nbOrganismes, actifs, hasAtLeastOneAvis };
+    };
+
     return {
+        computeKairosStats: () => {
+            return computeKairosStats();
+        },
         computeOrganismesStats: async () => {
-            let computeGlobalStats = async (query = {}) => {
-                let [nbOrganismes, actifs, hasAtLeastOneAvis] = await Promise.all([
-                    db.collection('accounts').count({ 'profile': 'organisme', ...query }),
-                    db.collection('accounts').count({
-                        'profile': 'organisme',
-                        'passwordHash': { $exists: true }, ...query
-                    }),
-                    db.collection('accounts').count({ 'profile': 'organisme', 'score.nb_avis': { $gt: 0 }, ...query }),
-                ]);
 
-                return { nbOrganismes, actifs, hasAtLeastOneAvis };
-            };
-
-            let [organismes, kairos, regions] = await Promise.all([
-                computeGlobalStats(),
-                computeGlobalStats({ 'sources': { $in: ['kairos'] } }),
-                Promise.all(findActiveRegions().map(async region => {
-                    return computeRegionalOrganismesStats(region.nom, region.codeRegion);
-                }))
+            let regions = findActiveRegions();
+            return Promise.all([
+                computeRegionalOrganismesStats('Toutes', regions.map(region => region.codeRegion)),
+                ...regions.map(async region => computeRegionalOrganismesStats(region.nom, [region.codeRegion])),
             ]);
-
-            return { organismes, kairos, regions };
         },
         computeAvisStats: () => {
             let regions = findActiveRegions();
             return Promise.all([
                 computeRegionalAvisStats('Toutes', regions.map(region => region.codeRegion)),
-                ...regions.map(async region => {
-                    return computeRegionalAvisStats(region.nom, [region.codeRegion]);
-                })
+                ...regions.map(async region => computeRegionalAvisStats(region.nom, [region.codeRegion]))
             ]);
         },
         computeSessionsStats: () => {
             let regions = findActiveRegions();
             return Promise.all([
                 computeRegionalSessionStats('Toutes', regions.map(region => region.codeRegion)),
-                ...regions.map(async region => {
-                    return computeRegionalSessionStats(region.nom, [region.codeRegion]);
-                })
+                ...regions.map(async region => computeRegionalSessionStats(region.nom, [region.codeRegion]))
             ]);
         },
         computeFormationsStats: async () => {
