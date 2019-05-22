@@ -5,6 +5,7 @@ module.exports = {
             db.collection('trainee').createIndex({ 'codeRegion': 1 }),
             db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
             db.collection('trainee').createIndex({ 'mailSent': 1 }),
+            db.collection('trainee').createIndex({ 'importDate': 1 }),
             db.collection('trainee').createIndex({ 'sourceIDF': 1 }),
             db.collection('trainee').createIndex({ 'campaign': 1 }),
             db.collection('trainee').createIndex({ 'unsubscribe': 1 }),
