@@ -18,7 +18,7 @@
 
     function createIFrame(widget) {
 
-        var baseUrl = window.location.href.indexOf('localhost') !== -1 ? 'http://localhost:3001' :
+        var baseUrl = window.location.href.indexOf('localhost') !== -1 ? 'http://localhost:3002' :
             window.location.href.replace(window.location.pathname, '') + '/widget';
         var format = widget.getAttribute('data-format');
         var type = widget.getAttribute('data-type');
