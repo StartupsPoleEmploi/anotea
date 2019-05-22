@@ -9,6 +9,7 @@ module.exports = {
         return new Promise(resolve => setTimeout(() => resolve(), milliseconds));
     },
     capitalizeFirstLetter: string => string.charAt(0).toUpperCase() + string.slice(1),
+    flatten: array => [].concat.apply([], array),
     execute: async (job, options = {}) => {
 
         process.on('unhandledRejection', e => console.log(e));

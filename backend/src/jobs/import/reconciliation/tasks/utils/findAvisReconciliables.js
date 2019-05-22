@@ -1,11 +1,8 @@
-module.exports = (db, formation, selectors = {}) => {
-
-    let sirens = selectors.sirets ? selectors.sirets.map(siret => new RegExp(`^${siret.substring(0, 9)}`)) : [];
+module.exports = (db, formation, selectors) => {
 
     return db.collection('comment').find({
         $and: [
-            { 'training.organisation.siret': { $in: sirens } },
-            selectors.lieu_de_formation ? { 'training.place.postalCode': selectors.lieu_de_formation } : {},
+            { 'training.organisation.siret': { $in: selectors.sirets } },
             {
                 $or: [
                     { 'training.certifInfo.id': { $in: formation._meta.certifinfos } },
