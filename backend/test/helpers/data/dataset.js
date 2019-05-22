@@ -11,11 +11,11 @@ let newComment = (custom, date = getDateInThePast()) => {
     return _.merge({
         _id: new ObjectID(),
         token: randomize('token-12345'),
-        campaign: 'test-mocha',
+        campaign: 'test',
         formacode: '46242',
         idSession: '2422722',
         training: {
-            idFormation: '14_AF_0000011111',
+            idFormation: 'F_XX_XX',
             title: 'Développeur',
             startDate: date,
             scheduledEndDate: date,
@@ -39,8 +39,8 @@ let newComment = (custom, date = getDateInThePast()) => {
             referencement: '41C561691111',
             idSessionAudeFormation: '2422722',
             infoCarif: {
-                numeroAction: '14_SE_0000092458',
-                numeroSession: 'SE_0000050645'
+                numeroAction: 'AC_XX_XXXXXX',
+                numeroSession: 'SE_XXXXXX'
             },
             codeFinanceur: '10'
         },
@@ -106,7 +106,7 @@ module.exports = {
                 dnIndividuNational: '1111111111'
             },
             training: {
-                idFormation: '14_AF_0000011111',
+                idFormation: 'F_XX_XX',
                 title: 'Développeur',
                 startDate: date,
                 scheduledEndDate: date,
@@ -130,8 +130,8 @@ module.exports = {
                 referencement: '41C561691111',
                 idSessionAudeFormation: '2422722',
                 infoCarif: {
-                    numeroAction: '14_SE_0000092458',
-                    numeroSession: 'SE_0000050645'
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX'
                 },
                 codeFinanceur: '10'
             },

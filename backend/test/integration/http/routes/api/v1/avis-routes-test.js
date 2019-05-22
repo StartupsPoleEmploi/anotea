@@ -44,7 +44,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 global: 2
             },
             formation: {
-                numero: '14_AF_0000011111',
+                numero: 'F_XX_XX',
                 intitule: 'Développeur',
                 domaine_formation: {
                     formacodes: [
@@ -57,7 +57,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     }
                 ],
                 action: {
-                    numero: '14_SE_0000092458',
+                    numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
                         code_postal: '75011',
                         ville: 'Paris'
@@ -125,7 +125,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 global: 2
             },
             formation: {
-                numero: '14_AF_0000011111',
+                numero: 'F_XX_XX',
                 intitule: 'Développeur',
                 domaine_formation: {
                     formacodes: [
@@ -138,7 +138,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     }
                 ],
                 action: {
-                    numero: '14_SE_0000092458',
+                    numero: 'AC_XX_XXXXXX',
                     lieu_de_formation: {
                         code_postal: '75011',
                         ville: 'Paris'

@@ -41,7 +41,7 @@ describe(__filename, () => {
                 global: 2
             },
             formation: {
-                numero: '14_AF_0000011111',
+                numero: 'F_XX_XX',
                 domaine_formation: {
                     formacodes: ['46242'],
                 },
