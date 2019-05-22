@@ -1,8 +1,9 @@
 const assert = require('assert');
 const moment = require('moment');
+const logger = require('../../../../helpers/test-logger');
 const { withMongoDB } = require('../../../../helpers/test-database');
-const generateActions = require('../../../../../src/jobs/import/reconciliation/generateActions');
-const removePreviousImports = require('../../../../../src/jobs/import/reconciliation/removePreviousImports');
+const reconcile = require('../../../../../src/jobs/import/reconciliation/tasks/reconcile');
+const removePreviousImports = require('../../../../../src/jobs/import/reconciliation/tasks/removePreviousImports');
 
 describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
@@ -11,7 +12,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
         let db = await getTestDatabase();
 
         await importIntercarif();
-        await generateActions(db);
+        await reconcile(db, logger, { actions: true });
 
         await removePreviousImports(db, moment().toDate());
 

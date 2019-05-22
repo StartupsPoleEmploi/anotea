@@ -1,4 +1,4 @@
-const { transformObject } = require('../../../common/utils/stream-utils');
+const { transformObject } = require('../../../../common/utils/stream-utils');
 
 module.exports = async db => {
 

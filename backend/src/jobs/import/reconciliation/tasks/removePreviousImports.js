@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require('moment/moment');
 
 module.exports = (db, retention) => {
 
