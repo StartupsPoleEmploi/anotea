@@ -1,4 +1,5 @@
 /* eslint-disable no-var */
+/* global window, document */
 (function() {
 
     window.anotea = window.anotea || {};

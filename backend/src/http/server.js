@@ -25,7 +25,8 @@ module.exports = components => {
     app.use(middlewares.logHttpRequests());
     app.use(middlewares.allowCORS());
     app.use(cookieParser(configuration.security.secret));
-    app.use(express.static(path.join(__dirname, '/public')));
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(path.dirname(require.main.filename), 'build/public')));
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json({
         verify: (req, res, buf, encoding) => {
