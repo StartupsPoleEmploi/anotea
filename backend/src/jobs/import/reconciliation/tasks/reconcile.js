@@ -40,14 +40,7 @@ module.exports = (db, logger, options = { formations: true, actions: true, sessi
         .pipe(transformObject(async rawFormation => {
 
             try {
-                let avis = await findAvisReconciliables(db, rawFormation, {
-                    sirets: rawFormation.actions.reduce((acc, action) => {
-                        return [
-                            ...acc,
-                            action.organisme_formateur.siret_formateur.siret,
-                        ];
-                    }, [])
-                });
+                let avis = await findAvisReconciliables(db, rawFormation);
 
                 let formation = reconcileFormation(rawFormation, avis);
                 let actions = reconcileActions(rawFormation, avis);

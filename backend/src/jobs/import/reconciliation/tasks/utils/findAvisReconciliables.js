@@ -1,8 +1,12 @@
-module.exports = (db, formation, selectors) => {
+module.exports = (db, formation) => {
 
     return db.collection('comment').find({
         $and: [
-            { 'training.organisation.siret': { $in: selectors.sirets } },
+            {
+                'training.organisation.siret': {
+                    $in: formation.actions.map(action => action.organisme_formateur.siret_formateur.siret)
+                }
+            },
             {
                 $or: [
                     { 'training.certifInfo.id': { $in: formation._meta.certifinfos } },
