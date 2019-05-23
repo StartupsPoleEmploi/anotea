@@ -62,7 +62,7 @@ describe(__filename, () => {
                         numero: '14_OF_XXXXXXXXXX',
                     },
                     session: {
-                        numero: '2422722',
+                        numero: 'SE_XXXXXX',
                         periode: {
                             debut: date,
                             fin: date
