@@ -1,7 +1,8 @@
 const computeScore = require('./computeScore');
 const { flatten } = require('../../../../job-utils');
+const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
 
-module.exports = (formation, allAvis) => {
+module.exports = (formation, allComments) => {
 
     return formation.actions.reduce((acc, action) => {
 
@@ -9,7 +10,7 @@ module.exports = (formation, allAvis) => {
             return acc;
         }
 
-        let avis = allAvis.filter(a => {
+        let comments = allComments.filter(a => {
             return a.training.place.postalCode === action.lieu_de_formation.coordonnees.adresse.codepostal &&
                 a.training.organisation.siret === action.organisme_formateur.siret_formateur.siret;
         });
@@ -24,8 +25,8 @@ module.exports = (formation, allAvis) => {
                     numero: session._attributes.numero,
                     region: action.lieu_de_formation.coordonnees.adresse.region,
                     code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
-                    avis: avis || [],
-                    score: computeScore(avis),
+                    avis: comments.map(a => convertCommentToAvis(a)) || [],
+                    score: computeScore(comments),
                     formation: {
                         numero: formation._attributes.numero,
                         intitule: formation.intitule_formation,

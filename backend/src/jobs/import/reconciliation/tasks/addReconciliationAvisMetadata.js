@@ -7,9 +7,9 @@ module.exports = async db => {
         db.collection('comment').find()
         .pipe(transformObject(async avis => {
             let [nbSessions, nbActions, nbFormations] = await Promise.all([
-                db.collection('sessionsReconciliees').countDocuments({ 'avis._id': avis._id }),
-                db.collection('actionsReconciliees').countDocuments({ 'avis._id': avis._id }),
-                db.collection('formationsReconciliees').countDocuments({ 'avis._id': avis._id }),
+                db.collection('sessionsReconciliees').countDocuments({ 'avis._id': avis.id }),
+                db.collection('actionsReconciliees').countDocuments({ 'avis._id': avis.id }),
+                db.collection('formationsReconciliees').countDocuments({ 'avis._id': avis.id }),
             ]);
 
             let reconciliation = {

@@ -1,27 +1,38 @@
 const _ = require('lodash');
-const createNoteDTO = require('./createNoteDTO');
 
 const convertCommentaire = data => {
 
-    let texte = _.isEmpty(data.comment.text) ? undefined : data.comment.text;
+    let commentaire = {};
+    if (!_.isEmpty(data.comment.text)) {
+        commentaire.texte = data.editedComment ? data.editedComment.text : data.comment.text;
+    }
 
-    return {
-        titre: (data.titleMasked || _.isEmpty(data.comment.title)) ? undefined : data.comment.title,
-        texte: data.editedComment ? data.editedComment.text : texte,
-        reponse: data.reponse && data.reponse.status === 'published' ? data.reponse.text : undefined,
-    };
+    if (!_.isEmpty(data.comment.title) && !data.titleMasked) {
+        commentaire.titre = data.comment.title;
+    }
+
+    if (data.reponse && data.reponse.status === 'published') {
+        commentaire.reponse = data.reponse.text;
+    }
+
+    return commentaire;
 };
 
-module.exports = (data, options = {}) => {
+module.exports = data => {
     let training = data.training;
     let rates = data.rates;
 
-    return {
+    let avis = {
         id: data._id,
-        pseudo: (data.pseudoMasked || data.rejected || _.isEmpty(data.pseudo)) ? undefined : data.pseudo,
         date: data.date ? data.date : data._id.getTimestamp(),
-        commentaire: data.comment && !data.rejected ? convertCommentaire(data) : undefined,
-        notes: createNoteDTO(rates, options),
+        notes: {
+            accueil: rates.accueil,
+            contenu_formation: rates.contenu_formation,
+            equipe_formateurs: rates.equipe_formateurs,
+            moyen_materiel: rates.moyen_materiel,
+            accompagnement: rates.accompagnement,
+            global: rates.global,
+        },
         formation: {
             numero: training.idFormation,
             intitule: training.title,
@@ -31,9 +42,8 @@ module.exports = (data, options = {}) => {
             certifications: [{
                 certif_info: training.certifInfo.id,
             }].filter(c => !_.isEmpty(c.certif_info)),
-            //TODO add organisme responsbale data
+            //TODO add organisme responsable data
             action: {
-                numero: training.infoCarif.numeroAction !== 'NULL' ? training.infoCarif.numeroAction : undefined,
                 lieu_de_formation: {
                     code_postal: training.place.postalCode,
                     ville: training.place.city,
@@ -56,4 +66,18 @@ module.exports = (data, options = {}) => {
             },
         },
     };
+
+    if (training.infoCarif.numeroAction !== 'NULL') {
+        avis.formation.action.numero = training.infoCarif.numeroAction;
+    }
+
+    if (!data.pseudoMasked && !data.rejected && !_.isEmpty(data.pseudo)) {
+        avis.pseudo = data.pseudo;
+    }
+
+    if (data.comment && !data.rejected) {
+        avis.commentaire = convertCommentaire(data);
+    }
+
+    return avis;
 };

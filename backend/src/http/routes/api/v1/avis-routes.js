@@ -5,8 +5,7 @@ const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch } = require('../../routes-utils');
 const { paginationValidator, notesDecimalesValidator } = require('./utils/validators');
-const createAvisDTO = require('./dto/createAvisDTO');
-const createPaginationDTO = require('./dto/createPaginationDTO');
+const { createPaginationDTO, createAvisDTO } = require('./utils/dto');
 
 const buildAvisQuery = filters => {
 
@@ -88,10 +87,10 @@ module.exports = ({ db, middlewares }) => {
         .limit(limit)
         .skip(skip);
 
-        let [total, avis] = await Promise.all([cursor.count(), cursor.toArray()]);
+        let [total, comment] = await Promise.all([cursor.count(), cursor.toArray()]);
 
         res.json({
-            avis: avis.map(a => createAvisDTO(a, { notes_decimales: parameters.notes_decimales })),
+            avis: comment.map(c => createAvisDTO(c, { notes_decimales: parameters.notes_decimales })),
             meta: {
                 pagination: createPaginationDTO(pagination, total)
             },
@@ -109,12 +108,12 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.badRequest('Identifiant invalide');
         }
 
-        let avis = await db.collection('comment').findOne({ _id: new ObjectID(parameters.id) });
+        let comment = await db.collection('comment').findOne({ _id: new ObjectID(parameters.id) });
 
-        if (!avis) {
+        if (!comment) {
             throw Boom.notFound('Identifiant inconnu');
         }
-        res.json(createAvisDTO(avis, { notes_decimales: parameters.notes_decimales }));
+        res.json(createAvisDTO(comment, { notes_decimales: parameters.notes_decimales }));
     }));
 
     return router;

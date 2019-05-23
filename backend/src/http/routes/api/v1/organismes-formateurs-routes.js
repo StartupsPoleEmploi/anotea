@@ -5,8 +5,7 @@ const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
 const { paginationValidator, arrayOfValidator, notesDecimalesValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const createPaginationDTO = require('./dto/createPaginationDTO');
-const createOrganismeFomateurDTO = require('./dto/createOrganismeFomateurDTO');
+const { createOrganismeFomateurDTO, createPaginationDTO } = require('./utils/dto');
 
 module.exports = ({ db, middlewares }) => {
 
