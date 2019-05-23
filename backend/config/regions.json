@@ -227,7 +227,7 @@
   },
   {
     "nom": "Normandie",
-    "active": false,
+    "active": true,
     "codeRegion": "14",
     "codeINSEE": "28",
     "departements": ["14", "27", "27", "50", "76", "61"],
@@ -236,7 +236,7 @@
     },
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
