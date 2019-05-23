@@ -47,7 +47,7 @@ module.exports = (data, options = {}) => {
                     numero: training.organisation.id,
                 },
                 session: {
-                    numero: data.idSession, //FIXME avis.idSession training.infoCarif.numeroSession ?
+                    numero: data.training.infoCarif.numeroSession,
                     periode: {
                         debut: training.startDate,
                         fin: training.scheduledEndDate,

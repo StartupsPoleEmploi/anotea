@@ -8,6 +8,10 @@ module.exports = (data, options = {}) => {
     json.id = json._id;
     delete json._id;
 
+    if (json.meta) {
+        delete json.meta.import_date;
+    }
+
     if (json.avis) {
         json.avis = json.avis.map(c => createAvisDTO(c, options));
     }
