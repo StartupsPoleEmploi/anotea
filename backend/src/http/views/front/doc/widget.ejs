@@ -8,9 +8,11 @@
               content="Le widget Anotea vous permet d’intégrer et de promouvoir facilement les avis des stagiaires sur votre site web." />
 
         <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+              integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+              crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <script src="<%= data.scriptUrl %>"></script>
+        <script src="/static/js/widget/anotea-widget.js"></script>
         <style>
             body {
                 font-size: 1em;
@@ -22,24 +24,6 @@
                 background-color: #384eaa;
                 color: white;
                 padding: 1.25rem;
-            }
-
-            .grid-displayer {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                z-index: 10000;
-                pointer-events: none;
-                opacity: .1;
-            }
-
-            .grid-displayer span {
-                display: block;
-                height: 100vh;
-                background: rgba(128, 128, 128, 1);
             }
 
             .widget {
@@ -62,9 +46,7 @@
             .integration a {
                 color: #91979C;
             }
-
         </style>
-
     </head>
 
     <body>
@@ -118,7 +100,7 @@
                         </div>
                     </div>
                     <div class="integration text-right">
-                       <a href="https://github.com/StartupsPoleEmploi/anotea/blob/master/WIDGET.md">
+                        <a href="https://github.com/StartupsPoleEmploi/anotea/blob/master/WIDGET.md">
                             <i class="fas fa-link"></i>
                             Documentation technique
                         </a>
@@ -142,32 +124,13 @@
                         </div>
                     </div>
                     <div class="integration text-right">
-                       <a href="https://github.com/StartupsPoleEmploi/anotea/blob/master/WIDGET.md">
+                        <a href="https://github.com/StartupsPoleEmploi/anotea/blob/master/WIDGET.md">
                             <i class="fas fa-link"></i>
                             Documentation technique
                         </a>
                     </div>
                 </div>
             </section>
-        </div>
-
-        <div class="grid-displayer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                    <div class="col-sm-1"><span></span></div>
-                </div>
-            </div>
         </div>
     </body>
 

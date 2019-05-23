@@ -15,4 +15,5 @@ heapdump-*
 .data
 coverage
 .nyc_output
+build/
 
