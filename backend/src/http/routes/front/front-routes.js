@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const express = require('express');
 const externalLinks = require('./utils/externalLinks');
 
@@ -34,7 +33,7 @@ module.exports = ({ db, configuration, stats }) => {
     router.get('/doc/widget', (req, res) => {
 
         let baseUrl = req.protocol + '://' + req.get('host');
-        res.render('front/doc/widget', {
+        res.render(`front/doc/widget${req.query.test ? '-tests' : ''}`, {
             data: {
                 scriptUrl: baseUrl.indexOf('localhost') !== -1 ?
                     'http://localhost:3002/js/anotea-widget.js' : '/widget/js/anotea-widget.js'

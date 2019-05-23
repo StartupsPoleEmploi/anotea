@@ -46,7 +46,10 @@
             widget.appendChild(getStyles());
             widget.appendChild(createIFrame(widget));
         }
-        window.anotea.iFrameResize({ heightCalculationMethod: 'bodyScroll' }, '.anotea-widget-iframe');
+        window.anotea.iFrameResize({
+            heightCalculationMethod: 'bodyScroll',
+            checkOrigin: false
+        }, '.anotea-widget-iframe');
     });
 
     /* eslint-disable  */
@@ -939,7 +942,7 @@
                     logEnabled = (options || {}).log
                     log(
                         iframeId,
-                        'Added missing iframe ID: ' + iframeId + ' (' + iframe.src + ')'
+                        'Added missing iframe ID: ' + iframeId + ' (' + iframe.getAttribute('src') + ')'
                     )
                 }
 
@@ -1133,7 +1136,7 @@
                 settings[iframeId] = {
                     firstRun: true,
                     iframe: iframe,
-                    remoteHost: iframe.src
+                    remoteHost: iframe.getAttribute('src')
                     .split('/')
                     .slice(0, 3)
                     .join('/')
