@@ -265,7 +265,7 @@
   },
   {
     "nom": "Occitanie",
-    "active": false,
+    "active": true,
     "codeRegion": "16",
     "codeINSEE": "76",
     "departements": ["32", "09", "11", "12", "30", "31", "34", "65", "46", "48", "66", "81", "82"],
@@ -274,7 +274,7 @@
     },
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
