@@ -24,13 +24,17 @@ module.exports = async (db, formation) => {
         ]
     })
     .project({
-        campaign: 0,
-        unsubscribe: 0,
-        mailSent: 0,
-        mailSentDate: 0,
-        tracking: 0,
-        accord: 0,
-        meta: 0,
+        _id: 1,
+        training: 1,
+        rates: 1,
+        date: 1,
+        formacode: 1,
+        codeFinanceur: 1,
+        comment: 1,
+        pseudo: 1,
+        rejected: 1,
+        editedComment: 1,
+        reponse: 1,
     })
     .toArray();
 

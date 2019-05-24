@@ -1,10 +1,10 @@
 const moment = require('moment/moment');
 
-module.exports = (db, retention) => {
+module.exports = (db, retention = moment().subtract(12, 'hours').toDate()) => {
 
     let query = {
         $or: [
-            { 'meta.import_date': { $lte: retention || moment().subtract(12, 'hours').toDate() } },
+            { 'meta.import_date': { $lte: retention } },
             { 'meta.import_date': { $exists: false } },
         ]
     };
