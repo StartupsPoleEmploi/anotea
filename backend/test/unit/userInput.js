@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { sanitize } = require('../../src/http/routes/front/utils/userInput.js');
+const { sanitize } = require('../../src/http/routes/api/questionnaire/utils/userInput.js');
 
 describe('Sanitize user input', function() {
 

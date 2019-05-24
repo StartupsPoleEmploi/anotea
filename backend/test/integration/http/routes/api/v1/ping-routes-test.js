@@ -1,8 +1,8 @@
 const request = require('supertest');
 const assert = require('assert');
-const moment = require('moment');
+const moment = require('moment/moment');
 const crypto = require('crypto');
-const { withServer } = require('../../../../helpers/test-server');
+const { withServer } = require('../../../../../helpers/test-server');
 
 describe('/api/ping', withServer(({ startServer }) => {
 

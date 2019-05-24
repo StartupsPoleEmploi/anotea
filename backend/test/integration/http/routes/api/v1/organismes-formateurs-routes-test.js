@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
-const { withServer } = require('../../../../helpers/test-server');
-const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
+const { withServer } = require('../../../../../helpers/test-server');
+const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 

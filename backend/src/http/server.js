@@ -36,7 +36,10 @@ module.exports = components => {
         }
     }));
 
-    //Public routes
+    //Pubic routes with HTML server-side rendering
+    app.use('/', require('./routes/front/html-routes')(httpComponents));
+
+    //API routes
     app.use('/api/', middlewares.addRateLimit(sentry));
     app.use('/api', require('./routes/api/swagger-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/ping-routes')(httpComponents));
@@ -47,12 +50,6 @@ module.exports = components => {
     app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
     app.use('/api', require('./routes/api/stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/kairos-routes')(httpComponents));
-
-    //Pubic routes with server-side rendering
-    app.use('/', require('./routes/front/front-routes')(httpComponents));
-    app.use('/', require('./routes/front/mailing-routes')(httpComponents));
-
-    //Routes used by backoffice applications
     app.use('/api', require('./routes/api/backoffice/auth/login-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/forgottenPassword-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/moderateur/moderation-routes')(httpComponents));
@@ -63,7 +60,7 @@ module.exports = components => {
     app.use('/api', require('./routes/api/backoffice/financeur/financeur-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/account-routes')(httpComponents));
-    app.use('/api', require('./routes/front/questionnaire-routes')(httpComponents));
+    app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
 
     // catch 404
     app.use(function(req, res) {

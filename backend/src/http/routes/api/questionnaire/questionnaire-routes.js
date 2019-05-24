@@ -2,11 +2,10 @@ const express = require('express');
 const moment = require('moment');
 const { getDeviceType } = require('./utils/analytics');
 const Joi = require('joi');
-const s = require('string');
-const externalLinks = require('./utils/externalLinks');
+const externalLinks = require('../../front/utils/externalLinks');
 const { sanitize } = require('./utils/userInput');
-const { tryAndCatch } = require('../routes-utils');
-const { AlreadySentError, BadDataError } = require('./../../../common/errors');
+const { tryAndCatch } = require('../../routes-utils');
+const { AlreadySentError, BadDataError } = require('../../../../common/errors');
 
 module.exports = ({ db, logger, configuration }) => {
 
