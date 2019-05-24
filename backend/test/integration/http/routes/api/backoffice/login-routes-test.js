@@ -2,8 +2,8 @@ const JWT = require('jsonwebtoken');
 const _ = require('lodash');
 const request = require('supertest');
 const assert = require('assert');
-const { withServer } = require('../../../../helpers/test-server');
-const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('../../../../helpers/data/dataset');
+const { withServer } = require('../../../../../helpers/test-server');
+const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoDatabase, getTestDatabase }) => {
 

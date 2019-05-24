@@ -3,9 +3,9 @@ const JWT = require('jsonwebtoken');
 const request = require('supertest');
 const assert = require('assert');
 const configuration = require('config');
-const { withServer } = require('../../../helpers/test-server');
-const { newOrganismeAccount, randomSIRET } = require('../../../helpers/data/dataset');
-const auth = require('../../../../src/common/components/auth');
+const { withServer } = require('../../../../helpers/test-server');
+const { newOrganismeAccount, randomSIRET } = require('../../../../helpers/data/dataset');
+const auth = require('../../../../../src/common/components/auth');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
 
