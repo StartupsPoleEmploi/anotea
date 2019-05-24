@@ -411,14 +411,19 @@ export default class FinancerPanel extends React.Component {
 
                     <ul className="nav nav-tabs">
                         <li className="nav-item">
-                            <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`}
+                            <button className={`nav-link btn btn-link ${this.getActiveStatus('reported')}`}
                                     onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
-                                className="badge rejected">{inventory.reported}</span></button>
+                                className="badge reported">{inventory.reported}</span></button>
                         </li>
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('commented')}`}
                                     onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
                                 className="badge published">{inventory.commented}</span></button>
+                        </li>
+                        <li className="nav-item">
+                            <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`}
+                                    onClick={this.switchTab.bind(this, 'rejected')}>Avis rejetés <span
+                                className="badge rejected">{inventory.rejected}</span></button>
                         </li>
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`}

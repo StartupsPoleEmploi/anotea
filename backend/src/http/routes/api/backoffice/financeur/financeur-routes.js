@@ -67,6 +67,8 @@ module.exports = ({ db, middlewares, configuration }) => {
                 filter.published = true;
                 filter.comment = { $exists: true };
                 filter.comment = { $ne: null };
+            } else if (req.query.filter === 'rejected') {
+                filter.rejected = true;
             } else if (req.query.filter === 'all') {
                 filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
             }
@@ -380,6 +382,7 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         let inventory = {};
         inventory.reported = await db.collection('comment').countDocuments({ ...filter, reported: true });
+        inventory.rejected = await db.collection('comment').countDocuments({ ...filter, rejected: true });
         inventory.commented = await db.collection('comment').countDocuments({
             ...filter,
             published: true,
@@ -415,6 +418,7 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         let inventory = {};
         inventory.reported = await db.collection('comment').countDocuments({ ...filter, reported: true });
+        inventory.rejected = await db.collection('comment').countDocuments({ ...filter, rejected: true });
         inventory.commented = await db.collection('comment').countDocuments({
             ...filter,
             published: true,
@@ -438,6 +442,7 @@ module.exports = ({ db, middlewares, configuration }) => {
 
         let inventory = {};
         inventory.reported = await db.collection('comment').countDocuments({ ...filter, reported: true });
+        inventory.rejected = await db.collection('comment').countDocuments({ ...filter, rejected: true });
         inventory.commented = await db.collection('comment').countDocuments({
             ...filter,
             published: true,
