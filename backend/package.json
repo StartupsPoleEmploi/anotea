@@ -9,7 +9,7 @@
     "test:coverage": "nyc --reporter=html --reporter=text-summary mocha --recursive --exit --timeout 5000 test",
     "test:integration": "mocha --recursive --exit --timeout 5000 test/integration",
     "test:all": "npm run test:unit && npm run test:integration",
-    "build": "mkdir -p build/public/static/js/widget/ && uglifyjs src/http/public/static/js/widget/anotea-widget.js --source-map --output build/public/static/js/widget/anotea-widget.min.js",
+    "build": "mkdir -p build/public/static/js/widget/ && uglifyjs src/http/public/static/js/widget/anotea-widget-loader.js --source-map --output build/public/static/js/widget/anotea-widget-loader.min.js",
     "start": "npm run start:default",
     "start:default": "node index.js",
     "start:watch": "nodemon --inspect --ignore test/ index.js",
