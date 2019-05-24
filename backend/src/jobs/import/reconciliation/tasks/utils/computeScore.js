@@ -1,7 +1,7 @@
 module.exports = avis => {
 
     let average = (avis, field) => {
-        let value = avis.map(a => a.rates[field]).reduce((acc, value) => {
+        let value = avis.map(a => a.notes[field]).reduce((acc, value) => {
             acc += value;
             return acc;
         }, 0);

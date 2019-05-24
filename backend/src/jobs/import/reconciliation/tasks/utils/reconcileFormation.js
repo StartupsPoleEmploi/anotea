@@ -1,7 +1,6 @@
 const computeScore = require('./computeScore');
-const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
 
-module.exports = (formation, allComments) => {
+module.exports = (formation, avis) => {
 
     let sirets = formation.actions.reduce((acc, action) => {
         return [
@@ -26,8 +25,8 @@ module.exports = (formation, allComments) => {
             siret: formation.organisme_formation_responsable.siret_organisme_formation.siret,
             numero: formation.organisme_formation_responsable._attributes.numero,
         },
-        avis: allComments.map(a => convertCommentToAvis(a)) || [],
-        score: computeScore(allComments),
+        avis: avis || [],
+        score: computeScore(avis),
         meta: {
             import_date: new Date(),
             source: {//TODO remove source field in v2
