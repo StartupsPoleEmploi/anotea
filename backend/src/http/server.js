@@ -20,10 +20,11 @@ module.exports = components => {
     app.set('view engine', 'ejs');
     app.set('views', path.join(__dirname, 'views'));
 
-    app.use(compression());
+    app.use(middlewares.rewriteDeprecatedUrl());
     app.use(middlewares.addRequestId());
     app.use(middlewares.logHttpRequests());
     app.use(middlewares.allowCORS());
+    app.use(compression());
     app.use(cookieParser(configuration.security.secret));
     app.use(express.static(path.join(__dirname, 'public')));
     app.use(express.static(path.join(path.dirname(require.main.filename), 'build/public')));
