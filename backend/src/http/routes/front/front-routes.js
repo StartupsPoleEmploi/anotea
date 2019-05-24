@@ -31,6 +31,9 @@ module.exports = ({ db, configuration, stats }) => {
     });
 
     router.get('/doc/widget', (req, res) => {
+        if (configuration.env === 'dev' && !req.query['load_anotea_widget_iframe_from_localhost']) {
+            return res.redirect('/doc/widget?load_anotea_widget_iframe_from_localhost=true');
+        }
         res.render(`front/doc/widget${req.query.test ? '-tests' : ''}`);
     });
 
