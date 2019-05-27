@@ -24,7 +24,7 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
 
     let cursor = db.collection('intercarif')
     .find()
-    .batchSize(10)
+    .batchSize(25)
     .project({
         '_attributes': 1,
         '_meta': 1,
@@ -37,8 +37,14 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
         'actions.sessions._attributes': 1,
     });
 
+    let promises = [];
     while (await cursor.hasNext()) {
         let rawFormation = await cursor.next();
+
+        if (promises.length >= 25) {
+            await Promise.all(promises);
+            promises = [];
+        }
 
         try {
             let avis = await findAvisReconciliables(db, rawFormation);
@@ -47,11 +53,13 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
             let actions = reconcileActions(rawFormation, avis);
             let sessions = reconcileSessions(rawFormation, avis);
 
-            await Promise.all([
-                ...(options.formations ? [replaceOne('formations', formation)] : []),
-                ...(options.actions ? [Promise.all(actions.map(action => replaceOne('actions', action)))] : []),
-                ...(options.sessions ? [Promise.all(sessions.map(session => replaceOne('sessions', session)))] : []),
-            ]);
+            promises.push(
+                Promise.all([
+                    ...(options.formations ? [replaceOne('formations', formation)] : []),
+                    ...(options.actions ? [Promise.all(actions.map(action => replaceOne('actions', action)))] : []),
+                    ...(options.sessions ? [Promise.all(sessions.map(session => replaceOne('sessions', session)))] : []),
+                ])
+            );
 
             logger.debug(`Formation ${rawFormation._attributes.numero} from intercarif has been reconciliated`);
 
@@ -60,6 +68,8 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
             logger.error(`Formation ${cursor._attributes.numero} can not be reconciliated`, e);
         }
     }
+
+    await Promise.all(promises);
 
     return stats.error ? Promise.reject(stats) : stats;
 };
