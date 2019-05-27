@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Formation from '../common/Formation';
+import labonneformation from '../../images/labonneformation.png';
 import './remerciements.scss';
 
 class Remerciements extends Component {
@@ -77,7 +78,7 @@ class Remerciements extends Component {
                                             target="_blank"
                                             rel="noopener noreferrer">
                                             <img
-                                                src={`/img/regions/logo-questionnaire/carif-${stagiaire.codeRegion}.png`}
+                                                src={process.env.PUBLIC_URL + `/images/regions/carif-${stagiaire.codeRegion}.png`}
                                                 alt="logo carif "/>
                                         </a>
                                         }
@@ -87,7 +88,7 @@ class Remerciements extends Component {
                                             title="Visiter labonneformation.fr"
                                             target="_blank"
                                             rel="noopener noreferrer">
-                                            <img src="/img/labonneformation.png" alt="labonneformation" />
+                                            <img src={labonneformation} alt="labonneformation" />
                                         </a>
                                     </div>
                                 </section>

@@ -32,7 +32,7 @@ export default class DeprecatedHeader extends React.PureComponent {
                 </NavLink>
                 {props.profile === 'organisme' &&
                     <a className="helpLink float-right"
-                        href={`https://anotea.pole-emploi.fr/notices/notice-${props.codeRegion}.pdf`}>Aide
+                        href={`https://anotea.pole-emploi.fr/static/notices/notice-${props.codeRegion}.pdf`}>Aide
                     </a>
                 }
 
