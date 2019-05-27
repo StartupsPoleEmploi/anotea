@@ -157,7 +157,7 @@
     "codeRegion": "10",
     "codeINSEE": "32",
     "departements": ["02", "59", "62", "60", "80"],
-    "filters": { },
+    "filters": {},
     "mailing": {
       "stagiaires": {
         "avis": true
