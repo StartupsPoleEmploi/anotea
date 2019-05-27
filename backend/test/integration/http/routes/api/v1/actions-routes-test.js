@@ -2,76 +2,91 @@ const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/test-server');
 const ObjectID = require('mongodb').ObjectID;
-const { newComment, randomize, newIntercarif, newAction } = require('../../../../../helpers/data/dataset');
+const { newComment, randomize, newIntercarif } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
+
+    let reconcileActions = (intercarifs, avis = []) => {
+        return Promise.all([
+            ...intercarifs.map(data => insertIntoDatabase('intercarif', data)),
+            ...avis.map(data => insertIntoDatabase('comment', data)),
+        ])
+        .then(() => reconcile({ actions: true }));
+    };
 
     it('can return action by id', async () => {
 
         let app = await startServer();
         let pseudo = randomize('pseudo');
         let date = new Date();
-        let actionId = '14_AF_0000010729|14_SE_0000109418';
         let commentId = new ObjectID();
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({
-                _id: actionId,
-                numero: '14_SE_0000109418',
-                region: '11',
-                avis: [
-                    newComment({
-                        _id: commentId,
-                        pseudo: pseudo,
-                        formacode: '22252',
-                        idSession: 'SE_XXXXXX',
-                        training: {
-                            idFormation: '14_AF_0000010729',
-                            formacode: '22252',
-                            organisation: {
-                                siret: '82422814200108',
-                            },
-                            place: {
-                                postalCode: '77420',
-                            },
-                            infoCarif: {
-                                numeroAction: '14_SE_0000109418',
-                                numeroSession: 'SE_XXXXXX'
-                            },
-                        }
-                    }, date)
-                ],
-            }))
-        ]);
 
-        let response = await request(app).get(`/api/v1/actions/${actionId}`);
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                newComment({
+                    _id: commentId,
+                    pseudo: pseudo,
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        accompagnement: 1,
+                        accueil: 3,
+                        contenu_formation: 2,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 2,
+                        global: 2.4,
+                    },
+                }, date)
+            ]
+        );
+
+        let response = await request(app).get(`/api/v1/actions/F_XX_XX|AC_XX_XXXXXX`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            id: actionId,
+            id: 'F_XX_XX|AC_XX_XXXXXX',
             region: '11',
-            numero: '14_SE_0000109418',
+            numero: 'AC_XX_XXXXXX',
             score: {
                 nb_avis: 1,
                 notes: {
-                    accompagnement: 4,
-                    accueil: 4,
-                    contenu_formation: 4,
+                    accompagnement: 1,
+                    accueil: 3,
+                    contenu_formation: 2,
                     equipe_formateurs: 4,
-                    global: 4,
-                    moyen_materiel: 4,
+                    moyen_materiel: 2,
+                    global: 2,
                 }
             },
             meta: {
                 reconciliation: {
-                    certifinfos: ['55518'],
-                    formacodes: ['31801'],
-                    lieu_de_formation: '49000',
-                    organisme_formateur: '11111111111111',
+                    certifinfos: ['80735'],
+                    formacodes: ['22252'],
+                    lieu_de_formation: '75019',
+                    organisme_formateur: '33333333333333',
                 },
                 source: {
-                    numero_formation: '14_AF_0000010729',
-                    numero_action: '14_SE_0000109418',
+                    numero_formation: 'F_XX_XX',
+                    numero_action: 'AC_XX_XXXXXX',
                     type: 'intercarif',
                 }
             },
@@ -93,7 +108,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 },
                 formation: {
                     intitule: 'Développeur',
-                    numero: '14_AF_0000010729',
+                    numero: 'F_XX_XX',
                     domaine_formation: {
                         formacodes: [
                             '22252'
@@ -105,15 +120,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                         }
                     ],
                     action: {
-                        numero: '14_SE_0000109418',
+                        numero: 'AC_XX_XXXXXX',
                         lieu_de_formation: {
-                            code_postal: '77420',
+                            code_postal: '75019',
                             ville: 'Paris'
                         },
                         organisme_financeurs: [],
                         organisme_formateur: {
                             raison_sociale: 'INSTITUT DE FORMATION',
-                            siret: '82422814200108',
+                            siret: '33333333333333',
                             numero: '14_OF_XXXXXXXXXX',
                         },
                         session: {
@@ -147,117 +162,110 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109417' })),
+        await reconcileActions([
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
         ]);
 
         let response = await request(app).get('/api/v1/actions');
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 2);
-        assert.ok(response.body.actions.find(s => s.numero === '14_SE_0000109418'));
-        assert.ok(response.body.actions.find(s => s.numero === '14_SE_0000109417'));
+        assert.ok(response.body.actions.find(a => a.numero === 'AC_XX_XXXXX1'));
+        assert.ok(response.body.actions.find(a => a.numero === 'AC_XX_XXXXX2'));
     });
 
     it('can search though all actions filtered by ids', async () => {
 
         let app = await startServer();
-        let firstActionId = '14_AF_0000010729|14_SE_0000109418';
-        let secondActionId = '14_AF_0000010729|14_SE_0000109417';
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: firstActionId })),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: secondActionId })),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109416' })),
+        await reconcileActions([
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX3' }),
         ]);
 
-        let response = await request(app).get(`/api/v1/actions?id=${firstActionId},${secondActionId}`);
+        let response = await request(app).get(`/api/v1/actions?id=F_XX_XX|AC_XX_XXXXX1,F_XX_XX|AC_XX_XXXXX2`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 2);
-        assert.ok(response.body.actions.find(s => s.numero === '14_SE_0000109418'));
-        assert.ok(response.body.actions.find(s => s.numero === '14_SE_0000109417'));
+        assert.ok(response.body.actions.find(a => a.numero === 'AC_XX_XXXXX1'));
+        assert.ok(response.body.actions.find(a => a.numero === 'AC_XX_XXXXX2'));
     });
 
     it('can search though all actions filtered by region', async () => {
 
         let app = await startServer();
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({
-                _id: '14_AF_0000010729|14_SE_0000109418',
-                region: '11'
-            })),
-            insertIntoDatabase('actionsReconciliees', newAction({
-                _id: '14_AF_0000010729|14_SE_0000109419',
-                region: '24'
-            })),
+        await reconcileActions([
+            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX1', codeRegion: '11' }),
+            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX2', codeRegion: '24' }),
         ]);
 
         let response = await request(app).get(`/api/v1/actions?region=11`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
-        assert.ok(response.body.actions.find(s => s.id === '14_AF_0000010729|14_SE_0000109418'));
+        assert.ok(response.body.actions.find(a => a.id === 'F_XX_XX|AC_XX_XXXXX1'));
     });
 
     it('can search though all actions filtered by numero', async () => {
 
         let app = await startServer();
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({
-                _id: '14_AF_0000010729|14_SE_0000109418',
-                numero: '14_SE_0000109418'
-            })),
-            insertIntoDatabase('actionsReconciliees', newAction({
-                _id: '14_AF_0000010729|14_SE_0000109419',
-                numero: '14_SE_0000109419'
-            })),
+        await reconcileActions([
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
         ]);
 
-        let response = await request(app).get(`/api/v1/actions?numero=14_SE_0000109418`);
+        let response = await request(app).get(`/api/v1/actions?numero=AC_XX_XXXXX1`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
-        assert.ok(response.body.actions.find(s => s.id === '14_AF_0000010729|14_SE_0000109418'));
+        assert.ok(response.body.actions.find(a => a.numero === 'AC_XX_XXXXX1'));
     });
 
     it('can search though all actions filtered by nb_avis', async () => {
 
         let app = await startServer();
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({
-                _id: '14_AF_0000010729|14_SE_0000109418',
-                score: {
-                    nb_avis: 1,
-                }
-            })),
-            insertIntoDatabase('actionsReconciliees', newAction({
-                _id: '14_AF_0000010729|14_SE_0000109419',
-                score: {
-                    nb_avis: 0,
-                },
-            })),
-        ]);
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXX1',
+                    formacode: '22252',
+                    organismeFormateur: '33333333333333',
+                    lieuDeFormation: '75019',
+                }),
+                newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
+            ],
+            [
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                })
+            ]
+        );
 
         let response = await request(app).get(`/api/v1/actions?nb_avis=1`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
-        assert.ok(response.body.actions.find(s => s.id === '14_AF_0000010729|14_SE_0000109418'));
+        assert.ok(response.body.actions.find(a => a.id === 'F_XX_XX|AC_XX_XXXXX1'));
     });
 
     it('can search though all actions with pagination', async () => {
 
         let app = await startServer();
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109419' })),
+        await reconcileActions([
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
         ]);
 
         let response = await request(app).get(`/api/v1/actions?page=0&items_par_page=1`);
@@ -279,10 +287,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
-        ]);
+        await reconcileActions([newIntercarif()]);
 
         let response = await request(app).get('/api/v1/actions?fields=score');
         assert.strictEqual(response.statusCode, 200);
@@ -294,9 +299,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
+        await reconcileActions([
+            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
         ]);
 
         let response = await request(app).get('/api/v1/actions?fields=-avis');
@@ -309,34 +313,64 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('actionsReconciliees', newAction({ _id: '14_AF_0000010729|14_SE_0000109418' })),
-        ]);
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXX1',
+                    formacode: '22252',
+                    organismeFormateur: '33333333333333',
+                    lieuDeFormation: '75019',
+                }),
+            ],
+            [
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        accompagnement: 1,
+                        accueil: 3,
+                        contenu_formation: 2,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 2,
+                        global: 2.4,
+                    },
+                })
+            ]
+        );
 
         let response = await request(app).get('/api/v1/actions?notes_decimales=true');
         assert.deepStrictEqual(response.body.actions[0].score, {
             nb_avis: 1,
             notes: {
-                accompagnement: 4.1,
-                accueil: 4.1,
-                contenu_formation: 4.1,
-                equipe_formateurs: 4.1,
-                global: 4.1,
-                moyen_materiel: 4.1,
+                accompagnement: 1,
+                accueil: 3,
+                contenu_formation: 2,
+                equipe_formateurs: 4,
+                moyen_materiel: 2,
+                global: 2.4,
             }
         });
 
-        response = await request(app).get('/api/v1/actions/14_AF_0000010729|14_SE_0000109418?notes_decimales=true');
+        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1?notes_decimales=true');
         assert.deepStrictEqual(response.body.score, {
             nb_avis: 1,
             notes: {
-                accompagnement: 4.1,
-                accueil: 4.1,
-                contenu_formation: 4.1,
-                equipe_formateurs: 4.1,
-                global: 4.1,
-                moyen_materiel: 4.1,
+                accompagnement: 1,
+                accueil: 3,
+                contenu_formation: 2,
+                equipe_formateurs: 4,
+                moyen_materiel: 2,
+                global: 2.4,
             }
         });
     });

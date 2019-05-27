@@ -35,6 +35,10 @@
                 margin-top: 2rem;
                 margin-bottom: 2rem;
             }
+
+            td {
+                font-size: 0.875rem;
+            }
         </style>
     </head>
 
@@ -47,8 +51,8 @@
                     </div>
                 </div>
 
-                <h2>Organismes</h2>
                 <div class="row">
+                    <h2>Organismes</h2>
                     <div class="col-sm-12">
 
                         <div class="card">
@@ -118,8 +122,8 @@
                     </div>
                 </div>
 
-                <h2>Avis</h2>
                 <div class="row">
+                    <h2>Avis</h2>
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">Par région</div>
@@ -153,8 +157,8 @@
                     </div>
                 </div>
 
-                <h2>Formations</h2>
                 <div class="row">
+                    <h2>Formations</h2>
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">Global</div>
@@ -182,8 +186,8 @@
                     </div>
                 </div>
 
-                <h2>Sessions</h2>
                 <div class="row">
+                    <h2>Sessions</h2>
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">Par région</div>
@@ -214,6 +218,48 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <h2>Emails</h2>
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">Par région</div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <table class="table small">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Campagne</th>
+                                                <th scope="col">Emails envoyés</th>
+                                                <th scope="col">Emails ouverts</th>
+                                                <th scope="col">Liens cliqués</th>
+                                                <th scope="col">Questionnaires validés</th>
+                                                <th scope="col">Contact</th>
+                                                <th scope="col">Commentaires</th>
+                                                <th scope="col">Commentaires rejetés</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% data.mailing.forEach(function(element) { %>
+                                                <tr>
+                                                    <td><%= element._id %></td>
+                                                    <td><%= element.mailSent %></td>
+                                                    <td><%= element.mailOpen %></td>
+                                                    <td><%= element.linkClick %></td>
+                                                    <td><%= element.formValidated %></td>
+                                                    <td><%= element.allowToContact %></td>
+                                                    <td><%= element.nbCommentaires %></td>
+                                                    <td><%= element.nbCommentairesRejected %></td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
     </body>

@@ -5,7 +5,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 const configuration = require('config');
 const { tryAndCatch } = require('../routes-utils');
-const createOrganismeFomateurDTO = require('./v1/dto/createOrganismeFomateurDTO');
+const { createOrganismeFomateurDTO } = require('./v1/utils/dto');
 const getCodeRegionFromKairosRegionName = require('../../../jobs/import/organismes/kairos/getCodeRegionFromKairosRegionName');
 
 module.exports = ({ db, auth, middlewares }) => {
