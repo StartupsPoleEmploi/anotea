@@ -206,7 +206,7 @@
   },
   {
     "nom": "Martinique",
-    "active": false,
+    "active": true,
     "codeRegion": "13",
     "codeINSEE": "02",
     "departements": ["972"],
@@ -215,7 +215,7 @@
     },
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
