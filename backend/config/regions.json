@@ -153,16 +153,14 @@
   },
   {
     "nom": "Hauts-de-France",
-    "active": false,
+    "active": true,
     "codeRegion": "10",
     "codeINSEE": "32",
     "departements": ["02", "59", "62", "60", "80"],
-    "filters": {
-      "conseil_regional": "excluded"
-    },
+    "filters": {},
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
