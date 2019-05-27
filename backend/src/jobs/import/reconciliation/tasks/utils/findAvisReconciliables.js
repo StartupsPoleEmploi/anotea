@@ -32,6 +32,7 @@ module.exports = async (db, formation) => {
         codeFinanceur: 1,
         comment: 1,
         pseudo: 1,
+        pseudoMasked: 1,
         rejected: 1,
         editedComment: 1,
         reponse: 1,
