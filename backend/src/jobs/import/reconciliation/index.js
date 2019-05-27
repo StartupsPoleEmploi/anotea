@@ -3,24 +3,23 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const generateFormations = require('./generateFormations');
-const generateActions = require('./generateActions');
-const generateSessions = require('./generateSessions');
-const addReconciliationAvisMetadata = require('./addReconciliationAvisMetadata');
+const reconcile = require('./tasks/reconcile');
+const addReconciliationAvisMetadata = require('./tasks/addReconciliationAvisMetadata');
+const removePreviousImports = require('./tasks/removePreviousImports');
 
 cli.description('Reconciling sessions/actions with comments...')
 .parse(process.argv);
 
-execute(async ({ logger, db }) => {
+execute(async ({ db, logger }) => {
 
-    logger.info(`Reconcile avis with intercarif...`);
-    let [formations, actions, sessions] = await Promise.all([
-        generateFormations(db),
-        generateActions(db),
-        generateSessions(db),
+    logger.info(`Reconciling formations, actions and sessions...`);
+    let stats = await reconcile(db, logger, { formations: true, actions: true, sessions: true });
+
+    logger.info(`Running post-process tasks...`);
+    await Promise.all([
+        addReconciliationAvisMetadata(db),
+        removePreviousImports(db),
     ]);
 
-    await addReconciliationAvisMetadata(db);
-
-    return { formations, actions, sessions };
+    return stats;
 });

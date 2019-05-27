@@ -2,70 +2,86 @@ const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/test-server');
 const ObjectID = require('mongodb').ObjectID;
-const { newComment, randomize, newIntercarif, newFormation } = require('../../../../../helpers/data/dataset');
+const { newComment, randomize, newIntercarif } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
 
-    it('can return session by id', async () => {
+    let reconcileFormations = (intercarifs, avis = []) => {
+        return Promise.all([
+            ...intercarifs.map(data => insertIntoDatabase('intercarif', data)),
+            ...avis.map(data => insertIntoDatabase('comment', data)),
+        ])
+        .then(() => reconcile({ formations: true }));
+    };
+
+    it('can return formation by id', async () => {
 
         let app = await startServer();
         let pseudo = randomize('pseudo');
         let date = new Date();
         let commentId = new ObjectID();
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({
-                _id: '14_AF_0000010729',
-                avis: [
-                    newComment({
-                        _id: commentId,
-                        pseudo: pseudo,
+        await reconcileFormations(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                newComment({
+                    _id: commentId,
+                    pseudo: pseudo,
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
                         formacode: '22252',
-                        idSession: 'SE_0000109418',
-                        training: {
-                            idFormation: '14_AF_0000010729',
-                            formacode: '22252',
-                            organisation: {
-                                siret: '82422814200108',
-                            },
-                            place: {
-                                postalCode: '77420',
-                            },
-                            infoCarif: {
-                                numeroAction: '14_SE_0000109418',
-                                numeroSession: 'SE_0000109418'
-                            },
-                        }
-                    }, date),
-                ],
-            }))
-        ]);
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        accompagnement: 1,
+                        accueil: 3,
+                        contenu_formation: 2,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 2,
+                        global: 2.4,
+                    },
+                }, date)
+            ]
+        );
 
-        let response = await request(app).get(`/api/v1/formations/14_AF_0000010729`);
+        let response = await request(app).get('/api/v1/formations/F_XX_XX');
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            id: '14_AF_0000010729',
-            numero: '14_AF_0000010729',
+            id: 'F_XX_XX',
+            numero: 'F_XX_XX',
             score: {
                 nb_avis: 1,
                 notes: {
-                    accompagnement: 4,
-                    accueil: 4,
-                    contenu_formation: 4,
+                    accompagnement: 1,
+                    accueil: 3,
+                    contenu_formation: 2,
                     equipe_formateurs: 4,
-                    global: 4,
-                    moyen_materiel: 4,
+                    moyen_materiel: 2,
+                    global: 2,
                 }
             },
             meta: {
                 reconciliation: {
-                    certifinfos: ['55518'],
-                    formacodes: ['31801'],
-                    organisme_formateurs: ['11111111111111'],
+                    certifinfos: ['80735'],
+                    formacodes: ['22252'],
+                    organisme_formateurs: ['33333333333333'],
                 },
                 source: {
-                    numero_formation: '14_AF_0000010729',
+                    numero_formation: 'F_XX_XX',
                     type: 'intercarif',
                 }
             },
@@ -86,32 +102,26 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     global: 2
                 },
                 formation: {
-                    numero: '14_AF_0000010729',
+                    numero: 'F_XX_XX',
                     intitule: 'Développeur',
                     domaine_formation: {
-                        formacodes: [
-                            '22252'
-                        ]
+                        formacodes: ['22252']
                     },
-                    certifications: [
-                        {
-                            certif_info: '78997'
-                        }
-                    ],
+                    certifications: [{ certif_info: '78997' }],
                     action: {
-                        numero: '14_SE_0000109418',
+                        numero: 'AC_XX_XXXXXX',
                         lieu_de_formation: {
-                            code_postal: '77420',
+                            code_postal: '75019',
                             ville: 'Paris'
                         },
                         organisme_financeurs: [],
                         organisme_formateur: {
                             raison_sociale: 'INSTITUT DE FORMATION',
-                            siret: '82422814200108',
+                            siret: '33333333333333',
                             numero: '14_OF_XXXXXXXXXX',
                         },
                         session: {
-                            numero: 'SE_0000109418',
+                            numero: 'SE_XXXXXX',
                             periode: {
                                 debut: date.toJSON(),
                                 fin: date.toJSON()
@@ -127,26 +137,39 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
         let date = new Date();
-        let sessionId = '14_AF_0000010729|14_SE_0000109418|SE_0000109418';
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({
-                _id: sessionId,
-                numero: 'SE_0000109418',
-                region: '11',
-                avis: [
-                    newComment({
-                        rejected: true,
-                        comment: {
-                            title: 'WTF',
-                            text: 'WTF',
+        await reconcileFormations(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
                         },
-                    }, date),
-                ],
-            }))
-        ]);
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rejected: true,
+                    comment: {
+                        title: 'WTF',
+                        text: 'WTF',
+                    },
+                }, date)
+            ]
+        );
 
-        let response = await request(app).get(`/api/v1/formations/${sessionId}`);
+        let response = await request(app).get(`/api/v1/formations/F_XX_XX`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis[0].commentaire, undefined);
@@ -170,96 +193,97 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: '14_AF_0000010729' })),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: '14_AF_0000010730' })),
+        await reconcileFormations([
+            newIntercarif({ numeroFormation: 'F_XX_X1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2' }),
         ]);
 
         let response = await request(app).get('/api/v1/formations');
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.formations.length, 2);
-        assert.ok(response.body.formations.find(s => s.numero === '14_AF_0000010729'));
-        assert.ok(response.body.formations.find(s => s.numero === '14_AF_0000010730'));
+        assert.ok(response.body.formations.find(s => s.numero === 'F_XX_X1'));
+        assert.ok(response.body.formations.find(s => s.numero === 'F_XX_X2'));
     });
 
     it('can search though all formations filtered by ids', async () => {
 
         let app = await startServer();
-        let firstSessionId = '14_AF_0000010729';
-        let secondSessionId = '14_AF_0000010730';
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: firstSessionId })),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: secondSessionId })),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: '14_AF_0000010731' })),
+        await reconcileFormations([
+            newIntercarif({ numeroFormation: 'F_XX_X1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X3' }),
         ]);
 
-        let response = await request(app).get(`/api/v1/formations?id=${firstSessionId},${secondSessionId}`);
+        let response = await request(app).get(`/api/v1/formations?id=F_XX_X1,F_XX_X2`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.formations.length, 2);
-        assert.ok(response.body.formations.find(s => s.numero === '14_AF_0000010729'));
-        assert.ok(response.body.formations.find(s => s.numero === '14_AF_0000010730'));
+        assert.ok(response.body.formations.find(s => s.numero === 'F_XX_X1'));
+        assert.ok(response.body.formations.find(s => s.numero === 'F_XX_X2'));
     });
 
     it('can search though all formations filtered by numero', async () => {
 
         let app = await startServer();
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({
-                _id: '14_AF_0000010729',
-                numero: '14_AF_0000010729'
-            })),
-            insertIntoDatabase('formationsReconciliees', newFormation({
-                _id: '14_AF_0000010730',
-                numero: '14_AF_0000010730'
-            })),
+        await reconcileFormations([
+            newIntercarif({ numeroFormation: 'F_XX_X1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2' }),
         ]);
 
-        let response = await request(app).get(`/api/v1/formations?numero=14_AF_0000010729`);
+        let response = await request(app).get(`/api/v1/formations?numero=F_XX_X1`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.formations.length, 1);
-        assert.ok(response.body.formations.find(s => s.id === '14_AF_0000010729'));
+        assert.ok(response.body.formations.find(s => s.id === 'F_XX_X1'));
     });
 
     it('can search though all formations filtered by nb_avis', async () => {
 
         let app = await startServer();
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({
-                _id: '14_AF_0000010729',
-                score: {
-                    nb_avis: 1,
-                },
-            })),
-            insertIntoDatabase('formationsReconciliees', newFormation({
-                _id: '14_AF_0000010730',
-                score: {
-                    nb_avis: 0,
-                },
-            })),
-        ]);
+        await reconcileFormations(
+            [
+                newIntercarif({ numeroFormation: 'F_XX_X2' }),
+                newIntercarif({
+                    numeroFormation: 'F_XX_X1',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                })
+            ]
+        );
 
         let response = await request(app).get(`/api/v1/formations?nb_avis=1`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.formations.length, 1);
-        assert.ok(response.body.formations.find(s => s.id === '14_AF_0000010729'));
+        assert.ok(response.body.formations.find(s => s.id === 'F_XX_X1'));
     });
 
     it('can search though all formations with pagination', async () => {
 
         let app = await startServer();
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: '14_AF_0000010729' })),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: '14_AF_0000010730' })),
+        await reconcileFormations([
+            newIntercarif({ numeroFormation: 'F_XX_X1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2' }),
         ]);
+
 
         let response = await request(app).get(`/api/v1/formations?page=0&items_par_page=1`);
         assert.strictEqual(response.statusCode, 200);
@@ -309,10 +333,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: '14_AF_0000010729' })),
+        await reconcileFormations([
+            newIntercarif({ numeroFormation: 'F_XX_X1' }),
         ]);
+
 
         let response = await request(app).get('/api/v1/formations?fields=score');
         assert.strictEqual(response.statusCode, 200);
@@ -324,10 +348,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: '14_AF_0000010729' })),
+        await reconcileFormations([
+            newIntercarif({ numeroFormation: 'F_XX_X1' }),
         ]);
+
 
         let response = await request(app).get('/api/v1/formations?fields=-avis');
         assert.strictEqual(response.statusCode, 200);
@@ -339,34 +363,64 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
-        await Promise.all([
-            insertIntoDatabase('intercarif', newIntercarif()),
-            insertIntoDatabase('formationsReconciliees', newFormation({ _id: '14_AF_0000010729' })),
-        ]);
+        await reconcileFormations(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_X1',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        accompagnement: 1,
+                        accueil: 3,
+                        contenu_formation: 2,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 2,
+                        global: 2.4,
+                    },
+                })
+            ]
+        );
 
         let response = await request(app).get('/api/v1/formations?notes_decimales=true');
         assert.deepStrictEqual(response.body.formations[0].score, {
             nb_avis: 1,
             notes: {
-                accompagnement: 4.1,
-                accueil: 4.1,
-                contenu_formation: 4.1,
-                equipe_formateurs: 4.1,
-                global: 4.1,
-                moyen_materiel: 4.1,
+                accompagnement: 1,
+                accueil: 3,
+                contenu_formation: 2,
+                equipe_formateurs: 4,
+                moyen_materiel: 2,
+                global: 2.4,
             }
         });
 
-        response = await request(app).get('/api/v1/formations/14_AF_0000010729?notes_decimales=true');
+        response = await request(app).get('/api/v1/formations/F_XX_X1?notes_decimales=true');
         assert.deepStrictEqual(response.body.score, {
             nb_avis: 1,
             notes: {
-                accompagnement: 4.1,
-                accueil: 4.1,
-                contenu_formation: 4.1,
-                equipe_formateurs: 4.1,
-                global: 4.1,
-                moyen_materiel: 4.1,
+                accompagnement: 1,
+                accueil: 3,
+                contenu_formation: 2,
+                equipe_formateurs: 4,
+                moyen_materiel: 2,
+                global: 2.4,
             }
         });
     });

@@ -50,7 +50,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 dnIndividuNational: '1111111111'
             },
             training: {
-                idFormation: '14_AF_0000011111',
+                idFormation: 'F_XX_XX',
                 title: 'Développeur',
                 startDate: date.toJSON(),
                 scheduledEndDate: date.toJSON(),
@@ -74,8 +74,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 referencement: '41C561691111',
                 idSessionAudeFormation: '2422722',
                 infoCarif: {
-                    numeroAction: '14_SE_0000092458',
-                    numeroSession: 'SE_0000050645'
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX'
                 },
                 codeFinanceur: '10'
             },
@@ -100,7 +100,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             formacode: '46242',
             idSession: '2422722',
             training: {
-                idFormation: '14_AF_0000011111',
+                idFormation: 'F_XX_XX',
                 title: 'Développeur',
                 startDate: date,
                 scheduledEndDate: date,
@@ -124,8 +124,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 referencement: '41C561691111',
                 idSessionAudeFormation: '2422722',
                 infoCarif: {
-                    numeroAction: '14_SE_0000092458',
-                    numeroSession: 'SE_0000050645'
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX'
                 },
                 codeFinanceur: '10'
             },

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
-const createAvisDTO = require('../../../src/http/routes/api/v1/dto/createAvisDTO');
+const convertCommentToAvis = require('../../../src/common/utils/convertCommentToAvis');
 const { newComment, randomize } = require('../../helpers/data/dataset');
 
 describe(__filename, () => {
@@ -21,7 +21,7 @@ describe(__filename, () => {
         }, date);
 
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data, {
             id: 1234,
@@ -29,7 +29,6 @@ describe(__filename, () => {
             commentaire: {
                 titre: 'Génial',
                 texte: 'Super formation.',
-                reponse: undefined,
             },
             date: date,
             notes: {
@@ -38,10 +37,10 @@ describe(__filename, () => {
                 equipe_formateurs: 4,
                 moyen_materiel: 2,
                 accompagnement: 1,
-                global: 2
+                global: 2.4
             },
             formation: {
-                numero: '14_AF_0000011111',
+                numero: 'F_XX_XX',
                 domaine_formation: {
                     formacodes: ['46242'],
                 },
@@ -62,7 +61,7 @@ describe(__filename, () => {
                         numero: '14_OF_XXXXXXXXXX',
                     },
                     session: {
-                        numero: '2422722',
+                        numero: 'SE_XXXXXX',
                         periode: {
                             debut: date,
                             fin: date
@@ -82,7 +81,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data.commentaire, {
             titre: 'Génial',
@@ -100,12 +99,11 @@ describe(__filename, () => {
             },
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data.commentaire, {
             titre: 'Génial',
             texte: 'Super formation.',
-            reponse: undefined,
         });
     });
 
@@ -115,7 +113,7 @@ describe(__filename, () => {
             comment: null,
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.strictEqual(data.commentaire, undefined);
     });
@@ -130,7 +128,7 @@ describe(__filename, () => {
             }
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.strictEqual(data.formation.action.numero, undefined);
     });
@@ -145,7 +143,7 @@ describe(__filename, () => {
             }
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data.formation.certifications, []);
     });
@@ -158,7 +156,7 @@ describe(__filename, () => {
             date: null
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(new Date(data.date).toISOString(), '1970-01-01T00:00:01.000Z');
     });
@@ -174,7 +172,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data.commentaire.titre, undefined);
     });
@@ -186,7 +184,7 @@ describe(__filename, () => {
             pseudo: 'hacker',
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data.pseudo, undefined);
     });
@@ -204,7 +202,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data.commentaire.texte, 'Formation super géniale.');
     });
@@ -219,7 +217,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data.commentaire, undefined);
     });
@@ -235,7 +233,7 @@ describe(__filename, () => {
             },
         });
 
-        let data = createAvisDTO(comment);
+        let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data.pseudo, undefined);
     });

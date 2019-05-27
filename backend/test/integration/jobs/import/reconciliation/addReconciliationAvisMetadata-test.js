@@ -1,9 +1,10 @@
 const assert = require('assert');
 const _ = require('lodash');
+const logger = require('../../../../helpers/test-logger');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newComment } = require('../../../../helpers/data/dataset');
-const generateActions = require('../../../../../src/jobs/import/reconciliation/generateActions');
-const addReconciliationAvisMetadata = require('../../../../../src/jobs/import/reconciliation/addReconciliationAvisMetadata');
+const reconcile = require('../../../../../src/jobs/import/reconciliation/tasks/reconcile');
+const addReconciliationAvisMetadata = require('../../../../../src/jobs/import/reconciliation/tasks/addReconciliationAvisMetadata');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
@@ -30,8 +31,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', avisReconciliable),
         ]);
+        await reconcile(db, logger, { actions: true });
 
-        await generateActions(db);
         await addReconciliationAvisMetadata(db);
 
         let avis = await db.collection('comment').findOne();
@@ -62,8 +63,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', avisNonReconciliable),
         ]);
+        await reconcile(db, logger, { actions: true });
 
-        await generateActions(db);
         await addReconciliationAvisMetadata(db);
 
         let avis = await db.collection('comment').findOne();
