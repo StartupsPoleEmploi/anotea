@@ -6,12 +6,13 @@ import './footer.scss';
 class Footer extends Component {
 
     static propTypes = {
-        stagiaire: PropTypes.object
+        stagiaire: PropTypes.object,
+        infosRegion: PropTypes.object,
     };
 
     render() {
 
-        let { stagiaire } = this.props;
+        let { stagiaire, infosRegion } = this.props;
 
         return (
             <div className="footer container">
@@ -19,7 +20,7 @@ class Footer extends Component {
                     <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <span className="propulsed">Service propulsé par</span>
                         <img className="logo" src={logo} alt="logo Pôle Emploi" />
-                        {stagiaire.training.codeFinanceur.includes('2') &&
+                        {infosRegion.carifLinkEnabled &&
                         <img
                             className="logo"
                             src={process.env.PUBLIC_URL + `/images/regions/region-${stagiaire.codeRegion}.png`}
