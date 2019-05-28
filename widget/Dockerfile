@@ -20,12 +20,12 @@ RUN mkdir $NVM_DIR \
 #Download npm dependencies
 COPY package.json package-lock.json /tmp/
 RUN cd /tmp && npm ci && mkdir -p /opt/anotea/widget && mv /tmp/node_modules /opt/anotea/widget/
-COPY ./ /opt/anotea/widget
-WORKDIR /opt/anotea/widget
 
 #Build project
 ARG ANOTEA_GOOGLE_ANALYTICS_ID
 ARG ANOTEA_HOTJAR_ID
+COPY ./ /opt/anotea/widget
+WORKDIR /opt/anotea/widget
 RUN REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID=${ANOTEA_GOOGLE_ANALYTICS_ID} \
     REACT_APP_ANOTEA_HOTJAR_ID=${ANOTEA_HOTJAR_ID} \
     npm run build &&  mv build/* /usr/share/nginx/html
