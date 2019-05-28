@@ -1,11 +1,12 @@
     .loginForm {
         background-color: #384EAA;
+        height: 100vh;
     }
 
     .loginForm h1 {
         text-align: center;
         color: #FFFFFF;
-        margin-bottom: 60px;
+        margin-bottom: 64px;
         color: #FFFFFF;
         font-family: Lato;
         font-size: 32px;
@@ -73,10 +74,22 @@
         height: 40px;
         background-color: #f4f4f5;
         border: none;
+        font-size: 16px;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
+    .loginForm .loginHelp {
+        margin-top: 34px;
     }
 
     .loginForm .loginHelp .btn {
         text-decoration: underline;
+        font-family: lato;
+        font-size: 16px;
+        color: #384EAA;
     }
 
     .loginForm .block .wrapper {
@@ -84,10 +97,10 @@
     }
     
     .wrapper .group-btn .btn {
-        margin-bottom: 25px;
+        margin-bottom: 16px;
         height: 40px;
         width: 7.750em;
-        font-size: 0.875rem;
+        font-size: 16px;
         line-height: 1.25rem;
         color: #384EAA;
         font-weight: bold;
@@ -97,6 +110,16 @@
         background-color: #EBEDF6;
         cursor: pointer;
         text-transform: uppercase;
+        font-family: lato;
+
+        &:focus {
+            background-color: #8895CC;
+            box-shadow: none;
+        }
+
+        &:hover {
+        background-color: #C3C9E5;
+        }
     }
 
     .bad-credential {
@@ -121,7 +144,7 @@
         color: #24303A;
         text-align: left;
         font-family: Lato;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: bold;
         line-height: 19px;
     }

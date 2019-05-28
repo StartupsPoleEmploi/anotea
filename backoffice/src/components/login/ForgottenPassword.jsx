@@ -69,6 +69,10 @@ export default class ForgottenPassword extends React.Component {
         this.onSuccessCallback(this.state.userInfo);
     };
 
+    close = () => {
+        this.setState({ asked: false });
+    };
+
     render() {
         let inputClassName = 'form-control input-sm';
         if (!this.state.asked && !this.state.passwordLost && this.state.error) {
@@ -77,17 +81,12 @@ export default class ForgottenPassword extends React.Component {
 
         return (
             <div className="forgottenPassword">
-                {this.state.asked &&
-                    <div className="asked">
-                        L&apos;email à bien été envoyé.
-                    </div>
-                }
                 <h1>Votre espace Anotéa</h1>
                 {!this.state.asked && !this.state.passwordLost &&
                     <div className="block">
                         <h4>Mot de passe oublié</h4>
 
-                        <div className="identifiant">
+                        <div className="mdp-oublie-identifiant">
                             <h1>Entrez votre identifiant et confirmez l&apos;envoi</h1>
                             <input type="text"
                                 id="username"
@@ -99,11 +98,11 @@ export default class ForgottenPassword extends React.Component {
                         </div>
 
                         <p className="clarification">L&apos;adresse e-mail est celle sur laquelle vous avez reçu la
-                            proposition de création de compte Anotéa, si vous ne la connaissez pas, contactez nous.</p>
+                            proposition de création de compte Anotéa, si vous ne la connaissez pas, <span className="contactez-nous">contactez nous.</span></p>
 
                         <div className="wrapper">
                             <span className="group-btn">
-                                <button onClick={this.handleAsk} className="btn btn-primary btn-md">
+                                <button onClick={this.handleAsk} className="btn">
                                     Confirmer
                                 </button>
                             </span>
@@ -111,8 +110,14 @@ export default class ForgottenPassword extends React.Component {
                     </div>
                 }
 
-                {!this.state.asked && !this.state.passwordLost && this.state.error &&
-                        <div className="alert-danger identifiant-incorrect">Désolé mais cet identifiant est incorrect.</div>}
+                {this.state.asked &&
+                    <div className="asked">
+                        L&apos;email à bien été envoyé.
+                        <button onClick={this.close} type="button" className="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
                 
                 {this.state.passwordLost && !this.state.userInfo &&
                 <div className="block passwordLost">
