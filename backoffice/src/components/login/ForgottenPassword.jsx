@@ -104,6 +104,9 @@ export default class ForgottenPassword extends React.Component {
 
                         <div className="wrapper">
                             <span className="group-btn">
+                                <button onClick={this.onSuccess} className="btn-retour">
+                                    retour
+                                </button>
                                 <button onClick={this.handleAsk} className="btn">
                                     Confirmer
                                 </button>
@@ -112,14 +115,14 @@ export default class ForgottenPassword extends React.Component {
                     </div>
                 }
 
-                {this.state.asked &&
+                {/* {this.state.asked &&
                     <div className="asked">
                         L&apos;email à bien été envoyé.
                         <button onClick={this.close} type="button" className="close" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                }
+                } */}
                 
                 {this.state.passwordLost && !this.state.userInfo &&
                 <div className="block passwordLost">
