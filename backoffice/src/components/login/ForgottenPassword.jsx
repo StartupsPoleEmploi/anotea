@@ -104,12 +104,14 @@ export default class ForgottenPassword extends React.Component {
 
                         <div className="wrapper">
                             <span className="group-btn">
-                                <button onClick={this.onSuccess} className="btn-retour">
-                                    retour
-                                </button>
-                                <button onClick={this.handleAsk} className="btn">
-                                    Confirmer
-                                </button>
+                                <div className="d-flex justify-content-around">
+                                    <button onClick={this.onSuccess} className="btn-retour">
+                                        retour
+                                    </button>
+                                    <button onClick={this.handleAsk} className="btn">
+                                        Confirmer
+                                    </button>
+                                </div>
                             </span>
                         </div>
                     </div>
