@@ -157,8 +157,8 @@ export default class ForgottenPassword extends React.Component {
                 }
                 {this.state.passwordLost && this.state.userInfo &&
                 <div className="passwordChanged">
-                    Votre mot de passe a été changé avec succès. Vous pouvez maintenant accéder à <a
-                        onClick={this.onSuccess} role="button">votre espace Anotea</a>.
+                    Votre mot de passe a été changé avec succès. Vous pouvez maintenant accéder à
+                    <a onClick={this.onSuccess} role="button">votre espace Anotea</a>.
                 </div>}
                 <br/>
             </div>
