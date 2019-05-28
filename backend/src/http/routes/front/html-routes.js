@@ -32,11 +32,18 @@ module.exports = ({ db, logger, configuration, stats, mailer }) => {
         res.render('front/faq');
     });
 
-    router.get('/doc/widget', (req, res) => {
-        if (configuration.env === 'dev' && !req.query['load_anotea_widget_iframe_from_localhost']) {
-            return res.redirect('/doc/widget?load_anotea_widget_iframe_from_localhost=true');
+    router.get('/doc/:name', (req, res) => {
+        let template = req.params.name;
+
+        if (template === 'widget') {
+            if (configuration.env === 'dev' && !req.query['load_anotea_widget_iframe_from_localhost']) {
+                return res.redirect('/doc/widget?load_anotea_widget_iframe_from_localhost=true');
+            }
+            return res.render(`front/doc/widget${req.query.test ? '-tests' : ''}`);
         }
-        res.render(`front/doc/widget${req.query.test ? '-tests' : ''}`);
+
+        return res.render(`front/doc/${template}`);
+
     });
 
     router.get('/stats', async (req, res) => {
