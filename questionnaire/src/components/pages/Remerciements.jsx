@@ -71,10 +71,10 @@ class Remerciements extends Component {
                                     </p>
 
                                     <div className="liens">
-                                        {infosRegion.carifLinkEnabled &&
+                                        {infosRegion.region.carif.active &&
                                         <a
                                             className="textimage"
-                                            href={infosRegion.carifURL}
+                                            href={infosRegion.region.carif.url}
                                             target="_blank"
                                             rel="noopener noreferrer">
                                             <img

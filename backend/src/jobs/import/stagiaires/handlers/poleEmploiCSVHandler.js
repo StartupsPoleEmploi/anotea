@@ -72,17 +72,14 @@ module.exports = (db, regions) => {
 
             let isValid = trainee => region && trainee.trainee.emailValid;
 
-            let isIncluded = (trainee, filters) => {
-                if (_.isEmpty(filters)) {
-                    return true;
-                }
+            let isIncluded = trainee => {
 
                 let isConseilRegional = trainee.training.codeFinanceur.includes('2');
 
-                if (isConseilRegional && filters.conseil_regional === 'excluded') {
+                if (isConseilRegional && region.conseil_regional === 'excluded') {
                     return false;
                 }
-                if (isConseilRegional && filters.conseil_regional === 'certifications_only') {
+                if (isConseilRegional && region.conseil_regional === 'certifications_only') {
                     return !_.isEmpty(trainee.training.certifInfo.id);
                 }
                 return true;
@@ -97,7 +94,7 @@ module.exports = (db, regions) => {
                 return count === 0;
             };
 
-            return isValid(trainee) && isIncluded(trainee, region.import.filters) && (await doesNotExist(trainee));
+            return isValid(trainee) && isIncluded(trainee) && (await doesNotExist(trainee));
 
 
         },
