@@ -37,7 +37,7 @@ module.exports = (db, logger) => {
                     return resolve(stats);
                 } else {
 
-                    logger.info(`Trainee import ${handler.name}/${campaign.name}...`);
+                    logger.info(`Import des stagiaires pour la campagne ${handler.name}/${campaign.name}...`);
 
                     fs.createReadStream(file)
                     .pipe(parse(handler.csvOptions))

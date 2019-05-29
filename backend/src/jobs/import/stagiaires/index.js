@@ -16,7 +16,7 @@ const sources = {
 };
 
 let dryRun = false;
-cli.description('launch trainee import')
+cli.description('Import des stagiaires')
 .option('-s, --source [name]', 'Source to import (PE or IDF)')
 .option('-f, --file [file]', 'The CSV file to import')
 .option('-r, --region [codeRegion]', 'Code region to filter')
