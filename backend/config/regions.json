@@ -5,8 +5,10 @@
     "codeRegion": "2",
     "codeINSEE": "84",
     "departements": ["03", "07", "15", "26", "43", "74", "38", "01", "42", "63", "73", "69"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -24,8 +26,10 @@
     "codeRegion": "3",
     "codeINSEE": "27",
     "departements": ["21", "25", "39", "58", "71", "90", "89", "70"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -43,8 +47,10 @@
     "codeRegion": "4",
     "codeINSEE": "53",
     "departements": ["22", "29", "35", "56"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -62,8 +68,10 @@
     "codeRegion": "5",
     "codeINSEE": "24",
     "departements": ["28", "36", "37", "41", "45", "18"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -81,8 +89,10 @@
     "codeRegion": "6",
     "codeINSEE": "94",
     "departements": ["20"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -100,8 +110,10 @@
     "codeRegion": "7",
     "codeINSEE": "44",
     "departements": ["68", "08", "10", "52", "67", "51", "54", "55", "88", "57"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -119,8 +131,10 @@
     "codeRegion": "8",
     "codeINSEE": "01",
     "departements": ["971", "977", "970", "975", "978"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -138,8 +152,10 @@
     "codeRegion": "9",
     "codeINSEE": "03",
     "departements": ["973"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -157,7 +173,9 @@
     "codeRegion": "10",
     "codeINSEE": "32",
     "departements": ["02", "59", "62", "60", "80"],
-    "filters": {},
+    "import": {
+      "filters": {}
+    },
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -174,7 +192,9 @@
     "codeINSEE": "11",
     "active": true,
     "departements": ["91", "92", "75", "93", "77", "95", "94", "78"],
-    "filters": {},
+    "import": {
+      "filters": {}
+    },
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -191,8 +211,10 @@
     "codeRegion": "12",
     "codeINSEE": "04",
     "departements": ["974", "976"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -210,8 +232,10 @@
     "codeRegion": "13",
     "codeINSEE": "02",
     "departements": ["972"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -229,8 +253,10 @@
     "codeRegion": "14",
     "codeINSEE": "28",
     "departements": ["14", "27", "27", "50", "76", "61"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -248,8 +274,10 @@
     "codeRegion": "15",
     "codeINSEE": "75",
     "departements": ["19", "16", "17", "23", "79", "24", "24", "33", "87", "40", "47", "64", "86", "33"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -267,8 +295,10 @@
     "codeRegion": "16",
     "codeINSEE": "76",
     "departements": ["32", "09", "11", "12", "30", "31", "34", "65", "46", "48", "66", "81", "82"],
-    "filters": {
-      "conseil_regional": "certifications_only"
+    "import": {
+      "filters": {
+        "conseil_regional": "certifications_only"
+      }
     },
     "mailing": {
       "stagiaires": {
@@ -286,7 +316,9 @@
     "codeRegion": "17",
     "codeINSEE": "52",
     "departements": ["44", "53", "49", "85", "72"],
-    "filters": {},
+    "import": {
+      "filters": {}
+    },
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -303,8 +335,10 @@
     "codeRegion": "18",
     "codeINSEE": "93",
     "departements": ["04", "13", "06", "83", "84", "05"],
-    "filters": {
-      "conseil_regional": "excluded"
+    "import": {
+      "filters": {
+        "conseil_regional": "excluded"
+      }
     },
     "mailing": {
       "stagiaires": {

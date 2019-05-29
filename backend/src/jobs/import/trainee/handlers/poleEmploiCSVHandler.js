@@ -97,7 +97,7 @@ module.exports = (db, regions) => {
                 return count === 0;
             };
 
-            return isValid(trainee) && isIncluded(trainee, region.filters) && (await doesNotExist(trainee));
+            return isValid(trainee) && isIncluded(trainee, region.import.filters) && (await doesNotExist(trainee));
 
 
         },
