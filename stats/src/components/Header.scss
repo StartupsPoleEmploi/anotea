@@ -1,9 +1,23 @@
 @import '../styles/variables';
 
 .Header {
-  .title {
-    text-align: center;
-    font-size: 1.125rem;
-    font-weight: $font-weight-700;
-  }
+    height: 80px;
+    width: 1440px;
+    background-color: $color-white;
+    box-shadow: 0 2px 4px 0 rgba(17,24,30,0.1);
+    display: grid;
+    grid-template-columns: 33% 33% auto;
+
+    .title {
+        grid-column: 2;
+        font-size: 1.125rem;
+        font-weight: $font-weight-700;
+    }
+
+    .logo {
+        grid-column: 1;
+        height: 56px;
+        width: 119.86px;
+        margin: 12px 0px 0px 165px;
+    }
 }
