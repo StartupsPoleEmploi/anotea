@@ -71,10 +71,6 @@ export default class ForgottenPassword extends React.Component {
         this.onSuccessCallback(this.state.userInfo);
     };
 
-    close = () => {
-        this.setState({ asked: false });
-    };
-
     render() {
         let inputClassName = 'form-control input-sm';
         if (!this.state.asked && !this.state.passwordLost && this.state.error) {
@@ -116,15 +112,6 @@ export default class ForgottenPassword extends React.Component {
                         </div>
                     </div>
                 }
-
-                {/* {this.state.asked &&
-                    <div className="asked">
-                        L&apos;email à bien été envoyé.
-                        <button onClick={this.close} type="button" className="close" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                } */}
                 
                 {this.state.passwordLost && !this.state.userInfo &&
                 <div className="block passwordLost">
