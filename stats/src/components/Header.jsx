@@ -6,7 +6,10 @@ export default function Header() {
     return (
         <div className="Header">
             <img className="logo" src={logo} alt="logo Anotea" />
-            <div className="title">A header</div>
+            <div className="title d-flex justify-content-around">
+                <span className="avis-title">Avis</span>
+                <span className="organismes-title">Organismes</span>
+            </div>
         </div>
     );
 }
