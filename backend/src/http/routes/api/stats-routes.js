@@ -2,7 +2,7 @@ const express = require('express');
 const moment = require('moment/moment');
 const { tryAndCatch } = require('../routes-utils');
 
-module.exports = ({ stats }) => {
+module.exports = ({ db, stats }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
@@ -19,6 +19,19 @@ module.exports = ({ stats }) => {
                 values.push(campaignStats[key]);
             });
             lines += values.join(';') + '\n';
+        });
+        res.send(lines);
+    }));
+
+    router.get('/stats/domainMailing.csv', tryAndCatch(async (req, res) => {
+
+        let data = await db.collection('domainMailStats').find().toArray();
+        res.setHeader('Content-disposition', 'attachment; filename=domainMailing.csv');
+        res.setHeader('Content-Type', 'text/csv');
+        let lines = 'Nom de la campagne;Nom de domaine;Nombre d\'email;Nombre d\'email ouverts;Taux d\'ouverture\n';
+        data.forEach(stats => {
+            let values = `${stats._id.campaign};${stats._id.domain};${stats.count};${stats.mailOpen};${stats.rate}`;
+            lines += values + '\n';
         });
         res.send(lines);
     }));
