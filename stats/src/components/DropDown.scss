@@ -1,0 +1,50 @@
+@import '../styles/variables';
+
+.dropdown {
+    margin: 8px 0px 0px 16px;
+
+    .dropdown-button {
+        height: 40px;
+        width: 215px;
+        border: 1px solid $color-grey-25;
+        border-radius: 5px;
+        background-color: $color-white;
+
+        > span {
+            height: 24px;
+            opacity: 0.8;
+            color: $color-black;
+            font-family: Lato;
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+
+        .caret {
+            margin: 6px 7px 0px 0px;
+        }
+    }
+
+    .menu {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid $color-grey-25;
+        border-radius: 0px 0px 5px 5px;
+
+        .menu-button {
+            border: none;
+            background-color: $color-white;
+
+            > span {
+                float: left;
+                height: 18px;
+                opacity: 0.6;
+                color: $color-black;
+                font-family: Lato;
+                font-size: 0.875rem;
+                line-height: 1.125rem;
+            }
+        }
+    }
+}
