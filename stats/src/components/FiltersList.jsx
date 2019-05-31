@@ -3,7 +3,8 @@ import './FiltersList.scss';
 import Filter from './Filter'
 import SearchButton from './SearchButton'
 
-export default function FiltersList() {
+export default function FiltersList(props) {
+    
     return (
         <div className="filters-list">
             <h1 className="title">Filtrer</h1>
