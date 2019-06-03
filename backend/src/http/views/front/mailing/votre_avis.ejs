@@ -118,7 +118,7 @@
                 <tr class="labels">
                     <td style="text-align:center">Notez et commentez la formation que vous venez de suivre</td>
                     <td style="text-align:center">Vos avis seront publiés sur La Bonne Formation
-                        <% if (!carifNameHidden) { %> et <%= carifName %>
+                        <% if (region.carif.active) { %> et <%= region.carif.nom %>
                         <% } %>
                     </td>
                     <td style="text-align:center">Vous pourrez répondre aux questions des futur-e-s stagiaires</td>
@@ -133,7 +133,7 @@
                 <div align="center"><a href="<%= formLink %>" target="_blank"><img src="/static/images/email/02.jpg" alt="0"
                                                                                    border="0" /></a></div>
                 <div style="text-align:center;padding-bottom: 20px;">Vos avis seront publiés sur La Bonne Formation
-                    <% if (!carifNameHidden) { %> et <%= carifName %>
+                    <% if (region.carif.active) { %> et <%= region.carif.nom %>
                     <% } %>
                 </div>
                 <div align="center"><a href="<%= formLink %>" target="_blank"><img src="/static/images/email/03.jpg" alt="0"

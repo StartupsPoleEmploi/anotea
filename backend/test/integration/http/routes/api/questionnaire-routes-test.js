@@ -2,7 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const _ = require('lodash');
 const { withServer } = require('../../../../helpers/test-server');
-const { newTrainee, newCarif } = require('../../../../helpers/data/dataset');
+const { newTrainee } = require('../../../../helpers/data/dataset');
 
 
 describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatabase }) => {
@@ -14,7 +14,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let date = new Date();
         let trainee = newTrainee({}, date);
         await insertIntoDatabase('trainee', trainee);
-        await insertIntoDatabase('carif', newCarif({ codeRegion: '11' }));
 
         let response = await request(app)
         .post(`/api/questionnaire/${trainee.token}`)
@@ -87,10 +86,32 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             },
             codeRegion: '11'
         });
+
         assert.deepStrictEqual(_.omit(response.body.infosRegion, ['trainee']), {
-            carifLinkEnabled: true,
-            carifURL: 'https://www.defi-metiers.fr/',
             showLinks: false,
+            region: {
+                nom: 'Île-de-France',
+                codeRegion: '11',
+                codeINSEE: '11',
+                conseil_regional: 'included',
+                contact: 'anotea-idf',
+                active: true,
+                departements: ['91', '92', '75', '93', '77', '95', '94', '78'],
+                mailing: {
+                    stagiaires: {
+                        avis: true
+                    },
+                    organismes: {
+                        accounts: true,
+                        notifications: true
+                    }
+                },
+                carif: {
+                    nom: 'Défi Métiers',
+                    url: 'https://www.defi-metiers.fr/',
+                    active: true
+                }
+            }
         });
 
         let result = await db.collection('comment').findOne({ token: trainee.token });

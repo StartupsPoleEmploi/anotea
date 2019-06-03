@@ -241,16 +241,6 @@ module.exports = {
             ]
         }, custom, { test: true });
     },
-    newCarif: custom => {
-        return _.merge({
-            codeRegion: '11',
-            name: 'Défi Métiers',
-            url: 'https://www.defi-metiers.fr/',
-            formLinkEnabled: true,
-            courriel: 'anotea-idf@pole-emploi.fr',
-            carifNameHidden: false
-        }, custom);
-    },
     newIntercarif: (options = {}) => {
         //same data as in test/helpers/data/intercarif-data-test.xml
         let numeroFormation = options.numeroFormation || 'F_XX_XX';

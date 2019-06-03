@@ -197,11 +197,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
             findActiveRegions: () => {
                 return [{
                     codeRegion: '2',
-                    import: {
-                        filters: {
-                            conseil_regional: 'excluded'
-                        }
-                    },
+                    conseil_regional: 'excluded',
                 }];
             }
         }));
@@ -228,11 +224,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
             findActiveRegions: () => {
                 return [{
                     codeRegion: '2',
-                    import: {
-                        filters: {
-                            conseil_regional: 'certifications_only'
-                        }
-                    },
+                    conseil_regional: 'certifications_only'
                 }];
             }
         }));
