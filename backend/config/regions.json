@@ -45,14 +45,14 @@
   },
   {
     "nom": "Bretagne",
-    "active": false,
+    "active": true,
     "codeRegion": "4",
     "codeINSEE": "53",
     "contact": "anoteabretagne.35076",
     "departements": ["22", "29", "35", "56"],
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
