@@ -1,39 +1,21 @@
 import React, { Component } from 'react';
-import './OrganismesStatsTable.scss';
+import './StatsTable.scss';
 
 export default class OrganismesStatsTable extends Component {
 
     render() {
 
-        const columns_title = [
-            {id: 1, value: ''},
-            {id: 2, value: 'Total'},
-            {id: 3, value: 'Total'},
-            {id: 4, value: 'Ouverts'},
-            {id: 5, value: 'Cliqués'},
-            {id: 6, value: 'Actifs'},
-            {id: 7, value: 'Connexion'},
-            {id: 8, value: 'Non lus'},
-            {id: 9, value: 'Répondus'},
-            {id: 10, value: 'Av. com'},
-            {id: 11, value: 'Notes seules'},
-            {id: 11, value: 'Signalés'},
-            {id: 11, value: 'Rejetés'},
-        ];
-        
         return (
             <div className="container table-responsive">
-                <table class="table">
+                <table className="table">
                     <thead>
                         <tr className="table-colspan">
-                            <th colSpan="1">Régions</th>
-                            <th colSpan="1">OF contactés</th>
-                            <th colSpan="3">Mails envoyés</th>
-                            <th colSpan="2">Comptes</th>
-                            <th colSpan="5">Avis</th>
+                            {this.props.variant.map( e => (
+                                <th key={e.id} colSpan={e.value}>{e.title}</th>
+                            ))}
                         </tr>
                         <tr>
-                            {columns_title.map( title => (
+                            {this.props.columnsTitle.map( title => (
                                 <th key={title.id} scope="col">{title.value}</th>
                             ))}
                         </tr>
