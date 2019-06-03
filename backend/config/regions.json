@@ -48,6 +48,7 @@
     "active": false,
     "codeRegion": "4",
     "codeINSEE": "53",
+    "contact": "anoteabretagne.35076",
     "departements": ["22", "29", "35", "56"],
     "mailing": {
       "stagiaires": {
@@ -58,7 +59,7 @@
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": "included",
     "carif": {
       "active": false
     }
