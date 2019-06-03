@@ -70,5 +70,32 @@ module.exports = ({ db, middlewares }) => {
 
     }));
 
+    router.get('/v1/actions/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
+
+        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
+            id: Joi.string().required(),
+            ...paginationValidator(),
+            ...notesDecimalesValidator(),
+        }, { abortEarly: false });
+
+        let pagination = _.pick(parameters, ['page', 'items_par_page']);
+        let limit = pagination.items_par_page;
+        let skip = pagination.page * limit;
+
+        let action = await collection.findOne({ _id: parameters.id });
+
+        if (!action) {
+            throw Boom.notFound('Numéro de formation inconnu ou formation expirée');
+        }
+
+        res.json({
+            avis: action.avis.slice(skip, limit),
+            meta: {
+                pagination: createPaginationDTO(pagination, action.avis.length)
+            },
+        });
+
+    }));
+
     return router;
 };

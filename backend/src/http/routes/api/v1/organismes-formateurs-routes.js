@@ -5,7 +5,7 @@ const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
 const { paginationValidator, arrayOfValidator, notesDecimalesValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const { createOrganismeFomateurDTO, createPaginationDTO } = require('./utils/dto');
+const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -76,6 +76,43 @@ module.exports = ({ db, middlewares }) => {
         }
 
         res.json(createOrganismeFomateurDTO(organisme, { notes_decimales: parameters.notes_decimales }));
+    }));
+
+    router.get('/v1/organismes-formateurs/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
+
+        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
+            id: Joi.string().required(),
+            ...paginationValidator(),
+            ...notesDecimalesValidator(),
+        }, { abortEarly: false });
+
+        let pagination = _.pick(parameters, ['page', 'items_par_page']);
+        let limit = pagination.items_par_page;
+        let skip = pagination.page * limit;
+
+        let cursor = await db.collection('comment')
+        .find({ 'training.organisation.siret': parameters.id })
+        .sort({ date: -1 })
+        .limit(limit)
+        .skip(skip);
+
+        let [total, comment, organisme] = await Promise.all([
+            cursor.count(),
+            cursor.toArray(),
+            collection.findOne({ _id: parseInt(parameters.id) })
+        ]);
+
+        if (!organisme) {
+            throw Boom.notFound('Identifiant inconnu');
+        }
+
+        res.json({
+            avis: comment.map(c => createAvisDTO(c, { notes_decimales: parameters.notes_decimales })),
+            meta: {
+                pagination: createPaginationDTO(pagination, total)
+            },
+        });
+
     }));
 
     return router;

@@ -64,8 +64,34 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro de formation inconnu ou formation expirée');
         }
 
-
         res.json(createFormationDTO(formation, { notes_decimales: parameters.notes_decimales }));
+
+    }));
+
+    router.get('/v1/formations/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
+
+        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
+            id: Joi.string().required(),
+            ...paginationValidator(),
+            ...notesDecimalesValidator(),
+        }, { abortEarly: false });
+
+        let pagination = _.pick(parameters, ['page', 'items_par_page']);
+        let limit = pagination.items_par_page;
+        let skip = pagination.page * limit;
+
+        let formation = await collection.findOne({ _id: parameters.id });
+
+        if (!formation) {
+            throw Boom.notFound('Numéro de formation inconnu ou formation expirée');
+        }
+
+        res.json({
+            avis: formation.avis.slice(skip, limit),
+            meta: {
+                pagination: createPaginationDTO(pagination, formation.avis.length)
+            },
+        });
 
     }));
 

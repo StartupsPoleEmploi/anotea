@@ -375,4 +375,107 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
+    it('can return avis for a action', async () => {
+
+        let app = await startServer();
+        let date = new Date();
+        let pseudo = randomize('pseudo');
+        let commentId = new ObjectID();
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXX1',
+                    formacode: '22252',
+                    organismeFormateur: '33333333333333',
+                    lieuDeFormation: '75019',
+                })
+            ],
+            [
+                newComment({
+                    _id: commentId,
+                    pseudo,
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        accompagnement: 1,
+                        accueil: 3,
+                        contenu_formation: 2,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 2,
+                        global: 2,
+                    },
+                }, date),
+            ]
+        );
+
+        let response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1/avis');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            avis: [{
+                id: commentId.toString(),
+                pseudo,
+                date: date.toJSON(),
+                commentaire: {
+                    titre: 'Génial',
+                    texte: 'Super formation.',
+                },
+                notes: {
+                    accueil: 3,
+                    contenu_formation: 2,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 2,
+                    accompagnement: 1,
+                    global: 2
+                },
+                formation: {
+                    numero: 'F_XX_XX',
+                    intitule: 'Développeur',
+                    domaine_formation: {
+                        formacodes: ['22252']
+                    },
+                    certifications: [{ certif_info: '78997' }],
+                    action: {
+                        numero: 'AC_XX_XXXXXX',
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                            ville: 'Paris'
+                        },
+                        organisme_financeurs: [],
+                        organisme_formateur: {
+                            raison_sociale: 'INSTITUT DE FORMATION',
+                            siret: '33333333333333',
+                            numero: '14_OF_XXXXXXXXXX',
+                        },
+                        session: {
+                            numero: 'SE_XXXXXX',
+                            periode: {
+                                debut: date.toJSON(),
+                                fin: date.toJSON()
+                            }
+                        }
+                    }
+                }
+            }],
+            meta: {
+                pagination: {
+                    page: 0,
+                    items_par_page: 50,
+                    total_items: 1,
+                    total_pages: 1,
+                }
+            }
+        });
+    });
+
 }));
