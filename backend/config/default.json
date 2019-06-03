@@ -57,7 +57,7 @@
     "greetingTimeout": 300000,
     "from": "anotea@anotea.pole-emploi.fr",
     "stagiaires": {
-      "avisRelaunchDelay": 7,
+      "avisRelaunchDelay": 6,
       "avisMaxRelaunch": 1
     },
     "organisme": {
