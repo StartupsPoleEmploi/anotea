@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.exports = function(db, logger, configuration) {
+module.exports = function(db, logger, configuration, regions) {
 
     const nodemailer = require('nodemailer');
     const ejs = require('ejs');
@@ -50,21 +50,12 @@ module.exports = function(db, logger, configuration) {
         return `${configuration.app.public_hostname}/admin?action=passwordLost&token=${token}`;
     };
 
-    const getContact = carif => {
-        return carif.courriel !== undefined ? carif.courriel : configuration.smtp.from;
+    const getRegionEmail = region => {
+        return region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from;
     };
 
-    const getReplyTo = carif => {
-        return `Anotea <${getContact(carif)}>`;
-    };
-
-    const getCarif = async (codeRegion, successCallback, errorCallback) => {
-        const carif = await db.collection('carif').findOne({ codeRegion: codeRegion });
-        if (carif === null) {
-            errorCallback(`CARIF for region code '${codeRegion}' unknown`);
-            return;
-        }
-        successCallback(carif);
+    const getReplyToEmail = region => {
+        return `Anotea <${getRegionEmail(region)}>`;
     };
 
     const buildContent = (template, extension, params) => {
@@ -138,84 +129,75 @@ module.exports = function(db, logger, configuration) {
 
             let { organisme, pickedComment } = data;
 
-            mailOptions.list = list;
+            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
+            let params = {
+                hostname: configuration.app.public_hostname,
+                trackingLink: getTrackingLink(organisme),
+                organisme: organisme,
+                comment: pickedComment ? pickedComment.comment.text : null,
+                contact: getRegionEmail(region)
+            };
 
-            getCarif(organisme.codeRegion, carif => {
-                mailOptions.replyTo = getReplyTo(carif);
-                mailOptions.subject = `Pôle Emploi - Vous avez ${data.nbUnreadComments} nouveaux avis stagiaires`;
-                const params = {
-                    hostname: configuration.app.public_hostname,
-                    trackingLink: getTrackingLink(organisme),
-                    organisme: organisme,
-                    comment: pickedComment ? pickedComment.comment.text : null,
-                    contact: getContact(carif)
-                };
-                sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
-            }, errorCallback);
+            mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
+            mailOptions.subject = `Pôle Emploi - Vous avez ${data.nbUnreadComments} nouveaux avis stagiaires`;
+
+            sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
         },
-        sendOrganisationAccountLink: async (mailOptions, organisation, successCallback, errorCallback) => {
+        sendOrganisationAccountLink: async (mailOptions, organisme, successCallback, errorCallback) => {
+
+            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
+            let params = {
+                link: getOrganisationPasswordLink(organisme),
+                trackingLink: getTrackingLink(organisme),
+                hostname: configuration.app.public_hostname,
+                organisation: organisme,
+                contact: getRegionEmail(region)
+            };
+
             mailOptions.subject = 'Pôle Emploi vous donne accès aux avis de vos stagiaires';
-
-            const link = getOrganisationPasswordLink(organisation);
-            const trackingLink = getTrackingLink(organisation);
-
             mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
 
-            getCarif(organisation.codeRegion, carif => {
-                mailOptions.replyTo = getReplyTo(carif);
-                const params = {
-                    link: link,
-                    trackingLink: trackingLink,
-                    hostname: configuration.app.public_hostname,
-                    organisation: organisation,
-                    contact: getContact(carif)
-                };
-                sendMail('organisation_password', params, mailOptions, successCallback, errorCallback);
-            }, errorCallback);
+            sendMail('organisation_password', params, mailOptions, successCallback, errorCallback);
         },
         sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, successCallback, errorCallback) => {
+
+            let link = getPasswordForgottenLink(passwordToken);
+            let params = { link: link, hostname: configuration.app.public_hostname, codeRegion: codeRegion };
+            let region = regions.findRegionByCodeRegion(codeRegion);
+
             mailOptions.subject = 'Votre compte Anotéa : Demande de renouvellement de mot de passe';
-
-            const link = getPasswordForgottenLink(passwordToken);
-
             mailOptions.list = list;
-  
-            getCarif(codeRegion, carif => {
-                mailOptions.replyTo = getReplyTo(carif);
-                const params = { link: link, hostname: configuration.app.public_hostname, codeRegion: codeRegion };
-                sendMail('password_forgotten', params, mailOptions, successCallback, errorCallback);
-            }, errorCallback);
+            mailOptions.replyTo = getReplyToEmail(region);
+
+            sendMail('password_forgotten', params, mailOptions, successCallback, errorCallback);
         },
         sendVotreAvisMail: async (mailOptions, trainee, successCallback, errorCallback) => {
-            mailOptions.subject = `${trainee.trainee.firstName} ${trainee.trainee.name}, donnez un avis sur votre formation en 1 minute`;
 
-            const consultationLink = getConsultationLink(trainee);
-            const unsubscribeLink = getUnsubscribeLink(trainee);
-            const formLink = getFormLink(trainee);
-            const trackingLink = getTrackingLink(trainee);
+            let unsubscribeLink = getUnsubscribeLink(trainee);
+            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
+            let params = {
+                trainee,
+                moment,
+                region,
+                consultationLink: getConsultationLink(trainee),
+                unsubscribeLink: unsubscribeLink,
+                formLink: getFormLink(trainee),
+                trackingLink: getTrackingLink(trainee),
+                hostname: configuration.app.public_hostname,
+            };
 
+            mailOptions.subject = `${trainee.trainee.firstName} ${trainee.trainee.name}` +
+                ', donnez un avis sur votre formation en 1 minute';
             mailOptions.list = Object.assign({}, list, {
                 unsubscribe: {
                     url: unsubscribeLink,
                 }
             });
+            mailOptions.replyTo = getReplyToEmail(region);
 
-            getCarif(trainee.codeRegion, carif => {
-                mailOptions.replyTo = getReplyTo(carif);
-                const params = {
-                    trainee: trainee,
-                    consultationLink: consultationLink,
-                    unsubscribeLink: unsubscribeLink,
-                    formLink: formLink,
-                    trackingLink: trackingLink,
-                    hostname: configuration.app.public_hostname,
-                    moment: moment,
-                    carifNameHidden: carif.carifNameHidden,
-                    carifName: carif.name,
-                    carifEmail: mailOptions.from
-                };
-                sendMail('votre_avis', params, mailOptions, successCallback, errorCallback);
-            }, errorCallback);
+            sendMail('votre_avis', params, mailOptions, successCallback, errorCallback);
 
         },
         sendMalformedImport: async (params, successCallback, errorCallback) => {
@@ -229,30 +211,25 @@ module.exports = function(db, logger, configuration) {
         sendInjureMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
             mailOptions.subject = `Rejet de votre avis sur votre formation ${trainee.training.title} à ${trainee.training.organisation.name}`;
 
-            const consultationLink = getConsultationLink(trainee);
-            const unsubscribeLink = getUnsubscribeLink(trainee);
-            const formLink = getFormLink(trainee);
+            let unsubscribeLink = getUnsubscribeLink(trainee);
+            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
+            let params = {
+                trainee,
+                comment,
+                moment,
+                consultationLink: getConsultationLink(trainee),
+                unsubscribeLink: unsubscribeLink,
+                formLink: getFormLink(trainee),
+                hostname: configuration.app.public_hostname,
+            };
 
+            mailOptions.replyTo = getReplyToEmail(region);
             mailOptions.list = Object.assign({}, list, {
                 unsubscribe: {
                     url: unsubscribeLink,
                 }
             });
-
-            getCarif(trainee.codeRegion, carif => {
-                mailOptions.replyTo = getReplyTo(carif);
-                const params = {
-                    comment: comment,
-                    trainee: trainee,
-                    consultationLink: consultationLink,
-                    unsubscribeLink: unsubscribeLink,
-                    formLink: formLink,
-                    hostname: configuration.app.public_hostname,
-                    carifEmail: mailOptions.from,
-                    moment: moment
-                };
-                sendMail('avis_injure', params, mailOptions, successCallback, errorCallback);
-            }, errorCallback);
+            sendMail('avis_injure', params, mailOptions, successCallback, errorCallback);
         }
     };
 };

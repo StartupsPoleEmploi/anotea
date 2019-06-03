@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/test-server');
-const { newOrganismeAccount, newCarif, newForgottenPasswordToken, randomize } = require('../../../../../helpers/data/dataset');
+const { newOrganismeAccount, newForgottenPasswordToken, randomize } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase, getComponents }) => {
 
@@ -15,7 +15,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
                     siretAsString: '6080274100045'
                 }
             })),
-            insertIntoDatabase('carif', newCarif({ codeRegion: '11' }))
         ]);
 
         let response = await request(app)

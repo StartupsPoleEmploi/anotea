@@ -7,7 +7,7 @@ const { sanitize } = require('./utils/userInput');
 const { tryAndCatch } = require('../../routes-utils');
 const { AlreadySentError, BadDataError } = require('../../../../common/errors');
 
-module.exports = ({ db, logger, configuration }) => {
+module.exports = ({ db, logger, configuration, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let badwords = require('./utils/badwords')(logger, configuration);
@@ -138,14 +138,13 @@ module.exports = ({ db, logger, configuration }) => {
     };
 
     const getInfosRegion = async trainee => {
-        const carif = await db.collection('carif').findOne({ codeRegion: trainee.codeRegion });
 
-        const trainingTooOld = trainee.training.scheduledEndDate < moment().subtract(90, 'days');
+        let trainingTooOld = trainee.training.scheduledEndDate < moment().subtract(90, 'days');
+        let region = regions.findRegionByCodeRegion(trainee.codeRegion);
 
         return {
             trainee: trainee,
-            carifURL: carif.url,
-            carifLinkEnabled: carif.formLinkEnabled,
+            region: region,
             showLinks: await externalLinks(db).getLink(trainee, 'pe') !== null && !trainingTooOld
         };
     };

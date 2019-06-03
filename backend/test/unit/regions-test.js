@@ -18,8 +18,14 @@ describe(__filename, () => {
             active: true,
             codeRegion: '17',
             codeINSEE: '52',
-            departements: ['44', '53', '49', '85', '72'],
-            filters: {},
+            contact: 'anotea-pdll.44116',
+            departements: [
+                '44',
+                '53',
+                '49',
+                '85',
+                '72'
+            ],
             mailing: {
                 stagiaires: {
                     avis: true
@@ -28,6 +34,12 @@ describe(__filename, () => {
                     accounts: true,
                     notifications: true
                 }
+            },
+            conseil_regional: 'included',
+            carif: {
+                nom: 'Orientation Pays de la Loire',
+                url: 'http://www.orientation-paysdelaloire.fr/',
+                active: false
             }
         });
     });
@@ -50,8 +62,8 @@ describe(__filename, () => {
             active: true,
             codeRegion: '17',
             codeINSEE: '52',
+            contact: 'anotea-pdll.44116',
             departements: ['44', '53', '49', '85', '72'],
-            filters: {},
             mailing: {
                 stagiaires: {
                     avis: true
@@ -60,6 +72,12 @@ describe(__filename, () => {
                     accounts: true,
                     notifications: true
                 }
+            },
+            conseil_regional: 'included',
+            carif: {
+                nom: 'Orientation Pays de la Loire',
+                url: 'http://www.orientation-paysdelaloire.fr/',
+                active: false
             }
         });
     });

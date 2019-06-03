@@ -3,8 +3,8 @@ const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const traineeImporter = require('../../../../../src/jobs/import/trainee/traineeImporter');
-const poleEmploiCSVHandler = require('../../../../../src/jobs/import/trainee/handlers/poleEmploiCSVHandler');
+const traineeImporter = require('../../../../../src/jobs/import/stagiaires/traineeImporter');
+const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/handlers/poleEmploiCSVHandler');
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
 

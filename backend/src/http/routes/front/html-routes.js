@@ -3,7 +3,7 @@ const moment = require('moment');
 const titleize = require('underscore.string/titleize');
 const externalLinks = require('./utils/externalLinks');
 
-module.exports = ({ db, logger, configuration, stats, mailer }) => {
+module.exports = ({ db, logger, configuration, stats, mailer, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
@@ -109,17 +109,14 @@ module.exports = ({ db, logger, configuration, stats, mailer }) => {
         const formLink = mailer.getFormLink(trainee);
         trainee.trainee.firstName = titleize(trainee.trainee.firstName);
         trainee.trainee.name = titleize(trainee.trainee.name);
-        let params = { trainee: trainee, unsubscribeLink: unsubscribeLink, formLink: formLink, moment: moment };
 
-        const carif = await db.collection('carif').findOne({ codeRegion: trainee.codeRegion });
-        if (carif === null) {
-            res.status(404).render('errors/404');
-        } else {
-            params.carifName = carif.name;
-            params.carifNameHidden = carif.carifNameHidden;
-            params.carifEmail = carif.courriel ? carif.courriel : 'anotea@pole-emploi.fr';
-            res.render('front/mailing/votre_avis.ejs', params);
-        }
+        res.render('front/mailing/votre_avis.ejs', {
+            trainee: trainee,
+            unsubscribeLink: unsubscribeLink,
+            formLink: formLink,
+            moment: moment,
+            region: regions.findRegionByCodeRegion(trainee.codeRegion),
+        });
     });
 
     router.get('/mail/:token/track', async (req, res) => {
