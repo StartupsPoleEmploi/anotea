@@ -5,6 +5,8 @@ import Header from './components/Header'
 import FiltersList from './components/FiltersList'
 import avisFilters from './constantes/AvisFilters'
 import organismesFilters from './constantes/OrganismesFilters'
+import AvisStatsTable from './components/AvisStatsTable'
+import OrganismesStatsTable from './components/OrganismesStatsTable'
 
 class App extends Component {
 
@@ -26,6 +28,7 @@ class App extends Component {
 
     render() {
         const variant = this.state.isAvis ? avisFilters : organismesFilters;
+        const statsTable = this.state.isAvis ? <AvisStatsTable /> : <OrganismesStatsTable />;
 
         return (
             <div className="anotea">
@@ -35,6 +38,7 @@ class App extends Component {
                     isOrganismes={this.state.isOrganismes}
                 />
                 <FiltersList variant={variant} />
+                {statsTable}
             </div>
         );
     }
