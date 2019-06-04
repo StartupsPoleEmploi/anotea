@@ -3,13 +3,14 @@
 .dropdown {
     margin: 8px 0px 0px 16px;
 
-    .dropdown-button {
+    @mixin drop-down-button($border-bottom, $border-radius) {
         height: 40px;
         width: 215px;
         border: 1px solid $color-grey-25;
-        border-radius: 5px;
+        border-radius: $border-radius;
         background-color: $color-white;
         outline: none;
+        border-bottom: $border-bottom;
 
         > span {
             height: 24px;
@@ -25,6 +26,14 @@
         }
     }
 
+    .dropdown-button-down {
+        @include drop-down-button(none, 5px 5px 0px 0px);
+    }
+
+    .dropdown-button-up {
+        @include drop-down-button(null, 5px);
+    }
+
     .menu {
         max-height:250px;
         overflow:auto;
@@ -34,7 +43,7 @@
         flex-direction: column;
         border: 1px solid $color-grey-25;
         border-radius: 0px 0px 5px 5px;
-        background-color: #FFFFFF;
+        background-color: $color-white;
         z-index: 1;
         position: relative;
 

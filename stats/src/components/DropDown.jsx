@@ -36,7 +36,7 @@ export default class DropDown extends Component {
         
         return (
             <div className="dropdown">
-                <button className="dropdown-button d-flex justify-content-between" onClick={this.showMenu}>
+                <button className={(this.state.showMenu ? 'dropdown-button-down' : 'dropdown-button-up') + ' d-flex justify-content-between'} onClick={this.showMenu}>
                     <span>Cumul depuis le début</span>
                     <i className={(this.state.showMenu ? 'fas fa-angle-up' : 'fas fa-angle-down') + ' caret'}></i>
                 </button>
