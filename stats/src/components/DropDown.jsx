@@ -20,6 +20,7 @@ export default class DropDown extends Component {
     }
 
     render() {
+        
         return (
             <div className="dropdown">
                 <button className="dropdown-button d-flex justify-content-between" onClick={this.showMenu}>
@@ -31,11 +32,12 @@ export default class DropDown extends Component {
                     this.state.showMenu
                         ? (
                             <div className="menu">
-                                <button className="menu-button"> <span>Cumul depuis le début</span> </button>
-                                <div class="dropdown-divider"></div>
-                                <button className="menu-button"> <span>Janvier</span> </button>
-                                <div class="dropdown-divider"></div>
-                                <button className="menu-button"> <span>Février</span> </button>
+                                {this.props.items.map( (e, index) => (
+                                    <div key={index}>
+                                        <button className="menu-button"> <span>{e.intitule}</span> </button>
+                                        <div className="dropdown-divider"></div>
+                                    </div>
+                                ))}
                             </div>
                         )
                         : (

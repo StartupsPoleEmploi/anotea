@@ -1,97 +1,97 @@
 const AVIS_FILTERS = [
     {
         intitule: "Campagne",
-        campaign: [
+        items: [
             {_id: 1, intitule: "Cumul depuis le début"},
         ],
     },
     {
         intitule: "Périmètre",
-        regions: [
+        items: [
             {
                 codeINSEE: "2",
                 codeRegion: "13",
-                nom: "Martinique"
+                intitule: "Martinique"
             },
             {
                 codeINSEE: "3",
                 codeRegion: "9",
-                nom: "Guyane"
+                intitule: "Guyane"
             },
             {
                 codeINSEE: "4",
                 codeRegion: "12",
-                nom: "La Réunion"
+                intitule: "La Réunion"
             },
             {
                 codeINSEE: "6",
                 codeRegion: "12",
-                nom: "Mayotte"
+                intitule: "Mayotte"
             },
             {
                 codeINSEE: "11",
                 codeRegion: "11",
-                nom: "IDF"
+                intitule: "IDF"
             },
             {
                 codeINSEE: "24",
                 codeRegion: "5",
-                nom: "Centre-Val de Loire"
+                intitule: "Centre-Val de Loire"
             },
             {
                 codeINSEE: "27",
                 codeRegion: "3",
-                nom: "Bourgogne-Franche-Comté"
+                intitule: "Bourgogne-Franche-Comté"
             },
             {
                 codeINSEE: "28",
                 codeRegion: "14",
-                nom: "Normandie"
+                intitule: "Normandie"
             },
             {
                 codeINSEE: "32",
                 codeRegion: "10",
-                nom: "Hauts-de-France"
+                intitule: "Hauts-de-France"
             },
             {
                 codeINSEE: "52",
                 codeRegion: "17",
-                nom: "Pays de la Loire"
+                intitule: "Pays de la Loire"
             },
             {
                 codeINSEE: "53",
                 codeRegion: "4",
-                nom: "Bretagne"
+                intitule: "Bretagne"
             },
             {
                 codeINSEE: "75",
                 codeRegion: "15",
-                nom: "Nouvelle-Aquitaine"
+                intitule: "Nouvelle-Aquitaine"
             },
             {
                 codeINSEE: "84",
                 codeRegion: "2",
-                nom: "ARA"
+                intitule: "ARA"
             },
             {
                 codeINSEE: "93",
                 codeRegion: "18",
-                nom: "PACA"
+                intitule: "PACA"
             },
             {
                 codeINSEE: "94",
                 codeRegion: "6",
-                nom: "Corse"
+                intitule: "Corse"
             },
             {
                 codeINSEE: "76",
                 codeRegion: "16",
-                nom: "Occitanie"
+                intitule: "Occitanie"
             },
             {
                 codeINSEE: "44",
                 codeRegion: "7",
-                nom: "Grand-Est"
+                intitule: "Grand-Est"
             }
         ],
     },

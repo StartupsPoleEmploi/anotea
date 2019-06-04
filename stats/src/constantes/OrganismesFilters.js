@@ -1,7 +1,7 @@
 const ORGANISMES_FILTERS = [
     {
         intitule: "Mois",
-        months: [
+        items: [
             {_id: 1, intitule: "Cumul depuis le début"},
             {_id: 2, intitule: "Janvier"},
             {_id: 3, intitule: "Février"},

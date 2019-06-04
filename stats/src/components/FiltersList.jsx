@@ -9,7 +9,9 @@ export default function FiltersList(props) {
         <div className="filters-list">
             <h1 className="title">Filtrer</h1>
             <div className="d-flex justify-content-around">
-                <Filter />
+                {props.variant.map( (e, index) => (
+                    <Filter key={index} intitule={e.intitule} items={e.items} />
+                ))}
                 <SearchButton />
             </div>
         </div>
