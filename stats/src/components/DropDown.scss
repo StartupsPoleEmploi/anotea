@@ -34,6 +34,9 @@
         flex-direction: column;
         border: 1px solid $color-grey-25;
         border-radius: 0px 0px 5px 5px;
+        background-color: #FFFFFF;
+        z-index: 1;
+        position: relative;
 
         .menu-button {
             border: none;
