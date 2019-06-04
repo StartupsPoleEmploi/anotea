@@ -55,12 +55,7 @@ module.exports = (db, logger) => {
                     $filter: {
                         input: '$advices',
                         as: 'advice',
-                        cond: {
-                            $and: [
-                                [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 1, 0],
-                                { $eq: ['$$advice.published', true] }
-                            ]
-                        }
+                        cond: { $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }
                     }
                 },
                 advicesPositif: {
