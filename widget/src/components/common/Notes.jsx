@@ -30,7 +30,7 @@ export default class Notes extends Component {
                     </div>
                 </div>
 
-                { this.state.tootlipAccueil &&
+                { this.state.tooltipAccueil &&
                     <div>
                         <div className="triangle"></div>
                         <div className="widget-tooltip">
