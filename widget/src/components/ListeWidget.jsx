@@ -9,30 +9,31 @@ import Avis from './common/Avis';
 import ContactStagiaire from './common/ContactStagiaire';
 import './ListeWidget.scss';
 
-const PAGE_SIZE = 3;
+const ITEMS_PAR_PAGE = 3;
 
 export default class ListeWidget extends Component {
 
     static propTypes = {
         score: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
+        fetchAvis: PropTypes.func.isRequired,
         showContactStagiaire: PropTypes.bool,
     };
 
-    state = {
-        page: 0
-    };
+    componentDidMount() {
+        this.goTo(0);
+    }
 
-    goto = async page => {
-        this.setState({ page });
+    goTo = async page => {
+        this.props.fetchAvis(page, ITEMS_PAR_PAGE);
     };
 
     getTotalPages = () => {
-        return Math.ceil(this.props.results.avis.length / PAGE_SIZE);
+        return this.props.results.meta.pagination.total_pages;
     };
 
     getCurrentPage = () => {
-        return this.state.page;
+        return this.props.results.meta.pagination.page;
     };
 
     getPagesBefore = () => {
@@ -52,7 +53,7 @@ export default class ListeWidget extends Component {
                 <span
                     className="nav"
                     key={page}
-                    onClick={() => this.goto(page - 1)}>{page}</span>
+                    onClick={() => this.goTo(page - 1)}>{page}</span>
             );
         });
     };
@@ -74,7 +75,7 @@ export default class ListeWidget extends Component {
                 <span
                     className="nav"
                     key={page}
-                    onClick={() => this.goto(page - 1)}>{page}</span>
+                    onClick={() => this.goTo(page - 1)}>{page}</span>
             );
         });
     };
@@ -95,7 +96,7 @@ export default class ListeWidget extends Component {
             <div className="Liste">
                 <div className="d-flex flex-column">
                     {
-                        avis.slice(this.getCurrentPage() * 3, this.getCurrentPage() * 3 + 3).map(current => {
+                        avis.map(current => {
                             return (
                                 <div key={current.id} className="mb-3">
                                     <Avis avis={current} />
@@ -108,7 +109,7 @@ export default class ListeWidget extends Component {
                     <div className="pagination d-flex justify-content-center py-3">
                         {this.getPagesBefore()}
                         <span
-                            className={`nav ${this.getCurrentPage() === this.state.page ? 'current' : ''}`}>
+                            className={`nav current`}>
                             {this.getCurrentPage() + 1}
                         </span>
                         {this.getPagesAfter()}

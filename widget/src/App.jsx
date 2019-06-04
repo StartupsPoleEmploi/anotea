@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ListeWidget from './components/ListeWidget';
-import { getOrganismesFormateur } from './components/services/organismeService';
-import { getFormation, getAction, getSession } from './components/services/formationService';
+import { getScore, getAvis } from './services/widgetService';
 import GridDisplayer from './components/common/library/GridDisplayer';
 import ScoreWidget from './components/ScoreWidget';
 import CarrouselWidget from './components/CarrouselWidget';
@@ -43,33 +42,24 @@ class App extends Component {
                     }
                 }
             },
-            pristine: true,
         };
+    }
+
+    async fetchAvis(page, itemsParPage) {
+        let { type, identifiant } = this.props;
+
+        let results = await getAvis(type, identifiant, page, itemsParPage);
+        this.setState({ results });
     }
 
     async componentDidMount() {
         let { type, identifiant } = this.props;
 
-        let fetch = null;
-        switch (type) {
-            case 'organisme':
-                fetch = () => getOrganismesFormateur(identifiant);
-                break;
-            case 'formation':
-                fetch = () => getFormation(identifiant);
-                break;
-            case 'action':
-                fetch = () => getAction(identifiant);
-                break;
-            case 'session':
-                fetch = () => getSession(identifiant);
-                break;
-            default:
-                fetch = () => ({ error: true });
+        if (!['organisme', 'formation', 'action', 'session'].includes(type)) {
+            return this.setState({ error: true });
         }
 
-        let results = await fetch();
-        this.setState({ ...results });
+        this.setState({ score: await getScore(type, identifiant) });
     }
 
     render() {
@@ -84,10 +74,16 @@ class App extends Component {
         if (format === 'score') {
             widget = <ScoreWidget {...this.state} />;
         } else if (format === 'carrousel') {
-            widget = <CarrouselWidget {...this.state} />;
+            widget = <CarrouselWidget
+                {...this.state}
+                fetchAvis={(page, itemsParPage) => this.fetchAvis(page, itemsParPage)}
+            />;
         } else {
             widget = (
-                <ListeWidget {...this.state} showContactStagiaire={options.indexOf('contact-stagiaire') !== -1} />);
+                <ListeWidget
+                    {...this.state}
+                    fetchAvis={(page, itemsParPage) => this.fetchAvis(page, itemsParPage)}
+                    showContactStagiaire={options.indexOf('contact-stagiaire') !== -1} />);
         }
 
         return (
@@ -102,9 +98,9 @@ class App extends Component {
 }
 
 App.defaultProps = {
-    format: 'liste',
-    type: 'organisme',
-    identifiant: '13002087800018',
+    format: 'carrousel',
+    type: 'action',
+    identifiant: '26_100646|26_145859_7591',
 };
 
 export default App;
