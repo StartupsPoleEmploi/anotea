@@ -45,11 +45,10 @@ class App extends Component {
         };
     }
 
-    async fetchAvis(page, itemsParPage) {
+    async fetchAvis(options) {
         let { type, identifiant } = this.props;
 
-        let results = await getAvis(type, identifiant, page, itemsParPage);
-        this.setState({ results });
+        this.setState({ results: await getAvis(type, identifiant, options) });
     }
 
     async componentDidMount() {
@@ -76,13 +75,13 @@ class App extends Component {
         } else if (format === 'carrousel') {
             widget = <CarrouselWidget
                 {...this.state}
-                fetchAvis={(page, itemsParPage) => this.fetchAvis(page, itemsParPage)}
+                fetchAvis={options => this.fetchAvis(options)}
             />;
         } else {
             widget = (
                 <ListeWidget
                     {...this.state}
-                    fetchAvis={(page, itemsParPage) => this.fetchAvis(page, itemsParPage)}
+                    fetchAvis={options => this.fetchAvis(options)}
                     showContactStagiaire={options.indexOf('contact-stagiaire') !== -1} />);
         }
 

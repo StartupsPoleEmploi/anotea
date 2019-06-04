@@ -9,8 +9,6 @@ import Avis from './common/Avis';
 import Button from './common/library/Button';
 import './CarrouselWidget.scss';
 
-const ITEMS_PAR_PAGE = 1;
-
 export default class CarrouselWidget extends Component {
 
     static propTypes = {
@@ -20,15 +18,15 @@ export default class CarrouselWidget extends Component {
     };
 
     componentDidMount() {
-        this.props.fetchAvis(0, ITEMS_PAR_PAGE);
+        this.props.fetchAvis({ page: 0, itemsParPage: 1 });
     }
 
     previous = () => {
-        this.props.fetchAvis(this.props.results.meta.pagination.page - 1, ITEMS_PAR_PAGE);
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page - 1, itemsParPage: 1 });
     };
 
     next = async () => {
-        this.props.fetchAvis(this.props.results.meta.pagination.page + 1, ITEMS_PAR_PAGE);
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page + 1, itemsParPage: 1 });
     };
 
     getCarrousel = () => {

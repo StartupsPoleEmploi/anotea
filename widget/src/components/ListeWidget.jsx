@@ -9,8 +9,6 @@ import Avis from './common/Avis';
 import ContactStagiaire from './common/ContactStagiaire';
 import './ListeWidget.scss';
 
-const ITEMS_PAR_PAGE = 3;
-
 export default class ListeWidget extends Component {
 
     static propTypes = {
@@ -25,7 +23,7 @@ export default class ListeWidget extends Component {
     }
 
     goTo = async page => {
-        this.props.fetchAvis(page, ITEMS_PAR_PAGE);
+        this.props.fetchAvis({ page, itemsParPage: 3 });
     };
 
     getTotalPages = () => {
