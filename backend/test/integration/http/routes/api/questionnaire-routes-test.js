@@ -93,7 +93,10 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 nom: 'Île-de-France',
                 codeRegion: '11',
                 codeINSEE: '11',
-                conseil_regional: 'included',
+                conseil_regional: {
+                    active: true,
+                    import: 'all',
+                },
                 contact: 'anotea-idf',
                 active: true,
                 departements: ['91', '92', '75', '93', '77', '95', '94', '78'],

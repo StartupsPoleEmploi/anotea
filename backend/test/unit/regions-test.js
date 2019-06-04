@@ -35,7 +35,10 @@ describe(__filename, () => {
                     notifications: true
                 }
             },
-            conseil_regional: 'included',
+            conseil_regional: {
+                active: true,
+                import: 'all',
+            },
             carif: {
                 nom: 'Orientation Pays de la Loire',
                 url: 'http://www.orientation-paysdelaloire.fr/',
@@ -73,7 +76,10 @@ describe(__filename, () => {
                     notifications: true
                 }
             },
-            conseil_regional: 'included',
+            conseil_regional: {
+                active: true,
+                import: 'all',
+            },
             carif: {
                 nom: 'Orientation Pays de la Loire',
                 url: 'http://www.orientation-paysdelaloire.fr/',
