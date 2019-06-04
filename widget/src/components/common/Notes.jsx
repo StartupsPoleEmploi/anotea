@@ -7,7 +7,7 @@ import help from './images/help.png';
 export default class Notes extends Component {
 
     state = {
-        tootlipAccueil: false,
+        tooltipAccueil: false,
         tooltipAccompagnement: false
     }
 
@@ -24,7 +24,7 @@ export default class Notes extends Component {
         return (
             <div className="Notes d-flex flex-column">
                 <div className="d-flex">
-                    <div className="name">Accueil <img src={help} className="help" onMouseEnter={this.toggleTooltip.bind(this, { tootlipAccueil: true })} onMouseLeave={this.toggleTooltip.bind(this, { tootlipAccueil: false })} /></div>
+                    <div className="name">Accueil <img src={help} className="help" onMouseEnter={this.toggleTooltip.bind(this, { tooltipAccueil: true })} onMouseLeave={this.toggleTooltip.bind(this, { tooltipAccueil: false })} /></div>
                     <div className="star ml-auto align-self-center">
                         <Stars note={notes.accueil} />
                     </div>
