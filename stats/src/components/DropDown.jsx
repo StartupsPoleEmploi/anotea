@@ -11,18 +11,9 @@ export default class DropDown extends Component {
         }
     }
 
-    componentDidMount() {
-        document.addEventListener('mousedown', this.handleClickOutside);
-    }
-    
-    componentWillUnmount() {
-        document.removeEventListener('mousedown', this.handleClickOutside);
-    }
-
     showMenu = () => {
 
         if (!this.state.showMenu) {
-          // attach/remove event handler
             document.addEventListener('click', this.handleOutsideClick, false);
         } else {
             document.removeEventListener('click', this.handleOutsideClick, false);
@@ -34,12 +25,11 @@ export default class DropDown extends Component {
     }
 
     handleOutsideClick = (e) => {
-    // ignore clicks on the component itself
-    if (this.node.contains(e.target)) {
-        return;
-    }
+        if (this.node.contains(e.target)) {
+            return;
+        }
     
-    this.showMenu();
+        this.showMenu();
     }
 
     render() {
@@ -56,10 +46,15 @@ export default class DropDown extends Component {
                         ? (
                             <div className="menu" ref={node => { this.node = node; }} >
                                 {this.props.items.map( (e, index) => (
-                                    <div key={index}>
-                                        <button className="menu-button"> <span>{e.intitule}</span> </button>
-                                        <div className="dropdown-divider"></div>
-                                    </div>
+                                    ((index + 1 === this.props.items.length) ?
+                                        (<div key={index}>
+                                            <button className="menu-button"> <span>{index}</span> </button>
+                                        </div>) :
+                                        (<div key={index}>
+                                            <button className="menu-button"> <span>{index}</span> </button>
+                                            <div className="dropdown-divider"></div>
+                                        </div>)
+                                    )
                                 ))}
                             </div>
                         )
