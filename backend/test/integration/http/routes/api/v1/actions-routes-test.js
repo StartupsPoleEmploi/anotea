@@ -317,7 +317,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
-                    numeroAction: 'AC_XX_XXXXX1',
+                    numeroAction: 'AC_XX_XXXXXX',
                     formacode: '22252',
                     organismeFormateur: '33333333333333',
                     lieuDeFormation: '75019',
@@ -361,7 +361,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             }
         });
 
-        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1?notes_decimales=true');
+        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX?notes_decimales=true');
         assert.deepStrictEqual(response.body.score, {
             nb_avis: 1,
             notes: {
@@ -375,7 +375,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
-    it('can return avis for a action', async () => {
+    it('can return avis', async () => {
 
         let app = await startServer();
         let date = new Date();
@@ -385,7 +385,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
-                    numeroAction: 'AC_XX_XXXXX1',
+                    numeroAction: 'AC_XX_XXXXXX',
                     formacode: '22252',
                     organismeFormateur: '33333333333333',
                     lieuDeFormation: '75019',
@@ -418,7 +418,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             ]
         );
 
-        let response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1/avis');
+        let response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX/avis');
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -476,6 +476,60 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 }
             }
         });
+    });
+
+    it('can return avis avec commentaires', async () => {
+
+        let app = await startServer();
+        let sansCommentaire = newComment({
+            pseudo: 'pseudo',
+            codeRegion: '11',
+            formacode: '22252',
+            training: {
+                formacode: '22252',
+                organisation: {
+                    siret: '33333333333333',
+                },
+                place: {
+                    postalCode: '75019',
+                },
+            },
+        });
+        delete sansCommentaire.comment;
+
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    formacode: '22252',
+                    organismeFormateur: '33333333333333',
+                    lieuDeFormation: '75019',
+                })
+            ],
+            [
+                sansCommentaire,
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                }),
+            ]
+        );
+
+        let response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX/avis?commentaires=false');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
 
 }));

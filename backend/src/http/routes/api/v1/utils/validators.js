@@ -25,4 +25,9 @@ module.exports = {
             notes_decimales: Joi.boolean().default(false),
         };
     },
+    commentairesValidator: () => {
+        return {
+            commentaires: Joi.boolean().default(null),
+        };
+    },
 };

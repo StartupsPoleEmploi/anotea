@@ -3,7 +3,7 @@ const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator, arrayOfValidator, notesDecimalesValidator } = require('./utils/validators');
+const { paginationValidator, arrayOfValidator, notesDecimalesValidator, commentairesValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
 
@@ -84,6 +84,7 @@ module.exports = ({ db, middlewares }) => {
             id: Joi.string().required(),
             ...paginationValidator(),
             ...notesDecimalesValidator(),
+            ...commentairesValidator(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -91,7 +92,13 @@ module.exports = ({ db, middlewares }) => {
         let skip = pagination.page * limit;
 
         let cursor = await db.collection('comment')
-        .find({ 'training.organisation.siret': parameters.id })
+        .find({
+            'training.organisation.siret': parameters.id,
+            '$and': [
+                parameters.commentaires === false ? { comment: { $exists: parameters.commentaires } } : {},
+                { rejected: false },
+            ]
+        })
         .sort({ date: -1 })
         .limit(limit)
         .skip(skip);

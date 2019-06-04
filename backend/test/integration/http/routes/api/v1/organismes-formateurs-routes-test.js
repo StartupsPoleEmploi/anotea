@@ -299,6 +299,21 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await Promise.all([
             insertIntoDatabase('accounts', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '11111111111111',
+                    },
+                },
+                rates: {
+                    accueil: 3,
+                    contenu_formation: 2,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 2,
+                    accompagnement: 1,
+                    global: 2.4,
+                },
+            })),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs?notes_decimales=true');
@@ -326,9 +341,19 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 global: 5.1,
             }
         });
+
+        response = await request(app).get('/api/v1/organismes-formateurs/11111111111111/avis?notes_decimales=true');
+        assert.deepStrictEqual(response.body.avis[0].notes, {
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            accompagnement: 1,
+            global: 2.4,
+        });
     });
 
-    it('can return avis for a organisme', async () => {
+    it('can return avis', async () => {
 
         let app = await startServer();
         let date = new Date();
@@ -407,5 +432,38 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             }
         });
+    });
+
+    it('can return avis avec commentaires', async () => {
+
+        let app = await startServer();
+        let sansCommentaire = newComment({
+            pseudo: 'pseudo',
+            training: {
+                organisation: {
+                    siret: '22222222222222',
+                },
+            },
+        });
+        delete sansCommentaire.comment;
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+            })),
+            insertIntoDatabase('comment', sansCommentaire),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+            })),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?commentaires=false');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
 }));

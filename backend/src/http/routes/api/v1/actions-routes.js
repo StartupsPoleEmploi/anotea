@@ -3,7 +3,7 @@ const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator, arrayOfValidator, notesDecimalesValidator } = require('./utils/validators');
+const { paginationValidator, arrayOfValidator, notesDecimalesValidator, commentairesValidator } = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createActionDTO, createPaginationDTO } = require('./utils/dto');
 
@@ -76,22 +76,28 @@ module.exports = ({ db, middlewares }) => {
             id: Joi.string().required(),
             ...paginationValidator(),
             ...notesDecimalesValidator(),
+            ...commentairesValidator(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
 
-        let action = await collection.findOne({ _id: parameters.id });
+        let action = await collection.findOne({ _id: parameters.id }, { projection: { avis: 1 } });
 
         if (!action) {
-            throw Boom.notFound('Numéro de formation inconnu ou formation expirée');
+            throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
+        }
+
+        let avis = action.avis;
+        if (parameters.commentaires !== null) {
+            avis = avis.filter(avis => parameters.commentaires ? avis.commentaire : !avis.commentaire);
         }
 
         res.json({
-            avis: action.avis.slice(skip, limit),
+            avis: avis.slice(skip, skip + limit),
             meta: {
-                pagination: createPaginationDTO(pagination, action.avis.length)
+                pagination: createPaginationDTO(pagination, avis.length)
             },
         });
 
