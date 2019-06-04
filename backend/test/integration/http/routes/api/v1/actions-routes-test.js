@@ -287,26 +287,32 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileActions([newIntercarif()]);
+        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX1' })]);
 
         let response = await request(app).get('/api/v1/actions?fields=score');
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.actions[0]), ['id', 'score']);
+
+        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1?fields=score');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'score']);
     });
 
     it('can search though all actions with -projection', async () => {
 
         let app = await startServer();
 
-        await reconcileActions([
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
-        ]);
+        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX1' })]);
 
         let response = await request(app).get('/api/v1/actions?fields=-avis');
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.actions[0]), ['id', 'numero', 'region', 'score', 'meta']);
+
+        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1?fields=-avis');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'numero', 'region', 'score', 'meta']);
     });
 
     it('can get score with notes décimales', async () => {

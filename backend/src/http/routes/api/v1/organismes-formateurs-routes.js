@@ -3,7 +3,7 @@ const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator, arrayOfValidator, notesDecimalesValidator, commentairesValidator } = require('./utils/validators');
+const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
 
@@ -17,15 +17,15 @@ module.exports = ({ db, middlewares }) => {
     router.get('/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
-            ...paginationValidator(),
-            id: arrayOfValidator(Joi.string()),
-            numero: arrayOfValidator(Joi.string()),
-            siret: arrayOfValidator(Joi.string()),
-            lieu_de_formation: arrayOfValidator(Joi.string()),
+            ...validators.pagination(),
+            id: validators.arrayOf(Joi.string()),
+            numero: validators.arrayOf(Joi.string()),
+            siret: validators.arrayOf(Joi.string()),
+            lieu_de_formation: validators.arrayOf(Joi.string()),
             nb_avis: Joi.number(),
-            fields: arrayOfValidator(Joi.string().required()).default([]),
-            ...paginationValidator(),
-            ...notesDecimalesValidator(),
+            ...validators.fields(),
+            ...validators.pagination(),
+            ...validators.notesDecimales(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -65,7 +65,7 @@ module.exports = ({ db, middlewares }) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
-            ...notesDecimalesValidator(),
+            ...validators.notesDecimales(),
         }, { abortEarly: false });
 
 
@@ -82,9 +82,9 @@ module.exports = ({ db, middlewares }) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
-            ...paginationValidator(),
-            ...notesDecimalesValidator(),
-            ...commentairesValidator(),
+            ...validators.pagination(),
+            ...validators.notesDecimales(),
+            ...validators.commentaires(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);

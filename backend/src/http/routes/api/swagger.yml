@@ -663,6 +663,15 @@ paths:
           type: string
           required: true
         - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=score` renvoie uniquement le champ score
+            `fields=-avis` renvoie tous sauf le champ avis
+          type: number
+          required: false
+        - in: query
           name: notes_decimales
           default: false
           description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
@@ -817,6 +826,15 @@ paths:
              (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
           type: string
           required: true
+        - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=score` renvoie uniquement le champ score
+            `fields=-avis` renvoie tous sauf le champ avis
+          type: number
+          required: false
         - in: query
           name: notes_decimales
           default: false
@@ -973,6 +991,15 @@ paths:
              (ex. `id=14_AF_0000011111|14_SE_0000102222`)
           type: string
           required: true
+        - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=score` renvoie uniquement le champ score
+            `fields=-avis` renvoie tous sauf le champ avis
+          type: number
+          required: false
         - in: query
           name: notes_decimales
           default: false

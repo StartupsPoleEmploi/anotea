@@ -3,7 +3,7 @@ const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator, arrayOfValidator, notesDecimalesValidator, commentairesValidator } = require('./utils/validators');
+const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createSessionDTO, createPaginationDTO } = require('./utils/dto');
 
@@ -17,13 +17,13 @@ module.exports = ({ db, middlewares }) => {
     router.get('/v1/sessions', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
-            id: arrayOfValidator(Joi.string()),
-            numero: arrayOfValidator(Joi.string()),
-            region: arrayOfValidator(Joi.string()),
+            id: validators.arrayOf(Joi.string()),
+            numero: validators.arrayOf(Joi.string()),
+            region: validators.arrayOf(Joi.string()),
             nb_avis: Joi.number(),
-            fields: arrayOfValidator(Joi.string().required()).default([]),
-            ...paginationValidator(),
-            ...notesDecimalesValidator(),
+            ...validators.fields(),
+            ...validators.pagination(),
+            ...validators.notesDecimales(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -57,10 +57,14 @@ module.exports = ({ db, middlewares }) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
-            ...notesDecimalesValidator(),
+            ...validators.fields(),
+            ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let session = await collection.findOne({ _id: parameters.id });
+        let session = await collection.findOne(
+            { _id: parameters.id },
+            { projection: buildProjection(parameters.fields) }
+        );
 
         if (!session) {
             throw Boom.notFound('Numéro de session inconnu ou session expirée');
@@ -74,9 +78,9 @@ module.exports = ({ db, middlewares }) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
-            ...paginationValidator(),
-            ...notesDecimalesValidator(),
-            ...commentairesValidator(),
+            ...validators.pagination(),
+            ...validators.commentaires(),
+            ...validators.notesDecimales(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);

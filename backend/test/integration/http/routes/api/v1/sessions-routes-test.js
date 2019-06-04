@@ -355,18 +355,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
-    it('can search though all sessions with projection (inclusion)', async () => {
+    it('can get sessions with projection (inclusion)', async () => {
 
         let app = await startServer();
 
         await reconcileSessions([
-            newIntercarif({ numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXX1' }),
         ]);
 
         let response = await request(app).get('/api/v1/sessions?fields=score');
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.sessions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.sessions[0]), ['id', 'score']);
+
+        response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1?fields=score');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'score']);
+
     });
 
     it('can search though all sessions with projection (exclusion)', async () => {
@@ -381,6 +386,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.sessions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.sessions[0]), ['id', 'numero', 'region', 'score', 'meta']);
+
+        response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1?fields=-avis');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'numero', 'region', 'score', 'meta']);
     });
 
     it('can get score with notes décimales', async () => {
