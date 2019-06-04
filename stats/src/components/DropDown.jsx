@@ -11,12 +11,35 @@ export default class DropDown extends Component {
         }
     }
 
-    showMenu = (event) => {
-        event.preventDefault();
-        
-        this.setState({
-            showMenu: !this.state.showMenu,
-        });
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+    
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    showMenu = () => {
+
+        if (!this.state.showMenu) {
+          // attach/remove event handler
+            document.addEventListener('click', this.handleOutsideClick, false);
+        } else {
+            document.removeEventListener('click', this.handleOutsideClick, false);
+        }
+    
+        this.setState(prevState => ({
+            showMenu: !prevState.showMenu,
+        }));
+    }
+
+    handleOutsideClick = (e) => {
+    // ignore clicks on the component itself
+    if (this.node.contains(e.target)) {
+        return;
+    }
+    
+    this.showMenu();
     }
 
     render() {
@@ -31,7 +54,7 @@ export default class DropDown extends Component {
                 {
                     this.state.showMenu
                         ? (
-                            <div className="menu">
+                            <div className="menu" ref={node => { this.node = node; }} >
                                 {this.props.items.map( (e, index) => (
                                     <div key={index}>
                                         <button className="menu-button"> <span>{e.intitule}</span> </button>
