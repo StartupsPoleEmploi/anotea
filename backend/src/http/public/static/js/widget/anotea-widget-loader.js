@@ -55,7 +55,7 @@
             widget.appendChild(createIFrame(widget));
         }
         window.anotea.iFrameResize({
-            heightCalculationMethod: 'bodyScroll',
+            heightCalculationMethod: 'documentElementOffset',
             checkOrigin: false
         }, '.anotea-widget-iframe');
     });
