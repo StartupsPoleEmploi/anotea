@@ -248,7 +248,7 @@
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": "included",
     "carif": {
       "active": false
     }
