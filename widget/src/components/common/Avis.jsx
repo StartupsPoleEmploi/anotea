@@ -13,6 +13,7 @@ export default class Avis extends Component {
     render() {
 
         let { avis } = this.props;
+        let { debut, fin } = avis.formation.action.session.periode;
 
         return (
             <div className="Avis d-flex flex-column align-items-stretch">
@@ -34,9 +35,9 @@ export default class Avis extends Component {
                 </div>
                 }
                 <div className="date">
-                    Session du {moment(avis.startDate).format('DD/MM/YYYY')}
-                    {avis.startDate !== avis.scheduledEndDate &&
-                    <span>au {moment(avis.scheduledEndDate).format('DD/MM/YYYY')}</span>
+                    Session du {moment(debut).format('DD/MM/YYYY')}
+                    {debut !== fin &&
+                    <span> au {moment(fin).format('DD/MM/YYYY')}</span>
                     }
                 </div>
             </div>
