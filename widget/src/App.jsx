@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ListeWidget from './components/ListeWidget';
-import { getOrganismesFormateur } from './components/services/organismeService';
-import { getFormation, getAction, getSession } from './components/services/formationService';
+import { getScore, getAvis } from './services/widgetService';
 import GridDisplayer from './components/common/library/GridDisplayer';
 import ScoreWidget from './components/ScoreWidget';
 import CarrouselWidget from './components/CarrouselWidget';
+import ContactStagiaire from './components/common/ContactStagiaire';
 import './App.scss';
 
 class App extends Component {
@@ -43,38 +43,33 @@ class App extends Component {
                     }
                 }
             },
-            pristine: true,
         };
+    }
+
+    async fetchAvis(options) {
+        let { type, identifiant } = this.props;
+
+        this.setState({ results: await getAvis(type, identifiant, options) });
     }
 
     async componentDidMount() {
         let { type, identifiant } = this.props;
 
-        let fetch = null;
-        switch (type) {
-            case 'organisme':
-                fetch = () => getOrganismesFormateur(identifiant);
-                break;
-            case 'formation':
-                fetch = () => getFormation(identifiant);
-                break;
-            case 'action':
-                fetch = () => getAction(identifiant);
-                break;
-            case 'session':
-                fetch = () => getSession(identifiant);
-                break;
-            default:
-                fetch = () => ({ error: true });
+        if (!['organisme', 'formation', 'action', 'session'].includes(type)) {
+            return this.setState({ error: true });
         }
 
-        let results = await fetch();
-        this.setState({ ...results });
+        this.setState({ score: await getScore(type, identifiant) });
+    }
+
+    hasOption(option) {
+        return (this.props.options || '').split(',').includes(option);
     }
 
     render() {
 
-        let { format, options = '' } = this.props;
+        let { format } = this.props;
+
 
         if (this.state.error) {
             return (<div className="anotea">Une erreur est survenue</div>);
@@ -84,10 +79,9 @@ class App extends Component {
         if (format === 'score') {
             widget = <ScoreWidget {...this.state} />;
         } else if (format === 'carrousel') {
-            widget = <CarrouselWidget {...this.state} />;
+            widget = <CarrouselWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
         } else {
-            widget = (
-                <ListeWidget {...this.state} showContactStagiaire={options.indexOf('contact-stagiaire') !== -1} />);
+            widget = <ListeWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
         }
 
         return (
@@ -95,6 +89,11 @@ class App extends Component {
                 {false && <GridDisplayer />}
                 <div className="container-fluid">
                     {widget}
+                    {this.hasOption('contact-stagiaire') &&
+                    <div className="d-flex justify-content-center py-2">
+                        <ContactStagiaire />
+                    </div>
+                    }
                 </div>
             </div>
         );
@@ -102,9 +101,10 @@ class App extends Component {
 }
 
 App.defaultProps = {
-    format: 'liste',
-    type: 'organisme',
-    identifiant: '13002087800018',
+    format: 'carrousel',
+    type: 'action',
+    identifiant: '26_100646|26_145859_7591',
+    options: 'contact-stagiaire',
 };
 
 export default App;

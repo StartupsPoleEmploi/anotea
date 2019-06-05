@@ -1,7 +1,8 @@
 const request = require('supertest');
 const assert = require('assert');
+const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/test-server');
-const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
+const { newOrganismeAccount, newComment, randomize } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
@@ -276,6 +277,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.organismes_formateurs.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'raison_sociale', 'siret', 'numero', 'score']);
+
+        response = await request(app).get('/api/v1/organismes-formateurs/11111111111111?fields=-lieux_de_formation');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'raison_sociale', 'siret', 'numero', 'score']);
     });
 
     it('can search though all organismes with projection (whitelist)', async () => {
@@ -288,8 +293,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get('/api/v1/organismes-formateurs?fields=lieux_de_formation');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.organismes_formateurs.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'lieux_de_formation']);
+
+        response = await request(app).get('/api/v1/organismes-formateurs/11111111111111?fields=lieux_de_formation');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'lieux_de_formation']);
     });
 
     it('can get score with notes décimales', async () => {
@@ -298,6 +306,21 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await Promise.all([
             insertIntoDatabase('accounts', buildOrganismeAccount('11111111111111')),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '11111111111111',
+                    },
+                },
+                rates: {
+                    accueil: 3,
+                    contenu_formation: 2,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 2,
+                    accompagnement: 1,
+                    global: 2.4,
+                },
+            })),
         ]);
 
         let response = await request(app).get('/api/v1/organismes-formateurs?notes_decimales=true');
@@ -325,6 +348,129 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 global: 5.1,
             }
         });
+
+        response = await request(app).get('/api/v1/organismes-formateurs/11111111111111/avis?notes_decimales=true');
+        assert.deepStrictEqual(response.body.avis[0].notes, {
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            accompagnement: 1,
+            global: 2.4,
+        });
     });
 
+    it('can return avis', async () => {
+
+        let app = await startServer();
+        let date = new Date();
+        let commentId = new ObjectID();
+        let pseudo = randomize('pseudo');
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+            })),
+            insertIntoDatabase('comment', newComment({
+                _id: commentId,
+                pseudo,
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+            }, date)),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            avis: [{
+                id: commentId.toString(),
+                pseudo,
+                date: date.toJSON(),
+                commentaire: {
+                    titre: 'Génial',
+                    texte: 'Super formation.',
+                },
+                notes: {
+                    accueil: 3,
+                    contenu_formation: 2,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 2,
+                    accompagnement: 1,
+                    global: 2
+                },
+                formation: {
+                    numero: 'F_XX_XX',
+                    intitule: 'Développeur',
+                    domaine_formation: {
+                        formacodes: ['46242']
+                    },
+                    certifications: [{ certif_info: '78997' }],
+                    action: {
+                        numero: 'AC_XX_XXXXXX',
+                        lieu_de_formation: {
+                            code_postal: '75011',
+                            ville: 'Paris'
+                        },
+                        organisme_financeurs: [],
+                        organisme_formateur: {
+                            raison_sociale: 'INSTITUT DE FORMATION',
+                            siret: '22222222222222',
+                            numero: '14_OF_XXXXXXXXXX',
+                        },
+                        session: {
+                            numero: 'SE_XXXXXX',
+                            periode: {
+                                debut: date.toJSON(),
+                                fin: date.toJSON()
+                            }
+                        }
+                    }
+                }
+            }],
+            meta: {
+                pagination: {
+                    page: 0,
+                    items_par_page: 50,
+                    total_items: 1,
+                    total_pages: 1,
+                }
+            }
+        });
+    });
+
+    it('can return avis avec commentaires', async () => {
+
+        let app = await startServer();
+        let sansCommentaire = newComment({
+            pseudo: 'pseudo',
+            training: {
+                organisation: {
+                    siret: '22222222222222',
+                },
+            },
+        });
+        delete sansCommentaire.comment;
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+            })),
+            insertIntoDatabase('comment', sansCommentaire),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+            })),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?commentaires=false');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+    });
 }));

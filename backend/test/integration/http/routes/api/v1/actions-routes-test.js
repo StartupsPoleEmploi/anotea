@@ -287,26 +287,32 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileActions([newIntercarif()]);
+        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX1' })]);
 
         let response = await request(app).get('/api/v1/actions?fields=score');
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.actions[0]), ['id', 'score']);
+
+        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1?fields=score');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'score']);
     });
 
     it('can search though all actions with -projection', async () => {
 
         let app = await startServer();
 
-        await reconcileActions([
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
-        ]);
+        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX1' })]);
 
         let response = await request(app).get('/api/v1/actions?fields=-avis');
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.actions[0]), ['id', 'numero', 'region', 'score', 'meta']);
+
+        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1?fields=-avis');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'numero', 'region', 'score', 'meta']);
     });
 
     it('can get score with notes décimales', async () => {
@@ -317,7 +323,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
-                    numeroAction: 'AC_XX_XXXXX1',
+                    numeroAction: 'AC_XX_XXXXXX',
                     formacode: '22252',
                     organismeFormateur: '33333333333333',
                     lieuDeFormation: '75019',
@@ -361,7 +367,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             }
         });
 
-        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1?notes_decimales=true');
+        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX?notes_decimales=true');
         assert.deepStrictEqual(response.body.score, {
             nb_avis: 1,
             notes: {
@@ -373,6 +379,163 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 global: 2.4,
             }
         });
+    });
+
+    it('can return avis', async () => {
+
+        let app = await startServer();
+        let date = new Date();
+        let pseudo = randomize('pseudo');
+        let commentId = new ObjectID();
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    formacode: '22252',
+                    organismeFormateur: '33333333333333',
+                    lieuDeFormation: '75019',
+                })
+            ],
+            [
+                newComment({
+                    _id: commentId,
+                    pseudo,
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        accompagnement: 1,
+                        accueil: 3,
+                        contenu_formation: 2,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 2,
+                        global: 2,
+                    },
+                }, date),
+            ]
+        );
+
+        let response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX/avis');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            avis: [{
+                id: commentId.toString(),
+                pseudo,
+                date: date.toJSON(),
+                commentaire: {
+                    titre: 'Génial',
+                    texte: 'Super formation.',
+                },
+                notes: {
+                    accueil: 3,
+                    contenu_formation: 2,
+                    equipe_formateurs: 4,
+                    moyen_materiel: 2,
+                    accompagnement: 1,
+                    global: 2
+                },
+                formation: {
+                    numero: 'F_XX_XX',
+                    intitule: 'Développeur',
+                    domaine_formation: {
+                        formacodes: ['22252']
+                    },
+                    certifications: [{ certif_info: '78997' }],
+                    action: {
+                        numero: 'AC_XX_XXXXXX',
+                        lieu_de_formation: {
+                            code_postal: '75019',
+                            ville: 'Paris'
+                        },
+                        organisme_financeurs: [],
+                        organisme_formateur: {
+                            raison_sociale: 'INSTITUT DE FORMATION',
+                            siret: '33333333333333',
+                            numero: '14_OF_XXXXXXXXXX',
+                        },
+                        session: {
+                            numero: 'SE_XXXXXX',
+                            periode: {
+                                debut: date.toJSON(),
+                                fin: date.toJSON()
+                            }
+                        }
+                    }
+                }
+            }],
+            meta: {
+                pagination: {
+                    page: 0,
+                    items_par_page: 50,
+                    total_items: 1,
+                    total_pages: 1,
+                }
+            }
+        });
+    });
+
+    it('can return avis avec commentaires', async () => {
+
+        let app = await startServer();
+        let sansCommentaire = newComment({
+            pseudo: 'pseudo',
+            codeRegion: '11',
+            formacode: '22252',
+            training: {
+                formacode: '22252',
+                organisation: {
+                    siret: '33333333333333',
+                },
+                place: {
+                    postalCode: '75019',
+                },
+            },
+        });
+        delete sansCommentaire.comment;
+
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    formacode: '22252',
+                    organismeFormateur: '33333333333333',
+                    lieuDeFormation: '75019',
+                })
+            ],
+            [
+                sansCommentaire,
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                }),
+            ]
+        );
+
+        let response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX/avis?commentaires=false');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
 
 }));

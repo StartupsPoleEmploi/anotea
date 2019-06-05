@@ -19,12 +19,13 @@ const handleResponse = (path, response) => {
 };
 
 export const _get = path => {
+    let referrer = new URL((document.referrer || 'http://unknown')).origin;
     return fetch(path, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'X-Anotea-Widget': true,
+            'X-Anotea-Widget': referrer,
         }
     })
     .then(res => handleResponse(path, res));

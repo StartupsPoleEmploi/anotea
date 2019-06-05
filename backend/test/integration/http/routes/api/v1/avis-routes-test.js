@@ -315,28 +315,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(avis[0].formation.domaine_formation.formacodes[0], formacode);
     });
 
-    it('can search avis with commentaires', async () => {
-
-        let app = await startServer();
-        let pseudo = randomize('pseudo');
-
-        let noCommentaire = newComment();
-        delete noCommentaire.comment;
-
-        await Promise.all([
-            insertIntoDatabase('comment', noCommentaire),
-            insertIntoDatabase('comment', newComment({
-                pseudo: pseudo,
-            }))
-        ]);
-
-        let response = await request(app).get(`/api/v1/avis?avec_commentaires_uniquement=true`);
-
-        assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.length, 1);
-        assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
-    });
-
     it('can search avis with pagination', async () => {
 
         let app = await startServer();

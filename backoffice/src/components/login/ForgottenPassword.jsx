@@ -42,7 +42,9 @@ export default class ForgottenPassword extends React.Component {
     };
 
     handleAsk = () => {
-        askNewPassword(this.state.username).then(() => this.setState({ error: false, asked: true }))
+        askNewPassword(this.state.username)
+        .then(() => this.setState({ error: false, asked: true }))
+        .then(() => this.onSuccess())
         .catch(() => {
             this.setState({ error: true });
         });
@@ -77,17 +79,12 @@ export default class ForgottenPassword extends React.Component {
 
         return (
             <div className="forgottenPassword">
-                {this.state.asked &&
-                    <div className="asked">
-                        L&apos;email à bien été envoyé.
-                    </div>
-                }
                 <h1>Votre espace Anotéa</h1>
                 {!this.state.asked && !this.state.passwordLost &&
                     <div className="block">
                         <h4>Mot de passe oublié</h4>
 
-                        <div className="identifiant">
+                        <div className="mdp-oublie-identifiant">
                             <h1>Entrez votre identifiant et confirmez l&apos;envoi</h1>
                             <input type="text"
                                 id="username"
@@ -99,21 +96,23 @@ export default class ForgottenPassword extends React.Component {
                         </div>
 
                         <p className="clarification">L&apos;adresse e-mail est celle sur laquelle vous avez reçu la
-                            proposition de création de compte Anotéa, si vous ne la connaissez pas, contactez nous.</p>
+                            proposition de création de compte Anotéa, si vous ne la connaissez pas, <a className="contactez-nous" href="mailto:anotea@pole-emploi.fr">contactez nous.</a></p>
 
                         <div className="wrapper">
                             <span className="group-btn">
-                                <button onClick={this.handleAsk} className="btn btn-primary btn-md">
-                                    Confirmer
-                                </button>
+                                <div className="d-flex justify-content-around">
+                                    <button onClick={this.onSuccess} className="btn-retour">
+                                        retour
+                                    </button>
+                                    <button onClick={this.handleAsk} className="btn">
+                                        Confirmer
+                                    </button>
+                                </div>
                             </span>
                         </div>
                     </div>
                 }
 
-                {!this.state.asked && !this.state.passwordLost && this.state.error &&
-                        <div className="alert-danger identifiant-incorrect">Désolé mais cet identifiant est incorrect.</div>}
-                
                 {this.state.passwordLost && !this.state.userInfo &&
                 <div className="block passwordLost">
                     <h4>Nous vous invitons à créer un nouveau mot de passe</h4>
@@ -152,8 +151,8 @@ export default class ForgottenPassword extends React.Component {
                 }
                 {this.state.passwordLost && this.state.userInfo &&
                 <div className="passwordChanged">
-                    Votre mot de passe a été changé avec succès. Vous pouvez maintenant accéder à <a
-                        onClick={this.onSuccess} role="button">votre espace Anotea</a>.
+                    Votre mot de passe a été changé avec succès. Vous pouvez maintenant accéder à
+                    <a onClick={this.onSuccess} role="button">votre espace Anotea</a>.
                 </div>}
                 <br/>
             </div>

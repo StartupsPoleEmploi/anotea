@@ -15,11 +15,14 @@
         "notifications": true
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
+      "active": false,
       "nom": "Orientation Auvergne-Rhône-Alpes",
-      "url": "http://www.orientation.auvergnerhonealpes.fr/",
-      "active": false
+      "url": "http://www.orientation.auvergnerhonealpes.fr/"
     }
   },
   {
@@ -38,7 +41,10 @@
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -59,7 +65,10 @@
         "notifications": false
       }
     },
-    "conseil_regional": "included",
+    "conseil_regional": {
+      "active": true,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -79,7 +88,10 @@
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -100,7 +112,10 @@
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -121,7 +136,10 @@
         "notifications": true
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -142,7 +160,10 @@
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -162,7 +183,10 @@
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -183,11 +207,14 @@
         "notifications": false
       }
     },
-    "conseil_regional": "included",
+    "conseil_regional": {
+      "active": true,
+      "import": "all"
+    },
     "carif": {
+      "active": true,
       "nom": "C2RP",
-      "url": "http://www.c2rp.fr/",
-      "active": true
+      "url": "http://www.c2rp.fr/"
     }
   },
   {
@@ -206,11 +233,14 @@
         "notifications": true
       }
     },
-    "conseil_regional": "included",
+    "conseil_regional": {
+      "active": true,
+      "import": "all"
+    },
     "carif": {
+      "active": true,
       "nom": "Défi Métiers",
-      "url": "https://www.defi-metiers.fr/",
-      "active": true
+      "url": "https://www.defi-metiers.fr/"
     }
   },
   {
@@ -228,7 +258,10 @@
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -248,28 +281,34 @@
         "notifications": false
       }
     },
-    "conseil_regional": "included",
+    "conseil_regional": {
+      "active": true,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
   },
   {
     "nom": "Normandie",
-    "active": false,
+    "active": true,
     "codeRegion": "14",
     "codeINSEE": "28",
     "contact": "anoteanormandie",
     "departements": ["14", "27", "27", "50", "76", "61"],
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -289,7 +328,10 @@
         "notifications": false
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
       "active": false
     }
@@ -310,7 +352,10 @@
         "notifications": false
       }
     },
-    "conseil_regional": "certifications_only",
+    "conseil_regional": {
+      "active": true,
+      "import": "certifications_only"
+    },
     "carif": {
       "active": false
     }
@@ -331,11 +376,14 @@
         "notifications": true
       }
     },
-    "conseil_regional": "included",
+    "conseil_regional": {
+      "active": true,
+      "import": "all"
+    },
     "carif": {
+      "active": false,
       "nom": "Orientation Pays de la Loire",
-      "url": "http://www.orientation-paysdelaloire.fr/",
-      "active": false
+      "url": "http://www.orientation-paysdelaloire.fr/"
     }
   },
   {
@@ -354,11 +402,14 @@
         "notifications": true
       }
     },
-    "conseil_regional": "excluded",
+    "conseil_regional": {
+      "active": false,
+      "import": "all"
+    },
     "carif": {
+      "active": false,
       "nom": "Orientation Sud",
-      "url": "http://www.orientationsud.fr/",
-      "active": false
+      "url": "http://www.orientationsud.fr/"
     }
   }
 ]

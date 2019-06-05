@@ -17,11 +17,13 @@
         return style;
     }
 
-    function getIframeUrl() {
-        if (window.location.href.indexOf('load_anotea_widget_iframe_from_localhost=true') !== -1) {
-            return 'http://localhost:3002/widget';
-        } else if (window.location.href.indexOf('https://anotea.beta.pole-emploi.fr') !== -1) {
+    function getIframeUrl(env) {
+        var location = window.location.href;
+
+        if (env === 'recette' || location.indexOf('https://anotea.beta.pole-emploi.fr') !== -1) {
             return 'https://anotea.beta.pole-emploi.fr/widget';
+        } else if (env === 'dev' || location.indexOf('load_anotea_widget_iframe_from_localhost=true') !== -1) {
+            return 'http://localhost:3002/widget';
         }
         return 'https://anotea.pole-emploi.fr/widget';
     }
@@ -31,13 +33,14 @@
         var format = widget.getAttribute('data-format');
         var type = widget.getAttribute('data-type');
         var identifiant = widget.getAttribute('data-identifiant');
+        var env = widget.getAttribute('data-env');
         var options = widget.getAttribute('data-options');
 
         var iframe = document.createElement('iframe');
         iframe.className = 'anotea-widget-iframe';
         iframe.scrolling = 'no';
         iframe.frameBorder = '0';
-        iframe.src = getIframeUrl() +
+        iframe.src = getIframeUrl(env) +
             '?format=' + format +
             '&type=' + type +
             '&identifiant=' + identifiant +
@@ -55,7 +58,7 @@
             widget.appendChild(createIFrame(widget));
         }
         window.anotea.iFrameResize({
-            heightCalculationMethod: 'bodyScroll',
+            heightCalculationMethod: 'documentElementOffset',
             checkOrigin: false
         }, '.anotea-widget-iframe');
     });

@@ -7,7 +7,7 @@ describe(__filename, () => {
 
         let actives = regions().findActiveRegions();
         assert.deepStrictEqual(actives.map(region => region.codeRegion),
-            ['2', '3', '4', '6', '7', '8', '10', '11', '13', '17', '18']);
+            ['2', '3', '4', '6', '7', '8', '10', '11', '13', '14', '17', '18']);
     });
 
     it('can find region by code', () => {
@@ -35,7 +35,10 @@ describe(__filename, () => {
                     notifications: true
                 }
             },
-            conseil_regional: 'included',
+            conseil_regional: {
+                active: true,
+                import: 'all',
+            },
             carif: {
                 nom: 'Orientation Pays de la Loire',
                 url: 'http://www.orientation-paysdelaloire.fr/',
@@ -73,7 +76,10 @@ describe(__filename, () => {
                     notifications: true
                 }
             },
-            conseil_regional: 'included',
+            conseil_regional: {
+                active: true,
+                import: 'all',
+            },
             carif: {
                 nom: 'Orientation Pays de la Loire',
                 url: 'http://www.orientation-paysdelaloire.fr/',

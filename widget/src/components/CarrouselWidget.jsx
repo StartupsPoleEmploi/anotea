@@ -14,25 +14,26 @@ export default class CarrouselWidget extends Component {
     static propTypes = {
         score: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
+        fetchAvis: PropTypes.func.isRequired,
     };
 
-    state = {
-        index: 0
-    };
+    componentDidMount() {
+        this.props.fetchAvis({ page: 0, itemsParPage: 1 });
+    }
 
     previous = () => {
-        this.setState({ index: this.state.index - 1 });
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page - 1, itemsParPage: 1 });
     };
 
     next = async () => {
-        this.setState({ index: this.state.index + 1 });
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page + 1, itemsParPage: 1 });
     };
-
 
     getCarrousel = () => {
 
-        let current = this.props.results.avis[this.state.index];
+        let current = this.props.results.avis[0];
         let totalItems = this.props.results.meta.pagination.total_items;
+        let pagination = this.props.results.meta.pagination;
 
         if (totalItems === 0) {
             return (
@@ -56,23 +57,22 @@ export default class CarrouselWidget extends Component {
                     <div className="pagination d-flex justify-content-between py-2">
                         <Button
                             size="small"
-                            className={`nav ${this.state.index === 0 ? 'invisible' : 'visible'}`}
+                            className={`nav ${pagination.page === 0 ? 'invisible' : 'visible'}`}
                             onClick={() => this.previous()}>
                             <span className="fas fa-chevron-left"></span>
                         </Button>
 
-                        <div className="align-self-center">{this.state.index + 1} sur {totalItems}</div>
+                        <div className="align-self-center">{pagination.page + 1} sur {totalItems}</div>
 
                         <Button
                             size="small"
-                            className={`nav ${this.state.index >= totalItems - 1 ? 'invisible' : 'visible'}`}
+                            className={`nav ${pagination.page >= totalItems - 1 ? 'invisible' : 'visible'}`}
                             onClick={() => this.next()}>
                             <span className="fas fa-chevron-right"></span>
                         </Button>
 
                     </div>
                     }
-
                 </div>
             </div>
         );

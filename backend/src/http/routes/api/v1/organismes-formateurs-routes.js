@@ -3,9 +3,9 @@ const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator, arrayOfValidator, notesDecimalesValidator } = require('./utils/validators');
+const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const { createOrganismeFomateurDTO, createPaginationDTO } = require('./utils/dto');
+const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -17,15 +17,15 @@ module.exports = ({ db, middlewares }) => {
     router.get('/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
-            ...paginationValidator(),
-            id: arrayOfValidator(Joi.string()),
-            numero: arrayOfValidator(Joi.string()),
-            siret: arrayOfValidator(Joi.string()),
-            lieu_de_formation: arrayOfValidator(Joi.string()),
+            ...validators.pagination(),
+            id: validators.arrayOf(Joi.string()),
+            numero: validators.arrayOf(Joi.string()),
+            siret: validators.arrayOf(Joi.string()),
+            lieu_de_formation: validators.arrayOf(Joi.string()),
             nb_avis: Joi.number(),
-            fields: arrayOfValidator(Joi.string().required()).default([]),
-            ...paginationValidator(),
-            ...notesDecimalesValidator(),
+            ...validators.fields(),
+            ...validators.pagination(),
+            ...validators.notesDecimales(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -65,17 +65,64 @@ module.exports = ({ db, middlewares }) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
-            ...notesDecimalesValidator(),
+            ...validators.fields(),
+            ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-
-        let organisme = await collection.findOne({ _id: parseInt(parameters.id) });
+        let organisme = await collection.findOne(
+            { _id: parseInt(parameters.id) },
+            { projection: buildProjection(parameters.fields) },
+        );
 
         if (!organisme) {
             throw Boom.notFound('Identifiant inconnu');
         }
 
         res.json(createOrganismeFomateurDTO(organisme, { notes_decimales: parameters.notes_decimales }));
+    }));
+
+    router.get('/v1/organismes-formateurs/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
+
+        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
+            id: Joi.string().required(),
+            ...validators.pagination(),
+            ...validators.notesDecimales(),
+            ...validators.commentaires(),
+        }, { abortEarly: false });
+
+        let pagination = _.pick(parameters, ['page', 'items_par_page']);
+        let limit = pagination.items_par_page;
+        let skip = pagination.page * limit;
+
+        let cursor = await db.collection('comment')
+        .find({
+            'training.organisation.siret': parameters.id,
+            '$and': [
+                parameters.commentaires !== null ? { comment: { $exists: parameters.commentaires } } : {},
+                { rejected: false },
+            ]
+        })
+        .sort({ date: -1 })
+        .limit(limit)
+        .skip(skip);
+
+        let [total, comment, organisme] = await Promise.all([
+            cursor.count(),
+            cursor.toArray(),
+            collection.findOne({ _id: parseInt(parameters.id) })
+        ]);
+
+        if (!organisme) {
+            throw Boom.notFound('Identifiant inconnu');
+        }
+
+        res.json({
+            avis: comment.map(c => createAvisDTO(c, { notes_decimales: parameters.notes_decimales })),
+            meta: {
+                pagination: createPaginationDTO(pagination, total)
+            },
+        });
+
     }));
 
     return router;
