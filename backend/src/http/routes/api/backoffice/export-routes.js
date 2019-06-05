@@ -16,19 +16,12 @@ module.exports = ({ db, middlewares, logger }) => {
     // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
     router.get('/backoffice/export/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
 
-        let query = {
-            $or: [
-                { 'comment': { $exists: false } },
-                { 'comment': null },
-                { 'published': true }
-            ]
-        };
+        let query = {};
 
         if (req.query.status === 'reported') {
             query['reported'] = true;
-        }
-
-        if (req.query.status === 'commented') {
+        } else if (req.query.status === 'commented') {
+            query['published'] = true;
             query['$and'] = [
                 { 'comment': { $ne: null } },
                 {
@@ -38,6 +31,8 @@ module.exports = ({ db, middlewares, logger }) => {
                     ]
                 }
             ];
+        } else if (req.query.status === 'rejected') {
+            query['rejected'] = true;
         }
 
         if (req.query.filter === 'region') {
@@ -68,7 +63,7 @@ module.exports = ({ db, middlewares, logger }) => {
         let stream = await db.collection('comment').find(query, { token: 0 }).stream();
         let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
 
-        if (req.user.codeFinanceur === POLE_EMPLOI) {
+        if (req.user.codeFinanceur === POLE_EMPLOI || req.query.status === 'rejected') {
             let array = lines.split(';');
             array.splice(10, 0, 'qualification');
             lines = array.join(';');
@@ -89,9 +84,16 @@ module.exports = ({ db, middlewares, logger }) => {
         .pipe(transformObject(async comment => {
 
             let qualification = '';
-            if (req.user.codeFinanceur === POLE_EMPLOI) {
-                let validQualification = comment.qualification !== undefined ? comment.qualification : '';
-                qualification = ';' + validQualification;
+
+            if (req.query.status === 'rejected') {
+                qualification = ';' + (comment.rejectReason !== undefined ? comment.rejectReason : '');
+            } else if (req.user.codeFinanceur === POLE_EMPLOI) {
+                qualification = ';';
+                if (comment.published) {
+                    qualification += comment.qualification !== undefined ? comment.qualification : '';
+                } else if (comment.rejected) {
+                    qualification += comment.rejectReason !== undefined ? comment.rejectReason : '';
+                }
             }
 
             if (comment.comment !== undefined && comment.comment !== null) {
