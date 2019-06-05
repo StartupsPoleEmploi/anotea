@@ -76,10 +76,12 @@ module.exports = (db, regions) => {
 
                 let isConseilRegional = trainee.training.codeFinanceur.includes('2');
 
-                if (isConseilRegional && region.conseil_regional === 'excluded') {
+                if (isConseilRegional && !region.conseil_regional.active) {
                     return false;
                 }
-                if (isConseilRegional && region.conseil_regional === 'certifications_only') {
+                if (isConseilRegional &&
+                    region.conseil_regional.active &&
+                    region.conseil_regional.import === 'certifications_only') {
                     return !_.isEmpty(trainee.training.certifInfo.id);
                 }
                 return true;

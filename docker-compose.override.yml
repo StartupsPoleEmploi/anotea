@@ -85,6 +85,8 @@ services:
     container_name: anotea_elasticsearch
     build:
       context: misc/efk/elasticsearch
+    ports:
+      - "9200:9200"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
     volumes:
