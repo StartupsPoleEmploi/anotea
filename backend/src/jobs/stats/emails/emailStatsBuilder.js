@@ -1,6 +1,8 @@
-module.exports = db => {
+module.exports = (db, logger) => {
 
     const buildStats = async option => {
+        logger.info(`Building email statistics displayed on financer dashboard (${option.unwind ? 'by code financeur' : 'with aggregated financeur code' })`);
+
         const request = [{ $match: { 'mailSentDate': { $ne: null } } }];
         let codeFinancerProject;
         let outCollection;
@@ -21,133 +23,128 @@ module.exports = db => {
                 as: 'advices',
             }
         },
-            {
-                $project: {
-                    mailSentDate: '$mailSentDate',
-                    codeRegion: '$codeRegion',
-                    codeFinanceur: codeFinancerProject,
-                    count: { '$sum': 1 },
-                    emailOpen: {
-                        $sum: { $cond: ['$tracking', 1, 0] }
-                    },
-                    advicesPublished: {
-                        $filter: {
-                            input: '$advices',
-                            as: 'advice',
-                            cond: {
-                                $or: [{
-                                    // avis avec commentaire, publié
-                                    $and: [
-                                        [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 1, 0],
-                                        { $eq: ['$$advice.published', true] }
-                                    ]
-                                }, {
-                                    // avis sans commentaire (notes seules)
-                                    $and: [
-                                        [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 0, 1]
-                                    ]
-                                }]
-                            }
-                        }
-                    }, advicesWithComments: {
-                        $filter: {
-                            input: '$advices',
-                            as: 'advice',
-                            cond: {
+        {
+            $project: {
+                mailSentDate: '$mailSentDate',
+                codeRegion: '$codeRegion',
+                codeFinanceur: codeFinancerProject,
+                count: { '$sum': 1 },
+                emailOpen: {
+                    $sum: { $cond: ['$tracking', 1, 0] }
+                },
+                advicesPublished: {
+                    $filter: {
+                        input: '$advices',
+                        as: 'advice',
+                        cond: {
+                            $or: [{
+                                // avis avec commentaire, publié
                                 $and: [
                                     [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 1, 0],
                                     { $eq: ['$$advice.published', true] }
                                 ]
-                            }
-                        }
-                    },
-                    advicesPositif: {
-                        $filter: {
-                            input: '$advices',
-                            as: 'advice',
-                            cond: {
-                                $or: [
-                                    {
-                                        $and: [
-                                            { $eq: ['$$advice.published', true] },
-                                            { $eq: ['$$advice.qualification', 'positif'] },
-                                        ]
-                                    },
-                                    {
-                                        $and: [
-                                            { $eq: ['$$advice.published', true] },
-                                            { $eq: ['$$advice.qualification', 'neutre'] },
-                                        ]
-                                    }]
-                            }
-                        }
-                    },
-                    advicesNegatif: {
-                        $filter: {
-                            input: '$advices',
-                            as: 'advice',
-                            cond: {
+                            }, {
+                                // avis sans commentaire (notes seules)
                                 $and: [
-                                    { $eq: ['$$advice.published', true] },
-                                    { $eq: ['$$advice.qualification', 'négatif'] },
+                                    [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 0, 1]
                                 ]
-                            }
-                        }
-                    },
-                    advicesRejected: {
-                        $filter: {
-                            input: '$advices',
-                            as: 'advice',
-                            cond: { $eq: ['$$advice.rejected', true] }
+                            }]
                         }
                     }
-                }
-            },
-            {
-                $project: {
-                    mailSentDate: '$mailSentDate',
-                    codeRegion: '$codeRegion',
-                    codeFinanceur: '$codeFinanceur',
-                    count: '$count',
-                    emailOpen: '$emailOpen',
-                    countAdvicesPublished: {
-                        '$size': '$advicesPublished'
-                    },
-                    countAdvicesWithComments: {
-                        '$size': '$advicesWithComments'
-                    },
-                    countAdvicesPositif: {
-                        '$size': '$advicesPositif'
-                    },
-                    countAdvicesNegatif: {
-                        '$size': '$advicesNegatif'
-                    },
-                    countAdvicesRejected: {
-                        '$size': '$advicesRejected'
+                }, advicesWithComments: {
+                    $filter: {
+                        input: '$advices',
+                        as: 'advice',
+                        cond: { $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }
                     }
-
-                }
-            },
-            {
-                $group: {
-                    _id: {
-                        year: { $year: '$mailSentDate' },
-                        month: { $month: '$mailSentDate' },
-                        codeRegion: '$codeRegion',
-                        codeFinanceur: '$codeFinanceur'
-                    },
-                    count: { $sum: '$count' },
-                    countEmailOpen: { $sum: '$emailOpen' },
-                    countAdvicesPublished: { $sum: '$countAdvicesPublished' },
-                    countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
-                    countAdvicesPositif: { $sum: '$countAdvicesPositif' },
-                    countAdvicesNegatif: { $sum: '$countAdvicesNegatif' },
-                    countAdvicesRejected: { $sum: '$countAdvicesRejected' }
                 },
-            }, {
+                advicesPositif: {
+                    $filter: {
+                        input: '$advices',
+                        as: 'advice',
+                        cond: {
+                            $or: [
+                                {
+                                    $and: [
+                                        { $eq: ['$$advice.published', true] },
+                                        { $eq: ['$$advice.qualification', 'positif'] },
+                                    ]
+                                },
+                                {
+                                    $and: [
+                                        { $eq: ['$$advice.published', true] },
+                                        { $eq: ['$$advice.qualification', 'neutre'] },
+                                    ]
+                                }]
+                        }
+                    }
+                },
+                advicesNegatif: {
+                    $filter: {
+                        input: '$advices',
+                        as: 'advice',
+                        cond: {
+                            $and: [
+                                { $eq: ['$$advice.published', true] },
+                                { $eq: ['$$advice.qualification', 'négatif'] },
+                            ]
+                        }
+                    }
+                },
+                advicesRejected: {
+                    $filter: {
+                        input: '$advices',
+                        as: 'advice',
+                        cond: { $eq: ['$$advice.rejected', true] }
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                mailSentDate: '$mailSentDate',
+                codeRegion: '$codeRegion',
+                codeFinanceur: '$codeFinanceur',
+                count: '$count',
+                emailOpen: '$emailOpen',
+                countAdvicesPublished: {
+                    '$size': '$advicesPublished'
+                },
+                countAdvicesWithComments: {
+                    '$size': '$advicesWithComments'
+                },
+                countAdvicesPositif: {
+                    '$size': '$advicesPositif'
+                },
+                countAdvicesNegatif: {
+                    '$size': '$advicesNegatif'
+                },
+                countAdvicesRejected: {
+                    '$size': '$advicesRejected'
+                }
+
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    year: { $year: '$mailSentDate' },
+                    month: { $month: '$mailSentDate' },
+                    codeRegion: '$codeRegion',
+                    codeFinanceur: '$codeFinanceur'
+                },
+                count: { $sum: '$count' },
+                countEmailOpen: { $sum: '$emailOpen' },
+                countAdvicesPublished: { $sum: '$countAdvicesPublished' },
+                countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
+                countAdvicesPositif: { $sum: '$countAdvicesPositif' },
+                countAdvicesNegatif: { $sum: '$countAdvicesNegatif' },
+                countAdvicesRejected: { $sum: '$countAdvicesRejected' }
+            },
+        }, {
             $sort: { '_id.year': 1, '_id.month': 1 }
         },
-            { $out: outCollection }].forEach(item => {
+        { $out: outCollection }].forEach(item => {
             request.push(item);
         });
 

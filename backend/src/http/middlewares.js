@@ -220,6 +220,16 @@ module.exports = (auth, logger, configuration) => {
                 });
             }
         }),
+        rewriteDeprecatedUrl: () => (req, res, next) => {
+            let urlStartsWith = value => ((req.baseUrl || '') + (req.url || '')).lastIndexOf(value, 0) === 0;
+
+            if (urlStartsWith('/img/')) {
+                req.url = req.url.replace(new RegExp('^/img/'), '/static/images/');
+            } else if (urlStartsWith('/css/')) {
+                req.url = req.url.replace(new RegExp('^/css/'), '/static/css/');
+            }
+            next('route');
+        },
     };
 };
 

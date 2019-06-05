@@ -6,10 +6,8 @@ const path = require('path');
 const { execute } = require('../../job-utils');
 const createIndexes = require('../indexes/createIndexes');
 const createAccounts = require('./createAccounts');
-const createRegionalData = require('./createRegionalData');
 const importIntercarif = require('../../import/intercarif/importIntercarif');
-const generateSessions = require('../../import/reconciliation/generateSessions');
-const generateActions = require('../../import/reconciliation/generateActions');
+const reconcile = require('../../import/reconciliation/tasks/reconcile');
 const generateOrganismesFromIntercarif = require('../../import/organismes/generateOrganismesFromIntercarif');
 const synchronizeOrganismesWithAccounts = require('../../import/organismes/synchronizeOrganismesWithAccounts');
 const computeOrganismesScore = require('../../import/organismes/computeOrganismesScore');
@@ -41,14 +39,12 @@ execute(async ({ db, logger, moderation, exit, regions }) => {
 
     await Promise.all([
         createIndexes(db),
-        createRegionalData(db),
     ]);
 
     let file = path.join(__dirname, '../../../../test/helpers/data/intercarif-data-test.xml');
     await importIntercarif(db, logger, file, regions);
 
-    await generateSessions(db, regions);
-    await generateActions(db, regions);
+    await reconcile(db, logger);
 
     await generateOrganismesFromIntercarif(db, logger);
     await synchronizeOrganismesWithAccounts(db, logger, regions);

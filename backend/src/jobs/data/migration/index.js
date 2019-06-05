@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 'use strict';
-
 const { execute } = require('../../job-utils');
 
-execute(async ({ db }) => {
+const removeCarifCollection = require('./removeCarifCollection');
 
+execute(async ({ db }) => {
+    await removeCarifCollection(db);
 });
+

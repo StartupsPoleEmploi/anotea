@@ -1,4 +1,5 @@
 {
+  "env": "ANOTEA_ENV",
   "app": {
     "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME"
   },

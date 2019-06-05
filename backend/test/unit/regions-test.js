@@ -2,14 +2,7 @@ const assert = require('assert');
 const regions = require('../../src/common/components/regions');
 
 describe(__filename, () => {
-
-    it('can get can active regions', () => {
-
-        let actives = regions().findActiveRegions();
-        assert.deepStrictEqual(actives.map(region => region.codeRegion),
-            ['2', '3', '6', '7', '8', '11', '16', '17', '18']);
-    });
-
+    
     it('can find region by code', () => {
 
         let region = regions().findRegionByCodeRegion('17');
@@ -18,8 +11,14 @@ describe(__filename, () => {
             active: true,
             codeRegion: '17',
             codeINSEE: '52',
-            departements: ['44', '53', '49', '85', '72'],
-            filters: {},
+            contact: 'anotea-pdll.44116',
+            departements: [
+                '44',
+                '53',
+                '49',
+                '85',
+                '72'
+            ],
             mailing: {
                 stagiaires: {
                     avis: true
@@ -28,6 +27,15 @@ describe(__filename, () => {
                     accounts: true,
                     notifications: true
                 }
+            },
+            conseil_regional: {
+                active: true,
+                import: 'all',
+            },
+            carif: {
+                nom: 'Orientation Pays de la Loire',
+                url: 'http://www.orientation-paysdelaloire.fr/',
+                active: false
             }
         });
     });
@@ -50,8 +58,8 @@ describe(__filename, () => {
             active: true,
             codeRegion: '17',
             codeINSEE: '52',
+            contact: 'anotea-pdll.44116',
             departements: ['44', '53', '49', '85', '72'],
-            filters: {},
             mailing: {
                 stagiaires: {
                     avis: true
@@ -60,6 +68,15 @@ describe(__filename, () => {
                     accounts: true,
                     notifications: true
                 }
+            },
+            conseil_regional: {
+                active: true,
+                import: 'all',
+            },
+            carif: {
+                nom: 'Orientation Pays de la Loire',
+                url: 'http://www.orientation-paysdelaloire.fr/',
+                active: false
             }
         });
     });

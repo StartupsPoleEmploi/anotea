@@ -36,7 +36,7 @@ class App extends Component {
     }
 
     render() {
-        let { stagiaire } = this.state;
+        let { stagiaire, infosRegion } = this.state;
 
         if (this.state.showErrorPage) {
             return <ErrorPage />;
@@ -50,12 +50,12 @@ class App extends Component {
         return (
             <div>
                 {this.state.showRemerciements ?
-                    <Remerciements stagiaire={stagiaire} infosRegion={this.state.infosRegion} /> :
+                    <Remerciements stagiaire={stagiaire} infosRegion={infosRegion} /> :
                     <Questionnaire
                         stagiaire={stagiaire}
                         onSubmit={() => this.setState({ showRemerciements: true })} />
                 }
-                <Footer stagiaire={stagiaire} />
+                <Footer stagiaire={stagiaire} infosRegion={infosRegion} />
             </div>
         );
     }

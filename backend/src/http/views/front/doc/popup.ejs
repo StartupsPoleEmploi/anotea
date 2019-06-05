@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+
+        <script crossorigin="anonymous"
+                src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Cfetch%2CIntl"></script>
+
+        <script>
+            window = window = {};
+            var sleepDurationMs = 5000;
+
+            window.openPopup = function() {
+
+                //Ouverture d'un onglet vide avec un message de chargement
+                var anoteaTab = window.open('', '_blank');
+                anoteaTab.document.write('Chargement dans ' + (sleepDurationMs / 1000) + 's...');
+
+                setTimeout(function() {
+                    return fetch('https://anotea.pole-emploi.fr/api/v1/ping/anonymous')
+                    .then(function() {
+                        anoteaTab.location.href = 'https://anotea.pole-emploi.fr';
+                        anoteaTab.focus();
+                    })
+                    .catch(function(e) {
+                        anoteaTab.close();
+                    })
+                }, sleepDurationMs);
+            };
+
+            window.openBlockedPopup = function() {
+
+                setTimeout(function() {
+                    return fetch('https://anotea.pole-emploi.fr/api/v1/ping/anonymous')
+                    .then(function() {
+                        window.open('https://anotea.pole-emploi.fr/api/v1/ping/anonymous', '_blank');
+                    });
+                }, sleepDurationMs)
+            }
+        </script>
+
+    </head>
+    <body>
+        <button onclick="window.openPopup()">openPopup</button>
+        <button onclick="window.openBlockedPopup()">openBlockedPopup</button>
+    </body>
+</html>

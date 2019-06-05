@@ -5,6 +5,7 @@ module.exports = {
             db.collection('trainee').createIndex({ 'codeRegion': 1 }),
             db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
             db.collection('trainee').createIndex({ 'mailSent': 1 }),
+            db.collection('trainee').createIndex({ 'importDate': 1 }),
             db.collection('trainee').createIndex({ 'sourceIDF': 1 }),
             db.collection('trainee').createIndex({ 'campaign': 1 }),
             db.collection('trainee').createIndex({ 'unsubscribe': 1 }),
@@ -59,7 +60,8 @@ module.exports = {
             db.collection('formationsReconciliees').createIndex({ 'region': 1 }),
             db.collection('formationsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('formationsReconciliees').createIndex({ 'score.nb_avis': 1 }),
-            db.collection('formationsReconciliees').createIndex({ 'avis._id': 1 }),
+            db.collection('formationsReconciliees').createIndex({ 'avis.id': 1 }),
+            db.collection('formationsReconciliees').createIndex({ 'meta.import_date': 1 }),
         ]);
     },
     actionsReconciliees: db => {
@@ -68,7 +70,8 @@ module.exports = {
             db.collection('actionsReconciliees').createIndex({ 'region': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('actionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
-            db.collection('actionsReconciliees').createIndex({ 'avis._id': 1 }),
+            db.collection('actionsReconciliees').createIndex({ 'avis.id': 1 }),
+            db.collection('actionsReconciliees').createIndex({ 'meta.import_date': 1 }),
         ]);
     },
     sessionsReconciliees: db => {
@@ -77,7 +80,8 @@ module.exports = {
             db.collection('sessionsReconciliees').createIndex({ 'region': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'code_region': 1 }),
             db.collection('sessionsReconciliees').createIndex({ 'score.nb_avis': 1 }),
-            db.collection('sessionsReconciliees').createIndex({ 'avis._id': 1 }),
+            db.collection('sessionsReconciliees').createIndex({ 'avis.id': 1 }),
+            db.collection('sessionsReconciliees').createIndex({ 'meta.import_date': 1 }),
         ]);
     },
     events: db => {

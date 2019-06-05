@@ -5,9 +5,8 @@ const moment = require('moment');
 const fs = require('fs');
 const { encodeStream } = require('iconv-lite');
 const path = require('path');
-const mailer = require('../../smtp/mailer');
 
-module.exports = (logger, db, configuration, codeRegion) => {
+module.exports = (logger, db, configuration, mailer, codeRegion) => {
     return new Promise((resolve, reject) => {
         let { avisRelaunchDelay } = configuration.smtp.stagiaires;
 

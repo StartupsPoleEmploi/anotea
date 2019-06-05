@@ -74,7 +74,7 @@ class App extends Component {
             this.state = {
                 action: 'loginWithAccessToken',
                 access_token: qs.access_token,
-                origin: qs.access_token,
+                origin: qs.origin,
             };
         }
     }

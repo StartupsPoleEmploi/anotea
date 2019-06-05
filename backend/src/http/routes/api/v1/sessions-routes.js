@@ -3,10 +3,9 @@ const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { tryAndCatch } = require('../../routes-utils');
-const { paginationValidator, arrayOfValidator, notesDecimalesValidator } = require('./utils/validators');
+const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
-const createPaginationDTO = require('./dto/createPaginationDTO');
-const createSessionDTO = require('./dto/createSessionDTO');
+const { createSessionDTO, createPaginationDTO } = require('./utils/dto');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -18,13 +17,13 @@ module.exports = ({ db, middlewares }) => {
     router.get('/v1/sessions', checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
-            id: arrayOfValidator(Joi.string()),
-            numero: arrayOfValidator(Joi.string()),
-            region: arrayOfValidator(Joi.string()),
+            id: validators.arrayOf(Joi.string()),
+            numero: validators.arrayOf(Joi.string()),
+            region: validators.arrayOf(Joi.string()),
             nb_avis: Joi.number(),
-            fields: arrayOfValidator(Joi.string().required()).default([]),
-            ...paginationValidator(),
-            ...notesDecimalesValidator(),
+            ...validators.fields(),
+            ...validators.pagination(),
+            ...validators.notesDecimales(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -58,16 +57,53 @@ module.exports = ({ db, middlewares }) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
-            ...notesDecimalesValidator(),
+            ...validators.fields(),
+            ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let session = await collection.findOne({ _id: parameters.id });
+        let session = await collection.findOne(
+            { _id: parameters.id },
+            { projection: buildProjection(parameters.fields) }
+        );
 
         if (!session) {
             throw Boom.notFound('Numéro de session inconnu ou session expirée');
         }
 
         res.json(createSessionDTO(session, { notes_decimales: parameters.notes_decimales }));
+
+    }));
+
+    router.get('/v1/sessions/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
+
+        const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
+            id: Joi.string().required(),
+            ...validators.pagination(),
+            ...validators.commentaires(),
+            ...validators.notesDecimales(),
+        }, { abortEarly: false });
+
+        let pagination = _.pick(parameters, ['page', 'items_par_page']);
+        let limit = pagination.items_par_page;
+        let skip = pagination.page * limit;
+
+        let session = await collection.findOne({ _id: parameters.id }, { projection: { avis: 1 } });
+
+        if (!session) {
+            throw Boom.notFound('Numéro de session inconnu ou session expirée');
+        }
+
+        let avis = session.avis;
+        if (parameters.commentaires !== null) {
+            avis = avis.filter(avis => parameters.commentaires ? avis.commentaire : !avis.commentaire);
+        }
+
+        res.json({
+            avis: avis.slice(skip, skip + limit),
+            meta: {
+                pagination: createPaginationDTO(pagination, avis.length)
+            },
+        });
 
     }));
 

@@ -663,6 +663,15 @@ paths:
           type: string
           required: true
         - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=score` renvoie uniquement le champ score
+            `fields=-avis` renvoie tous sauf le champ avis
+          type: number
+          required: false
+        - in: query
           name: notes_decimales
           default: false
           description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
@@ -673,6 +682,53 @@ paths:
       responses:
         200:
           $ref: "#/responses/FormationByIdResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/responses/UnauthorizedErrorResponse"
+        404:
+          $ref: "#/responses/NotFoundErrorResponse"
+      tags:
+        - Publique
+
+  /v1/formations/:id/avis:
+    get:
+      description: >
+        Permet d'obtenir la liste des avis pour la formation
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: >
+            L'identifiant d'une formation est de la forme suivante `numero_formation`
+          type: string
+          required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
+        - in: query
+          name: page
+          description: Le numéro de la page
+          default: 0
+          minimum: 0
+          type: number
+          required: false
+        - in: query
+          name: items_par_page
+          description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+      security:
+        - Authorization: []
+      responses:
+        200:
+          $ref: "#/responses/AvisResponse"
         400:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
@@ -771,6 +827,15 @@ paths:
           type: string
           required: true
         - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=score` renvoie uniquement le champ score
+            `fields=-avis` renvoie tous sauf le champ avis
+          type: number
+          required: false
+        - in: query
           name: notes_decimales
           default: false
           description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
@@ -781,6 +846,54 @@ paths:
       responses:
         200:
           $ref: "#/responses/SessionByIdResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/responses/UnauthorizedErrorResponse"
+        404:
+          $ref: "#/responses/NotFoundErrorResponse"
+      tags:
+        - Publique
+
+  /v1/sessions/:id/avis:
+    get:
+      description: >
+        Permet d'obtenir la liste des avis pour la session
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: >
+            L'identifiant d'une session est de la forme suivante `numero_formation|numero_action|numero_session`
+                        (ex. `id=14_AF_0000011111|14_SE_0000102222|SE_0000102222`)
+          type: string
+          required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
+        - in: query
+          name: page
+          description: Le numéro de la page
+          default: 0
+          minimum: 0
+          type: number
+          required: false
+        - in: query
+          name: items_par_page
+          description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+      security:
+        - Authorization: []
+      responses:
+        200:
+          $ref: "#/responses/AvisResponse"
         400:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
@@ -879,6 +992,15 @@ paths:
           type: string
           required: true
         - in: query
+          name: fields
+          description: >
+            Permet de limiter les champs renvoyés.
+            Exemple:
+            `fields=score` renvoie uniquement le champ score
+            `fields=-avis` renvoie tous sauf le champ avis
+          type: number
+          required: false
+        - in: query
           name: notes_decimales
           default: false
           description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
@@ -889,6 +1011,54 @@ paths:
       responses:
         200:
           $ref: "#/responses/ActionByIdResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/responses/UnauthorizedErrorResponse"
+        404:
+          $ref: "#/responses/NotFoundErrorResponse"
+      tags:
+        - Publique
+
+  /v1/actions/:id/avis:
+    get:
+      description: >
+        Permet d'obtenir la liste des avis pour l'action
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: >
+            L'identifiant d'une action à la forme suivante `numero_formation|numero_action`
+             (ex. `id=14_AF_0000011111|14_SE_0000102222`)
+          type: string
+          required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
+        - in: query
+          name: page
+          description: Le numéro de la page
+          default: 0
+          minimum: 0
+          type: number
+          required: false
+        - in: query
+          name: items_par_page
+          description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+      security:
+        - Authorization: []
+      responses:
+        200:
+          $ref: "#/responses/AvisResponse"
         400:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
@@ -998,6 +1168,53 @@ paths:
       responses:
         200:
           $ref: "#/responses/OrganismeFormateurByIdResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+        401:
+          $ref: "#/responses/UnauthorizedErrorResponse"
+        404:
+          $ref: "#/responses/NotFoundErrorResponse"
+      tags:
+        - Publique
+
+  /v1/organismes-formateurs/:id/avis:
+    get:
+      description: >
+        Permet d'obtenir la liste des avis pour l'organisme formateur
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: >
+            Permet d'obtenir un organisme formateur à partir de son identifiant
+          type: string
+          required: true
+        - in: query
+          name: notes_decimales
+          default: false
+          description: Si true, renvoie les notes en valeur décimale arrondie à la dizaine
+          type: number
+          required: false
+        - in: query
+          name: page
+          description: Le numéro de la page
+          default: 0
+          minimum: 0
+          type: number
+          required: false
+        - in: query
+          name: items_par_page
+          description: Le nombre d'avis par page
+          default: 50
+          maximum: 2000
+          type: number
+          required: false
+      security:
+        - Authorization: []
+      responses:
+        200:
+          $ref: "#/responses/AvisResponse"
         400:
           $ref: "#/responses/BadRequestErrorResponse"
         401:
