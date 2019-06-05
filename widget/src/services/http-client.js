@@ -19,7 +19,7 @@ const handleResponse = (path, response) => {
 };
 
 export const _get = path => {
-    let referrer = document.referrer.split('?')[0];
+    let referrer = new URL((document.referrer || 'http://unknown')).origin;
     return fetch(path, {
         method: 'GET',
         headers: {
