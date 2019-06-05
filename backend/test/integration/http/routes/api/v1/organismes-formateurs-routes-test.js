@@ -277,6 +277,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.organismes_formateurs.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'raison_sociale', 'siret', 'numero', 'score']);
+
+        response = await request(app).get('/api/v1/organismes-formateurs/11111111111111?fields=-lieux_de_formation');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'raison_sociale', 'siret', 'numero', 'score']);
     });
 
     it('can search though all organismes with projection (whitelist)', async () => {
@@ -289,8 +293,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let response = await request(app).get('/api/v1/organismes-formateurs?fields=lieux_de_formation');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.organismes_formateurs.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.organismes_formateurs[0]), ['id', 'lieux_de_formation']);
+
+        response = await request(app).get('/api/v1/organismes-formateurs/11111111111111?fields=lieux_de_formation');
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(Object.keys(response.body), ['id', 'lieux_de_formation']);
     });
 
     it('can get score with notes décimales', async () => {

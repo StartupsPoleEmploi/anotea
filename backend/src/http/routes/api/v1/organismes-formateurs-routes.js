@@ -65,11 +65,14 @@ module.exports = ({ db, middlewares }) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
+            ...validators.fields(),
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-
-        let organisme = await collection.findOne({ _id: parseInt(parameters.id) });
+        let organisme = await collection.findOne(
+            { _id: parseInt(parameters.id) },
+            { projection: buildProjection(parameters.fields) },
+        );
 
         if (!organisme) {
             throw Boom.notFound('Identifiant inconnu');
@@ -95,7 +98,7 @@ module.exports = ({ db, middlewares }) => {
         .find({
             'training.organisation.siret': parameters.id,
             '$and': [
-                parameters.commentaires === false ? { comment: { $exists: parameters.commentaires } } : {},
+                parameters.commentaires !== null ? { comment: { $exists: parameters.commentaires } } : {},
                 { rejected: false },
             ]
         })

@@ -977,7 +977,7 @@ paths:
       tags:
         - Publique
 
-  /v1/ations/:id:
+  /v1/actions/:id:
     get:
       description: >
         Permet d'obtenir une action à partir de son identifiant
