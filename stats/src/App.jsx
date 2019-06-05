@@ -23,24 +23,36 @@ class App extends Component {
         };
     }
 
-    componentDidMount = async () => {
-        this.getStats();
+    componentDidMount = () => {
+        this.getOrganismesStats();
     }
 
-    getStats = async () => {
-        const avis = await getAvis();
+    getOrganismesStats = async () => {
         const organismes = await getOrganismes();
         this.setState({ 
-            avis: avis, 
             organismes: organismes 
         });
     }
 
+    getAvisStats = async () => {
+        const avis = await getAvis();
+        this.setState({ 
+            avis: avis 
+        });
+    }
+
+    getStats = () => {
+        this.state.isOrganismes ? 
+            this.getOrganismesStats() : 
+                this.getAvisStats()
+    }
+
     changeView = () => {
-        this.getStats();
         this.setState({ 
             isAvis: !this.state.isAvis, 
-            isOrganismes: !this.state.isOrganismes 
+            isOrganismes: !this.state.isOrganismes
+        } , () => {
+            this.getStats()
         });
     }
 
@@ -91,8 +103,8 @@ class App extends Component {
             {id: 5, value: 4, title: 'Commentaires'},
         ];
         const variant = this.state.isAvis ? avisFilters : organismesFilters;
-        const statsTable = (avis.length === 0 || organismes.length === 0) 
-            ? <Loader /> 
+        const statsTable = (avis.length === 0 && this.state.isAvis) || (organismes.length === 0 && this.state.isOrganismes) ?
+            <Loader />
             : this.state.isAvis 
                 ? <StatsTable 
                     columnsTitle={avis_table_columns_title} 
