@@ -98,7 +98,7 @@ module.exports = ({ db, middlewares }) => {
         .find({
             'training.organisation.siret': parameters.id,
             '$and': [
-                parameters.commentaires === false ? { comment: { $exists: parameters.commentaires } } : {},
+                parameters.commentaires !== null ? { comment: { $exists: parameters.commentaires } } : {},
                 { rejected: false },
             ]
         })
