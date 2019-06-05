@@ -36,7 +36,7 @@ module.exports = ({ db, regions }) => {
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, 'profile': 'organisme', ...filter }),
             organismes.countDocuments({ 'tracking.click': { $ne: null }, 'profile': 'organisme', ...filter }),
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'passwordHash': { $ne: null }, 'profile': 'organisme', ...filter }),
-            avis.countDocuments({ 'published': true, $or: [{ 'read': false }, { 'read': { $ne: true } }], ...filter }),
+            avis.countDocuments({ 'published': true, '$or': [{ 'read': false }, { 'read': { $ne: true } }], ...filter }),
             avis.countDocuments({ 'moderated': true, 'rejected': false, ...filter }),
             avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, ...filter }),
             avis.countDocuments({ 'answer': { $ne: null }, ...filter }),
@@ -190,7 +190,7 @@ module.exports = ({ db, regions }) => {
         };
     };
 
-    router.get('/public-stats/organismes.json', tryAndCatch(async (req, res) => {
+    router.get('/public-stats/organismes', tryAndCatch(async (req, res) => {
 
         let organismes = await Promise.all(findActiveRegions().map(async region => {
             return getRegionalOrganismesStats(region.nom, region.codeRegion);
@@ -200,10 +200,10 @@ module.exports = ({ db, regions }) => {
 
         organismes.push(nationalOrganismes);
 
-        res.json(organismes);
+        res.status(200).send(organismes);
     }));
 
-    router.get('/public-stats/avis.json', tryAndCatch(async (req, res) => {
+    router.get('/public-stats/avis', tryAndCatch(async (req, res) => {
 
         let avis = await Promise.all(findActiveRegions().map(async region => {
             return getRegionalAvisStats(region.nom, region.codeRegion);
@@ -213,7 +213,7 @@ module.exports = ({ db, regions }) => {
 
         avis.push(nationalAvis);
 
-        res.json(avis);
+        res.status(200).send(avis);
     }));
 
     return router;

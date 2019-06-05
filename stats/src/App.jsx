@@ -6,6 +6,9 @@ import FiltersList from './components/FiltersList'
 import avisFilters from './constantes/AvisFilters'
 import organismesFilters from './constantes/OrganismesFilters'
 import StatsTable from './components/StatsTable'
+import { getAvis } from './components/services/avisService'
+import { getOrganismes } from './components/services/organismeService'
+import Loader from './components/Loader'
 
 class App extends Component {
 
@@ -14,11 +17,27 @@ class App extends Component {
 
         this.state = {
             isAvis: false,
-            isOrganismes: true
+            isOrganismes: true,
+            avis: [],
+            organismes: []
         };
     }
 
+    componentDidMount = async () => {
+        this.getStats();
+    }
+
+    getStats = async () => {
+        const avis = await getAvis();
+        const organismes = await getOrganismes();
+        this.setState({ 
+            avis: avis, 
+            organismes: organismes 
+        });
+    }
+
     changeView = () => {
+        this.getStats();
         this.setState({ 
             isAvis: !this.state.isAvis, 
             isOrganismes: !this.state.isOrganismes 
@@ -26,6 +45,9 @@ class App extends Component {
     }
 
     render() {
+        let avis = this.state.avis !== null ? this.state.avis.splice(0, this.state.avis.length - 1) : this.state.avis;
+        let organismes = this.state.organismes !== null ? this.state.organismes.splice(0, this.state.organismes.length - 1) : this.state.organismes;
+        
         const organismes_table_columns_title = [
             {id: 1, value: ''},
             {id: 2, value: 'Total'},
@@ -36,10 +58,8 @@ class App extends Component {
             {id: 7, value: 'Connexion'},
             {id: 8, value: 'Non lus'},
             {id: 9, value: 'Répondus'},
-            {id: 10, value: 'Av. com'},
-            {id: 11, value: 'Notes seules'},
+            {id: 10, value: 'Avec rép.'},
             {id: 12, value: 'Signalés'},
-            {id: 13, value: 'Rejetés'},
         ];
         const organismes_colspan = [
             {id: 1, value: 1, title: 'Régions'},
@@ -58,7 +78,7 @@ class App extends Component {
             {id: 7, value: 'Validés'},
             {id: 8, value: 'Total'},
             {id: 9, value: 'Com.'},
-            {id: 10, value: 'Total'},
+            {id: 10, value: 'À modérer'},
             {id: 11, value: 'Positif/neutre'},
             {id: 12, value: 'Neg.'},
             {id: 13, value: 'Rejetés'},
@@ -71,9 +91,18 @@ class App extends Component {
             {id: 5, value: 4, title: 'Commentaires'},
         ];
         const variant = this.state.isAvis ? avisFilters : organismesFilters;
-        const statsTable = this.state.isAvis ? 
-            <StatsTable columnsTitle={avis_table_columns_title} variant={avis_colspan} /> 
-            : <StatsTable columnsTitle={organismes_table_columns_title} variant={organismes_colspan} />
+        const statsTable = (avis.length === 0 || organismes.length === 0) 
+            ? <Loader /> 
+            : this.state.isAvis 
+                ? <StatsTable 
+                    columnsTitle={avis_table_columns_title} 
+                    variant={avis_colspan} 
+                    avis={avis} /> 
+                : <StatsTable 
+                    columnsTitle={organismes_table_columns_title} 
+                    isOrganismes={this.state.isOrganismes} 
+                    variant={organismes_colspan} 
+                    organismes={organismes} />
 
         return (
             <div className="anotea">

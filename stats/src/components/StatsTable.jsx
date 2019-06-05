@@ -4,7 +4,7 @@ import './StatsTable.scss';
 export default class OrganismesStatsTable extends Component {
 
     render() {
-
+        
         return (
             <div className="container table-responsive">
                 <table className="table">
@@ -21,54 +21,44 @@ export default class OrganismesStatsTable extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">PACA</th>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">HDF</th>
-                            <td>653</td>
-                            <td>12166</td>
-                            <td>11%</td>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">VDL</th>
-                            <td>888</td>
-                            <td>12188</td>
-                            <td>11%</td>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                            <td>1997</td>
-                            <td>12122</td>
-                            <td>11%</td>
-                        </tr>
+                        {(this.props.isOrganismes ?
+                            (this.props.organismes.map( (organisme, index) => (
+                                <tr key={index}>
+                                    <th scope="row">{organisme.region}</th>
+                                    <td>{organisme.nbOrganismesContactes}</td>
+                                    <td>{organisme.mailsEnvoyes}</td>
+                                    <td>{organisme.tauxOuvertureMails}</td>
+                                    <td>{organisme.tauxClicDansLien}</td>
+                                    <td>{organisme.tauxOrganismesActifs}</td>
+                                    <td>TODO</td>
+                                    <td>{organisme.tauxAvisNonLus}</td>
+                                    <td>{organisme.tauxCommentairesAvecReponses}</td>
+                                    <td>{organisme.tauxAvisAvecReponses}</td>
+                                    <td>{organisme.tauxAvisSignales}</td>
+                                </tr>
+                            ))) :
+                            (this.props.avis.map( (avis, index) => (
+                                <tr key={index}>
+                                    <th scope="row">{avis.region}</th>
+                                    <td>TODO</td>
+                                    <td>{avis.nbStagiairesContactes}</td>
+                                    <td>{avis.nbMailEnvoyes}</td>
+                                    <td>{avis.tauxOuvertureMail}</td>
+                                    <td>{avis.tauxLiensCliques}</td>
+                                    <td>{avis.tauxQuestionnairesValides}</td>
+                                    <td>{avis.tauxAvisDeposes}</td>
+                                    <td>{avis.tauxAvisAvecCommentaire}</td>
+                                    <td>{avis.nbCommentairesAModerer}</td>
+                                    <td>{avis.tauxAvisPositifs}</td>
+                                    <td>{avis.tauxAvisNegatifs}</td>
+                                    <td>{avis.tauxAvisRejetes}</td>
+                                </tr>
+                            )))
+                        )}
                     </tbody>
                 </table>
             </div>
         );
     }
 }
+

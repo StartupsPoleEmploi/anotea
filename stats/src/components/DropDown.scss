@@ -51,6 +51,10 @@
             border: none;
             background-color: $color-white;
 
+            &:focus {
+                outline: none;
+            }
+
             > span {
                 float: left;
                 height: 18px;
