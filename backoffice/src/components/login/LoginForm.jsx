@@ -105,7 +105,7 @@ export default class LoginForm extends React.Component {
 
                     <div className="wrapper">
                         <span className="group-btn">
-                            <button onClick={this.handleLogin} className="btn btn-primary btn-md">
+                            <button onClick={this.handleLogin} className="btn">
                                 Confirmer
                             </button>
                         </span>
