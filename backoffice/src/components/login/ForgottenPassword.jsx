@@ -96,7 +96,7 @@ export default class ForgottenPassword extends React.Component {
                         </div>
 
                         <p className="clarification">L&apos;adresse e-mail est celle sur laquelle vous avez reçu la
-                            proposition de création de compte Anotéa, si vous ne la connaissez pas, <span className="contactez-nous">contactez nous.</span></p>
+                            proposition de création de compte Anotéa, si vous ne la connaissez pas, <a className="contactez-nous" href="mailto:anotea@pole-emploi.fr">contactez nous.</a></p>
 
                         <div className="wrapper">
                             <span className="group-btn">
@@ -112,7 +112,7 @@ export default class ForgottenPassword extends React.Component {
                         </div>
                     </div>
                 }
-                
+
                 {this.state.passwordLost && !this.state.userInfo &&
                 <div className="block passwordLost">
                     <h4>Nous vous invitons à créer un nouveau mot de passe</h4>
