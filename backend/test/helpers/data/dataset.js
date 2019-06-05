@@ -11,11 +11,11 @@ let newComment = (custom, date = getDateInThePast()) => {
     return _.merge({
         _id: new ObjectID(),
         token: randomize('token-12345'),
-        campaign: 'test-mocha',
+        campaign: 'test',
         formacode: '46242',
         idSession: '2422722',
         training: {
-            idFormation: '14_AF_0000011111',
+            idFormation: 'F_XX_XX',
             title: 'Développeur',
             startDate: date,
             scheduledEndDate: date,
@@ -39,8 +39,8 @@ let newComment = (custom, date = getDateInThePast()) => {
             referencement: '41C561691111',
             idSessionAudeFormation: '2422722',
             infoCarif: {
-                numeroAction: '14_SE_0000092458',
-                numeroSession: 'SE_0000050645'
+                numeroAction: 'AC_XX_XXXXXX',
+                numeroSession: 'SE_XXXXXX'
             },
             codeFinanceur: '10'
         },
@@ -106,7 +106,7 @@ module.exports = {
                 dnIndividuNational: '1111111111'
             },
             training: {
-                idFormation: '14_AF_0000011111',
+                idFormation: 'F_XX_XX',
                 title: 'Développeur',
                 startDate: date,
                 scheduledEndDate: date,
@@ -130,8 +130,8 @@ module.exports = {
                 referencement: '41C561691111',
                 idSessionAudeFormation: '2422722',
                 infoCarif: {
-                    numeroAction: '14_SE_0000092458',
-                    numeroSession: 'SE_0000050645'
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX'
                 },
                 codeFinanceur: '10'
             },
@@ -208,207 +208,6 @@ module.exports = {
         }, custom, { test: true });
     },
     newComment: newComment,
-    newSession: (custom = {}) => {
-
-        let avis = custom.avis ? custom.avis : [newComment()];
-        let numeroFormation = 'F_XX_XX';
-        let numeroAction = 'AC_XX_XXXXXX';
-        let numeroSession = 'SE_XXXXXX';
-
-        if (custom._id) {
-            [numeroFormation, numeroAction, numeroSession] = custom._id.split('|');
-        }
-
-        return _.merge({
-            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
-            numero: numeroSession,
-            region: '11',
-            code_region: '11',
-            avis: avis,
-            score: {
-                nb_avis: 1,
-                notes: {
-                    accueil: 4.1,
-                    contenu_formation: 4.1,
-                    equipe_formateurs: 4.1,
-                    moyen_materiel: 4.1,
-                    accompagnement: 4.1,
-                    global: 4.1,
-                }
-            },
-            formation: {
-                numero: numeroFormation,
-                intitule: 'Développeur web',
-                domaine_formation: {
-                    formacodes: ['31801']
-                },
-                certifications: {
-                    certifinfos: ['55518']
-                },
-                action: {
-                    numero: numeroAction,
-                    lieu_de_formation: {
-                        code_postal: '75019',
-                        ville: 'Paris'
-                    },
-                    organisme_financeurs: [
-                        '2'
-                    ],
-                    organisme_formateur: {
-                        raison_sociale: 'Anotea Formation Paris',
-                        siret: '22222222222222',
-                        numero: 'OF_XXX'
-                    }
-                }
-            },
-            meta: {
-                source: {
-                    numero_formation: numeroFormation,
-                    numero_action: numeroAction,
-                    numero_session: numeroSession,
-                    type: 'intercarif',
-                },
-                reconciliation: {
-                    organisme_formateur: '22222222222222',
-                    lieu_de_formation: '75019',
-                    certifinfos: ['55518'],
-                    formacodes: ['31801']
-                },
-            }
-        }, custom, { test: true });
-    },
-    newAction: (custom = {}) => {
-
-        let numeroFormation = 'F_XX_XX';
-        let numeroAction = 'AC_XX_XXXXXX';
-        let avis = custom.avis ? custom.avis : [newComment()];
-
-        if (custom._id) {
-            [numeroFormation, numeroAction] = custom._id.split('|');
-        }
-
-        return _.merge({
-            _id: 'F_XX_XX|AC_XX_XXXXXX',
-            numero: numeroAction,
-            region: '11',
-            avis: avis,
-            score: {
-                nb_avis: 1,
-                notes: {
-                    accueil: 4.1,
-                    contenu_formation: 4.1,
-                    equipe_formateurs: 4.1,
-                    moyen_materiel: 4.1,
-                    accompagnement: 4.1,
-                    global: 4.1,
-                }
-            },
-            organisme_financeurs: ['2'],
-            organisme_formateur: {
-                raison_sociale: 'Anotea Formation Paris',
-                siret: '22222222222222',
-                numero: 'OF_XXX'
-            },
-            lieu_de_formation: {
-                code_postal: '75019',
-                ville: 'Paris'
-            },
-            formation: {
-                numero: numeroFormation,
-                intitule: 'Développeur web',
-                domaine_formation: {
-                    formacodes: ['31801']
-                },
-                certifications: {
-                    certifinfos: ['55518']
-                },
-            },
-            meta: {
-                source: {
-                    numero_formation: numeroFormation,
-                    numero_action: numeroAction,
-                    type: 'intercarif',
-                },
-                reconciliation: {
-                    organisme_formateur: '11111111111111',
-                    lieu_de_formation: '49000',
-                    certifinfos: ['55518'],
-                    formacodes: ['31801']
-                },
-            }
-        }, custom, { test: true });
-    },
-    newFormation: (custom = {}) => {
-
-        let avis = custom.avis ? custom.avis : [newComment()];
-        let numeroFormation = custom._id || 'F_XX_XX';
-
-        return _.merge({
-            _id: numeroFormation,
-            numero: numeroFormation,
-            intitule: 'Développeur web',
-            domaine_formation: {
-                formacodes: ['31801']
-            },
-            certifications: {
-                certifinfos: ['55518']
-            },
-            avis: avis,
-            score: {
-                nb_avis: 1,
-                notes: {
-                    accueil: 4.1,
-                    contenu_formation: 4.1,
-                    equipe_formateurs: 4.1,
-                    moyen_materiel: 4.1,
-                    accompagnement: 4.1,
-                    global: 4.1,
-                }
-            },
-            meta: {
-                source: {
-                    numero_formation: numeroFormation,
-                    type: 'intercarif',
-                },
-                reconciliation: {
-                    organisme_formateurs: ['11111111111111'],
-                    certifinfos: ['55518'],
-                    formacodes: ['31801']
-                },
-            }
-        }, custom, { test: true });
-    },
-    newOrganismeFormateur: custom => {
-        let siret = randomSIRET();
-        return _.merge({
-            _id: siret,
-            siret: siret,
-            numero: 'OF_XXX',
-            raison_sociale: 'Pole Emploi Formation',
-            courriel: 'contact@poleemploi-formation.fr',
-            lieux_de_formation: [
-                {
-                    adresse: {
-                        code_postal: '75011',
-                        ville: 'Paris 11e',
-                        region: '11'
-                    }
-                }
-            ],
-            regions: ['11'],
-            score: {
-                nb_avis: 1,
-                notes: {
-                    accueil: 2,
-                    contenu_formation: 3,
-                    equipe_formateurs: 2,
-                    moyen_materiel: 2,
-                    accompagnement: 1,
-                    global: 2
-                }
-            }
-        }, custom, { test: true });
-    },
     newOrganismeResponsable: custom => {
         return _.merge({
             numero: '07_452',
@@ -442,35 +241,29 @@ module.exports = {
             ]
         }, custom, { test: true });
     },
-    newCarif: custom => {
-        return _.merge({
-            codeRegion: '11',
-            name: 'Défi Métiers',
-            url: 'https://www.defi-metiers.fr/',
-            formLinkEnabled: true,
-            courriel: 'anotea-idf@pole-emploi.fr',
-            carifNameHidden: false
-        }, custom);
-    },
-    newIntercarif: custom => {
-        return _.merge({
+    newIntercarif: (options = {}) => {
+        //same data as in test/helpers/data/intercarif-data-test.xml
+        let numeroFormation = options.numeroFormation || 'F_XX_XX';
+        let numeroAction = options.numeroAction || 'AC_XX_XXXXXX';
+        let numeroSession = options.numeroSession || 'SE_XXXXXX';
+        let formacode = options.formacode || '224032422722';
+        let certifinfo = options.certifinfo || '80735';
+        let codeRegion = options.codeRegion || '11';
+        let lieuDeFormation = options.lieuDeFormation || '93100';
+        let organismeFormateur = options.organismeFormateur || '22222222222222';
+
+        return {
             _attributes: {
-                numero: '14_AF_0000011111',
-                datecrea: '20120213',
-                datemaj: '20171025',
-                file: 'http://www.defi-metiers.fr/lheo/file.xml',
-                href: 'http://www.defi-metiers.fr/dm_search/formation/AF_XXXXX'
+                numero: numeroFormation,
+                datecrea: '20010503',
+                datemaj: '20171213',
+                file: 'https://anotea.pole-emploi.fr',
+                href: 'https://anotea.pole-emploi.fr'
             },
             domaine_formation: {
                 code_formacodes: [
                     {
-                        _value: '22252',
-                        _attributes: {
-                            ref: 'V12'
-                        }
-                    },
-                    {
-                        _value: '22398',
+                        _value: formacode,
                         _attributes: {
                             ref: 'V12',
                             tag: 'principal'
@@ -478,88 +271,296 @@ module.exports = {
                     }
                 ],
                 code_nsfs: [
-                    '254'
+                    '233'
                 ],
                 code_romes: [
-                    'F1104'
+                    'F1604'
                 ]
             },
-            intitule_formation: 'Titre professionnel développeur',
-            objectif_formation: 'Apprendre à developper',
-            resultats_attendus: 'Titre professionnel développeur',
-            contenu_formation: 'Module 1.',
+            intitule_formation: 'Développeur web',
+            objectif_formation: 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
+            resultats_attendus: '-',
+            contenu_formation: 'Réaliser le développement d\'application web.',
             certifiante: '1',
             contact_formation: {
-                coordonnees: {
-                    civilite: 'Mme ou M.',
+                coordonnefs: {
+                    civilite: 'Madame',
+                    nom: 'Martin',
+                    prenom: 'Henri',
+                    adresse: {
+                        codepostal: lieuDeFormation,
+                        ville: 'Montreuil',
+                        departement: '93',
+                        code_insee_commune: lieuDeFormation,
+                        region: codeRegion,
+                        pays: 'FR',
+                        geolocalisation: {
+                            latitude: '47',
+                            longitude: '0'
+                        },
+                        lignes: [
+                            '-'
+                        ],
+                        code_region: codeRegion
+                    },
                     telfixe: {
                         numtels: [
-                            '18 18'
+                            '01 11 11 11 11'
                         ]
                     },
-                    courriel: 'contact@organisme.fr'
+                    portable: {
+                        numtels: [
+                            '06 22 22 22 22'
+                        ]
+                    },
+                    courriel: 'anotea.pe@gmail.com',
+                    web: {
+                        urlwebs: [
+                            'https://anotea.pole-emploi.fr'
+                        ]
+                    }
                 }
             },
-            parcours_de_formation: '1',
-            code_niveau_entree: '4',
+            parcours_de_formation: '3',
+            code_niveau_entree: '1',
             objectif_general_formation: '6',
-            code_niveau_sortie: '5',
+            code_niveau_sortie: '4',
             url_formation: {
-                urlwebs: ['https://url']
+                urlwebs: [
+                    'https://anotea.pole-emploi.fr'
+                ]
             },
             organisme_formation_responsable: {
                 _attributes: {
-                    numero: '14_OF_XXXXXXXXX1'
+                    numero: 'OR_XX_XXX'
                 },
-                numero_activite: '11930741111',
+                numero_activite: '24930181111',
                 siret_organisme_formation: {
-                    siret: '22222222222222'
+                    siret: '11111111111111'
                 },
-                nom_organisme: 'Pole Emploi Formation',
-                raison_sociale: 'Pole Emploi Formation',
+                nom_organisme: 'Anotea Formation',
+                raison_sociale: 'Centre de formation Anotéa',
                 coordonnees_organisme: {
                     coordonnees: {
-                        _attributes: {
-                            numero: '14_AD_0000011111'
-                        },
                         adresse: {
-                            codepostal: '93100',
+                            codepostal: lieuDeFormation,
                             ville: 'Montreuil',
                             departement: '93',
-                            code_insee_commune: '93048',
-                            region: '11',
+                            code_insee_commune: lieuDeFormation,
+                            region: codeRegion,
                             pays: 'FR',
                             geolocalisation: {
-                                latitude: '48.8',
-                                longitude: '2.4'
+                                latitude: '47',
+                                longitude: '0'
                             },
                             lignes: [
-                                'Pole Emploi Formation',
-                            ]
+                                '-'
+                            ],
+                            code_region: codeRegion
                         },
                         telfixe: {
                             numtels: [
-                                '18 18'
+                                '11 11'
                             ]
                         },
-                        courriel: 'contact@organisme-responsable.fr'
+                        fax: {
+                            numtels: [
+                                '01 11 22 33 44'
+                            ]
+                        },
+                        web: {
+                            urlwebs: [
+                                'https://anotea.pole-emploi.fr'
+                            ]
+                        }
                     }
                 },
                 contact_organisme: {
                     coordonnees: {
-                        civilite: 'Mme ou M.',
+                        nom: 'Martino',
+                        prenom: 'Jacko',
+                        adresse: {
+                            codepostal: lieuDeFormation,
+                            ville: 'Montreuil',
+                            departement: '93',
+                            code_insee_commune: lieuDeFormation,
+                            region: codeRegion,
+                            pays: 'FR',
+                            geolocalisation: {
+                                latitude: '47',
+                                longitude: '0'
+                            },
+                            lignes: [
+                                '-'
+                            ],
+                            code_region: codeRegion
+                        },
                         telfixe: {
                             numtels: [
-                                '18 18'
+                                '1111'
                             ]
                         },
-                        courriel: 'contact@organisme-responsable.fr'
+                        fax: {
+                            numtels: [
+                                '01 11 22 33 44'
+                            ]
+                        },
+                        courriel: 'anotea.pe+responsable@gmail.com',
+                        web: {
+                            urlwebs: [
+                                'https://anotea.pole-emploi.fr'
+                            ]
+                        }
                     }
                 },
                 potentiel: {
                     code_formacodes: [
                         {
-                            _value: '31834',
+                            _value: '13307',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '15061',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '15062',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '15070',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '21046',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '21047',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '21050',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '21546',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '21572',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22001',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22002',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22005',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22010',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22013',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22016',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22022',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22024',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22026',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22042',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22048',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22050',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22054',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22062',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22067',
+                            _attributes: {
+                                ref: 'V12'
+                            }
+                        },
+                        {
+                            _value: '22069',
                             _attributes: {
                                 ref: 'V12'
                             }
@@ -569,366 +570,352 @@ module.exports = {
             },
             certifications: [
                 {
-                    code_rncp: '9159',
-                    code_certifinfo: '84310'
+                    code_rncp: '320',
+                    code_certifinfo: certifinfo
                 }
             ],
-            actions: [
-                {
-                    _attributes: {
-                        numero: '14_SE_0000101111',
-                        datecrea: '20170207',
-                        datemaj: '20170207'
-                    },
-                    rythme_formation: 'temps plein',
-                    niveau_entree_obligatoire: '0',
-                    modalites_alternance: 'Cours du jour : 1106 h - Entreprise : 140 h',
-                    modalites_enseignement: '0',
-                    conditions_specifiques: 'Bonne vision dans l\'espace.',
-                    prise_en_charge_frais_possible: '0',
-                    lieu_de_formation: {
-                        coordonnees: {
-                            _attributes: {
-                                numero: '14_AD_0000000111'
+            actions: [{
+                _attributes: {
+                    numero: numeroAction,
+                    datecrea: '20010503',
+                    datemaj: '20171213'
+                },
+                rythme_formation: 'Continu temps plein, Modulaire',
+                niveau_entree_obligatoire: '0',
+                modalites_alternance: '-',
+                modalites_enseignement: '0',
+                conditions_specifiques: '-',
+                prise_en_charge_frais_possible: '0',
+                lieu_de_formation: {
+                    coordonnees: {
+                        nom: 'Anotea Formation Paris',
+                        adresse: {
+                            codepostal: '75019',
+                            ville: 'Paris',
+                            departement: '75',
+                            code_insee_commune: '75019',
+                            region: codeRegion,
+                            code_region: codeRegion,
+                            pays: 'FR',
+                            geolocalisation: {
+                                latitude: '48',
+                                longitude: '2'
                             },
-                            adresse: {
-                                codepostal: '77420',
-                                ville: 'Champs-sur-Marne',
-                                departement: '77',
-                                code_insee_commune: '77083',
-                                region: '11',
-                                pays: 'FR',
-                                geolocalisation: {
-                                    latitude: '48.85',
-                                    longitude: '2.58'
-                                },
-                                lignes: [
-                                    'Pole Emploi Formation',
-                                    'AVENUE DES LILAS',
-                                ]
-                            },
-                            telfixe: {
-                                numtels: [
-                                    '18 18'
-                                ]
-                            },
-                            courriel: 'contact@organisme-responsable.fr',
-                            web: {
-                                urlwebs: [
-                                    'http://www.pole-emploi.fr/'
-                                ]
-                            }
-                        }
-                    },
-                    modalites_entrees_sorties: '0',
-                    url_action: {
-                        urlwebs: [
-                            'https://www.afpa.fr/formation-qualifiante/dev'
-                        ]
-                    },
-                    duree_indicative: '263 jours',
-                    nombre_heures_centre: '1106',
-                    nombre_heures_entreprise: '140',
-                    nombre_heures_total: '1246',
-                    conventionnement: '0',
-                    organisme_formateur: {
-                        _attributes: {
-                            numero: '14_OF_XXXXXXXXXX'
+                            lignes: [
+                                '-'
+                            ],
                         },
-                        siret_formateur: {
-                            siret: '33333333333333'
+                        telfixe: {
+                            numtels: [
+                                '11 11'
+                            ]
                         },
-                        raison_sociale_formateur: 'Pole Emploi Formation Champs',
-                        contact_formateur: {
-                            coordonnees: {
-                                _attributes: {
-                                    numero: '14_CO_XXXXXXXXXX'
-                                },
-                                civilite: 'Mme ou M.',
-                                adresse: {
-                                    codepostal: '77420',
-                                    ville: 'Champs-sur-Marne',
-                                    departement: '77',
-                                    code_insee_commune: '77083',
-                                    region: '11',
-                                    pays: 'FR',
-                                    geolocalisation: {
-                                        latitude: '48.85',
-                                        longitude: '2.58'
-                                    },
-                                    lignes: [
-                                        'PE_FORMATION CHAMPS SUR MARNE (77)',
-                                        '67 AVENUE DU GENERAL DE GAULLE',
-                                    ]
-                                },
-                                telfixe: {
-                                    numtels: [
-                                        '18 18'
-                                    ]
-                                },
-                                courriel: 'contact@organisme-responsable.fr',
-                                web: {
-                                    urlwebs: [
-                                        'http://www.pole-emploi.fr/'
-                                    ]
-                                }
-                            }
+                        fax: {
+                            numtels: [
+                                '01 11 22 33 44'
+                            ]
                         },
-                        potentiel: {
-                            code_formacodes: [
-                                {
-                                    _value: '11020',
-                                    _attributes: {
-                                        ref: 'V12'
-                                    }
-                                },
-                                {
-                                    _value: '11502',
-                                    _attributes: {
-                                        ref: 'V12'
-                                    }
-                                },
+                        web: {
+                            urlwebs: [
+                                'https://anotea.pole-emploi.fr'
                             ]
                         }
-                    },
-                    code_public_vises: [
-                        {
-                            _value: '82044',
-                            _attributes: {
-                                ref: 'V12'
-                            }
-                        },
-                        {
-                            _value: '83056',
-                            _attributes: {
-                                ref: 'V12'
-                            }
-                        }
-                    ],
-                    sessions: [
-                        {
-                            _attributes: {
-                                numero: 'SE_0000109418',
-                                datecrea: '20170207',
-                                datemaj: '20170207'
-                            },
-                            periode: {
-                                debut: '20170911',
-                                fin: '20180601'
-                            },
-                            adresse_inscription: {
-                                adresse: {
-                                    codepostal: '77420',
-                                    ville: 'Champs-sur-Marne',
-                                    departement: '77',
-                                    code_insee_commune: '77083',
-                                    region: '11',
-                                    pays: 'FR',
-                                    geolocalisation: {
-                                        latitude: '48.85',
-                                        longitude: '2.58'
-                                    },
-                                    lignes: [
-                                        'PE_FORMATION CHAMPS SUR MARNE (77)',
-                                        '67 AVENUE DU GENERAL DE GAULLE',
-                                    ]
-                                }
-                            },
-                            etat_recrutement: '1'
-                        }
-                    ],
-                    code_modalite_pedagogiques: [
-                        {
-                            _value: '96142',
-                            _attributes: {
-                                ref: 'V12'
-                            }
-                        },
-                        {
-                            _value: '96312',
-                            _attributes: {
-                                ref: 'V12'
-                            }
-                        }
+                    }
+                },
+                modalites_entrees_sorties: '0',
+                url_action: {
+                    urlwebs: [
+                        'https://anotea.pole-emploi.fr'
                     ]
                 },
-                {
+                adresse_information: {
+                    adresse: {
+                        codepostal: '75019',
+                        ville: 'Paris',
+                        departement: '75',
+                        code_insee_commune: '75019',
+                        region: codeRegion,
+                        pays: 'FR',
+                        geolocalisation: {
+                            latitude: '48',
+                            longitude: '2'
+                        },
+                        lignes: [
+                            '-'
+                        ],
+                        code_region: codeRegion
+                    }
+                },
+                acces_handicapes: 'Accès handicapé possible',
+                langue_formation: 'FR',
+                modalites_recrutement: 'Entretien, Tests',
+                code_perimetre_recrutement: '3',
+                nombre_heures_centre: '585',
+                nombre_heures_entreprise: '112',
+                nombre_heures_total: '697',
+                conventionnement: '1',
+                organisme_formateur: {
                     _attributes: {
-                        numero: '14_SE_00001511111',
-                        datecrea: '20171025',
-                        datemaj: '20171025'
+                        numero: 'OF_XXX'
                     },
-                    rythme_formation: 'temps plein',
-                    niveau_entree_obligatoire: '0',
-                    modalites_alternance: 'Cours du jour : 1106 h - Entreprise : 140 h',
-                    modalites_enseignement: '0',
-                    conditions_specifiques: 'Bonne vision dans l\'espace.',
-                    prise_en_charge_frais_possible: '0',
-                    lieu_de_formation: {
+                    siret_formateur: {
+                        siret: organismeFormateur
+                    },
+                    raison_sociale_formateur: 'Anotea Formation Paris',
+                    contact_formateur: {
                         coordonnees: {
-                            _attributes: {
-                                numero: '14_AD_00000001111'
-                            },
+                            nom: 'Martina',
+                            prenom: 'Jacko',
                             adresse: {
-                                codepostal: '77420',
-                                ville: 'Champs-sur-Marne',
-                                departement: '77',
-                                code_insee_commune: '77083',
-                                region: '11',
+                                codepostal: '75019',
+                                ville: 'Paris',
+                                departement: '75',
+                                code_insee_commune: '75019',
+                                region: codeRegion,
                                 pays: 'FR',
                                 geolocalisation: {
-                                    latitude: '48.85',
-                                    longitude: '2.58'
+                                    latitude: '48',
+                                    longitude: '2'
                                 },
                                 lignes: [
-                                    'PE_FORMATION CHAMPS SUR MARNE (77)',
-                                ]
+                                    '-'
+                                ],
+                                code_region: codeRegion
                             },
                             telfixe: {
                                 numtels: [
-                                    '18 18'
+                                    '1111'
                                 ]
                             },
-                            courriel: 'contact@organisme-responsable.fr',
+                            fax: {
+                                numtels: [
+                                    '01 11 22 33 44'
+                                ]
+                            },
+                            courriel: 'anotea.pe+paris@gmail.com',
                             web: {
                                 urlwebs: [
-                                    'http://www.pole-emploi.fr/'
+                                    'https://anotea.pole-emploi.fr'
                                 ]
                             }
                         }
                     },
-                    modalites_entrees_sorties: '0',
-                    url_action: {
-                        urlwebs: [
-                            'https://www.afpa.fr/formation-qualifiante/dev'
-                        ]
-                    },
-                    duree_indicative: '263 jours',
-                    nombre_heures_centre: '1106',
-                    nombre_heures_entreprise: '140',
-                    nombre_heures_total: '1246',
-                    conventionnement: '0',
-                    organisme_formateur: {
-                        _attributes: {
-                            numero: '14_OF_XXXXXXXXXX'
-                        },
-                        siret_formateur: {
-                            siret: '82422814200108'
-                        },
-                        raison_sociale_formateur: 'AGENCE NATIONALE',
-                        contact_formateur: {
-                            coordonnees: {
+                    potentiel: {
+                        code_formacodes: [
+                            {
+                                _value: '13307',
                                 _attributes: {
-                                    numero: '14_CO_XXXXXXXXXX'
-                                },
-                                civilite: 'Mme ou M.',
-                                adresse: {
-                                    codepostal: '77420',
-                                    ville: 'Champs-sur-Marne',
-                                    departement: '77',
-                                    code_insee_commune: '77083',
-                                    region: '11',
-                                    pays: 'FR',
-                                    geolocalisation: {
-                                        latitude: '48.85',
-                                        longitude: '2.58'
-                                    },
-                                    lignes: [
-                                        'PE_FORMATION CHAMPS SUR MARNE (77)',
-                                    ]
-                                },
-                                telfixe: {
-                                    numtels: [
-                                        '18 18'
-                                    ]
-                                },
-                                courriel: 'contact@organisme-responsable.fr',
-                                web: {
-                                    urlwebs: [
-                                        'http://www.pole-emploi.fr/'
-                                    ]
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '15061',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '15062',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '15070',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '21046',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '21047',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '21050',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '21546',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '21572',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22001',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22002',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22005',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22010',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22013',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22016',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22022',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22024',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22026',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22042',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22048',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22050',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22054',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22062',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22067',
+                                _attributes: {
+                                    ref: 'V12'
+                                }
+                            },
+                            {
+                                _value: '22069',
+                                _attributes: {
+                                    ref: 'V12'
                                 }
                             }
-                        },
-                        potentiel: {
-                            code_formacodes: [
-                                {
-                                    _value: '11020',
-                                    _attributes: {
-                                        ref: 'V12'
-                                    }
-                                },
-                                {
-                                    _value: '22480',
-                                    _attributes: {
-                                        ref: 'V12'
-                                    }
-                                }
-                            ]
+                        ]
+                    }
+                },
+                code_public_vises: [
+                    {
+                        _value: '83056',
+                        _attributes: {
+                            ref: 'V12'
+                        }
+                    }
+                ],
+                sessions: [{
+                    _attributes: {
+                        numero: numeroSession,
+                        datecrea: '20010503',
+                        datemaj: '20171213'
+                    },
+                    periode: {
+                        debut: '20171030',
+                        fin: '20180601'
+                    },
+                    adresse_inscription: {
+                        adresse: {
+                            codepostal: '75019',
+                            ville: 'Paris',
+                            departement: '75',
+                            code_insee_commune: '75019',
+                            region: codeRegion,
+                            pays: 'FR',
+                            geolocalisation: {
+                                latitude: '48',
+                                longitude: '2'
+                            },
+                            lignes: [
+                                '-'
+                            ],
+                            code_region: codeRegion
                         }
                     },
-                    code_public_vises: [
-                        {
-                            _value: '82044',
-                            _attributes: {
-                                ref: 'V12'
-                            }
-                        },
-                        {
-                            _value: '83056',
-                            _attributes: {
-                                ref: 'V12'
-                            }
+                    periode_inscription: {
+                        periode: {
+                            debut: '00000000',
+                            fin: '20180522'
                         }
-                    ],
-                    sessions: [
-                        {
-                            _attributes: {
-                                numero: 'SE_0000154239',
-                                datecrea: '20171025',
-                                datemaj: '20171025'
-                            },
-                            periode: {
-                                debut: '20181001',
-                                fin: '20190621'
-                            },
-                            adresse_inscription: {
-                                adresse: {
-                                    codepostal: '77420',
-                                    ville: 'Champs-sur-Marne',
-                                    departement: '77',
-                                    code_insee_commune: '77083',
-                                    region: '11',
-                                    pays: 'FR',
-                                    geolocalisation: {
-                                        latitude: '48.85',
-                                        longitude: '2.58'
-                                    },
-                                    lignes: [
-                                        'PE_FORMATION CHAMPS SUR MARNE (77)',
-                                    ]
-                                }
-                            },
-                            etat_recrutement: '1'
-                        }
-                    ],
-                    code_modalite_pedagogiques: [
-                        {
-                            _value: '96142',
-                            _attributes: {
-                                ref: 'V12'
-                            }
-                        },
-                        {
-                            _value: '96312',
-                            _attributes: {
-                                ref: 'V12'
-                            }
-                        }
-                    ]
-                }
-            ],
-            md5: '6d2c31c7d672891a9363c24c8da1e9fd'
-        }, custom, { test: true });
+                    },
+                    etat_recrutement: '1'
+                }],
+                date_informations: [
+                    {
+                        date: '00000000'
+                    }
+                ],
+                organisme_financeurs: [
+                    {
+                        code_financeur: '2',
+                        nb_places_financees: '5'
+                    }
+                ]
+            }],
+            _meta: {
+                certifinfos: [certifinfo],
+                formacodes: [formacode]
+            },
+            md5: '863aab7eacec39772b8f0f8336579bec'
+        };
     }
 };

@@ -23,7 +23,8 @@ export const _get = path => {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-Anotea-Widget': true,
         }
     })
     .then(res => handleResponse(path, res));

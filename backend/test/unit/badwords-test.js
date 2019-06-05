@@ -7,7 +7,7 @@ let mockLogger = {
 };
 let mockConfiguration = {};
 
-let badwords = require('../../src/http/routes/front/utils/badwords.js')(mockLogger, mockConfiguration);
+let badwords = require('../../src/http/routes/api/questionnaire/utils/badwords.js')(mockLogger, mockConfiguration);
 
 describe('Badwords', function() {
     describe('isGood', function() {

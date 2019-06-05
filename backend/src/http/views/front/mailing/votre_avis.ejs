@@ -75,11 +75,11 @@
             <table width="760px" cellspacing="0" cellpadding="0" border="0"
                    style="font-family:Arial; background-color:white; font-size:1em;">
                 <tr>
-                    <td colspan="1" align="left" valign="middle"><img
-                                src="/img/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
+                    <td colspan="1" align="left" valign="middle">
+                        <img src="/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
                     <td colspan="2" align="right" valign="middle">
                         Propulsé par &nbsp;
-                        <img src="/img/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt=""
+                        <img src="/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt=""
                              style="vertical-align: middle;" />
                     </td>
                 </tr>
@@ -99,44 +99,44 @@
                         <a href="<%= formLink %>" target="_blank" class="avis-button">
                             <strong>Cliquez ici pour donner votre avis</strong>
                             <br />
-                            <img class="star" src="/img/email/white-star-icon.png" alt="white-star-icon" />
-                            <img class="star" src="/img/email/white-star-icon.png" alt="white-star-icon" />
-                            <img class="star" src="/img/email/white-star-icon.png" alt="white-star-icon" />
-                            <img class="star" src="/img/email/white-star-icon.png" alt="white-star-icon" />
-                            <img class="star" src="/img/email/white-star-icon.png" alt="white-star-icon" />
+                            <img class="star" src="/static/images/email/white-star-icon.png" alt="white-star-icon" />
+                            <img class="star" src="/static/images/email/white-star-icon.png" alt="white-star-icon" />
+                            <img class="star" src="/static/images/email/white-star-icon.png" alt="white-star-icon" />
+                            <img class="star" src="/static/images/email/white-star-icon.png" alt="white-star-icon" />
+                            <img class="star" src="/static/images/email/white-star-icon.png" alt="white-star-icon" />
                         </a>
                     </td>
                 </tr>
                 <tr class="icons">
                     <td colspan="1" align="center"><a href="<%= formLink %>" target="_blank"><img
-                                    src="/img/email/01.jpg" alt="0" border="0" /></a></td>
+                                    src="/static/images/email/01.jpg" alt="0" border="0" /></a></td>
                     <td colspan="1" align="center"><a href="<%= formLink %>" target="_blank"><img
-                                    src="/img/email/02.jpg" alt="0" border="0" /></a></td>
+                                    src="/static/images/email/02.jpg" alt="0" border="0" /></a></td>
                     <td colspan="1" align="center"><a href="<%= formLink %>" target="_blank"><img
-                                    src="/img/email/03.jpg" alt="0" border="0" /></a></td>
+                                    src="/static/images/email/03.jpg" alt="0" border="0" /></a></td>
                 </tr>
                 <tr class="labels">
                     <td style="text-align:center">Notez et commentez la formation que vous venez de suivre</td>
                     <td style="text-align:center">Vos avis seront publiés sur La Bonne Formation
-                        <% if (!carifNameHidden) { %> et <%= carifName %>
+                        <% if (region.carif.active) { %> et <%= region.carif.nom %>
                         <% } %>
                     </td>
                     <td style="text-align:center">Vous pourrez répondre aux questions des futur-e-s stagiaires</td>
                 </tr>
             </table>
             <div class="icons-mobile">
-                <div align="center"><a href="<%= formLink %>" target="_blank"><img src="/img/email/01.jpg" alt="0"
+                <div align="center"><a href="<%= formLink %>" target="_blank"><img src="/static/images/email/01.jpg" alt="0"
                                                                                    border="0" /></a></div>
                 <div style="text-align:center;padding-bottom: 20px;">Notez et commentez la formation que vous venez de
                     suivre
                 </div>
-                <div align="center"><a href="<%= formLink %>" target="_blank"><img src="/img/email/02.jpg" alt="0"
+                <div align="center"><a href="<%= formLink %>" target="_blank"><img src="/static/images/email/02.jpg" alt="0"
                                                                                    border="0" /></a></div>
                 <div style="text-align:center;padding-bottom: 20px;">Vos avis seront publiés sur La Bonne Formation
-                    <% if (!carifNameHidden) { %> et <%= carifName %>
+                    <% if (region.carif.active) { %> et <%= region.carif.nom %>
                     <% } %>
                 </div>
-                <div align="center"><a href="<%= formLink %>" target="_blank"><img src="/img/email/03.jpg" alt="0"
+                <div align="center"><a href="<%= formLink %>" target="_blank"><img src="/static/images/email/03.jpg" alt="0"
                                                                                    border="0" /></a></div>
                 <div style="text-align:center">Vous pourrez répondre aux questions des futur-e-s stagiaires</div>
             </div>

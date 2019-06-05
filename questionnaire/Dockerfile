@@ -19,14 +19,14 @@ RUN mkdir $NVM_DIR \
 
 #Download npm dependencies
 COPY package.json package-lock.json /tmp/
-RUN cd /tmp && npm ci && mkdir -p /opt/anotea/questionnaire && mv /tmp/node_modules /opt/anotea/questionnaire/
-COPY ./ /opt/anotea/questionnaire
-WORKDIR /opt/anotea/questionnaire
+RUN cd /tmp && npm install && mkdir -p /opt/anotea/questionnaire && mv /tmp/node_modules /opt/anotea/questionnaire/
 
 #Build project
 ARG ANOTEA_GOOGLE_ANALYTICS_ID
 ARG ANOTEA_GOOGLE_OPTIMIZE_ID
 ARG ANOTEA_HOTJAR_ID
+COPY ./ /opt/anotea/questionnaire
+WORKDIR /opt/anotea/questionnaire
 RUN REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID=${ANOTEA_GOOGLE_ANALYTICS_ID} \
     REACT_APP_ANOTEA_GOOGLE_OPTIMIZE_ID=${ANOTEA_GOOGLE_OPTIMIZE_ID} \
     REACT_APP_ANOTEA_HOTJAR_ID=${ANOTEA_HOTJAR_ID} \

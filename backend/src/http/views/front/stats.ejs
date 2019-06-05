@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
-        <link rel="icon" type="image/png" href="/img/favicon_noteo.ico" />
+        <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
         <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -35,6 +35,10 @@
                 margin-top: 2rem;
                 margin-bottom: 2rem;
             }
+
+            td {
+                font-size: 0.875rem;
+            }
         </style>
     </head>
 
@@ -47,8 +51,8 @@
                     </div>
                 </div>
 
-                <h2>Organismes</h2>
                 <div class="row">
+                    <h2>Organismes</h2>
                     <div class="col-sm-12">
 
                         <div class="card">
@@ -118,8 +122,8 @@
                     </div>
                 </div>
 
-                <h2>Avis</h2>
                 <div class="row">
+                    <h2>Avis</h2>
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">Par région</div>
@@ -153,8 +157,8 @@
                     </div>
                 </div>
 
-                <h2>Formations</h2>
                 <div class="row">
+                    <h2>Formations</h2>
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">Global</div>
@@ -182,8 +186,8 @@
                     </div>
                 </div>
 
-                <h2>Sessions</h2>
                 <div class="row">
+                    <h2>Sessions</h2>
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">Par région</div>
@@ -214,6 +218,48 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <h2>Emails</h2>
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">Par région</div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <table class="table small">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Campagne</th>
+                                                <th scope="col">Emails envoyés</th>
+                                                <th scope="col">Emails ouverts</th>
+                                                <th scope="col">Liens cliqués</th>
+                                                <th scope="col">Questionnaires validés</th>
+                                                <th scope="col">Contact</th>
+                                                <th scope="col">Commentaires</th>
+                                                <th scope="col">Commentaires rejetés</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% data.mailing.forEach(function(element) { %>
+                                                <tr>
+                                                    <td><%= element._id %></td>
+                                                    <td><%= element.mailSent %></td>
+                                                    <td><%= element.mailOpen %></td>
+                                                    <td><%= element.linkClick %></td>
+                                                    <td><%= element.formValidated %></td>
+                                                    <td><%= element.allowToContact %></td>
+                                                    <td><%= element.nbCommentaires %></td>
+                                                    <td><%= element.nbCommentairesRejected %></td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
     </body>
