@@ -6,7 +6,6 @@ import Verified from './common/Verified';
 import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
-import ContactStagiaire from './common/ContactStagiaire';
 import './ListeWidget.scss';
 
 export default class ListeWidget extends Component {
@@ -15,7 +14,6 @@ export default class ListeWidget extends Component {
         score: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
         fetchAvis: PropTypes.func.isRequired,
-        showContactStagiaire: PropTypes.bool,
     };
 
     componentDidMount() {
@@ -111,11 +109,6 @@ export default class ListeWidget extends Component {
                             {this.getCurrentPage() + 1}
                         </span>
                         {this.getPagesAfter()}
-                    </div>
-                    }
-                    {this.props.showContactStagiaire &&
-                    <div className="d-flex justify-content-center py-2">
-                        <ContactStagiaire />
                     </div>
                     }
                 </div>

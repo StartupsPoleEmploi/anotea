@@ -5,6 +5,7 @@ import { getScore, getAvis } from './services/widgetService';
 import GridDisplayer from './components/common/library/GridDisplayer';
 import ScoreWidget from './components/ScoreWidget';
 import CarrouselWidget from './components/CarrouselWidget';
+import ContactStagiaire from './components/common/ContactStagiaire';
 import './App.scss';
 
 class App extends Component {
@@ -78,17 +79,9 @@ class App extends Component {
         if (format === 'score') {
             widget = <ScoreWidget {...this.state} />;
         } else if (format === 'carrousel') {
-            widget = <CarrouselWidget
-                {...this.state}
-                fetchAvis={options => this.fetchAvis(options)}
-                showContactStagiaire={this.hasOption('contact-stagiaire')}
-            />;
+            widget = <CarrouselWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
         } else {
-            widget = <ListeWidget
-                {...this.state}
-                fetchAvis={options => this.fetchAvis(options)}
-                showContactStagiaire={this.hasOption('contact-stagiaire')}
-            />;
+            widget = <ListeWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
         }
 
         return (
@@ -96,6 +89,11 @@ class App extends Component {
                 {false && <GridDisplayer />}
                 <div className="container-fluid">
                     {widget}
+                    {this.hasOption('contact-stagiaire') &&
+                    <div className="d-flex justify-content-center py-2">
+                        <ContactStagiaire />
+                    </div>
+                    }
                 </div>
             </div>
         );
