@@ -51,11 +51,15 @@ module.exports = (db, logger) => {
                             }]
                         }
                     }
-                }, advicesWithComments: {
+                },
+                advicesWithComments: {
                     $filter: {
                         input: '$advices',
                         as: 'advice',
-                        cond: { $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }
+                        cond: { $or: [
+                            { $eq: ['$$advice.published', true] },
+                            { $eq: ['$$advice.rejected', true] },
+                        ] }
                     }
                 },
                 advicesPositif: {
