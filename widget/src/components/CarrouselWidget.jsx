@@ -8,6 +8,7 @@ import Header from './common/Header';
 import Avis from './common/Avis';
 import Button from './common/library/Button';
 import './CarrouselWidget.scss';
+import ContactStagiaire from "./common/ContactStagiaire";
 
 export default class CarrouselWidget extends Component {
 
@@ -15,6 +16,7 @@ export default class CarrouselWidget extends Component {
         score: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
         fetchAvis: PropTypes.func.isRequired,
+        showContactStagiaire: PropTypes.bool,
     };
 
     componentDidMount() {
@@ -71,6 +73,12 @@ export default class CarrouselWidget extends Component {
                             <span className="fas fa-chevron-right"></span>
                         </Button>
 
+                    </div>
+                    }
+
+                    {this.props.showContactStagiaire &&
+                    <div className="d-flex justify-content-center py-2">
+                        <ContactStagiaire />
                     </div>
                     }
 

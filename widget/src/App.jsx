@@ -61,9 +61,14 @@ class App extends Component {
         this.setState({ score: await getScore(type, identifiant) });
     }
 
+    hasOption(option) {
+        return (this.props.options || '').split(',').includes(option);
+    }
+
     render() {
 
-        let { format, options = '' } = this.props;
+        let { format } = this.props;
+
 
         if (this.state.error) {
             return (<div className="anotea">Une erreur est survenue</div>);
@@ -76,13 +81,14 @@ class App extends Component {
             widget = <CarrouselWidget
                 {...this.state}
                 fetchAvis={options => this.fetchAvis(options)}
+                showContactStagiaire={this.hasOption('contact-stagiaire')}
             />;
         } else {
-            widget = (
-                <ListeWidget
-                    {...this.state}
-                    fetchAvis={options => this.fetchAvis(options)}
-                    showContactStagiaire={options.indexOf('contact-stagiaire') !== -1} />);
+            widget = <ListeWidget
+                {...this.state}
+                fetchAvis={options => this.fetchAvis(options)}
+                showContactStagiaire={this.hasOption('contact-stagiaire')}
+            />;
         }
 
         return (
@@ -100,6 +106,7 @@ App.defaultProps = {
     format: 'carrousel',
     type: 'action',
     identifiant: '26_100646|26_145859_7591',
+    options: 'contact-stagiaire',
 };
 
 export default App;
