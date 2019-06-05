@@ -1,53 +1,52 @@
-const $round = require('../../$round');
+const _ = require('lodash');
+
+let roundNotes = score => {
+    let notes = _.cloneDeep(score.notes);
+    Object.keys(score.notes).forEach(key => {
+        notes[key] = Number(Math.round(score.notes[key] / score.nb_avis + 'e1') + 'e-1');
+    });
+    return notes;
+};
 
 const computeScore = async (db, siret) => {
-    let results = await db.collection('comment').aggregate([
-        {
-            $match: {
-                $expr: {
-                    $eq: ['$training.organisation.siret', siret]
-                },
-                $or: [
-                    { 'comment': { $exists: false } },
-                    { 'comment': null },
-                    { 'published': true },
-                    { 'rejected': true },
-                ]
-            }
-        },
-        {
-            $group: {
-                _id: null,
-                accueil: { $avg: '$rates.accueil' },
-                contenu_formation: { $avg: '$rates.contenu_formation' },
-                equipe_formateurs: { $avg: '$rates.equipe_formateurs' },
-                moyen_materiel: { $avg: '$rates.moyen_materiel' },
-                accompagnement: { $avg: '$rates.accompagnement' },
-                global: { $avg: '$rates.global' },
-                count: { $sum: 1 }
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                nb_avis: '$count',
-                notes: {
-                    accueil: $round('$accueil', 1),
-                    contenu_formation: $round('$contenu_formation', 1),
-                    equipe_formateurs: $round('$equipe_formateurs', 1),
-                    moyen_materiel: $round('$moyen_materiel', 1),
-                    accompagnement: $round('$accompagnement', 1),
-                    global: $round('$global', 1),
-                },
-            }
+    let score = {
+        nb_avis: 0,
+        notes: {
+            accueil: 0,
+            contenu_formation: 0,
+            equipe_formateurs: 0,
+            moyen_materiel: 0,
+            accompagnement: 0,
+            global: 0,
         }
-    ]).toArray();
+    };
 
-    if (results.length === 0) {
-        return { nb_avis: 0 };
+    let cursor = await db.collection('comment').find({
+        'training.organisation.siret': siret,
+        '$or': [
+            { 'comment': { $exists: false } },
+            { 'comment': null },
+            { 'published': true },
+            { 'rejected': true },
+        ]
+    });
+
+    while (await cursor.hasNext()) {
+        const comment = await cursor.next();
+        score.nb_avis++;
+        score.notes.accueil += comment.rates.accueil;
+        score.notes.contenu_formation += comment.rates.contenu_formation;
+        score.notes.equipe_formateurs += comment.rates.equipe_formateurs;
+        score.notes.moyen_materiel += comment.rates.moyen_materiel;
+        score.notes.accompagnement += comment.rates.accompagnement;
+        score.notes.global += comment.rates.global;
     }
-
-    return results[0];
+    if (score.nb_avis === 0) {
+        return _.pick(score, ['nb_avis']);
+    } else {
+        score.notes = roundNotes(score);
+        return score;
+    }
 };
 
 module.exports = async (db, logger) => {
