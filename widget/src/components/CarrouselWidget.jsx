@@ -73,7 +73,6 @@ export default class CarrouselWidget extends Component {
 
                     </div>
                     }
-
                 </div>
             </div>
         );

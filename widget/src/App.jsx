@@ -5,6 +5,7 @@ import { getScore, getAvis } from './services/widgetService';
 import GridDisplayer from './components/common/library/GridDisplayer';
 import ScoreWidget from './components/ScoreWidget';
 import CarrouselWidget from './components/CarrouselWidget';
+import ContactStagiaire from './components/common/ContactStagiaire';
 import './App.scss';
 
 class App extends Component {
@@ -61,9 +62,14 @@ class App extends Component {
         this.setState({ score: await getScore(type, identifiant) });
     }
 
+    hasOption(option) {
+        return (this.props.options || '').split(',').includes(option);
+    }
+
     render() {
 
-        let { format, options = '' } = this.props;
+        let { format } = this.props;
+
 
         if (this.state.error) {
             return (<div className="anotea">Une erreur est survenue</div>);
@@ -73,16 +79,9 @@ class App extends Component {
         if (format === 'score') {
             widget = <ScoreWidget {...this.state} />;
         } else if (format === 'carrousel') {
-            widget = <CarrouselWidget
-                {...this.state}
-                fetchAvis={options => this.fetchAvis(options)}
-            />;
+            widget = <CarrouselWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
         } else {
-            widget = (
-                <ListeWidget
-                    {...this.state}
-                    fetchAvis={options => this.fetchAvis(options)}
-                    showContactStagiaire={options.indexOf('contact-stagiaire') !== -1} />);
+            widget = <ListeWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
         }
 
         return (
@@ -90,6 +89,11 @@ class App extends Component {
                 {false && <GridDisplayer />}
                 <div className="container-fluid">
                     {widget}
+                    {this.hasOption('contact-stagiaire') &&
+                    <div className="d-flex justify-content-center py-2">
+                        <ContactStagiaire />
+                    </div>
+                    }
                 </div>
             </div>
         );
@@ -100,6 +104,7 @@ App.defaultProps = {
     format: 'carrousel',
     type: 'action',
     identifiant: '26_100646|26_145859_7591',
+    options: 'contact-stagiaire',
 };
 
 export default App;
