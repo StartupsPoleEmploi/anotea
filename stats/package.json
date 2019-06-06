@@ -10,7 +10,7 @@
     "react-app-polyfill": "1.0.1",
     "react-dom": "16.8.6",
     "react-scripts": "3.0.1",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "1.6.28"
   },
   "scripts": {
     "start": "react-scripts start",
