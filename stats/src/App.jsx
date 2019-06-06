@@ -57,8 +57,7 @@ class App extends Component {
     }
 
     render() {
-        let avis = this.state.avis !== null ? this.state.avis.splice(0, this.state.avis.length - 1) : this.state.avis;
-        let organismes = this.state.organismes !== null ? this.state.organismes.splice(0, this.state.organismes.length - 1) : this.state.organismes;
+        let { avis, organismes, isAvis, isOrganismes } = this.state;
         
         const organismes_table_columns_title = [
             {id: 1, value: ''},
@@ -67,7 +66,6 @@ class App extends Component {
             {id: 4, value: 'Ouverts'},
             {id: 5, value: 'Cliqués'},
             {id: 6, value: 'Actifs'},
-            {id: 7, value: 'Connexion'},
             {id: 8, value: 'Non lus'},
             {id: 9, value: 'Répondus'},
             {id: 10, value: 'Avec rép.'},
@@ -77,7 +75,7 @@ class App extends Component {
             {id: 1, value: 1, title: 'Régions'},
             {id: 2, value: 1, title: 'OF contactés'},
             {id: 3, value: 3, title: 'Mails envoyés'},
-            {id: 4, value: 2, title: 'Comptes'},
+            {id: 4, value: 1, title: 'Comptes'},
             {id: 5, value: 5, title: 'Avis'},
         ];
         const avis_table_columns_title = [
@@ -102,17 +100,17 @@ class App extends Component {
             {id: 4, value: 2, title: 'Avis déposés'},
             {id: 5, value: 4, title: 'Commentaires'},
         ];
-        const variant = this.state.isAvis ? avisFilters : organismesFilters;
-        const statsTable = (avis.length === 0 && this.state.isAvis) || (organismes.length === 0 && this.state.isOrganismes) ?
+        const variant = isAvis ? avisFilters : organismesFilters;
+        const statsTable = (avis.length === 0 && isAvis) || (organismes.length === 0 && isOrganismes) ?
             <Loader />
-            : this.state.isAvis 
+            : isAvis 
                 ? <StatsTable 
                     columnsTitle={avis_table_columns_title} 
                     variant={avis_colspan} 
                     avis={avis} /> 
                 : <StatsTable 
                     columnsTitle={organismes_table_columns_title} 
-                    isOrganismes={this.state.isOrganismes} 
+                    isOrganismes={isOrganismes} 
                     variant={organismes_colspan} 
                     organismes={organismes} />
 
@@ -120,8 +118,8 @@ class App extends Component {
             <div className="anotea">
                 <Header 
                     view={this.changeView} 
-                    isAvis={this.state.isAvis} 
-                    isOrganismes={this.state.isOrganismes}
+                    isAvis={isAvis} 
+                    isOrganismes={isOrganismes}
                 />
                 <FiltersList variant={variant} />
                 {statsTable}

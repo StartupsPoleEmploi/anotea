@@ -63,7 +63,7 @@ module.exports = ({ db, regions }) => {
         let regional = await getOrganismesStats(filter);
 
         return {
-            region: regionName,
+            perimetre: regionName,
             nbOrganismesContactes: regional.nbOrganimesContactes,
             mailsEnvoyes: regional.nbRelances + regional.nbOrganimesContactes,
             tauxOuvertureMails: calculateRate(regional.ouvertureMails, regional.nbOrganimesContactes),
@@ -83,15 +83,16 @@ module.exports = ({ db, regions }) => {
         let national = await getOrganismesStats(filter);
 
         return {
-            nbOrganismesContacteNational: national.nbOrganimesContactes,
-            mailsEnvoyesNational: national.nbRelances + national.nbOrganimesContactes,
-            tauxOuvertureMailsNational: calculateRate(national.ouvertureMails, national.nbOrganimesContactes),
-            tauxClicDansLienNational: calculateRate(national.nbClicDansLien, national.ouvertureMails),
-            tauxOrganismesActifsNational: calculateRate(national.organismesActifs, national.nbOrganimesContactes),
-            tauxAvisNonLusNational: calculateRate(national.avisNonLus, national.avisModeresNonRejetes),
-            tauxCommentairesAvecReponsesNational: calculateRate(national.nbCommentairesAvecOrganismesReponses, national.avisModeresNonRejetes),
-            tauxAvisAvecReponsesNational: calculateRate(national.nbAvisAvecOrganismesReponses, national.avisModeresNonRejetes),
-            tauxAvisSignalesNational: calculateRate(national.avisSignales, national.avisModeresNonRejetes),
+            perimetre: 'Total',
+            nbOrganismesContactes: national.nbOrganimesContactes,
+            mailsEnvoyes: national.nbRelances + national.nbOrganimesContactes,
+            tauxOuvertureMails: calculateRate(national.ouvertureMails, national.nbOrganimesContactes),
+            tauxClicDansLien: calculateRate(national.nbClicDansLien, national.ouvertureMails),
+            tauxOrganismesActifs: calculateRate(national.organismesActifs, national.nbOrganimesContactes),
+            tauxAvisNonLus: calculateRate(national.avisNonLus, national.avisModeresNonRejetes),
+            tauxCommentairesAvecReponses: calculateRate(national.nbCommentairesAvecOrganismesReponses, national.avisModeresNonRejetes),
+            tauxAvisAvecReponses: calculateRate(national.nbAvisAvecOrganismesReponses, national.avisModeresNonRejetes),
+            tauxAvisSignales: calculateRate(national.avisSignales, national.avisModeresNonRejetes),
         };
     };
 
@@ -154,7 +155,7 @@ module.exports = ({ db, regions }) => {
         let regional = await getAvisStats(filter);
 
         return {
-            region: regionName,
+            perimetre: regionName,
             nbStagiairesContactes: regional.nbStagiairesContactes,
             nbMailEnvoyes: regional.nbMailEnvoyes,
             tauxOuvertureMail: calculateRate(regional.nbMailsOuverts, regional.nbMailEnvoyes),
@@ -176,17 +177,18 @@ module.exports = ({ db, regions }) => {
         let national = await getAvisStats(filter);
 
         return {
-            nbStagiairesContactesNational: national.nbStagiairesContactes,
-            nbMailEnvoyesNational: national.nbMailEnvoyes,
-            tauxOuvertureMailNational: calculateRate(national.nbMailsOuverts, national.nbMailEnvoyes),
-            tauxLiensCliquesNational: calculateRate(national.nbLiensCliques, national.nbMailsOuverts),
-            tauxQuestionnairesValidesNational: calculateRate(national.nbQuestionnairesValidees, national.nbLiensCliques),
-            tauxAvisDeposesNational: calculateRate(national.nbQuestionnairesValidees, national.nbStagiairesContactes),
-            tauxAvisAvecCommentaireNational: calculateRate(national.nbAvisAvecCommentaire, national.nbQuestionnairesValidees),
-            nbCommentairesAModererNational: national.nbCommentairesAModerer,
-            tauxAvisPositifsNational: calculateRate(national.nbCommentairesPositifs, national.nbAvisAvecCommentaire),
-            tauxAvisNegatifsNational: calculateRate(national.nbCommentairesNegatifs, national.nbAvisAvecCommentaire),
-            tauxAvisRejetesNational: calculateRate(national.nbCommentairesRejetes, national.nbAvisAvecCommentaire),
+            perimetre: 'Total',
+            nbStagiairesContactes: national.nbStagiairesContactes,
+            nbMailEnvoyes: national.nbMailEnvoyes,
+            tauxOuvertureMail: calculateRate(national.nbMailsOuverts, national.nbMailEnvoyes),
+            tauxLiensCliques: calculateRate(national.nbLiensCliques, national.nbMailsOuverts),
+            tauxQuestionnairesValides: calculateRate(national.nbQuestionnairesValidees, national.nbLiensCliques),
+            tauxAvisDeposes: calculateRate(national.nbQuestionnairesValidees, national.nbStagiairesContactes),
+            tauxAvisAvecCommentaire: calculateRate(national.nbAvisAvecCommentaire, national.nbQuestionnairesValidees),
+            nbCommentairesAModerer: national.nbCommentairesAModerer,
+            tauxAvisPositifs: calculateRate(national.nbCommentairesPositifs, national.nbAvisAvecCommentaire),
+            tauxAvisNegatifs: calculateRate(national.nbCommentairesNegatifs, national.nbAvisAvecCommentaire),
+            tauxAvisRejetes: calculateRate(national.nbCommentairesRejetes, national.nbAvisAvecCommentaire),
         };
     };
 

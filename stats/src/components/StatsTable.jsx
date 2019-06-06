@@ -24,13 +24,12 @@ export default class OrganismesStatsTable extends Component {
                         {(this.props.isOrganismes ?
                             (this.props.organismes.map( (organisme, index) => (
                                 <tr key={index}>
-                                    <th scope="row">{organisme.region}</th>
+                                    <th scope="row">{organisme.perimetre}</th>
                                     <td>{organisme.nbOrganismesContactes}</td>
                                     <td>{organisme.mailsEnvoyes}</td>
                                     <td>{organisme.tauxOuvertureMails}</td>
                                     <td>{organisme.tauxClicDansLien}</td>
                                     <td>{organisme.tauxOrganismesActifs}</td>
-                                    <td>TODO</td>
                                     <td>{organisme.tauxAvisNonLus}</td>
                                     <td>{organisme.tauxCommentairesAvecReponses}</td>
                                     <td>{organisme.tauxAvisAvecReponses}</td>
@@ -39,7 +38,7 @@ export default class OrganismesStatsTable extends Component {
                             ))) :
                             (this.props.avis.map( (avis, index) => (
                                 <tr key={index}>
-                                    <th scope="row">{avis.region}</th>
+                                    <th scope="row">{avis.perimetre}</th>
                                     <td>TODO</td>
                                     <td>{avis.nbStagiairesContactes}</td>
                                     <td>{avis.nbMailEnvoyes}</td>
