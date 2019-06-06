@@ -1,15 +1,23 @@
 const _ = require('lodash');
 
-let roundNotes = score => {
-    let notes = _.cloneDeep(score.notes);
+let round = value => Number(Math.round(value + 'e1') + 'e-1');
+
+let getScore = accumulator => {
+
+    if (accumulator.nb_avis === 0) {
+        return _.pick(accumulator, ['nb_avis']);
+    }
+
+    let score = _.cloneDeep(accumulator);
     Object.keys(score.notes).forEach(key => {
-        notes[key] = Number(Math.round(score.notes[key] / score.nb_avis + 'e1') + 'e-1');
+        score.notes[key] = round(score.notes[key] / score.nb_avis);
     });
-    return notes;
+
+    return score;
 };
 
-const computeScore = async (db, siret) => {
-    let score = {
+const computeScore = async (db, organisme) => {
+    let accumulator = {
         nb_avis: 0,
         notes: {
             accueil: 0,
@@ -18,11 +26,17 @@ const computeScore = async (db, siret) => {
             moyen_materiel: 0,
             accompagnement: 0,
             global: 0,
-        }
+        },
+        aggregation: {
+            global: {
+                max: Number.MIN_SAFE_INTEGER,
+                min: Number.MAX_SAFE_INTEGER,
+            },
+        },
     };
 
     let cursor = await db.collection('comment').find({
-        'training.organisation.siret': siret,
+        'training.organisation.siret': organisme.meta.siretAsString,
         '$or': [
             { 'comment': { $exists: false } },
             { 'comment': null },
@@ -32,21 +46,20 @@ const computeScore = async (db, siret) => {
     });
 
     while (await cursor.hasNext()) {
-        const comment = await cursor.next();
-        score.nb_avis++;
-        score.notes.accueil += comment.rates.accueil;
-        score.notes.contenu_formation += comment.rates.contenu_formation;
-        score.notes.equipe_formateurs += comment.rates.equipe_formateurs;
-        score.notes.moyen_materiel += comment.rates.moyen_materiel;
-        score.notes.accompagnement += comment.rates.accompagnement;
-        score.notes.global += comment.rates.global;
+        let { rates } = await cursor.next();
+
+        accumulator.nb_avis++;
+        accumulator.notes.accueil += rates.accueil;
+        accumulator.notes.contenu_formation += rates.contenu_formation;
+        accumulator.notes.equipe_formateurs += rates.equipe_formateurs;
+        accumulator.notes.moyen_materiel += rates.moyen_materiel;
+        accumulator.notes.accompagnement += rates.accompagnement;
+        accumulator.notes.global += rates.global;
+        accumulator.aggregation.global.max = Math.max(rates.global, accumulator.aggregation.global.max);
+        accumulator.aggregation.global.min = Math.min(rates.global, accumulator.aggregation.global.min);
     }
-    if (score.nb_avis === 0) {
-        return _.pick(score, ['nb_avis']);
-    } else {
-        score.notes = roundNotes(score);
-        return score;
-    }
+
+    return getScore(accumulator);
 };
 
 module.exports = async (db, logger) => {
@@ -62,9 +75,10 @@ module.exports = async (db, logger) => {
         const organisme = await cursor.next();
         try {
             stats.total++;
+            let score = await computeScore(db, organisme);
             await db.collection('accounts').updateOne({ _id: organisme._id }, {
                 $set: {
-                    score: await computeScore(db, organisme.meta.siretAsString),
+                    score,
                 },
             });
             stats.updated++;
