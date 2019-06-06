@@ -15,6 +15,7 @@ export default class CarrouselWidget extends Component {
         score: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
         fetchAvis: PropTypes.func.isRequired,
+        children: PropTypes.node.isRequired,
     };
 
     componentDidMount() {
@@ -79,7 +80,7 @@ export default class CarrouselWidget extends Component {
     };
 
     render() {
-        let { score } = this.props;
+        let { score, children } = this.props;
 
         if (score.nb_avis === 0) {
             return <div></div>;
@@ -113,6 +114,11 @@ export default class CarrouselWidget extends Component {
                     </div>
                 </div>
 
+                <div className="row my-3">
+                    <div className="col-12 text-center">
+                        {children}
+                    </div>
+                </div>
 
                 <div className="row my-3">
                     <div className="col-12 text-center">
