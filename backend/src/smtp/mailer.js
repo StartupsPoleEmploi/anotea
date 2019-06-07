@@ -150,7 +150,8 @@ module.exports = function(db, logger, configuration, regions) {
             let params = {
                 hostname: configuration.app.public_hostname,
                 trackingLink: getTrackingLink(organisme),
-                contact: getRegionEmail(region)
+                contact: getRegionEmail(region),
+                organisme: organisme
             };
 
             mailOptions.list = list;

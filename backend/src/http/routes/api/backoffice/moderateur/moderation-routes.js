@@ -5,8 +5,9 @@ const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
 const moderationStats = require('./utils/moderationStats');
 const { objectId } = require('../../../../../common/validators');
+const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
 
-module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
+module.exports = ({ db, logger, middlewares, configuration, moderation, mailing }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -104,11 +105,24 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
     }));
 
     router.put('/backoffice/moderateur/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+        let { sendInjureMail } = mailing;
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { reason } = await Joi.validate(req.body, { reason: Joi.string().required() }, { abortEarly: false });
 
-        let avis = await moderation.reject(id, reason, { sendEmail: true, event: { origin: getRemoteAddress(req) } });
+        let avis = await moderation.reject(id, reason, { event: { origin: getRemoteAddress(req) } });
+
+        if (reason === 'injure') {
+            let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
+            let trainee = await db.collection('trainee').findOne({ token: comment.token });
+
+            let email = trainee.trainee.email;
+            sendInjureMail({ to: email }, trainee, comment, () => {
+                logger.info(`email sent to ${email} pour`, reason);
+            }, err => {
+                logger.error(`Unable to send email to ${email}`, err);
+            });
+        }
 
         return res.json(avis);
     }));
@@ -154,10 +168,16 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
     });
 
     router.put('/backoffice/moderateur/avis/:id/rejectReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
+        let { sendReponseRejeteeNotification } = mailing;
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
         let avis = await moderation.rejectReponse(id, { event: { origin: getRemoteAddress(req) } });
+
+        const comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
+        const organisme = await db.collection('accounts').findOne({ SIRET: parseInt(comment.training.organisation.siret) });
+        const email = getOrganismeEmail(organisme);
+        sendReponseRejeteeNotification(email, organisme);
 
         return res.json(avis);
 
