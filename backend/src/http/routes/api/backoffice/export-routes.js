@@ -5,6 +5,7 @@ const Boom = require('boom');
 const { tryAndCatch } = require('../../routes-utils');
 const { encodeStream } = require('iconv-lite/lib/index');
 const { transformObject } = require('../../../../common/utils/stream-utils');
+const getReponseStatus = require('../../../../common/utils/getReponseStatus');
 
 module.exports = ({ db, middlewares, logger }) => {
 
@@ -61,7 +62,7 @@ module.exports = ({ db, middlewares, logger }) => {
         }
 
         let stream = await db.collection('comment').find(query, { token: 0 }).stream();
-        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
+        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;réponse OF;statut;campagne;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
 
         if (req.user.codeFinanceur === POLE_EMPLOI || req.query.status === 'rejected') {
             let array = lines.split(';');
@@ -113,6 +114,8 @@ module.exports = ({ db, middlewares, logger }) => {
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') +
                 qualification + ';' +
+                (comment.reponse !== undefined ? comment.reponse.text : '') + ';' +
+                (comment.reponse !== undefined ? getReponseStatus(comment.reponse.status) : '') + ';' +
                 comment.campaign + ';' +
                 comment.date + ';' +
                 comment.accord + ';' +
