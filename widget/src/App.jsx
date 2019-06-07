@@ -79,9 +79,25 @@ class App extends Component {
         if (format === 'score') {
             widget = <ScoreWidget {...this.state} />;
         } else if (format === 'carrousel') {
-            widget = <CarrouselWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
+            widget = (
+                <CarrouselWidget {...this.state} fetchAvis={options => this.fetchAvis(options)}>
+                    {this.hasOption('contact-stagiaire') &&
+                    <div className="d-flex justify-content-center py-2">
+                        <ContactStagiaire />
+                    </div>
+                    }
+                </CarrouselWidget>
+            );
         } else {
-            widget = <ListeWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
+            widget = (
+                <ListeWidget {...this.state} fetchAvis={options => this.fetchAvis(options)}>
+                    {this.hasOption('contact-stagiaire') &&
+                    <div className="d-flex justify-content-center py-2">
+                        <ContactStagiaire />
+                    </div>
+                    }
+                </ListeWidget>
+            );
         }
 
         return (
@@ -89,11 +105,6 @@ class App extends Component {
                 {false && <GridDisplayer />}
                 <div className="container-fluid">
                     {widget}
-                    {this.hasOption('contact-stagiaire') &&
-                    <div className="d-flex justify-content-center py-2">
-                        <ContactStagiaire />
-                    </div>
-                    }
                 </div>
             </div>
         );
@@ -101,7 +112,7 @@ class App extends Component {
 }
 
 App.defaultProps = {
-    format: 'carrousel',
+    format: 'liste',
     type: 'action',
     identifiant: '26_100646|26_145859_7591',
     options: 'contact-stagiaire',

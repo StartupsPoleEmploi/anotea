@@ -14,6 +14,7 @@ export default class ListeWidget extends Component {
         score: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
         fetchAvis: PropTypes.func.isRequired,
+        children: PropTypes.node.isRequired,
     };
 
     componentDidMount() {
@@ -117,7 +118,7 @@ export default class ListeWidget extends Component {
     }
 
     render() {
-        let { score } = this.props;
+        let { score, children } = this.props;
 
         if (score.nb_avis === 0) {
             return <div></div>;
@@ -147,6 +148,7 @@ export default class ListeWidget extends Component {
                             <Verified />
                         </div>
                         {this.getListe()}
+                        {children}
                         <div className="d-flex justify-content-center mt-3">
                             <div className="d-xs-block d-sm-none">
                                 <Propulsed />
