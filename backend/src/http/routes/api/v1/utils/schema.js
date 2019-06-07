@@ -1,5 +1,5 @@
 module.exports = {
-    createOrganismeFomateurSchema: organisme => {
+    asOrganization: organisme => {
 
         let getAggregateRating = () => {
             return {
