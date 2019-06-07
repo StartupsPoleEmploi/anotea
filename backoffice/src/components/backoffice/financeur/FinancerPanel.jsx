@@ -465,8 +465,11 @@ export default class FinancerPanel extends React.Component {
                                                         <em>Cet utilisateur n'a pas laissé d'avis</em>}
                                                     </p>
                                                 </div>
-                                                {this.props.codeFinanceur === POLE_EMPLOI &&
-                                                <div> Qualification: {advice.qualification} </div>
+                                                {this.props.codeFinanceur === POLE_EMPLOI && advice.published &&
+                                                    <div> Qualification: {advice.qualification} </div>
+                                                }
+                                                {advice.rejected &&
+                                                    <div>Qualification: {advice.rejectReason} </div>
                                                 }
                                             </div>
                                             }
