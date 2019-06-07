@@ -1,0 +1,222 @@
+const express = require('express');
+const { tryAndCatch } = require('../routes-utils');
+
+module.exports = ({ db, regions }) => {
+
+    const router = express.Router(); // eslint-disable-line new-cap
+    const { findActiveRegions } = regions;
+    const avis = db.collection('comment');
+    const organismes = db.collection('accounts');
+    const trainee = db.collection('trainee');
+
+    const calculateRate = (dividend, divisor) => {
+        if (dividend && divisor !== 0) {
+            return (Math.round((dividend * 100) / divisor) + '%');
+        } else {
+            return (0 + '%');
+        }
+    };
+
+    const getOrganismesStats = async filter => {
+
+        let [
+            nbOrganimesContactes,
+            nbRelances,
+            ouvertureMails,
+            nbClicDansLien,
+            organismesActifs,
+            avisNonLus,
+            avisModeresNonRejetes,
+            nbCommentairesAvecOrganismesReponses,
+            nbAvisAvecOrganismesReponses,
+            avisSignales
+        ] = await Promise.all([
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ 'resend': true, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'tracking.firstRead': { $ne: null }, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ 'tracking.click': { $ne: null }, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'passwordHash': { $ne: null }, 'profile': 'organisme', ...filter }),
+            avis.countDocuments({ 'published': true, '$or': [{ 'read': false }, { 'read': { $ne: true } }], ...filter }),
+            avis.countDocuments({ 'moderated': true, 'rejected': false, ...filter }),
+            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'answer': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'reported': true, ...filter }),
+        ]);
+
+        return {
+            nbOrganimesContactes: nbOrganimesContactes,
+            nbRelances: nbRelances,
+            ouvertureMails: ouvertureMails,
+            nbClicDansLien: nbClicDansLien,
+            organismesActifs: organismesActifs,
+            avisNonLus: avisNonLus,
+            avisModeresNonRejetes: avisModeresNonRejetes,
+            nbCommentairesAvecOrganismesReponses: nbCommentairesAvecOrganismesReponses,
+            nbAvisAvecOrganismesReponses: nbAvisAvecOrganismesReponses,
+            avisSignales: avisSignales
+        };
+    };
+
+    const getRegionalOrganismesStats = async (regionName, codeRegion) => {
+
+        let filter = { codeRegion };
+        let regional = await getOrganismesStats(filter);
+
+        return {
+            perimetre: regionName,
+            nbOrganismesContactes: regional.nbOrganimesContactes,
+            mailsEnvoyes: regional.nbRelances + regional.nbOrganimesContactes,
+            tauxOuvertureMails: calculateRate(regional.ouvertureMails, regional.nbOrganimesContactes),
+            tauxClicDansLien: calculateRate(regional.nbClicDansLien, regional.ouvertureMails),
+            tauxOrganismesActifs: calculateRate(regional.organismesActifs, regional.nbOrganimesContactes),
+            tauxAvisNonLus: calculateRate(regional.avisNonLus, regional.avisModeresNonRejetes),
+            tauxCommentairesAvecReponses: calculateRate(regional.nbCommentairesAvecOrganismesReponses, regional.avisModeresNonRejetes),
+            tauxAvisAvecReponses: calculateRate(regional.nbAvisAvecOrganismesReponses, regional.avisModeresNonRejetes),
+            tauxAvisSignales: calculateRate(regional.avisSignales, regional.avisModeresNonRejetes),
+        };
+    };
+
+    const getNationalOrganismesStats = async () => {
+
+        let regions = findActiveRegions().map(region => region.codeRegion);
+        let filter = { 'codeRegion': { $in: regions } };
+        let national = await getOrganismesStats(filter);
+
+        return {
+            perimetre: 'Total',
+            nbOrganismesContactes: national.nbOrganimesContactes,
+            mailsEnvoyes: national.nbRelances + national.nbOrganimesContactes,
+            tauxOuvertureMails: calculateRate(national.ouvertureMails, national.nbOrganimesContactes),
+            tauxClicDansLien: calculateRate(national.nbClicDansLien, national.ouvertureMails),
+            tauxOrganismesActifs: calculateRate(national.organismesActifs, national.nbOrganimesContactes),
+            tauxAvisNonLus: calculateRate(national.avisNonLus, national.avisModeresNonRejetes),
+            tauxCommentairesAvecReponses: calculateRate(national.nbCommentairesAvecOrganismesReponses, national.avisModeresNonRejetes),
+            tauxAvisAvecReponses: calculateRate(national.nbAvisAvecOrganismesReponses, national.avisModeresNonRejetes),
+            tauxAvisSignales: calculateRate(national.avisSignales, national.avisModeresNonRejetes),
+        };
+    };
+
+    const getAvisStats = async filter => {
+
+        let [
+            nbStagiairesContactes,
+            nbRelances,
+            nbMailsOuverts,
+            nbLiensCliques,
+            nbQuestionnairesValidees,
+            nbAvisAvecCommentaire,
+            nbCommentairesAModerer,
+            nbCommentairesPositifs,
+            nbCommentairesNegatifs,
+            nbCommentairesRejetes
+        ] = await Promise.all([
+            trainee.countDocuments({ 'mailSent': true, ...filter }),
+            db.collection('trainee').aggregate([
+                {
+                    $match: {
+                        ...filter,
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        totalAmount: { $sum: '$mailRetry' },
+                    }
+                },
+            ]).toArray(),
+            trainee.countDocuments({ 'tracking.firstRead': { $ne: null }, ...filter }),
+            trainee.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
+            trainee.countDocuments({ 'avisCreated': true, ...filter }),
+            avis.countDocuments({ 'comment': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'comment': { $ne: null }, 'moderated': { $ne: true }, ...filter }),
+            avis.countDocuments({ 'comment': { $ne: null }, 'qualification': 'positif', ...filter }),
+            avis.countDocuments({ 'comment': { $ne: null }, 'qualification': 'négatif', ...filter }),
+            avis.countDocuments({ 'rejected': true, ...filter })
+        ]);
+        let nbMailEnvoyes = nbRelances.length > 0 ? (nbRelances[0].totalAmount + nbStagiairesContactes) : 0;
+
+        return {
+            nbStagiairesContactes: nbStagiairesContactes,
+            nbMailEnvoyes: nbMailEnvoyes,
+            nbMailsOuverts: nbMailsOuverts,
+            nbLiensCliques: nbLiensCliques,
+            nbQuestionnairesValidees: nbQuestionnairesValidees,
+            nbAvisAvecCommentaire: nbAvisAvecCommentaire,
+            nbCommentairesAModerer: nbCommentairesAModerer,
+            nbCommentairesPositifs: nbCommentairesPositifs,
+            nbCommentairesNegatifs: nbCommentairesNegatifs,
+            nbCommentairesRejetes: nbCommentairesRejetes
+        };
+    };
+
+    const getRegionalAvisStats = async (regionName, codeRegion) => {
+        
+        let filter = { codeRegion };
+        let regional = await getAvisStats(filter);
+
+        return {
+            perimetre: regionName,
+            nbStagiairesContactes: regional.nbStagiairesContactes,
+            nbMailEnvoyes: regional.nbMailEnvoyes,
+            tauxOuvertureMail: calculateRate(regional.nbMailsOuverts, regional.nbMailEnvoyes),
+            tauxLiensCliques: calculateRate(regional.nbLiensCliques, regional.nbMailsOuverts),
+            tauxQuestionnairesValides: calculateRate(regional.nbQuestionnairesValidees, regional.nbLiensCliques),
+            tauxAvisDeposes: calculateRate(regional.nbQuestionnairesValidees, regional.nbStagiairesContactes),
+            tauxAvisAvecCommentaire: calculateRate(regional.nbAvisAvecCommentaire, regional.nbQuestionnairesValidees),
+            nbCommentairesAModerer: regional.nbCommentairesAModerer,
+            tauxAvisPositifs: calculateRate(regional.nbCommentairesPositifs, regional.nbAvisAvecCommentaire),
+            tauxAvisNegatifs: calculateRate(regional.nbCommentairesNegatifs, regional.nbAvisAvecCommentaire),
+            tauxAvisRejetes: calculateRate(regional.nbCommentairesRejetes, regional.nbAvisAvecCommentaire),
+        };
+    };
+
+    const getNationalAvisStats = async () => {
+
+        let regions = findActiveRegions().map(region => region.codeRegion);
+        let filter = { 'codeRegion': { $in: regions } };
+        let national = await getAvisStats(filter);
+
+        return {
+            perimetre: 'Total',
+            nbStagiairesContactes: national.nbStagiairesContactes,
+            nbMailEnvoyes: national.nbMailEnvoyes,
+            tauxOuvertureMail: calculateRate(national.nbMailsOuverts, national.nbMailEnvoyes),
+            tauxLiensCliques: calculateRate(national.nbLiensCliques, national.nbMailsOuverts),
+            tauxQuestionnairesValides: calculateRate(national.nbQuestionnairesValidees, national.nbLiensCliques),
+            tauxAvisDeposes: calculateRate(national.nbQuestionnairesValidees, national.nbStagiairesContactes),
+            tauxAvisAvecCommentaire: calculateRate(national.nbAvisAvecCommentaire, national.nbQuestionnairesValidees),
+            nbCommentairesAModerer: national.nbCommentairesAModerer,
+            tauxAvisPositifs: calculateRate(national.nbCommentairesPositifs, national.nbAvisAvecCommentaire),
+            tauxAvisNegatifs: calculateRate(national.nbCommentairesNegatifs, national.nbAvisAvecCommentaire),
+            tauxAvisRejetes: calculateRate(national.nbCommentairesRejetes, national.nbAvisAvecCommentaire),
+        };
+    };
+
+    router.get('/public-stats/organismes', tryAndCatch(async (req, res) => {
+
+        let organismes = await Promise.all(findActiveRegions().map(async region => {
+            return getRegionalOrganismesStats(region.nom, region.codeRegion);
+        }));
+
+        let nationalOrganismes = await getNationalOrganismesStats();
+
+        organismes.push(nationalOrganismes);
+
+        res.status(200).send(organismes);
+    }));
+
+    router.get('/public-stats/avis', tryAndCatch(async (req, res) => {
+
+        let avis = await Promise.all(findActiveRegions().map(async region => {
+            return getRegionalAvisStats(region.nom, region.codeRegion);
+        }));
+
+        let nationalAvis = await getNationalAvisStats();
+
+        avis.push(nationalAvis);
+
+        res.status(200).send(avis);
+    }));
+
+    return router;
+};

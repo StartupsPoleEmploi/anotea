@@ -1,0 +1,69 @@
+@import '../styles/variables';
+
+.dropdown {
+    margin: 8px 0px 0px 16px;
+
+    @mixin drop-down-button($border-bottom, $border-radius) {
+        height: 40px;
+        width: 215px;
+        border: 1px solid $color-grey-25;
+        border-radius: $border-radius;
+        background-color: $color-white;
+        outline: none;
+        border-bottom: $border-bottom;
+
+        > span {
+            height: 24px;
+            opacity: 0.8;
+            color: $color-black;
+            font-family: Lato;
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+
+        .caret {
+            margin: 6px 7px 0px 0px;
+        }
+    }
+
+    .dropdown-button-down {
+        @include drop-down-button(none, 5px 5px 0px 0px);
+    }
+
+    .dropdown-button-up {
+        @include drop-down-button(null, 5px);
+    }
+
+    .menu {
+        max-height:250px;
+        overflow:auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid $color-grey-25;
+        border-radius: 0px 0px 5px 5px;
+        background-color: $color-white;
+        z-index: 1;
+        position: relative;
+
+        .menu-button {
+            border: none;
+            background-color: $color-white;
+
+            &:focus {
+                outline: none;
+            }
+
+            > span {
+                float: left;
+                height: 18px;
+                opacity: 0.6;
+                color: $color-black;
+                font-family: Lato;
+                font-size: 0.875rem;
+                line-height: 1.125rem;
+            }
+        }
+    }
+}

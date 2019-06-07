@@ -40,6 +40,14 @@ services:
     depends_on:
       - backend
 
+  stats:
+    image: anotea_stats
+    container_name: anotea_stats
+    build:
+      context: stats
+    depends_on:
+      - backend
+
   backend:
     image: anotea_backend
     container_name: anotea_backend
