@@ -106,6 +106,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     moyen_materiel: 2,
                     accompagnement: 1,
                     global: 2.4,
+                },
+                aggregation: {
+                    global: {
+                        max: 2.4,
+                        min: 2.4,
+                    }
                 }
             },
             formation: {
@@ -329,7 +335,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     equipe_formateurs: 1,
                     moyen_materiel: 5,
                     accompagnement: 1,
-                    global: 5,
+                    global: 3,
                 },
             })),
         ]);
@@ -345,7 +351,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 equipe_formateurs: 2.7,
                 moyen_materiel: 4.7,
                 accompagnement: 3.7,
-                global: 5,
+                global: 4.3,
+            },
+            aggregation: {
+                global: {
+                    max: 5,
+                    min: 3,
+                }
             }
         });
     });

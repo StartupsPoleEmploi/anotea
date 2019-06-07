@@ -1,4 +1,4 @@
-const computeScore = require('./computeScore');
+const computeScore = require('../../../../../common/utils/computeScore');
 const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
 
 module.exports = (formation, allComments) => {

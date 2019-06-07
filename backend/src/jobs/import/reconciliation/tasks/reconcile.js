@@ -65,7 +65,7 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
 
         } catch (e) {
             stats.error++;
-            logger.error(`Formation ${cursor._attributes.numero} can not be reconciliated`, e);
+            logger.error(`Formation ${rawFormation._attributes.numero} can not be reconciliated`, e);
         }
     }
 

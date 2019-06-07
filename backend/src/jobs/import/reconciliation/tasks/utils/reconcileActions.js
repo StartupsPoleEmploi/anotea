@@ -1,4 +1,4 @@
-const computeScore = require('./computeScore');
+const computeScore = require('../../../../../common/utils/computeScore');
 const { flatten } = require('../../../../job-utils');
 const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
 

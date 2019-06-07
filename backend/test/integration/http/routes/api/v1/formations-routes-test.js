@@ -72,6 +72,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     equipe_formateurs: 4,
                     moyen_materiel: 2,
                     global: 2,
+                },
+                aggregation: {
+                    global: {
+                        max: 2.4,
+                        min: 2.4,
+                    }
                 }
             },
             meta: {
@@ -406,29 +412,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         );
 
         let response = await request(app).get('/api/v1/formations?notes_decimales=true');
-        assert.deepStrictEqual(response.body.formations[0].score, {
-            nb_avis: 1,
-            notes: {
-                accompagnement: 1,
-                accueil: 3,
-                contenu_formation: 2,
-                equipe_formateurs: 4,
-                moyen_materiel: 2,
-                global: 2.4,
-            }
+        assert.deepStrictEqual(response.body.formations[0].score.notes, {
+            accompagnement: 1,
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            global: 2.4,
         });
 
         response = await request(app).get('/api/v1/formations/F_XX_X1?notes_decimales=true');
-        assert.deepStrictEqual(response.body.score, {
-            nb_avis: 1,
-            notes: {
-                accompagnement: 1,
-                accueil: 3,
-                contenu_formation: 2,
-                equipe_formateurs: 4,
-                moyen_materiel: 2,
-                global: 2.4,
-            }
+        assert.deepStrictEqual(response.body.score.notes, {
+            accompagnement: 1,
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            global: 2.4,
         });
     });
 
