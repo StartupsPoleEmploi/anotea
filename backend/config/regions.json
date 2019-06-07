@@ -338,7 +338,7 @@
   },
   {
     "nom": "Occitanie",
-    "active": true,
+    "active": false,
     "codeRegion": "16",
     "codeINSEE": "76",
     "contact": "anotea.occitanie",
