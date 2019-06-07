@@ -1,8 +1,6 @@
-const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
+module.exports = (db, formation) => {
 
-module.exports = async (db, formation) => {
-
-    let comments = await db.collection('comment').find({
+    return db.collection('comment').find({
         $and: [
             {
                 'training.organisation.siret': {
@@ -38,6 +36,4 @@ module.exports = async (db, formation) => {
         reponse: 1,
     })
     .toArray();
-
-    return comments.map(c => convertCommentToAvis(c));
 };
