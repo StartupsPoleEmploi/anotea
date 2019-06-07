@@ -2,7 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/test-server');
-const { newComment, newTrainee } = require('../../../../../helpers/data/dataset');
+const { newComment, newTrainee, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme, logAsFinancer, insertIntoDatabase, getTestDatabase }) => {
 
@@ -241,9 +241,11 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
 
         let app = await startServer();
         let comment = newComment();
+        let organisme = newOrganismeAccount({ SIRET: parseInt(comment.training.organisation.siret) });
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', comment),
+            insertIntoDatabase('accounts', organisme)
         ]);
 
         let response = await request(app)

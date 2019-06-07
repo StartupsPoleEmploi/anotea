@@ -1,19 +1,10 @@
 const ObjectID = require('mongodb').ObjectID;
 const { IdNotFoundError } = require('./../errors');
 
-module.exports = (db, logger, mailer) => {
+module.exports = db => {
 
     const saveEvent = function(id, type, source) {
         db.collection('events').insertOne({ adviceId: id, date: new Date(), type: type, source: source });
-    };
-
-    const sendInjureEmailAsync = (trainee, comment, reason) => {
-        let email = trainee.trainee.email;
-        mailer.sendInjureMail({ to: email }, trainee, comment, () => {
-            logger.info(`email sent to ${email} pour`, reason);
-        }, err => {
-            logger.error(`Unable to send email to ${email}`, err);
-        });
     };
 
     return {
@@ -73,12 +64,6 @@ module.exports = (db, logger, mailer) => {
 
             if (!result.value) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-            }
-
-            if (options.sendEmail && reason === 'injure') {
-                let comment = await db.collection('comment').findOne({ _id: oid });
-                let trainee = await db.collection('trainee').findOne({ token: comment.token });
-                sendInjureEmailAsync(trainee, comment, reason);
             }
 
             saveEvent(id, 'reject', {
