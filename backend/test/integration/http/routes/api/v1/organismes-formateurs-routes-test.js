@@ -47,8 +47,39 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                     equipe_formateurs: 4,
                     moyen_materiel: 3,
                     accompagnement: 4,
-                    global: 5
-                }
+                    global: 5,
+                },
+                aggregation: {
+                    global: {
+                        max: 5.1,
+                        min: 1,
+                    },
+                },
+            }
+        });
+    });
+
+    it('can return organisme by id as application/ld+json', async () => {
+
+        let app = await startServer();
+        let siret = '22222222222222';
+        await insertIntoDatabase('accounts', buildOrganismeAccount(siret));
+
+        let response = await request(app)
+        .get(`/api/v1/organismes-formateurs/${siret}`)
+        .set('Accept', 'application/ld+json');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            '@context': 'http://schema.org',
+            '@type': 'Organization',
+            'name': 'Pole Emploi Formation',
+            'aggregateRating': {
+                '@type': 'AggregateRating',
+                'ratingValue': 5.1,
+                'ratingCount': 15,
+                'bestRating': 5.1,
+                'worstRating': 1,
             }
         });
     });
@@ -333,7 +364,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 moyen_materiel: 3.1,
                 accompagnement: 4.1,
                 global: 5.1,
-            }
+            },
+            aggregation: {
+                global: {
+                    max: 5.1,
+                    min: 1,
+                },
+            },
         });
 
         response = await request(app).get('/api/v1/organismes-formateurs/11111111111111?notes_decimales=true');
@@ -346,7 +383,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 moyen_materiel: 3.1,
                 accompagnement: 4.1,
                 global: 5.1,
-            }
+            },
+            aggregation: {
+                global: {
+                    max: 5.1,
+                    min: 1,
+                },
+            },
         });
 
         response = await request(app).get('/api/v1/organismes-formateurs/11111111111111/avis?notes_decimales=true');

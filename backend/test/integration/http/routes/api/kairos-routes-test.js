@@ -70,7 +70,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
                         moyen_materiel: 3.1,
                         accompagnement: 4.1,
                         global: 5.1,
-                    }
+                    },
+                    aggregation: {
+                        global: {
+                            max: 5.1,
+                            min: 1,
+                        },
+                    },
                 }
             }
         });
@@ -371,7 +377,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
                             moyen_materiel: 3.1,
                             accompagnement: 4.1,
                             global: 5.1,
-                        }
+                        },
+                        aggregation: {
+                            global: {
+                                max: 5.1,
+                                min: 1,
+                            },
+                        },
                     }
                 }
             }
