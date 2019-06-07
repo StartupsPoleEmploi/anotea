@@ -1,0 +1,10 @@
+Bonjour,
+
+La réponse à un avis que vous avez déposé a été rejetée.
+
+Cordialement,
+L’Equipe Anotéa
+
+Plus d’infos sur Anotea: https://anotea.pole-emploi.fr/
+Je me connecte à mon Espace Anotéa : https://anotea.pole-emploi.fr/admin/
+En cas de besoin contactez : [<%= contact %>]

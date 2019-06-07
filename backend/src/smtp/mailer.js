@@ -144,6 +144,21 @@ module.exports = function(db, logger, configuration, regions) {
 
             sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
         },
+        sendReponseRejeteeNotification: async (mailOptions, organisme, successCallback, errorCallback) => {
+
+            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
+            let params = {
+                hostname: configuration.app.public_hostname,
+                trackingLink: getTrackingLink(organisme),
+                contact: getRegionEmail(region)
+            };
+
+            mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
+            mailOptions.subject = `Pôle Emploi - Votre réponse a été rejetée`;
+
+            sendMail('organisme_reponse_rejetee', params, mailOptions, successCallback, errorCallback);
+        },
         sendOrganisationAccountLink: async (mailOptions, organisme, successCallback, errorCallback) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
