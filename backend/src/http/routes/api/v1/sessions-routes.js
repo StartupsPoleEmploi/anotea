@@ -2,7 +2,7 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const { tryAndCatch } = require('../../routes-utils');
+const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createSessionDTO, createPaginationDTO } = require('./utils/dto');
@@ -36,20 +36,23 @@ module.exports = ({ db, middlewares }) => {
             ...(parameters.nb_avis ? { 'score.nb_avis': { $gte: parameters.nb_avis } } : {}),
         };
 
-        let cursor = await collection.find(query)
+        let sessions = await collection.find(query)
         .project(buildProjection(parameters.fields))
         .limit(limit)
         .skip(skip);
 
-        let [total, sessions] = await Promise.all([cursor.count(), cursor.toArray()]);
+        let total = await sessions.count();
+        let stream = sessions.transformStream({
+            transform: session => createSessionDTO(session, { notes_decimales: parameters.notes_decimales })
+        });
 
-        res.json({
-            sessions: sessions.map(session => {
-                return createSessionDTO(session, { notes_decimales: parameters.notes_decimales });
-            }) || [],
-            meta: {
-                pagination: createPaginationDTO(pagination, total)
-            },
+        return sendJsonStream(stream, res, {
+            objectPropertyName: 'sessions',
+            object: {
+                meta: {
+                    pagination: createPaginationDTO(pagination, total)
+                },
+            }
         });
     }));
 

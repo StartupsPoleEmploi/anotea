@@ -3,7 +3,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
-const { tryAndCatch } = require('../../routes-utils');
+const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const { createPaginationDTO, createAvisDTO } = require('./utils/dto');
 
@@ -72,19 +72,24 @@ module.exports = ({ db, middlewares }) => {
         let query = buildAvisQuery(filters);
 
 
-        let cursor = await db.collection('comment')
+        let comments = await db.collection('comment')
         .find(query)
         .sort({ date: -1 })
         .limit(limit)
         .skip(skip);
 
-        let [total, comment] = await Promise.all([cursor.count(), cursor.toArray()]);
+        let total = await comments.count();
+        let stream = comments.transformStream({
+            transform: comment => createAvisDTO(comment, { notes_decimales: parameters.notes_decimales })
+        });
 
-        res.json({
-            avis: comment.map(c => createAvisDTO(c, { notes_decimales: parameters.notes_decimales })),
-            meta: {
-                pagination: createPaginationDTO(pagination, total)
-            },
+        return sendJsonStream(stream, res, {
+            objectPropertyName: 'avis',
+            object: {
+                meta: {
+                    pagination: createPaginationDTO(pagination, total)
+                },
+            }
         });
     }));
 

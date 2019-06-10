@@ -183,6 +183,32 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.deepStrictEqual(response.body.avis[0].commentaire, undefined);
     });
 
+    it('should return empty avis array when no avis can be found', async () => {
+
+        let app = await startServer();
+        await reconcileSessions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '82422814200108',
+                })
+            ],
+            [
+                //no comments
+            ]
+        );
+
+        let response = await request(app).get(`/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
+    });
+
     it('should fail when numero de session is unknown', async () => {
 
         let app = await startServer();

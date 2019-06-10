@@ -21,26 +21,44 @@ module.exports = {
     transformObject: transformObject,
     ignoreEmpty: () => transformObject(data => data, { ignoreEmpty: true }),
     ignoreFirstLine: () => transformObject(data => data, { ignoreFirstLine: true }),
-    jsonStream: () => {
+    jsonStream: wrapper => {
         let chunksSent = 0;
         return new Transform({
             objectMode: true,
             transform: function(data, encoding, callback) {
                 if (chunksSent === 0) {
-                    this.push(new Buffer('['));
+                    if (wrapper.object) {
+                        let value = JSON.stringify(wrapper.object);
+                        value = value.substring(0, value.length - 1);
+                        value += String(`,"${wrapper.objectPropertyName}":[`);
+                        this.push(Buffer.from(value));
+                    } else {
+                        this.push(Buffer.from('['));
+                    }
                 }
                 if (chunksSent++ > 0) {
-                    this.push(new Buffer(','));
+                    this.push(Buffer.from(','));
                 }
 
                 this.push(JSON.stringify(data));
                 callback();
             },
             flush: function(callback) {
-                if (chunksSent > 0) {
-                    this.push(new Buffer(']'));
+                if (chunksSent === 0) {
+                    //nothing sent
+                    if (wrapper.object) {
+                        let value = _.cloneDeep(wrapper.object);
+                        value[wrapper.objectPropertyName] = [];
+                        this.push(Buffer.from(JSON.stringify(value)));
+                    } else {
+                        this.push(Buffer.from('[]'));
+                    }
                 } else {
-                    this.push(new Buffer('[]')); //means nothing sent
+                    //Close json properly
+                    this.push(Buffer.from(']'));
+                    if (wrapper.object) {
+                        this.push(Buffer.from('}'));
+                    }
                 }
                 return callback();
             }
