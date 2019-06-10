@@ -50,7 +50,7 @@ module.exports = {
             db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.code_postal': 1 }),
             db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.region': 1 }),
             db.collection('accounts').createIndex({ 'codeRegion': 1 }),
-            db.collection('accounts').createIndex({ 'courriel': 1 }),
+            db.collection('accounts').createIndex({ 'courriel': 1 }, { unique: true }),
             db.collection('accounts').createIndex({ 'profile': 1 })
         ]);
     },
