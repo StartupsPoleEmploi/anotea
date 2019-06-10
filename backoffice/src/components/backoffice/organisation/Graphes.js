@@ -1,5 +1,6 @@
 import React from 'react';
-import { Pie } from 'react-chartjs-2';
+import { Pie, defaults } from 'react-chartjs-2';
+import 'chartjs-plugin-labels';
 import Modal from 'react-modal';
 
 import Stars from '../common/deprecated/Stars';
@@ -90,6 +91,13 @@ export default class Graphes extends React.Component {
 
     constructor(props) {
         super(props);
+
+        defaults.pie.plugins = {
+            labels: {
+                fontColor: 'white',
+                fontStyle: 'bold'
+            }
+        };
 
         getOrganisationStates(props.organisationId).then(states => {
             if (states.length > 0) {

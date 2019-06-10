@@ -16,6 +16,7 @@
   "dependencies": {
     "bootstrap": "4.1.3",
     "chart.js": "2.7.3",
+    "chartjs-plugin-labels": "1.1.0",
     "jquery": "3.3.1",
     "jwt-decode": "2.2.0",
     "node-sass-chokidar": "1.3.4",
