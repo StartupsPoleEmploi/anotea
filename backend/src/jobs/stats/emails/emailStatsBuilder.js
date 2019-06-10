@@ -1,7 +1,7 @@
 module.exports = (db, logger) => {
 
     const buildStats = async option => {
-        logger.info(`Building email statistics displayed on financer dashboard (${option.unwind ? 'by code financeur' : 'with aggregated financeur code' })`);
+        logger.info(`Building email statistics displayed on financer dashboard (${option.unwind ? 'by code financeur' : 'with aggregated financeur code'})`);
 
         const request = [{ $match: { 'mailSentDate': { $ne: null } } }];
         let codeFinancerProject;
@@ -32,25 +32,8 @@ module.exports = (db, logger) => {
                 emailOpen: {
                     $sum: { $cond: ['$tracking', 1, 0] }
                 },
-                advicesPublished: {
-                    $filter: {
-                        input: '$advices',
-                        as: 'advice',
-                        cond: {
-                            $or: [{
-                                // avis avec commentaire, publié
-                                $and: [
-                                    [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 1, 0],
-                                    { $eq: ['$$advice.published', true] }
-                                ]
-                            }, {
-                                // avis sans commentaire (notes seules)
-                                $and: [
-                                    [{ $eq: [{ $ifNull: ['$$advice.comment', null] }, null] }, 0, 1]
-                                ]
-                            }]
-                        }
-                    }
+                countAdvices: {
+                    $sum: { '$size': '$advices' },
                 },
                 advicesWithComments: {
                     $filter: {
@@ -111,9 +94,7 @@ module.exports = (db, logger) => {
                 codeFinanceur: '$codeFinanceur',
                 count: '$count',
                 emailOpen: '$emailOpen',
-                countAdvicesPublished: {
-                    '$size': '$advicesPublished'
-                },
+                countAdvices: '$countAdvices',
                 countAdvicesWithComments: {
                     '$size': '$advicesWithComments'
                 },
@@ -139,7 +120,7 @@ module.exports = (db, logger) => {
                 },
                 count: { $sum: '$count' },
                 countEmailOpen: { $sum: '$emailOpen' },
-                countAdvicesPublished: { $sum: '$countAdvicesPublished' },
+                countAdvices: { $sum: '$countAdvices' },
                 countAdvicesWithComments: { $sum: '$countAdvicesWithComments' },
                 countAdvicesPositif: { $sum: '$countAdvicesPositif' },
                 countAdvicesNegatif: { $sum: '$countAdvicesNegatif' },

@@ -217,7 +217,7 @@ export default class Graphes extends React.Component {
                                                     text: `Note globale`
                                                 },
                                                 legend: {
-                                                    display: false
+                                                    display: true
                                                 }
                                             }}
                                         />
