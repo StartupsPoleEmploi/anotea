@@ -45,8 +45,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             region: '11',
             code_region: '11',
             periode: {
-                debut: new Date('2017-10-29T23:00:00.000Z'),
-                fin: new Date('2018-05-31T22:00:00.000Z')
+                debut: new Date('2017-10-30T00:00:00.000Z'),
+                fin: new Date('2018-06-01T00:00:00.000Z'),
             },
             avis: [
                 {
@@ -383,8 +383,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             region: '11',
             code_region: '11',
             periode: {
-                debut: new Date('2017-10-29T23:00:00.000Z'),
-                fin: new Date('2018-05-31T22:00:00.000Z')
+                debut: new Date('2017-10-30T00:00:00.000Z'),
+                fin: new Date('2018-06-01T00:00:00.000Z')
             },
             avis: [],
             score: {
