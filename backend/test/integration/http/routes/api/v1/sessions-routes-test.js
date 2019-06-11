@@ -145,7 +145,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
-    it('can return actions by id as application/ld+json', async () => {
+    it('can return CourseInstance for application/ld+json', async () => {
 
         let app = await startServer();
         await reconcileSessions(
@@ -200,6 +200,32 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 '@type': 'Organization',
                 'name': 'Centre de formation Anotéa',
             },
+            'hasCourseInstance': [
+                {
+                    '@type': 'CourseInstance',
+                    'courseMode': 'onsite',
+                    'name': 'Développeur web',
+                    'location': {
+                        '@type': 'Place',
+                        'name': 'Paris',
+                        'address': {
+                            '@type': 'PostalAddress',
+                            'addressLocality': 'Paris',
+                            'postalCode': '75019'
+                        }
+                    },
+                    'organizer': {
+                        '@type': 'Organization',
+                        'name': 'Anotea Formation Paris'
+                    },
+                    'performer': {
+                        '@type': 'Organization',
+                        'name': 'Anotea Formation Paris',
+                    },
+                    'startDate': '2017-10-30T00:00:00.000Z',
+                    'endDate': '2018-06-01T00:00:00.000Z',
+                }
+            ],
             'aggregateRating': {
                 '@type': 'AggregateRating',
                 'ratingValue': 2.4,

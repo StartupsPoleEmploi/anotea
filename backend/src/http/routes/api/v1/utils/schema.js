@@ -35,22 +35,43 @@ module.exports = {
             ...(hasScore ? { 'aggregateRating': getAggregateRating(organisme.score) } : {}),
         };
     },
-    toCourse: formation => {
-        let hasScore = formation.score && formation.score.nb_avis > 0;
+    toCourse: (formation, options = {}) => {
+        let score = options.score || formation.score;
+        let hasScore = score && score.nb_avis > 0;
 
         return {
             '@context': 'http://schema.org',
             ...getCourse(formation),
-            ...(hasScore ? { 'aggregateRating': getAggregateRating(formation.score) } : {}),
+            ...(hasScore ? { 'aggregateRating': getAggregateRating(score) } : {}),
         };
     },
-    toCourseInstance: action => {
+    toCourseInstance: session => {
 
-        let hasScore = action.score && action.score.nb_avis > 0;
+        let hasScore = session.score && session.score.nb_avis > 0;
         return {
             '@context': 'http://schema.org',
-            ...getCourse(action.formation),
-            ...(hasScore ? { 'aggregateRating': getAggregateRating(action.score) } : {}),
+            ...getCourse(session.formation),
+            'hasCourseInstance': [
+                {
+                    '@type': 'CourseInstance',
+                    'name': session.formation.intitule,
+                    'courseMode': 'onsite',
+                    'location': {
+                        '@type': 'Place',
+                        'name': session.formation.action.lieu_de_formation.ville,
+                        'address': {
+                            '@type': 'PostalAddress',
+                            'addressLocality': session.formation.action.lieu_de_formation.ville,
+                            'postalCode': session.formation.action.lieu_de_formation.code_postal,
+                        },
+                    },
+                    'organizer': getOrganization(session.formation.action.organisme_formateur),
+                    'performer': getOrganization(session.formation.action.organisme_formateur),
+                    'startDate': session.periode.debut,
+                    'endDate': session.periode.fin,
+                }
+            ],
+            ...(hasScore ? { 'aggregateRating': getAggregateRating(session.score) } : {}),
         };
     },
 };
