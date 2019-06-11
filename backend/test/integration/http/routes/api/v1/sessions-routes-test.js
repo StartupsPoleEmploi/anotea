@@ -145,6 +145,71 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
+    it('can return actions by id as application/ld+json', async () => {
+
+        let app = await startServer();
+        await reconcileSessions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        accompagnement: 1,
+                        accueil: 3,
+                        contenu_formation: 2,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 2,
+                        global: 2.4,
+                    },
+                })
+            ]
+        );
+
+
+        let response = await request(app)
+        .get(`/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX`)
+        .set('Accept', 'application/ld+json');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            '@context': 'http://schema.org',
+            '@type': 'Course',
+            'name': 'Développeur web',
+            'courseCode': 'F_XX_XX',
+            'provider': {
+                '@type': 'Organization',
+                'name': 'Centre de formation Anotéa',
+            },
+            'aggregateRating': {
+                '@type': 'AggregateRating',
+                'ratingValue': 2.4,
+                'ratingCount': 1,
+                'bestRating': 2.4,
+                'worstRating': 2.4,
+            }
+        });
+    });
+
     it('should return session with rejected avis', async () => {
 
         let app = await startServer();
