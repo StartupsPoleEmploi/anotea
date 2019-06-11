@@ -1,7 +1,9 @@
-const computeScore = require('./computeScore');
+const moment = require('moment');
+const computeScore = require('../../../../../common/utils/computeScore');
 const { flatten } = require('../../../../job-utils');
+const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
 
-module.exports = (formation, allAvis) => {
+module.exports = (formation, allComments) => {
 
     return formation.actions.reduce((acc, action) => {
 
@@ -9,11 +11,9 @@ module.exports = (formation, allAvis) => {
             return acc;
         }
 
-        let codePostal = action.lieu_de_formation.coordonnees.adresse.codepostal;
-        let siret = action.organisme_formateur.siret_formateur.siret;
-        let avis = allAvis.filter(a => {
-            return a.formation.action.lieu_de_formation.code_postal === codePostal &&
-                a.formation.action.organisme_formateur.siret === siret;
+        let comments = allComments.filter(a => {
+            return a.training.place.postalCode === action.lieu_de_formation.coordonnees.adresse.codepostal &&
+                a.training.organisation.siret === action.organisme_formateur.siret_formateur.siret;
         });
 
         return [
@@ -26,8 +26,12 @@ module.exports = (formation, allAvis) => {
                     numero: session._attributes.numero,
                     region: action.lieu_de_formation.coordonnees.adresse.region,
                     code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
-                    avis: avis || [],
-                    score: computeScore(avis),
+                    periode: {
+                        debut: moment(session.periode.debut, 'YYYYMMDD').toDate(),
+                        fin: moment(session.periode.fin, 'YYYYMMDD').toDate(),
+                    },
+                    avis: comments.map(a => convertCommentToAvis(a)) || [],
+                    score: computeScore(comments),
                     formation: {
                         numero: formation._attributes.numero,
                         intitule: formation.intitule_formation,
@@ -45,14 +49,14 @@ module.exports = (formation, allAvis) => {
                         action: {
                             numero: action._attributes.numero,
                             lieu_de_formation: {
-                                code_postal: codePostal,
+                                code_postal: action.lieu_de_formation.coordonnees.adresse.codepostal,
                                 ville: action.lieu_de_formation.coordonnees.adresse.ville,
                             },
                             organisme_financeurs: action.organisme_financeurs ?
                                 flatten(action.organisme_financeurs.map(of => of.code_financeur)) : [],
                             organisme_formateur: {
                                 raison_sociale: action.organisme_formateur.raison_sociale_formateur,
-                                siret: siret,
+                                siret: action.organisme_formateur.siret_formateur.siret,
                                 numero: action.organisme_formateur._attributes ? action.organisme_formateur._attributes.numero : null,
                             },
                         },
@@ -67,8 +71,8 @@ module.exports = (formation, allAvis) => {
                         },
                         reconciliation: {
                             //TODO must be converted into an array in v2
-                            organisme_formateur: siret,
-                            lieu_de_formation: codePostal,
+                            organisme_formateur: action.organisme_formateur.siret_formateur.siret,
+                            lieu_de_formation: action.lieu_de_formation.coordonnees.adresse.codepostal,
                             certifinfos: formation._meta.certifinfos,
                             formacodes: formation._meta.formacodes,
                         },

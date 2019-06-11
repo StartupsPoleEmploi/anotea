@@ -72,6 +72,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     equipe_formateurs: 4,
                     moyen_materiel: 2,
                     global: 2,
+                },
+                aggregation: {
+                    global: {
+                        max: 2.4,
+                        min: 2.4,
+                    }
                 }
             },
             meta: {
@@ -132,6 +138,69 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             }]
         });
     });
+
+    it('can return actions by id as application/ld+json', async () => {
+
+        let app = await startServer();
+        await reconcileFormations(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        accompagnement: 1,
+                        accueil: 3,
+                        contenu_formation: 2,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 2,
+                        global: 2.4,
+                    },
+                })
+            ]
+        );
+
+
+        let response = await request(app)
+        .get(`/api/v1/formations/F_XX_XX`)
+        .set('Accept', 'application/ld+json');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            '@context': 'http://schema.org',
+            '@type': 'Course',
+            'name': 'Développeur web',
+            'courseCode': 'F_XX_XX',
+            'provider': {
+                '@type': 'Organization',
+                'name': 'Centre de formation Anotéa',
+            },
+            'aggregateRating': {
+                '@type': 'AggregateRating',
+                'ratingValue': 2.4,
+                'ratingCount': 1,
+                'bestRating': 2.4,
+                'worstRating': 2.4,
+            }
+        });
+    })
 
     it('should return formation with rejected avis', async () => {
 
@@ -430,29 +499,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         );
 
         let response = await request(app).get('/api/v1/formations?notes_decimales=true');
-        assert.deepStrictEqual(response.body.formations[0].score, {
-            nb_avis: 1,
-            notes: {
-                accompagnement: 1,
-                accueil: 3,
-                contenu_formation: 2,
-                equipe_formateurs: 4,
-                moyen_materiel: 2,
-                global: 2.4,
-            }
+        assert.deepStrictEqual(response.body.formations[0].score.notes, {
+            accompagnement: 1,
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            global: 2.4,
         });
 
         response = await request(app).get('/api/v1/formations/F_XX_X1?notes_decimales=true');
-        assert.deepStrictEqual(response.body.score, {
-            nb_avis: 1,
-            notes: {
-                accompagnement: 1,
-                accueil: 3,
-                contenu_formation: 2,
-                equipe_formateurs: 4,
-                moyen_materiel: 2,
-                global: 2.4,
-            }
+        assert.deepStrictEqual(response.body.score.notes, {
+            accompagnement: 1,
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            global: 2.4,
         });
     });
 

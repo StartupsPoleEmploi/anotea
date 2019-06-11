@@ -115,7 +115,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     moyen_materiel: 3.1,
                     accompagnement: 4.1,
                     global: 5.1,
-                }
+                },
+                aggregation: {
+                    global: {
+                        max: 5.1,
+                        min: 1,
+                    },
+                },
             },
             meta: {
                 siretAsString: '22222222222222',

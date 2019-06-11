@@ -1,54 +1,4 @@
-const $round = require('../../$round');
-
-const computeScore = async (db, siret) => {
-    let results = await db.collection('comment').aggregate([
-        {
-            $match: {
-                $expr: {
-                    $eq: ['$training.organisation.siret', siret]
-                },
-                $or: [
-                    { 'comment': { $exists: false } },
-                    { 'comment': null },
-                    { 'published': true },
-                    { 'rejected': true },
-                ]
-            }
-        },
-        {
-            $group: {
-                _id: null,
-                accueil: { $avg: '$rates.accueil' },
-                contenu_formation: { $avg: '$rates.contenu_formation' },
-                equipe_formateurs: { $avg: '$rates.equipe_formateurs' },
-                moyen_materiel: { $avg: '$rates.moyen_materiel' },
-                accompagnement: { $avg: '$rates.accompagnement' },
-                global: { $avg: '$rates.global' },
-                count: { $sum: 1 }
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                nb_avis: '$count',
-                notes: {
-                    accueil: $round('$accueil', 1),
-                    contenu_formation: $round('$contenu_formation', 1),
-                    equipe_formateurs: $round('$equipe_formateurs', 1),
-                    moyen_materiel: $round('$moyen_materiel', 1),
-                    accompagnement: $round('$accompagnement', 1),
-                    global: $round('$global', 1),
-                },
-            }
-        }
-    ]).toArray();
-
-    if (results.length === 0) {
-        return { nb_avis: 0 };
-    }
-
-    return results[0];
-};
+const computeScore = require('../../../common/utils/computeScore');
 
 module.exports = async (db, logger) => {
 
@@ -60,12 +10,23 @@ module.exports = async (db, logger) => {
     };
 
     while (await cursor.hasNext()) {
+        stats.total++;
         const organisme = await cursor.next();
         try {
-            stats.total++;
+
+            let avis = await db.collection('comment').find({
+                'training.organisation.siret': organisme.meta.siretAsString,
+                '$or': [
+                    { 'comment': { $exists: false } },
+                    { 'comment': null },
+                    { 'published': true },
+                    { 'rejected': true },
+                ]
+            }).toArray();
+
             await db.collection('accounts').updateOne({ _id: organisme._id }, {
                 $set: {
-                    score: await computeScore(db, organisme.meta.siretAsString),
+                    score: computeScore(avis),
                 },
             });
             stats.updated++;

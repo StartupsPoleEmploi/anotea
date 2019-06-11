@@ -95,6 +95,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 equipe_formateurs: 2.3,
                 moyen_materiel: 2.3,
                 global: 2.3,
+            },
+            aggregation: {
+                global: {
+                    max: 3,
+                    min: 1,
+                },
             }
         });
     });
@@ -158,6 +164,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 equipe_formateurs: 1.8,
                 moyen_materiel: 1.8,
                 global: 1.8,
+            },
+            aggregation: {
+                global: {
+                    max: 3,
+                    min: 0,
+                },
             }
         });
     });

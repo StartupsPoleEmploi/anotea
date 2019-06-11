@@ -6,6 +6,7 @@ const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
+const schema = require('./utils/schema');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -81,7 +82,12 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Identifiant inconnu');
         }
 
-        res.json(createOrganismeFomateurDTO(organisme, { notes_decimales: parameters.notes_decimales }));
+        if (req.headers.accept === 'application/ld+json') {
+            res.json(schema.toOrganization(organisme));
+        } else {
+            let dto = createOrganismeFomateurDTO(organisme, { notes_decimales: parameters.notes_decimales });
+            res.json(dto);
+        }
     }));
 
     router.get('/v1/organismes-formateurs/:id/avis', checkAuth, tryAndCatch(async (req, res) => {

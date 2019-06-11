@@ -6,6 +6,7 @@ const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createSessionDTO, createPaginationDTO } = require('./utils/dto');
+const schema = require('./utils/schema');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -73,7 +74,13 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro de session inconnu ou session expirée');
         }
 
-        res.json(createSessionDTO(session, { notes_decimales: parameters.notes_decimales }));
+
+        if (req.headers.accept === 'application/ld+json') {
+            res.json(schema.toCourseInstance(session));
+        } else {
+            let dto = createSessionDTO(session, { notes_decimales: parameters.notes_decimales });
+            res.json(dto);
+        }
 
     }));
 

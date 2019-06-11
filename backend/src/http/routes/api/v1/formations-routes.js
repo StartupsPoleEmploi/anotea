@@ -6,6 +6,7 @@ const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createFormationDTO, createPaginationDTO } = require('./utils/dto');
+const schema = require('./utils/schema');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -71,7 +72,12 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro de formation inconnu ou formation expirée');
         }
 
-        res.json(createFormationDTO(formation, { notes_decimales: parameters.notes_decimales }));
+        if (req.headers.accept === 'application/ld+json') {
+            res.json(schema.toCourse(formation));
+        } else {
+            let dto = createFormationDTO(formation, { notes_decimales: parameters.notes_decimales });
+            res.json(dto);
+        }
 
     }));
 

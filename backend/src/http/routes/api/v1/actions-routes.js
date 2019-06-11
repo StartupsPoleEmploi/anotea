@@ -6,6 +6,7 @@ const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createActionDTO, createPaginationDTO } = require('./utils/dto');
+const schema = require('./utils/schema');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -73,8 +74,12 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
         }
 
-        res.json(createActionDTO(action, { notes_decimales: parameters.notes_decimales }));
-
+        if (req.headers.accept === 'application/ld+json') {
+            res.json(schema.toCourseInstance(action));
+        } else {
+            let dto = createActionDTO(action, { notes_decimales: parameters.notes_decimales });
+            res.json(dto);
+        }
     }));
 
     router.get('/v1/actions/:id/avis', checkAuth, tryAndCatch(async (req, res) => {

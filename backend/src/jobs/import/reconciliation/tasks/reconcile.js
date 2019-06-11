@@ -35,6 +35,7 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
         'actions.organisme_financeurs': 1,
         'actions.lieu_de_formation': 1,
         'actions.sessions._attributes': 1,
+        'actions.sessions.periode': 1,
     });
 
     let promises = [];
@@ -65,7 +66,7 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
 
         } catch (e) {
             stats.error++;
-            logger.error(`Formation ${cursor._attributes.numero} can not be reconciliated`, e);
+            logger.error(`Formation ${rawFormation._attributes.numero} can not be reconciliated`, e);
         }
     }
 
