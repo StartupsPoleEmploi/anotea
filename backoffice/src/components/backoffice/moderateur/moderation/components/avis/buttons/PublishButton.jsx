@@ -30,7 +30,7 @@ export default class PublishButton extends React.Component {
                 <Dropdown
                     header="Valider et tagguer comme"
                     button={
-                        <Button size="large" color="green" disabled={!!this.props.avis.published} toggable={true}>
+                        <Button size="large" color="green" toggable={true}>
                             <i className="far fa-check-circle" />
                         </Button>
                     }

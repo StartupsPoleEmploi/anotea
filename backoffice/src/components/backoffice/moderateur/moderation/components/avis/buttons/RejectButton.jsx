@@ -61,7 +61,7 @@ export default class RejectButton extends React.Component {
                 <Dropdown
                     header="Rejeter"
                     button={
-                        <Button size="large" color="red" disabled={isRejected} toggable={true}>
+                        <Button size="large" color="red" toggable={true}>
                             <i className="far fa-times-circle" />
                         </Button>
                     }
