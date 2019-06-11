@@ -175,6 +175,30 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.deepStrictEqual(response.body.avis[0].commentaire, undefined);
     });
 
+    it('should return empty avis array when no avis can be found', async () => {
+
+        let app = await startServer();
+        await reconcileFormations(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                //no comments
+            ]
+        );
+
+        let response = await request(app).get(`/api/v1/formations/F_XX_XX`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
+    });
+
     it('should fail when numero de formation is unknown', async () => {
 
         let app = await startServer();

@@ -2,7 +2,7 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const { tryAndCatch } = require('../../routes-utils');
+const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
@@ -44,20 +44,23 @@ module.exports = ({ db, middlewares }) => {
             } : {}),
         };
 
-        let cursor = await collection.find(query)
+        let organismes = await collection.find(query)
         .project(buildProjection(parameters.fields))
         .limit(limit)
         .skip(skip);
 
-        let [total, organismes] = await Promise.all([cursor.count(), cursor.toArray()]);
+        let total = await organismes.count();
+        let stream = organismes.transformStream({
+            transform: organisme => createOrganismeFomateurDTO(organisme, { notes_decimales: parameters.notes_decimales })
+        });
 
-        res.json({
-            organismes_formateurs: organismes.map(of => {
-                return createOrganismeFomateurDTO(of, { notes_decimales: parameters.notes_decimales });
-            }) || [],
-            meta: {
-                pagination: createPaginationDTO(pagination, total)
-            },
+        return sendJsonStream(stream, res, {
+            objectPropertyName: 'organismes_formateurs',
+            object: {
+                meta: {
+                    pagination: createPaginationDTO(pagination, total)
+                },
+            }
         });
     }));
 
@@ -94,7 +97,7 @@ module.exports = ({ db, middlewares }) => {
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
 
-        let cursor = await db.collection('comment')
+        let comments = await db.collection('comment')
         .find({
             'training.organisation.siret': parameters.id,
             '$and': [
@@ -106,9 +109,8 @@ module.exports = ({ db, middlewares }) => {
         .limit(limit)
         .skip(skip);
 
-        let [total, comment, organisme] = await Promise.all([
-            cursor.count(),
-            cursor.toArray(),
+        let [total, organisme] = await Promise.all([
+            comments.count(),
             collection.findOne({ _id: parseInt(parameters.id) })
         ]);
 
@@ -116,13 +118,18 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Identifiant inconnu');
         }
 
-        res.json({
-            avis: comment.map(c => createAvisDTO(c, { notes_decimales: parameters.notes_decimales })),
-            meta: {
-                pagination: createPaginationDTO(pagination, total)
-            },
+        let stream = comments.transformStream({
+            transform: comment => createAvisDTO(comment, { notes_decimales: parameters.notes_decimales })
         });
 
+        return sendJsonStream(stream, res, {
+            objectPropertyName: 'avis',
+            object: {
+                meta: {
+                    pagination: createPaginationDTO(pagination, total)
+                },
+            }
+        });
     }));
 
     return router;

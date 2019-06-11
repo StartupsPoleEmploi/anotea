@@ -144,6 +144,31 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
+    it('should return empty avis array when no avis can be found', async () => {
+
+        let app = await startServer();
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                //no comments
+            ]
+        );
+
+        let response = await request(app).get(`/api/v1/actions/F_XX_XX|AC_XX_XXXXXX`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
+    });
+
     it('should fail when numero d\'action is unknown', async () => {
 
         let app = await startServer();
