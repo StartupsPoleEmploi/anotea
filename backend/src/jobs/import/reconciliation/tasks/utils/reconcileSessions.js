@@ -1,3 +1,4 @@
+const moment = require('moment');
 const computeScore = require('../../../../../common/utils/computeScore');
 const { flatten } = require('../../../../job-utils');
 const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
@@ -25,6 +26,10 @@ module.exports = (formation, allComments) => {
                     numero: session._attributes.numero,
                     region: action.lieu_de_formation.coordonnees.adresse.region,
                     code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
+                    periode: {
+                        debut: moment(session.periode.debut, 'YYYYMMDD').toDate(),
+                        fin: moment(session.periode.fin, 'YYYYMMDD').toDate(),
+                    },
                     avis: comments.map(a => convertCommentToAvis(a)) || [],
                     score: computeScore(comments),
                     formation: {

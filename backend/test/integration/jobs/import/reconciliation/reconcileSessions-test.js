@@ -44,6 +44,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             numero: 'SE_XXXXXX',
             region: '11',
             code_region: '11',
+            periode: {
+                debut: new Date('2017-10-29T23:00:00.000Z'),
+                fin: new Date('2018-05-31T22:00:00.000Z')
+            },
             avis: [
                 {
                     id: commentId,
@@ -378,6 +382,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             numero: 'SE_XXXXXX',
             region: '11',
             code_region: '11',
+            periode: {
+                debut: new Date('2017-10-29T23:00:00.000Z'),
+                fin: new Date('2018-05-31T22:00:00.000Z')
+            },
             avis: [],
             score: {
                 nb_avis: 0
