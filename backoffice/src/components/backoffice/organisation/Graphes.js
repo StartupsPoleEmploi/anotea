@@ -94,8 +94,10 @@ export default class Graphes extends React.Component {
 
         defaults.pie.plugins = {
             labels: {
-                fontColor: 'white',
-                fontStyle: 'bold'
+                fontColor: 'black',
+                fontStyle: 'bold',
+                position: 'outside',
+                textMargin: 4
             }
         };
 
