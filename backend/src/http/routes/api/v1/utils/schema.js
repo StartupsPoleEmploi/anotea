@@ -21,6 +21,7 @@ let getCourse = formation => {
         '@type': 'Course',
         'courseCode': formation.numero,
         'name': formation.intitule,
+        'description': formation.objectif_formation,
         'provider': getOrganization(formation.organisme_responsable),
     };
 };

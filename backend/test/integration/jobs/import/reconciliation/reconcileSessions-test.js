@@ -121,6 +121,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             formation: {
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
+                objectif_formation: 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
                 domaine_formation: {
                     formacodes: ['22403']
                 },
@@ -376,65 +377,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await reconcile(db, logger, { sessions: true });
 
         let session = await db.collection('sessionsReconciliees').findOne();
-        delete session.meta.import_date;
-        assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
-            numero: 'SE_XXXXXX',
-            region: '11',
-            code_region: '11',
-            periode: {
-                debut: new Date('2017-10-30T00:00:00.000Z'),
-                fin: new Date('2018-06-01T00:00:00.000Z')
-            },
-            avis: [],
-            score: {
-                nb_avis: 0
-            },
-            formation: {
-                numero: 'F_XX_XX',
-                intitule: 'Développeur web',
-                domaine_formation: {
-                    formacodes: ['22403']
-                },
-                certifications: {
-                    certifinfos: ['80735']
-                },
-                organisme_responsable: {
-                    numero: 'OR_XX_XXX',
-                    raison_sociale: 'Centre de formation Anotéa',
-                    siret: '11111111111111',
-                },
-                action: {
-                    numero: 'AC_XX_XXXXXX',
-                    lieu_de_formation: {
-                        code_postal: '75019',
-                        ville: 'Paris'
-                    },
-                    organisme_financeurs: [
-                        '2'
-                    ],
-                    organisme_formateur: {
-                        raison_sociale: 'Anotea Formation Paris',
-                        siret: '22222222222222',
-                        numero: 'OF_XXX'
-                    }
-                }
-            },
-            meta: {
-                source: {
-                    numero_action: 'AC_XX_XXXXXX',
-                    numero_formation: 'F_XX_XX',
-                    numero_session: 'SE_XXXXXX',
-                    type: 'intercarif',
-                },
-                reconciliation: {
-                    organisme_formateur: '22222222222222',
-                    lieu_de_formation: '75019',
-                    formacodes: ['22403'],
-                    certifinfos: ['80735']
-                },
-            },
-        });
+        assert.deepStrictEqual(session.score, { nb_avis: 0 });
+        assert.deepStrictEqual(session.avis, []);
     });
 
     it('should reconcile comments with same formace/siret/code_postal than the session', async () => {
