@@ -27,8 +27,8 @@ module.exports = (formation, allComments) => {
                     region: action.lieu_de_formation.coordonnees.adresse.region,
                     code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
                     periode: {
-                        debut: moment(session.periode.debut, 'YYYYMMDD').toDate(),
-                        fin: moment(session.periode.fin, 'YYYYMMDD').toDate(),
+                        debut: moment(session.periode.debut, 'YYYYMMDD').utc().toDate(),
+                        fin: moment(session.periode.fin, 'YYYYMMDD').utc().toDate(),
                     },
                     avis: comments.map(a => convertCommentToAvis(a)) || [],
                     score: computeScore(comments),
