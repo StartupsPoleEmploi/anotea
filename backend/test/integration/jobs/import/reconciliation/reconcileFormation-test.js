@@ -42,6 +42,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             _id: 'F_XX_XX',
             numero: 'F_XX_XX',
             intitule: 'Développeur web',
+            objectif_formation: 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
             domaine_formation: {
                 formacodes: ['22403']
             },
@@ -273,38 +274,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await reconcile(db, logger, { formations: true });
 
         let formation = await db.collection('formationsReconciliees').findOne();
-        delete formation.meta.import_date;
-        assert.deepStrictEqual(formation, {
-            _id: 'F_XX_XX',
-            numero: 'F_XX_XX',
-            intitule: 'Développeur web',
-            domaine_formation: {
-                formacodes: ['22403']
-            },
-            certifications: {
-                certifinfos: ['80735']
-            },
-            organisme_responsable: {
-                numero: 'OR_XX_XXX',
-                raison_sociale: 'Centre de formation Anotéa',
-                siret: '11111111111111',
-            },
-            avis: [],
-            score: {
-                nb_avis: 0
-            },
-            meta: {
-                source: {
-                    numero_formation: 'F_XX_XX',
-                    type: 'intercarif',
-                },
-                reconciliation: {
-                    organisme_formateurs: ['22222222222222'],
-                    formacodes: ['22403'],
-                    certifinfos: ['80735']
-                },
-            },
-        });
+        assert.deepStrictEqual(formation.score, { nb_avis: 0 });
+        assert.deepStrictEqual(formation.avis, []);
     });
 
     it('should reconcile comments with same formace/siret/code_postal than the session', async () => {

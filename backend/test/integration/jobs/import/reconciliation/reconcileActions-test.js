@@ -129,6 +129,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             formation: {
                 numero: 'F_XX_XX',
                 intitule: 'Développeur web',
+                objectif_formation: 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
                 domaine_formation: {
                     formacodes: ['22403']
                 },
@@ -368,57 +369,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await reconcile(db, logger, { actions: true });
 
         let action = await db.collection('actionsReconciliees').findOne();
-        delete action.meta.import_date;
-        assert.deepStrictEqual(action, {
-            _id: 'F_XX_XX|AC_XX_XXXXXX',
-            numero: 'AC_XX_XXXXXX',
-            region: '11',
-            code_region: '11',
-            lieu_de_formation: {
-                code_postal: '75019',
-                ville: 'Paris'
-            },
-            organisme_financeurs: [
-                '2'
-            ],
-            organisme_formateur: {
-                raison_sociale: 'Anotea Formation Paris',
-                siret: '22222222222222',
-                numero: 'OF_XXX'
-            },
-            avis: [],
-            score: {
-                nb_avis: 0
-            },
-            formation: {
-                numero: 'F_XX_XX',
-                intitule: 'Développeur web',
-                domaine_formation: {
-                    formacodes: ['22403']
-                },
-                certifications: {
-                    certifinfos: ['80735']
-                },
-                organisme_responsable: {
-                    numero: 'OR_XX_XXX',
-                    raison_sociale: 'Centre de formation Anotéa',
-                    siret: '11111111111111',
-                },
-            },
-            meta: {
-                source: {
-                    numero_action: 'AC_XX_XXXXXX',
-                    numero_formation: 'F_XX_XX',
-                    type: 'intercarif',
-                },
-                reconciliation: {
-                    organisme_formateur: '22222222222222',
-                    lieu_de_formation: '75019',
-                    formacodes: ['22403'],
-                    certifinfos: ['80735']
-                },
-            },
-        });
+        assert.deepStrictEqual(action.score, { nb_avis: 0 });
+        assert.deepStrictEqual(action.avis, []);
     });
 
     it('should reconcile comments with same formacode/siret/code_postal than the session', async () => {

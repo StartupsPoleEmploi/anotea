@@ -139,7 +139,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
-    it('can return actions by id as application/ld+json', async () => {
+    it('can return Course for application/ld+json', async () => {
 
         let app = await startServer();
         await reconcileFormations(
@@ -187,6 +187,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             '@context': 'http://schema.org',
             '@type': 'Course',
             'name': 'Développeur web',
+            'description': 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
             'courseCode': 'F_XX_XX',
             'provider': {
                 '@type': 'Organization',

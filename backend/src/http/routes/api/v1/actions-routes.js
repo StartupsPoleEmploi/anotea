@@ -75,7 +75,7 @@ module.exports = ({ db, middlewares }) => {
         }
 
         if (req.headers.accept === 'application/ld+json') {
-            res.json(schema.toCourseInstance(action));
+            res.json(schema.toCourse(action.formation, { score: action.score }));
         } else {
             let dto = createActionDTO(action, { notes_decimales: parameters.notes_decimales });
             res.json(dto);

@@ -15,6 +15,7 @@ module.exports = (formation, allComments) => {
         _id: id,
         numero: formation._attributes.numero,
         intitule: formation.intitule_formation,
+        objectif_formation: formation.objectif_formation,
         domaine_formation: {
             formacodes: formation._meta.formacodes,
         },

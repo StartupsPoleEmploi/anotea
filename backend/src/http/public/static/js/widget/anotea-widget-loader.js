@@ -38,7 +38,13 @@
     }
 
     function getAggregateRatingScript(attributes, callback) {
-        var url = getAnoteaUrl('/api/v1/organismes-formateurs/' + attributes.identifiant);
+        var typeMapping = {
+            'organisme': 'organismes-formateurs',
+            'formation': 'formations',
+            'action': 'actions',
+            'session': 'sessions',
+        };
+        var url = getAnoteaUrl('/api/v1/' + typeMapping[attributes.type] + '/' + attributes.identifiant);
 
         var request = new XMLHttpRequest();
         request.open('GET', url, true);
@@ -89,7 +95,7 @@
             appendChild('widget', element, getWidgetIframe(attributes));
 
             if (i === elements.length - 1) {
-                if (attributes.type === 'organisme' && attributes.options.includes('aggregate-rating')) {
+                if (attributes.options.includes('aggregate-rating')) {
                     getAggregateRatingScript(attributes, function(script) {
                         appendChild('aggregate-rating', document.head, script);
                     });
