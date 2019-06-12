@@ -2,6 +2,7 @@
   "name": "stats",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://anotea.pole-emploi.fr/stats",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.8.2",
     "bootstrap": "4.3.1",
