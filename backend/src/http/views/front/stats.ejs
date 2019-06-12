@@ -200,6 +200,7 @@
                                                 <th scope="col">Nombre de sessions</th>
                                                 <th scope="col">Sessions avec au moins un avis</th>
                                                 <th scope="col">Sessions avec au moins trois avis</th>
+                                                <th scope="col">Sessions certifiantes avec au moins un avis</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -209,6 +210,7 @@
                                                     <td><%= element.nbSessions %></td>
                                                     <td><%= element.sessionsAvecAuMoinsUnAvis %></td>
                                                     <td><%= element.sessionsAvecAuMoinsTroisAvis %></td>
+                                                    <td><%= element.sessionsCertifiantesAvecAvis %></td>
                                                 </tr>
                                             <% }); %>
                                         </tbody>

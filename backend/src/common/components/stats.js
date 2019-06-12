@@ -28,10 +28,15 @@ module.exports = (db, regions) => {
 
         let sessionsReconciliees = db.collection('sessionsReconciliees');
 
-        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis] = await Promise.all([
+        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis, nbSessionsCertifiantesAvecAvis] = await Promise.all([
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 3 } }),
+            sessionsReconciliees.countDocuments({
+                'code_region': { $in: codeRegions },
+                'score.nb_avis': { $gte: 1 },
+                'formation.certifications.certifinfos.0': { $exists: true }
+            }),
         ]);
 
         return {
@@ -39,6 +44,7 @@ module.exports = (db, regions) => {
             nbSessions,
             sessionsAvecAuMoinsUnAvis: `${Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions)}%`,
             sessionsAvecAuMoinsTroisAvis: `${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbSessions)}%`,
+            sessionsCertifiantesAvecAvis: `${Math.ceil((nbSessionsCertifiantesAvecAvis * 100) / nbSessions)}%`,
         };
     };
 
