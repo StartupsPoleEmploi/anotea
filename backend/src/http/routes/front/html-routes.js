@@ -46,7 +46,7 @@ module.exports = ({ db, logger, configuration, stats, mailer, regions }) => {
 
     });
 
-    router.get('/stats', async (req, res) => {
+    router.get('/deprecated-stats', async (req, res) => {
         let [avis, formations, sessions, organismes, kairos, mailing] = await Promise.all([
             stats.computeAvisStats(),
             stats.computeFormationsStats(),
