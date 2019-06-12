@@ -1,8 +1,9 @@
 const computeScore = require('../../../../../common/utils/computeScore');
 const { flatten } = require('../../../../job-utils');
 const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
+const filterAvisReconciliables = require('./utils/filterAvisReconciliables');
 
-module.exports = (formation, allComments) => {
+module.exports = (formation, comments) => {
 
     return formation.actions.reduce((acc, action) => {
 
@@ -10,10 +11,7 @@ module.exports = (formation, allComments) => {
             return acc;
         }
 
-        let comments = allComments.filter(a => {
-            return a.training.place.postalCode === action.lieu_de_formation.coordonnees.adresse.codepostal &&
-                a.training.organisation.siret === action.organisme_formateur.siret_formateur.siret;
-        });
+        let reconciliated = filterAvisReconciliables(action, comments);
 
         let id = `${formation._attributes.numero}|${action._attributes.numero}`;
         return [
@@ -34,8 +32,8 @@ module.exports = (formation, allComments) => {
                 },
                 region: action.lieu_de_formation.coordonnees.adresse.region,
                 code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
-                avis: comments.map(a => convertCommentToAvis(a)) || [],
-                score: computeScore(comments),
+                avis: reconciliated.map(a => convertCommentToAvis(a)) || [],
+                score: computeScore(reconciliated),
                 formation: {
                     numero: formation._attributes.numero,
                     intitule: formation.intitule_formation,

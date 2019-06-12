@@ -158,6 +158,50 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         });
     });
 
+    it('should reconcile actions with avis (certifications only)', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            importIntercarif(),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: null,
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                }
+            })),
+        ]);
+
+        await reconcile(db, logger, { actions: true });
+
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(action.avis.length, 1);
+        assert.deepStrictEqual(action.avis[0].formation.certifications[0].certif_info, '80735');
+    });
+
     it('should ignore no matching avis', async () => {
 
         let db = await getTestDatabase();

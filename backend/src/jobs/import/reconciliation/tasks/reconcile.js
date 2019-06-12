@@ -1,7 +1,7 @@
-const reconcileFormation = require('./utils/reconcileFormation');
-const reconcileActions = require('./utils/reconcileActions');
-const reconcileSessions = require('./utils/reconcileSessions');
-const findAvisReconciliables = require('./utils/findAvisReconciliables');
+const reconcileFormation = require('./reconcile/reconcileFormation');
+const reconcileActions = require('./reconcile/reconcileActions');
+const reconcileSessions = require('./reconcile/reconcileSessions');
+const findAvisReconciliables = require('./reconcile/utils/findAvisReconciliables');
 
 module.exports = async (db, logger, options = { formations: true, actions: true, sessions: true }) => {
 
