@@ -8,6 +8,7 @@ import SearchForm from './searchForm';
 import EntitySearchForm from './entitySearchForm';
 import Graphes from './Graphes';
 import Notice from './Notice';
+import getReponseStatus from '../common/utils/getReponseStatus';
 
 import {
     getOrganisationInfo,
@@ -276,16 +277,6 @@ export default class OrganisationPanel extends React.Component {
 
     getActiveStatus = current => this.state.tab === current ? 'active' : '';
 
-    getStatus = reponse => {
-        if (reponse.status === 'rejected') {
-            return 'Rejetée';
-        } else if (reponse.status === 'published') {
-            return 'Publiée';
-        } else {
-            return 'En attente de modération';
-        }
-    }
-
     render() {
         const { currentEntity, entities } = this.state.training;
 
@@ -418,7 +409,7 @@ export default class OrganisationPanel extends React.Component {
                                                 }
                                                 {(advice.reponse && !this.state.reply.shown) &&
                                                 <div className="answer">
-                                                    <h4>Votre réponse <span>({this.getStatus(advice.reponse)})</span></h4>
+                                                    <h4>Votre réponse <span>({getReponseStatus(advice.reponse)})</span></h4>
                                                     <p>{advice.reponse.text}</p>
                                                 </div>
                                                 }

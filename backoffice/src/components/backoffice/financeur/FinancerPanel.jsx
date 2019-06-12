@@ -21,6 +21,7 @@ import {
 } from './service/financeurService';
 import Dashboard from './stats/Dashboard';
 import SideMenu from './SideMenu';
+import getReponseStatus from '../common/utils/getReponseStatus';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
@@ -477,6 +478,12 @@ export default class FinancerPanel extends React.Component {
                                             <div>
                                                 <div className="noComment">Cet utilisateur n'a pas laissé d'avis.</div>
                                             </div>
+                                            }
+                                            { advice.reponse &&
+                                                <div className="answer financeur">
+                                                    <h4>Réponse de l'organisme <span>({getReponseStatus(advice.reponse)})</span></h4>
+                                                    <p>{advice.reponse.text}</p>
+                                                </div>
                                             }
                                         </div>
                                         <div className="col-md-3">
