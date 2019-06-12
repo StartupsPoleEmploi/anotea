@@ -2,7 +2,7 @@ const AVIS_FILTERS = [
     {
         intitule: "Campagne",
         items: [
-            {_id: 1, intitule: "Cumul depuis le début"},
+            { _id: 1, intitule: "Cumul depuis le début" },
         ],
     },
     {

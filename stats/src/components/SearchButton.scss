@@ -1,28 +1,28 @@
 @import '../styles/variables';
 
 .rechercher {
-    margin: 46px 16px 0px 16px;
-	height: 40px;
-	width: 141px;
-	border-radius: 5px;
-    background-color: #FDF2E7;
-    border-radius: 5px;
-    border: none;
+  margin: 46px 16px 0px 16px;
+  height: 40px;
+  width: 141px;
+  border-radius: 5px;
+  background-color: #FDF2E7;
+  border-radius: 5px;
+  border: none;
 
-    &:focus {
-        outline: none;
-    }
+  &:focus {
+    outline: none;
+  }
 
-    > span {
-        color: #F28017; 
-        height: 24px;
-        width: 117px;
-        opacity: 0.8;
-        font-family: Lato;
-        font-size: 1rem;
-        font-weight: bold;
-        letter-spacing: 0.5px;
-        line-height: 1.5rem;
-        text-align: center;
-    }
+  > span {
+    color: #F28017;
+    height: 24px;
+    width: 117px;
+    opacity: 0.8;
+    font-family: Lato;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    line-height: 1.5rem;
+    text-align: center;
+  }
 }
