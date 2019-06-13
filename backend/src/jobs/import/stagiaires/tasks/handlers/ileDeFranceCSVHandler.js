@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const moment = require('moment');
-const { buildToken, buildEmail } = require('../utils');
+const { buildToken, buildEmail } = require('../utils/utils');
 
 const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
 

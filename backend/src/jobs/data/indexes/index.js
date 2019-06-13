@@ -3,9 +3,9 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const dropIndexes = require('./dropIndexes');
-const createIndexes = require('./createIndexes');
-const findUnusedIndexes = require('./findUnusedIndexes');
+const dropIndexes = require('./tasks/dropIndexes');
+const createIndexes = require('./tasks/createIndexes');
+const findUnusedIndexes = require('./tasks/findUnusedIndexes');
 
 cli.description('Manage indexes')
 .option('-f, --find', 'Find unused indexex')
