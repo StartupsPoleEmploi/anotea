@@ -3,8 +3,8 @@ const md5 = require('md5');
 const parse = require('csv-parse');
 const readline = require('readline');
 const _ = require('underscore');
-const validateTrainee = require('./validateTrainee');
-const { getCampaignDate, getCampaignName } = require('./utils');
+const validateTrainee = require('./utils/validateTrainee');
+const { getCampaignDate, getCampaignName } = require('./utils/utils');
 
 const ValidationErrorTypes = Object.freeze({
     BAD_HEADER: { name: 'BAD_HEADER', message: 'du format non conforme' },

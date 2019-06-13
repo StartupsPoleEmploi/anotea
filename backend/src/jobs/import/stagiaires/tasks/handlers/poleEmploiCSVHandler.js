@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { buildToken, buildEmail } = require('../utils');
+const { buildToken, buildEmail } = require('../utils/utils');
 
 const parseDate = value => new Date(value + 'Z');
 

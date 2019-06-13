@@ -5,8 +5,8 @@ const assert = require('assert');
 const md5File = require('md5-file/promise');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const traineeImporter = require('../../../../../src/jobs/import/stagiaires/traineeImporter');
-const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/handlers/poleEmploiCSVHandler');
+const importTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
+const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
 
@@ -15,10 +15,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
-        await importer.importTrainee(csvFile, handler);
+        await importTrainee(db, logger, csvFile, handler);
 
         let hash = await md5File(csvFile);
         let status = await db.collection('importTrainee').findOne();
@@ -43,10 +42,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe_2018-11-20.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
-        await importer.importTrainee(csvFile, handler);
+        await importTrainee(db, logger, csvFile, handler);
 
         let hash = await md5File(csvFile);
         let status = await db.collection('importTrainee').findOne();
@@ -71,10 +69,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
-        let results = await importer.importTrainee(csvFile, handler);
+        let results = await importTrainee(db, logger, csvFile, handler);
 
         assert.deepStrictEqual(results, {
             invalid: 0,
@@ -89,11 +86,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
-        await importer.importTrainee(csvFile, handler);
+        await importTrainee(db, logger, csvFile, handler);
 
-        let results = await importer.importTrainee(csvFile, handler);
+        let results = await importTrainee(db, logger, csvFile, handler);
 
         assert.deepStrictEqual(results, {
             invalid: 0,
@@ -108,11 +104,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
-        await importer.importTrainee(csvFile, handler);
+        await importTrainee(db, logger, csvFile, handler);
 
-        let results = await importer.importTrainee(csvFile, handler, { append: true });
+        let results = await importTrainee(db, logger, csvFile, handler, { append: true });
 
         assert.deepStrictEqual(results, {
             ignored: 4,
@@ -135,10 +130,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-email.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
-        await importer.importTrainee(csvFile, handler);
+        await importTrainee(db, logger, csvFile, handler);
 
         let count = await db.collection('trainee').countDocuments();
         assert.equal(count, 0);
@@ -148,10 +142,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
-        let results = await importer.importTrainee(csvFile, handler, {
+        let results = await importTrainee(db, logger, csvFile, handler, {
             codeRegion: '2'
         });
 
@@ -170,10 +163,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
-        let results = await importer.importTrainee(csvFile, handler, {
+        let results = await importTrainee(db, logger, csvFile, handler, {
             since: moment('2018-09-01 00Z').toDate(),
         });
 
@@ -192,7 +184,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-conseil-regional.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
                 return [{
@@ -204,7 +195,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
             }
         }));
 
-        let results = await importer.importTrainee(csvFile, handler);
+        let results = await importTrainee(db, logger, csvFile, handler);
 
         let doc = await db.collection('trainee').findOne();
         assert.deepStrictEqual(doc.trainee.email, 'email_4@pe.fr');
@@ -221,7 +212,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-non-certifiantes.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
                 return [{
@@ -234,7 +224,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
             }
         }));
 
-        let results = await importer.importTrainee(csvFile, handler);
+        let results = await importTrainee(db, logger, csvFile, handler);
 
         let doc = await db.collection('trainee').findOne();
         assert.deepStrictEqual(doc.trainee.email, 'email_4@pe.fr');
