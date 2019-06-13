@@ -1,4 +1,4 @@
-import { _get, _post, _delete } from '../../../../utils/http-client';
+import { _get, _post } from '../../../../utils/http-client';
 
 export const getActivationAccountStatus = activationToken => {
     return _get(`/backoffice/organisme/getActivationAccountStatus?token=${activationToken}`);
@@ -15,7 +15,7 @@ export const getOrganisationInfo = id => {
 export const loadAllAdvices = (id, filter, order, page) => {
     let query = `?filter=${filter}&order=${order}`;
 
-    if (page != null) {
+    if (page !== null) {
         query += `&page=${page}`;
     }
     return _get(`/backoffice/organisme/${id}/allAdvices${query}`);
@@ -38,7 +38,7 @@ export const loadAdvices = (id, trainingId, postalCode, filter, order, page) => 
     if (filter) {
         query += `&filter=${filter}&order=${order}`;
     }
-    if (page != null) {
+    if (page !== null) {
         query += `&page=${page}`;
     }
     return _get(`/backoffice/organisme/${id}/advices?trainingId=${trainingId}&postalCode=${postalCode}${query}`);
