@@ -285,7 +285,6 @@ export default class OrganisationPanel extends React.Component {
 
                 <Notice codeRegion={this.props.codeRegion} />
 
-                {/*{false && <SessionStats id={this.state.organisationId} />}*/}
                 <Graphes organisationId={this.state.organisationId} />
                 <h2 className="advicesGestion h2">Gestion des commentaires</h2>
 
