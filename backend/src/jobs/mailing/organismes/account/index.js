@@ -35,19 +35,21 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
         });
 
         try {
-            let results = await accountMailer.sendEmails(action, options);
+            let stats = await accountMailer.sendEmails(action, options);
 
             sendSlackNotification({
-                text: `${results.sent} emails de création de compte envoyés à des organismes` +
-                    `(Nombre d'erreurs : ${results.error})`,
+                text: `[ORGANISME] Des emails de création de compte ont été envoyés à des organismes :  ` +
+                    `${stats.sent} envoyés / ${stats.error} erreurs`,
             });
 
-            return results;
-        } catch (e) {
+            return stats;
+        } catch (stats) {
             sendSlackNotification({
-                text: `Les emails de création de compte pour les organismes n'ont pas pu être envoyés`,
-            });
-            throw e;
+                text: `[ORGANISME] Une erreur est survenue lors de l'envoi des emails de création de compte aux organismes : ` +
+                    `${stats.sent} envoyés / ${stats.error} erreurs`,
+            })
+            ;
+            throw stats;
         }
     }
 }, { slack: cli.slack });

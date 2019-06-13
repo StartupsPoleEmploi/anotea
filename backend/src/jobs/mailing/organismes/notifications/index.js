@@ -19,7 +19,7 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
     logger.info(`Sending emails to organismes...`);
 
     try {
-        let results = await notificationMailer.sendEmails({
+        let stats = await notificationMailer.sendEmails({
             limit: cli.limit,
             delay: cli.delay,
             codeRegions: cli.region ? [cli.region] :
@@ -27,15 +27,16 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
         });
 
         sendSlackNotification({
-            text: `${results.sent} emails de notifications de nouveaux avis envoyés à des organismes` +
-                `(Nombre d'erreurs : ${results.error})`,
+            text: `[ORGANISME] Des emails de notifications de nouveaux avis ont été envoyés à des organismes` +
+                `${stats.sent} envoyés / ${stats.error} erreurs`,
         });
 
-        return results;
-    } catch (e) {
+        return stats;
+    } catch (stats) {
         sendSlackNotification({
-            text: `Les emails de notifications d'avis n'ont pas pu être envoyés`,
+            text: `[ORGANISME] Une erreur est survenue lors de l'envoi des emails de notifications d'avis aux organismes : ` +
+                `${stats.sent} envoyés / ${stats.error} erreurs`,
         });
-        throw e;
+        throw stats;
     }
 }, { slack: cli.slack });
