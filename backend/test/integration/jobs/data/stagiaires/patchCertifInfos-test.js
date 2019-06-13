@@ -1,18 +1,18 @@
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../../../../helpers/test-database');
-const { newComment } = require('../../../../../helpers/data/dataset');
-const correctCertifinfos = require('../../../../../../src/jobs/data/corrector/stagiaires/tasks/correctCertifinfos');
-const logger = require('../../../../../helpers/test-logger');
+const { withMongoDB } = require('../../../../helpers/test-database');
+const { newTrainee } = require('../../../../helpers/data/dataset');
+const patchCertifInfos = require('../../../../../src/jobs/data/patch/stagiaires/tasks/patchCertifInfos');
+const logger = require('../../../../helpers/test-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    let certifinfos = path.join(__dirname, '../../../../../helpers/data', 'certifinfos.csv');
+    let certifinfos = path.join(__dirname, '../../../../helpers/data', 'certifinfos.csv');
 
     it('should update certifinfos', async () => {
 
         let db = await getTestDatabase();
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('trainee', newTrainee({
             _id: '1234',
             training: {
                 certifInfo: {
@@ -21,11 +21,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             },
         }));
 
-        let stats = await correctCertifinfos(db, logger, certifinfos);
+        let stats = await patchCertifInfos(db, logger, certifinfos);
 
-        let avis = await db.collection('comment').findOne({ _id: '1234' });
+        let avis = await db.collection('trainee').findOne({ _id: '1234' });
         assert.deepStrictEqual(avis.training.certifInfo.id, '74037');
-        assert.deepStrictEqual(avis.meta.originalCertifInfo, '10013');
+        assert.deepStrictEqual(avis.meta.patch.certifInfo, '10013');
         assert.deepStrictEqual(stats, {
             updated: 1,
             invalid: 0,
@@ -36,7 +36,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should ignore up to date certifinfos', async () => {
 
         let db = await getTestDatabase();
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('trainee', newTrainee({
             _id: '1234',
             training: {
                 certifInfo: {
@@ -45,9 +45,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             },
         }));
 
-        let stats = await correctCertifinfos(db, logger, certifinfos);
+        let stats = await patchCertifInfos(db, logger, certifinfos);
 
-        let avis = await db.collection('comment').findOne({ _id: '1234' });
+        let avis = await db.collection('trainee').findOne({ _id: '1234' });
         assert.deepStrictEqual(avis.training.certifInfo.id, '74037');
         assert.deepStrictEqual(stats, {
             updated: 0,
@@ -59,7 +59,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should ignore unknown certifinfos', async () => {
 
         let db = await getTestDatabase();
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('trainee', newTrainee({
             _id: '1234',
             training: {
                 certifInfo: {
@@ -68,9 +68,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             },
         }));
 
-        await correctCertifinfos(db, logger, certifinfos);
+        await patchCertifInfos(db, logger, certifinfos);
 
-        let avis = await db.collection('comment').findOne({ _id: '1234' });
+        let avis = await db.collection('trainee').findOne({ _id: '1234' });
         assert.deepStrictEqual(avis.training.certifInfo.id, 'XXXXX');
     });
 
