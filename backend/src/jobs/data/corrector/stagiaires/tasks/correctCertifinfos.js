@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { ignoreFirstLine } = require('../../../common/utils/stream-utils');
+const { ignoreFirstLine } = require('../../../../../common/utils/stream-utils');
 const parse = require('csv-parse');
 
 let loadCertifinfos = file => {

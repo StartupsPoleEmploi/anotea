@@ -1,13 +1,13 @@
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../../../helpers/test-database');
-const { newComment } = require('../../../../helpers/data/dataset');
-const updateCertifinfos = require('../../../../../src/jobs/import/certifinfos/updateCertifinfos');
-const logger = require('../../../../helpers/test-logger');
+const { withMongoDB } = require('../../../../../helpers/test-database');
+const { newComment } = require('../../../../../helpers/data/dataset');
+const correctCertifinfos = require('../../../../../../src/jobs/data/corrector/stagiaires/tasks/correctCertifinfos');
+const logger = require('../../../../../helpers/test-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    let certifinfos = path.join(__dirname, '../../../../helpers/data', 'certifinfos.csv');
+    let certifinfos = path.join(__dirname, '../../../../../helpers/data', 'certifinfos.csv');
 
     it('should update certifinfos', async () => {
 
@@ -21,7 +21,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             },
         }));
 
-        let stats = await updateCertifinfos(db, logger, certifinfos);
+        let stats = await correctCertifinfos(db, logger, certifinfos);
 
         let avis = await db.collection('comment').findOne({ _id: '1234' });
         assert.deepStrictEqual(avis.training.certifInfo.id, '74037');
@@ -45,7 +45,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             },
         }));
 
-        let stats = await updateCertifinfos(db, logger, certifinfos);
+        let stats = await correctCertifinfos(db, logger, certifinfos);
 
         let avis = await db.collection('comment').findOne({ _id: '1234' });
         assert.deepStrictEqual(avis.training.certifInfo.id, '74037');
@@ -68,7 +68,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             },
         }));
 
-        await updateCertifinfos(db, logger, certifinfos);
+        await correctCertifinfos(db, logger, certifinfos);
 
         let avis = await db.collection('comment').findOne({ _id: '1234' });
         assert.deepStrictEqual(avis.training.certifInfo.id, 'XXXXX');
