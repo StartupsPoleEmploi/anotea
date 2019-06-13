@@ -85,19 +85,20 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
 
 
         try {
-            let results = await importer.importTrainee(cli.file, handler, filters);
+            let stats = await importer.importTrainee(cli.file, handler, filters);
 
             sendSlackNotification({
-                text: `${results.imported} stagiaires importés pour le fichier ${cli.file} ` +
-                    `(Ignorés : ${results.ignored}, Nombre d'erreurs : ${results.invalid})`,
+                text: `[STAGIAIRE] Le fichier ${cli.file} a été importé : ` +
+                    `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`,
             });
 
-            return results;
-        } catch (e) {
+            return stats;
+        } catch (stats) {
             sendSlackNotification({
-                text: `Le fichier stagiaires ${cli.file} n'a pas pu être importé`,
+                text: `[STAGIAIRE] Une erreur est survenue lors de l'import du fichier stagiaires ${cli.file} : ` +
+                    `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`
             });
-            throw e;
+            throw stats;
         }
     }
 }, { slack: cli.slack });

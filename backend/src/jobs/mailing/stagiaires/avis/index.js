@@ -34,16 +34,16 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
         });
 
         sendSlackNotification({
-            text: `${stats.sent} emails stagiaires envoyés pour ${cli.campaign || type} ` +
-                `(Nombre d'erreurs : ${stats.error})`,
+            text: `[STAGIAIRE] Des emails stagiaires ont été envoyés pour ${cli.campaign || type} : ` +
+                `${stats.sent} envoyés / ${stats.error} erreurs`,
         });
 
         return stats;
 
     } catch (stats) {
         sendSlackNotification({
-            text: `${stats.error} emails stagiaires n'ont pas pu être envoyés pour ${cli.campaign || type} ` +
-                `(Nombre d'emails envoyés : ${stats.sent})`,
+            text: `[STAGIAIRE] Une erreur est survenue lors de l'envoi des emails aux stagiaires pour ${cli.campaign || type} : ` +
+                `${stats.sent} envoyés / ${stats.error} erreurs`,
         });
         throw stats;
     }
