@@ -4,7 +4,7 @@
 const cli = require('commander');
 const path = require('path');
 const { execute } = require('../../job-utils');
-const createIndexes = require('../indexes/createIndexes');
+const createIndexes = require('../indexes/tasks/createIndexes');
 const createAccounts = require('./createAccounts');
 const importIntercarif = require('../../import/intercarif/importIntercarif');
 const reconcile = require('../../import/reconciliation/tasks/reconcile');
