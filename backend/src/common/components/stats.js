@@ -28,23 +28,33 @@ module.exports = (db, regions) => {
 
         let sessionsReconciliees = db.collection('sessionsReconciliees');
 
-        let [nbSessions, nbSessionsAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis, nbSessionsCertifiantesAvecAvis] = await Promise.all([
+        let [nbSessions, nbSessionsAvecAvis, nbSessionsCertifiantesAvecAvis, avisPerSession] = await Promise.all([
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
-            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 3 } }),
             sessionsReconciliees.countDocuments({
                 'code_region': { $in: codeRegions },
                 'score.nb_avis': { $gte: 1 },
                 'formation.certifications.certifinfos.0': { $exists: true }
             }),
+            sessionsReconciliees.aggregate([
+                { $match: { 'code_region': { $in: codeRegions } } },
+                {
+                    $group: {
+                        _id: null,
+                        average: { $avg: '$score.nb_avis' }
+                    }
+                }
+            ]).toArray(),
         ]);
+
+        console.log(avisPerSession[0]);
 
         return {
             region: regionName,
             nbSessions,
-            sessionsAvecAuMoinsUnAvis: `${Math.ceil((nbSessionsAvecAuMoinsUnAvis * 100) / nbSessions)}%`,
-            sessionsAvecAuMoinsTroisAvis: `${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbSessions)}%`,
+            sessionsAvecAvis: `${Math.ceil((nbSessionsAvecAvis * 100) / nbSessions)}%`,
             sessionsCertifiantesAvecAvis: `${Math.ceil((nbSessionsCertifiantesAvecAvis * 100) / nbSessions)}%`,
+            avisPerSession: Number(Math.round(avisPerSession[0].average + 'e1') + 'e-1'),
         };
     };
 
@@ -80,16 +90,16 @@ module.exports = (db, regions) => {
 
     let computeKairosStats = async () => {
         let [nbOrganismes, actifs, hasAtLeastOneAvis] = await Promise.all([
-            db.collection('accounts').count({
+            db.collection('accounts').countDocuments({
                 'profile': 'organisme',
                 'sources': { $in: ['kairos'] }
             }),
-            db.collection('accounts').count({
+            db.collection('accounts').countDocuments({
                 'profile': 'organisme',
                 'passwordHash': { $exists: true },
                 'sources': { $in: ['kairos'] }
             }),
-            db.collection('accounts').count({
+            db.collection('accounts').countDocuments({
                 'profile': 'organisme',
                 'score.nb_avis': { $gt: 0 },
                 'sources': { $in: ['kairos'] }

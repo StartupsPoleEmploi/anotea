@@ -198,9 +198,9 @@
                                             <tr>
                                                 <th scope="col">Region</th>
                                                 <th scope="col">Nombre de sessions</th>
-                                                <th scope="col">Sessions avec au moins un avis</th>
-                                                <th scope="col">Sessions avec au moins trois avis</th>
-                                                <th scope="col">Sessions certifiantes avec au moins un avis</th>
+                                                <th scope="col">Sessions avec avis</th>
+                                                <th scope="col">Sessions certifiantes avec avis</th>
+                                                <th scope="col">Nombre moyen d'avis par session</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -208,9 +208,9 @@
                                                 <tr>
                                                     <td><%= element.region %></td>
                                                     <td><%= element.nbSessions %></td>
-                                                    <td><%= element.sessionsAvecAuMoinsUnAvis %></td>
-                                                    <td><%= element.sessionsAvecAuMoinsTroisAvis %></td>
+                                                    <td><%= element.sessionsAvecAvis %></td>
                                                     <td><%= element.sessionsCertifiantesAvecAvis %></td>
+                                                    <td><%= element.avisPerSession %></td>
                                                 </tr>
                                             <% }); %>
                                         </tbody>
