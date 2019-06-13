@@ -51,15 +51,15 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
         try {
             let avis = await findAvisReconciliables(db, rawFormation);
 
-            let formation = reconcileFormation(rawFormation, avis);
-            let actions = reconcileActions(rawFormation, avis);
-            let sessions = reconcileSessions(rawFormation, avis);
+            let formation = options.formations ? reconcileFormation(rawFormation, avis) : null;
+            let actions = options.actions ? reconcileActions(rawFormation, avis) : null;
+            let sessions = options.sessions ? reconcileSessions(rawFormation, avis) : null;
 
             promises.push(
                 Promise.all([
-                    ...(options.formations ? [replaceOne('formations', formation)] : []),
-                    ...(options.actions ? [Promise.all(actions.map(action => replaceOne('actions', action)))] : []),
-                    ...(options.sessions ? [Promise.all(sessions.map(session => replaceOne('sessions', session)))] : []),
+                    ...(formation ? [replaceOne('formations', formation)] : []),
+                    ...(actions ? [Promise.all(actions.map(action => replaceOne('actions', action)))] : []),
+                    ...(sessions ? [Promise.all(sessions.map(session => replaceOne('sessions', session)))] : []),
                 ])
             );
 

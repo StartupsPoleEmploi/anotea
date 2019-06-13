@@ -3,9 +3,9 @@ const { flatten } = require('../../../../job-utils');
 const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
 const filterAvisReconciliables = require('./utils/filterAvisReconciliables');
 
-module.exports = (formation, comments) => {
+module.exports = (intercarif, comments) => {
 
-    return formation.actions.reduce((acc, action) => {
+    return intercarif.actions.reduce((acc, action) => {
 
         if (!action.lieu_de_formation.coordonnees.adresse) {
             return acc;
@@ -13,7 +13,7 @@ module.exports = (formation, comments) => {
 
         let reconciliated = filterAvisReconciliables(action, comments);
 
-        let id = `${formation._attributes.numero}|${action._attributes.numero}`;
+        let id = `${intercarif._attributes.numero}|${action._attributes.numero}`;
         return [
             ...acc,
             {
@@ -35,25 +35,25 @@ module.exports = (formation, comments) => {
                 avis: reconciliated.map(a => convertCommentToAvis(a)) || [],
                 score: computeScore(reconciliated),
                 formation: {
-                    numero: formation._attributes.numero,
-                    intitule: formation.intitule_formation,
-                    objectif_formation: formation.objectif_formation,
+                    numero: intercarif._attributes.numero,
+                    intitule: intercarif.intitule_formation,
+                    objectif_formation: intercarif.objectif_formation,
                     domaine_formation: {
-                        formacodes: formation._meta.formacodes,
+                        formacodes: intercarif._meta.formacodes,
                     },
                     certifications: {
-                        certifinfos: formation._meta.certifinfos,
+                        certifinfos: intercarif._meta.certifinfos,
                     },
                     organisme_responsable: {
-                        raison_sociale: formation.organisme_formation_responsable.raison_sociale,
-                        siret: formation.organisme_formation_responsable.siret_organisme_formation.siret,
-                        numero: formation.organisme_formation_responsable._attributes.numero,
+                        raison_sociale: intercarif.organisme_formation_responsable.raison_sociale,
+                        siret: intercarif.organisme_formation_responsable.siret_organisme_formation.siret,
+                        numero: intercarif.organisme_formation_responsable._attributes.numero,
                     },
                 },
                 meta: {
                     import_date: new Date(),
                     source: {//TODO remove source field in v2
-                        numero_formation: formation._attributes.numero,
+                        numero_formation: intercarif._attributes.numero,
                         numero_action: action._attributes.numero,
                         type: 'intercarif',
                     },
@@ -61,8 +61,8 @@ module.exports = (formation, comments) => {
                         //TODO must be converted into an array in v2
                         organisme_formateur: action.organisme_formateur.siret_formateur.siret,
                         lieu_de_formation: action.lieu_de_formation.coordonnees.adresse.codepostal,
-                        certifinfos: formation._meta.certifinfos,
-                        formacodes: formation._meta.formacodes,
+                        certifinfos: intercarif._meta.certifinfos,
+                        formacodes: intercarif._meta.formacodes,
                     },
                 },
             },
