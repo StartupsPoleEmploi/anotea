@@ -5,10 +5,11 @@ module.exports = async db => {
         updated: 0,
         total: await cursor.count(),
     };
+
+    //Sync comment.training --> trainee.training
     while (await cursor.hasNext()) {
         let comment = await cursor.next();
 
-        //Sync training property from comment to trainee
         let trainee = await db.collection('trainee').findOne({ token: comment.token });
         if (trainee && JSON.stringify(trainee.training) !== JSON.stringify(comment.training)) {
 
@@ -17,10 +18,10 @@ module.exports = async db => {
                 {
                     $set: {
                         'training.title': comment.training.title,
-                        ...(comment.meta && comment.meta.originalCertifInfo ?
+                        ...(comment.meta && comment.meta.patch && comment.meta.patch.certifInfo ?
                             {
                                 'training.certifInfo.id': comment.training.certifInfo.id,
-                                'meta.patch.certifInfo': comment.meta.originalCertifInfo
+                                'meta.patch.certifInfo': comment.meta.patch.certifInfo
                             } : {}),
                         ...(trainee.training.organisation.label !== comment.training.organisation.label ?
                             {
@@ -37,13 +38,6 @@ module.exports = async db => {
             stats.updated++;
         }
     }
-
-    //Rename originalCertifInfo property
-    await db.collection('comment').updateOne(
-        {},
-        { $rename: { 'meta.originalCertifInfo': 'meta.patch.certifInfo' } },
-        { upsert: false },
-    );
 
     return stats;
 };

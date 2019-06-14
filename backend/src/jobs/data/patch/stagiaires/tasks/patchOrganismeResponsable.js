@@ -33,20 +33,32 @@ module.exports = async (db, logger) => {
                 });
 
                 if (formateurs.length === 1 && formateurs[0].siret !== responsable.siret) {
-                    let results = await db.collection('trainee').updateOne(
-                        { _id: trainee._id },
-                        {
-                            $set: {
-                                'training.organisation.siret': formateurs[0].siret,
-                                'meta.patch.siret': siret,
+                    let token = trainee.token;
+                    await Promise.all([
+                        db.collection('trainee').updateOne(
+                            { token: token },
+                            {
+                                $set: {
+                                    'training.organisation.siret': formateurs[0].siret,
+                                    'meta.patch.siret': siret,
+                                },
                             },
-                        },
-                        { upsert: false }
-                    );
+                            { upsert: false }
+                        ),
+                        //TODO remove me
+                        db.collection('comment').updateOne(
+                            { token: token },
+                            {
+                                $set: {
+                                    'training.organisation.siret': formateurs[0].siret,
+                                    'meta.patch.siret': siret,
+                                },
+                            },
+                            { upsert: false }
+                        )
+                    ]);
 
-                    if (results.result.nModified === 1) {
-                        stats.updated++;
-                    }
+                    stats.updated++;
                 }
             }
         } catch (e) {
