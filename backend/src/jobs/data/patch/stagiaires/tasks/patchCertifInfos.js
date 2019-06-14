@@ -38,19 +38,19 @@ module.exports = async (db, logger, file) => {
     };
 
     let certifinfos = await loadCertifinfos(file);
-    let cursor = db.collection('comment').find();
+    let cursor = db.collection('trainee').find({ 'meta.patch.certifInfo': { $exists: false } });
     while (await cursor.hasNext()) {
         stats.total++;
-        const avis = await cursor.next();
+        const trainee = await cursor.next();
         try {
-            let newCertifinfos = certifinfos[avis.training.certifInfo.id];
+            let newCertifinfos = certifinfos[trainee.training.certifInfo.id];
             if (newCertifinfos) {
-                let results = await db.collection('comment').updateOne(
-                    { _id: avis._id },
+                let results = await db.collection('trainee').updateOne(
+                    { _id: trainee._id },
                     {
                         $set: {
                             'training.certifInfo.id': newCertifinfos,
-                            'meta.originalCertifInfo': avis.training.certifInfo.id,
+                            'meta.patch.certifInfo': trainee.training.certifInfo.id,
                         },
                     },
                     { upsert: false }
@@ -62,7 +62,7 @@ module.exports = async (db, logger, file) => {
             }
         } catch (e) {
             stats.invalid++;
-            logger.error(`Avis cannot be updated`, e);
+            logger.error(`Stagiaire cannot be patched`, e);
         }
     }
 
