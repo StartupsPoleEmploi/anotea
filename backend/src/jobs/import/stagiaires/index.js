@@ -20,14 +20,13 @@ cli.description('Import des stagiaires')
 .option('--file [file]', 'The CSV file to import')
 .option('--region [codeRegion]', 'Code region to filter')
 .option('--since [since]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
-.option('--append', 'Append stagiaires to an existing campaign')
 .option('--slack', 'Send a slack notification when job is finished')
 .option('--validate', 'Validate CSV file but do not import it')
 .parse(process.argv);
 
 execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
 
-    let { file, source, region, since, validate, append } = cli;
+    let { file, source, region, since, validate } = cli;
 
     const handleValidationError = (validationError, csvOptions) => {
         let { line, type } = validationError;
@@ -68,7 +67,6 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
     let filters = {
         codeRegion: region,
         since: since && since.toDate(),
-        append: append,
     };
 
     if (validate) {
