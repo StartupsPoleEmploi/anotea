@@ -95,6 +95,8 @@ module.exports = ({ db, configuration, password, middlewares }) => {
 
         const projection = { token: 0 };
         let filter = { 'training.organisation.siret': req.params.id };
+        let order = { date: -1 };
+        
         if (req.query.filter) {
             if (req.query.filter === 'reported') {
                 filter.reported = true;
@@ -109,12 +111,12 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                 filter.reponse = { $exists: true };
             } else if (req.query.filter === 'answerRejected') {
                 filter['reponse.status'] = 'rejected';
+                order = { 'reponse.date': -1 };
             } else if (req.query.filter === 'all') {
                 filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
             }
         }
 
-        let order = { date: -1 };
         let skip = 0;
         let page = 1;
         if (req.query.page) {
@@ -186,6 +188,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
 
         const projection = { token: 0 };
         let filter = { 'training.organisation.siret': req.params.id };
+        let order = { date: -1 };
 
         if (req.query.trainingId === 'null') {
             Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
@@ -210,12 +213,12 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                 filter.reponse = { $exists: true };
             } else if (req.query.filter === 'answerRejected') {
                 filter['reponse.status'] = 'rejected';
+                order = { 'reponse.date': -1 };
             } else if (req.query.filter === 'all') {
                 filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
             }
         }
 
-        let order = { date: -1 };
         let skip = 0;
         let page = 1;
         if (req.query.page) {
