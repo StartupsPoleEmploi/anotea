@@ -2,25 +2,23 @@ const moment = require('moment');
 const computeScore = require('../../../../../common/utils/computeScore');
 const { flatten } = require('../../../../job-utils');
 const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
+const filterAvisReconciliables = require('./utils/filterAvisReconciliables');
 
-module.exports = (formation, allComments) => {
+module.exports = (intercarif, comments) => {
 
-    return formation.actions.reduce((acc, action) => {
+    return intercarif.actions.reduce((acc, action) => {
 
         if (!action.lieu_de_formation.coordonnees.adresse) {
             return acc;
         }
 
-        let comments = allComments.filter(a => {
-            return a.training.place.postalCode === action.lieu_de_formation.coordonnees.adresse.codepostal &&
-                a.training.organisation.siret === action.organisme_formateur.siret_formateur.siret;
-        });
+        let reconciliated = filterAvisReconciliables(action, comments);
 
         return [
             ...acc,
             ...action.sessions.map(session => {
 
-                let id = `${formation._attributes.numero}|${action._attributes.numero}|${session._attributes.numero}`;
+                let id = `${intercarif._attributes.numero}|${action._attributes.numero}|${session._attributes.numero}`;
                 return {
                     _id: id,
                     numero: session._attributes.numero,
@@ -30,22 +28,22 @@ module.exports = (formation, allComments) => {
                         debut: moment(`${session.periode.debut} -0000`, 'YYYYMMDD Z').toDate(),
                         fin: moment(`${session.periode.fin} -0000`, 'YYYYMMDD Z').toDate(),
                     },
-                    avis: comments.map(a => convertCommentToAvis(a)) || [],
-                    score: computeScore(comments),
+                    avis: reconciliated.map(a => convertCommentToAvis(a)) || [],
+                    score: computeScore(reconciliated),
                     formation: {
-                        numero: formation._attributes.numero,
-                        intitule: formation.intitule_formation,
-                        objectif_formation: formation.objectif_formation,
+                        numero: intercarif._attributes.numero,
+                        intitule: intercarif.intitule_formation,
+                        objectif_formation: intercarif.objectif_formation,
                         domaine_formation: {
-                            formacodes: formation._meta.formacodes,
+                            formacodes: intercarif._meta.formacodes,
                         },
                         certifications: {
-                            certifinfos: formation._meta.certifinfos,
+                            certifinfos: intercarif._meta.certifinfos,
                         },
                         organisme_responsable: {
-                            raison_sociale: formation.organisme_formation_responsable.raison_sociale,
-                            siret: formation.organisme_formation_responsable.siret_organisme_formation.siret,
-                            numero: formation.organisme_formation_responsable._attributes.numero,
+                            raison_sociale: intercarif.organisme_formation_responsable.raison_sociale,
+                            siret: intercarif.organisme_formation_responsable.siret_organisme_formation.siret,
+                            numero: intercarif.organisme_formation_responsable._attributes.numero,
                         },
                         action: {
                             numero: action._attributes.numero,
@@ -65,7 +63,7 @@ module.exports = (formation, allComments) => {
                     meta: {
                         import_date: new Date(),
                         source: {//TODO remove source field in v2
-                            numero_formation: formation._attributes.numero,
+                            numero_formation: intercarif._attributes.numero,
                             numero_action: action._attributes.numero,
                             numero_session: session._attributes.numero,
                             type: 'intercarif',
@@ -74,8 +72,8 @@ module.exports = (formation, allComments) => {
                             //TODO must be converted into an array in v2
                             organisme_formateur: action.organisme_formateur.siret_formateur.siret,
                             lieu_de_formation: action.lieu_de_formation.coordonnees.adresse.codepostal,
-                            certifinfos: formation._meta.certifinfos,
-                            formacodes: formation._meta.formacodes,
+                            certifinfos: intercarif._meta.certifinfos,
+                            formacodes: intercarif._meta.formacodes,
                         },
                     },
                 };

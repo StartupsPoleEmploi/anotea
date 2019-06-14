@@ -47,8 +47,6 @@ module.exports = (db, regions) => {
             ]).toArray(),
         ]);
 
-        console.log(avisPerSession[0]);
-
         return {
             region: regionName,
             nbSessions,
