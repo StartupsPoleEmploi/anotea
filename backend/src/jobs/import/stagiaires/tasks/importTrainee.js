@@ -29,7 +29,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
             invalid: 0,
         };
 
-        if (!filters.append && await db.collection('importTrainee').findOne({ hash, filters })) {
+        if (await db.collection('importTrainee').findOne({ hash, filters })) {
             logger.info(`CSV file ${file} already imported`);
             return resolve(stats);
         } else {
@@ -67,24 +67,15 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
             })
             .on('finish', async () => {
                 try {
-                    if (!filters.append) {
-                        await db.collection('importTrainee').insertOne({
-                            hash,
-                            campaign: campaign.name,
-                            campaignDate: campaign.date,
-                            file,
-                            filters,
-                            stats: stats,
-                            date: new Date(),
-                        });
-                    } else {
-                        await db.collection('importTrainee').updateOne({ campaign: campaign.name }, {
-                            $inc: {
-                                'stats.imported': stats.imported,
-                                'stats.invalid': stats.invalid,
-                            }
-                        });
-                    }
+                    await db.collection('importTrainee').insertOne({
+                        hash,
+                        campaign: campaign.name,
+                        campaignDate: campaign.date,
+                        file,
+                        filters,
+                        stats: stats,
+                        date: new Date(),
+                    });
                     return stats.invalid === 0 ? resolve(stats) : reject(stats);
 
                 } catch (e) {
