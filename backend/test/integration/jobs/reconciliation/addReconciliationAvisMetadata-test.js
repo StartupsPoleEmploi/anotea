@@ -8,7 +8,7 @@ const addReconciliationAvisMetadata = require('../../../../src/jobs/reconciliati
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
-    it('should add flag to avis reconciliable', async () => {
+    it('should insert meta to avis reconciliable', async () => {
 
         let db = await getTestDatabase();
         let avisReconciliable = newComment({
@@ -24,6 +24,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 place: {
                     postalCode: '75019',
                 },
+            },
+            meta: {
+                reconciliation: {
+                    reconciliable: false,
+                    formation: false,
+                    action: false,
+                    session: false,
+                }
             }
         });
 
@@ -36,11 +44,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await addReconciliationAvisMetadata(db);
 
         let avis = await db.collection('comment').findOne();
-        assert.ok(avis.meta.reconciliations);
-        let reconciliation = avis.meta.reconciliations[0];
-        assert.ok(reconciliation);
-        assert.ok(reconciliation.date);
-        assert.deepStrictEqual(_.omit(reconciliation, ['date']), {
+        assert.strictEqual(avis.meta.reconciliations.length, 1);
+        assert.deepStrictEqual(_.omit(avis.meta.reconciliations[0], ['date']), {
             reconciliable: true,
             formation: false,
             action: true,
@@ -48,7 +53,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         });
     });
 
-    it('should add flag to non avis reconciliable', async () => {
+    it('should create meta to avis non reconciliable', async () => {
 
         let db = await getTestDatabase();
         let avisNonReconciliable = newComment({
@@ -68,17 +73,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await addReconciliationAvisMetadata(db);
 
         let avis = await db.collection('comment').findOne();
-        assert.deepStrictEqual(_.omit(avis.meta.reconciliation, ['date']), {
-            reconciliable: false,
-            formation: false,
-            action: false,
-            session: false,
-        });
-        assert.ok(avis.meta.reconciliations);
-        let lastReconciliation = avis.meta.reconciliations[0];
-        assert.ok(lastReconciliation);
-        assert.ok(lastReconciliation.date);
-        assert.deepStrictEqual(_.omit(lastReconciliation, ['date']), {
+        assert.strictEqual(avis.meta.reconciliations.length, 1);
+        assert.deepStrictEqual(_.omit(avis.meta.reconciliations[0], ['date']), {
             reconciliable: false,
             formation: false,
             action: false,
