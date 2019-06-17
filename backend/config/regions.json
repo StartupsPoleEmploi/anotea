@@ -61,7 +61,7 @@
         "avis": true
       },
       "organismes": {
-        "accounts": false,
+        "accounts": true,
         "notifications": false
       }
     },
@@ -277,7 +277,7 @@
         "avis": true
       },
       "organismes": {
-        "accounts": false,
+        "accounts": true,
         "notifications": false
       }
     },
@@ -301,7 +301,7 @@
         "avis": true
       },
       "organismes": {
-        "accounts": false,
+        "accounts": true,
         "notifications": false
       }
     },
@@ -315,13 +315,14 @@
   },
   {
     "nom": "Nouvelle-Aquitaine",
-    "active": false,
+    "active": true,
     "codeRegion": "15",
     "codeINSEE": "75",
+    "contact": "anotea.33127",
     "departements": ["19", "16", "17", "23", "79", "24", "24", "33", "87", "40", "47", "64", "86", "33"],
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
