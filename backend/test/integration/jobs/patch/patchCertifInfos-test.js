@@ -7,7 +7,7 @@ const logger = require('../../../helpers/test-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    let certifinfos = path.join(__dirname, '../../../../helpers/data', 'certifinfos.csv');
+    let certifinfos = path.join(__dirname, '../../../helpers/data', 'certifinfos.csv');
 
     it('should update certifinfos', async () => {
 
