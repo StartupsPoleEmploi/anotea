@@ -7,11 +7,11 @@ const { execute } = require('../../job-utils');
 const createIndexes = require('../indexes/tasks/createIndexes');
 const createAccounts = require('./createAccounts');
 const importIntercarif = require('../../import/intercarif/importIntercarif');
-const reconcile = require('../../import/reconciliation/tasks/reconcile');
+const reconcile = require('../../reconciliation/tasks/reconcile');
 const generateOrganismesFromIntercarif = require('../../import/organismes/generateOrganismesFromIntercarif');
 const synchronizeOrganismesWithAccounts = require('../../import/organismes/synchronizeOrganismesWithAccounts');
 const computeOrganismesScore = require('../../import/organismes/computeOrganismesScore');
-const resetPasswords = require('../reset-passwords/resetPasswords');
+const resetPasswords = require('../auth/reset-passwords/resetPasswords');
 const createAvis = require('./createAvis');
 const dumpAvis = require('./dumpAvis');
 
