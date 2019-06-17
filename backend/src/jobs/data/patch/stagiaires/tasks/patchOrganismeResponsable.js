@@ -40,7 +40,9 @@ module.exports = async (db, logger) => {
                             {
                                 $set: {
                                     'training.organisation.siret': formateurs[0].siret,
-                                    'meta.patch.siret': siret,
+                                    'training.organisation.name': formateurs[0].raison_sociale,
+                                    'meta.patch.organisation.siret': siret,
+                                    'meta.patch.organisation.name': trainee.training.organisation.name,
                                 },
                             },
                             { upsert: false }
@@ -51,7 +53,9 @@ module.exports = async (db, logger) => {
                             {
                                 $set: {
                                     'training.organisation.siret': formateurs[0].siret,
-                                    'meta.patch.siret': siret,
+                                    'training.organisation.name': formateurs[0].raison_sociale,
+                                    'meta.patch.organisation.siret': siret,
+                                    'meta.patch.organisation.name': trainee.training.organisation.name,
                                 },
                             },
                             { upsert: false }

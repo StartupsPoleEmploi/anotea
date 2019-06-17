@@ -14,10 +14,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             db.collection('intercarif_organismes_responsables').insertOne({
                 _id: '11111111111111',
                 siret: '11111111111111',
+                nom: 'Organisme Responsable',
+                raison_sociale: 'Organisme Responsable',
                 organisme_formateurs: [
                     {
                         siret: '22222222222222',
-                        raison_sociale: 'PE Formation',
+                        raison_sociale: 'Organisme Formateur',
                         lieux_de_formation: [
                             {
                                 nom: 'CENTRE Paris',
@@ -36,6 +38,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 training: {
                     organisation: {
                         siret: '11111111111111',
+                        label: 'Organisme Responsable label',
+                        name: 'Organisme Responsable name'
                     },
                     place: {
                         postalCode: '75011',
@@ -48,7 +52,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
         assert.deepStrictEqual(avis.training.organisation.siret, '22222222222222');
-        assert.deepStrictEqual(avis.meta.patch.siret, '11111111111111');
+        assert.deepStrictEqual(avis.training.organisation.label, 'Organisme Responsable label');
+        assert.deepStrictEqual(avis.training.organisation.name, 'Organisme Formateur');
+        assert.deepStrictEqual(avis.meta.patch.organisation.siret, '11111111111111');
+        assert.deepStrictEqual(avis.meta.patch.organisation.name, 'Organisme Responsable name');
         assert.deepStrictEqual(stats, {
             updated: 1,
             invalid: 0,
@@ -64,6 +71,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             db.collection('intercarif_organismes_responsables').insertOne({
                 _id: '11111111111111',
                 siret: '11111111111111',
+                nom: 'PE Formation',
+                raison_sociale: 'Pole Emploi Formation',
                 organisme_formateurs: [
                     {
                         siret: '22222222222222',
@@ -114,6 +123,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             db.collection('intercarif_organismes_responsables').insertOne({
                 _id: '11111111111111',
                 siret: '11111111111111',
+                nom: 'PE Formation',
+                raison_sociale: 'Pole Emploi Formation',
                 organisme_formateurs: [
                     {
                         siret: '11111111111111',
