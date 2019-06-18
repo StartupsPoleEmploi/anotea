@@ -4,7 +4,10 @@ module.exports = (db, formation) => {
         $and: [
             {
                 'training.organisation.siret': {
-                    $in: formation.actions.map(action => action.organisme_formateur.siret_formateur.siret)
+                    $in: formation.actions.map(action => {
+                        let siren = action.organisme_formateur.siret_formateur.siret.substring(0, 9);
+                        return new RegExp(`^${siren}`);
+                    })
                 }
             },
             {

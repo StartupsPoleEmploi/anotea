@@ -2,7 +2,7 @@ const moment = require('moment');
 const computeScore = require('../../../../common/utils/computeScore');
 const { flatten } = require('../../../job-utils');
 const convertCommentToAvis = require('../../../../common/utils/convertCommentToAvis');
-const filterAvisReconciliables = require('./utils/filterAvisReconciliables');
+const getReconcilatedAvis = require('./utils/getReconcilatedAvis');
 
 module.exports = (intercarif, comments) => {
 
@@ -12,7 +12,7 @@ module.exports = (intercarif, comments) => {
             return acc;
         }
 
-        let reconciliated = filterAvisReconciliables(action, comments);
+        let reconciliated = getReconcilatedAvis(action, comments);
 
         return [
             ...acc,

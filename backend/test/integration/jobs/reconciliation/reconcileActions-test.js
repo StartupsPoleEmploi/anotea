@@ -202,6 +202,36 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.deepStrictEqual(action.avis[0].formation.certifications[0].certif_info, '80735');
     });
 
+    it('should reconcile actions with avis (siren)', async () => {
+
+        let db = await getTestDatabase();
+        await Promise.all([
+            importIntercarif(),
+            insertIntoDatabase('comment', newComment({
+                _id: '1234',
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: null,
+                    },
+                    organisation: {
+                        siret: '22222222244444',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                }
+            })),
+        ]);
+
+        await reconcile(db, logger, { actions: true });
+
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(action.avis.length, 1);
+        assert.deepStrictEqual(action.avis[0].id, '1234');
+    });
+
     it('should ignore no matching avis', async () => {
 
         let db = await getTestDatabase();
