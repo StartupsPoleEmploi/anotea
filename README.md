@@ -24,26 +24,24 @@ Anotea est composé de quatre projets :
 
 L'application nécessite MongoDB 4, Node.js 8
 
-Pour démarrer le backend, il faut executer les commandes :
+Les projets se démarrent avec les commandes suivantes :
 
 ```
 npm install
 npm start
 ```
 
-Pour démarrer le backoffice, il faut executer les commandes :
+#### Jeu de données
+
+Vous pouvez créer un jeu de données en local au moyen de la commande suivante:
 
 ```
-npm install
-npm start
+node src/jobs/data/dataset
 ```
 
-Pour démarrer le questionnaire, il faut executer les commandes :
+Ce script va générer des comptes et des avis.
+Il est ensuite possible de se connecter à l'url `http://localhost` avec le login `moderateur@pole-emploi.fr` et le mot de passe  `password`
 
-```
-npm install
-npm start
-```
 
 ### Démarrer l'application via Docker
 
@@ -62,16 +60,11 @@ Cette commande va construire et démarrer plusieurs containers :
 
 L'application est accessible à l'url `http://localhost`
 
-### Jeu de données
+Pour executer un script dans un conteneur docker, il faut lancer la commande :
 
-Il est possible de créer un jeu de données en local au moyen de la commande suivante:
-
+```sh
+docker exec anotea_mongodb bash -c "node src/jobs/<nom du script>"
 ```
-node src/jobs/data/dataset
-```
-
-Ce script va générer des comptes et des avis.
-Il est ensuite possible de se connecter à l'url `http://localhost` avec le login moderateur@pole-emploi.fr et le mot de passe  password
 
 #### Configurer un environnement
 
