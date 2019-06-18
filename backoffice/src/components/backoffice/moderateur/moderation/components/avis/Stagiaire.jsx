@@ -1,17 +1,28 @@
 import React from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import PrettyDate from '../../../../common/PrettyDate';
 import { maskPseudo } from '../../moderationService';
 import './Stagiaire.scss';
 
-const Stars = ({ note }) => {
-    return _.range(0, 5).map((v, index) => {
-        let starClass = (note % 1 !== 0 && Math.ceil(note) === index + 1 && index <= note) ? 'fa-star-half-alt' : 'fa-star';
-        return <span
-            key={index}
-            className={`stars fa ${starClass} ${index > note && 'empty'}`} />;
-    });
+const Stars = props => {
+
+    let isDecimalsNumber = props.note % 1 !== 0;
+    let note = Math.round(props.note);
+    let stars = new Array(5).fill('active', 0, note).fill('empty', note, 5);
+
+    return (
+        <span>
+            {
+                stars.map((star, index) => {
+                    let starClass = (isDecimalsNumber && Math.ceil(note) === index + 1 && index <= note) ? 'fa-star-half-alt' : 'fa-star';
+                    return <span
+                        key={index}
+                        className={star === 'active' ? `stars fa ${starClass} active` : 'stars fa fa-star empty'}
+                    />;
+                })
+            }
+        </span>
+    );
 };
 Stars.propTypes = { note: PropTypes.number.isRequired };
 
