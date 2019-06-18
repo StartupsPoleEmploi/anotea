@@ -6,7 +6,8 @@ const moment = require('moment');
 const { execute } = require('../job-utils');
 const { transformObject } = require('../../common/utils/stream-utils');
 
-cli.description('Export organismes per active region')
+cli
+.option('--reconciliable')
 .parse(process.argv);
 
 execute(async ({ logger, db, regions }) => {
@@ -21,9 +22,9 @@ execute(async ({ logger, db, regions }) => {
             db.collection('comment').find({
                 codeRegion,
                 $and: [
-                    { 'meta.reconciliation.0.formation': false },
-                    { 'meta.reconciliation.0.action': false },
-                    { 'meta.reconciliation.0.session': false },
+                    { 'meta.reconciliation.0.formation': cli.reconciliable },
+                    { 'meta.reconciliation.0.action': cli.reconciliable },
+                    { 'meta.reconciliation.0.session': cli.reconciliable },
                 ]
             })
             .pipe(transformObject(async avis => {
@@ -73,13 +74,6 @@ execute(async ({ logger, db, regions }) => {
             });
         });
     };
-
-    //Building indexes only for this script
-    await Promise.all([
-        db.collection('sessionsReconciliees').createIndex({ 'avis._id': 1 }),
-        db.collection('actionsReconciliees').createIndex({ 'avis._id': 1 }),
-        db.collection('formationsReconciliees').createIndex({ 'avis._id': 1 }),
-    ]);
 
     logger.info(`Generating CSV file...`);
     await Promise.all(regions.findActiveRegions().map(region => generateCSV(region)));
