@@ -64,22 +64,22 @@ export default class Graph extends React.Component {
                     {
                         type: 3,
                         label: 'Taux d\'avis avec commentaires',
-                        value: this.getRate(dashboardData.countAdvicesWithComments, dashboardData.countAdvicesModerated)
+                        value: this.getRate(dashboardData.countAdvicesWithComments, dashboardData.count)
                     },
                     {
                         type: 4,
                         label: 'Taux de commentaires positifs ou neutres',
-                        value: this.getRate(dashboardData.countAdvicesPositif, dashboardData.countAdvicesWithComments)
+                        value: this.getRate(dashboardData.countAdvicesPositif, dashboardData.countAdvicesModerated)
                     },
                     {
                         type: 5,
                         label: 'Taux de commentaires négatifs',
-                        value: this.getRate(dashboardData.countAdvicesNegatif, dashboardData.countAdvicesWithComments)
+                        value: this.getRate(dashboardData.countAdvicesNegatif, dashboardData.countAdvicesModerated)
                     },
                     {
                         type: 6,
                         label: 'Taux de commentaires rejetés',
-                        value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                        value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesModerated)
                     },
                     {
                         type: 7,
