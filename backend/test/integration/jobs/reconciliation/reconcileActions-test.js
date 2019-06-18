@@ -232,6 +232,60 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.deepStrictEqual(action.avis[0].id, '1234');
     });
 
+    it('should reconcile actions with avis (ville)', async () => {
+
+        let db = await getTestDatabase();
+        await importIntercarif();
+        await Promise.all([
+            db.collection('intercarif').updateMany(
+                {},
+                {
+                    $set: {
+                        'actions.0.lieu_de_formation.coordonnees.adresse.codepostal': '93100',
+                        'actions.0.lieu_de_formation.coordonnees.adresse.ville': 'Montreuil',
+                    }
+                }
+            ),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: null,
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '93100',
+                        city: 'Montreuil',
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: null,
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '93101',
+                        city: 'Montreuil',
+                    },
+                }
+            })),
+        ]);
+
+        await reconcile(db, logger, { actions: true });
+
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(action.avis.length, 2);
+    });
+
     it('should ignore no matching avis', async () => {
 
         let db = await getTestDatabase();
@@ -278,7 +332,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         siret: '22222222222222',
                     },
                     place: {
-                        postalCode: 'XXXXX',
+                        postalCode: '75018',
                     },
                 }
             })),
