@@ -10,6 +10,9 @@ module.exports = (intercarif, allComments) => {
         ];
     }, []);
 
+    let reconciliated = allComments;
+
+
     let id = intercarif._attributes.numero;
     return {
         _id: id,
@@ -27,7 +30,7 @@ module.exports = (intercarif, allComments) => {
             siret: intercarif.organisme_formation_responsable.siret_organisme_formation.siret,
             numero: intercarif.organisme_formation_responsable._attributes.numero,
         },
-        avis: allComments.map(a => convertCommentToAvis(a)) || [],
+        avis: reconciliated.map(a => convertCommentToAvis(a)) || [],
         score: computeScore(allComments),
         meta: {
             import_date: new Date(),
