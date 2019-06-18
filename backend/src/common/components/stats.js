@@ -17,9 +17,9 @@ module.exports = (db, regions) => {
             region: regionName,
             nbAvis,
             avisRestitutables: {
-                'apiRouteFormations': `${Math.ceil((formation * 100) / nbAvis)}%`,
-                'apiRouteActions': `${Math.ceil((action * 100) / nbAvis)}%`,
-                'apiRouteSessions': `${Math.ceil((session * 100) / nbAvis)}%`,
+                'apiRouteFormations': `${formation} (${Math.ceil((formation * 100) / nbAvis)}%)`,
+                'apiRouteActions': `${action} (${Math.ceil((action * 100) / nbAvis)}%)`,
+                'apiRouteSessions': `${session} (${Math.ceil((session * 100) / nbAvis)}%)`,
             },
         };
     };
@@ -50,9 +50,9 @@ module.exports = (db, regions) => {
         return {
             region: regionName,
             nbSessions,
-            sessionsAvecAvis: `${Math.ceil((nbSessionsAvecAvis * 100) / nbSessions)}%`,
-            sessionsCertifiantesAvecAvis: `${Math.ceil((nbSessionsCertifiantesAvecAvis * 100) / nbSessions)}%`,
-            avisPerSession: Number(Math.round(avisPerSession[0].average + 'e1') + 'e-1'),
+            sessionsAvecAvis: `${nbSessionsAvecAvis} (${Math.ceil((nbSessionsAvecAvis * 100) / nbSessions)}%)`,
+            sessionsCertifiantesAvecAvis: `${nbSessionsCertifiantesAvecAvis} (${Math.ceil((nbSessionsCertifiantesAvecAvis * 100) / nbSessions)}%)`,
+            avisPerSession: avisPerSession[0] ? Number(Math.round(avisPerSession[0].average + 'e1') + 'e-1') : 0,
         };
     };
 
@@ -82,7 +82,7 @@ module.exports = (db, regions) => {
             nbOrganimes,
             nbOrganismesActifs,
             nbOrganismesAvecAvis,
-            organismesAvecAuMoinsUnAvis: `${Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes)}%`,
+            organismesAvecAuMoinsUnAvis: `${nbOrganismesAvecAvis} (${Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes)}%)`,
         };
     };
 
@@ -145,8 +145,8 @@ module.exports = (db, regions) => {
 
             return {
                 nbFormations,
-                formationsAvecAuMoinsUnAvis: `${Math.ceil((nbFormationAvecAuMoinsUnAvis * 100) / nbFormations)}%`,
-                formationsAvecAuMoinsTroisAvis: `${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbFormations)}%`,
+                formationsAvecAuMoinsUnAvis: `${nbFormationAvecAuMoinsUnAvis} (${Math.ceil((nbFormationAvecAuMoinsUnAvis * 100) / nbFormations)}%)`,
+                formationsAvecAuMoinsTroisAvis: `${nbSessionsAuMoinsTroisAvis} (${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbFormations)}%)`,
             };
         },
         computeMailingStats: (codeRegion, codeFinanceur) => {
