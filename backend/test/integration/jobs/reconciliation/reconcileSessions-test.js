@@ -286,7 +286,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         siret: '22222222222222',
                     },
                     place: {
-                        postalCode: 'XXXXX',
+                        postalCode: '75018',
                     },
                 }
             })),
@@ -298,7 +298,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.strictEqual(session.avis.length, 0);
     });
 
-    it('should ignore avis from other action', async () => {
+    it('should ignore avis from other session', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([

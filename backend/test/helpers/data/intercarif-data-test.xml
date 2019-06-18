@@ -554,7 +554,7 @@
 <prenom>Jacko</prenom>
 <adresse>
 <ligne>-</ligne>
-<codepostal>93100</codepostal>
+    <codepostal>93100</codepostal>
 <ville>Montreuil</ville>
 <departement>93</departement>
 <code-INSEE-commune>93100</code-INSEE-commune>
