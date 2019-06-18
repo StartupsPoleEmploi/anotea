@@ -6,4 +6,5 @@ execute(async ({ db }) => {
     await require('./tasks/cleanCertifInfos')(db);
     await require('./tasks/renamePatchProperty')(db);
     await require('./tasks/syncTrainingProperty')(db);
+    await require('./tasks/cleanReconciliationMetadata')(db);
 });
