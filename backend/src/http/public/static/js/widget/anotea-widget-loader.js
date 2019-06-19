@@ -95,9 +95,9 @@
             appendChild('widget', element, getWidgetIframe(attributes));
 
             if (i === elements.length - 1) {
-                if (attributes.options.includes('aggregate-rating')) {
+                if (attributes.options.includes('json-ld')) {
                     getAggregateRatingScript(attributes, function(script) {
-                        appendChild('aggregate-rating', document.head, script);
+                        appendChild('json-ld', document.head, script);
                     });
                 }
                 element.appendChild(getIframeResizerScript());
