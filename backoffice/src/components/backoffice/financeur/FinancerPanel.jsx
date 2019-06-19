@@ -379,8 +379,6 @@ export default class FinancerPanel extends React.Component {
         return (
             <div className="organisationPanel mainPanel">
 
-                <SideMenu onChangePage={this.handleChangePage} features={this.props.features} />
-
                 {this.state.currentPage === 'stats' &&
                 <Dashboard codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} />
                 }
@@ -467,10 +465,10 @@ export default class FinancerPanel extends React.Component {
                                                     </p>
                                                 </div>
                                                 {this.props.codeFinanceur === POLE_EMPLOI && advice.published &&
-                                                    <div> Qualification: {advice.qualification} </div>
+                                                <div> Qualification: {advice.qualification} </div>
                                                 }
                                                 {advice.rejected &&
-                                                    <div>Qualification: {advice.rejectReason} </div>
+                                                <div>Qualification: {advice.rejectReason} </div>
                                                 }
                                             </div>
                                             }
@@ -479,11 +477,12 @@ export default class FinancerPanel extends React.Component {
                                                 <div className="noComment">Cet utilisateur n'a pas laissé d'avis.</div>
                                             </div>
                                             }
-                                            { advice.reponse &&
-                                                <div className="answer financeur">
-                                                    <h4>Réponse de l'organisme <span>({getReponseStatus(advice.reponse)})</span></h4>
-                                                    <p>{advice.reponse.text}</p>
-                                                </div>
+                                            {advice.reponse &&
+                                            <div className="answer financeur">
+                                                <h4>Réponse de
+                                                    l'organisme <span>({getReponseStatus(advice.reponse)})</span></h4>
+                                                <p>{advice.reponse.text}</p>
+                                            </div>
                                             }
                                         </div>
                                         <div className="col-md-3">
