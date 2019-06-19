@@ -1,6 +1,7 @@
 const config = require('config');
 const auth = require('./common/components/auth');
 const password = require('./common/components/password');
+const deprecatedStats = require('./common/components/deprecatedStats');
 const stats = require('./common/components/stats');
 const getRegions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
@@ -33,6 +34,7 @@ module.exports = async (options = {}) => {
         password,
         regions: regions,
         stats: stats(db, regions),
+        deprecatedStats: deprecatedStats(db, regions),
         moderation: moderation(db, logger, mailer),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),

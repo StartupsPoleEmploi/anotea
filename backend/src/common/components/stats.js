@@ -1,253 +1,139 @@
+const calculateRate = (dividend, divisor) => {
+    if (dividend && divisor !== 0) {
+        return (Math.round((dividend * 100) / divisor) + '%');
+    } else {
+        return (0 + '%');
+    }
+};
+
 module.exports = (db, regions) => {
 
     let { findActiveRegions } = regions;
+    let avis = db.collection('comment');
+    let organismes = db.collection('accounts');
+    let trainee = db.collection('trainee');
 
-    let computeRegionalAvisStats = async (regionName, codeRegions) => {
 
-        let avis = db.collection('comment');
+    const getOrganismesStats = async (regionName, codeRegions) => {
 
-        let [nbAvis, formation, action, session] = await Promise.all([
-            avis.countDocuments({ 'codeRegion': { $in: codeRegions } }),
-            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliations.0.formation': true }),
-            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliations.0.action': true }),
-            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliations.0.session': true }),
+        let filter = { codeRegion: { $in: codeRegions } };
+        let [
+            nbOrganimesContactes,
+            nbRelances,
+            ouvertureMails,
+            nbClicDansLien,
+            organismesActifs,
+            avisNonLus,
+            avisModeresNonRejetes,
+            nbCommentairesAvecOrganismesReponses,
+            nbAvisAvecOrganismesReponses,
+            avisSignales
+        ] = await Promise.all([
+            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ 'resend': true, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({
+                'mailSentDate': { $ne: null },
+                'tracking.firstRead': { $ne: null },
+                'profile': 'organisme', ...filter
+            }),
+            organismes.countDocuments({ 'tracking.click': { $ne: null }, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({
+                'mailSentDate': { $ne: null },
+                'passwordHash': { $ne: null },
+                'profile': 'organisme', ...filter
+            }),
+            avis.countDocuments({
+                'published': true,
+                '$or': [{ 'read': false }, { 'read': { $ne: true } }], ...filter
+            }),
+            avis.countDocuments({ 'moderated': true, 'rejected': false, ...filter }),
+            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'answer': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'reported': true, ...filter }),
         ]);
 
         return {
-            region: regionName,
-            nbAvis,
-            avisRestitutables: {
-                'apiRouteFormations': `${formation} (${Math.ceil((formation * 100) / nbAvis)}%)`,
-                'apiRouteActions': `${action} (${Math.ceil((action * 100) / nbAvis)}%)`,
-                'apiRouteSessions': `${session} (${Math.ceil((session * 100) / nbAvis)}%)`,
-            },
+            regionName: regionName,
+            nbOrganismesContactes: nbOrganimesContactes,
+            mailsEnvoyes: nbRelances + nbOrganimesContactes,
+            tauxOuvertureMails: calculateRate(ouvertureMails, nbOrganimesContactes),
+            tauxClicDansLien: calculateRate(nbClicDansLien, ouvertureMails),
+            tauxOrganismesActifs: calculateRate(organismesActifs, nbOrganimesContactes),
+            tauxAvisNonLus: calculateRate(avisNonLus, avisModeresNonRejetes),
+            tauxCommentairesAvecReponses: calculateRate(nbCommentairesAvecOrganismesReponses, avisModeresNonRejetes),
+            tauxAvisAvecReponses: calculateRate(nbAvisAvecOrganismesReponses, avisModeresNonRejetes),
+            tauxAvisSignales: calculateRate(avisSignales, avisModeresNonRejetes),
         };
     };
 
-    let computeRegionalSessionStats = async (regionName, codeRegions) => {
+    const getAvisStats = async (regionName, codeRegions) => {
 
-        let sessionsReconciliees = db.collection('sessionsReconciliees');
+        let filter = { codeRegion: { $in: codeRegions } };
 
-        let [nbSessions, nbSessionsAvecAvis, nbSessionsCertifiantesAvecAvis, avisPerSession] = await Promise.all([
-            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
-            sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
-            sessionsReconciliees.countDocuments({
-                'code_region': { $in: codeRegions },
-                'score.nb_avis': { $gte: 1 },
-                'formation.certifications.certifinfos.0': { $exists: true }
-            }),
-            sessionsReconciliees.aggregate([
-                { $match: { 'code_region': { $in: codeRegions } } },
+        let [
+            nbStagiairesContactes,
+            nbRelances,
+            nbMailsOuverts,
+            nbLiensCliques,
+            nbQuestionnairesValidees,
+            nbAvisAvecCommentaire,
+            nbCommentairesAModerer,
+            nbCommentairesPositifs,
+            nbCommentairesNegatifs,
+            nbCommentairesRejetes
+        ] = await Promise.all([
+            trainee.countDocuments({ 'mailSent': true, ...filter }),
+            db.collection('trainee').aggregate([
+                { $match: { ...filter } },
                 {
                     $group: {
                         _id: null,
-                        average: { $avg: '$score.nb_avis' }
+                        nbRetries: { $sum: '$mailRetry' },
                     }
-                }
+                },
             ]).toArray(),
+            trainee.countDocuments({ 'tracking.firstRead': { $ne: null }, ...filter }),
+            trainee.countDocuments({ 'tracking.click': { $ne: null }, ...filter }),
+            trainee.countDocuments({ 'avisCreated': true, ...filter }),
+            avis.countDocuments({ 'comment': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'comment': { $ne: null }, 'moderated': { $ne: true }, ...filter }),
+            avis.countDocuments({ 'comment': { $ne: null }, 'qualification': 'positif', ...filter }),
+            avis.countDocuments({ 'comment': { $ne: null }, 'qualification': 'négatif', ...filter }),
+            avis.countDocuments({ 'rejected': true, ...filter })
         ]);
 
+        let nbMailEnvoyes = nbRelances.length > 0 ? (nbRelances[0].nbRetries + nbStagiairesContactes) : 0;
         return {
-            region: regionName,
-            nbSessions,
-            sessionsAvecAvis: `${nbSessionsAvecAvis} (${Math.ceil((nbSessionsAvecAvis * 100) / nbSessions)}%)`,
-            sessionsCertifiantesAvecAvis: `${nbSessionsCertifiantesAvecAvis} (${Math.ceil((nbSessionsCertifiantesAvecAvis * 100) / nbSessions)}%)`,
-            avisPerSession: avisPerSession[0] ? Number(Math.round(avisPerSession[0].average + 'e1') + 'e-1') : 0,
+            regionName: regionName,
+            nbStagiairesContactes: nbStagiairesContactes,
+            nbMailEnvoyes: nbMailEnvoyes,
+            tauxOuvertureMail: calculateRate(nbMailsOuverts, nbMailEnvoyes),
+            tauxLiensCliques: calculateRate(nbLiensCliques, nbMailsOuverts),
+            tauxQuestionnairesValides: calculateRate(nbQuestionnairesValidees, nbLiensCliques),
+            tauxAvisDeposes: calculateRate(nbQuestionnairesValidees, nbStagiairesContactes),
+            tauxAvisAvecCommentaire: calculateRate(nbAvisAvecCommentaire, nbQuestionnairesValidees),
+            nbCommentairesAModerer: nbCommentairesAModerer,
+            tauxAvisPositifs: calculateRate(nbCommentairesPositifs, nbAvisAvecCommentaire),
+            tauxAvisNegatifs: calculateRate(nbCommentairesNegatifs, nbAvisAvecCommentaire),
+            tauxAvisRejetes: calculateRate(nbCommentairesRejetes, nbAvisAvecCommentaire),
         };
-    };
-
-    let computeRegionalOrganismesStats = async (regionName, codeRegions) => {
-
-        let organismes = db.collection('accounts');
-
-        let [nbOrganimes, nbOrganismesAvecAvis, nbOrganismesActifs] = await Promise.all([
-            organismes.countDocuments({
-                'profile': 'organisme',
-                'codeRegion': { $in: codeRegions },
-            }),
-            organismes.countDocuments({
-                'profile': 'organisme',
-                'score.nb_avis': { $gte: 1 },
-                'codeRegion': { $in: codeRegions },
-            }),
-            organismes.countDocuments({
-                'profile': 'organisme',
-                'passwordHash': { $ne: null },
-                'codeRegion': { $in: codeRegions },
-            }),
-        ]);
-
-        return {
-            region: regionName,
-            nbOrganimes,
-            nbOrganismesActifs,
-            nbOrganismesAvecAvis,
-            organismesAvecAuMoinsUnAvis: `${nbOrganismesAvecAvis} (${Math.ceil((nbOrganismesAvecAvis * 100) / nbOrganimes)}%)`,
-        };
-    };
-
-    let computeKairosStats = async () => {
-        let [nbOrganismes, actifs, hasAtLeastOneAvis] = await Promise.all([
-            db.collection('accounts').countDocuments({
-                'profile': 'organisme',
-                'sources': { $in: ['kairos'] }
-            }),
-            db.collection('accounts').countDocuments({
-                'profile': 'organisme',
-                'passwordHash': { $exists: true },
-                'sources': { $in: ['kairos'] }
-            }),
-            db.collection('accounts').countDocuments({
-                'profile': 'organisme',
-                'score.nb_avis': { $gt: 0 },
-                'sources': { $in: ['kairos'] }
-            }),
-        ]);
-
-        return { nbOrganismes, actifs, hasAtLeastOneAvis };
     };
 
     return {
-        computeKairosStats: () => {
-            return computeKairosStats();
-        },
-        computeOrganismesStats: async () => {
-
+        computeOrganismesStats: () => {
             let regions = findActiveRegions();
             return Promise.all([
-                computeRegionalOrganismesStats('Toutes', regions.map(region => region.codeRegion)),
-                ...regions.map(async region => computeRegionalOrganismesStats(region.nom, [region.codeRegion])),
+                getOrganismesStats('Toutes', regions.map(region => region.codeRegion)),
+                ...regions.map(region => getOrganismesStats(region.nom, [region.codeRegion])),
             ]);
+
         },
         computeAvisStats: () => {
             let regions = findActiveRegions();
             return Promise.all([
-                computeRegionalAvisStats('Toutes', regions.map(region => region.codeRegion)),
-                ...regions.map(async region => computeRegionalAvisStats(region.nom, [region.codeRegion]))
+                getAvisStats('Toutes', regions.map(region => region.codeRegion)),
+                ...regions.map(region => getAvisStats(region.nom, [region.codeRegion])),
             ]);
         },
-        computeSessionsStats: () => {
-            let regions = findActiveRegions();
-            return Promise.all([
-                computeRegionalSessionStats('Toutes', regions.map(region => region.codeRegion)),
-                ...regions.map(async region => computeRegionalSessionStats(region.nom, [region.codeRegion]))
-            ]);
-        },
-        computeFormationsStats: async () => {
-
-            let formationsReconciliees = db.collection('formationsReconciliees');
-
-            let [nbFormations, nbFormationAvecAuMoinsUnAvis, nbSessionsAuMoinsTroisAvis] = await Promise.all([
-                formationsReconciliees.countDocuments({}),
-                formationsReconciliees.countDocuments({ 'score.nb_avis': { $gte: 1 } }),
-                formationsReconciliees.countDocuments({ 'score.nb_avis': { $gte: 3 } }),
-            ]);
-
-            return {
-                nbFormations,
-                formationsAvecAuMoinsUnAvis: `${nbFormationAvecAuMoinsUnAvis} (${Math.ceil((nbFormationAvecAuMoinsUnAvis * 100) / nbFormations)}%)`,
-                formationsAvecAuMoinsTroisAvis: `${nbSessionsAuMoinsTroisAvis} (${Math.ceil((nbSessionsAuMoinsTroisAvis * 100) / nbFormations)}%)`,
-            };
-        },
-        computeMailingStats: (codeRegion, codeFinanceur) => {
-
-            return db.collection('trainee').aggregate([
-                {
-                    $match: {
-                        ...(codeRegion ? { codeRegion: codeRegion } : {}),
-                        ...(codeFinanceur ? { 'training.codeFinanceur': { $elemMatch: { $eq: codeFinanceur } } } : {})
-                    }
-                },
-                {
-                    $group: {
-                        _id: '$campaign',
-                        date: { $min: '$mailSentDate' },
-                        mailSent: { $sum: { $cond: ['$mailSent', 1, 0] } },
-                        mailOpen: { $sum: { $cond: ['$tracking.firstRead', 1, 0] } },
-                        linkClick: { $sum: { $cond: ['$tracking.click', 1, 0] } }
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'comment',
-                        let: {
-                            campaign: '$_id',
-                        },
-                        pipeline: [
-                            {
-                                $match: {
-                                    $expr: {
-                                        $and: [
-                                            { $eq: ['$campaign', '$$campaign'] },
-                                            //hack to return a valid expression when codeRegion is empty
-                                            codeRegion ? { $eq: ['$codeRegion', codeRegion] } : { $eq: ['$campaign', '$$campaign'] },
-                                        ]
-                                    },
-                                }
-                            },
-                            {
-                                $group: {
-                                    _id: null,
-                                    nbAvis: { $sum: 1 },
-                                    nbCommentaires: {
-                                        $sum: {
-                                            $cond: {
-                                                if: { $not: ['$comment'] },
-                                                then: 0,
-                                                else: 1,
-                                            }
-                                        }
-                                    },
-                                    nbCommentairesRejected: {
-                                        $sum: {
-                                            $cond: {
-                                                if: { $eq: ['$rejected', true] },
-                                                then: 1,
-                                                else: 0,
-                                            }
-                                        }
-                                    },
-                                    allowToContact: {
-                                        $sum: {
-                                            $cond: {
-                                                if: { $eq: ['$accord', true] },
-                                                then: 1,
-                                                else: 0
-                                            }
-                                        }
-                                    },
-                                }
-                            },
-                        ],
-                        as: 'stats'
-                    }
-                },
-                {
-                    $unwind:
-                        {
-                            path: '$stats',
-                            preserveNullAndEmptyArrays: true
-                        }
-                },
-                {
-                    $group: {
-                        _id: '$_id',
-                        date: { $first: '$date' },
-                        mailSent: { $first: '$mailSent' },
-                        mailOpen: { $first: '$mailOpen' },
-                        linkClick: { $first: '$linkClick' },
-                        formValidated: { $first: '$stats.nbAvis' },
-                        allowToContact: { $first: '$stats.allowToContact' },
-                        nbCommentaires: { $first: '$stats.nbCommentaires' },
-                        nbCommentairesRejected: { $first: '$stats.nbCommentairesRejected' },
-                    }
-                },
-                {
-                    $sort: {
-                        date: -1
-                    }
-                }
-            ]).toArray();
-        }
     };
 };

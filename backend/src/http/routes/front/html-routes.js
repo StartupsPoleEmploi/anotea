@@ -3,7 +3,7 @@ const moment = require('moment');
 const titleize = require('underscore.string/titleize');
 const externalLinks = require('./utils/externalLinks');
 
-module.exports = ({ db, logger, configuration, stats, mailer, regions }) => {
+module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
@@ -48,12 +48,12 @@ module.exports = ({ db, logger, configuration, stats, mailer, regions }) => {
 
     router.get('/deprecated-stats', async (req, res) => {
         let [avis, formations, sessions, organismes, kairos, mailing] = await Promise.all([
-            stats.computeAvisStats(),
-            stats.computeFormationsStats(),
-            stats.computeSessionsStats(),
-            stats.computeOrganismesStats(),
-            stats.computeKairosStats(),
-            stats.computeMailingStats(),
+            deprecatedStats.computeAvisStats(),
+            deprecatedStats.computeFormationsStats(),
+            deprecatedStats.computeSessionsStats(),
+            deprecatedStats.computeOrganismesStats(),
+            deprecatedStats.computeKairosStats(),
+            deprecatedStats.computeMailingStats(),
         ]);
 
         res.render('front/stats', {
