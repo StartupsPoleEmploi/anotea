@@ -168,16 +168,16 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
     });
 
     router.put('/backoffice/moderateur/avis/:id/rejectReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
-        let { sendReponseRejeteeNotification } = mailing;
-
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
         let avis = await moderation.rejectReponse(id, { event: { origin: getRemoteAddress(req) } });
 
+        /* Deactivated
         const comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
         const organisme = await db.collection('accounts').findOne({ SIRET: parseInt(comment.training.organisation.siret) });
         const email = getOrganismeEmail(organisme);
-        sendReponseRejeteeNotification(email, organisme);
+        mailing.sendReponseRejeteeNotification(email, organisme);
+         */
 
         return res.json(avis);
 
