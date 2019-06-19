@@ -171,7 +171,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
 
         let avis = await moderation.rejectReponse(id, { event: { origin: getRemoteAddress(req) } });
 
-        await mailing.sendReponseRejeteeNotification(avis._id);
+        //await mailing.sendReponseRejeteeNotification(avis._id);
 
         return res.json(avis);
 
