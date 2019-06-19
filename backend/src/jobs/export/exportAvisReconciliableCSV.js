@@ -8,23 +8,28 @@ const { transformObject } = require('../../common/utils/stream-utils');
 
 cli
 .option('--reconciliable')
+.option('--output [output]')
 .parse(process.argv);
 
 execute(async ({ logger, db, regions }) => {
 
     const generateCSV = ({ nom, codeRegion }) => {
+
+        let fileName = `avis-non-reconciliables-${nom}-${codeRegion}.xls`;
+        let file = path.join(__dirname, '../../../../.data', fileName);
+        if (cli.output) {
+            file = path.join(cli.output, fileName);
+        }
+
         return new Promise((resolve, reject) => {
             let total = 0;
-            let output = fs.createWriteStream(path.join(__dirname, `../../../../.data/avis-non-reconciliables-${nom}-${codeRegion}.xls`));
-
+            let output = fs.createWriteStream(file);
             output.write('id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;campagne;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n');
 
             db.collection('comment').find({
                 codeRegion,
                 $and: [
-                    { 'meta.reconciliation.0.formation': cli.reconciliable },
-                    { 'meta.reconciliation.0.action': cli.reconciliable },
-                    { 'meta.reconciliation.0.session': cli.reconciliable },
+                    { 'meta.reconciliations.0.action': cli.reconciliable },
                 ]
             })
             .pipe(transformObject(async avis => {
