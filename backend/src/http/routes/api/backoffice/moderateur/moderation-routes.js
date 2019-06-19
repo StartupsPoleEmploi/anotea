@@ -5,7 +5,6 @@ const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
 const moderationStats = require('./utils/moderationStats');
 const { objectId } = require('../../../../../common/validators');
-const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
 
 module.exports = ({ db, logger, middlewares, configuration, moderation, mailing }) => {
 
@@ -172,12 +171,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
 
         let avis = await moderation.rejectReponse(id, { event: { origin: getRemoteAddress(req) } });
 
-        /* Deactivated
-        const comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
-        const organisme = await db.collection('accounts').findOne({ SIRET: parseInt(comment.training.organisation.siret) });
-        const email = getOrganismeEmail(organisme);
-        mailing.sendReponseRejeteeNotification(email, organisme);
-         */
+        await mailing.sendReponseRejeteeNotification(avis._id);
 
         return res.json(avis);
 

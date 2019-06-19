@@ -133,6 +133,7 @@ module.exports = ({ db, regions }) => {
             avis.countDocuments({ 'comment': { $ne: null }, 'qualification': 'négatif', ...filter }),
             avis.countDocuments({ 'rejected': true, ...filter })
         ]);
+
         let nbMailEnvoyes = nbRelances.length > 0 ? (nbRelances[0].totalAmount + nbStagiairesContactes) : 0;
 
         return {
@@ -150,7 +151,7 @@ module.exports = ({ db, regions }) => {
     };
 
     const getRegionalAvisStats = async (regionName, codeRegion) => {
-        
+
         let filter = { codeRegion };
         let regional = await getAvisStats(filter);
 
