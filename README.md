@@ -1,4 +1,4 @@
-# Anotea
+<img src="https://anotea.pole-emploi.fr/static/images/logo_Anotea_Horizontal_baseline2.png" width="30%" height="30%" />
 
 Anotéa est un service lancé par Pôle emploi permettant de collecter les avis de demandeurs d'emplois ayant suivis une formation.
 
@@ -121,3 +121,5 @@ backend:
     - ANOTEA_CUSTOM_VARIABLE=25
 ...
 ```
+
+<img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi-530.png" width="20%" height="20%" />
