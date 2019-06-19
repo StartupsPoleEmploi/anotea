@@ -56,7 +56,7 @@ module.exports = ({ db, regions }) => {
         ]);
 
         return {
-            perimetre: regionName,
+            regionName: regionName,
             nbOrganismesContactes: nbOrganimesContactes,
             mailsEnvoyes: nbRelances + nbOrganimesContactes,
             tauxOuvertureMails: calculateRate(ouvertureMails, nbOrganimesContactes),
@@ -87,15 +87,11 @@ module.exports = ({ db, regions }) => {
         ] = await Promise.all([
             trainee.countDocuments({ 'mailSent': true, ...filter }),
             db.collection('trainee').aggregate([
-                {
-                    $match: {
-                        ...filter,
-                    }
-                },
+                { $match: { ...filter } },
                 {
                     $group: {
                         _id: null,
-                        totalAmount: { $sum: '$mailRetry' },
+                        nbRetries: { $sum: '$mailRetry' },
                     }
                 },
             ]).toArray(),
@@ -109,9 +105,9 @@ module.exports = ({ db, regions }) => {
             avis.countDocuments({ 'rejected': true, ...filter })
         ]);
 
-        let nbMailEnvoyes = nbRelances.length > 0 ? (nbRelances[0].totalAmount + nbStagiairesContactes) : 0;
+        let nbMailEnvoyes = nbRelances.length > 0 ? (nbRelances[0].nbRetries + nbStagiairesContactes) : 0;
         return {
-            perimetre: regionName,
+            regionName: regionName,
             nbStagiairesContactes: nbStagiairesContactes,
             nbMailEnvoyes: nbMailEnvoyes,
             tauxOuvertureMail: calculateRate(nbMailsOuverts, nbMailEnvoyes),

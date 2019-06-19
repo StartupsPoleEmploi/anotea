@@ -24,7 +24,7 @@ export default class OrganismesStatsTable extends Component {
                         {(this.props.isOrganismes ?
                                 (this.props.organismes.map((organisme, index) => (
                                     <tr key={index}>
-                                        <th scope="row">{organisme.perimetre}</th>
+                                        <th scope="row">{organisme.regionName}</th>
                                         <td>{organisme.nbOrganismesContactes}</td>
                                         <td>{organisme.mailsEnvoyes}</td>
                                         <td>{organisme.tauxOuvertureMails}</td>
@@ -38,7 +38,7 @@ export default class OrganismesStatsTable extends Component {
                                 ))) :
                                 (this.props.avis.map((avis, index) => (
                                     <tr key={index}>
-                                        <th scope="row">{avis.perimetre}</th>
+                                        <th scope="row">{avis.regionName}</th>
                                         <td>TODO</td>
                                         <td>{avis.nbStagiairesContactes}</td>
                                         <td>{avis.nbMailEnvoyes}</td>
