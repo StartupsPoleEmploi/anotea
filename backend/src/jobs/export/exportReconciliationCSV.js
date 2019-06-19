@@ -15,7 +15,7 @@ execute(async ({ logger, db, regions }) => {
 
     const generateCSV = ({ nom, codeRegion }) => {
 
-        let fileName = `avis-non-reconciliables-${nom}-${codeRegion}.xls`;
+        let fileName = `reconciliation-${nom}-${codeRegion}.xls`;
         let file = path.join(__dirname, '../../../../.data', fileName);
         if (cli.output) {
             file = path.join(cli.output, fileName);
