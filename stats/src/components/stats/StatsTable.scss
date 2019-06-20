@@ -1,56 +1,30 @@
 @import '../../styles/variables';
 
-.container {
-  padding: 0px;
-  margin: 32px 165px 0px 165px;
-  width: 1110px;
+.Table {
 
-  .table thead tr.table-colspan th {
-    height: 21px;
-    border-bottom: none;
-    padding: 8.5px 16px 8.5px 16px;
-    font-size: 1.125rem;
-    font-weight: bold;
-    line-height: 1.375rem;
-    opacity: unset;
-  }
+  thead {
 
-  .table thead th {
-    height: 18px;
-    padding: 3.5px 0px 4.5px 16px;
-    opacity: 0.6;
-    color: $color-black;
-    font-family: Lato;
-    font-size: 0.875rem;
-    line-height: 1.125rem;
-    border-top: none;
-  }
+    th {
+      border: none;
+    }
 
-  .table tbody {
-    border: 1px solid #F4F4F5;
-    border-radius: 0 0 5px 5px;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-
-    td {
-      height: 24px;
-      padding: 16px;
-      opacity: 0.8;
-      color: $color-black;
-      font-family: Lato;
-      font-size: 1rem;
-      line-height: 1.5rem;
-
-      &:hover {
-        background-color: $color-grey-25;
+    .column-name {
+      th {
+        font-size: 1.125rem;
+        padding-top: 1.25rem;
+        padding-bottom: 1.25rem;
       }
     }
+
+    .column-subname {
+      font-size: 0.875rem;
+      color: $color-black-60;
+      line-height: 18px;
+    }
+
   }
 
-  .table tbody tr {
-    cursor: pointer;
-
-    &:hover {
-      background-color: $color-grey-5;
-    }
+  tbody {
+    background-color: $color-white;
   }
 }
