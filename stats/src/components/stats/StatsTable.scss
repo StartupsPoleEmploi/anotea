@@ -1,0 +1,30 @@
+@import '../../styles/variables';
+
+.StatsTable {
+
+  thead {
+
+    th {
+      border: none;
+    }
+
+    .column-name {
+      th {
+        font-size: 1.125rem;
+        padding-top: 1.25rem;
+        padding-bottom: 1.25rem;
+      }
+    }
+
+    .column-subname {
+      font-size: 0.875rem;
+      color: $color-black-60;
+      line-height: 18px;
+    }
+
+  }
+
+  tbody {
+    background-color: $color-white;
+  }
+}

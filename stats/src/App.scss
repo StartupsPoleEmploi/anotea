@@ -1,9 +1,10 @@
 @import 'styles/variables';
 
 .anotea {
-  font-size: 1em;
+  background-color: #F9F9F9;
+  font-size: 1rem;
   font-family: 'Lato', sans-serif;
   font-weight: $font-weight-400;
   color: $color-black;
-  background-color: $color-white;
+  min-height: 1000px;
 }

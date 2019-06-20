@@ -15,6 +15,9 @@ module.exports = {
             db.collection('trainee').createIndex({ 'training.organisation.siret': 1 }),
             db.collection('trainee').createIndex({ 'training.scheduledEndDate': 1 }),
             db.collection('trainee').createIndex({ 'training.infoCarif.numeroSession': 1 }),
+            db.collection('trainee').createIndex({ 'avisCreated': 1 }),
+            db.collection('trainee').createIndex({ 'tracking.firstRead': 1 }),
+            db.collection('trainee').createIndex({ 'tracking.click': 1 }),
         ]);
     },
     comment: db => {
@@ -28,6 +31,7 @@ module.exports = {
             db.collection('comment').createIndex({ 'published': 1 }),
             db.collection('comment').createIndex({ 'rejected': 1 }),
             db.collection('comment').createIndex({ 'moderated': 1 }),
+            db.collection('comment').createIndex({ 'qualification': 1 }),
             db.collection('comment').createIndex({ 'reported': 1 }),
             db.collection('comment').createIndex({ 'date': 1 }),
             db.collection('comment').createIndex({ 'comment': 1 }),
@@ -51,7 +55,10 @@ module.exports = {
             db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.region': 1 }),
             db.collection('accounts').createIndex({ 'codeRegion': 1 }),
             db.collection('accounts').createIndex({ 'courriel': 1 }),
-            db.collection('accounts').createIndex({ 'profile': 1 })
+            db.collection('accounts').createIndex({ 'profile': 1 }),
+            db.collection('accounts').createIndex({ 'mailSentDate': 1 }),
+            db.collection('accounts').createIndex({ 'tracking.firstRead': 1 }),
+            db.collection('accounts').createIndex({ 'tracking.firstRead': 1 }),
         ]);
     },
     formationsReconciliees: db => {
@@ -100,6 +107,7 @@ module.exports = {
             db.collection('mailStats').createIndex({ 'token': 1 }),
             db.collection('kairos_organismes').createIndex({ 'siret': 1 }),
             db.collection('intercarif').createIndex({ 'actions.lieu_de_formation.coordonnees.adresse.region': 1 }),
+            db.collection('stats').createIndex({ 'date': 1 }),
         ]);
     },
 };
