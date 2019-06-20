@@ -2,6 +2,8 @@
 
 .StatsTable {
 
+  font-size: 0.875rem;
+
   thead {
 
     th {
@@ -10,21 +12,24 @@
 
     .column-name {
       th {
-        font-size: 1.125rem;
+        font-size: 1rem;
         padding-top: 1.25rem;
         padding-bottom: 1.25rem;
       }
     }
 
     .column-subname {
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       color: $color-black-60;
       line-height: 18px;
     }
-
   }
 
   tbody {
     background-color: $color-white;
+  }
+
+  .section {
+    border-left: 1px solid $color-grey-25;
   }
 }

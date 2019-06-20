@@ -1,7 +1,8 @@
 export default (dividend, divisor) => {
     if (dividend && divisor !== 0) {
-        return (Math.round((dividend * 100) / divisor) + '%');
+        let value = (dividend * 100) / divisor;
+        return Number(Math.round(value + 'e1') + 'e-1') + '%';
     } else {
-        return (0 + '%');
+        return 0 + '%';
     }
 };

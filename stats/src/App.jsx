@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Header from './components/stats/Header';
 import StatsRoutes from './components/stats/StatsRoutes';
-import GridDisplayer from './components/common/GridDisplayer';
+import GridDisplayer from './components/common/library/GridDisplayer';
 import './App.scss';
 
 class App extends Component {

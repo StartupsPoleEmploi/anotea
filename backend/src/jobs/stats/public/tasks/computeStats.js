@@ -17,8 +17,8 @@ module.exports = (db, regions) => {
             organismesActifs,
             avisNonLus,
             avisModeresNonRejetes,
-            nbCommentairesAvecOrganismesReponses,
-            nbAvisAvecOrganismesReponses,
+            nbReponses,
+            nbReponsesAvecCommentaires,
             avisSignales
         ] = await Promise.all([
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'profile': 'organisme', ...filter }),
@@ -39,8 +39,8 @@ module.exports = (db, regions) => {
                 '$or': [{ 'read': false }, { 'read': { $ne: true } }], ...filter
             }),
             avis.countDocuments({ 'moderated': true, 'rejected': false, ...filter }),
-            avis.countDocuments({ 'answer': { $ne: null }, 'comment': { $ne: null }, ...filter }),
-            avis.countDocuments({ 'answer': { $ne: null }, ...filter }),
+            avis.countDocuments({ 'reponse': { $exists: true }, ...filter }),
+            avis.countDocuments({ 'reponse': { $exists: true }, 'comment': { $exists: true }, ...filter }),
             avis.countDocuments({ 'reported': true, ...filter }),
         ]);
 
@@ -53,8 +53,8 @@ module.exports = (db, regions) => {
             nbClicDansLien,
             organismesActifs,
             avisNonLus,
-            nbCommentairesAvecOrganismesReponses,
-            nbAvisAvecOrganismesReponses,
+            nbReponses,
+            nbReponsesAvecCommentaires,
             avisSignales,
         };
     };
@@ -64,6 +64,7 @@ module.exports = (db, regions) => {
         let filter = { codeRegion: { $in: codeRegions } };
 
         let [
+            nbStagiairesImportes,
             nbStagiairesContactes,
             nbRelances,
             nbMailsOuverts,
@@ -75,13 +76,14 @@ module.exports = (db, regions) => {
             nbCommentairesNegatifs,
             nbCommentairesRejetes
         ] = await Promise.all([
+            trainee.countDocuments({ ...filter }),
             trainee.countDocuments({ 'mailSent': true, ...filter }),
             db.collection('trainee').aggregate([
-                { $match: { ...filter } },
+                { $match: { 'mailSent': true, ...filter } },
                 {
                     $group: {
                         _id: null,
-                        nbRetries: { $sum: '$mailRetry' },
+                        mailRetries: { $sum: '$mailRetry' },
                     }
                 },
             ]).toArray(),
@@ -97,8 +99,9 @@ module.exports = (db, regions) => {
 
         return {
             regionName,
+            nbStagiairesImportes,
             nbStagiairesContactes,
-            nbMailEnvoyes: nbRelances.length > 0 ? (nbRelances[0].nbRetries + nbStagiairesContactes) : 0,
+            nbMailEnvoyes: nbRelances.length > 0 ? (nbRelances[0].mailRetries + nbStagiairesContactes) : 0,
             nbCommentairesAModerer,
             nbMailsOuverts,
             nbLiensCliques,
