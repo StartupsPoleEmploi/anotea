@@ -1,0 +1,46 @@
+@import "../../styles/variables";
+
+.Tooltip {
+  display: inline;
+
+  .icon {
+    position: relative;
+
+    i {
+      color: $color-black-60;
+      top: -2px;
+      cursor: pointer;
+    }
+
+    .triangle {
+      width: 0;
+      height: 0;
+      position: absolute;
+      margin-top: -3px;
+      border-style: solid;
+      border-width: 0 7.5px 10px 7.5px;
+      border-color: transparent transparent $color-grey-5 transparent;
+    }
+  }
+
+  .box {
+    position: absolute;
+    margin-top: 0.75rem !important;
+    top: 1.125rem;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+
+    .message {
+      padding: 5px;
+      line-height: 18px;
+      font-size: 0.875rem;
+      color: $color-black-60;
+      background-color: $color-grey-5;
+      box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.1);
+    }
+  }
+
+
+}
