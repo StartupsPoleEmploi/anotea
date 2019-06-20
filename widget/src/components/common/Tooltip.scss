@@ -5,6 +5,7 @@
 
   .icon {
     position: relative;
+    font-size: 0.875rem;
 
     i {
       color: $color-black-60;
@@ -25,12 +26,17 @@
 
   .box {
     position: absolute;
-    margin-top: 0.75rem !important;
-    top: 1.125rem;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    margin-top: 6px !important;
     z-index: 1000;
+    width: 30%;
+
+    &.left {
+      left: 0;
+    }
+
+    &.right {
+      right: 0;
+    }
 
     .message {
       padding: 5px;
@@ -41,6 +47,4 @@
       box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.1);
     }
   }
-
-
 }

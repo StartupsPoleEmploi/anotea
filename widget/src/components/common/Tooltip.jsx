@@ -5,7 +5,8 @@ import './Tooltip.scss';
 export default class Tooltip extends Component {
 
     static propTypes = {
-        message: PropTypes.string.isRequired,
+        message: PropTypes.node.isRequired,
+        direction: PropTypes.string,
     };
 
     state = {
@@ -22,6 +23,8 @@ export default class Tooltip extends Component {
 
     render() {
 
+        let { message, direction = 'left' } = this.props;
+
         return (
             <div className="Tooltip">
                 <div className="icon">
@@ -33,8 +36,8 @@ export default class Tooltip extends Component {
                     {this.state.show && <div className="triangle"></div>}
                 </div>
                 {this.state.show &&
-                <div className="box">
-                    <div className="message">{this.props.message}</div>
+                <div className={`box ${direction}`}>
+                    <div className="message">{message}</div>
                 </div>
                 }
             </div>
