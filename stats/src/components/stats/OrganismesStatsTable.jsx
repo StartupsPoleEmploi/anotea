@@ -1,29 +1,16 @@
 import React, { Component } from 'react';
-import { getOrganismes } from '../../services/statsService';
-import Loader from '../common/Loader';
+import PropTypes from 'prop-types';
 import './StatsTable.scss';
 
 export default class OrganismesStatsTable extends Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            results: []
-        };
-    }
-
-    async componentDidMount() {
-        this.setState({ results: await getOrganismes() });
-    }
+    static propTypes = {
+        stats: PropTypes.array.isRequired,
+    };
 
     render() {
 
-        let { results } = this.state;
-
-        if (results.length === 0) {
-            return <Loader />;
-        }
+        let { stats } = this.props;
 
         return (
             <table className="StatsTable table table-hover">
@@ -50,7 +37,7 @@ export default class OrganismesStatsTable extends Component {
                 </thead>
                 <tbody>
                     {
-                        results.map((organisme, index) => (
+                        stats.map((organisme, index) => (
                             <tr key={index}>
                                 <th scope="row">{organisme.regionName}</th>
                                 <td>{organisme.nbOrganismesContactes}</td>

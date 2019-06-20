@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Header from './components/stats/Header';
-import AvisStatsTable from './components/stats/AvisStatsTable';
-import OrganismesStatsTable from './components/stats/OrganismesStatsTable';
+import StatsRoutes from './components/stats/StatsRoutes';
 import GridDisplayer from './components/common/GridDisplayer';
 import './App.scss';
 
@@ -19,12 +18,8 @@ class App extends Component {
                     </Switch>
                     <div className="container">
                         <Route
-                            path="/stats/avis"
-                            render={() => <AvisStatsTable />}
-                        />
-                        <Route
-                            path="/stats/organismes"
-                            render={() => <OrganismesStatsTable />}
+                            path="/stats"
+                            render={() => <StatsRoutes />}
                         />
                     </div>
                     {false && <GridDisplayer />}

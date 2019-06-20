@@ -1,29 +1,16 @@
 import React, { Component } from 'react';
-import { getAvis } from '../../services/statsService';
-import Loader from '../common/Loader';
+import PropTypes from 'prop-types';
 import './StatsTable.scss';
 
 export default class AvisStatsTable extends Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            results: []
-        };
-    }
-
-    async componentDidMount() {
-        this.setState({ results: await getAvis() });
-    }
+    static propTypes = {
+        stats: PropTypes.array.isRequired,
+    };
 
     render() {
 
-        let { results } = this.state;
-
-        if (results.length === 0) {
-            return <Loader />;
-        }
+        let { stats } = this.props;
 
         return (
             <table className="StatsTable table table-hover">
@@ -53,7 +40,7 @@ export default class AvisStatsTable extends Component {
                 </thead>
                 <tbody>
                     {
-                        results.map((avis, index) => (
+                        stats.map((avis, index) => (
                             <tr key={index}>
                                 <th scope="row">{avis.regionName}</th>
                                 <td>TODO</td>
