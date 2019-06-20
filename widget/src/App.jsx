@@ -53,9 +53,10 @@ class App extends Component {
     }
 
     async componentDidMount() {
-        let { type, identifiant } = this.props;
+        let { type, identifiant, format } = this.props;
 
-        if (!['organisme', 'formation', 'action', 'session'].includes(type)) {
+        if (!['organisme', 'formation', 'action', 'session'].includes(type) ||
+            !['score', 'carrousel', 'liste'].includes(format)) {
             return this.setState({ error: true });
         }
 

@@ -1,14 +1,46 @@
-# Anotea
+<img src="https://anotea.pole-emploi.fr/static/images/logo_Anotea_Horizontal_baseline2.png" width="30%" height="30%" />
 
-## Présentation
+Anotéa est un service lancé par Pôle emploi permettant de collecter les avis de demandeurs d'emplois ayant suivis une formation.
 
-Anotéa est un service lancé par Pôle emploi, en étroite collaboration avec la région Île-de-France. 
-Ces tiers s’assurent que les avis recueillis sont ceux d’anciens stagiaires.
-
-Seules les personnes ayant effectivement effectué la formation reçoivent un questionnaire à compléter. 
+Seules les personnes ayant effectué la formation reçoivent un questionnaire à compléter. 
 Vous êtes donc certains que les avis que vous consultez sont fiables.
 
+## Comment cela fonctionne-t-il ?
 
+Dans le cadre de sa recherche d'emploi, une personne peut suivre une formation financée par Pôle Emploi et/ou par la région dans laquelle il habite.
+
+Lorsque la formation est terminée, Anotéa envoie par email un questionnaire à cette personne — qu'on appelle stagiaire —  pourqu'il puisse déposer un avis sur la formation (la réponse à ce questionnaire est facultative).
+
+Une fois l'avis déposé et anonymisé, il est potentiellement consultable sur tous les sites qui utilisent Anotéa (ex: https://labonneformation.pole-emploi.fr)
+
+Afin de récupérer les avis, ces sites peuvent utiliser deux canaux fournis par Anotéa : l'[api](API.md) et le [widget](WIDGET.md)
+
+### Réconciliation
+
+Les formations suivies par les stagiaires sont référencées dans un catalogue.
+
+Chaque formation peut être dispensée par plusieurs organismes formateurs, dans plusieurs lieux et à des dates différentes.
+
+Quand un stagiaire dépose un avis sur une formation, il le fait donc pour
+
+ 1. un organisme formateur
+ 2. un lieu de formation (ex: 45000)
+ 3. une période (ex: du 01/01/2018 au 31/01/2018).
+
+Ces trois critères représentent une session de formation. 
+
+Le stagiaire étant contacté à la fin de la session, l'avis est donc déposé sur une session terminée. 
+
+Le but de la réconciliation va être d'identifier dans le catalogue de formations, des sessions similaires en cours ou à venir. 
+Une session est considérée comme similaire si elle possède
+ 
+ - le même `siren` que l'organisme formateur
+ - le même lieu de formation (`code postal`)
+ - au moins un `formacode` ou `certifinfo` identique
+        
+Une fois que les sessions ont été identifiées, l'avis déposé est alors rattaché à ces sessions.
+
+Les améliorations apportées à la réconciliation sont listées dans le [CHANGELOG](CHANGELOG.md#Réconciliation)
 
 ## Développement
 
@@ -89,3 +121,5 @@ backend:
     - ANOTEA_CUSTOM_VARIABLE=25
 ...
 ```
+
+<img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi-530.png" width="20%" height="20%" />
