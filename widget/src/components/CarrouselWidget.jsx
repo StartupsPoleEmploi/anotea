@@ -7,6 +7,8 @@ import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
 import Button from './common/library/Button';
+import Option from './common/options/Option';
+import ContactStagiaire from './common/ContactStagiaire';
 import './CarrouselWidget.scss';
 
 export default class CarrouselWidget extends Component {
@@ -15,7 +17,6 @@ export default class CarrouselWidget extends Component {
         score: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
         fetchAvis: PropTypes.func.isRequired,
-        children: PropTypes.node.isRequired,
     };
 
     componentDidMount() {
@@ -80,7 +81,7 @@ export default class CarrouselWidget extends Component {
     };
 
     render() {
-        let { score, children } = this.props;
+        let { score } = this.props;
 
         if (score.nb_avis === 0) {
             return <div></div>;
@@ -116,7 +117,13 @@ export default class CarrouselWidget extends Component {
 
                 <div className="row my-3">
                     <div className="col-12 text-center">
-                        {children}
+                        <Option value="contact-stagiaire" render={() => {
+                            return (
+                                <div className="d-flex justify-content-center py-2">
+                                    <ContactStagiaire />
+                                </div>
+                            );
+                        }} />
                     </div>
                 </div>
 

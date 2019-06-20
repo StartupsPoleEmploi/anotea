@@ -3,6 +3,8 @@ import moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import Stars from './Stars';
 import './Avis.scss';
+import Option from './options/Option';
+import Tooltip from './Tooltip';
 
 export default class Avis extends Component {
 
@@ -34,11 +36,22 @@ export default class Avis extends Component {
                     <div className="texte">{avis.commentaire.reponse}</div>
                 </div>
                 }
-                <div className="date">
-                    Session du {moment(debut).format('DD/MM/YYYY')}
-                    {debut !== fin &&
-                    <span> au {moment(fin).format('DD/MM/YYYY')}</span>
-                    }
+                <div className="date with-tooltip d-inline-flex justify-content-between">
+                    <div>Session du {moment(debut).format('DD/MM/YYYY')}
+                        {debut !== fin &&
+                        <span> au {moment(fin).format('DD/MM/YYYY')}</span>
+                        }
+                    </div>
+                    <Option value="avis-details" render={() => {
+                        return (
+                            <Tooltip direction="right" message={
+                                <div>
+                                    <div>Formation : {avis.formation.intitule} </div>
+                                    <div>Lieu de formation :{avis.formation.action.lieu_de_formation.code_postal}</div>
+                                </div>
+                            } />
+                        );
+                    }} />
                 </div>
             </div>
         );

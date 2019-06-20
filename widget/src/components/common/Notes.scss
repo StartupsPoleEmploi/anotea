@@ -3,43 +3,6 @@
 .Notes {
   .name {
     font-size: 0.875rem;
-    opacity: 0.6;
-  }
-
-  .help {
-    position: relative;
-    top: -2px;
-    cursor: pointer;
-  }
-
-
-  .triangle {
-    display : inline-block;
-    height : 0;
-    width : 0;
-    border-right : 10px solid transparent;
-    border-bottom : 10px solid $color-grey-5;
-    border-left : 10px solid transparent;
-    margin-top: -4px;
-    margin-left: 47px;
-    position: absolute;
-   }
-
-   .triangle {
-    &.accompagnement {
-      margin-left: 114px;
-    }
-   }
-
-  .widget-tooltip {
-	background-color: $color-grey-5;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
-	color: $color-grey-50;
-	font-size: 14px;
-    line-height: 18px;
-    padding: 5px;
-    position: absolute;
-    margin-top: 6px;
-    z-index: 1000;
+    color: $color-black-60
   }
 }
