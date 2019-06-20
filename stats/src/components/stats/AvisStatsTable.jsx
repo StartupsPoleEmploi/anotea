@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import calculateRate from './utils/calculateRate';
 import './StatsTable.scss';
 
 export default class AvisStatsTable extends Component {
@@ -40,21 +41,21 @@ export default class AvisStatsTable extends Component {
                 </thead>
                 <tbody>
                     {
-                        stats.map((avis, index) => (
+                        stats.map((a, index) => (
                             <tr key={index}>
-                                <th scope="row">{avis.regionName}</th>
+                                <th scope="row">{a.regionName}</th>
                                 <td>TODO</td>
-                                <td>{avis.nbStagiairesContactes}</td>
-                                <td>{avis.nbMailEnvoyes}</td>
-                                <td>{avis.tauxOuvertureMail}</td>
-                                <td>{avis.tauxLiensCliques}</td>
-                                <td>{avis.tauxQuestionnairesValides}</td>
-                                <td>{avis.tauxAvisDeposes}</td>
-                                <td>{avis.tauxAvisAvecCommentaire}</td>
-                                <td>{avis.nbCommentairesAModerer}</td>
-                                <td>{avis.tauxAvisPositifs}</td>
-                                <td>{avis.tauxAvisNegatifs}</td>
-                                <td>{avis.tauxAvisRejetes}</td>
+                                <td>{a.nbStagiairesContactes}</td>
+                                <td>{a.nbMailEnvoyes}</td>
+                                <td>{calculateRate(a.nbMailsOuverts, a.nbMailEnvoyes)}</td>
+                                <td>{calculateRate(a.nbLiensCliques, a.nbMailsOuverts)}</td>
+                                <td>{calculateRate(a.nbQuestionnairesValidees, a.nbLiensCliques)}</td>
+                                <td>{calculateRate(a.nbQuestionnairesValidees, a.nbStagiairesContactes)}</td>
+                                <td>{calculateRate(a.nbAvisAvecCommentaire, a.nbQuestionnairesValidees)}</td>
+                                <td>{a.nbCommentairesAModerer}</td>
+                                <td>{calculateRate(a.nbCommentairesPositifs, a.nbAvisAvecCommentaire)}</td>
+                                <td>{calculateRate(a.nbCommentairesNegatifs, a.nbAvisAvecCommentaire)}</td>
+                                <td>{calculateRate(a.nbCommentairesRejetes, a.nbAvisAvecCommentaire)}</td>
                             </tr>
                         ))
                     }

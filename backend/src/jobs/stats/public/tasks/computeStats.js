@@ -1,11 +1,3 @@
-const calculateRate = (dividend, divisor) => {
-    if (dividend && divisor !== 0) {
-        return (Math.round((dividend * 100) / divisor) + '%');
-    } else {
-        return (0 + '%');
-    }
-};
-
 module.exports = (db, regions) => {
 
     let { findActiveRegions } = regions;
@@ -18,7 +10,7 @@ module.exports = (db, regions) => {
 
         let filter = { codeRegion: { $in: codeRegions } };
         let [
-            nbOrganimesContactes,
+            nbOrganismesContactes,
             nbRelances,
             ouvertureMails,
             nbClicDansLien,
@@ -53,16 +45,17 @@ module.exports = (db, regions) => {
         ]);
 
         return {
-            regionName: regionName,
-            nbOrganismesContactes: nbOrganimesContactes,
-            mailsEnvoyes: nbRelances + nbOrganimesContactes,
-            tauxOuvertureMails: calculateRate(ouvertureMails, nbOrganimesContactes),
-            tauxClicDansLien: calculateRate(nbClicDansLien, ouvertureMails),
-            tauxOrganismesActifs: calculateRate(organismesActifs, nbOrganimesContactes),
-            tauxAvisNonLus: calculateRate(avisNonLus, avisModeresNonRejetes),
-            tauxCommentairesAvecReponses: calculateRate(nbCommentairesAvecOrganismesReponses, avisModeresNonRejetes),
-            tauxAvisAvecReponses: calculateRate(nbAvisAvecOrganismesReponses, avisModeresNonRejetes),
-            tauxAvisSignales: calculateRate(avisSignales, avisModeresNonRejetes),
+            regionName,
+            nbOrganismesContactes,
+            mailsEnvoyes: nbRelances + nbOrganismesContactes,
+            avisModeresNonRejetes,
+            ouvertureMails,
+            nbClicDansLien,
+            organismesActifs,
+            avisNonLus,
+            nbCommentairesAvecOrganismesReponses,
+            nbAvisAvecOrganismesReponses,
+            avisSignales,
         };
     };
 
@@ -102,20 +95,18 @@ module.exports = (db, regions) => {
             avis.countDocuments({ 'rejected': true, ...filter })
         ]);
 
-        let nbMailEnvoyes = nbRelances.length > 0 ? (nbRelances[0].nbRetries + nbStagiairesContactes) : 0;
         return {
-            regionName: regionName,
-            nbStagiairesContactes: nbStagiairesContactes,
-            nbMailEnvoyes: nbMailEnvoyes,
-            tauxOuvertureMail: calculateRate(nbMailsOuverts, nbMailEnvoyes),
-            tauxLiensCliques: calculateRate(nbLiensCliques, nbMailsOuverts),
-            tauxQuestionnairesValides: calculateRate(nbQuestionnairesValidees, nbLiensCliques),
-            tauxAvisDeposes: calculateRate(nbQuestionnairesValidees, nbStagiairesContactes),
-            tauxAvisAvecCommentaire: calculateRate(nbAvisAvecCommentaire, nbQuestionnairesValidees),
-            nbCommentairesAModerer: nbCommentairesAModerer,
-            tauxAvisPositifs: calculateRate(nbCommentairesPositifs, nbAvisAvecCommentaire),
-            tauxAvisNegatifs: calculateRate(nbCommentairesNegatifs, nbAvisAvecCommentaire),
-            tauxAvisRejetes: calculateRate(nbCommentairesRejetes, nbAvisAvecCommentaire),
+            regionName,
+            nbStagiairesContactes,
+            nbMailEnvoyes: nbRelances.length > 0 ? (nbRelances[0].nbRetries + nbStagiairesContactes) : 0,
+            nbCommentairesAModerer,
+            nbMailsOuverts,
+            nbLiensCliques,
+            nbQuestionnairesValidees,
+            nbAvisAvecCommentaire,
+            nbCommentairesPositifs,
+            nbCommentairesNegatifs,
+            nbCommentairesRejetes,
         };
     };
 

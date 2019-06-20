@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import calculateRate from './utils/calculateRate';
 import './StatsTable.scss';
 
 export default class OrganismesStatsTable extends Component {
@@ -37,18 +38,18 @@ export default class OrganismesStatsTable extends Component {
                 </thead>
                 <tbody>
                     {
-                        stats.map((organisme, index) => (
+                        stats.map((o, index) => (
                             <tr key={index}>
-                                <th scope="row">{organisme.regionName}</th>
-                                <td>{organisme.nbOrganismesContactes}</td>
-                                <td>{organisme.mailsEnvoyes}</td>
-                                <td>{organisme.tauxOuvertureMails}</td>
-                                <td>{organisme.tauxClicDansLien}</td>
-                                <td>{organisme.tauxOrganismesActifs}</td>
-                                <td>{organisme.tauxAvisNonLus}</td>
-                                <td>{organisme.tauxCommentairesAvecReponses}</td>
-                                <td>{organisme.tauxAvisAvecReponses}</td>
-                                <td>{organisme.tauxAvisSignales}</td>
+                                <th scope="row">{o.regionName}</th>
+                                <td>{o.nbOrganismesContactes}</td>
+                                <td>{o.mailsEnvoyes}</td>
+                                <td>{calculateRate(o.ouvertureMails, o.nbOrganismesContactes)}</td>
+                                <td>{calculateRate(o.nbClicDansLien, o.ouvertureMails)}</td>
+                                <td>{calculateRate(o.organismesActifs, o.nbOrganismesContactes)}</td>
+                                <td>{calculateRate(o.avisNonLus, o.avisModeresNonRejetes)}</td>
+                                <td>{calculateRate(o.nbCommentairesAvecOrganismesReponses, o.avisModeresNonRejetes)}</td>
+                                <td>{calculateRate(o.nbAvisAvecOrganismesReponses, o.avisModeresNonRejetes)}</td>
+                                <td>{calculateRate(o.avisSignales, o.avisModeresNonRejetes)}</td>
                             </tr>
                         ))
                     }
