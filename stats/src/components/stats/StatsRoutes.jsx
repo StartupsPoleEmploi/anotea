@@ -6,6 +6,7 @@ import AvisStatsTable from './AvisStatsTable';
 import OrganismesStatsTable from './OrganismesStatsTable';
 import ApiStatsTable from './ApiStatsTable';
 import { getLatestStatistics } from '../../services/statsService';
+import DiversStatsTable from './DiversStatsTable';
 
 export default class StatsRoutes extends Component {
 
@@ -43,6 +44,10 @@ export default class StatsRoutes extends Component {
                 <Route
                     path="/stats/api"
                     render={() => <ApiStatsTable stats={stats.api} />}
+                />
+                <Route
+                    path="/stats/divers"
+                    render={() => <DiversStatsTable />}
                 />
             </div>
         );
