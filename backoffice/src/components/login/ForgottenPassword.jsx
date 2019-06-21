@@ -8,12 +8,14 @@ import {
 } from '../backoffice/account/service/forgottenPasswordService';
 import { isPasswordStrongEnough, checkConfirm, passwordIsOK } from '../../utils/validation';
 import './ForgottenPassword.scss';
+import Loader from '../backoffice/common/Loader';
 
 export default class ForgottenPassword extends React.Component {
 
     state = {
         error: false,
-        asked: false
+        asked: false,
+        loading: false
     };
 
     static propTypes = {
@@ -42,11 +44,12 @@ export default class ForgottenPassword extends React.Component {
     };
 
     handleAsk = () => {
+        this.setState({ loading: true });
         askNewPassword(this.state.username)
-        .then(() => this.setState({ error: false, asked: true }))
+        .then(() => this.setState({ error: false, asked: true, loading: false }))
         .then(() => this.onSuccess())
         .catch(() => {
-            this.setState({ error: true });
+            this.setState({ error: true, loading: false });
         });
     };
 
@@ -59,6 +62,7 @@ export default class ForgottenPassword extends React.Component {
     };
 
     handePasswordChange = () => {
+
         updatePassword(this.state.token, this.state.password).then(result => {
             if (!result.error) {
                 this.setState({ passwordChanged: true, userInfo: result.userInfo });
@@ -83,7 +87,11 @@ export default class ForgottenPassword extends React.Component {
                 {!this.state.asked && !this.state.passwordLost &&
                     <div className="block">
                         <h4>Mot de passe oublié</h4>
-
+                        { this.state.loading &&
+                            <div className="loaderContainer">
+                                <Loader />
+                            </div>
+                        }
                         <div className="mdp-oublie-identifiant">
                             <h1>Entrez votre identifiant et confirmez l&apos;envoi</h1>
                             <input type="text"
