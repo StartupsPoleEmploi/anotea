@@ -3,21 +3,28 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const computeStats = require('./tasks/computeStats');
+const computeOrganismesStats = require('./tasks/computeOrganismesStats');
+const computeAvisStats = require('./tasks/computeAvisStats');
+const computeApiStats = require('./tasks/computeApiStats');
 
 cli.parse(process.argv);
 
 execute(async ({ db, regions }) => {
 
-    let { computeOrganismesStats, computeAvisStats } = computeStats(db, regions);
+    let stats = await Promise.all([
+        computeOrganismesStats(db, regions),
+        computeAvisStats(db, regions),
+        computeApiStats(db, regions),
+    ]);
 
-    let [organismes, avis] = await Promise.all([computeOrganismesStats(), computeAvisStats()]);
-
-    await db.collection('statistics').insertOne({
+    let doc = {
         date: new Date(),
-        organismes,
-        avis,
-    });
+        organismes: stats[0],
+        avis: stats[1],
+        api: stats[2],
+    };
 
-    return { organismes, avis };
+    await db.collection('statistics').insertOne(doc);
+
+    return doc;
 });

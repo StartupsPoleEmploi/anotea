@@ -46,32 +46,6 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
 
     });
 
-    router.get('/deprecated-stats', async (req, res) => {
-        let [avis, formations, sessions, organismes, kairos, mailing] = await Promise.all([
-            deprecatedStats.computeAvisStats(),
-            deprecatedStats.computeFormationsStats(),
-            deprecatedStats.computeSessionsStats(),
-            deprecatedStats.computeOrganismesStats(),
-            deprecatedStats.computeKairosStats(),
-            deprecatedStats.computeMailingStats(),
-        ]);
-
-        res.render('front/stats', {
-            data: {
-                avis,
-                formations,
-                sessions,
-                organismes,
-                mailing,
-                kairos: {
-                    ...kairos,
-                    kibanaDashboardUrl: 'https://137.74.30.34/app/kibana#/dashboard/d545e8a0-4738-11e9-a788-0de26b41fc5f?embed=true&_g=(refreshInterval%3A(display%3A\'30%20seconds\'%2Cpause%3A!f%2Csection%3A1%2Cvalue%3A30000)%2Ctime%3A(from%3Anow%2FM%2Cinterval%3Aauto%2Cmode%3Aquick%2Ctimezone%3AEurope%2FBerlin%2Cto%3Anow%2FM))',
-
-                },
-            }
-        });
-    });
-
     router.get('/link/:token', getTraineeFromToken, async (req, res) => {
         let trainee = req.trainee;
         const goto = req.query.goto;

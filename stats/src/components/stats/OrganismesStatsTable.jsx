@@ -61,7 +61,7 @@ export default class OrganismesStatsTable extends Component {
                     {
                         stats.map((o, index) => (
                             <tr key={index}>
-                                <th scope="row">{o.regionName}</th>
+                                <th scope="row">{o.label}</th>
                                 <td className="section">{o.nbOrganismesContactes}</td>
                                 <td className="section">{o.mailsEnvoyes}</td>
                                 <td>{

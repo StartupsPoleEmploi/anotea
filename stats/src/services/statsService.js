@@ -1,6 +1,6 @@
 import { _get } from './http-client';
 
 export const getLatestStatistics = () => {
-    return _get(`/public-stats/latest`);
+    return _get(`/stats/latest`);
 };
 

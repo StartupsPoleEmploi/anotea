@@ -65,7 +65,7 @@ export default class AvisStatsTable extends Component {
                         stats.map((a, index) => (
                             <tr key={index}>
                                 <th scope="row">
-                                    {a.regionName}
+                                    {a.label}
                                 </th>
                                 <td className="section">
                                     {a.nbStagiairesImportes}
