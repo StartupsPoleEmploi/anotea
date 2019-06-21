@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import calculateRate from './utils/calculateRate';
 import './StatsTable.scss';
 
-export default class OrganismesStatsTable extends Component {
+export default class ApiStatsTable extends Component {
 
     static propTypes = {
         stats: PropTypes.array.isRequired,
@@ -30,10 +30,8 @@ export default class OrganismesStatsTable extends Component {
                 <thead>
                     <tr className="column-name">
                         <th colSpan="1">Régions</th>
-                        <th colSpan="1">Contactés</th>
-                        <th colSpan="3">Mails envoyés</th>
-                        <th colSpan="1">Comptes</th>
-                        <th colSpan="5">Avis</th>
+                        <th colSpan="2">Avis</th>
+                        <th colSpan="4">Sessions</th>
                     </tr>
                     <tr className="column-subname">
                         <th scope="col">
@@ -47,44 +45,37 @@ export default class OrganismesStatsTable extends Component {
                             </div>
                         </th>
                         <th scope="col" className="section">Total</th>
+                        <th scope="col">Restituables</th>
                         <th scope="col" className="section">Total</th>
-                        <th scope="col">Ouverts</th>
-                        <th scope="col">Cliqués</th>
-                        <th scope="col" className="section">Actifs</th>
-                        <th scope="col" className="section">Non lus</th>
-                        <th scope="col">Réponses</th>
-                        <th scope="col">Réponses avec commentaires</th>
-                        <th scope="col">Signalés</th>
+                        <th scope="col">Réconciliées avec avis</th>
+                        <th scope="col">Réconciliées avec avis (certifiantes)</th>
+                        <th scope="col">Nb avis par session</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        stats.map((o, index) => (
+                        stats.map((a, index) => (
                             <tr key={index}>
-                                <th scope="row">{o.label}</th>
-                                <td className="section">{o.nbOrganismesContactes}</td>
-                                <td className="section">{o.mailsEnvoyes}</td>
-                                <td>{
-                                    this.computeRate(o.ouvertureMails, o.nbOrganismesContactes)}
+                                <th scope="row">
+                                    {a.label}
+                                </th>
+                                <td className="section">
+                                    {a.nbAvis}
                                 </td>
                                 <td>
-                                    {this.computeRate(o.nbClicDansLien, o.ouvertureMails)}
+                                    {this.computeRate(a.nbAvisRestituables, a.nbAvis)}
                                 </td>
                                 <td className="section">
-                                    {
-                                        this.computeRate(o.organismesActifs, o.nbOrganismesContactes)}
-                                </td>
-                                <td className="section">{
-                                    this.computeRate(o.avisNonLus, o.avisModeresNonRejetes)}
+                                    {a.nbSessions}
                                 </td>
                                 <td>
-                                    {this.computeRate(o.nbReponsesAvecCommentaires, o.avisModeresNonRejetes)}
+                                    {this.computeRate(a.nbSessionsAvecAvis, a.nbSessions)}
                                 </td>
                                 <td>
-                                    {this.computeRate(o.nbReponses, o.avisModeresNonRejetes)}
+                                    {this.computeRate(a.nbSessionsCertifiantesAvecAvis, a.nbSessions)}
                                 </td>
                                 <td>
-                                    {this.computeRate(o.avisSignales, o.avisModeresNonRejetes)}
+                                    {a.nbAvisParSession}
                                 </td>
                             </tr>
                         ))
