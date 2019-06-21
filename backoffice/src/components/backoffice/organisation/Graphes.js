@@ -230,6 +230,8 @@ export default class Graphes extends React.Component {
                                                     display: false
                                                 }
                                             }}
+                                            width={'40%'}
+                                            height={'30%'}
                                         />
                                     </div>
                                     <div className="col-md-4">
@@ -244,6 +246,8 @@ export default class Graphes extends React.Component {
                                                     display: false
                                                 }
                                             }}
+                                            width={'40%'}
+                                            height={'30%'}
                                         />
                                     </div>
                                     <div className="col-md-4">
@@ -258,6 +262,8 @@ export default class Graphes extends React.Component {
                                                     display: false
                                                 }
                                             }}
+                                            width={'40%'}
+                                            height={'30%'}
                                         />
                                     </div>
                                 </div>
@@ -274,6 +280,8 @@ export default class Graphes extends React.Component {
                                                     display: false
                                                 }
                                             }}
+                                            width={'40%'}
+                                            height={'30%'}
                                         />
                                     </div>
                                     <div className="col-md-4">
@@ -288,6 +296,8 @@ export default class Graphes extends React.Component {
                                                     display: false
                                                 }
                                             }}
+                                            width={'40%'}
+                                            height={'30%'}
                                         />
                                     </div>
                                     <div className="col-md-4">
@@ -302,6 +312,8 @@ export default class Graphes extends React.Component {
                                                     display: false
                                                 }
                                             }}
+                                            width={'40%'}
+                                            height={'30%'}
                                         />
                                     </div>
                                 </div>
