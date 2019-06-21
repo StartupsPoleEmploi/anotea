@@ -6,6 +6,8 @@ import Verified from './common/Verified';
 import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
+import ContactStagiaire from './common/ContactStagiaire';
+import Option from './common/options/Option';
 import './ListeWidget.scss';
 
 export default class ListeWidget extends Component {
@@ -14,7 +16,6 @@ export default class ListeWidget extends Component {
         score: PropTypes.object.isRequired,
         results: PropTypes.object.isRequired,
         fetchAvis: PropTypes.func.isRequired,
-        children: PropTypes.node.isRequired,
     };
 
     componentDidMount() {
@@ -118,7 +119,7 @@ export default class ListeWidget extends Component {
     }
 
     render() {
-        let { score, children } = this.props;
+        let { score } = this.props;
 
         if (score.nb_avis === 0) {
             return <div></div>;
@@ -148,7 +149,13 @@ export default class ListeWidget extends Component {
                             <Verified />
                         </div>
                         {this.getListe()}
-                        {children}
+                        <Option value="contact-stagiaire" render={() => {
+                            return (
+                                <div className="d-flex justify-content-center py-2">
+                                    <ContactStagiaire />
+                                </div>
+                            );
+                        }} />
                         <div className="d-flex justify-content-center mt-3">
                             <div className="d-xs-block d-sm-none">
                                 <Propulsed />

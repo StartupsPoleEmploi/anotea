@@ -28,22 +28,23 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
     logger.info(`Sending emails to stagiaires (${type})...`);
 
     try {
-        let results = await traineeMailer.sendEmails(action, {
+        let stats = await traineeMailer.sendEmails(action, {
             limit: cli.limit,
             delay: cli.delay,
         });
 
         sendSlackNotification({
-            text: `${results.sent} emails stagiaires envoyés pour la campagne ${cli.campaign || 'tous'} ` +
-                `(Nombre d'erreurs : ${results.error})`,
+            text: `[STAGIAIRE] Des emails stagiaires ont été envoyés pour ${cli.campaign || type} : ` +
+                `${stats.sent} envoyés / ${stats.error} erreurs`,
         });
 
-        return results;
+        return stats;
 
-    } catch (e) {
+    } catch (stats) {
         sendSlackNotification({
-            text: `Les emails stagiaires pour la campagne ${cli.campaign || 'tous'} n'ont pas pu être envoyés`,
+            text: `[STAGIAIRE] Une erreur est survenue lors de l'envoi des emails aux stagiaires pour ${cli.campaign || type} : ` +
+                `${stats.sent} envoyés / ${stats.error} erreurs`,
         });
-        throw e;
+        throw stats;
     }
 }, { slack: cli.slack });

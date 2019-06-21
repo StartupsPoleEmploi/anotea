@@ -1,9 +1,9 @@
 const path = require('path');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
-const validateCsvFile = require('../../../../../src/jobs/import/stagiaires/validateCsvFile');
-const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/handlers/poleEmploiCSVHandler');
-const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/handlers/ileDeFranceCSVHandler');
+const validateCsvFile = require('../../../../../src/jobs/import/stagiaires/tasks/validateCsvFile');
+const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
+const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/ileDeFranceCSVHandler');
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
 

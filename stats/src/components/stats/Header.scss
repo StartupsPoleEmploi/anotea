@@ -1,0 +1,31 @@
+@import '../../styles/variables';
+
+.Header {
+  background-color: $color-white;
+  box-shadow: $shadow;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+
+  .nav-link {
+    color: $color-black-60;
+    font-size: 1.25rem;
+
+    &.active {
+      color: $color-black;
+    }
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      font-weight: $font-weight-700;
+      opacity: 1;
+      transition: opacity 0.2s linear;
+    }
+  }
+
+  .logo {
+    width: 120px;
+    height: 56px;
+  }
+}
+

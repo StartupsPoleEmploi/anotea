@@ -7,28 +7,26 @@ const moment = require('moment');
 const cli = require('commander');
 const colors = require('colors/safe');
 const { execute } = require('../../job-utils');
-const createImporter = require('./traineeImporter');
-const validateCsvFile = require('./validateCsvFile');
+const importTrainee = require('./tasks/importTrainee');
+const validateCsvFile = require('./tasks/validateCsvFile');
 
 const sources = {
     'PE': 'poleEmploi',
     'IDF': 'ileDeFrance',
 };
 
-let dryRun = false;
 cli.description('Import des stagiaires')
-.option('-s, --source [name]', 'Source to import (PE or IDF)')
-.option('-f, --file [file]', 'The CSV file to import')
-.option('-r, --region [codeRegion]', 'Code region to filter')
-.option('-s, --since [since]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
-.option('--append', 'Append stagiaires to an existing campaign')
+.option('--source [name]', 'Source to import (PE or IDF)')
+.option('--file [file]', 'The CSV file to import')
+.option('--region [codeRegion]', 'Code region to filter')
+.option('--since [since]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
 .option('--slack', 'Send a slack notification when job is finished')
-.option('-d, --dry-run', 'Execute this script in dry mode', () => {
-    dryRun = true;
-}, false)
+.option('--validate', 'Validate CSV file but do not import it')
 .parse(process.argv);
 
 execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
+
+    let { file, source, region, since, validate } = cli;
 
     const handleValidationError = (validationError, csvOptions) => {
         let { line, type } = validationError;
@@ -44,60 +42,56 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
             filename: path.basename(cli.file),
             date: moment().format('DD/MM/YYYY'),
             reason: type.message,
-            source: cli.source
+            source: source
         }, () => ({}), e => exit(e));
     };
 
     let allowedSources = Object.keys(sources);
-    if (cli.source === undefined || !allowedSources.includes(cli.source)) {
+    if (source === undefined || !allowedSources.includes(source)) {
         return exit(`Source param is required, please choose one : ${JSON.stringify(allowedSources)}`);
     }
 
-    if (!cli.file) {
+    if (!file) {
         return exit('CSV File is required');
     }
 
-    if (cli.region && isNaN(cli.region)) {
+    if (region && isNaN(region)) {
         return exit('Region is invalid');
     }
 
-    if (cli.since && !cli.since.isValid()) {
+    if (since && !since.isValid()) {
         return exit('since is invalid, please use format \'YYYY-MM-DD\'');
     }
 
-    let importer = createImporter(db, logger);
-    let createHandler = require(`./handlers/${sources[cli.source]}CSVHandler`);
-    let handler = createHandler(db, regions);
+    let handler = require(`./tasks/handlers/${sources[cli.source]}CSVHandler`)(db, regions);
     let filters = {
-        codeRegion: cli.region,
-        since: cli.since && cli.since.toDate(),
-        append: cli.append,
+        codeRegion: region,
+        since: since && since.toDate(),
     };
 
-    if (dryRun === true) {
-        logger.info(`Validating file ${cli.file} in dry-run mode...`);
-        let validationError = await validateCsvFile(cli.file, handler);
-        if (validationError) {
-            handleValidationError(validationError, handler.csvOptions);
+    if (validate) {
+        logger.info(`Validating file ${file}...`);
+        let errors = await validateCsvFile(file, handler);
+        if (errors) {
+            handleValidationError(errors, handler.csvOptions);
         }
     } else {
-        logger.info(`Importing source ${cli.source} from file ${cli.file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
-
-
+        logger.info(`Importing source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
         try {
-            let results = await importer.importTrainee(cli.file, handler, filters);
+            let stats = await importTrainee(db, logger, file, handler, filters);
 
             sendSlackNotification({
-                text: `${results.imported} stagiaires importés pour le fichier ${cli.file} ` +
-                    `(Ignorés : ${results.ignored}, Nombre d'erreurs : ${results.invalid})`,
+                text: `[STAGIAIRE] Le fichier ${file} a été importé : ` +
+                    `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`,
             });
 
-            return results;
-        } catch (e) {
+            return stats;
+        } catch (stats) {
             sendSlackNotification({
-                text: `Le fichier stagiaires ${cli.file} n'a pas pu être importé`,
+                text: `[STAGIAIRE] Une erreur est survenue lors de l'import du fichier stagiaires ${file} : ` +
+                    `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`
             });
-            throw e;
+            throw stats;
         }
     }
 }, { slack: cli.slack });

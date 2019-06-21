@@ -1,8 +1,8 @@
 const path = require('path');
 const logger = require('./test-logger');
 const importIntercarif = require('../../src/jobs/import/intercarif/importIntercarif');
-const reconcile = require('../../src/jobs/import/reconciliation/tasks/reconcile');
-const mongoIndexes = require('../../src/jobs/data/indexes/mongoIndexes');
+const reconcile = require('../../src/jobs/reconciliation/tasks/reconcile');
+const mongoIndexes = require('../../src/jobs/data/indexes/tasks/mongoIndexes');
 const { withComponents } = require('./test-components');
 
 module.exports = {

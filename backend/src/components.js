@@ -1,7 +1,6 @@
 const config = require('config');
 const auth = require('./common/components/auth');
 const password = require('./common/components/password');
-const stats = require('./common/components/stats');
 const getRegions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
 const sentry = require('./common/components/sentry');
@@ -11,6 +10,8 @@ const createMailer = require('./smtp/mailer');
 const sendForgottenPasswordEmail = require('./common/components/mailing/sendForgottenPasswordEmail');
 const sendOrganisationAccountEmail = require('./common/components/mailing/sendOrganisationAccountEmail');
 const sendVotreAvisEmail = require('./common/components/mailing/sendVotreAvisEmail');
+const sendReponseRejeteeNotification = require('./common/components/mailing/sendReponseRejeteeNotification');
+const sendInjureMail = require('./common/components/mailing/sendInjureMail');
 
 module.exports = async (options = {}) => {
 
@@ -30,12 +31,13 @@ module.exports = async (options = {}) => {
         auth: auth(configuration),
         password,
         regions: regions,
-        stats: stats(db, regions),
         moderation: moderation(db, logger, mailer),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
             sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
             sendVotreAvisEmail: sendVotreAvisEmail(db, mailer),
+            sendReponseRejeteeNotification: sendReponseRejeteeNotification(db, mailer, logger),
+            sendInjureMail: sendInjureMail(db, mailer)
         }
     }, options || {});
 };

@@ -59,7 +59,7 @@
     background-color: #5cb85c;
   }
 
-  .badge.rejected {
+  .badge.rejected, .badge.answerRejected {
     background-color: #d9534f;
   }
 
@@ -288,6 +288,11 @@
     color: red;
   }
 
+  .mainPanel .advice .answer.financeur {
+    margin-left: inherit;
+    margin-top: 10px;
+  }
+
   .AdviceRates {
     background: #eee;
     padding: 7px;
@@ -349,59 +354,6 @@
 
   .toolbox .sort .action {
     margin: 0px 20px 0px 5px;
-  }
-
-  .SessionStats {
-    border: solid 1px #ddd;
-    padding: 10px;
-    border-radius: 10px;
-    width: 65%;
-  }
-
-  .SessionStats h3 {
-    margin-top: 0px;
-  }
-
-  .SessionStats .metadata ul {
-    list-style: none;
-    padding-left: 10px;
-  }
-
-  .SessionStats .metadata li {
-    margin-top: 8px;
-  }
-
-  .SessionStats .rates h4 {
-    text-align: center;
-  }
-
-  .SessionStats .rates .Stars {
-    display: inline-block;
-  }
-
-  .SessionStats .rates .title {
-    margin-bottom: 10px;
-  }
-
-  .SessionStats .rates .title .Stars {
-    margin: 0px 10px;
-  }
-
-  .SessionStats .rates ul {
-    list-style: none;
-    padding: 0px
-  }
-
-  .SessionStats .rates .progress {
-    height: 10px;
-    width: 60%;
-    display: inline-block;
-    margin-bottom: 0px;
-    margin: 0px 10px;
-  }
-
-  .SessionStats .rates .progress-bar {
-    background-color: green;
   }
 
   .publishedAdvices {

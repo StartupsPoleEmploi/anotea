@@ -4,8 +4,8 @@ const assert = require('assert');
 const configuration = require('config');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const traineeImporter = require('../../../../../src/jobs/import/stagiaires/traineeImporter');
-const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/handlers/ileDeFranceCSVHandler');
+const importTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
+const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/ileDeFranceCSVHandler');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
@@ -13,19 +13,18 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-idf.csv');
-        let importer = traineeImporter(db, logger, configuration);
         let handler = ileDeFranceCSVHandler(db, logger, configuration);
 
-        await importer.importTrainee(csvFile, handler);
+        await importTrainee(db, logger, csvFile, handler);
 
         let count = await db.collection('trainee').countDocuments();
-        assert.equal(count, 5);
+        assert.strictEqual(count, 5);
         let docs = await db.collection('trainee').find({ 'trainee.email': 'email1@pe.fr' }).toArray();
         assert.ok(docs[0]._id);
         assert.ok(docs[0].importDate);
         assert.ok(docs[0].campaignDate);
         assert.ok(docs[0].token);
-        assert.deepEqual(_.omit(docs[0], ['_id', 'importDate', 'token', 'campaignDate']), {
+        assert.deepStrictEqual(_.omit(docs[0], ['_id', 'importDate', 'token', 'campaignDate']), {
             campaign: 'stagiaires-idf',
             sourceIDF: true,
             avisCreated: false,

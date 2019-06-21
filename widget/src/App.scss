@@ -6,4 +6,8 @@
   font-weight: $font-weight-400;
   color: $color-black;
   background-color: $color-white;
+
+  .with-tooltip {
+    position: relative;
+  }
 }

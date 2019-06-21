@@ -75,6 +75,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     equipe_formateurs: 4,
                     moyen_materiel: 2,
                     global: 2,
+                },
+                aggregation: {
+                    global: {
+                        max: 2.4,
+                        min: 2.4,
+                    }
                 }
             },
             meta: {
@@ -142,6 +148,96 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 }
             }]
         });
+    });
+
+    it('can return Course for application/ld+json', async () => {
+
+        let app = await startServer();
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        accompagnement: 1,
+                        accueil: 3,
+                        contenu_formation: 2,
+                        equipe_formateurs: 4,
+                        moyen_materiel: 2,
+                        global: 2.4,
+                    },
+                })
+            ]
+        );
+
+
+        let response = await request(app)
+        .get(`/api/v1/actions/F_XX_XX|AC_XX_XXXXXX`)
+        .set('Accept', 'application/ld+json');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            '@context': 'http://schema.org',
+            '@type': 'Course',
+            'name': 'Développeur web',
+            'description': 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
+            'courseCode': 'F_XX_XX',
+            'provider': {
+                '@type': 'Organization',
+                'name': 'Centre de formation Anotéa',
+            },
+            'aggregateRating': {
+                '@type': 'AggregateRating',
+                'ratingValue': 2.4,
+                'ratingCount': 1,
+                'bestRating': 2.4,
+                'worstRating': 2.4,
+            }
+        });
+    });
+
+    it('should return empty avis array when no avis can be found', async () => {
+
+        let app = await startServer();
+        await reconcileActions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                //no comments
+            ]
+        );
+
+        let response = await request(app).get(`/api/v1/actions/F_XX_XX|AC_XX_XXXXXX`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
     });
 
     it('should fail when numero d\'action is unknown', async () => {
@@ -355,29 +451,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         );
 
         let response = await request(app).get('/api/v1/actions?notes_decimales=true');
-        assert.deepStrictEqual(response.body.actions[0].score, {
-            nb_avis: 1,
-            notes: {
-                accompagnement: 1,
-                accueil: 3,
-                contenu_formation: 2,
-                equipe_formateurs: 4,
-                moyen_materiel: 2,
-                global: 2.4,
-            }
+        assert.deepStrictEqual(response.body.actions[0].score.notes, {
+            accompagnement: 1,
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            global: 2.4,
         });
 
         response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXXX?notes_decimales=true');
-        assert.deepStrictEqual(response.body.score, {
-            nb_avis: 1,
-            notes: {
-                accompagnement: 1,
-                accueil: 3,
-                contenu_formation: 2,
-                equipe_formateurs: 4,
-                moyen_materiel: 2,
-                global: 2.4,
-            }
+        assert.deepStrictEqual(response.body.score.notes, {
+            accompagnement: 1,
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            global: 2.4,
         });
     });
 

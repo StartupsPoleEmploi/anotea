@@ -53,33 +53,33 @@ export default class Graph extends React.Component {
                     },
                     {
                         type: 2,
-                        label: 'Nombre d\'avis déposés',
-                        value: dashboardData.countAdvicesPublished
+                        label: 'Nombre d\'avis modérés',
+                        value: dashboardData.countAdvicesModerated
                     },
                     {
                         type: 2,
-                        label: 'Taux d\'avis déposés',
-                        value: this.getRate(dashboardData.countAdvicesPublished, dashboardData.count)
+                        label: 'Taux d\'avis modérés',
+                        value: this.getRate(dashboardData.countAdvicesModerated, dashboardData.count)
                     },
                     {
                         type: 3,
                         label: 'Taux d\'avis avec commentaires',
-                        value: this.getRate(dashboardData.countAdvicesWithComments, dashboardData.countAdvicesPublished)
+                        value: this.getRate(dashboardData.countAdvicesWithComments, dashboardData.count)
                     },
                     {
                         type: 4,
                         label: 'Taux de commentaires positifs ou neutres',
-                        value: this.getRate(dashboardData.countAdvicesPositif, dashboardData.countAdvicesWithComments)
+                        value: this.getRate(dashboardData.countAdvicesPositif, dashboardData.countAdvicesModerated)
                     },
                     {
                         type: 5,
                         label: 'Taux de commentaires négatifs',
-                        value: this.getRate(dashboardData.countAdvicesNegatif, dashboardData.countAdvicesWithComments)
+                        value: this.getRate(dashboardData.countAdvicesNegatif, dashboardData.countAdvicesModerated)
                     },
                     {
                         type: 6,
                         label: 'Taux de commentaires rejetés',
-                        value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesWithComments)
+                        value: this.getRate(dashboardData.countAdvicesRejected, dashboardData.countAdvicesModerated)
                     },
                     {
                         type: 7,

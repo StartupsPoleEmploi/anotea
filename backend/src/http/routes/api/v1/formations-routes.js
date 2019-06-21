@@ -2,10 +2,11 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const { tryAndCatch } = require('../../routes-utils');
+const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createFormationDTO, createPaginationDTO } = require('./utils/dto');
+const schema = require('./utils/schema');
 
 module.exports = ({ db, middlewares }) => {
 
@@ -34,20 +35,23 @@ module.exports = ({ db, middlewares }) => {
             ...(parameters.nb_avis ? { 'score.nb_avis': { $gte: parameters.nb_avis } } : {}),
         };
 
-        let cursor = await collection.find(query)
+        let formations = await collection.find(query)
         .project(buildProjection(parameters.fields))
         .limit(limit)
         .skip(skip);
 
-        let [total, formations] = await Promise.all([cursor.count(), cursor.toArray()]);
+        let total = await formations.count();
+        let stream = formations.transformStream({
+            transform: formation => createFormationDTO(formation, { notes_decimales: parameters.notes_decimales })
+        });
 
-        res.json({
-            formations: formations.map(formation => {
-                return createFormationDTO(formation, { notes_decimales: parameters.notes_decimales });
-            }) || [],
-            meta: {
-                pagination: createPaginationDTO(pagination, total)
-            },
+        return sendJsonStream(stream, res, {
+            objectPropertyName: 'formations',
+            object: {
+                meta: {
+                    pagination: createPaginationDTO(pagination, total)
+                },
+            }
         });
     }));
 
@@ -68,7 +72,12 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro de formation inconnu ou formation expirée');
         }
 
-        res.json(createFormationDTO(formation, { notes_decimales: parameters.notes_decimales }));
+        if (req.headers.accept === 'application/ld+json') {
+            res.json(schema.toCourse(formation));
+        } else {
+            let dto = createFormationDTO(formation, { notes_decimales: parameters.notes_decimales });
+            res.json(dto);
+        }
 
     }));
 

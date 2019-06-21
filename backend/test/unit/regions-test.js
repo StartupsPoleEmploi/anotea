@@ -3,13 +3,6 @@ const regions = require('../../src/common/components/regions');
 
 describe(__filename, () => {
 
-    it('can get can active regions', () => {
-
-        let actives = regions().findActiveRegions();
-        assert.deepStrictEqual(actives.map(region => region.codeRegion),
-            ['2', '3', '4', '6', '7', '8', '10', '11', '13', '14', '15', '16', '17', '18']);
-    });
-
     it('can find region by code', () => {
 
         let region = regions().findRegionByCodeRegion('17');

@@ -2,9 +2,9 @@
 'use strict';
 const { execute } = require('../../job-utils');
 
-const removeCarifCollection = require('./removeCarifCollection');
-
 execute(async ({ db }) => {
-    await removeCarifCollection(db);
+    await require('./tasks/cleanCertifInfos')(db);
+    await require('./tasks/renamePatchProperty')(db);
+    await require('./tasks/syncTrainingProperty')(db);
+    await require('./tasks/cleanReconciliationMetadata')(db);
 });
-

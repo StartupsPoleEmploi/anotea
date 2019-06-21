@@ -3,8 +3,8 @@ const _ = require('lodash');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const traineeImporter = require('../../../../../src/jobs/import/stagiaires/traineeImporter');
-const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/handlers/poleEmploiCSVHandler');
+const traineeImporter = require('../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
+const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
 
@@ -13,10 +13,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
-        await importer.importTrainee(csvFile, handler);
+        await traineeImporter(db, logger, csvFile, handler);
 
         let count = await db.collection('trainee').countDocuments();
         assert.strictEqual(count, 4);
@@ -93,11 +92,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-departement.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
         try {
-            await importer.importTrainee(csvFile, handler);
+            await traineeImporter(db, logger, csvFile, handler);
             assert.fail('Should have fail');
         } catch (e) {
             assert.deepStrictEqual(e, {
@@ -114,10 +112,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-inactive-region.csv');
         let { regions } = await getComponents();
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
-        await importer.importTrainee(csvFile, handler);
+        await traineeImporter(db, logger, csvFile, handler);
 
         let count = await db.collection('trainee').countDocuments();
         assert.strictEqual(count, 0);
@@ -128,11 +125,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         let csvFileWithDuplicates = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-doublons.csv');
-        let importer = traineeImporter(db, logger);
         let handler = poleEmploiCSVHandler(db, regions);
 
-        await importer.importTrainee(csvFile, handler);
-        let results = await importer.importTrainee(csvFileWithDuplicates, handler);
+        await traineeImporter(db, logger, csvFile, handler);
+        let results = await traineeImporter(db, logger, csvFileWithDuplicates, handler);
 
         assert.deepStrictEqual(results, {
             invalid: 0,

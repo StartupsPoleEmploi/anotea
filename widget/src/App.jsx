@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import ListeWidget from './components/ListeWidget';
 import { getScore, getAvis } from './services/widgetService';
 import GridDisplayer from './components/common/library/GridDisplayer';
+import OptionsContext from './components/common/options/OptionsContext';
 import ScoreWidget from './components/ScoreWidget';
 import CarrouselWidget from './components/CarrouselWidget';
-import ContactStagiaire from './components/common/ContactStagiaire';
 import './App.scss';
 
 class App extends Component {
@@ -53,17 +53,18 @@ class App extends Component {
     }
 
     async componentDidMount() {
-        let { type, identifiant } = this.props;
+        let { type, identifiant, format } = this.props;
 
-        if (!['organisme', 'formation', 'action', 'session'].includes(type)) {
+        if (!['organisme', 'formation', 'action', 'session'].includes(type) ||
+            !['score', 'carrousel', 'liste'].includes(format)) {
             return this.setState({ error: true });
         }
 
         this.setState({ score: await getScore(type, identifiant) });
     }
 
-    hasOption(option) {
-        return (this.props.options || '').split(',').includes(option);
+    getOptions() {
+        return (this.props.options || '').split(',');
     }
 
     render() {
@@ -79,32 +80,18 @@ class App extends Component {
         if (format === 'score') {
             widget = <ScoreWidget {...this.state} />;
         } else if (format === 'carrousel') {
-            widget = (
-                <CarrouselWidget {...this.state} fetchAvis={options => this.fetchAvis(options)}>
-                    {this.hasOption('contact-stagiaire') &&
-                    <div className="d-flex justify-content-center py-2">
-                        <ContactStagiaire />
-                    </div>
-                    }
-                </CarrouselWidget>
-            );
+            widget = <CarrouselWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
         } else {
-            widget = (
-                <ListeWidget {...this.state} fetchAvis={options => this.fetchAvis(options)}>
-                    {this.hasOption('contact-stagiaire') &&
-                    <div className="d-flex justify-content-center py-2">
-                        <ContactStagiaire />
-                    </div>
-                    }
-                </ListeWidget>
-            );
+            widget = <ListeWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
         }
 
         return (
             <div className="anotea">
                 {false && <GridDisplayer />}
                 <div className="container-fluid">
-                    {widget}
+                    <OptionsContext.Provider value={this.getOptions()}>
+                        {widget}
+                    </OptionsContext.Provider>
                 </div>
             </div>
         );
@@ -112,10 +99,10 @@ class App extends Component {
 }
 
 App.defaultProps = {
-    format: 'liste',
+    format: 'carrousel',
     type: 'action',
     identifiant: '26_100646|26_145859_7591',
-    options: 'contact-stagiaire',
+    options: 'avis-details',
 };
 
 export default App;

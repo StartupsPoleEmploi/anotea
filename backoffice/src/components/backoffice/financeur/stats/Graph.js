@@ -64,7 +64,7 @@ export default class Graph extends React.Component {
                 }, options),
                 Object.assign({
                     label: 'Nombre d\'avis déposés',
-                    data: graphData.map(item => item.countAdvicesPublished)
+                    data: graphData.map(item => item.countAdvicesModerated)
                 }, options),
                 Object.assign({
                     label: 'Nombre d\'avis avec commentaires',

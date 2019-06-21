@@ -34,15 +34,15 @@ module.exports = data => {
             global: rates.global,
         },
         formation: {
+            //TODO add organisme responsable data
             numero: training.idFormation,
             intitule: training.title,
             domaine_formation: {
                 formacodes: [data.formacode],
             },
-            certifications: [{
-                certif_info: training.certifInfo.id,
-            }].filter(c => !_.isEmpty(c.certif_info)),
-            //TODO add organisme responsable data
+            certifications: [
+                { certif_info: training.certifInfo.id }
+            ].filter(c => !_.isEmpty(c.certif_info)),
             action: {
                 lieu_de_formation: {
                     code_postal: training.place.postalCode,
