@@ -21,7 +21,7 @@ module.exports = {
     transformObject: transformObject,
     ignoreEmpty: () => transformObject(data => data, { ignoreEmpty: true }),
     ignoreFirstLine: () => transformObject(data => data, { ignoreFirstLine: true }),
-    jsonStream: wrapper => {
+    jsonStream: (wrapper = {}) => {
         let chunksSent = 0;
         return new Transform({
             objectMode: true,
