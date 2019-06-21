@@ -4,6 +4,7 @@ import _ from 'lodash';
 import Loader from '../common/Loader';
 import AvisStatsTable from './AvisStatsTable';
 import OrganismesStatsTable from './OrganismesStatsTable';
+import ApiStatsTable from './ApiStatsTable';
 import { getLatestStatistics } from '../../services/statsService';
 
 export default class StatsRoutes extends Component {
@@ -38,6 +39,10 @@ export default class StatsRoutes extends Component {
                 <Route
                     path="/stats/organismes"
                     render={() => <OrganismesStatsTable stats={stats.organismes} />}
+                />
+                <Route
+                    path="/stats/api"
+                    render={() => <ApiStatsTable stats={stats.api} />}
                 />
             </div>
         );

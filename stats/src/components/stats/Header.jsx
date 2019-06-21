@@ -22,6 +22,9 @@ export default class Header extends Component {
                                 <NavLink to="/stats/organismes" className="nav-link" activeClassName="active">
                                     Organismes
                                 </NavLink>
+                                <NavLink to="/stats/api" className="nav-link" activeClassName="active">
+                                    Api
+                                </NavLink>
                             </div>
                         </div>
                     </div>
