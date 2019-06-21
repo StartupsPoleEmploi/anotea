@@ -67,6 +67,7 @@
     "underscore": "1.9.1",
     "underscore.string": "3.3.5",
     "uuid": "3.3.2",
+    "xss": "1.0.6",
     "yamljs": "0.3.0"
   },
   "engines": {

@@ -1,31 +1,75 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import './ContactStagiaire.scss';
+import Button from './library/Button';
+import { saveContactStagiaire } from '../../services/widgetService';
+import { getReferrerUrl } from '../../utils';
+import Modal from './library/Modal';
 
 export default class ContactStagiaire extends Component {
 
-    componentDidMount() {
-        (function(h, o, t, j, a, r) {
-            h.hj = h.hj || function() {
-                (h.hj.q = h.hj.q || []).push(arguments);
-            };
-            h._hjSettings = { hjid: parseInt(process.env.REACT_APP_ANOTEA_HOTJAR_ID) || 0, hjsv: 6 };
-            a = o.getElementsByTagName('head')[0];
-            r = o.createElement('script');
-            r.async = 1;
-            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+
+    constructor() {
+        super();
+        this.state = {
+            showModal: false,
+            form: this.getInitialForm(),
+        };
+    }
+
+    getInitialForm() {
+        return {
+            question: '',
+            contact: '',
+            referrer: getReferrerUrl().href,
+        };
     }
 
     render() {
         return (
-            <span className="ContactStagiaire">
-                <button
-                    className="btn"
-                    onClick={() => window.hj('trigger', 'ancien_stagiaire')}>
+            <div className="ContactStagiaire">
+                {this.state.showModal &&
+                <Modal
+                    title="Contacter un stagiaire"
+                    body={
+                        <form>
+                            <div className="form-group">
+                                <label>Posez ici une question à un ancien stagiaire de cette formation.</label>
+                                <textarea
+                                    name="question"
+                                    value={this.state.form.question}
+                                    maxLength={500}
+                                    rows="7"
+                                    placeholder=""
+                                    onChange={e => this.setState(_.merge(this.state, { form: { question: e.target.value } }))}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Indiquer une email ou un numéro de téléphone nous permettant de vous recontacter</label>
+                                <input
+                                    name="contact"
+                                    type="texte"
+                                    className="form-control"
+                                    placeholder=""
+                                    value={this.state.form.contact}
+                                    onChange={e => this.setState(_.merge(this.state, { form: { contact: e.target.value } }))}
+                                />
+
+                            </div>
+                        </form>
+                    }
+                    onClose={() => this.setState({ showModal: false })}
+                    onConfirmed={async () => {
+                        await saveContactStagiaire({ ...this.state.form });
+                        this.setState({ showModal: false, form: this.getInitialForm() });
+                    }} />
+                }
+                <Button
+                    size="medium"
+                    onClick={() => this.setState({ showModal: !this.state.showModal })}>
                     Contacter un ancien stagiaire
-                </button>
-            </span>
+                </Button>
+            </div>
         );
     }
 }
