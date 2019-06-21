@@ -60,6 +60,7 @@ module.exports = components => {
     app.use('/api', require('./routes/api/backoffice/avis-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/formations-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/sirens-routes')(httpComponents));
+    app.use('/api', require('./routes/api/regions-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/gestion-organismes-routes')(httpComponents));
     app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
