@@ -62,7 +62,7 @@
     },
     "organisme": {
       "accountsRelaunchDelay": 7,
-      "notificationsRelaunchDelay": 15
+      "notificationsRelaunchDelay": 30
     }
   },
   "api": {
