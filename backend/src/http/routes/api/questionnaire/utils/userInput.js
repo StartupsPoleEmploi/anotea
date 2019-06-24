@@ -9,16 +9,14 @@ module.exports = {
 
     removeEmoji: removeEmoji,
 
-    sanitize: data => {
-        // unescape HTML (if user copy/paste HTML entities)
-        let sanitizedData = s(data).unescapeHTML().s;
+    sanitize: text => {
 
-        // remove HTML tags
-        sanitizedData = s(sanitizedData).stripTags().s;
+        // unescape HTML (if user copy/paste HTML entities) and remove HTML tags
+        let sanitized = s(text).unescapeHTML().stripTags().s;
 
         // remove emoj
-        sanitizedData = removeEmoji(sanitizedData);
+        sanitized = removeEmoji(sanitized);
 
-        return sanitizedData;
+        return sanitized;
     }
 };

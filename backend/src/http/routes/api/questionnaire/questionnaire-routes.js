@@ -85,6 +85,7 @@ module.exports = ({ db, logger, configuration, regions }) => {
     };
 
     const buildAvis = (notes, token, body, trainee) => {
+        let data = sanitizeBody(body);
         let avis = {
             date: new Date(),
             token: token,
@@ -92,29 +93,27 @@ module.exports = ({ db, logger, configuration, regions }) => {
             formacode: trainee.training.formacode,
             idSession: trainee.training.idSession,
             training: trainee.training,
-            codeRegion: trainee.codeRegion
+            codeRegion: trainee.codeRegion,
+            rates: notes,
+            pseudo: data.pseudo.replace(/ /g, '').replace(/\./g, ''),
+            accord: data.accord,
+            accordEntreprise: data.accordEntreprise,
         };
-        avis.rates = notes;
 
-        avis.pseudo = body.pseudo.replace(/ /g, '').replace(/\./g, '');
-
-        let commentTxt = body.commentaire.texte;
-        let commentTitle = body.commentaire.titre;
-
-        if (commentTitle !== '' || commentTxt !== '') {
+        let text = data.commentaire.texte;
+        let title = data.commentaire.titre;
+        if (title !== '' || text !== '') {
             avis.comment = {
-                title: commentTitle,
-                text: commentTxt
+                title: title,
+                text: text
             };
         }
-
-        avis.accord = body.accord;
-        avis.accordEntreprise = body.accordEntreprise;
 
         return avis;
     };
 
     const validateAvis = avis => {
+
         if (avis.pseudo.length > 50 ||
             (avis.comment !== undefined && (avis.comment.title.length > 50 || avis.comment.text.length > 200))) {
             return { error: 'too long' };
@@ -190,9 +189,11 @@ module.exports = ({ db, logger, configuration, regions }) => {
 
         let resultNotes = validateNotes(req.body);
         if (resultNotes.error === null) {
-            const avis = buildAvis(resultNotes.value, req.params.token, sanitizeBody(req.body), req.trainee);
-            let resultAvis = validateAvis(avis);
-            if (resultAvis.error === null) {
+
+            const avis = buildAvis(resultNotes.value, req.params.token, req.body, req.trainee);
+
+            let validation = validateAvis(avis);
+            if (validation.error === null) {
                 avis.rates.global = calculateAverageRate(avis);
                 await Promise.all([
                     db.collection('comment').insertOne(avis),
