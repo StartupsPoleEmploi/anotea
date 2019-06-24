@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import logo from './Header.svg';
 import './Header.scss';
 import { NavLink, Route } from 'react-router-dom';
+import _ from 'lodash';
+import { searchAvis } from './../moderateur/moderation/moderationService';
 
 const Link = ({ label, url, className }) => {
     return (
@@ -28,9 +30,31 @@ Link.propTypes = {
 
 export default class Header extends React.Component {
 
+    state = {
+
+    }
+
     static propTypes = {
         onLogout: PropTypes.func.isRequired,
     };
+
+    componentDidMount() {
+        this.search();
+    }
+
+    search = (options = {}) => {
+        return new Promise(resolve => {
+            this.setState({ loading: !options.silent }, async () => {
+                let avis = await searchAvis({ status: 'none', sortBy: 'lastStatusUpdate' });
+                let reponses = await searchAvis({ reponseStatus: 'none', sortBy: 'reponse.lastStatusUpdate' });
+                this.setState({ avis, reponses, loading: false }, () => resolve());
+            });
+        });
+    };
+
+    getNbAvis = () => this.state.avis ? _.get(this.state.avis.meta.stats, 'status.none') : '0';
+
+    getNbReponses = () => this.state.reponses ? _.get(this.state.reponses.meta.stats, 'reponseStatus.none') : '0';
 
     render() {
 
@@ -50,31 +74,24 @@ export default class Header extends React.Component {
                                 </div>
                                 <div className="col-7">
                                     <ul className="nav">
-                                        <li className="nav-item dropdown">
-                                            <a
-                                                className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
-                                                data-toggle="dropdown"
-                                                href="#"
-                                                role="button"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                                Moderation
-                                            </a>
-                                            <div className="dropdown-menu">
-                                                <Link
-                                                    className="dropdown-item"
-                                                    label="Avis stagiaires"
-                                                    url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
-                                                <Link
-                                                    className="dropdown-item"
-                                                    label=" Réponses des organismes"
-                                                    url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
-                                            </div>
+                                        <li className="nav-item">
+                                            <Link
+                                                className="nav-link"
+                                                label="Avis stagiaires"
+                                                url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
+                                            { !this.state.loading && <span className="badge badge-light pastille">{this.getNbAvis()}</span> }
                                         </li>
                                         <li className="nav-item">
                                             <Link
                                                 className="nav-link"
-                                                label="Gestion des organismes"
+                                                label=" Réponses des organismes"
+                                                url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
+                                            { !this.state.loading && <span className="badge badge-light pastille">{this.getNbReponses()}</span> }
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link
+                                                className="nav-link"
+                                                label="Liste des organismes"
                                                 url="/admin/moderateur/gestion/organismes?page=0&status=active" />
                                         </li>
                                     </ul>

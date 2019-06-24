@@ -6,58 +6,21 @@
 
   &.moderation {
     background-color: $color-blue;
-
-    .dropdown-menu {
-      background-color: $color-blue;
-    }
   }
 
   &.misc {
     background-color: $color-green;
-
-    .dropdown-menu {
-      background-color: $color-green;
-    }
   }
 
   .nav {
     font-weight: $font-weight-400;
 
-    .dropdown-menu {
-      border: none;
-      border-left: 2px solid $color-white;
-      border-radius: unset;
-      padding: 0;
-
-      .dropdown-toggle {
-        .active {
-          opacity: 1;
-          background-color: unset;
-        }
-      }
-
-      .dropdown-item {
-        padding: 0.1rem 0.5rem;
-        margin-left: 0.5rem;
-        color: rgba(255, 255, 255, 0.6);
-
-        &.active {
-          color: rgba(255, 255, 255, 1);
-          background-color: unset;
-        }
-
-        &:hover,
-        &:focus {
-          background-color: rgba(255, 255, 255, 0.19);
-          border-radius: 5px;
-        }
-      }
-    }
-
     .nav-link {
       color: $color-white;
-      padding: 0 4rem 0 0;
+      display: inline-block;
       opacity: 0.6;
+
+      padding-right: 0.5em;
 
       &.active {
         color: $color-white;
@@ -73,6 +36,14 @@
         opacity: 1;
         transition: opacity 0.2s linear;
       }
+    }
+
+    .badge.pastille {
+        background-color: $color-red;
+        color: $color-white;
+        border-radius: 10px;
+        font-size: 0.7em;
+        padding: 0.3em 0.6em;
     }
   }
 
