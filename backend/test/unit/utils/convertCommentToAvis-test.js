@@ -83,17 +83,13 @@ describe(__filename, () => {
 
         let data = convertCommentToAvis(comment);
 
-        assert.deepStrictEqual(data.commentaire, {
-            titre: 'Génial',
-            texte: 'Super formation.',
-            reponse: 'Voici notre réponse',
-        });
+        assert.deepStrictEqual(data.reponse, 'Voici notre réponse');
     });
 
     it('should ignore réponse not published', async () => {
 
         let comment = newComment({
-            answer: {
+            reponse: {
                 text: 'Voici notre réponse',
                 status: 'rejected',
             },

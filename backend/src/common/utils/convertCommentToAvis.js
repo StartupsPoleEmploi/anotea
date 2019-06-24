@@ -11,10 +11,6 @@ const convertCommentaire = data => {
         commentaire.titre = data.comment.title;
     }
 
-    if (data.reponse && data.reponse.status === 'published') {
-        commentaire.reponse = data.reponse.text;
-    }
-
     return commentaire;
 };
 
@@ -77,6 +73,10 @@ module.exports = data => {
 
     if (data.comment && !data.rejected) {
         avis.commentaire = convertCommentaire(data);
+    }
+
+    if (data.reponse && data.reponse.status === 'published') {
+        avis.reponse = data.reponse.text;
     }
 
     return avis;
