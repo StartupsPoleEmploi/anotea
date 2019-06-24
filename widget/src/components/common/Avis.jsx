@@ -24,16 +24,20 @@ export default class Avis extends Component {
                     <span className="par">par</span>
                     <span className="pseudo">{avis.pseudo ? avis.pseudo : 'un stagiaire'}</span>
                 </div>
+                {avis.commentaire &&
                 <div className={`titre ${avis.commentaire.titre ? 'visible' : 'invisible'}`}>
                     {avis.commentaire.titre}
                 </div>
+                }
+                {avis.commentaire &&
                 <div className={`texte ${avis.commentaire.texte ? 'visible' : 'invisible'}`}>
                     {avis.commentaire.texte}
                 </div>
-                {avis.commentaire.reponse &&
+                }
+                {avis.reponse &&
                 <div className="reponse">
                     <div className="titre">Réponse de l'organisme</div>
-                    <div className="texte">{avis.commentaire.reponse}</div>
+                    <div className="texte">{avis.reponse}</div>
                 </div>
                 }
                 <div className="date with-tooltip d-inline-flex justify-content-between">

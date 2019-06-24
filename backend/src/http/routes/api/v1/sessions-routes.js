@@ -105,7 +105,7 @@ module.exports = ({ db, middlewares }) => {
 
         let avis = session.avis;
         if (parameters.commentaires !== null) {
-            avis = avis.filter(avis => parameters.commentaires ? avis.commentaire : !avis.commentaire);
+            avis = avis.filter(avis => parameters.commentaires ? (avis.commentaire || avis.reponse) : !avis.commentaire);
         }
 
         res.json({
