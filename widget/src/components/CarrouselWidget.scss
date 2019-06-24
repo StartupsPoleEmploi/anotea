@@ -27,18 +27,10 @@
       font-size: 0.75rem;
 
       .nav {
-        border: 1px solid $color-grey-25;
-        color: $color-grey-50;
-        border-radius: 5px;
-        padding: 0.5rem 1rem;
 
-        &:hover,
-        &:focus {
-          cursor: pointer;
-          font-weight: $font-weight-700;
-          opacity: 1;
-          transition: opacity 0.2s linear;
-        }
+        color: $color-black;
+        padding: 0.25rem 0.5rem;
+        text-transform: unset;
 
         &.inactive {
           visibility: hidden;

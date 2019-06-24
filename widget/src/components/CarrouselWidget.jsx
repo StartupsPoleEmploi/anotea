@@ -53,28 +53,29 @@ export default class CarrouselWidget extends Component {
                         <span>{totalItems} commentaires</span>
                     </div>
 
-                    <Avis avis={current} />
-
                     {totalItems > 1 &&
                     <div className="pagination d-flex justify-content-between py-2">
                         <Button
-                            size="small"
+                            size="medium"
                             className={`nav ${pagination.page === 0 ? 'invisible' : 'visible'}`}
                             onClick={() => this.previous()}>
-                            <span className="fas fa-chevron-left"></span>
+                            Précédent
                         </Button>
 
                         <div className="align-self-center">{pagination.page + 1} sur {totalItems}</div>
 
                         <Button
-                            size="small"
+                            size="medium"
                             className={`nav ${pagination.page >= totalItems - 1 ? 'invisible' : 'visible'}`}
                             onClick={() => this.next()}>
-                            <span className="fas fa-chevron-right"></span>
+                            Suivant
                         </Button>
 
                     </div>
                     }
+
+                    <Avis avis={current} />
+
                 </div>
             </div>
         );
