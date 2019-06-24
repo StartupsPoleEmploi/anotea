@@ -13,6 +13,7 @@ export default class ContactStagiaire extends Component {
         super();
         this.state = {
             showModal: false,
+            error: false,
             form: this.getInitialForm(),
         };
     }
@@ -23,6 +24,17 @@ export default class ContactStagiaire extends Component {
             contact: '',
             referrer: getReferrerUrl().href,
         };
+    }
+
+    async submit() {
+        try {
+            await saveContactStagiaire({ ...this.state.form });
+            this.setState({ showModal: false, form: this.getInitialForm() });
+        } catch (e) {
+            console.log(e);
+            this.setState({ error: 'Une erreur est survenue.' });
+        }
+
     }
 
     render() {
@@ -56,13 +68,13 @@ export default class ContactStagiaire extends Component {
                                 />
 
                             </div>
+                            {this.state.error &&
+                            <div className="error">{this.state.error}</div>
+                            }
                         </form>
                     }
                     onClose={() => this.setState({ showModal: false })}
-                    onConfirmed={async () => {
-                        await saveContactStagiaire({ ...this.state.form });
-                        this.setState({ showModal: false, form: this.getInitialForm() });
-                    }} />
+                    onConfirmed={() => this.submit()} />
                 }
                 <Button
                     size="medium"
