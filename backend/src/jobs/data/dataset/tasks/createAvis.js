@@ -36,7 +36,7 @@ const createStagiaire = avis => {
     };
 };
 
-const buildAvis = (session, custom) => {
+const buildAvis = (session, custom = {}) => {
 
     let randomize = value => `${value}-${uuid.v4()}`;
     let getDateInThePast = () => moment().subtract('100', 'days').toDate();
@@ -119,7 +119,7 @@ module.exports = async (db, moderation, options = {}) => {
 
     promises.push(
         ...(options.published || generate(10)).map(custom => {
-            let avis = buildAvis(session, { reponse: buildReponse() }, custom);
+            let avis = buildAvis(session, { reponse: buildReponse(), ...custom });
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
                 db.collection('comment').insertOne(avis),
