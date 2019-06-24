@@ -8,4 +8,23 @@
     border: 1px solid $color-grey-25;
     padding: 0.5rem 1rem;
   }
+
+  .error {
+    color: $color-red;
+    text-align: right;
+  }
+
+  form {
+
+    label {
+      display: block;
+      text-align: left;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 0.5rem;
+    }
+  }
+
 }

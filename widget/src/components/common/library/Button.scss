@@ -83,11 +83,10 @@
       @include disable-button($color-grey-5, $color-grey-25);
       border: 1px solid $color-grey-5;
     }
-
   }
 
   &.a-btn-small {
-    @include small-button($color-grey-50, $color-grey-25);
+    @include small-button($color-black, $color-grey-25);
 
     &.a-btn-red {
       @include small-button($color-red, $color-red-10);
@@ -103,7 +102,7 @@
   }
 
   &.a-btn-medium {
-    @include medium-button($color-grey-50, $color-grey-25);
+    @include medium-button($color-black, $color-grey-25);
 
     &.a-btn-red {
       @include medium-button($color-red, $color-red-30);
@@ -116,11 +115,10 @@
     &.a-btn-blue {
       @include medium-button($color-blue, $color-blue-30);
     }
-
   }
 
   &.a-btn-large {
-    @include large-button($color-grey-50, $color-grey-5, $color-grey-25);
+    @include large-button($color-black, $color-grey-5, $color-grey-25);
 
     &.a-btn-red {
       @include large-button($color-red, $color-red-10, $color-red-30);
@@ -133,6 +131,5 @@
     &.a-btn-blue {
       @include large-button($color-blue, $color-blue-10, $color-blue-30);
     }
-
   }
 }

@@ -1,12 +1,35 @@
 const Boom = require('boom');
 const _ = require('lodash');
+const basicAuth = require('basic-auth');
 const uuid = require('node-uuid');
 const RateLimit = require('express-rate-limit');
 const { tryAndCatch } = require('./routes/routes-utils');
 
 module.exports = (auth, logger, configuration) => {
     return {
-        createHMACAuthMiddleware: (types, options) => {
+        createBasicAuthMiddleware: clientKeys => {
+
+            let unauthorized = res => {
+                res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+                return res.send(401);
+            };
+
+            return (req, res, next) => {
+
+                let user = basicAuth(req);
+
+                if (!user || !user.name || !user.pass) {
+                    return unauthorized(res);
+                }
+
+                if (clientKeys.includes(user.name) && user.pass === configuration.auth[user.name].secret) {
+                    return next();
+                } else {
+                    return unauthorized(res);
+                }
+            };
+        },
+        createHMACAuthMiddleware: (clientKeys, options) => {
             let scheme = 'ANOTEA-HMAC-SHA256 ';
 
             return tryAndCatch((req, res, next) => {
@@ -18,7 +41,7 @@ module.exports = (auth, logger, configuration) => {
                     let credentials = req.headers.authorization.substring(scheme.length);
                     let [apiKey, timestamp, digest] = credentials.split(':');
 
-                    if (!types.includes(apiKey)) {
+                    if (!clientKeys.includes(apiKey)) {
                         throw Boom.unauthorized('Clé d\'api inconnue');
                     }
 
@@ -50,8 +73,7 @@ module.exports = (auth, logger, configuration) => {
                 }
             });
         },
-
-        createJWTAuthMiddleware: (type, options = {}) => {
+        createJWTAuthMiddleware: (clientKey, options = {}) => {
             return tryAndCatch((req, res, next) => {
                 let scheme = 'Bearer ';
                 if ((!req.headers.authorization || !req.headers.authorization.startsWith(scheme)) && !req.query.token) {
@@ -63,7 +85,7 @@ module.exports = (auth, logger, configuration) => {
                 }
 
                 const token = req.query.token || req.headers.authorization.substring(scheme.length);
-                return auth.checkJWT(type, token, options)
+                return auth.checkJWT(clientKey, token, options)
                 .then(decoded => {
                     req.user = decoded;
                     next();

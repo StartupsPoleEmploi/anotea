@@ -1,4 +1,4 @@
-import { _get } from './http-client';
+import { _get, _post } from './http-client';
 import queryString from 'query-string';
 
 const typeMapping = {
@@ -26,5 +26,9 @@ export const getAvis = (type, identifiant, options) => {
         page: options.page || 0,
         items_par_page: options.itemsParPage || 3,
     })}`);
+};
+
+export const saveContactStagiaire = data => {
+    return _post(`/api/contact-stagiaires`, data);
 };
 
