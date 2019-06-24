@@ -87,10 +87,6 @@ const buildAvis = (session, custom = {}) => {
             global: 2.1,
         },
         pseudo: faker.name.firstName(),
-        comment: {
-            title: faker.lorem.sentence(),
-            text: faker.lorem.paragraph(),
-        },
         date: getDateInThePast(),
         importDate: getDateInThePast(),
         unsubscribe: false,
@@ -98,6 +94,13 @@ const buildAvis = (session, custom = {}) => {
             firstRead: getDateInThePast(),
         },
     }, custom);
+};
+
+const buildComment = () => {
+    return {
+        title: faker.lorem.sentence(),
+        text: faker.lorem.paragraph(),
+    };
 };
 
 const buildReponse = () => {
@@ -113,13 +116,22 @@ const buildReponse = () => {
 module.exports = async (db, moderation, options = {}) => {
 
     let promises = [];
-    let generate = number => _.range(number).map(() => ({}));
+    let generateRandom = () => {
+        let range = number => _.range(number).map(() => ({}));
+
+        return [
+            ...range(20),
+            ...range(20, { reponse: buildReponse() }),
+            ...range(20, { comment: buildComment() }),
+            ...range(20, { comment: buildComment(), reponse: buildReponse() }),
+        ];
+    };
 
     let session = await db.collection('sessionsReconciliees').findOne();
 
     promises.push(
-        ...(options.published || generate(10)).map(custom => {
-            let avis = buildAvis(session, { reponse: buildReponse(), ...custom });
+        ...(options.published || generateRandom()).map(custom => {
+            let avis = buildAvis(session, custom);
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
                 db.collection('comment').insertOne(avis),
@@ -129,7 +141,7 @@ module.exports = async (db, moderation, options = {}) => {
     );
 
     promises.push(
-        ...(options.rejected || generate(10)).map(custom => {
+        ...(options.rejected || generateRandom()).map(custom => {
             let avis = buildAvis(session, custom);
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
@@ -140,7 +152,7 @@ module.exports = async (db, moderation, options = {}) => {
     );
 
     promises.push(
-        ...(options.reported || generate(10)).map(custom => {
+        ...(options.reported || generateRandom()).map(custom => {
             let avis = buildAvis(session, custom);
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
@@ -151,7 +163,7 @@ module.exports = async (db, moderation, options = {}) => {
     );
 
     promises.push(
-        ...(options.toModerate || generate(200)).map(custom => {
+        ...(options.toModerate || generateRandom()).map(custom => {
             let avis = buildAvis(session, custom);
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
