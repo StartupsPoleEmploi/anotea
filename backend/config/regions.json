@@ -325,7 +325,7 @@
         "avis": true
       },
       "organismes": {
-        "accounts": false,
+        "accounts": true,
         "notifications": false
       }
     },
@@ -349,7 +349,7 @@
         "avis": true
       },
       "organismes": {
-        "accounts": false,
+        "accounts": true,
         "notifications": false
       }
     },
