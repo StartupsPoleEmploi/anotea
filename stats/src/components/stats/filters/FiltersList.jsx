@@ -1,7 +1,7 @@
 import React from 'react';
 import './FiltersList.scss';
-import Filter from './Filter'
-import SearchButton from './SearchButton'
+import Filter from './Filter';
+import SearchButton from './SearchButton';
 
 export default function FiltersList(props) {
 

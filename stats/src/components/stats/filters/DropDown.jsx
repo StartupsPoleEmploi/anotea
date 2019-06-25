@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './DropDown.scss'
+import './DropDown.scss';
 
 export default class DropDown extends Component {
 
@@ -8,7 +8,7 @@ export default class DropDown extends Component {
 
         this.state = {
             showMenu: false,
-        }
+        };
     }
 
     showMenu = () => {
@@ -24,7 +24,7 @@ export default class DropDown extends Component {
         }));
     };
 
-    handleOutsideClick = (e) => {
+    handleOutsideClick = e => {
         if (this.node.contains(e.target)) {
             return;
         }
@@ -44,25 +44,25 @@ export default class DropDown extends Component {
                 </button>
 
                 {
-                    this.state.showMenu
-                        ? (
+                    this.state.showMenu ?
+                        (
                             <div className="menu" ref={node => {
                                 this.node = node;
                             }}>
                                 {this.props.items.map((e, index) => (
                                     ((index + 1 === this.props.items.length) ?
-                                            (<div key={index}>
-                                                <button className="menu-button"><span>{e.intitule}</span></button>
-                                            </div>) :
-                                            (<div key={index}>
-                                                <button className="menu-button"><span>{e.intitule}</span></button>
-                                                <div className="dropdown-divider"></div>
-                                            </div>)
+                                        (<div key={index}>
+                                            <button className="menu-button"><span>{e.intitule}</span></button>
+                                        </div>) :
+                                        (<div key={index}>
+                                            <button className="menu-button"><span>{e.intitule}</span></button>
+                                            <div className="dropdown-divider"></div>
+                                        </div>)
                                     )
                                 ))}
                             </div>
-                        )
-                        : (
+                        ) :
+                        (
                             null
                         )
                 }
