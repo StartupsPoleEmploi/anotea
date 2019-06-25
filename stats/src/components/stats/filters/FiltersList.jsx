@@ -1,9 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './FiltersList.scss';
 import Filter from './Filter';
 import SearchButton from './SearchButton';
 
 export default function FiltersList(props) {
+
+    FiltersList.propTypes = {
+        variant: PropTypes.object.isRequired,
+    };
 
     return (
         <div className="filters-list">

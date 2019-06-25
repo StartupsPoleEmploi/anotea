@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './DropDown.scss';
 
 export default class DropDown extends Component {
+
+    static propTypes = {
+        items: PropTypes.object.isRequired,
+    };
 
     constructor() {
         super();
