@@ -4,7 +4,7 @@ import logo from './Header.svg';
 import './Header.scss';
 import { NavLink, Route } from 'react-router-dom';
 import _ from 'lodash';
-import { searchAvis } from './../moderateur/moderation/moderationService';
+import { stats } from './../moderateur/moderation/moderationService';
 
 const Link = ({ label, url, className }) => {
     return (
@@ -45,16 +45,13 @@ export default class Header extends React.Component {
     search = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let avis = await searchAvis({ status: 'none', sortBy: 'lastStatusUpdate' });
-                let reponses = await searchAvis({ reponseStatus: 'none', sortBy: 'reponse.lastStatusUpdate' });
+                let computedStats = await stats();
+                let avis = computedStats.status.none;
+                let reponses = computedStats.reponseStatus.none;
                 this.setState({ avis, reponses, loading: false }, () => resolve());
             });
         });
     };
-
-    getNbAvis = () => this.state.avis ? _.get(this.state.avis.meta.stats, 'status.none') : '0';
-
-    getNbReponses = () => this.state.reponses ? _.get(this.state.reponses.meta.stats, 'reponseStatus.none') : '0';
 
     render() {
 
@@ -79,14 +76,14 @@ export default class Header extends React.Component {
                                                 className="nav-link"
                                                 label="Avis stagiaires"
                                                 url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
-                                            { !this.state.loading && <span className="badge badge-light pastille">{this.getNbAvis()}</span> }
+                                            { !this.state.loading && <span className="badge badge-light pastille">{this.state.avis}</span> }
                                         </li>
                                         <li className="nav-item">
                                             <Link
                                                 className="nav-link"
                                                 label=" Réponses des organismes"
                                                 url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
-                                            { !this.state.loading && <span className="badge badge-light pastille">{this.getNbReponses()}</span> }
+                                            { !this.state.loading && <span className="badge badge-light pastille">{this.state.reponses}</span> }
                                         </li>
                                         <li className="nav-item">
                                             <Link

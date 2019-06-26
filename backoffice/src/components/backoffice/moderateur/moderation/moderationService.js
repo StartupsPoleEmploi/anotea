@@ -1,6 +1,10 @@
 import { _delete, _get, _put } from '../../../../utils/http-client';
 import queryString from 'query-string';
 
+export const stats = () => {
+    return _get(`/backoffice/moderateur/stats`);
+};
+
 export const searchAvis = (options = {}) => {
     return _get(`/backoffice/moderateur/avis?${queryString.stringify(options)}`);
 };
