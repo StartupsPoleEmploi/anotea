@@ -28,6 +28,10 @@
                 padding: 0px 0px 20px 20px;
             }
 
+            .reponse {
+                font-style: italic;
+            }
+
             @media only screen and (max-width: 596px) {
                 body {
                     width: 100%;
@@ -71,7 +75,26 @@
                 </tr>
                 <tr>
                     <td colspan="3" style="padding:0em 2em">
-                        <p>La réponse à un avis que vous avez déposé a été rejetée.</p>
+                        <p>Nous avons pris connaissance de la réponse que vous avez formulée dans votre Espace Anotéa</p>
+
+                        <p class="reponse"><%= reponse %></p>
+
+                        <p>
+                            Nous vous remercions de votre contribution à notre service. En répondant aux commentaires, vous apportez vous aussi un éclairage aux personnes qui consultent les avis en ligne
+                        </p>
+                        <p>
+                            Voici quelques conseils pour formuler votre réponse : 
+                        </p>
+                        <ul>
+                            <li><strong>Ayez à l’esprit qu’elle s’adresse aux personnes qui vont consulter les avis Anotéa en ligne</strong></li>
+                            <li>Faites part de la prise en compte des remarques formulées par l’émetteur de l’avis</li>
+                            <li>Objectivez en apportant des éléments factuels de réponse (nombre de retours à l’emploi, taux de réussite..., travaux menés ou planifiés...)</li>
+                            <li>Ne rédigez pas votre réponse comme une réponse à une réclamation</li>
+                            <li>Respectez l’anonymat des formateurs et des stagiaires</li>
+                            <li>Ne faîtes pas mention de coordonnées téléphoniques ou mail</li>
+                        </ul>
+
+                        <p><strong>Nous avons procédé au rejet de la réponse ci-dessus et nous vous invitons à la modifier dans votre Espace.                        </strong></p>
                     </td>
                 </tr>
                 </tr>

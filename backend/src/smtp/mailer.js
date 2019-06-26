@@ -144,14 +144,15 @@ module.exports = function(db, logger, configuration, regions) {
 
             sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
         },
-        sendReponseRejeteeNotification: async (mailOptions, organisme, successCallback, errorCallback) => {
+        sendReponseRejeteeNotification: async (mailOptions, organisme, reponse, successCallback, errorCallback) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
                 hostname: configuration.app.public_hostname,
                 trackingLink: getTrackingLink(organisme),
                 contact: getRegionEmail(region),
-                organisme: organisme
+                organisme: organisme,
+                reponse: reponse
             };
 
             mailOptions.list = list;
