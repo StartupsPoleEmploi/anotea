@@ -516,4 +516,42 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(response.body.avis.length, 1);
         assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
+
+    it('can return avis avec commentaires', async () => {
+
+        let app = await startServer();
+        let avisAvecReponse = newComment({
+            pseudo: 'pseudo',
+            training: {
+                organisation: {
+                    siret: '22222222222222',
+                },
+            },
+            reponse: {
+                text: 'La réponse',
+                date: new Date(),
+                status: 'none',
+            },
+        });
+        delete avisAvecReponse.comment;
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+            })),
+            insertIntoDatabase('comment', avisAvecReponse),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+            })),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?commentaires=false');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+    });
 }));

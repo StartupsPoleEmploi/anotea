@@ -43,13 +43,13 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
         let cursor = db.collection('comment')
         .find({
             codeRegion: codeRegion,
-            ...(status !== 'all' ? { comment: { $ne: null } } : {}),
+            ...(['none', 'published', 'rejected'].includes(status) ? { comment: { $ne: null } } : {}),
             ...(status === 'rejected' ? { rejected: true } : {}),
             ...(status === 'published' ? { published: true } : {}),
             ...(status === 'reported' ? { reported: true } : {}),
             ...(status === 'none' ? { moderated: { $ne: true } } : {}),
             ...(reponseStatus ? { reponse: { $exists: true } } : {}),
-            ...(reponseStatus && reponseStatus !== 'all' ? { 'reponse.status': reponseStatus } : {}),
+            ...(['none', 'published', 'rejected'].includes(reponseStatus) ? { 'reponse.status': reponseStatus } : {}),
             ...(filter ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
         })
         .sort({ [sortBy]: -1 })

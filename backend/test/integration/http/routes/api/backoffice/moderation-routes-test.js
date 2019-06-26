@@ -191,17 +191,20 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
 
     it('can search all avis with reponse', async () => {
         let app = await startServer();
+        let commentWithReponse = newComment({
+            reponse: {
+                text: 'Voici notre réponse',
+                status: 'published',
+            },
+        });
+        delete commentWithReponse.comment;
+
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment({
                 reported: true,
             })),
-            insertIntoDatabase('comment', newComment({
-                reponse: {
-                    text: 'Voici notre réponse',
-                    status: 'published',
-                },
-            })),
+            insertIntoDatabase('comment', commentWithReponse),
             insertIntoDatabase('comment', newComment({
                 reponse: {
                     text: 'Voici notre réponse',
