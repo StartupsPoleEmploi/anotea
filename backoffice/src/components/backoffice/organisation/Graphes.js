@@ -2,8 +2,11 @@ import React from 'react';
 import { Pie, defaults } from 'react-chartjs-2';
 import 'chartjs-plugin-labels';
 import Modal from 'react-modal';
+import PropTypes from 'prop-types';
 
 import Stars from '../common/deprecated/Stars';
+
+import './Graphes.scss';
 
 import {
     getOrganisationStates
@@ -87,6 +90,11 @@ export default class Graphes extends React.Component {
                 }
             ]
         },
+        traineeCount: 0
+    };
+    
+    static propTypes = {
+        organisationId: PropTypes.string.isRequired
     };
 
     constructor(props) {
@@ -103,6 +111,7 @@ export default class Graphes extends React.Component {
 
         getOrganisationStates(props.organisationId).then(states => {
             if (states.length > 0) {
+                console.log(states[0])
                 this.setState({
                     countAdvices: states[0].countAdvices,
                     accueil: {
@@ -195,6 +204,7 @@ export default class Graphes extends React.Component {
                             }
                         ]
                     },
+                    traineeCount: states[0].traineeCount,
                 });
             } else {
                 this.setState({
@@ -208,10 +218,14 @@ export default class Graphes extends React.Component {
         this.setState({ modalIsOpen: false });
     };
 
+    getTauxRepondants = () => {
+        return `${(this.state.countAdvices / this.state.traineeCount * 100).toFixed(2).replace('.', ',')} %`;
+    }
+
     render() {
         const { countAdvices } = this.state;
         return (
-            <div className="row">
+            <div className="graphes row">
                 {countAdvices > 0 ?
                     (<div className="col-md-12">
                         <h2 className="graphe h2">Notes toutes formations confondues</h2>
@@ -344,6 +358,10 @@ export default class Graphes extends React.Component {
                                     <Stars value={1} style={{ display: 'inline' }} />
                                     <p>Pas du tout satisfait</p>
                                 </div>
+                                <div className="repondants">
+                                    <h3>{this.getTauxRepondants()}</h3>
+                                    <p>des stagiaires interrogés ont rempli le questionnaire</p>
+                                </div>
                             </div>
                         </div>
                     </div>) :
@@ -364,20 +382,6 @@ export default class Graphes extends React.Component {
                         </Modal>
                     )
                 }
-                {/*A Laisser en commentaire pour le moment*/}
-                {/*<div className="col-md-2">*/}
-                {/*<h2 className="publishedAdvicesTitle h2">Avis en ligne</h2>*/}
-                {/*<div className="publishedAdvices center-block">*/}
-                {/*<h2 className="countPublishedAdvices h2">{this.state.countPublishedAdvices}</h2>*/}
-                {/*<div className="date">*/}
-                {/*<h2 className="date h2">{new Intl.DateTimeFormat('en-GB', {*/}
-                {/*year: 'numeric',*/}
-                {/*month: 'long',*/}
-                {/*day: '2-digit'*/}
-                {/*}).format(this.state.now)}</h2>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*</div>*/}
             </div>
         );
     }
