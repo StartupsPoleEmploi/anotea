@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import logo from './Header.svg';
 import './Header.scss';
 import { NavLink, Route } from 'react-router-dom';
-import _ from 'lodash';
+import logo from './Header.svg';
 import { stats } from './../moderateur/moderation/moderationService';
 
 const Link = ({ label, url, className }) => {
@@ -30,19 +29,17 @@ Link.propTypes = {
 
 export default class Header extends React.Component {
 
-    state = {
-
-    }
+    state = {};
 
     static propTypes = {
         onLogout: PropTypes.func.isRequired,
     };
 
     componentDidMount() {
-        this.search();
+        this.fetchStats();
     }
 
-    search = (options = {}) => {
+    fetchStats = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
                 let computedStats = await stats();
@@ -63,43 +60,50 @@ export default class Header extends React.Component {
                 return (
                     <div className={`Header ${isModeration ? 'moderation' : 'misc'}`}>
                         <div className="container">
-                            <div className="row align-items-center">
-                                <div className="col-2">
-                                    <NavLink to="/admin">
-                                        <img src={logo} className="logo" alt="logo" />
-                                    </NavLink>
-                                </div>
-                                <div className="col-7">
-                                    <ul className="nav">
-                                        <li className="nav-item">
-                                            <Link
-                                                className="nav-link"
-                                                label="Avis stagiaires"
-                                                url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
-                                            { !this.state.loading && <span className="badge badge-light pastille">{this.state.avis}</span> }
-                                        </li>
-                                        <li className="nav-item">
-                                            <Link
-                                                className="nav-link"
-                                                label=" Réponses des organismes"
-                                                url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
-                                            { !this.state.loading && <span className="badge badge-light pastille">{this.state.reponses}</span> }
-                                        </li>
-                                        <li className="nav-item">
-                                            <Link
-                                                className="nav-link"
-                                                label="Liste des organismes"
-                                                url="/admin/moderateur/gestion/organismes?page=0&status=active" />
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className="col-3 text-right">
-                                    <NavLink to="/mon-compte" className="account-link" activeClassName="active">
-                                        <span className="fas fa-cog" />
-                                    </NavLink>
-                                    <button onClick={this.props.onLogout} className="logout btn btn-outline-light">
-                                        <span>SE DECONNECTER</span>
-                                    </button>
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                                        <NavLink to="/admin">
+                                            <img src={logo} className="logo" alt="logo" />
+                                        </NavLink>
+                                        <ul className="nav">
+                                            <li className="nav-item">
+                                                <Link
+                                                    className="nav-link"
+                                                    label="Avis stagiaires"
+                                                    url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
+                                                {!this.state.loading &&
+                                                <span className="badge badge-light pastille">{this.state.avis}</span>
+                                                }
+                                            </li>
+                                            <li className="nav-item">
+                                                <Link
+                                                    className="nav-link"
+                                                    label="Réponses des organismes"
+                                                    url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
+                                                {!this.state.loading &&
+                                                <span className="badge badge-light pastille">{this.state.reponses}</span>
+                                                }
+                                            </li>
+                                            <li className="nav-item">
+                                                <Link
+                                                    className="nav-link"
+                                                    label="Liste des organismes"
+                                                    url="/admin/moderateur/gestion/organismes?page=0&status=active" />
+                                            </li>
+                                            <li className="nav-item">
+                                                <Link
+                                                    className="nav-link"
+                                                    url="/mon-compte"
+                                                    label="Mon compte" />
+                                            </li>
+                                        </ul>
+                                        <button
+                                            onClick={this.props.onLogout}
+                                            className="logout btn btn-outline-light">
+                                            <span>SE DECONNECTER</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
