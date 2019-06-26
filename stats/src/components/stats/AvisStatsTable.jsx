@@ -77,7 +77,7 @@ export default class AvisStatsTable extends Component {
                                     {a.nbMailEnvoyes}
                                 </td>
                                 <td>
-                                    {this.computeRate(a.nbMailsOuverts, a.nbMailEnvoyes)}
+                                    {this.computeRate(a.nbMailsOuverts, a.nbStagiairesContactes)}
                                 </td>
                                 <td>
                                     {this.computeRate(a.nbLiensCliques, a.nbMailsOuverts)}
