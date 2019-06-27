@@ -560,7 +560,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') +
                 qualification + ';' +
-                (comment.reponse !== undefined ? s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').replaceAll('\n', '').s + '"' : '') + ';' +
+                (comment.reponse !== undefined ? s(comment.reponse.text).replaceAll(';', '').replaceAll('"', '').replaceAll('\n', '').s + '"' : '') + ';' +
                 (comment.reponse !== undefined ? getReponseStatus(comment.reponse.status) : '') + ';' +
                 comment.campaign + ';' +
                 comment.date + ';' +
