@@ -45,7 +45,7 @@ export default class ApiStatsTable extends Component {
                             </div>
                         </th>
                         <th scope="col" className="section">Total</th>
-                        <th scope="col">Restituables</th>
+                        <th scope="col">restitués</th>
                         <th scope="col" className="section">Total</th>
                         <th scope="col">Réconciliées avec avis</th>
                         <th scope="col">Réconciliées avec avis (certifiantes)</th>

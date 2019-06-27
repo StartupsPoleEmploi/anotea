@@ -48,13 +48,13 @@ export default class OrganismesStatsTable extends Component {
                         </th>
                         <th scope="col" className="section">Total</th>
                         <th scope="col" className="section">Total</th>
-                        <th scope="col">Ouverts</th>
-                        <th scope="col">Cliqués</th>
-                        <th scope="col" className="section">Actifs</th>
-                        <th scope="col" className="section">Non lus</th>
-                        <th scope="col">Réponses</th>
-                        <th scope="col">Réponses avec commentaires</th>
-                        <th scope="col">Signalés</th>
+                        <th scope="col">Ouverts <i className="fas fa-question-circle"><span className="tooltip">Hover wording goes here</span></i></th>
+                        <th scope="col">Cliqués <i className="fas fa-question-circle"><span className="tooltip">Hover wording goes here</span></i></th>
+                        <th scope="col" className="section">Actifs <i className="fas fa-question-circle"><span className="tooltip">Hover wording goes here</span></i></th>
+                        <th scope="col" className="section">Non lus <i className="fas fa-question-circle"><span className="tooltip">Hover wording goes here</span></i></th>
+                        <th scope="col" >Réponses <i className="fas fa-question-circle"><span className="tooltip">Hover wording goes here</span></i></th>
+                        <th scope="col">Réponses avec commentaires <i className="fas fa-question-circle"><span className="tooltip">Hover wording goes here</span></i></th>
+                        <th scope="col">Signalés <i className="fas fa-question-circle"><span className="tooltip">Hover wording goes here</span></i></th>
                     </tr>
                 </thead>
                 <tbody>
