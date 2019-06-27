@@ -48,7 +48,7 @@ export default class OrganismesStatsTable extends Component {
                         </th>
                         <th scope="col" className="section">Total</th>
                         <th scope="col" className="section">Total</th>
-                        <th scope="col">Ouverts <i className="fas fa-question-circle"><span className="tooltip">Taux d&apos;ouverture de mail</span></i></th>
+                        <th scope="col">Ouverts <i className="fas fa-question-circle"><span className="tooltip">Taux d&apos;ouverture de mails</span></i></th>
                         <th scope="col">Cliqués <i className="fas fa-question-circle"><span className="tooltip">Taux de clic dans le lien</span></i></th>
                         <th scope="col" className="section">Actifs <i className="fas fa-question-circle"><span className="tooltip">Taux des organismes actifs</span></i></th>
                         <th scope="col" className="section">Non lus <i className="fas fa-question-circle"><span className="tooltip">Taux des avis non lus par les OF</span></i></th>
