@@ -7,4 +7,10 @@
   font-weight: $font-weight-400;
   color: $color-black;
   min-height: 1000px;
+
+  .container .info {
+    color: #24303A;
+    font-size: 12px;
+    line-height: 16px;
+  }
 }
