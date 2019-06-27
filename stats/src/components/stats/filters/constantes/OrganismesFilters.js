@@ -10,7 +10,7 @@ const ORGANISMES_FILTERS = [
             { _id: 6, intitule: 'Mai' },
             { _id: 7, intitule: 'Juin' },
             { _id: 8, intitule: 'Juillet' },
-            { _id: 9, intitule: 'Aout' },
+            { _id: 9, intitule: 'Août' },
             { _id: 10, intitule: 'Septembre' },
             { _id: 11, intitule: 'Octobre' },
             { _id: 12, intitule: 'Novembre' },
