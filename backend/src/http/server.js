@@ -49,11 +49,11 @@ module.exports = components => {
     app.use('/api', require('./routes/api/v1/actions-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/sessions-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
-    app.use('/api', require('./routes/api/export-routes')(httpComponents));
+    app.use('/api', require('./routes/api/exports-routes')(httpComponents));
     app.use('/api', require('./routes/api/regions-routes')(httpComponents));
     app.use('/api', require('./routes/api/stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/kairos-routes')(httpComponents));
-    app.use('/api', require('./routes/api/contact-stagiaires-routes')(httpComponents));
+    app.use('/api', require('./routes/api/contactStagiaires-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/login-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/forgottenPassword-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/moderateur/moderation-routes')(httpComponents));

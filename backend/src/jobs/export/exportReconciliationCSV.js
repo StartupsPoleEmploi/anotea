@@ -1,7 +1,9 @@
 const cli = require('commander');
+const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
-const { execute, streamToCSV } = require('../job-utils');
+const { streamToCSV } = require('../../common/utils/stream-utils');
+const { execute } = require('../job-utils');
 
 cli
 .option('--reconciliable')
@@ -14,6 +16,7 @@ execute(async ({ logger, db, regions }) => {
 
         let fileName = `reconciliation-${nom}-${codeRegion}.csv`;
         let csvFile = cli.output ? path.join(cli.output, fileName) : path.join(__dirname, '../../../../.data', fileName);
+        let output = fs.createWriteStream(csvFile);
 
         logger.info(`Generating CSV file ${csvFile}...`);
 
@@ -22,7 +25,7 @@ execute(async ({ logger, db, regions }) => {
             'meta.reconciliations.0.action': cli.reconciliable
         });
 
-        return streamToCSV(stream, csvFile, {
+        return streamToCSV(stream, output, {
             'id': avis => avis._id,
             'note accueil': avis => avis.rates ? avis.rates.accueil : '',
             'note contenu formation': avis => avis.rates ? avis.rates.contenu_formation : '',

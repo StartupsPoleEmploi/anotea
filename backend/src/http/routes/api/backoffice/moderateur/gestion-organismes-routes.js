@@ -93,12 +93,12 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         .on('error', handleError)
         .pipe(transformObject(async organisme => {
 
-            let isKairos = (organisme) => {
+            let isKairos = organisme => {
                 let kairos = organisme.sources.find(s => s === 'kairos');
                 return kairos === 'kairos' ? 'oui' : 'non';
-            }
+            };
 
-            let kairos = isKairos(organisme)
+            let kairos = isKairos(organisme);
             let email = getOrganismeEmail(organisme);
 
             return organisme.meta.siretAsString + ';' +

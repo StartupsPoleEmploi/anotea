@@ -29,6 +29,6 @@ export const getAvis = (type, identifiant, options) => {
 };
 
 export const saveContactStagiaire = data => {
-    return _post(`/api/contact-stagiaires`, data);
+    return _post(`/api/contactStagiaires`, data);
 };
 
