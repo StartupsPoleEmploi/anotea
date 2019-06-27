@@ -13,7 +13,7 @@ export default class OrganismesStatsTable extends Component {
         super(props);
 
         this.state = {
-            showRates: true,
+            showRates: false,
         };
     }
 
