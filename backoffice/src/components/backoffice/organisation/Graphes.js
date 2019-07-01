@@ -98,8 +98,7 @@ export default class Graphes extends React.Component {
     };
 
     getPercentage = (value, total) => {
-        const percent = Math.round(value / total * 100);
-        return percent >= 10 ? percent : 0;
+        return Math.round(value / total * 100);
     }
 
     constructor(props) {
@@ -111,7 +110,7 @@ export default class Graphes extends React.Component {
                 fontStyle: 'bold',
                 position: 'outside',
                 textMargin: 4,
-                render: args => `${args.value} %`
+                render: args => args.value >= 10 ? `${args.value} %` : ''
             }
         };
 
