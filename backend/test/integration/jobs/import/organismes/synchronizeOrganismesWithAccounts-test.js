@@ -6,7 +6,7 @@ const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
 const synchronizeOrganismesWithAccounts = require('../../../../../src/jobs/import/organismes/tasks/synchronizeOrganismesWithAccounts');
 const generateOrganismesFromIntercarif = require('../../../../../src/jobs/import/organismes/tasks/generateOrganismesFromIntercarif');
-const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/tasks/generateOrganismesFromKairos');
+const generateOrganismesFromKairos = require('../../../../../src/jobs/import/kairos/tasks/importKairosCSV');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, getComponents }) => {
 

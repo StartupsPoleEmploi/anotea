@@ -3,7 +3,7 @@ const path = require('path');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/tasks/generateOrganismesFromKairos');
+const importKairosCSV = require('../../../../../src/jobs/import/kairos/tasks/importKairosCSV');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
@@ -12,7 +12,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
 
-        let stats = await generateOrganismesFromKairos(db, logger, csvFile);
+        let stats = await importKairosCSV(db, logger, csvFile);
 
         assert.deepStrictEqual(stats, {
             inserted: 3,
@@ -45,7 +45,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'invalid.csv');
 
         try {
-            await generateOrganismesFromKairos(db, logger, csvFile);
+            await importKairosCSV(db, logger, csvFile);
             assert.fail('Should have fail');
         } catch (e) {
             assert.deepStrictEqual(e.code, 'ENOENT');
