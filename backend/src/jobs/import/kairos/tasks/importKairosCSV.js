@@ -30,7 +30,7 @@ module.exports = async (db, logger, file) => {
         invalid: 0,
     };
 
-    await db.collection('kairos_organismes').removeMany({});
+    await db.collection('kairos').removeMany({});
 
     return new Promise((resolve, reject) => {
         fs.createReadStream(file)
@@ -57,7 +57,7 @@ module.exports = async (db, logger, file) => {
             try {
                 let document = await buildDocument(data);
 
-                await db.collection('kairos_organismes').insertOne(document);
+                await db.collection('kairos').insertOne(document);
                 return { organisme: document };
             } catch (e) {
                 return { error: e, organisme: data };

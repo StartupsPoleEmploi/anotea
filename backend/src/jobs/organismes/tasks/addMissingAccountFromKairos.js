@@ -47,7 +47,7 @@ module.exports = async (db, logger) => {
         }
     };
 
-    let cursor = db.collection('kairos_organismes').find();
+    let cursor = db.collection('kairos').find();
     while (await cursor.hasNext()) {
         const data = await cursor.next();
         await addMissingAccountFromKairos(data);

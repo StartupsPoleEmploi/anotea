@@ -9,7 +9,7 @@ const importKairosCSV = require('../../../../src/jobs/import/kairos/tasks/import
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, getComponents }) => {
 
-    let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
+    let csvFile = path.join(__dirname, '../../../helpers/data', 'kairos-organismes.csv');
 
     it('should create new organisme formateur and merge Kairos data', async () => {
 

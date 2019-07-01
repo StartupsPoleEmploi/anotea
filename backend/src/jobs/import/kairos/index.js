@@ -5,7 +5,7 @@ const cli = require('commander');
 const { execute } = require('../../job-utils');
 const importKairosCSV = require('./tasks/importKairosCSV');
 
-cli.description('Import accounts from Intercarif and Kairos')
+cli.description('Import accounts from Kairos')
 .option('--file [file]', 'The CSV file with organismes from Kairos')
 .parse(process.argv);
 

@@ -15,7 +15,7 @@ module.exports = async (db, logger, regions) => {
     const buildAccount = async data => {
 
         let siret = `${parseInt(data.siret, 10)}`;
-        let kairos = await db.collection('kairos_organismes').findOne({ siret });
+        let kairos = await db.collection('kairos').findOne({ siret });
         let region = findRegion(regions, data);
 
         let document = {

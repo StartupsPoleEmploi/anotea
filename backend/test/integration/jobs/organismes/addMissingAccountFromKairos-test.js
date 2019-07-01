@@ -8,7 +8,7 @@ const addMissingAccountFromKairos = require('../../../../src/jobs/organismes/tas
 
 describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
-    let csvFile = path.join(__dirname, '../../../../helpers/data', 'kairos-organismes.csv');
+    let csvFile = path.join(__dirname, '../../../helpers/data', 'kairos-organismes.csv');
 
     it('should create new organisme from kairos', async () => {
 

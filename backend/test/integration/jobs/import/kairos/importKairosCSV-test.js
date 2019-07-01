@@ -19,10 +19,10 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             invalid: 0,
         });
 
-        let count = await db.collection('kairos_organismes').countDocuments();
+        let count = await db.collection('kairos').countDocuments();
         assert.deepStrictEqual(count, 3);
 
-        let organisme = await db.collection('kairos_organismes').findOne();
+        let organisme = await db.collection('kairos').findOne();
         assert.deepStrictEqual(_.omit(organisme, ['_id']), {
             siret: '11111111111111',
             codeRegion: '7',
