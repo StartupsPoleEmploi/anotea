@@ -1,5 +1,4 @@
-const Boom = require('boom');
-const { transformObject, jsonStream } = require('../../common/utils/stream-utils');
+const { jsonStream, csvStream } = require('../../common/utils/stream-utils');
 const { encodeStream } = require('iconv-lite');
 
 module.exports = {
@@ -19,21 +18,19 @@ module.exports = {
         res.setHeader('Content-Type', 'application/json');
         stream
         .pipe(jsonStream(wrapper))
-        .pipe(res);
+        .pipe(res)
+        .on('error', () => res.status(500))
+        .on('end', () => res.end());
     },
-    sendCSVStream: (stream, res, columnNames, transform) => {
-        res.setHeader('Content-disposition', 'attachment; filename=contact-stagiaires.csv');
+    sendCSVStream: (stream, res, columns, options = {}) => {
+        res.setHeader('Content-disposition', `attachment; filename=${options.filename || 'export.csv'}`);
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
-        res.write(columnNames);
 
         stream
-        .on('error', e => {
-            res.status(500);
-            stream.push(Boom.boomify(e).output.payload);
-        })
-        .pipe(transformObject(doc => transform(doc)))
-        .pipe(encodeStream('UTF-16BE'))
+        .pipe(csvStream(columns))
+        .pipe(encodeStream('UTF-8'))
         .pipe(res)
+        .on('error', () => res.status(500))
         .on('end', () => res.end());
     },
 };

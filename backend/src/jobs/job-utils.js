@@ -4,7 +4,7 @@ const fs = require('fs');
 const { encodeStream } = require('iconv-lite');
 const createComponents = require('../components');
 const createLogger = require('../common/components/logger');
-const { transformObject } = require('../common/utils/stream-utils');
+const { transformObject, csvStream } = require('../common/utils/stream-utils');
 const { IncomingWebhook } = require('@slack/webhook');
 
 module.exports = {
@@ -62,21 +62,11 @@ module.exports = {
         }
     },
     streamToCSV: (stream, file, columns) => {
-
         return new Promise((resolve, reject) => {
-            let total = 0;
-            let output = fs.createWriteStream(file);
-
-            output.write(`${Object.keys(columns).join(';')}\n`);
-
             stream
-            .pipe(transformObject(data => {
-                let line = Object.keys(columns).map(key => columns[key](data)).join(';');
-                return `${line}\n`;
-            }))
-            .on('data', () => total++)
+            .pipe(csvStream(columns))
             .pipe(encodeStream('UTF-8'))
-            .pipe(output)
+            .pipe(fs.createWriteStream(file))
             .on('error', e => reject(e))
             .on('finish', async () => resolve());
         });

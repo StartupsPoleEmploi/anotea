@@ -26,7 +26,11 @@ export default class ContactStagiaire extends Component {
         };
     }
 
-    async submit() {
+    async submit(e) {
+        if (e) {
+            e.preventDefault();
+        }
+
         try {
             await saveContactStagiaire({ ...this.state.form });
             this.setState({ showModal: false, form: this.getInitialForm() });
@@ -44,7 +48,7 @@ export default class ContactStagiaire extends Component {
                 <Modal
                     title="Contacter un stagiaire"
                     body={
-                        <form>
+                        <form onSubmit={e => this.submit(e)}>
                             <div className="form-group">
                                 <label>Posez ici une question à un ancien stagiaire de cette formation.</label>
                                 <textarea
