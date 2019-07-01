@@ -1,5 +1,5 @@
-module.exports = async db => {
-    await db.collection('intercarif').aggregate([
+module.exports = db => {
+    return db.collection('intercarif').aggregate([
         {
             $match: {
                 siret: { $ne: '0' },
@@ -96,13 +96,8 @@ module.exports = async db => {
             $addFields: {
                 _id: '$siret'
             }
-        },
-        {
-            $out: 'intercarif_organismes_responsables'
         }
-    ], { allowDiskUse: true }).toArray();
-
-    return db.collection('intercarif_organismes_responsables').countDocuments();
+    ]);
 };
 
 

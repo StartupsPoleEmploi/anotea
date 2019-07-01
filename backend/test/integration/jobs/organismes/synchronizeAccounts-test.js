@@ -1,12 +1,11 @@
 const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../../../helpers/test-database');
-const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
-const logger = require('../../../../helpers/test-logger');
-const synchronizeOrganismesWithAccounts = require('../../../../../src/jobs/import/organismes/tasks/synchronizeOrganismesWithAccounts');
-const generateOrganismesFromIntercarif = require('../../../../../src/jobs/import/organismes/tasks/generateOrganismesFromIntercarif');
-const generateOrganismesFromKairos = require('../../../../../src/jobs/import/kairos/tasks/importKairosCSV');
+const { withMongoDB } = require('../../../helpers/test-database');
+const { newOrganismeAccount } = require('../../../helpers/data/dataset');
+const logger = require('../../../helpers/test-logger');
+const synchronizeAccounts = require('../../../../src/jobs/organismes/tasks/synchronizeAccounts');
+const importKairosCSV = require('../../../../src/jobs/import/kairos/tasks/importKairosCSV');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, getComponents }) => {
 
@@ -16,11 +15,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await importIntercarif();
+        await Promise.all([
+            importIntercarif(),
+            importKairosCSV(db, logger, csvFile)
+        ]);
 
-        await generateOrganismesFromIntercarif(db, logger);
-        await generateOrganismesFromKairos(db, logger, csvFile);
-        await synchronizeOrganismesWithAccounts(db, logger, regions);
+        await synchronizeAccounts(db, logger, regions);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.creationDate);
@@ -55,7 +55,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         });
     });
 
-    it('should update organismes', async () => {
+    it('should update organisme when it exists', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
@@ -74,11 +74,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     siretAsString: '22222222222222',
                 },
             })),
+            importKairosCSV(db, logger, csvFile),
         ]);
 
-        await generateOrganismesFromIntercarif(db, logger);
-        await generateOrganismesFromKairos(db, logger, csvFile);
-        await synchronizeOrganismesWithAccounts(db, logger, regions);
+        await synchronizeAccounts(db, logger, regions);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.updateDate);
@@ -133,64 +132,31 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await importIntercarif();
+        await Promise.all([
+            importIntercarif(),
+            importKairosCSV(db, logger, csvFile)
+        ]);
 
-        await generateOrganismesFromIntercarif(db, logger);
-        await generateOrganismesFromKairos(db, logger, csvFile);
-        await synchronizeOrganismesWithAccounts(db, logger, regions);
+        await synchronizeAccounts(db, logger, regions);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 11111111111111 });
         assert.ok(doc);
     });
 
-    it('should get code_postal from organismes_formateurs when organisme responsable code_postal is invalid', async () => {
+    it('should findRegion from organismes_formateurs when organisme responsable code_postal is invalid', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await importIntercarif();
-
-        await generateOrganismesFromIntercarif(db, logger);
-        await generateOrganismesFromKairos(db, logger, csvFile);
+        await Promise.all([
+            importIntercarif(),
+            importKairosCSV(db, logger, csvFile)
+        ]);
         await db.collection('intercarif_organismes_responsables').updateMany({}, { $set: { 'adresse.code_postal': '00000' } });
 
-        await synchronizeOrganismesWithAccounts(db, logger, regions);
+        await synchronizeAccounts(db, logger, regions);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 11111111111111 });
         assert.deepStrictEqual(doc.codeRegion, '7');
-    });
-
-    it('should create new organisme from kairos', async () => {
-
-        let db = await getTestDatabase();
-        let { regions } = await getComponents();
-        await importIntercarif();
-
-        await generateOrganismesFromIntercarif(db, logger);
-        await generateOrganismesFromKairos(db, logger, csvFile);
-        await synchronizeOrganismesWithAccounts(db, logger, regions);
-
-        let doc = await db.collection('accounts').findOne({ SIRET: 33333333333333 });
-        assert.ok(doc.creationDate);
-        assert.ok(doc.token);
-        assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
-            _id: 33333333333333,
-            SIRET: 33333333333333,
-            courriel: 'contact+kairos@formation.fr',
-            courriels: ['contact+kairos@formation.fr'],
-            sources: ['kairos'],
-            profile: 'organisme',
-            codeRegion: '10',
-            kairosCourriel: 'contact+kairos@formation.fr',
-            numero: null,
-            raisonSociale: 'Pole Emploi Formation Nord',
-            lieux_de_formation: [],
-            meta: {
-                siretAsString: '33333333333333',
-                kairos: {
-                    eligible: false,
-                }
-            },
-        });
     });
 
 }));
