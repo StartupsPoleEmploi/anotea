@@ -34,33 +34,18 @@ module.exports = async (db, logger) => {
 
                 if (formateurs.length === 1 && formateurs[0].siret !== responsable.siret) {
                     let token = trainee.token;
-                    await Promise.all([
-                        db.collection('trainee').updateOne(
-                            { token: token },
-                            {
-                                $set: {
-                                    'training.organisation.siret': formateurs[0].siret,
-                                    'training.organisation.name': formateurs[0].raison_sociale,
-                                    'meta.patch.organisation.siret': siret,
-                                    'meta.patch.organisation.name': trainee.training.organisation.name,
-                                },
+                    await db.collection('trainee').updateOne(
+                        { token: token },
+                        {
+                            $set: {
+                                'training.organisation.siret': formateurs[0].siret,
+                                'training.organisation.name': formateurs[0].raison_sociale,
+                                'meta.patch.organisation.siret': siret,
+                                'meta.patch.organisation.name': trainee.training.organisation.name,
                             },
-                            { upsert: false }
-                        ),
-                        //TODO remove me
-                        db.collection('comment').updateOne(
-                            { token: token },
-                            {
-                                $set: {
-                                    'training.organisation.siret': formateurs[0].siret,
-                                    'training.organisation.name': formateurs[0].raison_sociale,
-                                    'meta.patch.organisation.siret': siret,
-                                    'meta.patch.organisation.name': trainee.training.organisation.name,
-                                },
-                            },
-                            { upsert: false }
-                        )
-                    ]);
+                        },
+                        { upsert: false }
+                    );
 
                     stats.updated++;
                 }
