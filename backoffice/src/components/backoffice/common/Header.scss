@@ -19,7 +19,7 @@
       color: $color-white;
       display: inline-block;
       opacity: 0.6;
-
+      white-space:nowrap;
       padding-right: 0.5em;
 
       &.active {
@@ -49,7 +49,6 @@
 
   .account-link {
     color: white;
-    padding: 0 15px;
   }
 
   .logout {
