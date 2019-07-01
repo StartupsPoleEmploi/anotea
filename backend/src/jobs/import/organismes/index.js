@@ -3,10 +3,10 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const generateOrganismesFromIntercarif = require('./generateOrganismesFromIntercarif');
-const generateOrganismesFromKairos = require('./generateOrganismesFromKairos');
-const synchronizeOrganismesWithAccounts = require('./synchronizeOrganismesWithAccounts');
-const computeOrganismesScore = require('./computeOrganismesScore');
+const generateOrganismesFromIntercarif = require('./tasks/generateOrganismesFromIntercarif');
+const generateOrganismesFromKairos = require('./tasks/generateOrganismesFromKairos');
+const synchronizeOrganismesWithAccounts = require('./tasks/synchronizeOrganismesWithAccounts');
+const computeOrganismesScore = require('./tasks/computeScore');
 
 cli.description('Import accounts from Intercarif and Kairos')
 .option('--kairos [kairos]', 'The CSV file with organismes from Kairos')

@@ -1,4 +1,4 @@
-const computeScore = require('../../../common/utils/computeScore');
+const computeScore = require('../../../../common/utils/computeScore');
 
 module.exports = async (db, logger) => {
 

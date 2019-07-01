@@ -3,7 +3,7 @@ const path = require('path');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/generateOrganismesFromKairos');
+const generateOrganismesFromKairos = require('../../../../../src/jobs/import/organismes/tasks/generateOrganismesFromKairos');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
 

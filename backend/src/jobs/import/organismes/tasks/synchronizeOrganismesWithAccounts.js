@@ -44,7 +44,7 @@ module.exports = async (db, logger, regions) => {
         return region;
     };
 
-    const buildAccountFromIntercarif = async data => {
+    const buildAccount = async data => {
 
         let siret = `${parseInt(data.siret, 10)}`;
         let kairos = await db.collection('kairos_organismes').findOne({ siret });
@@ -81,28 +81,28 @@ module.exports = async (db, logger, regions) => {
         return document;
     };
 
-    const synchronizeAccounts = async (sourceCollectionName, stats) => {
+    const synchronizeAccounts = async sourceCollectionName => {
 
         let cursor = db.collection(sourceCollectionName).find();
 
         while (await cursor.hasNext()) {
             const data = await cursor.next();
             try {
-                let organisme = await buildAccountFromIntercarif(data);
+                let account = await buildAccount(data);
 
                 let results = await db.collection('accounts')
                 .updateOne(
-                    { _id: organisme._id },
+                    { _id: account._id },
                     {
-                        $setOnInsert: _.omit(organisme, ['courriels', 'sources', 'numero', 'lieux_de_formation', 'profile']),
+                        $setOnInsert: _.omit(account, ['courriels', 'sources', 'numero', 'lieux_de_formation', 'profile']),
                         $addToSet: {
-                            courriels: organisme.courriel,
-                            sources: organisme.sources[0],
+                            courriels: account.courriel,
+                            sources: account.sources[0],
                         },
                         $set: {
                             profile: 'organisme',
-                            numero: organisme.numero,
-                            lieux_de_formation: organisme.lieux_de_formation,
+                            numero: account.numero,
+                            lieux_de_formation: account.lieux_de_formation,
                             updateDate: new Date(),
                         },
                     },
@@ -123,7 +123,7 @@ module.exports = async (db, logger, regions) => {
         }
     };
 
-    const addMissingAccountsFromKairos = async stats => {
+    const addMissingAccountsFromKairos = async () => {
 
         let cursor = db.collection('kairos_organismes').find();
 
@@ -166,9 +166,9 @@ module.exports = async (db, logger, regions) => {
         }
     };
 
-    await synchronizeAccounts('intercarif_organismes_responsables', stats);
-    await synchronizeAccounts('intercarif_organismes_formateurs', stats);
-    await addMissingAccountsFromKairos(stats);
+    await synchronizeAccounts('intercarif_organismes_responsables');
+    await synchronizeAccounts('intercarif_organismes_formateurs');
+    await addMissingAccountsFromKairos();
 
     return stats.invalid === 0 ? Promise.resolve(stats) : Promise.reject(stats);
 };
