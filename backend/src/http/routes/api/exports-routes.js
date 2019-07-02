@@ -81,7 +81,7 @@ module.exports = ({ db, middlewares }) => {
                                 }
                             },
                         ],
-                        as: 'stats-routes.js'
+                        as: 'stats'
                     }
                 },
                 {
