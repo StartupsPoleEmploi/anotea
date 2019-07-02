@@ -1,26 +1,19 @@
 const _ = require('lodash');
 const assert = require('assert');
-const path = require('path');
 const { withMongoDB } = require('../../../helpers/test-database');
 const { newOrganismeAccount } = require('../../../helpers/data/dataset');
 const logger = require('../../../helpers/test-logger');
-const synchronizeAccounts = require('../../../../src/jobs/organismes/tasks/synchronizeAccounts');
-const importKairosCSV = require('../../../../src/jobs/import/kairos/tasks/importKairosCSV');
+const synchronizeAccountsWithIntercarif = require('../../../../src/jobs/organismes/tasks/synchronizeAccountsWithIntercarif');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, getComponents }) => {
 
-    let csvFile = path.join(__dirname, '../../../helpers/data', 'kairos-organismes.csv');
-
-    it('should create new organisme formateur and merge Kairos data', async () => {
+    it('should create new organisme formateur', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await Promise.all([
-            importIntercarif(),
-            importKairosCSV(db, logger, csvFile)
-        ]);
+        await importIntercarif();
 
-        await synchronizeAccounts(db, logger, regions);
+        await synchronizeAccountsWithIntercarif(db, logger, regions);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.creationDate);
@@ -32,8 +25,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             courriels: ['anotea.pe+paris@gmail.com'],
             sources: ['intercarif'],
             profile: 'organisme',
-            codeRegion: '15',
-            kairosCourriel: 'contact+kairos@formation.fr',
+            codeRegion: '11',
             numero: 'OF_XXX',
             raisonSociale: 'Anotea Formation Paris',
             lieux_de_formation: [
@@ -48,9 +40,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             ],
             meta: {
                 siretAsString: '22222222222222',
-                kairos: {
-                    eligible: false,
-                }
             },
         });
     });
@@ -74,13 +63,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     siretAsString: '22222222222222',
                 },
             })),
-            importKairosCSV(db, logger, csvFile),
         ]);
 
-        await synchronizeAccounts(db, logger, regions);
+        await synchronizeAccountsWithIntercarif(db, logger, regions);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
-        assert.ok(doc.updateDate);
         assert.deepStrictEqual(_.omit(doc, ['updateDate']), {
             _id: 22222222222222,
             SIRET: 22222222222222,
@@ -132,12 +119,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
-        await Promise.all([
-            importIntercarif(),
-            importKairosCSV(db, logger, csvFile)
-        ]);
+        await importIntercarif();
 
-        await synchronizeAccounts(db, logger, regions);
+        await synchronizeAccountsWithIntercarif(db, logger, regions);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 11111111111111 });
         assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
@@ -147,8 +131,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             courriels: ['anotea.pe+responsable@gmail.com'],
             sources: ['intercarif'],
             profile: 'organisme',
-            codeRegion: '7',
-            kairosCourriel: 'contact@formation.fr',
+            codeRegion: '11',
             numero: 'OR_XX_XXX',
             raisonSociale: 'Centre de formation Anotéa',
             lieux_de_formation: [],
@@ -171,9 +154,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             ],
             meta: {
                 siretAsString: '11111111111111',
-                kairos: {
-                    eligible: false,
-                }
             },
         });
     });
@@ -182,16 +162,20 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
+        await importIntercarif();
         await Promise.all([
-            importIntercarif(),
-            importKairosCSV(db, logger, csvFile)
+            db.collection('intercarif').updateMany({}, {
+                $set: { 'organisme_formation_responsable.coordonnees_organisme.coordonnees.adresse.codepostal': '00000' }
+            }),
+            db.collection('intercarif').updateMany({}, {
+                $set: { 'actions.$[].lieu_de_formation.coordonnees.adresse.codepostal': '45000' }
+            }),
         ]);
-        await db.collection('intercarif_organismes_responsables').updateMany({}, { $set: { 'adresse.code_postal': '00000' } });
 
-        await synchronizeAccounts(db, logger, regions);
+        await synchronizeAccountsWithIntercarif(db, logger, regions);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 11111111111111 });
-        assert.deepStrictEqual(doc.codeRegion, '7');
+        assert.deepStrictEqual(doc.codeRegion, '5');
     });
 
 }));

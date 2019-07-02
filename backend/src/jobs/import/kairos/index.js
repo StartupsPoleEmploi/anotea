@@ -16,7 +16,7 @@ execute(async ({ logger, db, exit }) => {
         return exit('file are required');
     }
 
-    logger.info(`Generating organismes from kairos CSV file ${file}...`);
+    logger.info(`Import organismes from kairos CSV ${file}...`);
     let stats = await importKairosCSV(db, logger, file);
 
     return stats.invalid ? Promise.reject(stats) : Promise.resolve(stats);

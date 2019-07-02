@@ -3,8 +3,8 @@
 
 const cli = require('commander');
 const { execute } = require('../job-utils');
-const synchronizeAccounts = require('./tasks/synchronizeAccounts');
-const addMissingAccountFromKairos = require('./tasks/addMissingAccountFromKairos');
+const synchronizeAccountsWithIntercarif = require('./tasks/synchronizeAccountsWithIntercarif');
+const synchronizeAccountsWithKairos = require('./tasks/synchronizeAccountsWithKairos');
 const computeOrganismesScore = require('./tasks/computeScore');
 
 cli.parse(process.argv);
@@ -13,14 +13,14 @@ execute(async ({ logger, db, regions }) => {
 
     let stats = {};
 
-    logger.info('Synchronizing organismes...');
-    stats.synchronized = await synchronizeAccounts(db, logger, regions);
+    logger.info('Synchronizing organismes from Intercarif...');
+    stats.intercarif = await synchronizeAccountsWithIntercarif(db, logger, regions);
 
-    logger.info('Add missing accounts from Kairos...');
-    stats.kairos = await addMissingAccountFromKairos(db, logger);
+    logger.info('Synchronizing organismes from Kairos...');
+    stats.kairos = await synchronizeAccountsWithKairos(db, logger);
 
     logger.info('Computing score for all organismes...');
-    stats.computed = await computeOrganismesScore(db, logger);
+    stats.score = await computeOrganismesScore(db, logger);
 
     return Promise.resolve(stats);
 });
