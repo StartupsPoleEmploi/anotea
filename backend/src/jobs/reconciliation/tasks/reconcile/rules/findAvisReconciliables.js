@@ -1,27 +1,28 @@
 module.exports = (db, formation) => {
 
+    let sirens = formation.actions.map(action => {
+        let siren = action.organisme_formateur.siret_formateur.siret.substring(0, 9);
+        return new RegExp(`^${siren}`);
+    });
+
     return db.collection('comment').find({
         $and: [
             {
-                'training.organisation.siret': {
-                    $in: formation.actions.map(action => {
-                        let siren = action.organisme_formateur.siret_formateur.siret.substring(0, 9);
-                        return new RegExp(`^${siren}`);
-                    })
-                }
-            },
-            {
-                $or: [
+                'training.organisation.siret': { $in: sirens },
+                '$or': [
                     { 'training.certifInfo.id': { $in: formation._meta.certifinfos } },
                     { 'formacode': { $in: formation._meta.formacodes } },
                 ]
+
+            },
+            {
+                '$or': [
+                    { 'comment': { $exists: false } },
+                    { 'published': true },
+                    { 'rejected': true },
+                ]
             },
         ],
-        $or: [
-            { 'comment': { $exists: false } },
-            { 'published': true },
-            { 'rejected': true },
-        ]
     })
     .project({
         _id: 1,
