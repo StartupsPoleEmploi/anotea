@@ -21,6 +21,7 @@ class App extends Component {
                             path="/stats"
                             render={() => <StatsRoutes />}
                         />
+                        <div className="info">Données cumulées depuis la date de déploiement.</div>
                     </div>
                     {false && <GridDisplayer />}
                 </div>

@@ -21,13 +21,11 @@
   .titre {
     padding: 0.25rem 1rem;
     font-weight: $font-weight-700;
-    min-height: 3rem;
   }
 
   .texte {
     padding: 0.25rem 1rem 0.5rem 1rem;
     color: $color-black-60;
-    min-height: 9rem;
   }
 
   .reponse {
@@ -38,10 +36,6 @@
       padding-left: 0.5rem;
       padding-right: 1rem;
       border-left: 1px solid $color-black;
-    }
-
-    .texte {
-      min-height: 40px;
     }
 
   }

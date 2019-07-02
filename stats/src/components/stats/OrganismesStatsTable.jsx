@@ -13,7 +13,7 @@ export default class OrganismesStatsTable extends Component {
         super(props);
 
         this.state = {
-            showRates: true,
+            showRates: false,
         };
     }
 
@@ -47,14 +47,13 @@ export default class OrganismesStatsTable extends Component {
                             </div>
                         </th>
                         <th scope="col" className="section">Total</th>
-                        <th scope="col" className="section">Total</th>
+                        <th scope="col" className="section">Total <i className="fas fa-question-circle"><span className="tooltip">Comprend les relances</span></i></th>
                         <th scope="col">Ouverts</th>
-                        <th scope="col">Cliqués</th>
-                        <th scope="col" className="section">Actifs</th>
-                        <th scope="col" className="section">Non lus</th>
-                        <th scope="col">Réponses</th>
-                        <th scope="col">Réponses avec commentaires</th>
-                        <th scope="col">Signalés</th>
+                        <th scope="col">Cliqués <i className="fas fa-question-circle"><span className="tooltip">Nombre de clic dans le lien / le nombre d&apos;ouverture de mails</span></i></th>
+                        <th scope="col" className="section">Actifs <i className="fas fa-question-circle"><span className="tooltip">OF ayant créé leur mot de passe / la totalité des OF référencés dans la base Anotéa</span></i></th>
+                        <th scope="col" className="section">Non lus <i className="fas fa-question-circle"><span className="tooltip">Avis non marqué comme &quot;lu&quot; par l&apos;OF</span></i></th>
+                        <th scope="col">Répondus <i className="fas fa-question-circle"><span className="tooltip">Notes seuls avec réponse + commentaires avec réponse</span></i></th>
+                        <th scope="col">Signalés <i className="fas fa-question-circle"><span className="tooltip">Avis signalés / le total des avis</span></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,24 +63,20 @@ export default class OrganismesStatsTable extends Component {
                                 <th scope="row">{o.label}</th>
                                 <td className="section">{o.nbOrganismesContactes}</td>
                                 <td className="section">{o.mailsEnvoyes}</td>
-                                <td>{
-                                    this.computeRate(o.ouvertureMails, o.nbOrganismesContactes)}
+                                <td>
+                                    {this.computeRate(o.ouvertureMails, o.nbOrganismesContactes)}
                                 </td>
                                 <td>
                                     {this.computeRate(o.nbClicDansLien, o.ouvertureMails)}
                                 </td>
                                 <td className="section">
-                                    {
-                                        this.computeRate(o.organismesActifs, o.nbOrganismesContactes)}
+                                    {this.computeRate(o.organismesActifs, o.nbOrganismesContactes)}
                                 </td>
-                                <td className="section">{
-                                    this.computeRate(o.avisNonLus, o.avisModeresNonRejetes)}
-                                </td>
-                                <td>
-                                    {this.computeRate(o.nbReponsesAvecCommentaires, o.avisModeresNonRejetes)}
+                                <td className="section">
+                                    {this.computeRate(o.avisNonLus, o.avisModeresNonRejetes)}
                                 </td>
                                 <td>
-                                    {this.computeRate(o.nbReponses, o.avisModeresNonRejetes)}
+                                    {o.nbReponses + o.avisModeresNonRejetes}
                                 </td>
                                 <td>
                                     {this.computeRate(o.avisSignales, o.avisModeresNonRejetes)}

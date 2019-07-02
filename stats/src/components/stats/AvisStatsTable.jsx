@@ -13,7 +13,7 @@ export default class AvisStatsTable extends Component {
         super(props);
 
         this.state = {
-            showRates: true,
+            showRates: false,
         };
     }
 
@@ -46,18 +46,18 @@ export default class AvisStatsTable extends Component {
                                 <span> Taux</span>
                             </div>
                         </th>
-                        <th scope="col" className="section">Importés</th>
-                        <th scope="col">Contactés</th>
-                        <th scope="col" className="section">Envoyés</th>
-                        <th scope="col">Ouverts</th>
-                        <th scope="col">Cliqués</th>
-                        <th scope="col">Validés</th>
-                        <th scope="col" className="section">Déposés</th>
-                        <th scope="col">Avec commentaires</th>
-                        <th scope="col" className="section">À modérer</th>
-                        <th scope="col">Positif/Neutre</th>
-                        <th scope="col">Negatifs</th>
-                        <th scope="col">Rejetés</th>
+                        <th scope="col" className="section">Importés <i className="fas fa-question-circle"><span className="tooltip">Nombre de stagiaires présents dans le fichier datalake</span></i></th>
+                        <th scope="col">Contactés <i className="fas fa-question-circle"><span className="tooltip">Nombre de stagiaires à qui un mail à été envoyé</span></i></th>
+                        <th scope="col" className="section">Envoyés <i className="fas fa-question-circle"><span className="tooltip">Nombre de mails envoyés aux stagiaires</span></i></th>
+                        <th scope="col">Ouverts <i className="fas fa-question-circle"><span className="tooltip">Taux d&apos;ouverture de mails</span></i></th>
+                        <th scope="col">Cliqués <i className="fas fa-question-circle"><span className="tooltip">Taux de clic dans le questionnaire</span></i> </th>
+                        <th scope="col">Validés <i className="fas fa-question-circle"><span className="tooltip">Taux de questionnaires validés</span></i></th>
+                        <th scope="col" className="section">Déposés <i className="fas fa-question-circle"><span className="tooltip">Taux d&apos;avis déposés</span></i></th>
+                        <th scope="col">Avec commentaires <i className="fas fa-question-circle"><span className="tooltip">Taux d&apos;avis avec commentaire</span></i></th>
+                        <th scope="col" className="section">À modérer <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires à modérer</span></i></th>
+                        <th scope="col">Positif/Neutre <i className="fas fa-question-circle"><span className="tooltip">Taux de commentaires positifs ou neutres</span></i></th>
+                        <th scope="col">Negatifs <i className="fas fa-question-circle"><span className="tooltip">Taux de commentaires négatifs</span></i></th>
+                        <th scope="col">Rejetés <i className="fas fa-question-circle"><span className="tooltip">Taux de commentaires rejetés</span></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,7 +77,7 @@ export default class AvisStatsTable extends Component {
                                     {a.nbMailEnvoyes}
                                 </td>
                                 <td>
-                                    {this.computeRate(a.nbMailsOuverts, a.nbMailEnvoyes)}
+                                    {this.computeRate(a.nbMailsOuverts, a.nbStagiairesContactes)}
                                 </td>
                                 <td>
                                     {this.computeRate(a.nbLiensCliques, a.nbMailsOuverts)}

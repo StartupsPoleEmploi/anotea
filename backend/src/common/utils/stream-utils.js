@@ -3,17 +3,19 @@ const { Transform } = require('stream');
 
 let transformObject = (callback, options = { ignoreFirstLine: false, ignoreEmpty: false }) => {
     let lines = 0;
+    let isFirstLine = () => options.ignoreFirstLine && lines++ === 0;
+    let isEmpty = value => options.ignoreEmpty && _.isEmpty(value);
+
     return new Transform({
         objectMode: true,
         transform: async function(data, encoding, next) {
-            if ((options.ignoreEmpty && _.isEmpty(data)) ||
-                (options.ignoreFirstLine && lines++ === 0)) {
-                return next();
+            if (!isEmpty(data) && !isFirstLine()) {
+                let res = await callback(data);
+                if (!isEmpty(res)) {
+                    this.push(res);
+                }
             }
-
-            let res = await callback(data);
-            this.push(res);
-            next();
+            return next();
         }
     });
 };
@@ -21,7 +23,7 @@ module.exports = {
     transformObject: transformObject,
     ignoreEmpty: () => transformObject(data => data, { ignoreEmpty: true }),
     ignoreFirstLine: () => transformObject(data => data, { ignoreFirstLine: true }),
-    jsonStream: wrapper => {
+    jsonStream: (wrapper = {}) => {
         let chunksSent = 0;
         return new Transform({
             objectMode: true,
@@ -63,5 +65,22 @@ module.exports = {
                 return callback();
             }
         });
+    },
+    csvStream: columns => {
+        let lines = 0;
+        return new Transform({
+            objectMode: true,
+            transform: function(chunk, encoding, callback) {
+                if (lines++ === 0) {
+                    this.push(`${Object.keys(columns).join(';')}\n`);
+                }
+
+                let line = Object.keys(columns).map(key => columns[key](chunk)).join(';');
+                this.push(`${line}\n`);
+
+                callback();
+            }
+        });
+
     }
 };

@@ -24,6 +24,10 @@
     "secret": "1234"
   },
   "auth": {
+    "export": {
+      "type": "basic",
+      "secret": "1234"
+    },
     "backoffice": {
       "type": "jwt",
       "secret": "1234",
@@ -62,7 +66,7 @@
     },
     "organisme": {
       "accountsRelaunchDelay": 7,
-      "notificationsRelaunchDelay": 15
+      "notificationsRelaunchDelay": 30
     }
   },
   "api": {

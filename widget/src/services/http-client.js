@@ -1,5 +1,6 @@
 /* global fetch */
 import EventEmitter from 'events';
+import { getReferrerUrl } from '../utils';
 
 class HTTPError extends Error {
     constructor(message, json) {
@@ -19,14 +20,26 @@ const handleResponse = (path, response) => {
 };
 
 export const _get = path => {
-    let referrer = new URL((document.referrer || 'http://unknown')).origin;
     return fetch(path, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'X-Anotea-Widget': referrer,
+            'X-Anotea-Widget': getReferrerUrl().origin,
         }
+    })
+    .then(res => handleResponse(path, res));
+};
+
+export const _post = (path, body) => {
+    return fetch(path, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Anotea-Widget': getReferrerUrl().origin,
+        },
+        body: JSON.stringify(body)
     })
     .then(res => handleResponse(path, res));
 };

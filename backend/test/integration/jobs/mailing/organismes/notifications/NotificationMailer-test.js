@@ -64,12 +64,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.ok(organisme.newCommentsNotificationEmailSentDate);
     });
 
-    it('should send another email notification to organisme when not email sent since 15 days', async () => {
+    it('should send another email notification to organisme when not email sent since 30 days', async () => {
 
         let spy = [];
         let db = await getTestDatabase();
         let notificationMailer = new NotificationMailer(db, logger, configuration, fakeMailer(spy));
-        let newCommentsNotificationEmailSentDate = moment().subtract('25', 'days').toDate();
+        let newCommentsNotificationEmailSentDate = moment().subtract('45', 'days').toDate();
         await Promise.all([
             ...(
                 _.range(5).map(() => {

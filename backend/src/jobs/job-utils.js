@@ -1,7 +1,10 @@
 const moment = require('moment');
 const config = require('config');
+const fs = require('fs');
+const { encodeStream } = require('iconv-lite');
 const createComponents = require('../components');
 const createLogger = require('../common/components/logger');
+const { transformObject, csvStream } = require('../common/utils/stream-utils');
 const { IncomingWebhook } = require('@slack/webhook');
 
 module.exports = {
@@ -58,4 +61,14 @@ module.exports = {
             exit(e);
         }
     },
+    streamToCSV: (stream, file, columns) => {
+        return new Promise((resolve, reject) => {
+            stream
+            .pipe(csvStream(columns))
+            .pipe(encodeStream('UTF-8'))
+            .pipe(fs.createWriteStream(file))
+            .on('error', e => reject(e))
+            .on('finish', async () => resolve());
+        });
+    }
 };

@@ -2,6 +2,29 @@
 
 .StatsTable {
 
+  .fa-question-circle {
+
+    .tooltip {
+      visibility: hidden;
+    }
+
+    &:hover {
+      color: rgb(253, 186, 60);
+      
+      .tooltip {
+        visibility: visible;
+        opacity: 2;
+        background-color: rgb(253, 186, 60);
+        width: auto;
+        padding: 5px;
+        border: 1px solid $color-grey-5;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
   font-size: 0.875rem;
 
   thead {

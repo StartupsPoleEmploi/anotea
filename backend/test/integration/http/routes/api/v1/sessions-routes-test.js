@@ -748,4 +748,65 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.deepStrictEqual(response.body.avis.length, 1);
         assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
+
+    it('can return avis avec commentaires', async () => {
+
+        let app = await startServer();
+        let avisAvecReponse = newComment({
+            pseudo: 'pseudo',
+            codeRegion: '11',
+            formacode: '22252',
+            training: {
+                formacode: '22252',
+                organisation: {
+                    siret: '33333333333333',
+                },
+                place: {
+                    postalCode: '75019',
+                },
+            },
+            reponse: {
+                text: 'La réponse',
+                date: new Date(),
+                status: 'none',
+            },
+        });
+        delete avisAvecReponse.comment;
+
+        await reconcileSessions(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
+                    formacode: '22252',
+                    lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
+                })
+            ],
+            [
+                avisAvecReponse,
+                newComment({
+                    codeRegion: '11',
+                    formacode: '22252',
+                    training: {
+                        formacode: '22252',
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                }),
+            ]
+        );
+
+        let response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX/avis?commentaires=false');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+    });
 }));

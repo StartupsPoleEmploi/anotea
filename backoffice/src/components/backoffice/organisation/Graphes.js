@@ -2,8 +2,11 @@ import React from 'react';
 import { Pie, defaults } from 'react-chartjs-2';
 import 'chartjs-plugin-labels';
 import Modal from 'react-modal';
+import PropTypes from 'prop-types';
 
 import Stars from '../common/deprecated/Stars';
+
+import './Graphes.scss';
 
 import {
     getOrganisationStates
@@ -87,7 +90,16 @@ export default class Graphes extends React.Component {
                 }
             ]
         },
+        traineeCount: 0
     };
+    
+    static propTypes = {
+        organisationId: PropTypes.string.isRequired
+    };
+
+    getPercentage = (value, total) => {
+        return Math.round(value / total * 100);
+    }
 
     constructor(props) {
         super(props);
@@ -97,7 +109,8 @@ export default class Graphes extends React.Component {
                 fontColor: 'black',
                 fontStyle: 'bold',
                 position: 'outside',
-                textMargin: 4
+                textMargin: 4,
+                render: args => args.value >= 10 ? `${args.value} %` : ''
             }
         };
 
@@ -110,11 +123,11 @@ export default class Graphes extends React.Component {
                         datasets: [
                             {
                                 data: [
-                                    Math.round((states[0].accueilOne / states[0].countAdvices) * 100),
-                                    Math.round((states[0].accueilTwo / states[0].countAdvices) * 100),
-                                    Math.round((states[0].accueilThree / states[0].countAdvices) * 100),
-                                    Math.round((states[0].accueilFour / states[0].countAdvices) * 100),
-                                    Math.round((states[0].accueilFive / states[0].countAdvices) * 100),
+                                    this.getPercentage(states[0].accueilOne, states[0].countAdvices),
+                                    this.getPercentage(states[0].accueilTwo, states[0].countAdvices),
+                                    this.getPercentage(states[0].accueilThree, states[0].countAdvices),
+                                    this.getPercentage(states[0].accueilFour, states[0].countAdvices),
+                                    this.getPercentage(states[0].accueilFive, states[0].countAdvices),
                                 ],
                                 backgroundColor: backgroundColor,
                             }
@@ -125,11 +138,11 @@ export default class Graphes extends React.Component {
                         datasets: [
                             {
                                 data: [
-                                    Math.round((states[0].noteGlobaleOne / states[0].countAdvices) * 100),
-                                    Math.round((states[0].noteGlobaleTwo / states[0].countAdvices) * 100),
-                                    Math.round((states[0].noteGlobaleThree / states[0].countAdvices) * 100),
-                                    Math.round((states[0].noteGlobaleFour / states[0].countAdvices) * 100),
-                                    Math.round((states[0].noteGlobaleFive / states[0].countAdvices) * 100),
+                                    this.getPercentage(states[0].noteGlobaleOne, states[0].countAdvices),
+                                    this.getPercentage(states[0].noteGlobaleTwo, states[0].countAdvices),
+                                    this.getPercentage(states[0].noteGlobaleThree, states[0].countAdvices),
+                                    this.getPercentage(states[0].noteGlobaleFour, states[0].countAdvices),
+                                    this.getPercentage(states[0].noteGlobaleFive, states[0].countAdvices),
                                 ],
                                 backgroundColor: backgroundColor,
                             }
@@ -140,11 +153,11 @@ export default class Graphes extends React.Component {
                         datasets: [
                             {
                                 data: [
-                                    Math.round((states[0].accompagnementOne / states[0].countAdvices) * 100),
-                                    Math.round((states[0].accompagnementTwo / states[0].countAdvices) * 100),
-                                    Math.round((states[0].accompagnementThree / states[0].countAdvices) * 100),
-                                    Math.round((states[0].accompagnementFour / states[0].countAdvices) * 100),
-                                    Math.round((states[0].accompagnementFive / states[0].countAdvices) * 100),
+                                    this.getPercentage(states[0].accompagnementOne, states[0].countAdvices),
+                                    this.getPercentage(states[0].accompagnementTwo, states[0].countAdvices),
+                                    this.getPercentage(states[0].accompagnementThree, states[0].countAdvices),
+                                    this.getPercentage(states[0].accompagnementFour, states[0].countAdvices),
+                                    this.getPercentage(states[0].accompagnementFive, states[0].countAdvices),
                                 ],
                                 backgroundColor: backgroundColor,
                             }
@@ -155,11 +168,11 @@ export default class Graphes extends React.Component {
                         datasets: [
                             {
                                 data: [
-                                    Math.round((states[0].materielOne / states[0].countAdvices) * 100),
-                                    Math.round((states[0].materielTwo / states[0].countAdvices) * 100),
-                                    Math.round((states[0].materielThree / states[0].countAdvices) * 100),
-                                    Math.round((states[0].materielFour / states[0].countAdvices) * 100),
-                                    Math.round((states[0].materielFive / states[0].countAdvices) * 100),
+                                    this.getPercentage(states[0].materielOne, states[0].countAdvices),
+                                    this.getPercentage(states[0].materielTwo, states[0].countAdvices),
+                                    this.getPercentage(states[0].materielThree, states[0].countAdvices),
+                                    this.getPercentage(states[0].materielFour, states[0].countAdvices),
+                                    this.getPercentage(states[0].materielFive, states[0].countAdvices),
                                 ],
                                 backgroundColor: backgroundColor,
                             }
@@ -170,11 +183,11 @@ export default class Graphes extends React.Component {
                         datasets: [
                             {
                                 data: [
-                                    Math.round((states[0].equipeOne / states[0].countAdvices) * 100),
-                                    Math.round((states[0].equipeTwo / states[0].countAdvices) * 100),
-                                    Math.round((states[0].equipeThree / states[0].countAdvices) * 100),
-                                    Math.round((states[0].equipeFour / states[0].countAdvices) * 100),
-                                    Math.round((states[0].equipeFive / states[0].countAdvices) * 100),
+                                    this.getPercentage(states[0].equipeOne, states[0].countAdvices),
+                                    this.getPercentage(states[0].equipeTwo, states[0].countAdvices),
+                                    this.getPercentage(states[0].equipeThree, states[0].countAdvices),
+                                    this.getPercentage(states[0].equipeFour, states[0].countAdvices),
+                                    this.getPercentage(states[0].equipeFive, states[0].countAdvices),
                                 ],
                                 backgroundColor: backgroundColor,
                             }
@@ -185,16 +198,17 @@ export default class Graphes extends React.Component {
                         datasets: [
                             {
                                 data: [
-                                    Math.round((states[0].contenuFormationOne / states[0].countAdvices) * 100),
-                                    Math.round((states[0].contenuFormationTwo / states[0].countAdvices) * 100),
-                                    Math.round((states[0].contenuFormationThree / states[0].countAdvices) * 100),
-                                    Math.round((states[0].contenuFormationFour / states[0].countAdvices) * 100),
-                                    Math.round((states[0].contenuFormationFive / states[0].countAdvices) * 100),
+                                    this.getPercentage(states[0].contenuFormationOne, states[0].countAdvices),
+                                    this.getPercentage(states[0].contenuFormationTwo, states[0].countAdvices),
+                                    this.getPercentage(states[0].contenuFormationThree, states[0].countAdvices),
+                                    this.getPercentage(states[0].contenuFormationFour, states[0].countAdvices),
+                                    this.getPercentage(states[0].contenuFormationFive, states[0].countAdvices),
                                 ],
                                 backgroundColor: backgroundColor,
                             }
                         ]
                     },
+                    traineeCount: states[0].traineeCount,
                 });
             } else {
                 this.setState({
@@ -208,10 +222,14 @@ export default class Graphes extends React.Component {
         this.setState({ modalIsOpen: false });
     };
 
+    getTauxRepondants = () => {
+        return `${(this.state.countAdvices / this.state.traineeCount * 100).toFixed(2).replace('.', ',')} %`;
+    }
+
     render() {
         const { countAdvices } = this.state;
         return (
-            <div className="row">
+            <div className="graphes row">
                 {countAdvices > 0 ?
                     (<div className="col-md-12">
                         <h2 className="graphe h2">Notes toutes formations confondues</h2>
@@ -344,6 +362,10 @@ export default class Graphes extends React.Component {
                                     <Stars value={1} style={{ display: 'inline' }} />
                                     <p>Pas du tout satisfait</p>
                                 </div>
+                                <div className="repondants">
+                                    <h3>{this.getTauxRepondants()}</h3>
+                                    <p>des stagiaires interrogés ont rempli le questionnaire</p>
+                                </div>
                             </div>
                         </div>
                     </div>) :
@@ -364,20 +386,6 @@ export default class Graphes extends React.Component {
                         </Modal>
                     )
                 }
-                {/*A Laisser en commentaire pour le moment*/}
-                {/*<div className="col-md-2">*/}
-                {/*<h2 className="publishedAdvicesTitle h2">Avis en ligne</h2>*/}
-                {/*<div className="publishedAdvices center-block">*/}
-                {/*<h2 className="countPublishedAdvices h2">{this.state.countPublishedAdvices}</h2>*/}
-                {/*<div className="date">*/}
-                {/*<h2 className="date h2">{new Intl.DateTimeFormat('en-GB', {*/}
-                {/*year: 'numeric',*/}
-                {/*month: 'long',*/}
-                {/*day: '2-digit'*/}
-                {/*}).format(this.state.now)}</h2>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*</div>*/}
             </div>
         );
     }

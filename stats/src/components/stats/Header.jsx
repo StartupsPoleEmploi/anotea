@@ -18,7 +18,7 @@ export default class Header extends Component {
                             <div className="d-flex justify-content-around">
                                 <NavLink to="/stats/avis" className="nav-link" activeClassName="active">Avis</NavLink>
                                 <NavLink to="/stats/organismes" className="nav-link" activeClassName="active">Organismes</NavLink>
-                                <NavLink to="/stats/api" className="nav-link" activeClassName="active">Api</NavLink>
+                                <NavLink to="/stats/api" className="nav-link" activeClassName="active">Restitution</NavLink>
                                 <NavLink to="/stats/divers" className="nav-link" activeClassName="active">Divers</NavLink>
                             </div>
                         </div>

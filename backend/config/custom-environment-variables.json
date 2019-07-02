@@ -10,6 +10,9 @@
     "secret": "ANOTEA_SECURITY_SECRET"
   },
   "auth": {
+    "export": {
+      "secret": "ANOTEA_AUTH_EXPORT_SECRET"
+    },
     "backoffice": {
       "secret": "ANOTEA_AUTH_BACKOFFICE_SECRET"
     },
