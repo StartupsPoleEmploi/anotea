@@ -140,7 +140,42 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await synchronizeAccounts(db, logger, regions);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 11111111111111 });
-        assert.ok(doc);
+        assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
+            _id: 11111111111111,
+            SIRET: 11111111111111,
+            courriel: 'anotea.pe+responsable@gmail.com',
+            courriels: ['anotea.pe+responsable@gmail.com'],
+            sources: ['intercarif'],
+            profile: 'organisme',
+            codeRegion: '7',
+            kairosCourriel: 'contact@formation.fr',
+            numero: 'OR_XX_XXX',
+            raisonSociale: 'Centre de formation Anotéa',
+            lieux_de_formation: [],
+            organismeFormateurs: [
+                {
+                    numero: 'OF_XXX',
+                    siret: '22222222222222',
+                    raisonSociale: 'Anotea Formation Paris',
+                    lieux_de_formation: [
+                        {
+                            nom: 'Anotea Formation Paris',
+                            adresse: {
+                                code_postal: '75019',
+                                ville: 'Paris',
+                                region: '11'
+                            }
+                        }
+                    ]
+                }
+            ],
+            meta: {
+                siretAsString: '11111111111111',
+                kairos: {
+                    eligible: false,
+                }
+            },
+        });
     });
 
     it('should findRegion from organismes_formateurs when organisme responsable code_postal is invalid', async () => {

@@ -1,7 +1,6 @@
 const uuid = require('node-uuid');
-const _ = require('lodash');
-const getOrganismesResponsables = require('./utils/getOrganismesResponsables');
-const findRegion = require('./utils/findRegion');
+const getOrganismesResponsables = require('./synchronizeAccounts/getOrganismesResponsables');
+const findRegion = require('./synchronizeAccounts/findRegion');
 
 module.exports = async (db, logger, regions) => {
 
@@ -12,67 +11,63 @@ module.exports = async (db, logger, regions) => {
         invalid: 0,
     };
 
-    const buildAccount = async data => {
+    const createUpdateQuery = (organisme, options = {}) => {
 
-        let siret = `${parseInt(data.siret, 10)}`;
-        let kairos = await db.collection('kairos').findOne({ siret });
-        let region = findRegion(regions, data);
+        let region = findRegion(regions, organisme);
 
-        let document = {
-            _id: parseInt(data.siret, 10),
-            SIRET: parseInt(data.siret, 10),
-            raisonSociale: data.raison_sociale,
-            numero: data.numero,
-            codeRegion: region.codeRegion,
-            courriel: data.courriel,
-            courriels: data.courriel ? [data.courriel] : [],
-            token: uuid.v4(),
-            creationDate: new Date(),
-            sources: ['intercarif'],
-            profile: 'organisme',
-            lieux_de_formation: data.lieux_de_formation ? data.lieux_de_formation : [],
-            meta: {
-                siretAsString: siret,
-            }
+        let query = {
+            $setOnInsert: {
+                _id: parseInt(organisme.siret, 10),
+                SIRET: parseInt(organisme.siret, 10),
+                raisonSociale: organisme.raison_sociale,
+                codeRegion: region.codeRegion,
+                courriel: organisme.courriel,
+                token: uuid.v4(),
+                creationDate: new Date(),
+                ...(options.kairos ? { kairosCourriel: options.kairos.emailRGC } : {}),
+                ...(options.kairos ? { codeRegion: options.kairos.codeRegion } : {}),
+                meta: {
+                    siretAsString: organisme.siret,
+                    ...(options.kairos ? { kairos: { eligible: false } } : {}),
+                }
+            },
+            $addToSet: {
+                courriels: organisme.courriel ? organisme.courriel : [],
+                sources: 'intercarif',
+            },
+            $set: {
+                profile: 'organisme',
+                updateDate: new Date(),
+                numero: organisme.numero,
+                lieux_de_formation: organisme.lieux_de_formation ? organisme.lieux_de_formation :
+                    organisme.organisme_formateurs
+                    .filter(of => of.siret === organisme.siret)
+                    .map(of => of.lieux_de_formation),
+            },
         };
 
-        if (kairos) {
-            return _.merge(document, {
-                kairosCourriel: kairos.emailRGC,
-                codeRegion: kairos.codeRegion,
-                meta: {
-                    kairos: {
-                        eligible: false,
-                    }
-                },
+        if (organisme.organisme_formateurs) {
+            query.$set.organismeFormateurs = organisme.organisme_formateurs.map(of => {
+                return {
+                    siret: of.siret,
+                    numero: of.numero,
+                    raisonSociale: of.raison_sociale,
+                    lieux_de_formation: of.lieux_de_formation,
+                };
             });
         }
-        return document;
+
+        return query;
     };
 
-    const synchronizeAccount = async data => {
+    const synchronizeAccount = async organisme => {
 
         try {
-            let account = await buildAccount(data);
+            let kairos = await db.collection('kairos').findOne({ siret: organisme.siret });
+            let updateQuery = await createUpdateQuery(organisme, { kairos });
 
             let results = await db.collection('accounts')
-            .updateOne(
-                { _id: account._id },
-                {
-                    $setOnInsert: _.omit(account, ['courriels', 'sources', 'numero', 'lieux_de_formation', 'profile']),
-                    $addToSet: {
-                        courriels: account.courriel,
-                        sources: account.sources[0],
-                    },
-                    $set: {
-                        profile: 'organisme',
-                        numero: account.numero,
-                        lieux_de_formation: account.lieux_de_formation,
-                        updateDate: new Date(),
-                    },
-                },
-                { upsert: true }
-            );
+            .updateOne({ _id: updateQuery.$setOnInsert._id }, updateQuery, { upsert: true });
 
             if (results.result.nModified === 1) {
                 stats.updated++;
@@ -83,17 +78,17 @@ module.exports = async (db, logger, regions) => {
 
         } catch (e) {
             stats.invalid++;
-            logger.error(`Organisme cannot be imported`, JSON.stringify(data, null, 2), e);
+            logger.error(`Organisme cannot be imported`, JSON.stringify(organisme, null, 2), e);
         }
     };
 
     let cursor = getOrganismesResponsables(db);
     while (await cursor.hasNext()) {
-        const data = await cursor.next();
+        const organisme = await cursor.next();
 
         await Promise.all([
-            synchronizeAccount(data),
-            ...(data ? data.organisme_formateurs.map(of => synchronizeAccount(of)) : [])
+            synchronizeAccount(organisme),
+            ...organisme.organisme_formateurs.map(of => synchronizeAccount(of))
         ]);
     }
 

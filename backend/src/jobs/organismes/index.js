@@ -13,7 +13,7 @@ execute(async ({ logger, db, regions }) => {
 
     let stats = {};
 
-    logger.info('Synchronizing organismes with existing ones...');
+    logger.info('Synchronizing organismes...');
     stats.synchronized = await synchronizeAccounts(db, logger, regions);
 
     logger.info('Add missing accounts from Kairos...');
