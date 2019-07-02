@@ -96,7 +96,5 @@ module.exports = db => {
         
     };
 
-    return Promise.all([
-        getCampaignReconciliesStats()
-    ]);
+    return getCampaignReconciliesStats();
 };
