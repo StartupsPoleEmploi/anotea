@@ -261,7 +261,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
 
         let { mailer } = await getComponents();
         let email = mailer.getCalls()[0];
-        //assert.deepStrictEqual(email[0], { to: 'contact@poleemploi-formation.fr' });
+        assert.deepStrictEqual(email[0], { to: 'contact@poleemploi-formation.fr' });
     });
 
 
