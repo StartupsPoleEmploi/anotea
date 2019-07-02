@@ -19,7 +19,6 @@ module.exports = (db, formation) => {
         ],
         $or: [
             { 'comment': { $exists: false } },
-            { 'comment': null },
             { 'published': true },
             { 'rejected': true },
         ]

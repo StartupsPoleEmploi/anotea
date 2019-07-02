@@ -18,7 +18,6 @@ module.exports = async (db, logger) => {
                 'training.organisation.siret': organisme.meta.siretAsString,
                 '$or': [
                     { 'comment': { $exists: false } },
-                    { 'comment': null },
                     { 'published': true },
                     { 'rejected': true },
                 ]
