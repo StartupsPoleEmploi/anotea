@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import calculateRate from './utils/calculateRate';
 import './StatsTable.scss';
 
@@ -117,7 +118,7 @@ export default class AvisStatsTable extends Component {
                     <thead>
                         <tr className="column-subname">
                             <th scope="col">Campagnes</th>
-                            {/* <th scope="col">Date</th> */}
+                            <th scope="col">Date</th>
                             <th scope="col">Mails envoyés</th>
                             <th scope="col">Mails ouverts</th>
                             <th scope="col">Ouverture de lien</th>
@@ -132,6 +133,9 @@ export default class AvisStatsTable extends Component {
                             <th scope="row">
                                 Toutes
                             </th>
+                            <td>
+                                -
+                            </td>
                             <td>
                                 { campaignStats[0].map(e => e.mailSent).reduce((a, b) => a + b) }
                             </td>
@@ -160,9 +164,9 @@ export default class AvisStatsTable extends Component {
                                     <th scope="row">
                                         {a._id}
                                     </th>
-                                    {/* <td>
-                                        {a.date}
-                                    </td> */}
+                                    <td>
+                                        {a.date && moment(a.date).format('DD/MM/YYYY')}
+                                    </td>
                                     <td>
                                         {a.mailSent}
                                     </td>
