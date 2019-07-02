@@ -38,7 +38,7 @@
       },
       "organismes": {
         "accounts": true,
-        "notifications": false
+        "notifications": true
       }
     },
     "conseil_regional": {
@@ -62,7 +62,7 @@
       },
       "organismes": {
         "accounts": true,
-        "notifications": false
+        "notifications": true
       }
     },
     "conseil_regional": {
@@ -108,8 +108,8 @@
         "avis": true
       },
       "organismes": {
-        "accounts": false,
-        "notifications": false
+        "accounts": true,
+        "notifications": true
       }
     },
     "conseil_regional": {
@@ -157,7 +157,7 @@
       },
       "organismes": {
         "accounts": true,
-        "notifications": false
+        "notifications": true
       }
     },
     "conseil_regional": {
@@ -204,7 +204,7 @@
       },
       "organismes": {
         "accounts": true,
-        "notifications": false
+        "notifications": true
       }
     },
     "conseil_regional": {
@@ -278,7 +278,7 @@
       },
       "organismes": {
         "accounts": true,
-        "notifications": false
+        "notifications": true
       }
     },
     "conseil_regional": {
@@ -302,7 +302,7 @@
       },
       "organismes": {
         "accounts": true,
-        "notifications": false
+        "notifications": true
       }
     },
     "conseil_regional": {
@@ -326,7 +326,7 @@
       },
       "organismes": {
         "accounts": true,
-        "notifications": false
+        "notifications": true
       }
     },
     "conseil_regional": {
@@ -350,7 +350,7 @@
       },
       "organismes": {
         "accounts": true,
-        "notifications": false
+        "notifications": true
       }
     },
     "conseil_regional": {
