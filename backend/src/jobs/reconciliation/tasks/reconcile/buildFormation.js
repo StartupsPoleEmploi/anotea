@@ -1,7 +1,7 @@
 const computeScore = require('../../../../common/utils/computeScore');
 const convertCommentToAvis = require('../../../../common/utils/convertCommentToAvis');
 
-module.exports = (intercarif, allComments) => {
+module.exports = (intercarif, comments) => {
 
     let sirets = intercarif.actions.reduce((acc, action) => {
         return [
@@ -10,8 +10,7 @@ module.exports = (intercarif, allComments) => {
         ];
     }, []);
 
-    let reconciliated = allComments;
-
+    let reconciliated = comments;
 
     let id = intercarif._attributes.numero;
     return {
@@ -31,7 +30,7 @@ module.exports = (intercarif, allComments) => {
             numero: intercarif.organisme_formation_responsable._attributes.numero,
         },
         avis: reconciliated.map(a => convertCommentToAvis(a)) || [],
-        score: computeScore(allComments),
+        score: computeScore(reconciliated),
         meta: {
             import_date: new Date(),
             source: {//TODO remove source field in v2

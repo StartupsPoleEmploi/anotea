@@ -1,7 +1,7 @@
-const reconcileFormation = require('./reconcile/reconcileFormation');
-const reconcileActions = require('./reconcile/reconcileActions');
-const reconcileSessions = require('./reconcile/reconcileSessions');
-const findAvisReconciliables = require('./reconcile/utils/findAvisReconciliables');
+const buildFormation = require('./reconcile/buildFormation');
+const buildActions = require('./reconcile/buildActions');
+const buildSessions = require('./reconcile/buildSessions');
+const findAvisReconciliables = require('./reconcile/rules/findAvisReconciliables');
 
 module.exports = async (db, logger, options = { formations: true, actions: true, sessions: true }) => {
 
@@ -41,7 +41,7 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
 
     let promises = [];
     while (await cursor.hasNext()) {
-        let rawFormation = await cursor.next();
+        let intercarif = await cursor.next();
 
         if (promises.length >= 25) {
             await Promise.all(promises);
@@ -49,11 +49,11 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
         }
 
         try {
-            let avis = await findAvisReconciliables(db, rawFormation);
+            let comments = await findAvisReconciliables(db, intercarif);
 
-            let formation = options.formations ? reconcileFormation(rawFormation, avis) : null;
-            let actions = options.actions ? reconcileActions(rawFormation, avis) : null;
-            let sessions = options.sessions ? reconcileSessions(rawFormation, avis) : null;
+            let formation = options.formations ? buildFormation(intercarif, comments) : null;
+            let actions = options.actions ? buildActions(intercarif, comments) : null;
+            let sessions = options.sessions ? buildSessions(intercarif, comments) : null;
 
             promises.push(
                 Promise.all([
@@ -63,11 +63,11 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
                 ])
             );
 
-            logger.debug(`Formation ${rawFormation._attributes.numero} from intercarif has been reconciliated`);
+            logger.debug(`Formation ${intercarif._attributes.numero} from intercarif has been reconciliated`);
 
         } catch (e) {
             stats.error++;
-            logger.error(`Formation ${rawFormation._attributes.numero} can not be reconciliated`, e);
+            logger.error(`Formation ${intercarif._attributes.numero} can not be reconciliated`, e);
         }
     }
 

@@ -1,7 +1,7 @@
 const computeScore = require('../../../../common/utils/computeScore');
 const { flatten } = require('../../../job-utils');
 const convertCommentToAvis = require('../../../../common/utils/convertCommentToAvis');
-const getReconcilatedAvis = require('./utils/getReconcilatedAvis');
+const filterAvisReconciliables = require('./rules/filterAvisReconciliables');
 
 module.exports = (intercarif, comments) => {
 
@@ -11,7 +11,7 @@ module.exports = (intercarif, comments) => {
             return acc;
         }
 
-        let reconciliated = getReconcilatedAvis(action, comments);
+        let reconciliated = filterAvisReconciliables(action, comments);
 
         let id = `${intercarif._attributes.numero}|${action._attributes.numero}`;
         return [
