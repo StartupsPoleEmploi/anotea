@@ -63,7 +63,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif, getCompon
         assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
             _id: 22222222222222,
             SIRET: 22222222222222,
-            codeRegion: '15',
+            codeRegion: '11',
             kairosCourriel: 'contact+kairos@formation.fr',
             courriel: 'anotea.pe+paris@gmail.com',
             courriels: ['anotea.pe+paris@gmail.com', 'contact+kairos@formation.fr'],

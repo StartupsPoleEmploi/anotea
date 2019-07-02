@@ -1,7 +1,6 @@
 const uuid = require('node-uuid');
 const getOrganismesResponsables = require('./intercarif/getOrganismesResponsables');
 const findRegion = require('./intercarif/findRegion');
-const { flatten } = require('../../job-utils');
 
 module.exports = async (db, logger, regions) => {
 
@@ -24,7 +23,6 @@ module.exports = async (db, logger, regions) => {
                 {
                     $setOnInsert: {
                         _id: id,
-                        profile: 'organisme',
                         SIRET: id,
                         raisonSociale: organisme.raison_sociale,
                         codeRegion: region.codeRegion,
@@ -40,9 +38,10 @@ module.exports = async (db, logger, regions) => {
                         sources: 'intercarif',
                     },
                     $set: {
-                        numero: organisme.numero,
-                        ...(!organisme.organisme_formateurs ? {} : {
-                            organismeFormateurs: organisme.organisme_formateurs.map(of => {
+                        profile: 'organisme',
+                        ...(organisme.numero ? { numero: organisme.numero } : {}),
+                        ...(!organisme.organismes_formateurs ? {} : {
+                            organismeFormateurs: organisme.organismes_formateurs.map(of => {
                                 return {
                                     siret: of.siret,
                                     numero: of.numero,
@@ -51,10 +50,7 @@ module.exports = async (db, logger, regions) => {
                                 };
                             })
                         }),
-                        lieux_de_formation: organisme.lieux_de_formation ? organisme.lieux_de_formation :
-                            flatten(organisme.organisme_formateurs
-                            .filter(of => of.siret === organisme.siret)
-                            .map(of => of.lieux_de_formation)),
+                        lieux_de_formation: organisme.lieux_de_formation ? organisme.lieux_de_formation : [],
                     },
                 },
                 { upsert: true }
@@ -72,11 +68,11 @@ module.exports = async (db, logger, regions) => {
 
     let cursor = getOrganismesResponsables(db);
     while (await cursor.hasNext()) {
-        const organisme = await cursor.next();
+        const responsable = await cursor.next();
 
         await Promise.all([
-            synchronizeAccount(organisme),
-            ...organisme.organisme_formateurs.map(of => synchronizeAccount(of))
+            synchronizeAccount(responsable),
+            ...responsable.organismes_formateurs.map(of => synchronizeAccount(of))
         ]);
     }
 

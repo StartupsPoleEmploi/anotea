@@ -11,36 +11,37 @@ module.exports = async (db, logger) => {
 
     let cursor = db.collection('kairos').find();
     while (await cursor.hasNext()) {
-        const organisme = await cursor.next();
+        const kairos = await cursor.next();
         stats.total++;
 
         try {
-            let id = parseInt(organisme.siret, 10);
+            let id = parseInt(kairos.siret, 10);
             let account = await db.collection('accounts').findOne({ _id: id });
 
+            let kairosCourriel = kairos.emailRGC;
             let results = await db.collection('accounts').updateOne(
                 { _id: id },
                 {
                     $setOnInsert: {
                         _id: id,
-                        profile: 'organisme',
                         SIRET: id,
-                        raisonSociale: organisme.libelle,
-                        courriel: organisme.emailRGC,
+                        raisonSociale: kairos.libelle,
+                        codeRegion: kairos.codeRegion,
+                        courriel: kairosCourriel,
                         token: uuid.v4(),
                         creationDate: new Date(),
                         numero: null,
                         lieux_de_formation: [],
                     },
                     $addToSet: {
-                        ...(organisme.emailRGC ? { courriels: organisme.emailRGC } : {}),
+                        ...(kairosCourriel ? { courriels: kairosCourriel } : {}),
                         sources: 'kairos',
                     },
                     $set: {
-                        codeRegion: organisme.codeRegion,
-                        ...(_.get(account, 'kairosCourriel') ? {} : { 'kairosCourriel': organisme.emailRGC }),
+                        profile: 'organisme',
+                        ...(_.get(account, 'kairosCourriel') && kairosCourriel ? {} : { 'kairosCourriel': kairosCourriel }),
                         ...(_.get(account, 'meta.kairos') ? {} : { 'meta.kairos.eligible': false }),
-                        ...(_.get(account, 'meta.siretAsString') ? {} : { 'meta.siretAsString': organisme.siret }),
+                        ...(_.get(account, 'meta.siretAsString') ? {} : { 'meta.siretAsString': kairos.siret }),
                     },
                 }
                 , { upsert: true });
@@ -51,7 +52,7 @@ module.exports = async (db, logger) => {
 
         } catch (e) {
             stats.invalid++;
-            logger.error(`Organisme cannot be synchronized with kairos`, JSON.stringify(organisme, null, 2), e);
+            logger.error(`Organisme cannot be synchronized with kairos`, JSON.stringify(kairos, null, 2), e);
         }
     }
 
