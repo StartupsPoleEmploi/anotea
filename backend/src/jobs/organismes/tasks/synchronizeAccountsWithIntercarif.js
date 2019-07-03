@@ -100,8 +100,8 @@ module.exports = async (db, logger, regions) => {
                     },
                     $set: {
                         profile: 'organisme',
-                        ...(formateur._attributes ? { numero: formateur._attributes.numero } : {}),
-                        lieux_de_formation: data.lieux_de_formation.map(lieu => {
+                        //TODO remove underscores
+                        lieux_de_formation: _.sortBy(data.lieux_de_formation.map(lieu => {
                             return {
                                 nom: lieu.coordonnees.nom,
                                 adresse: {
@@ -110,7 +110,7 @@ module.exports = async (db, logger, regions) => {
                                     region: lieu.coordonnees.adresse.region
                                 }
                             };
-                        }),
+                        }), ['adresse.code_postal']),
                     },
                 },
                 { upsert: true }

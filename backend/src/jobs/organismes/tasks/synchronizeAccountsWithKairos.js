@@ -30,7 +30,6 @@ module.exports = async (db, logger) => {
                         courriel: kairosCourriel,
                         token: uuid.v4(),
                         creationDate: new Date(),
-                        numero: null,
                         lieux_de_formation: [],
                     },
                     $addToSet: {
