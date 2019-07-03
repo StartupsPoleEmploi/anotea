@@ -23,16 +23,13 @@ export default class AvisStatsTable extends Component {
         return this.state.showRates ? calculateRate(dividend, divisor) : dividend;
     }
 
+    getTotal = string => {
+        return this.props.campaignStats[0].map(e => e[string]).reduce((a, b) => a + b);
+    };
+
     render() {
 
         let { stats, campaignStats } = this.props;
-        let mailSent = campaignStats[0].map(e => e.mailSent).reduce((a, b) => a + b);
-        let mailOpen = campaignStats[0].map(e => e.mailOpen).reduce((a, b) => a + b);
-        let linkClick = campaignStats[0].map(e => e.linkClick).reduce((a, b) => a + b);
-        let formValidated = campaignStats[0].map(e => e.formValidated).reduce((a, b) => a + b);
-        let allowToContact = campaignStats[0].map(e => e.allowToContact).reduce((a, b) => a + b);
-        let nbCommentaires = campaignStats[0].map(e => e.nbCommentaires).reduce((a, b) => a + b);
-        let nbCommentairesRejected = campaignStats[0].map(e => e.nbCommentairesRejected).reduce((a, b) => a + b);
 
         return (
             <div>
@@ -157,37 +154,37 @@ export default class AvisStatsTable extends Component {
                                 -
                             </td>
                             <td>
-                                { mailSent }
+                                { this.getTotal('mailSent') }
                             </td>
                             <td>
-                                { mailOpen }
+                                { this.getTotal('mailOpen') }
                             </td>
                             <td>
-                                { this.computeRate(mailOpen, mailSent) }
+                                { this.computeRate(this.getTotal('mailOpen'), this.getTotal('mailSent')) }
                             </td>
                             <td>
-                                { linkClick }
+                                { this.getTotal('linkClick') }
                             </td>
                             <td>
-                                { this.computeRate(linkClick, mailOpen) }
+                                { this.computeRate(this.getTotal('linkClick'), this.getTotal('mailOpen')) }
                             </td>
                             <td >
-                                { formValidated }
+                                { this.getTotal('formValidated') }
                             </td>
                             <td>
-                                { this.computeRate(formValidated, mailSent) }
+                                { this.computeRate(this.getTotal('formValidated'), this.getTotal('mailSent')) }
                             </td>
                             <td>
-                                { allowToContact }
+                                { this.getTotal('allowToContact') }
                             </td>
                             <td>
-                                { nbCommentaires }
+                                { this.getTotal('nbCommentaires') }
                             </td>
                             <td>
-                                { this.computeRate(nbCommentaires, formValidated) }
+                                { this.computeRate(this.getTotal('nbCommentaires'), this.getTotal('formValidated')) }
                             </td>
                             <td>
-                                { nbCommentairesRejected }
+                                { this.getTotal('nbCommentairesRejected') }
                             </td>
                         </tr>
                         {
