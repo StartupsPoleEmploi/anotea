@@ -26,6 +26,12 @@ export default class AvisStatsTable extends Component {
     render() {
 
         let { stats, campaignStats } = this.props;
+        let mailSent = campaignStats[0].map(e => e.mailSent).reduce((a, b) => a + b);
+        let mailOpen = campaignStats[0].map(e => e.mailOpen).reduce((a, b) => a + b);
+        let linkClick = campaignStats[0].map(e => e.linkClick).reduce((a, b) => a + b);
+        let formValidated = campaignStats[0].map(e => e.formValidated).reduce((a, b) => a + b);
+        let allowToContact = campaignStats[0].map(e => e.allowToContact).reduce((a, b) => a + b);
+        let nbCommentaires = campaignStats[0].map(e => e.nbCommentaires).reduce((a, b) => a + b);
 
         return (
             <div>
@@ -117,14 +123,27 @@ export default class AvisStatsTable extends Component {
                 <table className="StatsTable table table-hover">
                     <thead>
                         <tr className="column-subname">
-                            <th scope="col">Campagnes</th>
+                            <th scope="col">
+                                <div>
+                                    <input
+                                        name="showRates"
+                                        type="checkbox"
+                                        checked={this.state.showRates}
+                                        onChange={() => this.setState({ showRates: !this.state.showRates })} />
+                                    <span> Taux</span>
+                                </div>
+                            </th>
                             <th scope="col">Date</th>
                             <th scope="col">Mails envoyés</th>
                             <th scope="col">Mails ouverts</th>
+                            <th scope="col">Taux d&apos;ouverture</th>
                             <th scope="col">Ouverture de lien</th>
+                            <th scope="col">Taux de clic</th>
                             <th scope="col">Personnes ayant validé le questionnaire</th>
+                            <th scope="col">Taux de répondant</th>
                             <th scope="col">Autorisation de contact</th>
                             <th scope="col">Commentaires</th>
+                            <th scope="col">Taux avis avec commentaire</th>
                             <th scope="col">Commentaires rejetés</th>
                         </tr>
                     </thead>
@@ -137,22 +156,34 @@ export default class AvisStatsTable extends Component {
                                 -
                             </td>
                             <td>
-                                { campaignStats[0].map(e => e.mailSent).reduce((a, b) => a + b) }
+                                { mailSent }
                             </td>
                             <td>
-                                { campaignStats[0].map(e => e.mailOpen).reduce((a, b) => a + b) }
+                                { mailOpen }
                             </td>
                             <td>
-                                { campaignStats[0].map(e => e.linkClick).reduce((a, b) => a + b) }
+                                { this.computeRate(mailOpen, mailSent) }
+                            </td>
+                            <td>
+                                { linkClick }
+                            </td>
+                            <td>
+                                { this.computeRate(linkClick, mailOpen) }
                             </td>
                             <td >
-                                { campaignStats[0].map(e => e.formValidated).reduce((a, b) => a + b) }
+                                { formValidated }
                             </td>
                             <td>
-                                { campaignStats[0].map(e => e.allowToContact).reduce((a, b) => a + b) }
+                                { this.computeRate(formValidated, mailSent) }
                             </td>
                             <td>
-                                { campaignStats[0].map(e => e.nbCommentaires).reduce((a, b) => a + b) }
+                                { allowToContact }
+                            </td>
+                            <td>
+                                { nbCommentaires }
+                            </td>
+                            <td>
+                                { this.computeRate(nbCommentaires, formValidated) }
                             </td>
                             <td>
                                 { campaignStats[0].map(e => e.nbCommentairesRejected).reduce((a, b) => a + b) }
@@ -174,16 +205,28 @@ export default class AvisStatsTable extends Component {
                                         {a.mailOpen}
                                     </td>
                                     <td>
+                                        1
+                                    </td>
+                                    <td>
                                         {a.linkClick}
+                                    </td>
+                                    <td>
+                                        2
                                     </td>
                                     <td >
                                         {a.formValidated}
+                                    </td>
+                                    <td>
+                                        1
                                     </td>
                                     <td>
                                         {a.allowToContact}
                                     </td>
                                     <td>
                                         {a.nbCommentaires}
+                                    </td>
+                                    <td>
+                                        1
                                     </td>
                                     <td>
                                         {a.nbCommentairesRejected}
