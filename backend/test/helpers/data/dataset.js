@@ -7,84 +7,6 @@ const randomize = value => `${value}-${uuid.v4()}`;
 const randomSIRET = () => `${Math.floor(Math.random() * 9000000000) + 1000000000}`;
 const getDateInThePast = () => moment().subtract('100', 'days').toDate();
 
-let newComment = (custom, date = getDateInThePast()) => {
-    return _.merge({
-        _id: new ObjectID(),
-        token: randomize('token-12345'),
-        campaign: 'test',
-        formacode: '46242',
-        idSession: '2422722',
-        training: {
-            idFormation: 'F_XX_XX',
-            title: 'Développeur',
-            startDate: date,
-            scheduledEndDate: date,
-            organisation: {
-                id: '14_OF_XXXXXXXXXX',
-                siret: '11111111111111',
-                label: 'Pole Emploi Formation',
-                name: 'INSTITUT DE FORMATION'
-            },
-            place: {
-                postalCode: '75011',
-                city: 'Paris'
-            },
-            certifInfo: {
-                id: '78997',
-                label: 'Développeur'
-            },
-            idSession: '2422722',
-            formacode: '46242',
-            aesRecu: 'AES',
-            referencement: '41C561691111',
-            idSessionAudeFormation: '2422722',
-            infoCarif: {
-                numeroAction: 'AC_XX_XXXXXX',
-                numeroSession: 'SE_XXXXXX'
-            },
-            codeFinanceur: '10'
-        },
-        rates: {
-            accueil: 3,
-            contenu_formation: 2,
-            equipe_formateurs: 4,
-            moyen_materiel: 2,
-            accompagnement: 1,
-            global: 2.4,
-        },
-        pseudo: randomize('pseudo'),
-        comment: {
-            title: 'Génial',
-            text: 'Super formation.'
-        },
-        date: date,
-        accord: false,
-        reported: false,
-        moderated: true,
-        published: true,
-        rejected: false,
-        rejectReason: null,
-        qualification: 'positif',
-        lastStatusUpdate: date,
-        read: true,
-        importDate: date,
-        unsubscribe: false,
-        mailSent: true,
-        mailSentDate: date,
-        mailRetry: 2,
-        tracking: {
-            firstRead: date,
-            lastRead: date
-        },
-        deviceTypes: {
-            phone: 0,
-            tablet: 0,
-            desktop: 1
-        },
-        codeRegion: '11',
-    }, custom, { test: true });
-};
-
 module.exports = {
     randomize,
     randomSIRET,
@@ -213,38 +135,81 @@ module.exports = {
             id: uuid.v4(),
         }, custom, { test: true });
     },
-    newComment: newComment,
-    newOrganismeResponsable: custom => {
+    newComment: (custom, date = getDateInThePast()) => {
         return _.merge({
-            numero: '07_452',
-            siret: '11111111111111',
-            nom: 'PE Formation',
-            raison_sociale: 'Pole Emploi Formation',
-            courriel: 'contact@organisme-responsable.fr',
-            adresse: {
-                code_postal: '45160',
-                ville: 'Olivet',
-                region: '24'
+            _id: new ObjectID(),
+            token: randomize('token-12345'),
+            campaign: 'test',
+            formacode: '46242',
+            idSession: '2422722',
+            training: {
+                idFormation: 'F_XX_XX',
+                title: 'Développeur',
+                startDate: date,
+                scheduledEndDate: date,
+                organisation: {
+                    id: '14_OF_XXXXXXXXXX',
+                    siret: '11111111111111',
+                    label: 'Pole Emploi Formation',
+                    name: 'INSTITUT DE FORMATION'
+                },
+                place: {
+                    postalCode: '75011',
+                    city: 'Paris'
+                },
+                certifInfo: {
+                    id: '78997',
+                    label: 'Développeur'
+                },
+                idSession: '2422722',
+                formacode: '46242',
+                aesRecu: 'AES',
+                referencement: '41C561691111',
+                idSessionAudeFormation: '2422722',
+                infoCarif: {
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX'
+                },
+                codeFinanceur: '10'
             },
-            organisme_formateurs: [
-                {
-                    _id: '22222222222222',
-                    siret: '22222222222222',
-                    numero: 'OF_XXX',
-                    raison_sociale: 'PE Formation',
-                    courriel: 'contact@poleemploi-formation.fr',
-                    lieux_de_formation: [
-                        {
-                            nom: 'PE Formation',
-                            adresse: {
-                                code_postal: '37250',
-                                ville: 'Veigné',
-                                region: '24'
-                            }
-                        }
-                    ]
-                }
-            ]
+            rates: {
+                accueil: 3,
+                contenu_formation: 2,
+                equipe_formateurs: 4,
+                moyen_materiel: 2,
+                accompagnement: 1,
+                global: 2.4,
+            },
+            pseudo: randomize('pseudo'),
+            comment: {
+                title: 'Génial',
+                text: 'Super formation.'
+            },
+            date: date,
+            accord: false,
+            reported: false,
+            moderated: true,
+            published: true,
+            rejected: false,
+            rejectReason: null,
+            qualification: 'positif',
+            lastStatusUpdate: date,
+            read: true,
+            importDate: date,
+            unsubscribe: false,
+            mailSent: true,
+            mailSentDate: date,
+            mailRetry: 2,
+            tracking: {
+                firstRead: date,
+                lastRead: date
+            },
+            deviceTypes: {
+                phone: 0,
+                tablet: 0,
+                desktop: 1
+            },
+            codeRegion: '11',
         }, custom, { test: true });
     },
     newIntercarif: (options = {}) => {

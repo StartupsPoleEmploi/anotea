@@ -17,8 +17,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 training: {
                     organisation: {
                         siret: '11111111111111',
-                        label: 'Organisme Responsable label',
-                        name: 'Organisme Responsable name'
+                        label: 'Untouched label',
+                        name: 'Patched name'
                     },
                     place: {
                         postalCode: '75019',
@@ -31,10 +31,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
         assert.deepStrictEqual(avis.training.organisation.siret, '22222222222222');
-        assert.deepStrictEqual(avis.training.organisation.label, 'Organisme Responsable label');
+        assert.deepStrictEqual(avis.training.organisation.label, 'Untouched label');
         assert.deepStrictEqual(avis.training.organisation.name, 'Anotea Formation Paris');
         assert.deepStrictEqual(avis.meta.patch.organisation.siret, '11111111111111');
-        assert.deepStrictEqual(avis.meta.patch.organisation.name, 'Organisme Responsable name');
+        assert.deepStrictEqual(avis.meta.patch.organisation.name, 'Patched name');
         assert.deepStrictEqual(stats, {
             updated: 1,
             invalid: 0,
