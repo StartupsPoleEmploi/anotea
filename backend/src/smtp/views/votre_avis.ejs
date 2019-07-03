@@ -103,9 +103,9 @@
                 </tr>
                 <tr>
                     <td colspan="1" align="left" valign="middle">
-                        <img src="/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
+                        <img src="<%= hostname %>/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
                     <td colspan="2" align="right" valign="middle">
-                        <img src="/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt=""
+                        <img src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt=""
                              style="vertical-align: middle;" />
                     </td>
                 </tr>
@@ -153,6 +153,8 @@
                     <td colspan="3" align="center"
                         style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
                         <%- include('./legal/mentions.ejs'); %>
+
+                        <img src="<%= hostname %>/static/images/lbf.jpg" />
 
                         <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
                                 pouvez vous désinscrire</a>.</p>
