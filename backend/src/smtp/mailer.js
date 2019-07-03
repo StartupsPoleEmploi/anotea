@@ -205,8 +205,7 @@ module.exports = function(db, logger, configuration, regions) {
                 hostname: configuration.app.public_hostname,
             };
 
-            mailOptions.subject = `${trainee.trainee.firstName} ${trainee.trainee.name}` +
-                ', donnez un avis sur votre formation en 1 minute';
+            mailOptions.subject = 'Pôle Emploi vous demande votre avis sur votre formation';
             mailOptions.list = Object.assign({}, list, {
                 unsubscribe: {
                     url: unsubscribeLink,
