@@ -1,6 +1,5 @@
 const uuid = require('node-uuid');
-const getOrganismesResponsables = require('./intercarif/getOrganismesResponsables');
-const findRegion = require('./intercarif/findRegion');
+const _ = require('lodash');
 
 module.exports = async (db, logger, regions) => {
 
@@ -10,13 +9,74 @@ module.exports = async (db, logger, regions) => {
         invalid: 0,
     };
 
-    const synchronizeAccount = async organisme => {
+    const getOrganismesFromIntercarif = async () => {
+        let accumulator = {};
+
+        let cursor = db.collection('intercarif').find().project({
+            'actions.lieu_de_formation': 1,
+            'actions.organisme_formateur': 1
+        });
+        while (await cursor.hasNext()) {
+            let intercarif = await cursor.next();
+
+            intercarif.actions
+            .filter(action => action.lieu_de_formation.coordonnees.adresse)
+            .forEach(action => {
+                let siret = action.organisme_formateur.siret_formateur.siret;
+                let hasCourriel = !!_.get(action, 'organisme_formateur.contact_formateur');
+                let previous = accumulator[siret];
+
+                if (previous) {
+                    accumulator[siret] = {
+                        organisme_formateur: _.merge({}, previous.organisme_formateur, action.organisme_formateur),
+                        courriels: _.unionWith(
+                            previous.courriels,
+                            hasCourriel ? [action.organisme_formateur.contact_formateur.coordonnees.courriel] : [],
+                            _.isEqual
+                        ),
+                        lieux_de_formation: _.unionWith(
+                            previous.lieux_de_formation,
+                            [action.lieu_de_formation],
+                            (v1, v2) => v1.coordonnees.adresse.codepostal === v2.coordonnees.adresse.codepostal
+                        ),
+                    };
+                } else {
+                    accumulator[siret] = {
+                        organisme_formateur: action.organisme_formateur,
+                        courriels: hasCourriel ? [action.organisme_formateur.contact_formateur.coordonnees.courriel] : [],
+                        lieux_de_formation: [action.lieu_de_formation],
+                    };
+                }
+            });
+        }
+        return Object.values(accumulator);
+    };
+
+    const findRegion = data => {
+
+        let results = data.lieux_de_formation.map(lieu => {
+            try {
+                return regions.findRegionByPostalCode(lieu.coordonnees.adresse.codepostal);
+            } catch (e) {
+                return null;
+            }
+        });
+
+        if (_.every(results, r => r === null)) {
+            throw new Error(`Unable to find region for organisme ${data.organisme_formateur.siret_formateur.siret}`);
+        }
+
+        return results.find(r => r);
+    };
+
+    const synchronizeAccount = async data => {
 
         try {
             stats.total++;
-            let region = findRegion(regions, organisme);
 
-            let id = parseInt(organisme.siret, 10);
+            let formateur = data.organisme_formateur;
+            let siret = formateur.siret_formateur.siret;
+            let id = parseInt(siret, 10);
 
             let results = await db.collection('accounts').updateOne(
                 { _id: id },
@@ -24,33 +84,32 @@ module.exports = async (db, logger, regions) => {
                     $setOnInsert: {
                         _id: id,
                         SIRET: id,
-                        raisonSociale: organisme.raison_sociale,
-                        codeRegion: region.codeRegion,
-                        courriel: organisme.courriel,
+                        raisonSociale: formateur.raison_sociale_formateur,
+                        codeRegion: findRegion(data).codeRegion,
+                        courriel: data.courriels[0],
                         token: uuid.v4(),
                         creationDate: new Date(),
                         meta: {
-                            siretAsString: organisme.siret,
+                            siretAsString: siret,
                         }
                     },
                     $addToSet: {
-                        ...(organisme.courriel ? { courriels: organisme.courriel } : {}),
+                        courriels: { $each: data.courriels },
                         sources: 'intercarif',
                     },
                     $set: {
                         profile: 'organisme',
-                        ...(organisme.numero ? { numero: organisme.numero } : {}),
-                        ...(!organisme.organismes_formateurs ? {} : {
-                            organismeFormateurs: organisme.organismes_formateurs.map(of => {
-                                return {
-                                    siret: of.siret,
-                                    numero: of.numero,
-                                    raisonSociale: of.raison_sociale,
-                                    lieux_de_formation: of.lieux_de_formation,
-                                };
-                            })
+                        ...(formateur._attributes ? { numero: formateur._attributes.numero } : {}),
+                        lieux_de_formation: data.lieux_de_formation.map(lieu => {
+                            return {
+                                nom: lieu.coordonnees.nom,
+                                adresse: {
+                                    code_postal: lieu.coordonnees.adresse.codepostal,
+                                    ville: lieu.coordonnees.adresse.ville,
+                                    region: lieu.coordonnees.adresse.region
+                                }
+                            };
                         }),
-                        lieux_de_formation: organisme.lieux_de_formation ? organisme.lieux_de_formation : [],
                     },
                 },
                 { upsert: true }
@@ -62,19 +121,13 @@ module.exports = async (db, logger, regions) => {
 
         } catch (e) {
             stats.invalid++;
-            logger.error(`Organisme cannot be synchronized with intercarif`, JSON.stringify(organisme, null, 2), e);
+            logger.error(`Organisme cannot be synchronized with intercarif`, JSON.stringify(data, null, 2), e);
         }
     };
 
-    let cursor = getOrganismesResponsables(db);
-    while (await cursor.hasNext()) {
-        const responsable = await cursor.next();
+    let organismes = await getOrganismesFromIntercarif();
 
-        await Promise.all([
-            synchronizeAccount(responsable),
-            ...responsable.organismes_formateurs.map(of => synchronizeAccount(of))
-        ]);
-    }
+    await Promise.all(organismes.map(organisme => synchronizeAccount(organisme)));
 
     return stats.invalid === 0 ? Promise.resolve(stats) : Promise.reject(stats);
 };

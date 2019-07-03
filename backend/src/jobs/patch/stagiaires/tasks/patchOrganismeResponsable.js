@@ -1,3 +1,5 @@
+const getOrganismesResponsables = require('./utils/getOrganismesResponsables');
+
 module.exports = async (db, logger) => {
 
     let stats = {
@@ -6,10 +8,10 @@ module.exports = async (db, logger) => {
         total: 0,
     };
 
-    let responsables = await db.collection('intercarif_organismes_responsables').find();
-    while (await responsables.hasNext()) {
-        let responsable = await responsables.next();
-        let codePostaux = responsable.organisme_formateurs.reduce((acc, organisme) => {
+    let cursor = await getOrganismesResponsables(db);
+    while (await cursor.hasNext()) {
+        let responsable = await cursor.next();
+        let codePostaux = responsable.organismes_formateurs.reduce((acc, organisme) => {
             return [
                 ...acc,
                 ...organisme.lieux_de_formation.map(l => l.adresse.code_postal),
@@ -28,7 +30,7 @@ module.exports = async (db, logger) => {
                 let trainee = await trainees.next();
                 let siret = trainee.training.organisation.siret;
                 let codePostal = trainee.training.place.postalCode;
-                let formateurs = responsable.organisme_formateurs.filter(o => {
+                let formateurs = responsable.organismes_formateurs.filter(o => {
                     return o.lieux_de_formation.find(lieu => lieu.adresse.code_postal === codePostal);
                 });
 
