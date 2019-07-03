@@ -1,7 +1,7 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const generateOrganismesFromIntercarif = require('../../../../../src/jobs/import/organismes/generateOrganismesFromIntercarif');
+const generateOrganismesFromIntercarif = require('../../../../../src/jobs/import/organismes/tasks/generateOrganismesFromIntercarif');
 
 describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 

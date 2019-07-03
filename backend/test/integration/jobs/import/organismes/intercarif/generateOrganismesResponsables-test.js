@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/test-database');
-const generateOrganismesResponsables = require('../../../../../../src/jobs/import/organismes/intercarif/generateOrganismesResponsables');
+const generateOrganismesResponsables = require('../../../../../../src/jobs/import/organismes/tasks/intercarif/generateOrganismesResponsables');
 
 describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
@@ -12,7 +12,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
         await generateOrganismesResponsables(db);
 
         let organisme = await db.collection('intercarif_organismes_responsables').findOne();
-        assert.deepEqual(organisme, {
+        assert.deepStrictEqual(organisme, {
             _id: '11111111111111',
             siret: '11111111111111',
             nom: 'Anotea Formation',
