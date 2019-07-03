@@ -32,6 +32,7 @@ export default class AvisStatsTable extends Component {
         let formValidated = campaignStats[0].map(e => e.formValidated).reduce((a, b) => a + b);
         let allowToContact = campaignStats[0].map(e => e.allowToContact).reduce((a, b) => a + b);
         let nbCommentaires = campaignStats[0].map(e => e.nbCommentaires).reduce((a, b) => a + b);
+        let nbCommentairesRejected = campaignStats[0].map(e => e.nbCommentairesRejected).reduce((a, b) => a + b);
 
         return (
             <div>
@@ -58,15 +59,15 @@ export default class AvisStatsTable extends Component {
                             <th scope="col" className="section">Importés <i className="fas fa-question-circle"><span className="tooltip">Nombre de stagiaires présents dans le fichier datalake</span></i></th>
                             <th scope="col">Contactés <i className="fas fa-question-circle"><span className="tooltip">Nombre de stagiaires à qui un mail à été envoyé</span></i></th>
                             <th scope="col" className="section">Envoyés <i className="fas fa-question-circle"><span className="tooltip">Nombre de mails envoyés aux stagiaires</span></i></th>
-                            <th scope="col">Ouverts <i className="fas fa-question-circle"><span className="tooltip">Taux d&apos;ouverture de mails</span></i></th>
-                            <th scope="col">Cliqués <i className="fas fa-question-circle"><span className="tooltip">Taux de clic dans le questionnaire</span></i> </th>
-                            <th scope="col">Validés <i className="fas fa-question-circle"><span className="tooltip">Taux de questionnaires validés</span></i></th>
-                            <th scope="col" className="section">Déposés <i className="fas fa-question-circle"><span className="tooltip">Taux d&apos;avis déposés</span></i></th>
-                            <th scope="col">Avec commentaires <i className="fas fa-question-circle"><span className="tooltip">Taux d&apos;avis avec commentaire</span></i></th>
+                            <th scope="col">Ouverts <i className="fas fa-question-circle"><span className="tooltip">Nombre de mails ouverts / nombre de stagiaires contactés</span></i></th>
+                            <th scope="col">Cliqués <i className="fas fa-question-circle"><span className="tooltip">Nombre de clics dans le mail / nombre de mails ouverts</span></i> </th>
+                            <th scope="col">Validés <i className="fas fa-question-circle"><span className="tooltip">Nombre de questionnaires validés / nombre de clics dans le lien</span></i></th>
+                            <th scope="col" className="section">Déposés <i className="fas fa-question-circle"><span className="tooltip">Nombre de questionnaires validés / nombre de stagiaires contactés</span></i></th>
+                            <th scope="col">Avec commentaires <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires / nombre de questionnaires validés</span></i></th>
                             <th scope="col" className="section">À modérer <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires à modérer</span></i></th>
-                            <th scope="col">Positif/Neutre <i className="fas fa-question-circle"><span className="tooltip">Taux de commentaires positifs ou neutres</span></i></th>
-                            <th scope="col">Negatifs <i className="fas fa-question-circle"><span className="tooltip">Taux de commentaires négatifs</span></i></th>
-                            <th scope="col">Rejetés <i className="fas fa-question-circle"><span className="tooltip">Taux de commentaires rejetés</span></i></th>
+                            <th scope="col">Positif/Neutre <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires tagués positifs / nombre de commentaires total</span></i></th>
+                            <th scope="col">Negatifs <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires tagués négatifs / nombre de commentaires total</span></i></th>
+                            <th scope="col">Rejetés <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires rejetés / nombre de commentaires total</span></i></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -186,7 +187,7 @@ export default class AvisStatsTable extends Component {
                                 { this.computeRate(nbCommentaires, formValidated) }
                             </td>
                             <td>
-                                { campaignStats[0].map(e => e.nbCommentairesRejected).reduce((a, b) => a + b) }
+                                { nbCommentairesRejected }
                             </td>
                         </tr>
                         {
