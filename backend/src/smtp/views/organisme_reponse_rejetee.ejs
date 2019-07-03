@@ -46,8 +46,7 @@
             width: 33%;
         }
 
-        h1,
-        p, ul {
+        h1 {
             text-align: center;
         }
 
@@ -61,11 +60,7 @@
             color: #91979C;
             font-size: 0.7em;
         }
-
-        ul {
-            list-style: none;
-        }
-
+        
         .banner {
             height: 193px;
         }
@@ -84,6 +79,7 @@
 
         .reponse {
             font-style: italic;
+            font-weight: bold;
         }
 
         .button {
@@ -145,7 +141,7 @@
         <p>Bonjour,</p>
         <p>Nous avons pris connaissance de la réponse que vous avez formulée dans votre Espace Anotéa</p>
 
-        <p class="reponse"><%= reponse %></p>
+        <p class="reponse">"<%= reponse %>"</p>
 
         <p>
             Nous vous remercions de votre contribution à notre service. En répondant aux commentaires, vous apportez vous
