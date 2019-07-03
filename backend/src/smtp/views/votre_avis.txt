@@ -7,6 +7,8 @@ Vous avez suivi la formation de "<%= trainee.training.title %>" du <%= moment(tr
 
 Pourquoi donner votre avis ?
 
+Aider les prochains à faire le bon choix
+
 100% anonyme
 
 Cet avis est totalement anonyme.
@@ -14,8 +16,6 @@ Cet avis est totalement anonyme.
 Participer à l'amélioration des formations
 
 Donnez des retours direct aux centres de formation ainsi qu'à Pôle Emploi.
-
-Aider les prochains à faire le bon choix
 
 Votre avis sera consulté par des centaines de personnes en recherche de formation.
 
