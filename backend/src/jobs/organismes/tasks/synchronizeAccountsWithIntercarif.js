@@ -1,5 +1,6 @@
 const uuid = require('node-uuid');
 const _ = require('lodash');
+const { promiseAll } = require('../../job-utils');
 
 module.exports = async (db, logger, regions) => {
 
@@ -119,15 +120,17 @@ module.exports = async (db, logger, regions) => {
                 stats.updated++;
             }
 
+            return results;
+
         } catch (e) {
             stats.invalid++;
             logger.error(`Organisme cannot be synchronized with intercarif`, JSON.stringify(data, null, 2), e);
+            return null;
         }
     };
 
     let organismes = await getOrganismesFromIntercarif();
-
-    await Promise.all(organismes.map(organisme => synchronizeAccount(organisme)));
+    await promiseAll(organismes, organisme => synchronizeAccount(organisme), { batchSize: 50 });
 
     return stats.invalid === 0 ? Promise.resolve(stats) : Promise.reject(stats);
 };
