@@ -289,7 +289,7 @@ module.exports = {
             contenu_formation: 'Réaliser le développement d\'application web.',
             certifiante: '1',
             contact_formation: {
-                coordonnefs: {
+                coordonnees: {
                     civilite: 'Madame',
                     nom: 'Martin',
                     prenom: 'Henri',
