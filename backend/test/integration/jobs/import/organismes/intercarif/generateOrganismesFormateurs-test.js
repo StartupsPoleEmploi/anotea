@@ -2,7 +2,7 @@ const assert = require('assert');
 const _ = require('lodash');
 const { withMongoDB } = require('../../../../../helpers/test-database');
 const { newOrganismeResponsable } = require('../../../../../helpers/data/dataset');
-const generateOrganismesFormateurs = require('../../../../../../src/jobs/import/organismes/intercarif/generateOrganismesFormateurs');
+const generateOrganismesFormateurs = require('../../../../../../src/jobs/import/organismes/tasks/intercarif/generateOrganismesFormateurs');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
@@ -17,7 +17,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let organisme = await db.collection('intercarif_organismes_formateurs').findOne();
         assert.ok(organisme._id);
-        assert.deepEqual(_.omit(organisme, ['_id']), {
+        assert.deepStrictEqual(_.omit(organisme, ['_id']), {
             siret: '22222222222222',
             numero: 'OF_XXX',
             raison_sociale: 'PE Formation',
@@ -49,7 +49,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await generateOrganismesFormateurs(db);
 
         let count = await db.collection('intercarif_organismes_formateurs').countDocuments({ siret: '22222222222222' });
-        assert.deepEqual(count, 1);
+        assert.deepStrictEqual(count, 1);
     });
 
     it('should ignore organismes formateurs with missing data', async () => {
@@ -81,9 +81,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await generateOrganismesFormateurs(db);
 
         let count = await db.collection('intercarif_organismes_formateurs').countDocuments({ siret: '0' });
-        assert.deepEqual(count, 0);
+        assert.deepStrictEqual(count, 0);
 
         count = await db.collection('intercarif_organismes_formateurs').countDocuments({ siret: '44444444444444' });
-        assert.deepEqual(count, 0);
+        assert.deepStrictEqual(count, 0);
     });
 }));

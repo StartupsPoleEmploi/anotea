@@ -144,14 +144,15 @@ module.exports = function(db, logger, configuration, regions) {
 
             sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
         },
-        sendReponseRejeteeNotification: async (mailOptions, organisme, successCallback, errorCallback) => {
+        sendReponseRejeteeNotification: async (mailOptions, organisme, reponse, successCallback, errorCallback) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
                 hostname: configuration.app.public_hostname,
                 trackingLink: getTrackingLink(organisme),
                 contact: getRegionEmail(region),
-                organisme: organisme
+                organisme: organisme,
+                reponse: reponse
             };
 
             mailOptions.list = list;
@@ -204,8 +205,7 @@ module.exports = function(db, logger, configuration, regions) {
                 hostname: configuration.app.public_hostname,
             };
 
-            mailOptions.subject = `${trainee.trainee.firstName} ${trainee.trainee.name}` +
-                ', donnez un avis sur votre formation en 1 minute';
+            mailOptions.subject = 'Pôle Emploi vous demande votre avis sur votre formation';
             mailOptions.list = Object.assign({}, list, {
                 unsubscribe: {
                     url: unsubscribeLink,

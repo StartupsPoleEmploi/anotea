@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const { newOrganismeAccount, newModerateurAccount, newComment } = require('../../../../helpers/data/dataset');
 const logger = require('../../../../helpers/test-logger');
-const computeOrganismesScore = require('../../../../../src/jobs/import/organismes/computeOrganismesScore');
+const computeOrganismesScore = require('../../../../../src/jobs/import/organismes/tasks/computeScore');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
