@@ -20,7 +20,8 @@ export default class Edition extends React.Component {
     }
 
     update = async () => {
-        let updated = await updateEditedCourriel(this.props.organisme._id, this.state.inputValue);
+        const inputValue = this.state.inputValue.replace(/\s/g, '');
+        let updated = await updateEditedCourriel(this.props.organisme._id, inputValue);
         this.props.onClose();
         this.props.onChange(updated, {
             message: {
