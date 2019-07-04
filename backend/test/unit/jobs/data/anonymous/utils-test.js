@@ -148,7 +148,7 @@ describe(__filename, () => {
             }
         });
         
-        assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE    SAINT FRANCOIS');
+        assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE SAINT FRANCOIS');
     });
 
     it('should not remove training numbers', () => {
