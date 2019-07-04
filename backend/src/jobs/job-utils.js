@@ -61,12 +61,14 @@ module.exports = {
             exit(e);
         }
     },
-    streamToCSV: (stream, file, columns) => {
+    csv: (inputStream, columns) => {
+        return inputStream
+        .pipe(csvStream(columns))
+        .pipe(encodeStream('UTF-8'));
+    },
+    asPromise: stream => {
         return new Promise((resolve, reject) => {
             stream
-            .pipe(csvStream(columns))
-            .pipe(encodeStream('UTF-8'))
-            .pipe(fs.createWriteStream(file))
             .on('error', e => reject(e))
             .on('finish', async () => resolve());
         });

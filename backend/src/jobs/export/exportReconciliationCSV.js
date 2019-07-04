@@ -2,8 +2,7 @@ const cli = require('commander');
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
-const { streamToCSV } = require('../../common/utils/stream-utils');
-const { execute } = require('../job-utils');
+const { execute, csv, asPromise } = require('../job-utils');
 
 cli
 .option('--reconciliable')
@@ -16,7 +15,6 @@ execute(async ({ logger, db, regions }) => {
 
         let fileName = `reconciliation-${nom}-${codeRegion}.csv`;
         let csvFile = cli.output ? path.join(cli.output, fileName) : path.join(__dirname, '../../../../.data', fileName);
-        let output = fs.createWriteStream(csvFile);
 
         logger.info(`Generating CSV file ${csvFile}...`);
 
@@ -25,41 +23,44 @@ execute(async ({ logger, db, regions }) => {
             'meta.reconciliations.0.action': cli.reconciliable
         });
 
-        return streamToCSV(stream, output, {
-            'id': avis => avis._id,
-            'note accueil': avis => avis.rates ? avis.rates.accueil : '',
-            'note contenu formation': avis => avis.rates ? avis.rates.contenu_formation : '',
-            'note equipe formateurs': avis => avis.rates ? avis.rates.equipe_formateurs : '',
-            'note matériel': avis => avis.rates ? avis.rates.moyen_materiel : '',
-            'note accompagnement': avis => avis.rates ? avis.rates.accompagnement : '',
-            'note global': avis => avis.rates ? avis.rates.global : '',
-            'pseudo': avis => (avis.comment && avis.comment.pseudo) ? avis.comment.pseudo : '',
-            'titre': avis => (avis.comment && avis.comment.title) ? avis.comment.title : '',
-            'commentaire': avis => (avis.comment && avis.comment.text) ? avis.comment.text : '',
-            'campagne': avis => avis.campaign,
-            'date': avis => avis.date,
-            'accord': avis => avis.accord,
-            'id formation': avis => avis.training.idFormation,
-            'titre formation': avis => avis.training.title,
-            'date début': avis => moment(avis.training.startDate).format('DD/MM/YYYY'),
-            'date de fin prévue': avis => moment(avis.training.scheduledEndDate).format('DD/MM/YYYY'),
-            'id organisme': avis => `="${avis.training.organisation.id}"`,
-            ' siret organisme': avis => `="${avis.training.organisation.siret}"`,
-            'libellé organisme': avis => avis.training.organisation.label,
-            'nom organisme': avis => avis.training.organisation.name,
-            'code postal': avis => avis.training.place.postalCode,
-            'ville': avis => avis.training.place.city,
-            'id certif info': avis => (`="${avis.training.certifInfo.id}"`),
-            'libellé certifInfo': avis => avis.training.certifInfo.label,
-            'id session': avis => avis.training.idSession,
-            'formacode': avis => avis.training.formacode,
-            'AES reçu': avis => avis.training.aesRecu,
-            'référencement': avis => avis.training.referencement,
-            'id session aude formation': avis => avis.training.idSessionAudeFormation,
-            'numéro d\'action': avis => avis.infoCarif ? avis.infoCarif.numeroAction : '',
-            'numéro de session': avis => avis.infoCarif ? avis.infoCarif.numeroSession : '',
-            'code financeur': avis => avis.training.codeFinanceur,
-        });
+        return asPromise(
+            csv(stream, {
+                'id': avis => avis._id,
+                'note accueil': avis => avis.rates ? avis.rates.accueil : '',
+                'note contenu formation': avis => avis.rates ? avis.rates.contenu_formation : '',
+                'note equipe formateurs': avis => avis.rates ? avis.rates.equipe_formateurs : '',
+                'note matériel': avis => avis.rates ? avis.rates.moyen_materiel : '',
+                'note accompagnement': avis => avis.rates ? avis.rates.accompagnement : '',
+                'note global': avis => avis.rates ? avis.rates.global : '',
+                'pseudo': avis => (avis.comment && avis.comment.pseudo) ? avis.comment.pseudo : '',
+                'titre': avis => (avis.comment && avis.comment.title) ? avis.comment.title : '',
+                'commentaire': avis => (avis.comment && avis.comment.text) ? avis.comment.text : '',
+                'campagne': avis => avis.campaign,
+                'date': avis => avis.date,
+                'accord': avis => avis.accord,
+                'id formation': avis => avis.training.idFormation,
+                'titre formation': avis => avis.training.title,
+                'date début': avis => moment(avis.training.startDate).format('DD/MM/YYYY'),
+                'date de fin prévue': avis => moment(avis.training.scheduledEndDate).format('DD/MM/YYYY'),
+                'id organisme': avis => `="${avis.training.organisation.id}"`,
+                ' siret organisme': avis => `="${avis.training.organisation.siret}"`,
+                'libellé organisme': avis => avis.training.organisation.label,
+                'nom organisme': avis => avis.training.organisation.name,
+                'code postal': avis => avis.training.place.postalCode,
+                'ville': avis => avis.training.place.city,
+                'id certif info': avis => (`="${avis.training.certifInfo.id}"`),
+                'libellé certifInfo': avis => avis.training.certifInfo.label,
+                'id session': avis => avis.training.idSession,
+                'formacode': avis => avis.training.formacode,
+                'AES reçu': avis => avis.training.aesRecu,
+                'référencement': avis => avis.training.referencement,
+                'id session aude formation': avis => avis.training.idSessionAudeFormation,
+                'numéro d\'action': avis => avis.infoCarif ? avis.infoCarif.numeroAction : '',
+                'numéro de session': avis => avis.infoCarif ? avis.infoCarif.numeroSession : '',
+                'code financeur': avis => avis.training.codeFinanceur,
+            })
+            .pipe(fs.createWriteStream(csvFile))
+        );
     };
 
     await Promise.all(regions.findActiveRegions().map(region => generateCSV(region)));
