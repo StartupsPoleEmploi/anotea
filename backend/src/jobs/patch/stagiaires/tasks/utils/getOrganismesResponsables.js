@@ -1,5 +1,5 @@
-module.exports = async db => {
-    await db.collection('intercarif').aggregate([
+module.exports = db => {
+    return db.collection('intercarif').aggregate([
         {
             $match: {
                 siret: { $ne: '0' },
@@ -54,7 +54,7 @@ module.exports = async db => {
         {
             $group: {
                 _id: {
-                    numero: '$organisme_responsable.numero',
+                    siret: '$organisme_responsable.siret',
                     organisme_formateur_siret: '$actions.organisme_formateur.siret',
                     lieu_de_formation_code_postal: '$actions.lieu_de_formation.adresse.code_postal'
                 },
@@ -66,7 +66,7 @@ module.exports = async db => {
         {
             $group: {
                 _id: {
-                    numero: '$organisme_responsable.numero',
+                    siret: '$organisme_responsable.siret',
                     organisme_formateur_siret: '$organisme_formateur.siret'
                 },
                 organisme_responsable: { $mergeObjects: '$organisme_responsable' },
@@ -77,10 +77,10 @@ module.exports = async db => {
         {
             $group: {
                 _id: {
-                    numero: '$organisme_responsable.numero'
+                    siret: '$organisme_responsable.siret'
                 },
                 organisme_responsable: { $first: '$organisme_responsable' },
-                organisme_formateurs: {
+                organismes_formateurs: {
                     $push: {
                         $mergeObjects: ['$organisme_formateur', { lieux_de_formation: '$lieux_de_formation' }]
                     }
@@ -89,20 +89,15 @@ module.exports = async db => {
         },
         {
             $replaceRoot: {
-                newRoot: { $mergeObjects: ['$organisme_responsable', { organisme_formateurs: '$organisme_formateurs' }] }
+                newRoot: { $mergeObjects: ['$organisme_responsable', { organismes_formateurs: '$organismes_formateurs' }] }
             }
         },
         {
             $addFields: {
                 _id: '$siret'
             }
-        },
-        {
-            $out: 'intercarif_organismes_responsables'
         }
-    ], { allowDiskUse: true }).toArray();
-
-    return db.collection('intercarif_organismes_responsables').countDocuments();
+    ]);
 };
 
 

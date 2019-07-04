@@ -1,4 +1,5 @@
 const moment = require('moment');
+const _ = require('lodash');
 const config = require('config');
 const fs = require('fs');
 const { encodeStream } = require('iconv-lite');
@@ -72,5 +73,11 @@ module.exports = {
             .on('error', e => reject(e))
             .on('finish', async () => resolve());
         });
+    },
+    promiseAll: async (promises, callback, options = { batchSize: 25 }) => {
+        let chunks = _.chunk(promises, options.batchSize);
+        for (let chunk of chunks) {
+            await Promise.all(chunk.map(data => callback(data)));
+        }
     }
 };
