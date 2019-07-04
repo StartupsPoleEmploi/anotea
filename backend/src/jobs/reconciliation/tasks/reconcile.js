@@ -3,6 +3,7 @@ const buildFormation = require('./reconcile/buildFormation');
 const buildAction = require('./reconcile/buildAction');
 const buildSession = require('./reconcile/buildSession');
 const findAvisReconciliables = require('./reconcile/findAvisReconciliables');
+const { batchCursor } = require('../../job-utils');
 
 module.exports = async (db, logger, options = {}) => {
 
@@ -40,21 +41,16 @@ module.exports = async (db, logger, options = {}) => {
         'actions.sessions.periode': 1,
     });
 
-    let promises = [];
-    while (await cursor.hasNext()) {
-        let intercarif = await cursor.next();
-        intercarif.actions = intercarif.actions.filter(a => a.lieu_de_formation.coordonnees.adresse);
-
-        if (promises.length >= 25) {
-            await Promise.all(promises);
-            promises = [];
-        }
+    await batchCursor(cursor, async next => {
+        let intercarif = await next();
 
         try {
 
-            let reconciliations = await Promise.all(intercarif.actions.map(action => {
-                return findAvisReconciliables(db, intercarif, action, options);
-            }));
+            let reconciliations = await Promise.all(
+                intercarif.actions
+                .filter(a => a.lieu_de_formation.coordonnees.adresse)
+                .map(action => findAvisReconciliables(db, intercarif, action, options))
+            );
 
             let actions = reconciliations.reduce((acc, { action, comments }) => {
                 return [
@@ -75,13 +71,11 @@ module.exports = async (db, logger, options = {}) => {
                 _.chain(reconciliations).flatMap(r => r.comments).uniqBy('token').value()
             );
 
-            promises.push(
-                Promise.all([
-                    replaceOne('formations', formation),
-                    Promise.all(actions.map(action => replaceOne('actions', action))),
-                    Promise.all(sessions.map(session => replaceOne('sessions', session))),
-                ])
-            );
+            await Promise.all([
+                replaceOne('formations', formation),
+                Promise.all(actions.map(action => replaceOne('actions', action))),
+                Promise.all(sessions.map(session => replaceOne('sessions', session))),
+            ]);
 
             logger.debug(`Formation ${intercarif._attributes.numero} from intercarif has been reconciliated`);
 
@@ -89,9 +83,8 @@ module.exports = async (db, logger, options = {}) => {
             stats.error++;
             logger.error(`Formation ${intercarif._attributes.numero} can not be reconciliated`, e);
         }
-    }
+    });
 
-    await Promise.all(promises);
 
     return stats.error ? Promise.reject(stats) : stats;
 };
