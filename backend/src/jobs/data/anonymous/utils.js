@@ -59,6 +59,8 @@ module.exports = () => {
 
     const normalize = str => accents.remove(str).toUpperCase();
 
+    const removeMultipleSpaces = str => str.replace(/\s\s+/g, ' ');
+
     const getAnonymizedTitle = trainee => {
         const title = trainee.training.title;
         const firstName = trainee.trainee.firstName;
@@ -82,7 +84,7 @@ module.exports = () => {
         }
 
         if (changeDetected) {
-            anonymizedTitle = removeTail(anonymizedTitle);
+            anonymizedTitle = removeMultipleSpaces(removeTail(anonymizedTitle));
         }
 
         return { changeDetected, anonymizedTitle };
