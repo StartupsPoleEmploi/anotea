@@ -9,7 +9,7 @@ const createObjectReadableStream = () => new Readable({
     }
 });
 
-module.exports = () => {
+module.exports = output => {
 
     let villeStream = null;
 
@@ -24,7 +24,7 @@ module.exports = () => {
                     'Ville Commenaire': data => data.v1,
                     'Ville Action': data => data.v2,
                 })
-                .pipe(fs.createWriteStream(path.join(__dirname, '../../../../../../.data', 'reconciliation-ville.csv')));
+                .pipe(fs.createWriteStream(path.join(output, 'reconciliation-ville.csv')));
 
             }
             villeStream.push(data);

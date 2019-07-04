@@ -1,7 +1,6 @@
 const buildFormation = require('./reconcile/buildFormation');
 const buildActions = require('./reconcile/buildActions');
 const buildSessions = require('./reconcile/buildSessions');
-const createReporter = require('./reconcile/createReporter');
 const findAvisReconciliables = require('./reconcile/rules/findAvisReconciliables');
 
 module.exports = async (db, logger, options = { formations: true, actions: true, sessions: true }) => {
@@ -41,7 +40,6 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
     });
 
     let promises = [];
-    let reporter = createReporter();
     while (await cursor.hasNext()) {
         let intercarif = await cursor.next();
 
@@ -52,9 +50,9 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
 
         try {
             let comments = await findAvisReconciliables(db, intercarif);
-            let formation = options.formations ? buildFormation(intercarif, comments, reporter) : null;
-            let actions = options.actions ? buildActions(intercarif, comments, reporter) : null;
-            let sessions = options.sessions ? buildSessions(intercarif, comments, reporter) : null;
+            let formation = options.formations ? buildFormation(intercarif, comments, { reporter: options.reporter }) : null;
+            let actions = options.actions ? buildActions(intercarif, comments, { reporter: options.reporter }) : null;
+            let sessions = options.sessions ? buildSessions(intercarif, comments, { reporter: options.reporter }) : null;
 
             promises.push(
                 Promise.all([
@@ -73,7 +71,6 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
     }
 
     await Promise.all(promises);
-    reporter.end();
 
     return stats.error ? Promise.reject(stats) : stats;
 };

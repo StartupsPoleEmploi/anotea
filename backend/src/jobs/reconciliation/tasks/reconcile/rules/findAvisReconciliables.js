@@ -36,6 +36,7 @@ module.exports = (db, formation) => {
         rejected: 1,
         editedComment: 1,
         reponse: 1,
+        codeRegion: 1,
     })
     .toArray();
 };
