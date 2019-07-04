@@ -39,7 +39,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', avisReconciliable),
         ]);
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         await addReconciliationAvisMetadata(db);
 
@@ -47,9 +47,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.strictEqual(avis.meta.reconciliations.length, 1);
         assert.deepStrictEqual(_.omit(avis.meta.reconciliations[0], ['date']), {
             reconciliable: true,
-            formation: false,
+            formation: true,
             action: true,
-            session: false,
+            session: true,
         });
     });
 
@@ -68,7 +68,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', avisNonReconciliable),
         ]);
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         await addReconciliationAvisMetadata(db);
 

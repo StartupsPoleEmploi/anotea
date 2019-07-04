@@ -35,7 +35,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             }, date)),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         delete action.meta.import_date;
@@ -195,7 +195,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.avis.length, 1);
@@ -225,7 +225,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.avis.length, 1);
@@ -274,7 +274,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.avis.length, 2);
@@ -332,7 +332,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(action.avis.length, 0);
@@ -377,7 +377,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             }
         );
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('actionsReconciliees').findOne({ numero: 'AC_XX_XXXXXX' });
         assert.strictEqual(session.avis.length, 0);
@@ -459,7 +459,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.score, {
@@ -488,7 +488,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.score, { nb_avis: 0 });
@@ -518,7 +518,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let count = await db.collection('actionsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
         assert.strictEqual(count, 1);
@@ -546,7 +546,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let count = await db.collection('actionsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
         assert.strictEqual(count, 1);
@@ -578,7 +578,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(action.avis.length, 1);
@@ -607,7 +607,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.avis, []);
@@ -640,7 +640,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(action.avis.length, 1);

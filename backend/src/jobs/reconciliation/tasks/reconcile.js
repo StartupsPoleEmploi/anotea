@@ -1,9 +1,10 @@
+const _ = require('lodash');
 const buildFormation = require('./reconcile/buildFormation');
-const buildActions = require('./reconcile/buildActions');
-const buildSessions = require('./reconcile/buildSessions');
-const findAvisReconciliables = require('./reconcile/rules/findAvisReconciliables');
+const buildAction = require('./reconcile/buildAction');
+const buildSession = require('./reconcile/buildSession');
+const findAvisReconciliables = require('./reconcile/findAvisReconciliables');
 
-module.exports = async (db, logger, options = { formations: true, actions: true, sessions: true }) => {
+module.exports = async (db, logger, options = {}) => {
 
     let stats = {
         imported: { formations: 0, actions: 0, sessions: 0 },
@@ -42,6 +43,7 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
     let promises = [];
     while (await cursor.hasNext()) {
         let intercarif = await cursor.next();
+        intercarif.actions = intercarif.actions.filter(a => a.lieu_de_formation.coordonnees.adresse);
 
         if (promises.length >= 25) {
             await Promise.all(promises);
@@ -49,16 +51,35 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
         }
 
         try {
-            let comments = await findAvisReconciliables(db, intercarif);
-            let formation = options.formations ? buildFormation(intercarif, comments, { reporter: options.reporter }) : null;
-            let actions = options.actions ? buildActions(intercarif, comments, { reporter: options.reporter }) : null;
-            let sessions = options.sessions ? buildSessions(intercarif, comments, { reporter: options.reporter }) : null;
+
+            let reconciliations = await Promise.all(intercarif.actions.map(action => {
+                return findAvisReconciliables(db, intercarif, action, options);
+            }));
+
+            let actions = reconciliations.reduce((acc, { action, comments }) => {
+                return [
+                    ...acc,
+                    buildAction(intercarif, action, comments),
+                ];
+            }, []);
+
+            let sessions = reconciliations.reduce((acc, { action, comments }) => {
+                let sessions = action.sessions;
+                return [
+                    ...acc,
+                    ...sessions.map(session => buildSession(intercarif, action, session, comments)),
+                ];
+            }, []);
+
+            let formation = buildFormation(intercarif,
+                _.chain(reconciliations).flatMap(r => r.comments).uniqBy(['token']).value()
+            );
 
             promises.push(
                 Promise.all([
-                    ...(formation ? [replaceOne('formations', formation)] : []),
-                    ...(actions ? [Promise.all(actions.map(action => replaceOne('actions', action)))] : []),
-                    ...(sessions ? [Promise.all(sessions.map(session => replaceOne('sessions', session)))] : []),
+                    replaceOne('formations', formation),
+                    Promise.all(actions.map(action => replaceOne('actions', action))),
+                    Promise.all(sessions.map(session => replaceOne('sessions', session))),
                 ])
             );
 

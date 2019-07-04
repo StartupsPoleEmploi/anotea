@@ -17,7 +17,7 @@ execute(async ({ db, logger }) => {
     let reporter = cli.reporting ? createReporter(cli.reporting) : null;
 
     logger.info(`Reconciling formations, actions and sessions...`);
-    let stats = await reconcile(db, logger, { formations: true, actions: true, sessions: true, reporter });
+    let stats = await reconcile(db, logger, { reporter });
 
     logger.info(`Running post-process tasks...`);
     await Promise.all([

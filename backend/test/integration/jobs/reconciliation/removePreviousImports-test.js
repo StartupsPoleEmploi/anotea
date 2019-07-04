@@ -12,7 +12,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
         let db = await getTestDatabase();
 
         await importIntercarif();
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         await removePreviousImports(db, moment().toDate());
 
