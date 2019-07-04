@@ -34,8 +34,8 @@ const sameLieuDeFormation = (action, comment, reporter) => {
 };
 
 const sameSiren = (action, comment) => {
-    let siren = action.organisme_formateur.siret_formateur.siret.substring(0, 9);
-    return new RegExp(`^${siren}`).test(comment.training.organisation.siret);
+    return action.organisme_formateur.siret_formateur.siret.substring(0, 9) ===
+        comment.training.organisation.siret.substring(0, 9);
 };
 
 module.exports = (action, comments, reporter) => {
