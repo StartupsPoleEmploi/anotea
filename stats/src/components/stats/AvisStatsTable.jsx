@@ -24,7 +24,7 @@ export default class AvisStatsTable extends Component {
     }
 
     getTotal = string => {
-        return this.props.campaignStats[0].map(e => e[string]).reduce((a, b) => a + b);
+        return this.props.campaignStats.map(e => e[string]).reduce((a, b) => a + b);
     };
 
     render() {
@@ -188,7 +188,7 @@ export default class AvisStatsTable extends Component {
                             </td>
                         </tr>
                         {
-                            campaignStats[0].map((a, index) => (
+                            campaignStats.map((a, index) => (
                                 <tr key={index}>
                                     <th scope="row">
                                         {a._id}
