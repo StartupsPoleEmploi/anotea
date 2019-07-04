@@ -44,6 +44,15 @@ module.exports = {
             db.collection('comment').createIndex({ 'reponse.status': 1 }),
             db.collection('comment').createIndex({ 'reponse.date': 1 }),
             db.collection('comment').createIndex({ 'meta.reconciliations': 1 }),
+            db.collection('comment').createIndex({
+                'training.place.city': 1,
+                'training.place.postalCode': 1,
+                'formacode': 1,
+                'training.certifInfo.id': 1,
+                'rejected': 1,
+                'published': 1,
+                'training.organisation.siret': 1,
+            }, { name: 'reconciliation' }),
         ]);
     },
     accounts: db => {
