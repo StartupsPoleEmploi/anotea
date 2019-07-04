@@ -53,21 +53,15 @@ module.exports = async (db, logger, regions) => {
         return Object.values(accumulator);
     };
 
-    const findRegion = data => {
+    const findCodeRegion = data => {
 
-        let results = data.lieux_de_formation.map(lieu => {
-            try {
-                return regions.findRegionByPostalCode(lieu.coordonnees.adresse.codepostal);
-            } catch (e) {
-                return null;
-            }
-        });
+        let lieu = data.lieux_de_formation.find(lieu => lieu.coordonnees.adresse.code_region !== 'XX');
 
-        if (_.every(results, r => r === null)) {
+        if (!lieu) {
             throw new Error(`Unable to find region for organisme ${data.organisme_formateur.siret_formateur.siret}`);
         }
 
-        return results.find(r => r);
+        return lieu.coordonnees.adresse.code_region;
     };
 
     const synchronizeAccount = async data => {
@@ -86,7 +80,7 @@ module.exports = async (db, logger, regions) => {
                         _id: id,
                         SIRET: id,
                         raisonSociale: formateur.raison_sociale_formateur,
-                        codeRegion: findRegion(data).codeRegion,
+                        codeRegion: findCodeRegion(data),
                         courriel: data.courriels[0],
                         token: uuid.v4(),
                         creationDate: new Date(),
