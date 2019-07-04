@@ -4,7 +4,7 @@ const { flatten } = require('../../../job-utils');
 const convertCommentToAvis = require('../../../../common/utils/convertCommentToAvis');
 const filterAvisReconciliables = require('./rules/filterAvisReconciliables');
 
-module.exports = (intercarif, comments) => {
+module.exports = (intercarif, comments, reporter) => {
 
     return intercarif.actions.reduce((acc, action) => {
 
@@ -12,7 +12,7 @@ module.exports = (intercarif, comments) => {
             return acc;
         }
 
-        let reconciliated = filterAvisReconciliables(action, comments);
+        let reconciliated = filterAvisReconciliables(action, comments, reporter);
 
         return [
             ...acc,
