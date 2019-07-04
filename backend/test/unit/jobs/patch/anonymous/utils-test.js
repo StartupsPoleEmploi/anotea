@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { getAnonymizedTitle } = require('../../../../../src/jobs/data/anonymous/utils')();
+const { getAnonymizedTitle } = require('../../../../../src/jobs/patch/anonymous/utils')();
 
 describe(__filename, () => {
     it('should remove name, firstname and Pôle Emploi ID', () => {

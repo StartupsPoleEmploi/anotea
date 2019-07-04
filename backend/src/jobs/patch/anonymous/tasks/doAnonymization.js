@@ -14,7 +14,7 @@ module.exports = db => {
                     $set: {
                         'training.title': result.anonymizedTitle,
                         'anonymized': true,
-                        'training.oldTitle': trainee.training.title
+                        'meta.patch.training.title': trainee.training.title
                     }
                 };
 
