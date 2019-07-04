@@ -30,8 +30,6 @@ export default class AvisStatsTable extends Component {
     render() {
 
         let { stats, campaignStats } = this.props;
-        console.log(campaignStats);
-        
 
         return (
             <div>
