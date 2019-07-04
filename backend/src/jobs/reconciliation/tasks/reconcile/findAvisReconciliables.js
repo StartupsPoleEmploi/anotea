@@ -50,6 +50,7 @@ module.exports = async (db, intercarif, action) => {
     })
     .project({
         _id: 1,
+        token: 1,
         training: 1,
         rates: 1,
         date: 1,

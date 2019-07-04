@@ -26,12 +26,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
             },
             meta: {
-                reconciliation: {
+                reconciliations: [{
                     reconciliable: false,
-                    formation: false,
-                    action: false,
-                    session: false,
-                }
+                }]
             }
         });
 
@@ -44,12 +41,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await addReconciliationAvisMetadata(db);
 
         let avis = await db.collection('comment').findOne();
-        assert.strictEqual(avis.meta.reconciliations.length, 1);
+        assert.strictEqual(avis.meta.reconciliations.length, 2);
         assert.deepStrictEqual(_.omit(avis.meta.reconciliations[0], ['date']), {
             reconciliable: true,
-            formation: true,
-            action: true,
-            session: true,
         });
     });
 
@@ -76,9 +70,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.strictEqual(avis.meta.reconciliations.length, 1);
         assert.deepStrictEqual(_.omit(avis.meta.reconciliations[0], ['date']), {
             reconciliable: false,
-            formation: false,
-            action: false,
-            session: false,
         });
     });
 

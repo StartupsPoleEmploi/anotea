@@ -72,7 +72,7 @@ module.exports = async (db, logger, options = {}) => {
             }, []);
 
             let formation = buildFormation(intercarif,
-                _.chain(reconciliations).flatMap(r => r.comments).uniqBy(['token']).value()
+                _.chain(reconciliations).flatMap(r => r.comments).uniqBy('token').value()
             );
 
             promises.push(

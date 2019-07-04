@@ -197,7 +197,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.strictEqual(formation.avis.length, 0);
     });
 
-    it.only('should ignore same avis from multiple actions', async () => {
+    it('should ignore same avis from multiple actions', async () => {
 
         let db = await getTestDatabase();
         let intercarif = newIntercarif();

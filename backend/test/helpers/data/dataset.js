@@ -138,7 +138,7 @@ module.exports = {
     newComment: (custom, date = getDateInThePast()) => {
         return _.merge({
             _id: new ObjectID(),
-            token: randomize('token-12345'),
+            token: randomize('token'),
             campaign: 'test',
             formacode: '46242',
             idSession: '2422722',
