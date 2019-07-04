@@ -1,4 +1,4 @@
-const asSiren = require('./asSiren');
+const asSiren = siret => siret.substring(0, 9);
 
 module.exports = (db, formation) => {
 
