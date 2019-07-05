@@ -3,7 +3,6 @@ const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../helpers/test-database');
 const logger = require('../../../helpers/test-logger');
-const importKairosCSV = require('../../../../src/jobs/import/kairos/tasks/importKairosCSV');
 const synchronizeAccountsWithIntercarif = require('../../../../src/jobs/organismes/tasks/synchronizeAccountsWithIntercarif');
 const synchronizeAccountsWithKairos = require('../../../../src/jobs/organismes/tasks/synchronizeAccountsWithKairos');
 
@@ -14,11 +13,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif, getCompon
     it('should create new organisme from kairos', async () => {
 
         let db = await getTestDatabase();
-        await Promise.all([
-            importKairosCSV(db, logger, csvFile)
-        ]);
 
-        await synchronizeAccountsWithKairos(db, logger);
+        await synchronizeAccountsWithKairos(db, logger, csvFile);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 33333333333333 });
         assert.ok(doc.creationDate);
@@ -48,13 +44,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif, getCompon
         let db = await getTestDatabase();
         let { regions } = await getComponents();
 
-        await Promise.all([
-            importIntercarif(),
-            importKairosCSV(db, logger, csvFile)
-        ]);
+        await importIntercarif();
 
         await synchronizeAccountsWithIntercarif(db, logger, regions);
-        await synchronizeAccountsWithKairos(db, logger);
+        await synchronizeAccountsWithKairos(db, logger, csvFile);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.creationDate);
@@ -86,6 +79,20 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif, getCompon
             raisonSociale: 'Anotea Formation Paris',
             sources: ['intercarif', 'kairos'],
         });
+    });
+
+
+    it('should not invalid csv line', async () => {
+
+        let db = await getTestDatabase();
+        let invalidFile = path.join(__dirname, '../../../helpers/data', 'kairos-organismes-invalid.csv');
+
+        try {
+            await synchronizeAccountsWithKairos(db, logger, invalidFile);
+            assert.fail();
+        } catch (e) {
+            assert.ok(e);
+        }
     });
 
 }));

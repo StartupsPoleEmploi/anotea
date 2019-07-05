@@ -2,7 +2,7 @@ const cli = require('commander');
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
-const { execute, csv, asPromise } = require('../job-utils');
+const { execute, toCsvStream, promisifyStream } = require('../job-utils');
 
 cli
 .option('--reconciliable')
@@ -23,8 +23,8 @@ execute(async ({ logger, db, regions }) => {
             'meta.reconciliations.0.action': cli.reconciliable
         });
 
-        return asPromise(
-            csv(stream, {
+        return promisifyStream(
+            toCsvStream(stream, {
                 'id': avis => avis._id,
                 'note accueil': avis => avis.rates ? avis.rates.accueil : '',
                 'note contenu formation': avis => avis.rates ? avis.rates.contenu_formation : '',

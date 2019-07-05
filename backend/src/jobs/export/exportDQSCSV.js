@@ -2,7 +2,7 @@ const cli = require('commander');
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
-const { asPromise, csv, execute } = require('../job-utils');
+const { promisifyStream, toCsvStream, execute } = require('../job-utils');
 const { transformObject } = require('../../common/utils/stream-utils');
 
 cli
@@ -33,8 +33,8 @@ execute(async ({ logger, db, regions }) => {
         return { ...comment, trainee: trainee.trainee };
     }, { ignoreEmpty: true }));
 
-    return asPromise(
-        csv(stream, {
+    return promisifyStream(
+        toCsvStream(stream, {
             'Identifiant Anotea': data => data.token,
             'Identifiant PE national': data => data.trainee.dnIndividuNational,
             'Identifiant PE local': data => data.trainee.idLocal,
