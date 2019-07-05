@@ -34,7 +34,7 @@ module.exports = () => {
         return anonymizedTitle;
     };
 
-    const reID = new RegExp('(^|[^0-9])[0-9]{7}\\s?[A-Z0-9]([^0-9]|$)', 'gi');
+    const reID = new RegExp('(^|[^0-9a-z])[0-9]{7}\\s?[A-Z0-9]([^0-9]|$)', 'gi');
 
     const containsId = content => {
         return content.match(reID);
