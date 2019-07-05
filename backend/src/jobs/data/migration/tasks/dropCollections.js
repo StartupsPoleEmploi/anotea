@@ -23,7 +23,7 @@ module.exports = db => {
         db.collection('tmp.agg_out.51').drop().catch(() => ({})),
         db.collection('tmp.agg_out.52').drop().catch(() => ({})),
         db.collection('tmp.agg_out.53').drop().catch(() => ({})),
-        db.dropCollection('contact-stagiaires').drop().catch(() => ({})),
-        db.dropCollection('organismes').drop().catch(() => ({})),
+        db.collection('contact-stagiaires').drop().catch(() => ({})),
+        db.collection('organismes').drop().catch(() => ({})),
     ]);
 };
