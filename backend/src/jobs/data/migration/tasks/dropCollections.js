@@ -4,6 +4,7 @@ module.exports = db => {
         db.collection('intercarif_organismes_responsables').drop().catch(() => ({})),
         db.collection('intercarif_organismes_formateurs').drop().catch(() => ({})),
         db.collection('kairos_organismes').drop().catch(() => ({})),
+        db.collection('kairos').drop().catch(() => ({})),
         db.collection('tmp.agg_out.36').drop().catch(() => ({})),
         db.collection('tmp.agg_out.37').drop().catch(() => ({})),
         db.collection('tmp.agg_out.38').drop().catch(() => ({})),

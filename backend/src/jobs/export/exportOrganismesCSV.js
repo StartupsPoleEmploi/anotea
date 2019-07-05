@@ -2,7 +2,7 @@ const cli = require('commander');
 const fs = require('fs');
 const path = require('path');
 const getOrganismeEmail = require('../../common/utils/getOrganismeEmail');
-const { execute, csv, asPromise } = require('../job-utils');
+const { execute, toCsvStream, promisifyStream } = require('../job-utils');
 
 cli.description('Export organismes per active region')
 .parse(process.argv);
@@ -17,8 +17,8 @@ execute(async ({ db, logger, regions }) => {
         logger.info(`Generating CSV file ${csvFile}...`);
 
         let stream = db.collection('accounts').find({ profile: 'organisme', codeRegion });
-        return asPromise(
-            csv(stream, {
+        return promisifyStream(
+            toCsvStream(stream, {
                 'Siret': organisme => `="${organisme.meta.siretAsString}"`,
                 'Raison sociale': organisme => organisme.raisonSociale,
                 'Email': organisme => getOrganismeEmail(organisme),
