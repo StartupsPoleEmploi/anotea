@@ -12,12 +12,12 @@ cli
 .parse(process.argv);
 
 
-execute(async ({ logger, db, regions }) => {
+execute(async ({ logger, db }) => {
 
     let stats = {};
 
     logger.info('Synchronizing organismes from Intercarif...');
-    stats.intercarif = await synchronizeAccountsWithIntercarif(db, logger, regions);
+    stats.intercarif = await synchronizeAccountsWithIntercarif(db, logger);
 
     if (cli.kairos) {
         logger.info('Synchronizing organismes from Kairos...');

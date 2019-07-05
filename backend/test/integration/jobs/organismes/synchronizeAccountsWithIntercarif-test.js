@@ -5,15 +5,14 @@ const { newOrganismeAccount, newIntercarif } = require('../../../helpers/data/da
 const logger = require('../../../helpers/test-logger');
 const synchronizeAccountsWithIntercarif = require('../../../../src/jobs/organismes/tasks/synchronizeAccountsWithIntercarif');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
     it('should create account', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         await importIntercarif();
 
-        await synchronizeAccountsWithIntercarif(db, logger, regions);
+        await synchronizeAccountsWithIntercarif(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.creationDate);
@@ -46,7 +45,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should create account with multiple actions (sorted by code postaux)', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         let intercarif = newIntercarif();
         intercarif.actions.push(_.merge({}, intercarif.actions[0], {
             organisme_formateur: {
@@ -68,7 +66,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         }));
         await insertIntoDatabase('intercarif', intercarif);
 
-        await synchronizeAccountsWithIntercarif(db, logger, regions);
+        await synchronizeAccountsWithIntercarif(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.ok(doc.creationDate);
@@ -109,7 +107,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should update account', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('accounts', newOrganismeAccount({
@@ -127,7 +124,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await synchronizeAccountsWithIntercarif(db, logger, regions);
+        await synchronizeAccountsWithIntercarif(db, logger);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
         assert.deepStrictEqual(_.omit(doc, ['updateDate']), {
