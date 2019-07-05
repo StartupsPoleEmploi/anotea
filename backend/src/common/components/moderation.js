@@ -127,7 +127,7 @@ module.exports = db => {
             saveEvent(id, 'report', {
                 app: 'organisation',
                 user: 'admin',
-                profile: 'moderateur',
+                profile: 'organisme',
                 ...(options.events || {}),
             });
 
