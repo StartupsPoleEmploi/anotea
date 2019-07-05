@@ -11,8 +11,8 @@ import regions from './../../constantes/regions';
 export default class DeprecatedHeader extends React.PureComponent {
 
     static propTypes = {
-        codeFinanceur: PropTypes.node.isRequired,
-        codeRegion: PropTypes.node.isRequired,
+        codeFinanceur: PropTypes.string.isRequired,
+        codeRegion: PropTypes.string.isRequired,
     };
 
     getLabel = code => financeurs.map(e => e.code === code ? (e.label) : '');
@@ -21,6 +21,10 @@ export default class DeprecatedHeader extends React.PureComponent {
         let region = regions.find(e => e.codeRegion === codeRegion);
         return region ? region.nom : null;
     };
+
+    getUrl = () => {
+        return process.env.PUBLIC_URL ? `${process.env.PUBLIC_URL}/stats/avis` : 'http://localhost:3003/stats/avis';
+    }
 
     getFinanceurHeader = () => {
         return (
@@ -31,7 +35,7 @@ export default class DeprecatedHeader extends React.PureComponent {
                 </h1>
                 <a target="_blank"
                     rel="noopener noreferrer"
-                    href="https://anotea.pole-emploi.fr/stats/avis"
+                    href={this.getUrl()}
                     className="stats-link"><span className="fas fa-chart-line" /> Avis - Statistiques
                 </a>
             </div>
