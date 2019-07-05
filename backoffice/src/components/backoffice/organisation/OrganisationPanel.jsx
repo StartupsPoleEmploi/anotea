@@ -432,7 +432,7 @@ export default class OrganisationPanel extends React.Component {
                                                                 <span
                                                                     className="fas fa-comment-alt" /> {advice.reponse ? 'Modifier la réponse' : 'Répondre'}
                                                             </button>}
-                                                        {(this.state.tab !== 'reported' && advice.reported !== true && advice.comment !== undefined && advice.comment !== null) &&
+                                                        {(this.state.tab !== 'reported' && advice.reported !== true && !!advice.comment) &&
                                                             <button className="btn btn-danger btn-sm"
                                                                 onClick={this.handleReport.bind(this, advice._id)}
                                                                 title="signaler un avis permet d'alerter le modérateur sur son non-respect potentiel de la charte de modération">
