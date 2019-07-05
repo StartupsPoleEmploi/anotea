@@ -20,8 +20,6 @@ module.exports = async (db, logger, file) => {
     let stream = getOrganismesFromKairosCSV(file)
     .on('error', handleError)
     .pipe(transformObject(async kairos => {
-        stats.total++;
-
         let id = parseInt(kairos.siret, 10);
         let account = await db.collection('accounts').findOne({ _id: id });
 
@@ -52,12 +50,14 @@ module.exports = async (db, logger, file) => {
             }
             , { upsert: true });
 
-        if (results.result.nModified === 1) {
+        return results.result.nModified === 1;
+    }))
+    .on('data', modified => {
+        stats.total++;
+        if (modified) {
             stats.updated++;
         }
-
-        return results;
-    }))
+    })
     .on('error', handleError);
 
     await promisifyStream(stream);
