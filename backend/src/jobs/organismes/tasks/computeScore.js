@@ -1,4 +1,5 @@
 const computeScore = require('../../../common/utils/computeScore');
+const { batchCursor } = require('../../job-utils');
 
 module.exports = async (db, logger) => {
 
@@ -9,11 +10,10 @@ module.exports = async (db, logger) => {
         invalid: 0,
     };
 
-    while (await cursor.hasNext()) {
+    await batchCursor(cursor, async next => {
+        const organisme = await next();
         stats.total++;
-        const organisme = await cursor.next();
         try {
-
             let avis = await db.collection('comment').find({
                 'training.organisation.siret': organisme.meta.siretAsString,
                 '$or': [
@@ -34,7 +34,7 @@ module.exports = async (db, logger) => {
             stats.invalid++;
             logger.error(`Can not compute score for organisme ${organisme.meta.siretAsString}`, e);
         }
-    }
+    });
 
     return stats.invalid === 0 ? Promise.resolve(stats) : Promise.reject(stats);
 };
