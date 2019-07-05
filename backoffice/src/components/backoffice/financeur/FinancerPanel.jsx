@@ -518,7 +518,7 @@ export default class FinancerPanel extends React.Component {
                                        pageRangeDisplayed={5}
                                        onPageChange={this.handlePageClick}
                                        breakClassName="page-item"
-                                       breakLabel={<a className="page-link">...</a>}
+                                       breakLabel={<button className="page-link">...</button>}
                                        pageClassName="page-item"
                                        previousClassName="page-item"
                                        nextClassName="page-item"
