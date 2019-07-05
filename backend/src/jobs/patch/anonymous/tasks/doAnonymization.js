@@ -3,7 +3,8 @@ const { getAnonymizedTitle } = require('../utils')();
 module.exports = db => {
     return new Promise((resolve, reject) => {
         let stream = db.collection('trainee').find().sort().stream();
-    
+        let promises = [];
+
         stream.on('data', trainee => {
             const result = getAnonymizedTitle(trainee);
 
@@ -18,8 +19,12 @@ module.exports = db => {
                     }
                 };
 
-                db.collection('trainee').updateOne(query, update);
-                db.collection('comment').updateOne({ token: trainee.token }, update);
+                let p = Promise.all([
+                    db.collection('trainee').updateOne(query, update),
+                    db.collection('comment').updateOne({ token: trainee.token }, update)
+                ]);
+                
+                promises.push(p);
             }
         });
 
@@ -27,7 +32,8 @@ module.exports = db => {
             reject();
         });
 
-        stream.on('end', () => {
+        stream.on('end', async () => {
+            await Promise.all(promises);
             resolve();
         });
     });
