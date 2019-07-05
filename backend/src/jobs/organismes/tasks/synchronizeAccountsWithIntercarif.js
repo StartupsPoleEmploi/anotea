@@ -2,7 +2,7 @@ const uuid = require('node-uuid');
 const _ = require('lodash');
 const { promiseAll } = require('../../job-utils');
 
-module.exports = async (db, logger, regions) => {
+module.exports = async (db, logger) => {
 
     let stats = {
         total: 0,

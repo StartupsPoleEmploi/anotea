@@ -6,7 +6,7 @@ const logger = require('../../../helpers/test-logger');
 const synchronizeAccountsWithIntercarif = require('../../../../src/jobs/organismes/tasks/synchronizeAccountsWithIntercarif');
 const synchronizeAccountsWithKairos = require('../../../../src/jobs/organismes/tasks/synchronizeAccountsWithKairos');
 
-describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
     let csvFile = path.join(__dirname, '../../../helpers/data', 'kairos-organismes.csv');
 
@@ -42,11 +42,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif, getCompon
     it('should update organisme already imported from intercarif', async () => {
 
         let db = await getTestDatabase();
-        let { regions } = await getComponents();
 
         await importIntercarif();
 
-        await synchronizeAccountsWithIntercarif(db, logger, regions);
+        await synchronizeAccountsWithIntercarif(db, logger);
         await synchronizeAccountsWithKairos(db, logger, csvFile);
 
         let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
