@@ -16,7 +16,8 @@ let mapper = {
     'Occitanie': '16',
     'Pays de la Loire': '17',
     'Provence-Alpes-Côte d\'Azur': '18',
-}
+};
+
 module.exports = name => {
     let codeRegion = mapper[name];
     if (!codeRegion) {

@@ -81,6 +81,12 @@ describe(__filename, () => {
         });
     });
 
+    it('can find region by code INSEE (Mayotte)', () => {
+
+        let region = regions().findRegionByCodeINSEE('06');
+        assert.deepStrictEqual(region.codeRegion, '12');
+    });
+
     it('should fail when codeINSEE is unknown', () => {
 
         try {

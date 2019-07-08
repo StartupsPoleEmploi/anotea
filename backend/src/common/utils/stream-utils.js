@@ -10,9 +10,13 @@ let transformObject = (callback, options = { ignoreFirstLine: false, ignoreEmpty
         objectMode: true,
         transform: async function(data, encoding, next) {
             if (!isEmpty(data) && !isFirstLine()) {
-                let res = await callback(data);
-                if (!isEmpty(res)) {
-                    this.push(res);
+                try {
+                    let res = await callback(data);
+                    if (!isEmpty(res)) {
+                        this.push(res);
+                    }
+                } catch (e) {
+                    return next(e);
                 }
             }
             return next();
