@@ -203,19 +203,19 @@ export default class AvisStatsTable extends Component {
                                         {a.mailOpen}
                                     </td>
                                     <td>
-                                        1
+                                        {this.computeRate(a.mailOpen, a.mailSent)}
                                     </td>
                                     <td>
                                         {a.linkClick}
                                     </td>
                                     <td>
-                                        2
+                                        {this.computeRate(a.linkClick, a.mailOpen)}
                                     </td>
                                     <td >
                                         {a.formValidated}
                                     </td>
                                     <td>
-                                        1
+                                        {this.computeRate(a.formValidated, a.mailSent)}
                                     </td>
                                     <td>
                                         {a.allowToContact}
@@ -224,7 +224,7 @@ export default class AvisStatsTable extends Component {
                                         {a.nbCommentaires}
                                     </td>
                                     <td>
-                                        1
+                                        {this.computeRate(a.nbCommentaires, a.formValidated)}
                                     </td>
                                     <td>
                                         {a.nbCommentairesRejected}
