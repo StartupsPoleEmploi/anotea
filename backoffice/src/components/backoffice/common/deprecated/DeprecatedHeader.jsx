@@ -50,21 +50,21 @@ export default class DeprecatedHeader extends React.PureComponent {
             <div className="App-header">
                 <NavLink to="/">
                     <img src={logo} className="App-logo" alt="logo" />
-                    {props.profile === 'organisme' && <h5 className="label h5">{props.raisonSociale}</h5>}
+                    {props.profile === 'organisme' && <h1 className="organisme-header-title">{props.raisonSociale}</h1>}
                     {props.profile === 'financeur' && this.getFinanceurHeader()}
 
                 </NavLink>
-                {props.profile === 'organisme' &&
-                    <a className="helpLink float-right"
-                        href={`https://anotea.pole-emploi.fr/static/notices/notice-${props.codeRegion}.pdf`}>Aide
-                    </a>
-                }
 
                 {props.loggedIn &&
                     <div>
                         <NavLink to="/mon-compte"
                             className="account-link"
                             activeClassName="active">
+                            {props.profile === 'organisme' &&
+                                <a className="helpLink"
+                                    href={`https://anotea.pole-emploi.fr/static/notices/notice-${props.codeRegion}.pdf`}>Aide&nbsp;&nbsp;
+                                </a>
+                            }
                             <span className="fas fa-cog" />
                         </NavLink>
                         <Logout handleLogout={props.handleLogout} />
