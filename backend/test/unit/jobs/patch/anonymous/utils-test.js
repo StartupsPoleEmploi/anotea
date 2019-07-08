@@ -165,4 +165,19 @@ describe(__filename, () => {
         
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE CERT 12345');
     });
+
+    it('should not remove training numbers', () => {
+
+        const result = getAnonymizedTitle({
+            trainee: {
+                name: 'TOTO',
+                firstName: 'ANGELIQUE'
+            },
+            training: {
+                title: 'CAP PETITE ENFANCE CERT 15Q00312749I9902_15Q00312749I01S1'
+            }
+        });
+        
+        assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE CERT 15Q00312749I9902_15Q00312749I01S1');
+    });
 });
