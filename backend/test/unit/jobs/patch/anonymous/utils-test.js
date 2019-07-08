@@ -166,7 +166,7 @@ describe(__filename, () => {
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE CERT 12345');
     });
 
-    it('should not remove numero de bon de commande', () => {
+    it('should not remove training numbers', () => {
 
         const result = getAnonymizedTitle({
             trainee: {
@@ -174,11 +174,25 @@ describe(__filename, () => {
                 firstName: 'ANGELIQUE'
             },
             training: {
-                title: 'PARCOURS CERTIFIANT 74017 - GESTIONNAIRE D\'UNITE COMMERCIALE OPTION SPECIALISEE (15Q00642502I01S104_15Q00642502I01S1)'
+                title: 'CAP PETITE ENFANCE CERT 12345'
             }
         });
         
-        assert.deepEqual(result.anonymizedTitle, 'PARCOURS CERTIFIANT 74017 - GESTIONNAIRE D\'UNITE COMMERCIALE OPTION SPECIALISEE (15Q00642502I01S104_15Q00642502I01S1)');
+        assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE CERT 12345');
     });
 
+    it('should not remove training numbers', () => {
+
+        const result = getAnonymizedTitle({
+            trainee: {
+                name: 'TOTO',
+                firstName: 'ANGELIQUE'
+            },
+            training: {
+                title: 'CAP PETITE ENFANCE CERT 15Q00312749I9902_15Q00312749I01S1'
+            }
+        });
+        
+        assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE CERT 15Q00312749I9902_15Q00312749I01S1');
+    });
 });
