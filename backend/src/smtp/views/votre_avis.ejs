@@ -78,6 +78,12 @@
                 border: 1px solid #F4F4F5;
             }
 
+            #lbf-logo {
+                margin: auto;
+                display: block;
+                width: 200px;
+            }
+
             @media only screen and (max-width: 596px) {
                 body {
                     width: 100%;
@@ -154,7 +160,7 @@
                         style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
                         <%- include('./legal/mentions.ejs'); %>
 
-                        <img src="<%= hostname %>/static/images/lbf.jpg" />
+                        <img id="lbf-logo" src="<%= hostname %>/static/images/lbf.jpg" />
 
                         <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
                                 pouvez vous désinscrire</a>.</p>
