@@ -26,7 +26,7 @@ export default class StatsRoutes extends Component {
     render() {
 
         let { stats } = this.state;
-
+        
         if (_.isEmpty(stats)) {
             return <Loader />;
         }
@@ -35,7 +35,7 @@ export default class StatsRoutes extends Component {
             <div>
                 <Route
                     path="/stats/avis"
-                    render={() => <AvisStatsTable stats={stats.avis} />}
+                    render={() => <AvisStatsTable stats={stats.avis} campaignStats={stats.campaign} />}
                 />
                 <Route
                     path="/stats/organismes"

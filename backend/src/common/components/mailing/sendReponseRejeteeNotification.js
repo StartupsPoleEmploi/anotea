@@ -12,7 +12,7 @@ module.exports = (db, mailer, logger) => {
             });
             let email = getOrganismeEmail(organisme);
 
-            mailer.sendReponseRejeteeNotification({ to: email }, organisme,
+            mailer.sendReponseRejeteeNotification({ to: email }, organisme, comment.reponse.text,
                 async () => {
                     logger.info(`email sent to ${email} for rejected response`);
                     resolve();

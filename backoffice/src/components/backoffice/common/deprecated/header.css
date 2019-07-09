@@ -1,5 +1,4 @@
 .App-header .helpLink {
-    margin-right: 160px;
     color: #ffffff;
     font-size: 16px;
     line-height: 24px;
@@ -16,3 +15,35 @@
 .App-header a, .App-header a:hover {
     color: white;
 }
+
+.App-header .financeur-header, .organisme-header-title {
+    margin-left: 20px;
+}
+
+.App-header .financeur-header .financer-header-title, .App-header .organisme-header-title {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6rem;
+    color: #FFFFFF;
+    opacity: 0.6;
+    width: 40rem;
+}
+
+.App-header .financeur-header .stats-link {
+    padding: 5px;
+    margin-left: 100px;
+    font-size: 2em;
+    font-weight: 900;
+    line-height: 2.5rem;
+    text-align: center;
+    text-decoration: none;
+    background-color: #337ab7;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.App-header .financeur-header .stats-link:hover {
+    background-color: #285f8f;
+}
+
+
