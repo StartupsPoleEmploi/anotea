@@ -29,6 +29,12 @@ module.exports = () => ({
         return region;
     },
     findRegionByCodeINSEE: codeINSEE => {
+
+        if (codeINSEE === '06') {
+            //Mayotte et La Réunion ont le même codeRegion PE
+            codeINSEE = '04';
+        }
+
         let region = regions.find(region => region.codeINSEE === codeINSEE);
         if (!region) {
             throw new Error(`Region inconnue pour le code INSEE: ${codeINSEE}`);

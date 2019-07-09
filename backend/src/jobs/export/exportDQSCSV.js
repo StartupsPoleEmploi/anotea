@@ -1,7 +1,8 @@
 const cli = require('commander');
 const path = require('path');
+const fs = require('fs');
 const moment = require('moment');
-const { streamToCSV, execute } = require('../job-utils');
+const { promisifyStream, toCsvStream, execute } = require('../job-utils');
 const { transformObject } = require('../../common/utils/stream-utils');
 
 cli
@@ -32,14 +33,17 @@ execute(async ({ logger, db, regions }) => {
         return { ...comment, trainee: trainee.trainee };
     }, { ignoreEmpty: true }));
 
-    return streamToCSV(stream, csvFile, {
-        'Identifiant Anotea': data => data.token,
-        'Identifiant PE national': data => data.trainee.dnIndividuNational,
-        'Identifiant PE local': data => data.trainee.idLocal,
-        'Titre formation': data => data.training.title,
-        'Siret organisme': data => `="${data.training.organisation.siret}"`,
-        'Lieu de formation': data => data.training.place.postalCode,
-        'Certifinfo': data => `="${data.training.certifInfo.id}"`,
-        'formacode': data => data.training.formacode,
-    });
+    return promisifyStream(
+        toCsvStream(stream, {
+            'Identifiant Anotea': data => data.token,
+            'Identifiant PE national': data => data.trainee.dnIndividuNational,
+            'Identifiant PE local': data => data.trainee.idLocal,
+            'Titre formation': data => data.training.title,
+            'Siret organisme': data => `="${data.training.organisation.siret}"`,
+            'Lieu de formation': data => data.training.place.postalCode,
+            'Certifinfo': data => `="${data.training.certifInfo.id}"`,
+            'formacode': data => data.training.formacode,
+        })
+        .pipe(fs.createWriteStream(csvFile))
+    );
 });

@@ -8,9 +8,8 @@ const createIndexes = require('../indexes/tasks/createIndexes');
 const createAccounts = require('./tasks/createAccounts');
 const importIntercarif = require('../../import/intercarif/importIntercarif');
 const reconcile = require('../../reconciliation/tasks/reconcile');
-const generateOrganismesFromIntercarif = require('../../import/organismes/generateOrganismesFromIntercarif');
-const synchronizeOrganismesWithAccounts = require('../../import/organismes/synchronizeOrganismesWithAccounts');
-const computeOrganismesScore = require('../../import/organismes/computeOrganismesScore');
+const synchronizeOrganismesWithAccounts = require('../../organismes/tasks/synchronizeAccountsWithIntercarif');
+const computeOrganismesScore = require('../../organismes/tasks/computeScore');
 const resetPasswords = require('../auth/reset-passwords/resetPasswords');
 const createAvis = require('./tasks/createAvis');
 const dumpAvis = require('./tasks/dumpAvis');
@@ -51,7 +50,6 @@ execute(async ({ db, logger, moderation, exit, regions }) => {
     await reconcile(db, logger);
 
     logger.info(`Creating organismes....`);
-    await generateOrganismesFromIntercarif(db, logger);
     await synchronizeOrganismesWithAccounts(db, logger, regions);
     await computeOrganismesScore(db, logger);
 

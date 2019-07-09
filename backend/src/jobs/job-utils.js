@@ -1,6 +1,8 @@
 const moment = require('moment');
+const _ = require('lodash');
 const config = require('config');
 const fs = require('fs');
+const parse = require('csv-parse');
 const { encodeStream } = require('iconv-lite');
 const createComponents = require('../components');
 const createLogger = require('../common/components/logger');
@@ -61,14 +63,30 @@ module.exports = {
             exit(e);
         }
     },
-    streamToCSV: (stream, file, columns) => {
+    toCsvStream: (inputStream, columns) => {
+        return inputStream
+        .pipe(csvStream(columns))
+        .pipe(encodeStream('UTF-8'));
+    },
+    fromCsvStream: (stream, parser, callback) => {
+        return stream
+        .pipe(parse(parser))
+        .pipe(transformObject(data => callback(data), { ignoreFirstLine: true }))
+        .on('unpipe', function() {
+            this.end();
+        });
+    },
+    promisifyStream: stream => {
         return new Promise((resolve, reject) => {
             stream
-            .pipe(csvStream(columns))
-            .pipe(encodeStream('UTF-8'))
-            .pipe(fs.createWriteStream(file))
             .on('error', e => reject(e))
             .on('finish', async () => resolve());
         });
+    },
+    promiseAll: async (promises, callback, options = { batchSize: 25 }) => {
+        let chunks = _.chunk(promises, options.batchSize);
+        for (let chunk of chunks) {
+            await Promise.all(chunk.map(data => callback(data)));
+        }
     }
 };
