@@ -23,7 +23,7 @@ export default class DeprecatedHeader extends React.PureComponent {
     };
 
     getUrl = () => {
-        return process.env.PUBLIC_URL ? `${process.env.PUBLIC_URL}/stats/avis` : 'http://localhost:3003/stats/avis';
+        return 'https://anotea.pole-emploi.fr/stats/avis';
     }
 
     getFinanceurHeader = () => {
@@ -36,7 +36,7 @@ export default class DeprecatedHeader extends React.PureComponent {
                 <a target="_blank"
                     rel="noopener noreferrer"
                     href={this.getUrl()}
-                    className="stats-link"><span className="fas fa-chart-line" /> Avis - Statistiques
+                    className="stats-link"><span className="fas fa-chart-line" />Statistiques
                 </a>
             </div>
         );
