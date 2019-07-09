@@ -34,11 +34,7 @@ module.exports = () => {
         return anonymizedTitle;
     };
 
-<<<<<<< HEAD
-    const reID = new RegExp('(^|[^0-9a-z])[0-9]{7}\\s?[A-Z0-9]([^0-9]|$)', 'gi');
-=======
     const reID = new RegExp('(^|[^0-9a-z])[0-9]{7}\\s?[A-Z0-9]([^0-9a-z]|$)', 'gi');
->>>>>>> 48df4a30... fix id regex + more unit test + fix export
 
     const containsId = content => {
         return content.match(reID);
