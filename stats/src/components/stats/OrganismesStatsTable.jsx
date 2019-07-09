@@ -75,7 +75,7 @@ export default class OrganismesStatsTable extends Component {
                                 {/* <td className="section">
                                     {this.computeRate(o.avisNonLus, o.avisModeresNonRejetes)}
                                 </td> */}
-                                <td>
+                                <td className="section">
                                     {o.nbReponses + o.avisModeresNonRejetes}
                                 </td>
                                 <td>
