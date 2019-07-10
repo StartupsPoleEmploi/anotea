@@ -8,6 +8,7 @@ services:
       context: ./misc/nginx
     ports:
       - 80:80
+    mem_limit: 64m
     depends_on:
       - backend
       - backoffice
@@ -18,6 +19,7 @@ services:
     container_name: anotea_backoffice
     build:
       context: backoffice
+    mem_limit: 32m
     depends_on:
       - backend
 
@@ -26,6 +28,7 @@ services:
     container_name: anotea_questionnaire
     build:
       context: questionnaire
+    mem_limit: 32m
     depends_on:
       - backend
 
@@ -37,6 +40,7 @@ services:
       args:
         - ANOTEA_GOOGLE_ANALYTICS_ID=1234
         - ANOTEA_HOTJAR_ID=1234
+    mem_limit: 32m
     depends_on:
       - backend
 
@@ -45,6 +49,7 @@ services:
     container_name: anotea_stats
     build:
       context: stats
+    mem_limit: 32m
     depends_on:
       - backend
 
@@ -53,3 +58,4 @@ services:
     container_name: anotea_backend
     build:
       context: backend
+    mem_limit: 2g
