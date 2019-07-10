@@ -5,15 +5,15 @@ module.exports = async db => {
     let rollback = collectionName => {
         let cursor = db.collection(collectionName).find({ 'meta.patch.organisation': { $exists: true } });
         return batchCursor(cursor, async next => {
-            let comment = await next();
+            let doc = await next();
 
-            return db.collection('trainee').updateOne({ _id: comment._id }, {
+            return db.collection(collectionName).updateOne({ _id: doc._id }, {
                 $set: {
-                    'training.organisation.siret': comment.meta.patch.organisation.siret,
-                    'training.organisation.name': comment.meta.patch.organisation.name,
+                    'training.organisation.siret': doc.meta.patch.organisation.siret,
+                    'training.organisation.name': doc.meta.patch.organisation.name,
                 },
                 $unset: {
-                    'meta.patch.organisation': 0,
+                    'meta.patch.organisation': 1,
                 }
 
             });
