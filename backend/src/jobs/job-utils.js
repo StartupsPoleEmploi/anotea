@@ -1,7 +1,6 @@
 const moment = require('moment');
 const _ = require('lodash');
 const config = require('config');
-const fs = require('fs');
 const parse = require('csv-parse');
 const { encodeStream } = require('iconv-lite');
 const createComponents = require('../components');
@@ -88,5 +87,19 @@ module.exports = {
         for (let chunk of chunks) {
             await Promise.all(chunk.map(data => callback(data)));
         }
+    },
+    batchCursor: async (cursor, callback, options = { batchSize: 25 }) => {
+        let promises = [];
+
+        while (await cursor.hasNext()) {
+            if (promises.length >= options.batchSize) {
+                await Promise.all(promises);
+                promises = [];
+            }
+
+            promises.push(callback(() => cursor.next()));
+        }
+
+        return Promise.all(promises);
     }
 };

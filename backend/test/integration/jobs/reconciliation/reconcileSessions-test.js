@@ -35,7 +35,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             }, date)),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         delete session.meta.import_date;
@@ -203,7 +203,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.avis.length, 1);
@@ -233,7 +233,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(action.avis.length, 1);
@@ -286,19 +286,19 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         siret: '22222222222222',
                     },
                     place: {
-                        postalCode: 'XXXXX',
+                        postalCode: '75018',
                     },
                 }
             })),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 0);
     });
 
-    it('should ignore avis from other action', async () => {
+    it('should ignore avis from other session', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
@@ -337,7 +337,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             }
         );
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne({ numero: 'SE_XXXXXX' });
         assert.strictEqual(session.avis.length, 0);
@@ -419,7 +419,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.score, {
@@ -448,7 +448,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.score, { nb_avis: 0 });
@@ -478,7 +478,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let count = await db.collection('sessionsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
         assert.strictEqual(count, 1);
@@ -507,7 +507,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let count = await db.collection('sessionsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
         assert.strictEqual(count, 1);
@@ -540,7 +540,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
@@ -569,7 +569,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.deepStrictEqual(session.avis, []);
@@ -602,7 +602,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { sessions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('sessionsReconciliees').findOne();
         assert.strictEqual(session.avis.length, 1);
