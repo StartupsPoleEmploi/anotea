@@ -15,7 +15,11 @@ Une fois l'avis déposé et anonymisé, il est potentiellement consultable sur t
 
 Afin de récupérer les avis, ces sites peuvent utiliser deux canaux fournis par Anotéa : l'[api](API.md) et le [widget](WIDGET.md)
 
-### Réconciliation
+### En détails 
+
+![Anotea Diagram](./misc/doc/diagram/anotea-diagram.svg)
+
+#### Réconciliation
 
 Les formations suivies par les stagiaires sont référencées dans un catalogue.
 
@@ -40,11 +44,13 @@ Une session est considérée comme similaire si elle possède
         
 Une fois que les sessions ont été identifiées, l'avis déposé est alors rattaché à ces sessions.
 
-Les améliorations apportées à la réconciliation sont listées dans le [CHANGELOG](CHANGELOG.md#Réconciliation)
+Les améliorations apportées à la réconciliation sont listées dans le [CHANGELOG](CHANGELOG.md#Réconciliation) 
 
 ## Développement
+Travis Status ![Travis Status](https://travis-ci.org/StartupsPoleEmploi/anotea.svg?branch=master)
 
-[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=cDdFS0VEeVkwNGplNWRRZTc3ajFXakk3Z1FYS1VXOVdDbHU1K0F0TDlYTT0tLWJJU1RoSk9YZzliWURyODU5a0xRZEE9PQ==--891e4fe6e282b4d38005ce6116797dbf12e80496)](https://www.browserstack.com/automate/public-build/cDdFS0VEeVkwNGplNWRRZTc3ajFXakk3Z1FYS1VXOVdDbHU1K0F0TDlYTT0tLWJJU1RoSk9YZzliWURyODU5a0xRZEE9PQ==--891e4fe6e282b4d38005ce6116797dbf12e80496)
+BrowserStack Status ![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=cDdFS0VEeVkwNGplNWRRZTc3ajFXakk3Z1FYS1VXOVdDbHU1K0F0TDlYTT0tLWJJU1RoSk9YZzliWURyODU5a0xRZEE9PQ==--891e4fe6e282b4d38005ce6116797dbf12e80496)
+
 
 Anotea est composé de quatre projets : 
 - `backend` qui contient un serveur node.js et expose des serveurs via [une API](API.md)
@@ -121,5 +127,6 @@ backend:
     - ANOTEA_CUSTOM_VARIABLE=25
 ...
 ```
-
+<p align="center">
 <img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi-530.png" width="20%" height="20%" />
+</p>
