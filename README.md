@@ -127,5 +127,6 @@ backend:
     - ANOTEA_CUSTOM_VARIABLE=25
 ...
 ```
-
+<p align="center">
 <img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi-530.png" width="20%" height="20%" />
+</p>
