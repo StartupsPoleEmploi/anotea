@@ -28,6 +28,21 @@ module.exports = async (db, intercarif, action) => {
                     {
                         'training.place.postalCode': adresse.codepostal,
                     },
+                    {
+                        $and: [
+                            {
+                                'training.place.postalCode': {
+                                    $not: /^(75|690|130)/
+                                }
+                            },
+                            {
+                                'training.place.postalCode': {
+                                    $regex: new RegExp(`^${getDepartement(adresse.codepostal)}`)
+                                },
+                                'training.place.city': adresse.ville,
+                            },
+                        ]
+                    }
                 ]
 
             }
