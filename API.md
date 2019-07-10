@@ -10,7 +10,7 @@ Ell est disponible sur l'Emploi Store Dev (https://www.emploi-store-dev.fr/porta
 
 La documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/doc/#/Publique
 
-### Authentification HMAC
+### Authentification
 
 Cette API requière une authentification de type HMAC.
 
@@ -49,9 +49,9 @@ Cette API permet aux utilistateurs de l'application Kairos de se connecter autom
 
 Le documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/doc/#/Kairos
 
-![Kairos specifications](misc/specifications/kairos/api-kairos.svg)
+![Kairos specifications](misc/doc/kairos/api-kairos.svg)
 
-### Authentification JWT
+### Authentification
 
 Cette API requière une authentification de type JWT.
 
