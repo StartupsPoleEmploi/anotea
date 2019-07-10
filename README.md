@@ -15,7 +15,11 @@ Une fois l'avis déposé et anonymisé, il est potentiellement consultable sur t
 
 Afin de récupérer les avis, ces sites peuvent utiliser deux canaux fournis par Anotéa : l'[api](API.md) et le [widget](WIDGET.md)
 
-### Réconciliation
+### En détails 
+
+![Anotea Diagram](./misc/doc/diagram/anotea-diagram.svg)
+
+#### Réconciliation
 
 Les formations suivies par les stagiaires sont référencées dans un catalogue.
 
@@ -40,7 +44,7 @@ Une session est considérée comme similaire si elle possède
         
 Une fois que les sessions ont été identifiées, l'avis déposé est alors rattaché à ces sessions.
 
-Les améliorations apportées à la réconciliation sont listées dans le [CHANGELOG](CHANGELOG.md#Réconciliation)
+Les améliorations apportées à la réconciliation sont listées dans le [CHANGELOG](CHANGELOG.md#Réconciliation) 
 
 ## Développement
 Travis Status ![Travis Status](https://travis-ci.org/StartupsPoleEmploi/anotea.svg?branch=master)

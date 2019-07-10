@@ -49,7 +49,7 @@ Cette API permet aux utilistateurs de l'application Kairos de se connecter autom
 
 Le documentation Swagger est disponible à l'url suivante https://anotea.pole-emploi.fr/api/doc/#/Kairos
 
-![Kairos specifications](misc/specifications/kairos/api-kairos.svg)
+![Kairos specifications](misc/doc/kairos/api-kairos.svg)
 
 ### Authentification
 
