@@ -4,6 +4,8 @@ const basicAuth = require('basic-auth');
 const uuid = require('node-uuid');
 const RateLimit = require('express-rate-limit');
 const { tryAndCatch } = require('./routes/routes-utils');
+const createDatalakeExporter = require('./utils/createDatalakeExporter');
+const createResponseRecorder = require('./utils/createResponseRecorder');
 
 module.exports = (auth, logger, configuration) => {
     return {
@@ -115,84 +117,72 @@ module.exports = (auth, logger, configuration) => {
                 next();
             });
         },
-        logHttpRequests: () => (req, res, next) => {
+        logHttpRequests: () => {
 
-            const createResponseRecorder = () => {
-                let chunks = [];
+            let exporter = createDatalakeExporter(logger, configuration);
 
-                return {
-                    shouldRecord: req => {
-                        return req.url.startsWith('/api/kairos/') || req.url.startsWith('/api/backoffice/generate-auth-url');
-                    },
-                    record: res => {
-                        let write = res.write;
-                        res.write = chunk => {
-                            chunks.push(chunk);
-                            write.apply(res, [chunk]);
+            return (req, res, next) => {
+
+                let relativeUrl = (req.baseUrl || '') + (req.url || '');
+
+                let recorder = null;
+                if (relativeUrl.startsWith('/api/kairos/') || relativeUrl.startsWith('/api/backoffice/generate-auth-url')) {
+                    recorder = createResponseRecorder();
+                    recorder.record(res);
+                }
+
+                let log = () => {
+
+                    try {
+                        let error = req.err;
+                        let body = recorder ? recorder.getBody() : null;
+
+                        let data = {
+                            type: 'http',
+                            ...(!error ? {} : {
+                                error: {
+                                    ...error,
+                                    stack: error.stack,
+                                }
+                            }),
+                            request: {
+                                requestId: req.requestId,
+                                url: {
+                                    full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
+                                    relative: relativeUrl,
+                                    path: (req.baseUrl || '') + (req.path || ''),
+                                    parameters: _.omit(req.query, ['access_token']),
+                                },
+                                method: req.method,
+                                headers: req.headers,
+                                body: _.omit(req.body, ['password'])
+                            },
+                            response: {
+                                statusCode: res.statusCode,
+                                statusCodeAsString: `${res.statusCode}`,
+                                headers: res._headers,
+                                body,
+                            },
                         };
 
-                        let end = res.end;
-                        res.end = chunk => {
-                            if (chunk) {
-                                chunks.push(chunk);
-                            }
-                            end.apply(res, [chunk]);
-                        };
-                    },
-                    getBody: () => {
-                        try {
-                            return JSON.parse(Buffer.concat(chunks).toString('utf8'));
-                        } catch (e) {
-                            return chunks;
+                        if (relativeUrl.startsWith('/api/v1/')) {
+                            exporter.export(data);
                         }
-                    },
+
+                        logger[error ? 'error' : 'info'](data, `Http Request ${error ? 'KO' : 'OK'}`);
+
+                    } finally {
+                        res.removeListener('finish', log);
+                        res.removeListener('close', log);
+                    }
                 };
+
+                res.on('close', log);
+                res.on('finish', log);
+
+                next();
+
             };
-
-            let recorder = createResponseRecorder();
-            if (recorder.shouldRecord(req)) {
-                recorder.record(res);
-            }
-
-            let log = () => {
-                res.removeListener('finish', log);
-                res.removeListener('close', log);
-
-                let error = req.err;
-                logger[error ? 'error' : 'info']({
-                    type: 'http',
-                    ...(!error ? {} : {
-                        error: {
-                            ...error,
-                            stack: error.stack,
-                        }
-                    }),
-                    request: {
-                        requestId: req.requestId,
-                        url: {
-                            full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
-                            relative: (req.baseUrl || '') + (req.url || ''),
-                            path: (req.baseUrl || '') + (req.path || ''),
-                            parameters: _.omit(req.query, ['access_token']),
-                        },
-                        method: req.method,
-                        headers: req.headers,
-                        body: _.omit(req.body, ['password'])
-                    },
-                    response: {
-                        statusCode: res.statusCode,
-                        statusCodeAsString: `${res.statusCode}`,
-                        headers: res._headers,
-                        body: recorder.getBody(),
-                    },
-                }, `Http Request ${error ? 'KO' : 'OK'}`);
-            };
-
-            res.on('close', log);
-            res.on('finish', log);
-
-            next();
-
         },
         addRequestId: () => (req, res, next) => {
             req.requestId = uuid.v4();
