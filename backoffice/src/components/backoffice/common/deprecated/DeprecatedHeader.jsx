@@ -33,10 +33,10 @@ export default class DeprecatedHeader extends React.PureComponent {
                     Espace Financeur {this.getLabel(this.props.codeFinanceur)}
                     {this.getRegionName(this.props.codeRegion)}
                 </h1>
-                <a target="_blank"
+                <a href={this.getUrl()}
+                    target="_blank"
                     rel="noopener noreferrer"
-                    href={this.getUrl()}
-                    className="stats-link"><span className="fas fa-chart-line" />Statistiques
+                    className="stats-link"><span className="fas fa-chart-line" /> Statistiques
                 </a>
             </div>
         );
@@ -51,9 +51,9 @@ export default class DeprecatedHeader extends React.PureComponent {
                 <NavLink to="/">
                     <img src={logo} className="App-logo" alt="logo" />
                     {props.profile === 'organisme' && <h1 className="organisme-header-title">{props.raisonSociale}</h1>}
-                    {props.profile === 'financeur' && this.getFinanceurHeader()}
-
                 </NavLink>
+                {props.profile === 'financeur' && this.getFinanceurHeader()}
+
 
                 {props.loggedIn &&
                     <div>
