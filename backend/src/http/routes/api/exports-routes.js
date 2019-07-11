@@ -147,8 +147,8 @@ module.exports = ({ db, middlewares }) => {
         let stream = db.collection('contactStagiaires').find().stream();
 
         return sendCSVStream(stream, res, {
-            'Contact': doc => doc.contact,
-            'Question': doc => doc.question,
+            'Contact': doc => `="${doc.contact}"`,
+            'Question': doc => doc.question.replace(/\n/g, ' ').trim(),
             'Source': doc => doc.referrer,
         }, { filename: 'contactStagiaires.csv' });
     }));
