@@ -132,8 +132,7 @@ module.exports = (auth, logger, configuration) => {
 
             const shouldRecordChunks = req => {
                 //Include only specific routes
-                return new RegExp('^/api/kairos/.*').test(req.url) ||
-                    new RegExp('^/api/backoffice/generate-auth-url.*').test(req.url);
+                return req.url.startsWith('/api/kairos/') || req.url.startsWith('/api/backoffice/generate-auth-url');
             };
 
             const createChunkRecorder = res => {
