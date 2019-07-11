@@ -241,8 +241,11 @@ definitions:
           texte:
             type: string
       reponse:
-        type: string
+        type: object
         description: La réponse de l'organisme formateur
+        properties:
+          texte:
+            type: string
       notes:
         $ref: "#/definitions/Notes"
       formation:

@@ -83,7 +83,9 @@ describe(__filename, () => {
 
         let data = convertCommentToAvis(comment);
 
-        assert.deepStrictEqual(data.reponse, 'Voici notre réponse');
+        assert.deepStrictEqual(data.reponse, {
+            texte: 'Voici notre réponse',
+        });
     });
 
     it('should ignore réponse not published', async () => {
