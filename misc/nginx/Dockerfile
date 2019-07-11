@@ -5,7 +5,6 @@ RUN apt-get update \
 
 #Logrotate
 COPY app/logrotate.d/logrotate.conf /etc/logrotate.conf
-COPY app/logrotate.d/cron.daily/logrotate /etc/cron.daily/logrotate
 RUN chmod 644 /etc/logrotate.conf
 
 #Nginx
