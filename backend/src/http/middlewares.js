@@ -116,42 +116,43 @@ module.exports = (auth, logger, configuration) => {
             });
         },
         logHttpRequests: () => (req, res, next) => {
-            const accumulator = {};
 
-            let jsonify = data => {
-                if (!data) {
-                    return null;
-                }
-
-                try {
-                    return JSON.parse(data);
-                } catch (e) {
-                    return data;
-                }
-            };
-
-            const shouldRecordChunks = req => {
-                //Include only specific routes
-                return req.url.startsWith('/api/kairos/') || req.url.startsWith('/api/backoffice/generate-auth-url');
-            };
-
-            const createChunkRecorder = res => {
-                const chunks = [];
+            const createResponseRecorder = () => {
+                let chunks = [];
 
                 return {
-                    proxifyWrite: target => chunk => {
-                        chunks.push(chunk);
-                        target.apply(res, [chunk]);
+                    shouldRecord: req => {
+                        return req.url.startsWith('/api/kairos/') || req.url.startsWith('/api/backoffice/generate-auth-url');
                     },
-                    proxifyEnd: (target, callback) => chunk => {
-                        if (chunk) {
+                    record: res => {
+                        let write = res.write;
+                        res.write = chunk => {
                             chunks.push(chunk);
+                            write.apply(res, [chunk]);
+                        };
+
+                        let end = res.end;
+                        res.end = chunk => {
+                            if (chunk) {
+                                chunks.push(chunk);
+                            }
+                            end.apply(res, [chunk]);
+                        };
+                    },
+                    getBody: () => {
+                        try {
+                            return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+                        } catch (e) {
+                            return chunks;
                         }
-                        callback(chunks);
-                        target.apply(res, [chunk]);
-                    }
+                    },
                 };
             };
+
+            let recorder = createResponseRecorder();
+            if (recorder.shouldRecord(req)) {
+                recorder.record(res);
+            }
 
             let log = () => {
                 res.removeListener('finish', log);
@@ -182,22 +183,13 @@ module.exports = (auth, logger, configuration) => {
                         statusCode: res.statusCode,
                         statusCodeAsString: `${res.statusCode}`,
                         headers: res._headers,
-                        body: jsonify(accumulator.chunks),
+                        body: recorder.getBody(),
                     },
                 }, `Http Request ${error ? 'KO' : 'OK'}`);
             };
 
             res.on('close', log);
             res.on('finish', log);
-
-            if (shouldRecordChunks(req)) {
-                const recorder = createChunkRecorder(res);
-                res.write = recorder.proxifyWrite(res.write);
-                res.end = recorder.proxifyEnd(res.end, chunks => {
-                    let allChunksAreBuffers = _.every(chunks, c => Buffer.isBuffer(c));
-                    accumulator.chunks = allChunksAreBuffers ? Buffer.concat(chunks).toString('utf8') : chunks;
-                });
-            }
 
             next();
 
