@@ -2,6 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const moment = require('moment/moment');
 const crypto = require('crypto');
+const createHMACSignature = require('../../../../../../src/jobs/data/auth/utils/createHMACSignature');
 const { withServer } = require('../../../../../helpers/test-server');
 
 describe('/api/ping', withServer(({ startServer }) => {
@@ -21,14 +22,10 @@ describe('/api/ping', withServer(({ startServer }) => {
     it('can ping authenticated route with HMAC authentication (GET)', async () => {
 
         let app = await startServer();
-        let timestamp = new Date().getTime();
-        let digest = crypto.createHmac('sha256', '1234')
-        .update(`${timestamp}GET/api/v1/ping/authenticated`)
-        .digest('hex');
 
         let response = await request(app)
         .get('/api/v1/ping/authenticated')
-        .set('authorization', `ANOTEA-HMAC-SHA256 esd:${timestamp}:${digest}`);
+        .set('authorization', createHMACSignature('esd', '1234', 'GET', '/api/v1/ping/authenticated'));
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -39,16 +36,12 @@ describe('/api/ping', withServer(({ startServer }) => {
     it('can ping authenticated route with HMAC authentication (POST)', async () => {
 
         let app = await startServer();
-        let timestamp = new Date().getTime();
-        let payload = { value: 1 };
-        let digest = crypto.createHmac('sha256', '1234')
-        .update(`${timestamp}POST/api/v1/ping/authenticated${JSON.stringify(payload)}`)
-        .digest('hex');
+        let body = { value: 1 };
 
         let response = await request(app)
         .post('/api/v1/ping/authenticated')
-        .set('authorization', `ANOTEA-HMAC-SHA256 esd:${timestamp}:${digest}`)
-        .send(payload);
+        .set('authorization', createHMACSignature('esd', '1234', 'POST', '/api/v1/ping/authenticated', { body }))
+        .send(body);
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -91,7 +84,7 @@ describe('/api/ping', withServer(({ startServer }) => {
         });
     });
 
-    it('can not ping authenticated route with invalid api credentials', async () => {
+    it('can not ping authenticated route with invalid apiKey', async () => {
 
         let app = await startServer();
 
@@ -106,7 +99,7 @@ describe('/api/ping', withServer(({ startServer }) => {
         });
     });
 
-    it('can not ping authenticated route with invalid HMAC authentication', async () => {
+    it('can not ping authenticated route with invalid HMAC signature', async () => {
 
         let app = await startServer();
 
@@ -125,13 +118,10 @@ describe('/api/ping', withServer(({ startServer }) => {
 
         let app = await startServer();
         let timestamp = moment().subtract(6, 'minutes').valueOf();
-        let signature = crypto.createHmac('sha256', '1234')
-        .update(`${timestamp}GET/api/v1/ping/authenticated`)
-        .digest('hex');
 
         let response = await request(app)
         .get('/api/v1/ping/authenticated')
-        .set('authorization', `ANOTEA-HMAC-SHA256 esd:${timestamp}:${signature}`);
+        .set('authorization', createHMACSignature('esd', '1234', 'GET', '/api/v1/ping/authenticated', { timestamp }));
 
         assert.strictEqual(response.statusCode, 401);
         assert.deepStrictEqual(response.body, {
