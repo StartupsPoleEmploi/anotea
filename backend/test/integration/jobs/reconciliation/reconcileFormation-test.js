@@ -1,8 +1,9 @@
 const assert = require('assert');
+const _ = require('lodash');
 const logger = require('../../../helpers/test-logger');
 const ObjectID = require('mongodb').ObjectID;
 const { withMongoDB } = require('../../../helpers/test-database');
-const { newComment, randomize } = require('../../../helpers/data/dataset');
+const { newComment, randomize, newIntercarif } = require('../../../helpers/data/dataset');
 const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
@@ -34,7 +35,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             }, date)),
         ]);
 
-        await reconcile(db, logger, { formations: true });
+        await reconcile(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         delete formation.meta.import_date;
@@ -161,7 +162,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { formations: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('formationsReconciliees').findOne();
         assert.deepStrictEqual(action.avis.length, 1);
@@ -192,8 +193,45 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger, { actions: true });
 
-        let action = await db.collection('actionsReconciliees').findOne();
-        assert.strictEqual(action.avis.length, 0);
+        let formation = await db.collection('formationsReconciliees').findOne();
+        assert.strictEqual(formation.avis.length, 0);
+    });
+
+    it('should ignore same avis from multiple actions', async () => {
+
+        let db = await getTestDatabase();
+        let intercarif = newIntercarif();
+        intercarif.actions.push(_.merge({}, intercarif.actions[0], {
+            _attributes: {
+                numero: '123456',
+                datecrea: '20010503',
+                datemaj: '20171213'
+            },
+        }));
+
+        await Promise.all([
+            insertIntoDatabase('intercarif', intercarif),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '80735',
+                    },
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                }
+            })),
+        ]);
+
+        await reconcile(db, logger, { actions: true });
+
+        let formation = await db.collection('formationsReconciliees').findOne();
+        assert.strictEqual(formation.avis.length, 1);
     });
 
     it('should round notes during reconcile', async () => {
@@ -272,7 +310,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { formations: true });
+        await reconcile(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.deepStrictEqual(formation.score, {
@@ -301,7 +339,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await reconcile(db, logger, { formations: true });
+        await reconcile(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.deepStrictEqual(formation.score, { nb_avis: 0 });
@@ -331,7 +369,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { formations: true });
+        await reconcile(db, logger);
 
         let count = await db.collection('formationsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
         assert.strictEqual(count, 1);
@@ -359,7 +397,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { formations: true });
+        await reconcile(db, logger);
 
         let count = await db.collection('formationsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
         assert.strictEqual(count, 1);
@@ -391,7 +429,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await reconcile(db, logger, { formations: true });
+        await reconcile(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.strictEqual(formation.avis.length, 1);
@@ -420,7 +458,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { formations: true });
+        await reconcile(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.deepStrictEqual(formation.avis, []);
@@ -453,7 +491,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { formations: true });
+        await reconcile(db, logger);
 
         let formation = await db.collection('formationsReconciliees').findOne();
         assert.strictEqual(formation.avis.length, 1);

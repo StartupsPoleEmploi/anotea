@@ -42,6 +42,7 @@ services:
     image: mongo:4.0.4-xenial
     container_name: anotea_mongodb
     command: --wiredTigerCacheSizeGB 1
+    mem_limit: 1g
     volumes:
       - ./.data/mongodb/db:/data/db
       - ./.data/mongodb/config:/data/configdb

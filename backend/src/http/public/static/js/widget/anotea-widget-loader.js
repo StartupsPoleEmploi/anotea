@@ -1,5 +1,5 @@
 /* eslint-disable no-var */
-/* global window, document, XMLHttpRequest */
+/* global window, document, navigator, XMLHttpRequest */
 (function() {
 
     window.anotea = window.anotea || {};
@@ -73,8 +73,11 @@
         script.setAttribute('src', getAnoteaUrl('/static/js/widget/iframe-resizer.min.js', attributes.env));
         script.async = false;
         script.onload = function() {
+
+            var isOldIE = (navigator.userAgent.indexOf('MSIE') !== -1); // Detect IE10 and below
+
             window.anotea.iFrameResizer({
-                heightCalculationMethod: 'documentElementOffset',
+                heightCalculationMethod: isOldIE ? 'max' : 'lowestElement',
                 checkOrigin: false,
             }, '.anotea-widget-iframe');
         };

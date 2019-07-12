@@ -1,9 +1,11 @@
-const reconcileFormation = require('./reconcile/reconcileFormation');
-const reconcileActions = require('./reconcile/reconcileActions');
-const reconcileSessions = require('./reconcile/reconcileSessions');
-const findAvisReconciliables = require('./reconcile/utils/findAvisReconciliables');
+const _ = require('lodash');
+const buildFormation = require('./reconcile/buildFormation');
+const buildAction = require('./reconcile/buildAction');
+const buildSession = require('./reconcile/buildSession');
+const findAvisReconciliables = require('./reconcile/findAvisReconciliables');
+const { batchCursor } = require('../../job-utils');
 
-module.exports = async (db, logger, options = { formations: true, actions: true, sessions: true }) => {
+module.exports = async (db, logger, options = {}) => {
 
     let stats = {
         imported: { formations: 0, actions: 0, sessions: 0 },
@@ -39,39 +41,50 @@ module.exports = async (db, logger, options = { formations: true, actions: true,
         'actions.sessions.periode': 1,
     });
 
-    let promises = [];
-    while (await cursor.hasNext()) {
-        let rawFormation = await cursor.next();
-
-        if (promises.length >= 25) {
-            await Promise.all(promises);
-            promises = [];
-        }
+    await batchCursor(cursor, async next => {
+        let intercarif = await next();
 
         try {
-            let avis = await findAvisReconciliables(db, rawFormation);
 
-            let formation = options.formations ? reconcileFormation(rawFormation, avis) : null;
-            let actions = options.actions ? reconcileActions(rawFormation, avis) : null;
-            let sessions = options.sessions ? reconcileSessions(rawFormation, avis) : null;
-
-            promises.push(
-                Promise.all([
-                    ...(formation ? [replaceOne('formations', formation)] : []),
-                    ...(actions ? [Promise.all(actions.map(action => replaceOne('actions', action)))] : []),
-                    ...(sessions ? [Promise.all(sessions.map(session => replaceOne('sessions', session)))] : []),
-                ])
+            let reconciliations = await Promise.all(
+                intercarif.actions
+                .filter(a => a.lieu_de_formation.coordonnees.adresse)
+                .map(action => findAvisReconciliables(db, intercarif, action, options))
             );
 
-            logger.debug(`Formation ${rawFormation._attributes.numero} from intercarif has been reconciliated`);
+            let actions = reconciliations.reduce((acc, { action, comments }) => {
+                return [
+                    ...acc,
+                    buildAction(intercarif, action, comments),
+                ];
+            }, []);
+
+            let sessions = reconciliations.reduce((acc, { action, comments }) => {
+                let sessions = action.sessions;
+                return [
+                    ...acc,
+                    ...sessions.map(session => buildSession(intercarif, action, session, comments)),
+                ];
+            }, []);
+
+            let formation = buildFormation(intercarif,
+                _.chain(reconciliations).flatMap(r => r.comments).uniqBy('token').value()
+            );
+
+            await Promise.all([
+                replaceOne('formations', formation),
+                Promise.all(actions.map(action => replaceOne('actions', action))),
+                Promise.all(sessions.map(session => replaceOne('sessions', session))),
+            ]);
+
+            logger.debug(`Formation ${intercarif._attributes.numero} from intercarif has been reconciliated`);
 
         } catch (e) {
             stats.error++;
-            logger.error(`Formation ${rawFormation._attributes.numero} can not be reconciliated`, e);
+            logger.error(`Formation ${intercarif._attributes.numero} can not be reconciliated`, e);
         }
-    }
+    });
 
-    await Promise.all(promises);
 
     return stats.error ? Promise.reject(stats) : stats;
 };

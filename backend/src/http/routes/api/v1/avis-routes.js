@@ -39,7 +39,6 @@ const buildAvisQuery = filters => {
             {
                 '$or': [
                     { 'comment': { $exists: false } },
-                    { 'comment': null },
                     { 'published': true },
                     { 'rejected': true },
                 ]

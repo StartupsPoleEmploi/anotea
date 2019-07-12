@@ -16,7 +16,7 @@ module.exports = (db, regions) => {
             avisPerSession,
         ] = await Promise.all([
             avis.countDocuments({ 'codeRegion': { $in: codeRegions } }),
-            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliations.0.session': true }),
+            avis.countDocuments({ 'codeRegion': { $in: codeRegions }, 'meta.reconciliations.0.reconciliable': true }),
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions } }),
             sessionsReconciliees.countDocuments({ 'code_region': { $in: codeRegions }, 'score.nb_avis': { $gte: 1 } }),
             sessionsReconciliees.countDocuments({

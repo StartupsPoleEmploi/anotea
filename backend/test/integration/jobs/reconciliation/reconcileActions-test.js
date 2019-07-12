@@ -35,7 +35,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             }, date)),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         delete action.meta.import_date;
@@ -195,7 +195,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.avis.length, 1);
@@ -225,11 +225,59 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.avis.length, 1);
         assert.deepStrictEqual(action.avis[0].id, '1234');
+    });
+
+    it('should reconcile actions with avis (ville)', async () => {
+
+        let db = await getTestDatabase();
+        await importIntercarif();
+        await Promise.all([
+            db.collection('intercarif').updateMany(
+                {},
+                {
+                    $set: {
+                        'actions.0.lieu_de_formation.coordonnees.adresse.codepostal': '93100',
+                        'actions.0.lieu_de_formation.coordonnees.adresse.ville': 'Montreuil',
+                    }
+                }
+            ),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '93100',
+                        city: 'Montreuil',
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                formacode: '22403',
+                training: {
+                    formacode: '22403',
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '93101',
+                        city: 'Montreuil',
+                    },
+                }
+            })),
+        ]);
+
+        await reconcile(db, logger);
+
+        let action = await db.collection('actionsReconciliees').findOne();
+        assert.deepStrictEqual(action.avis.length, 2);
     });
 
     it('should ignore no matching avis', async () => {
@@ -278,13 +326,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         siret: '22222222222222',
                     },
                     place: {
-                        postalCode: 'XXXXX',
+                        postalCode: '75018',
                     },
                 }
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(action.avis.length, 0);
@@ -329,7 +377,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             }
         );
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let session = await db.collection('actionsReconciliees').findOne({ numero: 'AC_XX_XXXXXX' });
         assert.strictEqual(session.avis.length, 0);
@@ -411,7 +459,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.score, {
@@ -440,7 +488,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.score, { nb_avis: 0 });
@@ -470,7 +518,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let count = await db.collection('actionsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
         assert.strictEqual(count, 1);
@@ -498,7 +546,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let count = await db.collection('actionsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
         assert.strictEqual(count, 1);
@@ -530,7 +578,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', comment),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(action.avis.length, 1);
@@ -559,7 +607,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.deepStrictEqual(action.avis, []);
@@ -592,7 +640,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             })),
         ]);
 
-        await reconcile(db, logger, { actions: true });
+        await reconcile(db, logger);
 
         let action = await db.collection('actionsReconciliees').findOne();
         assert.strictEqual(action.avis.length, 1);
