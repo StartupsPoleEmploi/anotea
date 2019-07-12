@@ -76,7 +76,9 @@ module.exports = data => {
     }
 
     if (data.reponse && data.reponse.status === 'published') {
-        avis.reponse = data.reponse.text;
+        avis.reponse = {
+            texte: data.reponse.text,
+        };
     }
 
     return avis;
