@@ -47,14 +47,12 @@ module.exports = (logger, configuration) => {
                 let headers = data.request.headers;
 
                 stream.write(JSON.stringify({
+                    requestId: data.request.requestId,
                     date: new Date(),
                     apiVersion: 'v1',
                     application: findApplication(data.request),
-                    request: {
-                        ..._.pick(data.request, ['requestId']),
-                        widget: !!headers['x-anotea-widget'],
-                    },
-                    response: _.pick(data.response, ['statusCode']),
+                    widget: !!headers['x-anotea-widget'],
+                    statusCode: data.response.statusCode
 
                 }) + '\n');
             } catch (e) {

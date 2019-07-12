@@ -45,15 +45,11 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 
         let line = JSON.parse(lines[tests++]);
         assert.ok(line.date);
-        assert.ok(line.request.requestId);
-        assert.deepStrictEqual(_.omit(line, ['date', 'request']), {
+        assert.ok(line.requestId);
+        assert.deepStrictEqual(_.omit(line, ['date', 'requestId']), {
             apiVersion: 'v1',
             application: 'esd',
-            response: {
-                statusCode: 200
-            }
-        });
-        assert.deepStrictEqual(_.omit(line.request, ['requestId']), {
+            statusCode: 200,
             widget: false,
         });
     });
@@ -71,7 +67,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 
         let line = JSON.parse(lines[tests++]);
         assert.strictEqual(line.application, 'test.com');
-        assert.strictEqual(line.request.widget, true);
+        assert.strictEqual(line.widget, true);
     });
 
     it('should export log to datalake (widget invalid referrer)', async () => {
@@ -87,7 +83,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 
         let line = JSON.parse(lines[tests++]);
         assert.strictEqual(line.application, 'public');
-        assert.strictEqual(line.request.widget, true);
+        assert.strictEqual(line.widget, true);
     });
 
     it('should export log to datalake (error)', async () => {
@@ -101,7 +97,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
         let lines = await getFileContent(configuration.log.datalake);
 
         let line = JSON.parse(lines[tests++]);
-        assert.strictEqual(line.response.statusCode, 500);
+        assert.strictEqual(line.statusCode, 500);
     });
 
 }));
