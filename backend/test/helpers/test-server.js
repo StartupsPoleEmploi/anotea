@@ -6,6 +6,7 @@ const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = requir
 
 module.exports = {
     withServer: callback => {
+
         return withMongoDB(context => {
             return callback(Object.assign({}, context, {
                 startServer: async () => {
@@ -20,7 +21,7 @@ module.exports = {
                     let response = await request(app)
                     .post('/api/backoffice/login')
                     .send({ username: courriel, password: 'password' });
-                    assert.equal(response.statusCode, 200);
+                    assert.strictEqual(response.statusCode, 200);
 
                     return response.body.access_token;
                 },
@@ -40,7 +41,7 @@ module.exports = {
                     let response = await request(app)
                     .post('/api/backoffice/login')
                     .send({ username: organisme.meta.siretAsString, password: 'password' });
-                    assert.equal(response.statusCode, 200);
+                    assert.strictEqual(response.statusCode, 200);
 
                     return response.body.access_token;
                 },
@@ -54,7 +55,7 @@ module.exports = {
                     let response = await request(app)
                     .post('/api/backoffice/login')
                     .send({ username: courriel, password: 'password' });
-                    assert.equal(response.statusCode, 200);
+                    assert.strictEqual(response.statusCode, 200);
 
                     return response.body.access_token;
                 },

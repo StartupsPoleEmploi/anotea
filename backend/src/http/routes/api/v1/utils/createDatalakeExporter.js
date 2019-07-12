@@ -26,14 +26,18 @@ module.exports = (logger, configuration) => {
         let headers = request.headers;
 
         if (headers['x-anotea-widget']) {
-            return headers['x-anotea-widget'];
+            try {
+                let url = new URL(headers['x-anotea-widget']);
+                return url.host;
+            } catch (e) {
+                return 'public';
+            }
         }
 
         let authorization = headers['authorization'];
         if (authorization && authorization.startsWith('ANOTEA-HMAC-SHA256 ')) {
             return authorization.replace(/ANOTEA-HMAC-SHA256 /, '').split(':')[0];
         }
-
 
         return 'public';
     };
@@ -45,10 +49,10 @@ module.exports = (logger, configuration) => {
                 stream.write(JSON.stringify({
                     date: new Date(),
                     apiVersion: 'v1',
+                    application: findApplication(data.request),
                     request: {
                         ..._.pick(data.request, ['requestId']),
                         widget: !!headers['x-anotea-widget'],
-                        application: findApplication(data.request),
                     },
                     response: _.pick(data.response, ['statusCode']),
 
