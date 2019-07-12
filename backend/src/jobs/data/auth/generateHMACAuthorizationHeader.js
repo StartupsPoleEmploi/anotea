@@ -3,7 +3,7 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const createHMACSignature = require('./utils/createHMACSignature');
+const buildHMACSignature = require('./utils/buildHMACSignature');
 
 cli.description('Generate an authorization header')
 .option('-k, --apiKey [apiKey]')
@@ -22,7 +22,7 @@ execute(async ({ exit }) => {
     }
 
     return {
-        'Authorization': createHMACSignature(apiKey, secret, method, path, body),
+        'Authorization': buildHMACSignature(apiKey, secret, { method, path, body }),
     };
 
 });

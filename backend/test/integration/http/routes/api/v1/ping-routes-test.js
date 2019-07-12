@@ -2,7 +2,7 @@ const request = require('supertest');
 const assert = require('assert');
 const moment = require('moment/moment');
 const crypto = require('crypto');
-const createHMACSignature = require('../../../../../../src/jobs/data/auth/utils/createHMACSignature');
+const buildHMACSignature = require('../../../../../../src/jobs/data/auth/utils/buildHMACSignature');
 const { withServer } = require('../../../../../helpers/test-server');
 
 describe('/api/ping', withServer(({ startServer }) => {
@@ -25,7 +25,7 @@ describe('/api/ping', withServer(({ startServer }) => {
 
         let response = await request(app)
         .get('/api/v1/ping/authenticated')
-        .set('authorization', createHMACSignature('esd', '1234', 'GET', '/api/v1/ping/authenticated'));
+        .set('authorization', buildHMACSignature('esd', '1234', { method: 'GET', path: '/api/v1/ping/authenticated' }));
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -40,7 +40,7 @@ describe('/api/ping', withServer(({ startServer }) => {
 
         let response = await request(app)
         .post('/api/v1/ping/authenticated')
-        .set('authorization', createHMACSignature('esd', '1234', 'POST', '/api/v1/ping/authenticated', { body }))
+        .set('authorization', buildHMACSignature('esd', '1234', { method: 'POST', path: '/api/v1/ping/authenticated', body }))
         .send(body);
 
         assert.strictEqual(response.statusCode, 200);
@@ -121,7 +121,7 @@ describe('/api/ping', withServer(({ startServer }) => {
 
         let response = await request(app)
         .get('/api/v1/ping/authenticated')
-        .set('authorization', createHMACSignature('esd', '1234', 'GET', '/api/v1/ping/authenticated', { timestamp }));
+        .set('authorization', buildHMACSignature('esd', '1234', { method: 'GET', path: '/api/v1/ping/authenticated', timestamp }));
 
         assert.strictEqual(response.statusCode, 401);
         assert.deepStrictEqual(response.body, {

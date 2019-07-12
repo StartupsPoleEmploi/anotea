@@ -4,7 +4,7 @@ const _ = require('lodash');
 const path = require('path');
 const readline = require('readline');
 const assert = require('assert');
-const createHMACSignature = require('../../../../../../src/jobs/data/auth/utils/createHMACSignature');
+const buildHMACSignature = require('../../../../../../src/jobs/data/auth/utils/buildHMACSignature');
 const { withServer } = require('../../../../../helpers/test-server');
 
 describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
@@ -39,7 +39,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 
         await request(app)
         .get('/api/v1/ping/authenticated')
-        .set('authorization', createHMACSignature('esd', '1234', 'GET', '/api/v1/ping/authenticated'));
+        .set('authorization', buildHMACSignature('esd', '1234', { method: 'GET', path: '/api/v1/ping/authenticated' }));
 
         let lines = await getFileContent(configuration.log.datalake);
 
