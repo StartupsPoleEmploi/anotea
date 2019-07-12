@@ -5,4 +5,5 @@ const { execute } = require('../../job-utils');
 execute(async ({ db }) => {
     await require('./tasks/dropCollections')(db);
     await require('./tasks/unsetReconciliations')(db);
+    await require('./tasks/rollbackOrganismeResponsablePatch')(db);
 });
