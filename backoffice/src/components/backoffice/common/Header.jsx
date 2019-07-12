@@ -67,23 +67,35 @@ export default class Header extends React.Component {
                                             <img src={logo} className="logo" alt="logo" />
                                         </NavLink>
                                         <ul className="nav">
-                                            <li className="nav-item">
-                                                <Link
-                                                    className="nav-link"
-                                                    label="Avis stagiaires"
-                                                    url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
-                                                {!this.state.loading &&
-                                                <span className="badge badge-light pastille">{this.state.avis}</span>
-                                                }
-                                            </li>
-                                            <li className="nav-item">
-                                                <Link
-                                                    className="nav-link"
-                                                    label="Réponses des organismes"
-                                                    url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
-                                                {!this.state.loading &&
-                                                <span className="badge badge-light pastille">{this.state.reponses}</span>
-                                                }
+                                            <li className="nav-item dropdown">
+                                                <a href="#"
+                                                    className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
+                                                    data-toggle="dropdown"
+                                                    role="button"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false"
+                                                >
+                                                    Moderation
+                                                    {/* {!this.state.loading &&
+                                                        <span className="badge badge-light pastille"></span>
+                                                    } */}
+                                                </a>
+                                                <div className="dropdown-menu">
+                                                    <Link
+                                                        className="dropdown-item"
+                                                        label="Avis stagiaires"
+                                                        url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
+                                                    {!this.state.loading &&
+                                                        <span className="badge badge-light pastille">{this.state.avis}</span>
+                                                    }
+                                                    <Link
+                                                        className="dropdown-item"
+                                                        label="Réponses des organismes"
+                                                        url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
+                                                    {!this.state.loading &&
+                                                        <span className="badge badge-light pastille">{this.state.reponses}</span>
+                                                    }
+                                                </div>
                                             </li>
                                             <li className="nav-item">
                                                 <Link
@@ -91,12 +103,39 @@ export default class Header extends React.Component {
                                                     label="Liste des organismes"
                                                     url="/admin/moderateur/gestion/organismes?page=0&status=active" />
                                             </li>
+                                            <li className="nav-item dropdown">
+                                                <a href="#"
+                                                    className="nav-link dropdown-toggle"
+                                                    data-toggle="dropdown"
+                                                    role="button"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false"
+                                                >
+                                                    Templates
+                                                </a>
+                                                <div className="dropdown-menu">
+                                                    <Link
+                                                        className="nav-link"
+                                                        url="/mail-templates"
+                                                        label="Templates de mail 1" />
+                                                    <Link
+                                                        className="nav-link"
+                                                        url="/mail-templates"
+                                                        label="Templates de mail 2" />
+                                                </div>
+                                            </li>
                                             <li className="nav-item">
                                                 <Link
                                                     className="nav-link"
                                                     url="/mon-compte"
                                                     label="Mon compte" />
                                             </li>
+                                            {/* <li className="nav-item">
+                                                <Link
+                                                    className="nav-link"
+                                                    url="/mail-templates"
+                                                    label="Templates de mail" />
+                                            </li> */}
                                         </ul>
                                         <button
                                             onClick={this.props.onLogout}

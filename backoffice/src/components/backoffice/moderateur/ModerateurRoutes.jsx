@@ -7,6 +7,7 @@ import OrganismePanel from './gestion/organismes/OrganismePanel';
 import AvisStagiairesPanel from './moderation/AvisStagiairesPanel';
 import AvisReponsesPanel from './moderation/AvisReponsesPanel';
 import MonComptePanel from '../account/MonComptePanel';
+import TemplatesMail from './moderation/TemplatesMailPanel';
 
 export default class ModerateurRoutes extends React.Component {
 
@@ -33,9 +34,10 @@ export default class ModerateurRoutes extends React.Component {
                 <Switch>
                     <Redirect exact from="/" to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
                     <Redirect exact from="/admin"
-                              to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
+                        to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
                 </Switch>
                 <Route path="/mon-compte" component={MonComptePanel} />
+                <Route path="/mail-templates" component={TemplatesMail} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"
                     render={({ history, location }) => {
