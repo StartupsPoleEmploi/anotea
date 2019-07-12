@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const Boom = require('boom');
-const createMiddlewares = require('./middlewares');
+const createMiddlewares = require('./middlewares/middlewares');
 const compression = require('compression');
 
 module.exports = components => {

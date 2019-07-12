@@ -3,8 +3,8 @@ const _ = require('lodash');
 const basicAuth = require('basic-auth');
 const uuid = require('node-uuid');
 const RateLimit = require('express-rate-limit');
-const { tryAndCatch } = require('./routes/routes-utils');
-const createDatalakeExporter = require('./utils/createDatalakeExporter');
+const { tryAndCatch } = require('../routes/routes-utils');
+const createDatalakeExporter = require('../routes/api/v1/utils/createDatalakeExporter');
 const createResponseRecorder = require('./utils/createResponseRecorder');
 
 module.exports = (auth, logger, configuration) => {
