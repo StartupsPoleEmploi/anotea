@@ -1,5 +1,4 @@
 const rfs = require('rotating-file-stream');
-const _ = require('lodash');
 const moment = require('moment');
 
 module.exports = (logger, configuration) => {
