@@ -58,4 +58,4 @@ services:
     container_name: anotea_backend
     build:
       context: backend
-    mem_limit: 2g
+    mem_limit: 1g
