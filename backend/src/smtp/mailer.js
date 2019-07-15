@@ -237,6 +237,7 @@ module.exports = function(db, logger, configuration, regions) {
                 unsubscribeLink: unsubscribeLink,
                 formLink: getFormLink(trainee),
                 hostname: configuration.app.public_hostname,
+                email: getReplyToEmail(region)
             };
 
             mailOptions.replyTo = getReplyToEmail(region);

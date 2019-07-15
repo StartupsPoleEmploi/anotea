@@ -37,7 +37,7 @@ module.exports = async (options = {}) => {
             sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
             sendVotreAvisEmail: sendVotreAvisEmail(db, mailer),
             sendReponseRejeteeNotification: sendReponseRejeteeNotification(db, mailer, logger),
-            sendInjureMail: sendInjureMail(db, mailer)
+            sendInjureMail: sendInjureMail(db, mailer, logger)
         }
     }, options || {});
 };

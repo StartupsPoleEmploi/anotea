@@ -116,7 +116,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
             let trainee = await db.collection('trainee').findOne({ token: comment.token });
 
             let email = trainee.trainee.email;
-            sendInjureMail({ to: email }, trainee, comment, () => {
+            sendInjureMail(email, trainee, comment, () => {
                 logger.info(`email sent to ${email} pour`, reason);
             }, err => {
                 logger.error(`Unable to send email to ${email}`, err);
