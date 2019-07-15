@@ -2,8 +2,8 @@
 'use strict';
 
 const cli = require('commander');
-const crypto = require('crypto');
 const { execute } = require('../../job-utils');
+const buildHMACSignature = require('./utils/buildHMACSignature');
 
 cli.description('Generate an authorization header')
 .option('-k, --apiKey [apiKey]')
@@ -15,17 +15,14 @@ cli.description('Generate an authorization header')
 
 execute(async ({ exit }) => {
 
-    if (!cli.apiKey || !cli.secret || !cli.method || !cli.path) {
+    let { apiKey, secret, method, path, body } = cli;
+
+    if (!apiKey || !secret || !method || !path) {
         exit('Invalid arguments');
     }
 
-    let timestamp = new Date().getTime();
-    let signature = crypto.createHmac('sha256', cli.secret)
-    .update(`${timestamp}${cli.method}${cli.path}${cli.body ? cli.body : ''}`)
-    .digest('hex');
-
     return {
-        'Authorization': `ANOTEA-HMAC-SHA256 ${cli.apiKey}:${timestamp}:${signature}`
+        'Authorization': buildHMACSignature(apiKey, secret, { method, path, body }),
     };
 
 });

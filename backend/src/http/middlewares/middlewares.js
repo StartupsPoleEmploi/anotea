@@ -3,7 +3,9 @@ const _ = require('lodash');
 const basicAuth = require('basic-auth');
 const uuid = require('node-uuid');
 const RateLimit = require('express-rate-limit');
-const { tryAndCatch } = require('./routes/routes-utils');
+const { tryAndCatch } = require('../routes/routes-utils');
+const createDatalakeExporter = require('./utils/createDatalakeExporter');
+const createResponseRecorder = require('./utils/createResponseRecorder');
 
 module.exports = (auth, logger, configuration) => {
     return {
@@ -115,93 +117,72 @@ module.exports = (auth, logger, configuration) => {
                 next();
             });
         },
-        logHttpRequests: () => (req, res, next) => {
-            const accumulator = {};
+        logHttpRequests: () => {
 
-            let jsonify = data => {
-                if (!data) {
-                    return null;
+            let exporter = createDatalakeExporter(logger, configuration);
+
+            return (req, res, next) => {
+
+                let relativeUrl = (req.baseUrl || '') + (req.url || '');
+
+                let recorder = null;
+                if (relativeUrl.startsWith('/api/kairos/') || relativeUrl.startsWith('/api/backoffice/generate-auth-url')) {
+                    recorder = createResponseRecorder();
+                    recorder.record(res);
                 }
 
-                try {
-                    return JSON.parse(data);
-                } catch (e) {
-                    return data;
-                }
-            };
+                let log = () => {
 
-            const shouldRecordChunks = req => {
-                //Include only specific routes
-                return new RegExp('^/api/kairos/.*').test(req.url) ||
-                    new RegExp('^/api/backoffice/generate-auth-url.*').test(req.url);
-            };
+                    try {
+                        let error = req.err;
+                        let body = recorder ? recorder.getBody() : null;
 
-            const createChunkRecorder = res => {
-                const chunks = [];
+                        let data = {
+                            type: 'http',
+                            ...(!error ? {} : {
+                                error: {
+                                    ...error,
+                                    stack: error.stack,
+                                }
+                            }),
+                            request: {
+                                requestId: req.requestId,
+                                url: {
+                                    full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
+                                    relative: relativeUrl,
+                                    path: (req.baseUrl || '') + (req.path || ''),
+                                    parameters: _.omit(req.query, ['access_token']),
+                                },
+                                method: req.method,
+                                headers: req.headers,
+                                body: _.omit(req.body, ['password'])
+                            },
+                            response: {
+                                statusCode: res.statusCode,
+                                statusCodeAsString: `${res.statusCode}`,
+                                headers: res._headers,
+                                body,
+                            },
+                        };
 
-                return {
-                    proxifyWrite: target => chunk => {
-                        chunks.push(chunk);
-                        target.apply(res, [chunk]);
-                    },
-                    proxifyEnd: (target, callback) => chunk => {
-                        if (chunk) {
-                            chunks.push(chunk);
+                        if (relativeUrl.startsWith('/api/v1/')) {
+                            exporter.export(data);
                         }
-                        callback(chunks);
-                        target.apply(res, [chunk]);
+
+                        logger[error ? 'error' : 'info'](data, `Http Request ${error ? 'KO' : 'OK'}`);
+
+                    } finally {
+                        res.removeListener('finish', log);
+                        res.removeListener('close', log);
                     }
                 };
+
+                res.on('close', log);
+                res.on('finish', log);
+
+                next();
+
             };
-
-            let log = () => {
-                res.removeListener('finish', log);
-                res.removeListener('close', log);
-
-                let error = req.err;
-                logger[error ? 'error' : 'info']({
-                    type: 'http',
-                    ...(!error ? {} : {
-                        error: {
-                            ...error,
-                            stack: error.stack,
-                        }
-                    }),
-                    request: {
-                        requestId: req.requestId,
-                        url: {
-                            full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
-                            relative: (req.baseUrl || '') + (req.url || ''),
-                            path: (req.baseUrl || '') + (req.path || ''),
-                            parameters: _.omit(req.query, ['access_token']),
-                        },
-                        method: req.method,
-                        headers: req.headers,
-                        body: _.omit(req.body, ['password'])
-                    },
-                    response: {
-                        statusCode: res.statusCode,
-                        statusCodeAsString: `${res.statusCode}`,
-                        headers: res._headers,
-                        body: jsonify(accumulator.chunks),
-                    },
-                }, `Http Request ${error ? 'KO' : 'OK'}`);
-            };
-
-            res.on('close', log);
-            res.on('finish', log);
-
-            if (shouldRecordChunks(req)) {
-                const recorder = createChunkRecorder(res);
-                res.write = recorder.proxifyWrite(res.write);
-                res.end = recorder.proxifyEnd(res.end, chunks => {
-                    let allChunksAreBuffers = _.every(chunks, c => Buffer.isBuffer(c));
-                    accumulator.chunks = allChunksAreBuffers ? Buffer.concat(chunks).toString('utf8') : chunks;
-                });
-            }
-
-            next();
-
         },
         addRequestId: () => (req, res, next) => {
             req.requestId = uuid.v4();

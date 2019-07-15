@@ -11,6 +11,10 @@
     "fluentbit": {
       "host": "localhost",
       "port": 24224
+    },
+    "datalake": {
+      "path": "../.data/datalake/logs",
+      "fileNamePrefix": "anotea"
     }
   },
   "sentry": {

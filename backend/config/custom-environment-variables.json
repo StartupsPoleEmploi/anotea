@@ -32,6 +32,9 @@
     "fluentbit": {
       "host": "ANOTEA_LOG_FLUENTBIT_HOST",
       "port": "ANOTEA_LOG_FLUENTBIT_PORT"
+    },
+    "datalake": {
+      "path": "ANOTEA_LOG_DATALAKE_PATH"
     }
   },
   "sentry": {

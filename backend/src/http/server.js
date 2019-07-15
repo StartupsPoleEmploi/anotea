@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const Boom = require('boom');
-const createMiddlewares = require('./middlewares');
+const createMiddlewares = require('./middlewares/middlewares');
 const compression = require('compression');
 
 module.exports = components => {
@@ -41,7 +41,7 @@ module.exports = components => {
     app.use('/', require('./routes/front/html-routes')(httpComponents));
 
     //API routes
-    app.use('/api/', middlewares.addRateLimit(sentry));
+    app.use('/api', middlewares.addRateLimit(sentry));
     app.use('/api', require('./routes/api/swagger-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/ping-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/avis-routes')(httpComponents));
