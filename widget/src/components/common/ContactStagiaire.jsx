@@ -8,10 +8,10 @@ import Modal from './library/Modal';
 
 export default class ContactStagiaire extends Component {
 
-
     constructor() {
         super();
         this.state = {
+            submitting: false,
             showModal: false,
             error: false,
             form: this.getInitialForm(),
@@ -33,10 +33,10 @@ export default class ContactStagiaire extends Component {
 
         try {
             await saveContactStagiaire({ ...this.state.form });
-            this.setState({ showModal: false, form: this.getInitialForm() });
+            this.setState({ showModal: false, form: this.getInitialForm(), submitting: false });
         } catch (e) {
-            console.log(e);
-            this.setState({ error: 'Une erreur est survenue.' });
+            this.setState({ error: 'Une erreur est survenue.', submitting: false });
+            throw e;
         }
 
     }
@@ -47,6 +47,7 @@ export default class ContactStagiaire extends Component {
                 {this.state.showModal &&
                 <Modal
                     title="Contacter un stagiaire"
+                    disabled={this.state.submitting}
                     body={
                         <form onSubmit={e => this.submit(e)}>
                             <div className="form-group">
@@ -78,7 +79,9 @@ export default class ContactStagiaire extends Component {
                         </form>
                     }
                     onClose={() => this.setState({ showModal: false })}
-                    onConfirmed={() => this.submit()} />
+                    onConfirmed={() => {
+                        this.setState({ submitting: true }, () => this.submit());
+                    }} />
                 }
                 <Button
                     size="medium"

@@ -10,6 +10,7 @@ export default class Modal extends React.Component {
         body: PropTypes.node.isRequired,
         onClose: PropTypes.func.isRequired,
         onConfirmed: PropTypes.func.isRequired,
+        disabled: PropTypes.bool,
     };
 
     constructor(props) {
@@ -38,7 +39,7 @@ export default class Modal extends React.Component {
     }
 
     render() {
-        let { title, body, onClose, onConfirmed } = this.props;
+        let { title, body, onClose, onConfirmed, disabled } = this.props;
         let transitionClass = this.state.showTransition ? 'show' : '';
 
         return (
@@ -55,10 +56,10 @@ export default class Modal extends React.Component {
                             </div>
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end">
-                                    <Button size="small" color="red" onClick={onClose} className="mr-2">
+                                    <Button disabled={disabled} size="small" color="red" onClick={onClose} className="mr-2">
                                         Annuler
                                     </Button>
-                                    <Button size="large" color="blue" onClick={onConfirmed}>
+                                    <Button disabled={disabled} size="large" color="blue" onClick={onConfirmed}>
                                         Confirmer
                                     </Button>
                                 </div>
