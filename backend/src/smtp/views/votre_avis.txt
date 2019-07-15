@@ -19,13 +19,10 @@ Participer à l'amélioration des formations
 
 Donnez des retours directs aux centres de formation ainsi qu'à Pôle Emploi.
 
+<%- include('./legal/mentions.txt'); %>
 
-Vous recevez cet email parce que vous vous êtes inscrit à une session de formation.
-
-Si vous ne souhaitez plus participer à l'enquête :
+Si vous ne souhaitez plus participer à l'enquête vous pouvez vous désinscrire :
 <%= unsubscribeLink %>
 
 Si vous souhaitez consulter ce mail sur votre navigateur web :
 <%= consultationLink %>
-
-<%- include('./legal/mentions.txt'); %>
