@@ -210,6 +210,31 @@ module.exports = function(db, logger, configuration, regions) {
             sendMail('votre_avis', params, mailOptions, successCallback, errorCallback);
 
         },
+        sendQuestionnaire6MoisMail: async (mailOptions, trainee, successCallback, errorCallback) => {
+
+            let unsubscribeLink = getUnsubscribeLink(trainee);
+            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
+            let params = {
+                trainee,
+                moment,
+                region,
+                unsubscribeLink: unsubscribeLink,
+                formLink: 'https://avril_la_vae_facile.typeform.com/to/gIFh4q',
+                trackingLink: getTrackingLink(trainee),
+                hostname: configuration.app.public_hostname,
+            };
+
+            mailOptions.subject = 'Pole Emploi - Suivi de votre formation';
+            mailOptions.list = Object.assign({}, list, {
+                unsubscribe: {
+                    url: unsubscribeLink,
+                }
+            });
+            mailOptions.replyTo = getReplyToEmail(region);
+
+            sendMail('questionnaire_6mois', params, mailOptions, successCallback, errorCallback);
+
+        },
         sendMalformedImport: async (params, successCallback, errorCallback) => {
             let mailOptions = {};
             mailOptions.to = params.source === 'IDF' ? configuration.smtp.idf_error_to : configuration.smtp.pe_error_to;

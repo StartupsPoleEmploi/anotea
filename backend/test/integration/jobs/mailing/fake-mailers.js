@@ -5,6 +5,10 @@ module.exports = {
                 spy.push(options);
                 success();
             },
+            sendQuestionnaire6MoisMail: (options, trainee, success) => {
+                spy.push(options);
+                success();
+            },
             sendOrganisationAccountLink: async (options, trainee, success) => {
                 spy.push(options);
                 success();
@@ -14,6 +18,11 @@ module.exports = {
     errorMailer: (spy = []) => {
         return {
             sendVotreAvisMail: (options, trainee, success, error) => {
+                let err = new Error('timeout');
+                spy.push(err);
+                return error(err);
+            },
+            sendQuestionnaire6MoisMail: (options, trainee, success, error) => {
                 let err = new Error('timeout');
                 spy.push(err);
                 return error(err);
