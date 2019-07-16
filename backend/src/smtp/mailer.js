@@ -157,7 +157,7 @@ module.exports = function(db, logger, configuration, regions) {
 
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
-            mailOptions.subject = `Pôle Emploi - Votre réponse a été rejetée`;
+            mailOptions.subject = `Anotéa - votre réponse n'a pas été prise en compte`;
 
             sendMail('organisme_reponse_rejetee', params, mailOptions, successCallback, errorCallback);
         },
