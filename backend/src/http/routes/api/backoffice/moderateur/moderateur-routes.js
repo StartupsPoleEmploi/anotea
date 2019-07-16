@@ -34,6 +34,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
             sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
         }, { abortEarly: false });
 
+
         let stagiaire = await getStagiaire(fulltext);
         let cursor = db.collection('comment')
         .find({
@@ -45,9 +46,15 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
             ...(status === 'none' ? { moderated: { $ne: true } } : {}),
             ...(reponseStatus ? { reponse: { $exists: true } } : {}),
             ...(['none', 'published', 'rejected'].includes(reponseStatus) ? { 'reponse.status': reponseStatus } : {}),
-            ...(fulltext ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
+            ...(fulltext ? {
+                $or: [
+                    { $text: { $search: fulltext } },
+                    { token: stagiaire ? stagiaire.token : 'unknown' },
+                ]
+            } : {}),
         })
-        .sort({ [sortBy]: -1 })
+        .project(fulltext ? { score: { $meta: 'textScore' } } : {})
+        .sort(fulltext ? { score: { $meta: 'textScore' } } : { [sortBy]: -1 })
         .skip((page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 

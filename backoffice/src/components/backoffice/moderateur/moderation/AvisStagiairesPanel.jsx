@@ -106,7 +106,7 @@ export default class AvisStagiairesPanel extends React.Component {
                             isActive={() => query.status === 'all'} />
 
                         <SearchInputTab
-                            label="Rechercher un avus"
+                            label="Rechercher un avis"
                             isActive={active => this.setState({ tabsDisabled: active })}
                             onSubmit={fulltext => {
                                 return onNewQuery({

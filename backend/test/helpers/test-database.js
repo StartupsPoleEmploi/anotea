@@ -29,9 +29,7 @@ module.exports = {
                 insertIntoDatabase,
                 createIndexes: async (...collectionNames) => {
                     let db = await getTestDatabase();
-                    return collectionNames.map(name => {
-                        return mongoIndexes[name](db);
-                    });
+                    return collectionNames.map(name => mongoIndexes[name](db));
                 },
                 importIntercarif: async file => {
                     let intercarifFile = path.join(__dirname, 'data', 'intercarif-data-test.xml');

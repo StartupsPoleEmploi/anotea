@@ -53,6 +53,12 @@ module.exports = {
                 'published': 1,
                 'training.organisation.siret': 1,
             }, { name: 'reconciliation' }),
+            db.collection('comment').createIndex({
+                'comment.title': 'text',
+                'comment.text': 'text',
+                'training.title': 'text',
+                'training.organisation.label': 'text',
+            }, { name: 'comment_fulltext' }),
         ]);
     },
     accounts: db => {
