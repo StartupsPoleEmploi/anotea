@@ -125,32 +125,6 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.deepStrictEqual(response.body.avis.length, 0);
     });
 
-    it('can search all avis with identifiant', async () => {
-        let app = await startServer();
-        let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('trainee', newTrainee({
-                token: '12345',
-                trainee: {
-                    dnIndividuNational: '1234567890'
-                },
-            })),
-            insertIntoDatabase('comment', newComment({
-                pseudo: 'kikoo',
-                token: '12345',
-            })),
-        ]);
-
-        let response = await request(app)
-        .get('/api/backoffice/moderateur/avis?fulltext=1234567890')
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 200);
-        assert.ok(response.body.avis);
-        assert.deepStrictEqual(response.body.avis.length, 1);
-    });
-
     it('can search all avis with pagination', async () => {
 
         let app = await startServer();

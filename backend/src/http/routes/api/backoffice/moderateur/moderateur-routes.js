@@ -19,12 +19,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
             return null;
         }
 
-        return db.collection('trainee').findOne({
-            $or: [
-                { 'trainee.email': fulltext },
-                { 'trainee.dnIndividuNational': fulltext }
-            ]
-        });
+        return db.collection('trainee').findOne({ 'trainee.email': fulltext });
     };
 
     router.get('/backoffice/moderateur/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
