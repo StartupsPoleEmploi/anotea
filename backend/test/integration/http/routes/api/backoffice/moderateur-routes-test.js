@@ -97,7 +97,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/moderateur/avis?stagiaire=robert@domaine.com')
+        .get('/api/backoffice/moderateur/avis?fulltext=robert@domaine.com')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -117,7 +117,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/moderateur/avis?stagiaire=unknown@domaine.com')
+        .get('/api/backoffice/moderateur/avis?fulltext=unknown@domaine.com')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -143,7 +143,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/moderateur/avis?stagiaire=1234567890')
+        .get('/api/backoffice/moderateur/avis?fulltext=1234567890')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
