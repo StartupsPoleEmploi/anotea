@@ -9,6 +9,34 @@ import AvisReponsesPanel from './moderation/AvisReponsesPanel';
 import MonComptePanel from '../account/MonComptePanel';
 import TemplatesMail from './moderation/TemplatesMailPanel';
 
+const carouselSlidesDataStagiaires = [
+    {
+        image: require('../common/slide/images/stagiaire_commentaire_rejeté.PNG'),
+        content:
+        'Titre du premier template'
+    }, {
+        image: require('../common/slide/images/stagiaire_avis_formation.PNG'),
+        content:
+        'Titre du deuxième template'
+    }
+];
+
+const carouselSlidesDataOrganismes = [
+    {
+        image: require('../common/slide/images/organismes_accès_compte.PNG'),
+        content:
+        'Titre du quatrième template'
+    }, {
+        image: require('../common/slide/images/organismes_renouvellement_mdp.PNG'),
+        content:
+        'Titre du 5 template'
+    }, {
+        image: require('../common/slide/images/organismes_réponse_rejetée.PNG'),
+        content:
+        'Titre du 6 template'
+    }
+];
+
 export default class ModerateurRoutes extends React.Component {
 
     static propTypes = {
@@ -37,7 +65,8 @@ export default class ModerateurRoutes extends React.Component {
                         to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
                 </Switch>
                 <Route path="/mon-compte" component={MonComptePanel} />
-                <Route path="/mail-templates" component={TemplatesMail} />
+                <Route path="/mail-templates-stagiaires" render={() => <TemplatesMail carouselSlidesData={carouselSlidesDataStagiaires}/>} />
+                <Route path="/mail-templates-organismes" render={() => <TemplatesMail carouselSlidesData={carouselSlidesDataOrganismes}/>} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"
                     render={({ history, location }) => {

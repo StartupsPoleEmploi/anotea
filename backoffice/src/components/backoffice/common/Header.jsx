@@ -56,6 +56,8 @@ export default class Header extends React.Component {
             <Route render={({ location }) => {
 
                 let isModeration = location.pathname.indexOf('/admin/moderateur/moderation/avis') !== -1;
+                let isOrganismesTemplates = location.pathname.indexOf('/mail-templates-organismes') !== -1;
+                let isStagiairesTemplates = location.pathname.indexOf('/mail-templates-stagiaires') !== -1;
 
                 return (
                     <div className={`Header ${isModeration ? 'moderation' : 'misc'}`}>
@@ -105,23 +107,23 @@ export default class Header extends React.Component {
                                             </li>
                                             <li className="nav-item dropdown">
                                                 <a href="#"
-                                                    className="nav-link dropdown-toggle"
+                                                    className={`nav-link dropdown-toggle  ${isStagiairesTemplates || isOrganismesTemplates ? 'active' : ''}`}
                                                     data-toggle="dropdown"
                                                     role="button"
                                                     aria-haspopup="true"
                                                     aria-expanded="false"
                                                 >
-                                                    Templates
+                                                    Courriels
                                                 </a>
                                                 <div className="dropdown-menu">
                                                     <Link
                                                         className="nav-link"
-                                                        url="/mail-templates"
-                                                        label="Templates de mail 1" />
+                                                        url="/mail-templates-stagiaires"
+                                                        label="Stagiaires" />
                                                     <Link
                                                         className="nav-link"
-                                                        url="/mail-templates"
-                                                        label="Templates de mail 2" />
+                                                        url="/mail-templates-organismes"
+                                                        label="Organismes" />
                                                 </div>
                                             </li>
                                             <li className="nav-item">
@@ -130,12 +132,6 @@ export default class Header extends React.Component {
                                                     url="/mon-compte"
                                                     label="Mon compte" />
                                             </li>
-                                            {/* <li className="nav-item">
-                                                <Link
-                                                    className="nav-link"
-                                                    url="/mail-templates"
-                                                    label="Templates de mail" />
-                                            </li> */}
                                         </ul>
                                         <button
                                             onClick={this.props.onLogout}
