@@ -13,11 +13,11 @@ const carouselSlidesDataStagiaires = [
     {
         image: require('../common/slide/images/stagiaire_commentaire_rejeté.PNG'),
         content:
-        'Titre du premier template'
+        'Rejet pour injure'
     }, {
         image: require('../common/slide/images/stagiaire_avis_formation.PNG'),
         content:
-        'Titre du deuxième template'
+        'Donnez votre avis'
     }
 ];
 
@@ -25,15 +25,15 @@ const carouselSlidesDataOrganismes = [
     {
         image: require('../common/slide/images/organismes_accès_compte.PNG'),
         content:
-        'Titre du quatrième template'
+        'Création de compte'
     }, {
         image: require('../common/slide/images/organismes_renouvellement_mdp.PNG'),
         content:
-        'Titre du 5 template'
+        'Mail mot de passe oublié'
     }, {
         image: require('../common/slide/images/organismes_réponse_rejetée.PNG'),
         content:
-        'Titre du 6 template'
+        'Mail avis signalé'
     }
 ];
 
