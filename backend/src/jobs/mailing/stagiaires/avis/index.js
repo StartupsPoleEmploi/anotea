@@ -18,7 +18,7 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
 
     let type = cli.type || 'Send';
     let traineeMailer = new TraineeMailer(db, logger, mailer);
-    let ActionClass = require(`./actions/${type}Action`);
+    let ActionClass = require(`./tasks/actions/${type}Action`);
     let action = new ActionClass(configuration, {
         campaign: cli.campaign,
         codeRegions: cli.region ? [cli.region] :
