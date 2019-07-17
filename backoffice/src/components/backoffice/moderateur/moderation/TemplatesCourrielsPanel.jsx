@@ -5,9 +5,9 @@ import LeftArrow from '../../common/slide/LeftArrow';
 import CarouselSlide from '../../common/slide/CarouselSlide';
 import RightArrow from '../../common/slide/RightArrow';
 import CarouselIndicator from '../../common/slide/CarouselIndicator';
-import './TemplateMailPanel.scss';
+import './TemplateCourrielsPanel.scss';
 
-export default class TemplatesMailPanel extends Component {
+export default class TemplatesCourrielsPanel extends Component {
 
     static propTypes = {
         carouselSlidesData: PropTypes.array.isRequired,

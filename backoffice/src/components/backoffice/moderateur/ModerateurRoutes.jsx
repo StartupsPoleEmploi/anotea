@@ -7,15 +7,15 @@ import OrganismePanel from './gestion/organismes/OrganismePanel';
 import AvisStagiairesPanel from './moderation/AvisStagiairesPanel';
 import AvisReponsesPanel from './moderation/AvisReponsesPanel';
 import MonComptePanel from '../account/MonComptePanel';
-import TemplatesMail from './moderation/TemplatesMailPanel';
+import TemplatesCourrielsPanel from './moderation/TemplatesCourrielsPanel';
 
 const carouselSlidesDataStagiaires = [
     {
-        image: require('../common/slide/images/stagiaire_commentaire_rejeté.PNG'),
+        image: require('../common/slide/images/stagiaire_commentaire_rejeté.png'),
         content:
         'Rejet pour injure'
     }, {
-        image: require('../common/slide/images/stagiaire_avis_formation.PNG'),
+        image: require('../common/slide/images/stagiaire_avis_formation.png'),
         content:
         'Donnez votre avis'
     }
@@ -23,15 +23,15 @@ const carouselSlidesDataStagiaires = [
 
 const carouselSlidesDataOrganismes = [
     {
-        image: require('../common/slide/images/organismes_accès_compte.PNG'),
+        image: require('../common/slide/images/organismes_accès_compte.png'),
         content:
         'Création de compte'
     }, {
-        image: require('../common/slide/images/organismes_renouvellement_mdp.PNG'),
+        image: require('../common/slide/images/organismes_renouvellement_mdp.png'),
         content:
         'Mail mot de passe oublié'
     }, {
-        image: require('../common/slide/images/organismes_réponse_rejetée.PNG'),
+        image: require('../common/slide/images/organismes_réponse_rejetée.png'),
         content:
         'Mail avis signalé'
     }
@@ -65,8 +65,10 @@ export default class ModerateurRoutes extends React.Component {
                         to="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
                 </Switch>
                 <Route path="/mon-compte" component={MonComptePanel} />
-                <Route path="/mail-templates-stagiaires" render={() => <TemplatesMail carouselSlidesData={carouselSlidesDataStagiaires}/>} />
-                <Route path="/mail-templates-organismes" render={() => <TemplatesMail carouselSlidesData={carouselSlidesDataOrganismes}/>} />
+                <Route path="/admin/courriels/templates-stagiaires"
+                    render={() => <TemplatesCourrielsPanel carouselSlidesData={carouselSlidesDataStagiaires}/>} />
+                <Route path="/admin/courriels/templates-organismes"
+                    render={() => <TemplatesCourrielsPanel carouselSlidesData={carouselSlidesDataOrganismes}/>} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"
                     render={({ history, location }) => {

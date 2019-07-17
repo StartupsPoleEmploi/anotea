@@ -56,8 +56,8 @@ export default class Header extends React.Component {
             <Route render={({ location }) => {
 
                 let isModeration = location.pathname.indexOf('/admin/moderateur/moderation/avis') !== -1;
-                let isOrganismesTemplates = location.pathname.indexOf('/mail-templates-organismes') !== -1;
-                let isStagiairesTemplates = location.pathname.indexOf('/mail-templates-stagiaires') !== -1;
+                let isOrganismesTemplates = location.pathname.indexOf('/admin/courriels/templates-organismes') !== -1;
+                let isStagiairesTemplates = location.pathname.indexOf('/admin/courriels/templates-stagiaires') !== -1;
 
                 return (
                     <div className={`Header ${isModeration ? 'moderation' : 'misc'}`}>
@@ -118,11 +118,11 @@ export default class Header extends React.Component {
                                                 <div className="dropdown-menu">
                                                     <Link
                                                         className="nav-link"
-                                                        url="/mail-templates-stagiaires"
+                                                        url="/admin/courriels/templates-stagiaires"
                                                         label="Stagiaires" />
                                                     <Link
                                                         className="nav-link"
-                                                        url="/mail-templates-organismes"
+                                                        url="/admin/courriels/templates-organismes"
                                                         label="Organismes" />
                                                 </div>
                                             </li>
