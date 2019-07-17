@@ -10,25 +10,28 @@ const { withServer } = require('../../../../../helpers/test-server');
 describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 
     let tests = 0;
-    const getFileContent = datalake => {
-        return new Promise((resolve, reject) => {
+    const getFileContent = async configuration => {
+
+        let datalakeFile = path.join(configuration.log.datalake.path, `${configuration.log.datalake.fileNamePrefix}.log`);
+
+        await new Promise(resolve => {
+            const timeout = setInterval(() => {
+                fs.exists(datalakeFile, exists => {
+                    if (exists) {
+                        clearInterval(timeout);
+                        resolve();
+                    }
+                });
+            }, 10);
+        });
+
+        return new Promise(resolve => {
 
             let lines = [];
 
-            fs.readdir(datalake.path, (err, files) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                let res = files.filter(f => f.startsWith(datalake.fileNamePrefix));
-                assert.strictEqual(res.length, 1);
-
-                let datalakeFile = path.join(datalake.path, files[0]);
-
-                readline.createInterface({ input: fs.createReadStream(datalakeFile) })
-                .on('line', line => lines.push(line))
-                .on('close', () => resolve(lines));
-            });
+            readline.createInterface({ input: fs.createReadStream(datalakeFile) })
+            .on('line', line => lines.push(line))
+            .on('close', () => resolve(lines));
         });
     };
 
@@ -41,7 +44,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
         .get('/api/v1/ping/authenticated')
         .set('authorization', buildHMACSignature('esd', '1234', { method: 'GET', path: '/api/v1/ping/authenticated' }));
 
-        let lines = await getFileContent(configuration.log.datalake);
+        let lines = await getFileContent(configuration);
 
         let line = JSON.parse(lines[tests++]);
         assert.ok(line.date);
@@ -63,7 +66,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
         .get('/api/v1/ping/anonymous')
         .set('X-Anotea-Widget', 'http://test.com');
 
-        let lines = await getFileContent(configuration.log.datalake);
+        let lines = await getFileContent(configuration);
 
         let line = JSON.parse(lines[tests++]);
         assert.strictEqual(line.application, 'test.com');
@@ -79,7 +82,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
         .get('/api/v1/ping/anonymous')
         .set('X-Anotea-Widget', 'INVALID');
 
-        let lines = await getFileContent(configuration.log.datalake);
+        let lines = await getFileContent(configuration);
 
         let line = JSON.parse(lines[tests++]);
         assert.strictEqual(line.application, 'public');
@@ -94,7 +97,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
         await request(app)
         .get('/api/v1/ping/error');
 
-        let lines = await getFileContent(configuration.log.datalake);
+        let lines = await getFileContent(configuration);
 
         let line = JSON.parse(lines[tests++]);
         assert.strictEqual(line.statusCode, 500);
