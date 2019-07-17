@@ -4,7 +4,7 @@ const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/test-server');
 const { newComment, newTrainee, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme, logAsFinancer, insertIntoDatabase, getTestDatabase, getComponents }) => {
+describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme, logAsFinancer, insertIntoDatabase, getTestDatabase, getComponents, createIndexes }) => {
 
     it('can search all avis with filter', async () => {
 
@@ -79,76 +79,97 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.deepStrictEqual(response.body.avis.length, 1);
     });
 
-    it('can search all avis with stagiaire email', async () => {
+    it('can search all avis by email', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment()),
             insertIntoDatabase('trainee', newTrainee({
                 token: '12345',
                 trainee: {
                     email: 'robert@domaine.com',
                 },
             })),
+            insertIntoDatabase('comment', newComment()),
             insertIntoDatabase('comment', newComment({
                 pseudo: 'kikoo',
                 token: '12345',
             })),
+            createIndexes(['comment']),
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/moderateur/avis?stagiaire=robert@domaine.com')
+        .get('/api/backoffice/moderateur/avis?fulltext=robert@domaine.com')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis.length, 1);
         assert.deepStrictEqual(response.body.meta.stagiaire, {
             email: 'robert@domaine.com',
             dnIndividuNational: '1111111111'
         });
     });
 
-    it('should return empty list when email cannot be found', async () => {
+    it('can search all avis by email (no match)', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', newComment()),
+            createIndexes(['comment']),
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/moderateur/avis?stagiaire=unknown@domaine.com')
+        .get('/api/backoffice/moderateur/avis?fulltext=unknown@unknown.com')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepStrictEqual(response.body.avis.length, 0);
+        assert.strictEqual(response.body.avis.length, 0);
     });
 
-    it('can search all avis with identifiant', async () => {
+    it('can search all avis by titre', async () => {
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('trainee', newTrainee({
-                token: '12345',
-                trainee: {
-                    dnIndividuNational: '1234567890'
+            insertIntoDatabase('comment', newComment({
+                pseudo: 'pseudo',
+                comment: {
+                    title: 'Trop Génial',
                 },
             })),
             insertIntoDatabase('comment', newComment({
-                pseudo: 'kikoo',
-                token: '12345',
+                comment: {
+                    title: 'Pas cool',
+                },
             })),
+            createIndexes(['comment']),
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/moderateur/avis?stagiaire=1234567890')
+        .get('/api/backoffice/moderateur/avis?fulltext=Trop')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].pseudo, 'pseudo');
+    });
+
+    it('can search all avis by titre (no match)', async () => {
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment()),
+            createIndexes(['comment']),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/moderateur/avis?fulltext=NOMATCH')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.avis);
+        assert.strictEqual(response.body.avis.length, 0);
     });
 
     it('can search all avis with pagination', async () => {

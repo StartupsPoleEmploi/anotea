@@ -13,33 +13,29 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
 
-    const getStagiaire = async stagiaire => {
+    const getStagiaire = async fulltext => {
 
-        if (!stagiaire) {
+        if (!fulltext) {
             return null;
         }
 
-        return db.collection('trainee').findOne({
-            $or: [
-                { 'trainee.email': stagiaire },
-                { 'trainee.dnIndividuNational': stagiaire }
-            ]
-        });
+        return db.collection('trainee').findOne({ 'trainee.email': fulltext });
     };
 
     router.get('/backoffice/moderateur/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
         let { computeStats } = moderationStats(db, codeRegion);
-        let { status, reponseStatus, stagiaire: filter, page, sortBy } = await Joi.validate(req.query, {
+        let { status, reponseStatus, fulltext, page, sortBy } = await Joi.validate(req.query, {
             status: Joi.string(),
             reponseStatus: Joi.string(),
-            stagiaire: Joi.string().allow('').default(''),
+            fulltext: Joi.string().allow('').default(''),
             page: Joi.number().min(0).default(0),
             sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
         }, { abortEarly: false });
 
-        let stagiaire = await getStagiaire(filter);
+
+        let stagiaire = await getStagiaire(fulltext);
         let cursor = db.collection('comment')
         .find({
             codeRegion: codeRegion,
@@ -50,9 +46,15 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
             ...(status === 'none' ? { moderated: { $ne: true } } : {}),
             ...(reponseStatus ? { reponse: { $exists: true } } : {}),
             ...(['none', 'published', 'rejected'].includes(reponseStatus) ? { 'reponse.status': reponseStatus } : {}),
-            ...(filter ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
+            ...(fulltext ? {
+                $or: [
+                    { $text: { $search: fulltext } },
+                    { token: stagiaire ? stagiaire.token : 'unknown' },
+                ]
+            } : {}),
         })
-        .sort({ [sortBy]: -1 })
+        .project(fulltext ? { score: { $meta: 'textScore' } } : {})
+        .sort(fulltext ? { score: { $meta: 'textScore' } } : { [sortBy]: -1 })
         .skip((page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 
