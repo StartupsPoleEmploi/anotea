@@ -45,6 +45,7 @@
     "config": "3.0.0",
     "cookie-parser": "1.4.3",
     "csv-parse": "4.1.0",
+    "cyclist": "1.0.1",
     "ejs": "2.6.1",
     "express": "4.16.4",
     "express-rate-limit": "3.3.2",

@@ -1,26 +1,24 @@
 const _ = require('lodash');
 const { Transform } = require('stream');
+const parallelTransform = require('./parallelTransform');
 
-let transformObject = (callback, options = { ignoreFirstLine: false, ignoreEmpty: false }) => {
+let transformObject = (onTransform, options = {}) => {
     let lines = 0;
-    let isFirstLine = () => options.ignoreFirstLine && lines++ === 0;
-    let isEmpty = value => options.ignoreEmpty && _.isEmpty(value);
+    let isFirstLine = () => (options.ignoreFirstLine || false) && lines++ === 0;
+    let isEmpty = value => (options.ignoreEmpty || false) && _.isEmpty(value);
 
-    return new Transform({
-        objectMode: true,
-        transform: async function(data, encoding, next) {
-            if (!isEmpty(data) && !isFirstLine()) {
-                try {
-                    let res = await callback(data);
-                    if (!isEmpty(res)) {
-                        this.push(res);
-                    }
-                } catch (e) {
-                    return next(e);
+    return parallelTransform(options.parallel || 1, async (data, next) => {
+        if (!isEmpty(data) && !isFirstLine()) {
+            try {
+                let res = await onTransform(data);
+                if (!isEmpty(res)) {
+                    return next(null, res);
                 }
+            } catch (e) {
+                return next(e);
             }
-            return next();
         }
+        return next(null);
     });
 };
 module.exports = {
