@@ -28,12 +28,12 @@
             }
 
             a {
-                color:black;
+                color: black;
             }
 
             a:hover {
                 text-decoration: none;
-                color:black;
+                color: black;
             }
 
             .header {
@@ -100,7 +100,7 @@
             }
 
             .content p {
-                color: rgba(36, 48, 58, 0.6);
+                color: rgba(36, 48, 58, 0.7);
             }
 
             hr {
@@ -130,9 +130,12 @@
     </head>
     <body style="background-color:#ebebeb;">
         <div class="header">
-            <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
-            <img class="logo-right" src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" />
-            <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a></p>
+            <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Vertical_baseline2.png"
+                 alt="" /></td>
+            <img class="logo-right"
+                 src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" />
+            <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
+            </p>
         </div>
 
         <div class="content">
@@ -173,7 +176,7 @@
             <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
                     pouvez vous désinscrire</a>.</p>
         </div>
-        
+
         <img src="<%= trackingLink %>" />
     </body>
 </html>
