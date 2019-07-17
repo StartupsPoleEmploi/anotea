@@ -5,7 +5,7 @@ const buildSession = require('./reconcile/buildSession');
 const findAvisReconciliables = require('./reconcile/findAvisReconciliables');
 const { batchCursor } = require('../../job-utils');
 
-module.exports = async (db, logger, options = {}) => {
+module.exports = async (db, logger) => {
 
     let stats = {
         imported: { formations: 0, actions: 0, sessions: 0 },
@@ -49,7 +49,7 @@ module.exports = async (db, logger, options = {}) => {
             let reconciliations = await Promise.all(
                 intercarif.actions
                 .filter(a => a.lieu_de_formation.coordonnees.adresse)
-                .map(action => findAvisReconciliables(db, intercarif, action, options))
+                .map(action => findAvisReconciliables(db, intercarif, action))
             );
 
             let actions = reconciliations.reduce((acc, { action, comments }) => {
