@@ -2,7 +2,7 @@ const moment = require('moment');
 
 module.exports = db => {
     return {
-        archive: (sourceCollection, destinationCollection) => {
+        archive: sourceCollection => {
             return new Promise(async (resolve, reject) => {
 
                 let archived = 0;
@@ -16,10 +16,7 @@ module.exports = db => {
                 })
                 .on('data', async doc => {
                     archived++;
-                    let p = Promise.all([
-                        db.collection(`${destinationCollection}`).insertOne(doc),
-                        db.collection(`${sourceCollection}`).deleteOne({ _id: doc._id }),
-                    ]);
+                    let p = await db.collection(`${sourceCollection}`).update({ _id: doc._id }, { $set: { 'archived': true } });
                     promises.push(p);
                 })
                 .on('error', () => reject())
