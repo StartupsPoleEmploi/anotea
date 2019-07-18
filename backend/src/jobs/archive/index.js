@@ -13,5 +13,8 @@ execute(async ({ db, logger }) => {
 
     let archiver = require(`./archive`)(db);
 
-    return archiver.archive('comment');
+    return Promise.all([
+        archiver.initArchivedField('comment'),
+        archiver.archive('comment'),
+    ]);
 });

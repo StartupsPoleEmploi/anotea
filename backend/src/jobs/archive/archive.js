@@ -25,6 +25,10 @@ module.exports = db => {
                     resolve({ collection: sourceCollection, archived });
                 });
             });
+        },
+
+        initArchivedField: sourceCollection => {
+            return db.collection(`${sourceCollection}`).updateMany({ }, { $set: { 'archived': false } });
         }
     };
 
