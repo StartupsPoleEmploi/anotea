@@ -56,6 +56,8 @@ export default class Header extends React.Component {
             <Route render={({ location }) => {
 
                 let isModeration = location.pathname.indexOf('/admin/moderateur/moderation/avis') !== -1;
+                let isOrganismesTemplates = location.pathname.indexOf('/admin/courriels/templates-organismes') !== -1;
+                let isStagiairesTemplates = location.pathname.indexOf('/admin/courriels/templates-stagiaires') !== -1;
 
                 return (
                     <div className={`Header ${isModeration ? 'moderation' : 'misc'}`}>
@@ -67,29 +69,62 @@ export default class Header extends React.Component {
                                             <img src={logo} className="logo" alt="logo" />
                                         </NavLink>
                                         <ul className="nav">
-                                            <li className="nav-item">
-                                                <Link
-                                                    className="nav-link"
-                                                    label="Avis stagiaires"
-                                                    url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
-                                                {!this.state.loading &&
-                                                <span className="badge badge-light pastille">{this.state.avis}</span>
-                                                }
-                                            </li>
-                                            <li className="nav-item">
-                                                <Link
-                                                    className="nav-link"
-                                                    label="Réponses des organismes"
-                                                    url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
-                                                {!this.state.loading &&
-                                                <span className="badge badge-light pastille">{this.state.reponses}</span>
-                                                }
+                                            <li className="nav-item dropdown">
+                                                <a href="#"
+                                                    className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
+                                                    data-toggle="dropdown"
+                                                    role="button"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false"
+                                                >
+                                                    Moderation
+                                                    {/* {!this.state.loading &&
+                                                        <span className="badge badge-light pastille"></span>
+                                                    } */}
+                                                </a>
+                                                <div className="dropdown-menu">
+                                                    <Link
+                                                        className="dropdown-item"
+                                                        label="Avis stagiaires"
+                                                        url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
+                                                    {!this.state.loading &&
+                                                        <span className="badge badge-light pastille">{this.state.avis}</span>
+                                                    }
+                                                    <Link
+                                                        className="dropdown-item"
+                                                        label="Réponses des organismes"
+                                                        url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
+                                                    {!this.state.loading &&
+                                                        <span className="badge badge-light pastille">{this.state.reponses}</span>
+                                                    }
+                                                </div>
                                             </li>
                                             <li className="nav-item">
                                                 <Link
                                                     className="nav-link"
                                                     label="Liste des organismes"
                                                     url="/admin/moderateur/gestion/organismes?page=0&status=active" />
+                                            </li>
+                                            <li className="nav-item dropdown">
+                                                <a href="#"
+                                                    className={`nav-link dropdown-toggle  ${isStagiairesTemplates || isOrganismesTemplates ? 'active' : ''}`}
+                                                    data-toggle="dropdown"
+                                                    role="button"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false"
+                                                >
+                                                    Courriels
+                                                </a>
+                                                <div className="dropdown-menu">
+                                                    <Link
+                                                        className="nav-link"
+                                                        url="/admin/courriels/templates-stagiaires"
+                                                        label="Stagiaires" />
+                                                    <Link
+                                                        className="nav-link"
+                                                        url="/admin/courriels/templates-organismes"
+                                                        label="Organismes" />
+                                                </div>
                                             </li>
                                             <li className="nav-item">
                                                 <Link
