@@ -16,7 +16,7 @@ module.exports = db => {
                 })
                 .on('data', async doc => {
                     archived++;
-                    let p = await db.collection(`${sourceCollection}`).update({ _id: doc._id }, { $set: { 'archived': true } });
+                    let p = await db.collection(`${sourceCollection}`).updateOne({ _id: doc._id }, { $set: { 'archived': true } });
                     promises.push(p);
                 })
                 .on('error', () => reject())
