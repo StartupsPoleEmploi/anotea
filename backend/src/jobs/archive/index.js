@@ -4,14 +4,14 @@
 const cli = require('commander');
 const { execute } = require('../job-utils');
 
-cli.description('launch advices archive')
+cli.description('Adding archived flag to old avis')
 .parse(process.argv);
 
 execute(async ({ db, logger, configuration }) => {
 
-    logger.info(`Archiving old advices...`);
+    logger.info(`Adding flag 'archived' to old avis...`);
 
     let archiver = require(`./archive`)(db, logger, configuration);
 
-    return archiver.archive('comment', 'archivedAdvices');
+    return archiver.archive('comment');
 });
