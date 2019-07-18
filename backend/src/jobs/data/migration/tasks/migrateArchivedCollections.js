@@ -1,27 +1,26 @@
+const { batchCursor } = require('../../../job-utils');
 
 module.exports = db => {
+            
     return {
-        migrateArchivedCollections: (sourceCollection, destinationCollection) => {
-            return new Promise(async (resolve, reject) => {
+        migrateArchivedCollections: () => {
 
-                let migrated = 0;
-                let promises = [];
+            let rollback = (sourceCollection, destinationSource, filter) => {
 
-                db.collection(`${sourceCollection}`).update({}, { $set: { archived: true } })
-                .on('data', async doc => {
-                    migrated++;
-                    let p = Promise.all([
-                        db.collection(`${destinationCollection}`).insertOne(doc),
-                        db.collection(`${sourceCollection}`).deleteOne({ _id: doc._id }),
-                    ]);
-                    promises.push(p);
-                })
-                .on('error', () => reject())
-                .on('end', async () => {
-                    await Promise.all(promises);
-                    resolve({ collection: sourceCollection, migrated });
+                let cursor = db.collection(sourceCollection).find();
+                
+                return batchCursor(cursor, async next => {
+                    let doc = await next();
+        
+                    return db.collection(destinationSource).insertOne({ ...doc, ...filter });
                 });
-            });
+            };
+
+
+            return Promise.all([
+                rollback('archivedComment', 'comment', { archived: true }),
+                rollback('archivedTrainee', 'trainee'),
+            ]);
         }
     };
 };
