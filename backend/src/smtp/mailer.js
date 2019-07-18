@@ -230,7 +230,7 @@ module.exports = function(db, logger, configuration, regions) {
                     url: unsubscribeLink,
                 }
             });
-            mailOptions.replyTo = getReplyToEmail(region);
+            mailOptions.from = getRegionEmail(region);
 
             sendMail('questionnaire_6mois', params, mailOptions, successCallback, errorCallback);
 
