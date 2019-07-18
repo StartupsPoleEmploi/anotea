@@ -23,20 +23,24 @@ body {
     display: inline-block;
     position: relative;
     margin: 0px;
-    height: 30px;
+    height: 45px;
     padding-top: 15px;
-    top: -10px;
-    border-radius: 10px;
+    top: -20px;
+    border-radius: 30px;
     color: white;
     background-color: #F0801A;
     box-shadow: none;
     border: none;
     font-weight: bold;
-    width: 120px;
-    font-size: 0.8em;
+    width: 330px;
+    font-size: 1em;
     margin-left: 20px;
     text-decoration: none;
     text-align: center;
+}
+
+.login .button:hover {
+    box-shadow: 1px 1px 12px #555;
 }
 
 h1 {
@@ -526,3 +530,27 @@ h1 {
         display: inherit;
     }
 }
+
+/*============================================
+== PE Connect
+=============================================*/
+.pe-connect {
+    clear: both;
+  }
+  .pe-connect .button-pe-connect {
+    border-radius: 100px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .pe-connect .button-pe-connect .icon-pe-connect-hover {
+    display: none;
+  }
+  .pe-connect .button-pe-connect:hover .icon-pe-connect {
+    display: none;
+  }
+  .pe-connect .button-pe-connect:hover .icon-pe-connect-hover {
+    display: block;
+  }
+  .pe-connect .button-pe-connect:focus {
+    opacity: 0.7;
+  }
