@@ -34,6 +34,10 @@ const carouselSlidesDataOrganismes = [
         image: require('../common/slide/images/organismes_réponse_rejetée.png'),
         content:
         'Mail avis signalé'
+    }, {
+        image: require('../common/slide/images/organismes_notifications_avis_non_lus.png'),
+        content:
+        'Notification avis non lus'
     }
 ];
 
