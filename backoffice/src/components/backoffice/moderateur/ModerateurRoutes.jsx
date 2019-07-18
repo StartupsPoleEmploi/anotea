@@ -11,11 +11,11 @@ import TemplatesCourrielsPanel from './moderation/TemplatesCourrielsPanel';
 
 const carouselSlidesDataStagiaires = [
     {
-        image: require('../common/slide/images/stagiaire_commentaire_rejeté.png'),
+        image: require('../common/slide/images/stagiaire_commentaire_rejeté.PNG'),
         content:
         'Rejet pour injure'
     }, {
-        image: require('../common/slide/images/stagiaire_avis_formation.png'),
+        image: require('../common/slide/images/stagiaire_avis_formation.PNG'),
         content:
         'Donnez votre avis'
     }
@@ -23,19 +23,19 @@ const carouselSlidesDataStagiaires = [
 
 const carouselSlidesDataOrganismes = [
     {
-        image: require('../common/slide/images/organismes_accès_compte.png'),
+        image: require('../common/slide/images/organismes_accès_compte.PNG'),
         content:
         'Création de compte'
     }, {
-        image: require('../common/slide/images/organismes_renouvellement_mdp.png'),
+        image: require('../common/slide/images/organismes_renouvellement_mdp.PNG'),
         content:
         'Mail mot de passe oublié'
     }, {
-        image: require('../common/slide/images/organismes_réponse_rejetée.png'),
+        image: require('../common/slide/images/organismes_réponse_rejetée.PNG'),
         content:
         'Mail avis signalé'
     }, {
-        image: require('../common/slide/images/organismes_notifications_avis_non_lus.png'),
+        image: require('../common/slide/images/organismes_notifications_avis_non_lus.PNG'),
         content:
         'Notification avis non lus'
     }
