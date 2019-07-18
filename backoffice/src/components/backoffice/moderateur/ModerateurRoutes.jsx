@@ -35,7 +35,7 @@ const carouselSlidesDataOrganismes = [
         content:
         'Mail avis signalé'
     }, {
-        image: require('../common/slide/images/organismes_notifications_avis_non_lus.PNG'),
+        image: require('../common/slide/images/organismes_notifications_avis_non_lus.png'),
         content:
         'Notification avis non lus'
     }
