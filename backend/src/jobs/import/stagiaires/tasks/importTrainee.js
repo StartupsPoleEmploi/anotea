@@ -52,7 +52,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
                 } catch (e) {
                     return { status: 'invalid', trainee: data, error: e };
                 }
-            }, { ignoreFirstLine: true }))
+            }, { ignoreFirstLine: true, parallel: 25 }))
             .on('data', ({ trainee, status, error }) => {
                 stats.total++;
                 stats[status]++;
