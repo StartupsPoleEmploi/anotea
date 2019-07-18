@@ -65,7 +65,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
                     logger.debug('New trainee inserted');
                 }
             })
-            .on('finish', async () => {
+            .on('end', async () => {
                 try {
                     await db.collection('importTrainee').insertOne({
                         hash,

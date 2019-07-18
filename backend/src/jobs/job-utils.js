@@ -79,7 +79,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             stream
             .on('error', e => reject(e))
-            .on('finish', async () => resolve());
+            .on('end', async () => resolve());
         });
     },
     promiseAll: async (promises, callback, options = { batchSize: 25 }) => {

@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const { Transform } = require('stream');
-const parallelTransform = require('./parallelTransform');
+const parallelTransform = require('parallel-transform');
 
 let transformObject = (onTransform, options = {}) => {
     let lines = 0;

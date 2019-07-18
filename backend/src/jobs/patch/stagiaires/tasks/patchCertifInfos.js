@@ -25,7 +25,7 @@ let loadCertifinfos = file => {
             mapping[data.cer3_code] = data.cer3_codenew;
         })
         .on('error', err => reject(err))
-        .on('finish', async () => resolve(mapping));
+        .on('end', async () => resolve(mapping));
     });
 };
 
