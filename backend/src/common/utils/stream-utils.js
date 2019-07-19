@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const { Transform, Writable } = require('stream');
 const pipeline = require('stream').pipeline;
+const parse = require('csv-parse');
+const { encodeStream } = require('iconv-lite');
 
 let transformObject = (transform, options = {}) => {
     let lines = 0;
@@ -47,6 +49,8 @@ let transformObject = (transform, options = {}) => {
 };
 
 module.exports = {
+    encodeStream: encodeStream,
+    encodeIntoUTF8: () => encodeStream('UTF-8'),
     transformObject: transformObject,
     ignoreEmpty: () => transformObject(data => data, { ignoreEmpty: true }),
     ignoreFirstLine: () => transformObject(data => data, { ignoreFirstLine: true }),
@@ -134,7 +138,8 @@ module.exports = {
             }
         });
     },
-    csvStream: columns => {
+    parseCSV: parse,
+    convertIntoCSV: columns => {
         let lines = 0;
         return new Transform({
             objectMode: true,
@@ -149,6 +154,5 @@ module.exports = {
                 callback();
             }
         });
-
     }
 };
