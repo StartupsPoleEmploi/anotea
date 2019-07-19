@@ -12,7 +12,7 @@ module.exports = db => {
                 return batchCursor(cursor, async next => {
                     let doc = await next();
         
-                    return db.collection(destinationSource).insertOne({ ...doc, ...filter });
+                    return db.collection(destinationSource).updateOne({ ...doc, ...filter }, { upsert: true });
                 });
             };
 
