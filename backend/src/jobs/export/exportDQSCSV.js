@@ -2,8 +2,8 @@ const cli = require('commander');
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
-const { promisifyStream, toCsvStream, execute } = require('../job-utils');
-const { transformObject } = require('../../common/utils/stream-utils');
+const { execute } = require('../job-utils');
+const { ignoreEmpty, transformObject, pipeline, convertIntoCSV, encodeIntoUTF8 } = require('../../common/utils/stream-utils');
 
 cli
 .option('--output [output]')
@@ -18,23 +18,19 @@ execute(async ({ logger, db, regions }) => {
 
     logger.info(`Generating CSV file ${csvFile}...`);
 
-    let stream = db.collection('comment').find({
-        'codeRegion': idf.codeRegion,
-        'campaign': { $ne: 'STAGIAIRES_AES_TT_REGIONS_REPRISE_IDF_2019-03-15' },
-        'training.scheduledEndDate': { $gte: moment('2019-01-01 00Z').toDate() },
-    })
-    .pipe(transformObject(async comment => {
-        let trainee = await db.collection('trainee').findOne({ token: comment.token });
+    return pipeline([
+        db.collection('comment').find({
+            'codeRegion': idf.codeRegion,
+            'campaign': { $ne: 'STAGIAIRES_AES_TT_REGIONS_REPRISE_IDF_2019-03-15' },
+            'training.scheduledEndDate': { $gte: moment('2019-01-01 00Z').toDate() },
+        }),
+        transformObject(async comment => {
+            let trainee = await db.collection('trainee').findOne({ token: comment.token });
 
-        if (!trainee) {
-            return '';
-        }
-
-        return { ...comment, trainee: trainee.trainee };
-    }, { ignoreEmpty: true }));
-
-    return promisifyStream(
-        toCsvStream(stream, {
+            return trainee ? { ...comment, trainee: trainee.trainee } : '';
+        }),
+        ignoreEmpty(),
+        convertIntoCSV({
             'Identifiant Anotea': data => data.token,
             'Identifiant PE national': data => data.trainee.dnIndividuNational,
             'Identifiant PE local': data => data.trainee.idLocal,
@@ -43,7 +39,8 @@ execute(async ({ logger, db, regions }) => {
             'Lieu de formation': data => data.training.place.postalCode,
             'Certifinfo': data => `="${data.training.certifInfo.id}"`,
             'formacode': data => data.training.formacode,
-        })
-        .pipe(fs.createWriteStream(csvFile))
-    );
+        }),
+        encodeIntoUTF8(),
+        fs.createWriteStream(csvFile)
+    ]);
 });

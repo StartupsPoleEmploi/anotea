@@ -3,8 +3,7 @@ const { tryAndCatch } = require('../../../routes-utils');
 const Boom = require('boom');
 const moment = require('moment/moment');
 const s = require('string');
-const { encodeStream } = require('iconv-lite/lib/index');
-const { transformObject } = require('../../../../../common/utils/stream-utils');
+const { transformObject, encodeStream } = require('../../../../../common/utils/stream-utils');
 const getReponseStatus = require('../../../../../common/utils/getReponseStatus');
 
 

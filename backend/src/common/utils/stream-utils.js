@@ -1,30 +1,100 @@
 const _ = require('lodash');
-const { Transform } = require('stream');
-const parallelTransform = require('./parallelTransform');
+const { Transform, Writable } = require('stream');
+const pipeline = require('stream').pipeline;
+const parse = require('csv-parse');
+const { encodeStream } = require('iconv-lite');
 
-let transformObject = (onTransform, options = {}) => {
+let transformObject = (transform, options = {}) => {
     let lines = 0;
     let isFirstLine = () => (options.ignoreFirstLine || false) && lines++ === 0;
     let isEmpty = value => (options.ignoreEmpty || false) && _.isEmpty(value);
+    let parallel = options.parallel || 1;
 
-    return parallelTransform(options.parallel || 1, async (data, next) => {
-        if (!isEmpty(data) && !isFirstLine()) {
-            try {
-                let res = await onTransform(data);
-                if (!isEmpty(res)) {
-                    return next(null, res);
-                }
-            } catch (e) {
-                return next(e);
+    let promises = [];
+
+    return new Transform({
+        objectMode: true,
+        transform: async function(data, encoding, done) {
+
+            if (promises.length >= parallel) {
+                await Promise.all(promises);
+                promises = [];
             }
+
+            if (isEmpty(data) || isFirstLine()) {
+                return done();
+            }
+
+            try {
+                let value = transform(data);
+                promises.push(
+                    Promise.resolve(value)
+                    .then(res => {
+                        if (!isEmpty(res)) {
+                            this.push(res);
+                        }
+                        done();
+                    })
+                    .catch(e => done(e))
+                );
+            } catch (e) {
+                done(e);
+            }
+        },
+        async flush(done) {
+            await Promise.all(promises);
+            done();
         }
-        return next(null);
     });
 };
+
 module.exports = {
+    encodeStream: encodeStream,
+    encodeIntoUTF8: () => encodeStream('UTF-8'),
     transformObject: transformObject,
     ignoreEmpty: () => transformObject(data => data, { ignoreEmpty: true }),
     ignoreFirstLine: () => transformObject(data => data, { ignoreFirstLine: true }),
+    writeObject: (write, options = {}) => {
+        let parallel = options.parallel || 1;
+
+        let promises = [];
+
+        return new Writable({
+            objectMode: true,
+            write: async (data, enc, done) => {
+
+                if (promises.length >= parallel) {
+                    await Promise.all(promises);
+                    promises = [];
+                }
+
+                try {
+                    let value = write(data);
+                    promises.push(
+                        Promise.resolve(value)
+                        .then(() => done())
+                        .catch(e => done(e))
+                    );
+                } catch (e) {
+                    return done(e);
+                }
+            },
+            end: async done => {
+                await Promise.all(promises);
+                done();
+            }
+        });
+    },
+    pipeline: streams => {
+        return new Promise((resolve, reject) => {
+            pipeline(streams, err => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            });
+        });
+    },
     jsonStream: (wrapper = {}) => {
         let chunksSent = 0;
         return new Transform({
@@ -68,7 +138,8 @@ module.exports = {
             }
         });
     },
-    csvStream: columns => {
+    parseCSV: parse,
+    convertIntoCSV: columns => {
         let lines = 0;
         return new Transform({
             objectMode: true,
@@ -83,6 +154,5 @@ module.exports = {
                 callback();
             }
         });
-
     }
 };
