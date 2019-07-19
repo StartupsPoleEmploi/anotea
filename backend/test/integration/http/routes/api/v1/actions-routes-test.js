@@ -254,7 +254,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
-    it('can search trough all actions', async () => {
+    it.only('can search trough all actions', async () => {
 
         let app = await startServer();
 

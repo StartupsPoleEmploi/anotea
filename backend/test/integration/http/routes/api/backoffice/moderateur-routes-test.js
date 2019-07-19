@@ -56,6 +56,25 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.ok(response.body.avis);
         assert.deepStrictEqual(response.body.avis.length, 2);
     });
+    
+    it('can search avis and ignoring those with archived true', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({
+                archived: true
+            })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/moderateur/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.avis);
+        assert.deepStrictEqual(response.body.avis.length, 0);
+    });
 
     it('can search avis with filter!=all (should return avis with commentaires)', async () => {
 

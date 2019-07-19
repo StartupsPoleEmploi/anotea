@@ -30,7 +30,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             },
             accord: true,
             accordEntreprise: true,
-            archived: false
         });
 
         assert.strictEqual(response.statusCode, 200);
@@ -86,7 +85,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 firstRead: date.toJSON()
             },
             codeRegion: '11',
-            archived: false
         });
 
         assert.deepStrictEqual(_.omit(response.body.infosRegion, ['trainee']), {
