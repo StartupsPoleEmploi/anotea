@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
 const { execute } = require('../job-utils');
-const { ignoreEmpty, transformObject, pipeline, convertIntoCSV, encodeIntoUTF8 } = require('../../common/utils/stream-utils');
+const { ignoreEmpty, transformObject, pipeline, transformObjectIntoCSV, encodeIntoUTF8 } = require('../../common/utils/stream-utils');
 
 cli
 .option('--output [output]')
@@ -30,7 +30,7 @@ execute(async ({ logger, db, regions }) => {
             return trainee ? { ...comment, trainee: trainee.trainee } : '';
         }),
         ignoreEmpty(),
-        convertIntoCSV({
+        transformObjectIntoCSV({
             'Identifiant Anotea': data => data.token,
             'Identifiant PE national': data => data.trainee.dnIndividuNational,
             'Identifiant PE local': data => data.trainee.idLocal,

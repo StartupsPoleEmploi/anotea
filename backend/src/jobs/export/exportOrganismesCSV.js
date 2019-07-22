@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const getOrganismeEmail = require('../../common/utils/getOrganismeEmail');
 const { execute } = require('../job-utils');
-const { pipeline, convertIntoCSV } = require('../../common/utils/stream-utils');
+const { pipeline, transformObjectIntoCSV } = require('../../common/utils/stream-utils');
 
 cli.description('Export organismes per active region')
 .parse(process.argv);
@@ -19,7 +19,7 @@ execute(async ({ db, logger, regions }) => {
 
         return pipeline([
             db.collection('accounts').find({ profile: 'organisme', codeRegion }),
-            convertIntoCSV({
+            transformObjectIntoCSV({
                 'Siret': organisme => `="${organisme.meta.siretAsString}"`,
                 'Raison sociale': organisme => organisme.raisonSociale,
                 'Email': organisme => getOrganismeEmail(organisme),
