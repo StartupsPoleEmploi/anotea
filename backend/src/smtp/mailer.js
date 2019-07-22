@@ -51,7 +51,11 @@ module.exports = function(db, logger, configuration, regions) {
     };
 
     const getRegionEmail = region => {
-        return `Anotea <${region.contact}@pole-emploi.fr>`;
+        return region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from;
+    };
+
+    const getReplyToEmail = region => {
+        return `Anotea <${getRegionEmail(region)}>`;
     };
 
     const buildContent = (template, extension, params) => {
@@ -75,6 +79,7 @@ module.exports = function(db, logger, configuration, regions) {
         if (cc) {
             mailOptions.cc = cc;
         }
+        mailOptions.from = `Anotea <${configuration.smtp.from}>`;
 
         let contents = [];
         contents.push(buildContent(template, 'txt', params));
@@ -134,8 +139,8 @@ module.exports = function(db, logger, configuration, regions) {
             };
 
             mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
             mailOptions.subject = `Pôle Emploi - Vous avez ${data.nbUnreadComments} nouveaux avis stagiaires`;
-            mailOptions.from = getRegionEmail(region);
 
             sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
         },
@@ -145,18 +150,19 @@ module.exports = function(db, logger, configuration, regions) {
             let params = {
                 hostname: configuration.app.public_hostname,
                 trackingLink: getTrackingLink(organisme),
+                contact: getRegionEmail(region),
                 organisme: organisme,
                 reponse: reponse
             };
 
-            mailOptions.list = list;
-
             mailOptions.subject = `Anotéa - votre réponse n'a pas été prise en compte`;
-            mailOptions.from = getRegionEmail(region);
+            mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
 
             sendMail('organisme_reponse_rejetee', params, mailOptions, successCallback, errorCallback);
         },
         sendOrganisationAccountLink: async (mailOptions, organisme, successCallback, errorCallback) => {
+
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
                 link: getOrganisationPasswordLink(organisme),
@@ -168,7 +174,7 @@ module.exports = function(db, logger, configuration, regions) {
 
             mailOptions.subject = 'Pôle Emploi vous donne accès aux avis de vos stagiaires';
             mailOptions.list = list;
-            mailOptions.from = getRegionEmail(region);
+            mailOptions.replyTo = getReplyToEmail(region);
 
             sendMail('organisation_password', params, mailOptions, successCallback, errorCallback);
         },
@@ -180,7 +186,7 @@ module.exports = function(db, logger, configuration, regions) {
 
             mailOptions.subject = 'Votre compte Anotéa : Demande de renouvellement de mot de passe';
             mailOptions.list = list;
-            mailOptions.from = getRegionEmail(region);
+            mailOptions.replyTo = getReplyToEmail(region);
 
             sendMail('password_forgotten', params, mailOptions, successCallback, errorCallback);
         },
@@ -205,7 +211,7 @@ module.exports = function(db, logger, configuration, regions) {
                     url: unsubscribeLink,
                 }
             });
-            mailOptions.from = getRegionEmail(region);
+            mailOptions.replyTo = getReplyToEmail(region);
 
             sendMail('votre_avis', params, mailOptions, successCallback, errorCallback);
 
@@ -230,21 +236,21 @@ module.exports = function(db, logger, configuration, regions) {
                     url: unsubscribeLink,
                 }
             });
-            mailOptions.from = getRegionEmail(region);
+            mailOptions.replyTo = getReplyToEmail(region);
 
             sendMail('questionnaire_6mois', params, mailOptions, successCallback, errorCallback);
 
         },
         sendMalformedImport: async (params, successCallback, errorCallback) => {
             let mailOptions = {};
+            let cc = configuration.smtp.import_error_cc;
+
             mailOptions.to = params.source === 'IDF' ? configuration.smtp.idf_error_to : configuration.smtp.pe_error_to;
             mailOptions.subject = 'Imports stagiaires IDF : une erreur est survenue';
-            mailOptions.from = 'anotea@anotea.pole-emploi.fr';
-            const cc = configuration.smtp.import_error_cc;
+
             sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
         },
         sendInjureMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
-            mailOptions.subject = `Rejet de votre avis sur votre formation ${trainee.training.title} à ${trainee.training.organisation.name}`;
 
             let unsubscribeLink = getUnsubscribeLink(trainee);
             let region = regions.findRegionByCodeRegion(trainee.codeRegion);
@@ -256,16 +262,17 @@ module.exports = function(db, logger, configuration, regions) {
                 unsubscribeLink: unsubscribeLink,
                 formLink: getFormLink(trainee),
                 hostname: configuration.app.public_hostname,
-                email: getRegionEmail(region)
+                email: getReplyToEmail(region)
             };
 
+            mailOptions.subject =
+                `Rejet de votre avis sur votre formation ${trainee.training.title} à ${trainee.training.organisation.name}`;
             mailOptions.list = Object.assign({}, list, {
                 unsubscribe: {
                     url: unsubscribeLink,
                 }
             });
-            mailOptions.from = getRegionEmail(region);
-
+            mailOptions.replyTo = getReplyToEmail(region);
             sendMail('avis_injure', params, mailOptions, successCallback, errorCallback);
         }
     };
