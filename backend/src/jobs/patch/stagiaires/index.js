@@ -20,10 +20,11 @@ execute(async ({ logger, db, exit }) => {
     let stats = {};
 
     if (cli.datalake) {
+        logger.info(`Refreshing stagiaires and avis with datalake file...`);
         stats.datalake = await refreshDataFromDatalake(db, logger, cli.datalake);
     }
 
-    logger.info(`Patching stagiaires...`);
+    logger.info(`Patching certifInfos v2...`);
     stats.certifInfos = await patchCertifinfos(db, logger, cli.certifInfos);
 
     return stats;

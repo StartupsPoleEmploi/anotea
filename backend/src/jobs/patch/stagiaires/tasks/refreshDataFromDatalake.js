@@ -59,11 +59,11 @@ module.exports = async (db, logger, file) => {
             stats.total++;
 
             let siret = record['dc_siret'];
+            let label = record['dc_lblorganisme'];
             let name = record['dc_raisonsociale'];
 
             let trainee = await db.collection('trainee').findOne({
                 'trainee.email': record['c_adresseemail'].toLowerCase(),
-                'training.idSession': record['dn_session_id'],
                 'training.infoCarif.numeroSession': record['dc_numeroicsession'],
             });
 
@@ -79,9 +79,9 @@ module.exports = async (db, logger, file) => {
                     {
                         $set: {
                             'training.organisation.siret': siret,
+                            'training.organisation.label': label,
                             'training.organisation.name': name,
                         }
-
                     }
                 ),
                 db.collection('trainee').updateOne(
@@ -91,8 +91,8 @@ module.exports = async (db, logger, file) => {
                     {
                         $set: {
                             'training.organisation.siret': siret,
+                            'training.organisation.label': label,
                             'training.organisation.name': name,
-
                         }
                     }
                 ),
