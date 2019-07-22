@@ -5,9 +5,41 @@ const { writeObject, pipeline, ignoreFirstLine } = require('../../../../common/u
 module.exports = async (db, logger, file) => {
 
     let stats = {
-        refreshed: 0,
+        refreshed: {
+            trainee: 0,
+            comment: 0,
+        },
         invalid: 0,
         total: 0,
+    };
+
+    let refresh = async (collectionName, token, { siret, label, name }) => {
+        let res = await db.collection(collectionName).updateOne(
+            {
+                'token': token,
+            },
+            {
+                $set: {
+                    'training.organisation.siret': siret,
+                    'training.organisation.label': label,
+                    'training.organisation.name': name,
+                }
+            }
+        );
+
+        if (res.result.nModified > 0) {
+            stats.refreshed[collectionName]++;
+            return db.collection(collectionName).updateOne(
+                {
+                    'token': token,
+                },
+                {
+                    $set: {
+                        'meta.refreshed': true,
+                    }
+                }
+            );
+        }
     };
 
     await pipeline([
@@ -72,36 +104,9 @@ module.exports = async (db, logger, file) => {
             }
 
             return Promise.all([
-                db.collection('comment').updateOne(
-                    {
-                        'token': trainee.token,
-                    },
-                    {
-                        $set: {
-                            'training.organisation.siret': siret,
-                            'training.organisation.label': label,
-                            'training.organisation.name': name,
-                        }
-                    }
-                ),
-                db.collection('trainee').updateOne(
-                    {
-                        'token': trainee.token,
-                    },
-                    {
-                        $set: {
-                            'training.organisation.siret': siret,
-                            'training.organisation.label': label,
-                            'training.organisation.name': name,
-                        }
-                    }
-                ),
+                refresh('comment', trainee.token, { siret, label, name }),
+                refresh('trainee', trainee.token, { siret, label, name }),
             ])
-            .then(results => {
-                if (results.find(r => r.result.nModified > 0)) {
-                    stats.refreshed++;
-                }
-            })
             .catch(e => {
                 stats.invalid++;
                 logger.error(e);
