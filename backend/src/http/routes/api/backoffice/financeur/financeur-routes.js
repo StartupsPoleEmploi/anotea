@@ -549,12 +549,12 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             }
 
             return comment._id + ';' +
-                (comment.rates !== undefined ? comment.rates.accueil : '') + ';' +
-                (comment.rates !== undefined ? comment.rates.contenu_formation : '') + ';' +
-                (comment.rates !== undefined ? comment.rates.equipe_formateurs : '') + ';' +
-                (comment.rates !== undefined ? comment.rates.moyen_materiel : '') + ';' +
-                (comment.rates !== undefined ? comment.rates.accompagnement : '') + ';' +
-                (comment.rates !== undefined ? comment.rates.global : '') + ';' +
+                (comment.rates !== undefined ? `${comment.rates.accueil}`.replace(/\./g, ',') : '') + ';' +
+                (comment.rates !== undefined ? `${comment.rates.contenu_formation}`.replace(/\./g, ',') : '') + ';' +
+                (comment.rates !== undefined ? `${comment.rates.equipe_formateurs}`.replace(/\./g, ',') : '') + ';' +
+                (comment.rates !== undefined ? `${comment.rates.moyen_materiel}`.replace(/\./g, ',') : '') + ';' +
+                (comment.rates !== undefined ? `${comment.rates.accompagnement}`.replace(/\./g, ',') : '') + ';' +
+                (comment.rates !== undefined ? `${comment.rates.global}`.replace(/\./g, ',') : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') +
