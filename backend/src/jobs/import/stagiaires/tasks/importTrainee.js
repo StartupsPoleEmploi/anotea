@@ -1,8 +1,7 @@
 const fs = require('fs');
-const parse = require('csv-parse');
 const md5File = require('md5-file/promise');
 const validateTrainee = require('./utils/validateTrainee');
-const { transformObject } = require('../../../../common/utils/stream-utils');
+const { writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../common/utils/stream-utils');
 const { getCampaignDate, getCampaignName } = require('./utils/utils');
 
 module.exports = async (db, logger, file, handler, filters = {}) => {
@@ -36,53 +35,42 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
 
             logger.info(`Import des stagiaires pour la campagne ${handler.name}/${campaign.name}...`);
 
-            fs.createReadStream(file)
-            .pipe(parse(handler.csvOptions))
-            .pipe(transformObject(async data => {
-                try {
-                    let trainee = await handler.buildTrainee(data, campaign);
+            await pipeline([
+                fs.createReadStream(file),
+                parseCSV(handler.csvOptions),
+                ignoreFirstLine(),
+                writeObject(async record => {
+                    try {
+                        stats.total++;
+                        let trainee = await handler.buildTrainee(record, campaign);
 
-                    if (await shouldBeImported(trainee)) {
-                        await validateTrainee(trainee);
-                        await db.collection('trainee').insertOne(trainee);
-                        return { status: 'imported', trainee };
-                    } else {
-                        return { status: 'ignored', trainee };
+                        if (await shouldBeImported(trainee)) {
+                            await validateTrainee(trainee);
+                            await db.collection('trainee').insertOne(trainee);
+                            stats.imported++;
+                            logger.debug('New trainee inserted');
+                        } else {
+                            stats.ignored++;
+                            logger.debug('Trainee ignored', trainee, {});
+                        }
+                    } catch (e) {
+                        stats.invalid++;
+                        logger.error(`Trainee cannot be imported`, record, e);
                     }
-                } catch (e) {
-                    return { status: 'invalid', trainee: data, error: e };
-                }
-            }, { ignoreFirstLine: true, parallel: 25 }))
-            .on('data', ({ trainee, status, error }) => {
-                stats.total++;
-                stats[status]++;
+                }, { parallel: 25 })
+            ]);
 
-                if (status === 'ignored') {
-                    logger.debug('Trainee ignored', trainee, {});
-                } else if (status === 'invalid') {
-                    logger.error(`Trainee cannot be imported`, trainee, error);
-                } else {
-                    logger.debug('New trainee inserted');
-                }
-            })
-            .on('finish', async () => {
-                try {
-                    await db.collection('importTrainee').insertOne({
-                        hash,
-                        campaign: campaign.name,
-                        campaignDate: campaign.date,
-                        file,
-                        filters,
-                        stats: stats,
-                        date: new Date(),
-                    });
-                    return stats.invalid === 0 ? resolve(stats) : reject(stats);
-
-                } catch (e) {
-                    reject(e);
-                }
+            await db.collection('importTrainee').insertOne({
+                hash,
+                campaign: campaign.name,
+                campaignDate: campaign.date,
+                file,
+                filters,
+                stats: stats,
+                date: new Date(),
             });
 
+            return stats.invalid === 0 ? resolve(stats) : reject(stats);
         }
     });
 };

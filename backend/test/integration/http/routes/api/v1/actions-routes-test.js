@@ -259,8 +259,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let app = await startServer();
 
         await reconcileActions([
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2' }),
         ]);
 
         let response = await request(app).get('/api/v1/actions');
@@ -275,12 +275,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         await reconcileActions([
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX3' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X3', numeroAction: 'AC_XX_XXXXX3' }),
         ]);
 
-        let response = await request(app).get(`/api/v1/actions?id=F_XX_XX|AC_XX_XXXXX1,F_XX_XX|AC_XX_XXXXX2`);
+        let response = await request(app).get(`/api/v1/actions?id=F_XX_X1|AC_XX_XXXXX1,F_XX_X2|AC_XX_XXXXX2`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 2);
@@ -292,23 +292,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         await reconcileActions([
-            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX1', codeRegion: '11' }),
-            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX2', codeRegion: '24' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', codeRegion: '11' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', codeRegion: '24' }),
         ]);
 
         let response = await request(app).get(`/api/v1/actions?region=11`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
-        assert.ok(response.body.actions.find(a => a.id === 'F_XX_XX|AC_XX_XXXXX1'));
+        assert.ok(response.body.actions.find(a => a.id === 'F_XX_X1|AC_XX_XXXXX1'));
     });
 
     it('can search though all actions filtered by numero', async () => {
 
         let app = await startServer();
         await reconcileActions([
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2' }),
         ]);
 
         let response = await request(app).get(`/api/v1/actions?numero=AC_XX_XXXXX1`);
@@ -324,13 +324,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         await reconcileActions(
             [
                 newIntercarif({
-                    numeroFormation: 'F_XX_XX',
+                    numeroFormation: 'F_XX_X1',
                     numeroAction: 'AC_XX_XXXXX1',
                     formacode: '22252',
                     organismeFormateur: '33333333333333',
                     lieuDeFormation: '75019',
                 }),
-                newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
+                newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2' }),
             ],
             [
                 newComment({
@@ -353,15 +353,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
-        assert.ok(response.body.actions.find(a => a.id === 'F_XX_XX|AC_XX_XXXXX1'));
+        assert.ok(response.body.actions.find(a => a.id === 'F_XX_X1|AC_XX_XXXXX1'));
     });
 
     it('can search though all actions with pagination', async () => {
 
         let app = await startServer();
         await reconcileActions([
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX1' }),
-            newIntercarif({ numeroAction: 'AC_XX_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2' }),
         ]);
 
         let response = await request(app).get(`/api/v1/actions?page=0&items_par_page=1`);
@@ -383,14 +383,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX1' })]);
+        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' })]);
 
         let response = await request(app).get('/api/v1/actions?fields=score');
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.actions[0]), ['id', 'score']);
 
-        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1?fields=score');
+        response = await request(app).get('/api/v1/actions/F_XX_X1|AC_XX_XXXXX1?fields=score');
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(Object.keys(response.body), ['id', 'score']);
     });
@@ -399,14 +399,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXX1' })]);
+        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' })]);
 
         let response = await request(app).get('/api/v1/actions?fields=-avis');
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.actions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.actions[0]), ['id', 'numero', 'region', 'score', 'meta']);
 
-        response = await request(app).get('/api/v1/actions/F_XX_XX|AC_XX_XXXXX1?fields=-avis');
+        response = await request(app).get('/api/v1/actions/F_XX_X1|AC_XX_XXXXX1?fields=-avis');
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(Object.keys(response.body), ['id', 'numero', 'region', 'score', 'meta']);
     });

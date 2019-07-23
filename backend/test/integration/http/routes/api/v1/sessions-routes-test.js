@@ -326,8 +326,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let app = await startServer();
 
         await reconcileSessions([
-            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXX1' }),
-            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
         ]);
 
         let response = await request(app).get('/api/v1/sessions');
@@ -342,13 +342,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         await reconcileSessions([
-            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXX1' }),
-            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXX2' }),
-            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXX3' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X3', numeroAction: 'AC_XX_XXXXX3', numeroSession: 'SE_XXXXX3' }),
         ]);
 
         let response = await request(app)
-        .get(`/api/v1/sessions?id=F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1,F_XX_XX|AC_XX_XXXXXX|SE_XXXXX2`);
+        .get(`/api/v1/sessions?id=F_XX_X1|AC_XX_XXXXX1|SE_XXXXX1,F_XX_X2|AC_XX_XXXXX2|SE_XXXXX2`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.sessions.length, 2);
@@ -360,24 +360,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         await reconcileSessions([
-            newIntercarif({ numeroSession: 'SE_XXXXX1', codeRegion: '11' }),
-            newIntercarif({ numeroSession: 'SE_XXXXX2', codeRegion: '24' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1', codeRegion: '11' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2', codeRegion: '24' }),
         ]);
 
         let response = await request(app).get(`/api/v1/sessions?region=11`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.sessions.length, 1);
-        assert.ok(response.body.sessions.find(s => s.id === 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1'));
+        assert.ok(response.body.sessions.find(s => s.id === 'F_XX_X1|AC_XX_XXXXX1|SE_XXXXX1'));
     });
 
     it('can search though all sessions filtered by numero', async () => {
 
         let app = await startServer();
         await reconcileSessions([
-            newIntercarif({ numeroSession: 'SE_XXXXX1' }),
-            newIntercarif({ numeroSession: 'SE_XXXXX2' }),
-            newIntercarif({ numeroSession: 'SE_XXXXX3' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X3', numeroAction: 'AC_XX_XXXXX3', numeroSession: 'SE_XXXXX3' }),
         ]);
 
         let response = await request(app).get(`/api/v1/sessions?numero=SE_XXXXX1`);
@@ -392,10 +392,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let app = await startServer();
         await reconcileSessions(
             [
-                newIntercarif({ numeroSession: 'SE_XXXXX2' }),
+                newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
                 newIntercarif({
-                    numeroFormation: 'F_XX_XX',
-                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroFormation: 'F_XX_X1',
+                    numeroAction: 'AC_XX_XXXXX1',
                     numeroSession: 'SE_XXXXX1',
                     formacode: '22252',
                     lieuDeFormation: '75019',
@@ -424,15 +424,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.sessions.length, 1);
-        assert.ok(response.body.sessions.find(s => s.id === 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1'));
+        assert.ok(response.body.sessions.find(s => s.id === 'F_XX_X1|AC_XX_XXXXX1|SE_XXXXX1'));
     });
 
     it('can search though all sessions with pagination', async () => {
 
         let app = await startServer();
         await reconcileSessions([
-            newIntercarif({ numeroSession: 'SE_XXXXX1' }),
-            newIntercarif({ numeroSession: 'SE_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
         ]);
 
         let response = await request(app).get(`/api/v1/sessions?page=0&items_par_page=1`);
@@ -484,7 +484,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let app = await startServer();
 
         await reconcileSessions([
-            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXXX' }),
         ]);
 
         let response = await request(app).get('/api/v1/sessions?fields=score');
@@ -492,7 +492,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.body.sessions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.sessions[0]), ['id', 'score']);
 
-        response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1?fields=score');
+        response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX?fields=score');
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(Object.keys(response.body), ['id', 'score']);
 
@@ -503,7 +503,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let app = await startServer();
 
         await reconcileSessions([
-            newIntercarif({ numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
         ]);
 
         let response = await request(app).get('/api/v1/sessions?fields=-avis');
@@ -511,7 +511,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.body.sessions.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.sessions[0]), ['id', 'numero', 'region', 'score', 'meta']);
 
-        response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1?fields=-avis');
+        response = await request(app).get('/api/v1/sessions/F_XX_X1|AC_XX_XXXXX1|SE_XXXXX1?fields=-avis');
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(Object.keys(response.body), ['id', 'numero', 'region', 'score', 'meta']);
     });
@@ -525,7 +525,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
                     numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXX1',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
@@ -567,7 +567,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             global: 2.4,
         });
 
-        response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1?notes_decimales=true');
+        response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX?notes_decimales=true');
         assert.deepStrictEqual(response.body.score.notes, {
             accompagnement: 1,
             accueil: 3,
@@ -577,7 +577,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             global: 2.4,
         });
 
-        response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXX1/avis?notes_decimales=true');
+        response = await request(app).get('/api/v1/sessions/F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX/avis?notes_decimales=true');
         assert.deepStrictEqual(response.body.avis[0].notes, {
             accompagnement: 1,
             accueil: 3,

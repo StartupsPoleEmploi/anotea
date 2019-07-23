@@ -5,8 +5,7 @@ const { IdNotFoundError } = require('../../../../../common/errors');
 const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
 const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
 const convertOrganismeToDTO = require('./utils/convertOrganismeToDTO');
-const { encodeStream } = require('iconv-lite');
-const { transformObject } = require('../../../../../common/utils/stream-utils');
+const { transformObject, encodeStream } = require('../../../../../common/utils/stream-utils');
 
 module.exports = ({ db, configuration, mailing, middlewares }) => {
 

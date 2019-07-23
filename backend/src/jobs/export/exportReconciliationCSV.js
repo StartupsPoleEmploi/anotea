@@ -2,7 +2,8 @@ const cli = require('commander');
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
-const { execute, toCsvStream, promisifyStream } = require('../job-utils');
+const { execute } = require('../job-utils');
+const { pipeline, convertIntoCSV } = require('../../common/utils/stream-utils');
 
 cli
 .option('--reconciliable')
@@ -18,13 +19,12 @@ execute(async ({ logger, db, regions }) => {
 
         logger.info(`Generating CSV file ${csvFile}...`);
 
-        let stream = db.collection('comment').find({
-            codeRegion,
-            'meta.reconciliations.0.action': cli.reconciliable
-        });
-
-        return promisifyStream(
-            toCsvStream(stream, {
+        return pipeline([
+            db.collection('comment').find({
+                codeRegion,
+                'meta.reconciliations.0.reconciliable': cli.reconciliable
+            }),
+            convertIntoCSV({
                 'id': avis => avis._id,
                 'note accueil': avis => avis.rates ? avis.rates.accueil : '',
                 'note contenu formation': avis => avis.rates ? avis.rates.contenu_formation : '',
@@ -58,10 +58,10 @@ execute(async ({ logger, db, regions }) => {
                 'numéro d\'action': avis => avis.infoCarif ? avis.infoCarif.numeroAction : '',
                 'numéro de session': avis => avis.infoCarif ? avis.infoCarif.numeroSession : '',
                 'code financeur': avis => avis.training.codeFinanceur,
-            })
-            .pipe(fs.createWriteStream(csvFile))
-        );
+            }),
+            fs.createWriteStream(csvFile)
+        ]);
     };
 
-    await Promise.all(regions.findActiveRegions().map(region => generateCSV(region)));
+    return Promise.all(regions.findActiveRegions().map(region => generateCSV(region)));
 });

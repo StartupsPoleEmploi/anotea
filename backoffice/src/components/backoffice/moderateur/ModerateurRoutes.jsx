@@ -11,11 +11,15 @@ import TemplatesCourrielsPanel from './moderation/TemplatesCourrielsPanel';
 
 const carouselSlidesDataStagiaires = [
     {
-        image: require('../common/slide/images/stagiaire_commentaire_rejeté.PNG'),
+        image: require('../common/slide/images/Stag_6mois.png'),
+        content:
+        'Six mois après la fin de la formation'
+    }, {
+        image: require('../common/slide/images/Stag_AvisRejeté.png'),
         content:
         'Rejet pour injure'
     }, {
-        image: require('../common/slide/images/stagiaire_avis_formation.PNG'),
+        image: require('../common/slide/images/Stag_DonnerVotreAvis.png'),
         content:
         'Donnez votre avis'
     }
@@ -23,21 +27,21 @@ const carouselSlidesDataStagiaires = [
 
 const carouselSlidesDataOrganismes = [
     {
-        image: require('../common/slide/images/organismes_accès_compte.PNG'),
-        content:
-        'Création de compte'
-    }, {
-        image: require('../common/slide/images/organismes_renouvellement_mdp.PNG'),
+        image: require('../common/slide/images/OF_NewMDP.png'),
         content:
         'Mail mot de passe oublié'
     }, {
-        image: require('../common/slide/images/organismes_réponse_rejetée.PNG'),
-        content:
-        'Mail avis signalé'
-    }, {
-        image: require('../common/slide/images/organismes_notifications_avis_non_lus.png'),
+        image: require('../common/slide/images/OF_NonLus.png'),
         content:
         'Notification avis non lus'
+    }, {
+        image: require('../common/slide/images/OF_ReponseRejeté.png'),
+        content:
+        'Mail avis rejeté'
+    }, {
+        image: require('../common/slide/images/OF_JoinAnotéa.png'),
+        content:
+        'Création de compte'
     }
 ];
 
