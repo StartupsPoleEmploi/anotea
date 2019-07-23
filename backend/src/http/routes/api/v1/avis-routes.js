@@ -10,7 +10,7 @@ const { createPaginationDTO, createAvisDTO } = require('./utils/dto');
 const buildAvisQuery = filters => {
 
     let queries = (filters.constructor === Array ? filters : [filters]).map(filter => {
-        let query = {};
+        let query = { 'archived': false };
         const FORMACODE_LENGTH = 5;
 
         if (filter.organisme_formateur) {
