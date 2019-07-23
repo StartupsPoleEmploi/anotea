@@ -7,11 +7,11 @@ const { execute } = require('../job-utils');
 cli.description('Adding archived flag to old avis')
 .parse(process.argv);
 
-execute(async ({ db, logger, configuration }) => {
+execute(async ({ db, logger }) => {
 
     logger.info(`Adding flag 'archived' to old avis...`);
 
-    let archiver = require(`./archive`)(db, logger, configuration);
+    let archiver = require(`./archive`)(db);
 
     return archiver.archive('comment');
 });

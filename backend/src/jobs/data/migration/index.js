@@ -6,11 +6,16 @@ const cli = require('commander');
 cli.description('migrate archived collections')
 .parse(process.argv);
 
-execute(async ({ db, logger, configuration }) => {
+execute(async ({ db, logger }) => {
 
     logger.info(`adding flag to old avis then migrating archived collections...`);
 
-    let migrater = require(`./tasks/migrateArchivedCollections`)(db, logger, configuration);
+    let migrater = require(`./tasks/migrateArchivedCollections`)(db, logger);
+    let stats = await migrater.migrateArchivedCollections();
 
-    return migrater.migrateArchivedCollections();
+    await require('./tasks/removeInvalidComment')(db);
+
+    await require('./tasks/dropArchivedCollections')(db);
+
+    return stats;
 });
