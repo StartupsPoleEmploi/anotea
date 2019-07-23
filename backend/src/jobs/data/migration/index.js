@@ -10,10 +10,10 @@ execute(async ({ db, logger }) => {
 
     logger.info(`adding flag to old avis then migrating archived collections...`);
 
+    await require('./tasks/removeInvalidComment')(db);
+
     let migrater = require(`./tasks/migrateArchivedCollections`)(db, logger);
     let stats = await migrater.migrateArchivedCollections();
-
-    await require('./tasks/removeInvalidComment')(db);
 
     await require('./tasks/dropArchivedCollections')(db);
 

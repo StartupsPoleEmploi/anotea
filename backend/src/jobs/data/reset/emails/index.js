@@ -2,7 +2,7 @@
 'use strict';
 
 const cli = require('commander');
-const { execute } = require('../../job-utils');
+const { execute } = require('../../../job-utils');
 
 cli.description('reset email sent status').parse(process.argv);
 
