@@ -109,7 +109,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         await importTrainee(db, logger, csvFile, handler);
 
         let count = await db.collection('trainee').countDocuments();
-        assert.equal(count, 0);
+        assert.strictEqual(count, 0);
     });
 
     it('can filter trainee by region', async () => {
@@ -181,7 +181,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         });
     });
 
-
     it('should filter trainee with conseil regional filter (certifications_only)', async () => {
         let db = await getTestDatabase();
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-non-certifiantes.csv');
@@ -207,6 +206,22 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
             ignored: 1,
             imported: 2,
             total: 3,
+        });
+    });
+
+    it('should convert NULL value into ""', async () => {
+        let db = await getTestDatabase();
+        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-with-NULL.csv');
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
+
+        await importTrainee(db, logger, csvFile, handler);
+
+        let doc = await db.collection('trainee').findOne();
+        assert.deepStrictEqual(doc.training.codeFinanceur, []);
+        assert.deepStrictEqual(doc.training.certifInfo, {
+            id: '',
+            label: '',
         });
     });
 

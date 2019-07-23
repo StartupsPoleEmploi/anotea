@@ -5,15 +5,16 @@ const parseDate = value => new Date(value + 'Z');
 
 module.exports = (db, regions) => {
 
-    const buildCodeFinanceur = data => {
-        if (data !== 'NULL') {
-            if (data.indexOf(';') !== -1) {
-                return data.split(';');
-            } else if (!isNaN(parseInt(data, 10))) {
-                return [data];
-            }
+    const buildCodeFinanceur = value => {
+        if (_.isEmpty(value)) {
+            return [];
         }
-        return [];
+
+        if (value.indexOf(';') !== -1) {
+            return value.split(';');
+        } else if (!isNaN(parseInt(value, 10))) {
+            return [value];
+        }
     };
 
     const buildFormationTitle = data => {
@@ -79,6 +80,7 @@ module.exports = (db, regions) => {
                 if (isConseilRegional && !region.conseil_regional.active) {
                     return false;
                 }
+
                 if (isConseilRegional &&
                     region.conseil_regional.active &&
                     region.conseil_regional.import === 'certifications_only') {
