@@ -139,7 +139,7 @@ module.exports = {
         });
     },
     parseCSV: parse,
-    convertIntoCSV: columns => {
+    transformObjectIntoCSV: columns => {
         let lines = 0;
         return new Transform({
             objectMode: true,

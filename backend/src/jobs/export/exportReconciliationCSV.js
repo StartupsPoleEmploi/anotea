@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const { execute } = require('../job-utils');
-const { pipeline, convertIntoCSV } = require('../../common/utils/stream-utils');
+const { pipeline, transformObjectIntoCSV } = require('../../common/utils/stream-utils');
 
 cli
 .option('--reconciliable')
@@ -24,7 +24,7 @@ execute(async ({ logger, db, regions }) => {
                 codeRegion,
                 'meta.reconciliations.0.reconciliable': cli.reconciliable
             }),
-            convertIntoCSV({
+            transformObjectIntoCSV({
                 'id': avis => avis._id,
                 'note accueil': avis => avis.rates ? avis.rates.accueil : '',
                 'note contenu formation': avis => avis.rates ? avis.rates.contenu_formation : '',
