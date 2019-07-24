@@ -10,8 +10,8 @@ const { createPaginationDTO, createAvisDTO } = require('./utils/dto');
 const buildAvisQuery = filters => {
 
     let queries = (filters.constructor === Array ? filters : [filters]).map(filter => {
-        let query = { 'archived': false };
         const FORMACODE_LENGTH = 5;
+        let query = {};
 
         if (filter.organisme_formateur) {
             query['training.organisation.siret'] = filter.organisme_formateur;
@@ -34,6 +34,7 @@ const buildAvisQuery = filters => {
     });
 
     return {
+        'archived': false,
         '$and': [
             queries.length === 0 ? {} : { '$or': queries },
             {

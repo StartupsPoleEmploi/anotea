@@ -549,18 +549,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis and ignoring those with archived true', async () => {
 
         let app = await startServer();
-        let oid = new ObjectID();
 
-        await insertIntoDatabase('comment', newComment({
-                _id: oid,
-                archived: true,
-            }));
+        await Promise.all([
+            insertIntoDatabase('comment', newComment()),
+            insertIntoDatabase('comment', newComment({ archived: true }))
+        ]);
 
         let response = await request(app)
         .get('/api/v1/avis');
 
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepStrictEqual(response.body.avis.length, 0);
+        assert.deepStrictEqual(response.body.avis.length, 1);
     });
 }));

@@ -558,13 +558,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis and ignoring those with archived true', async () => {
 
         let app = await startServer();
-        let commentId = new ObjectID();
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 22222222222222,
             })),
             insertIntoDatabase('comment', newComment({
-                _id: commentId,
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+                archived: false,
+            })),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
                 archived: true,
             })),
         ]);
@@ -574,7 +585,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
-        assert.deepStrictEqual(response.body.avis.length, 0);
+        assert.deepStrictEqual(response.body.avis.length, 1);
     });
 
 }));
