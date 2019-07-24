@@ -23,9 +23,10 @@ execute(async ({ db, logger }) => {
 
     await batchCursor(cursor, async next => {
         const comment = await next();
-
-        stats.archived++;
-        return db.collection('comment').updateOne({ _id: comment._id }, { $set: { 'archived': true } });
+        let res = await db.collection('comment').updateOne({ _id: comment._id }, { $set: { 'archived': true } });
+        if (res.result.nModified > 0) {
+            stats.archived++;
+        }
     });
 
     return stats;
