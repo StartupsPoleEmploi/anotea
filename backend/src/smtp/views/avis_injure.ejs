@@ -5,33 +5,107 @@
         <style>
             body {
                 font-size: 1em;
+                padding: 0px;
+                margin: 0px;
+                background-color: #f4f3f5;
+                font-size: 1.3em;
+                font-family: lato, sans-serif;
+            }
+
+            .content, .header {
+                background-color: white;
+            }
+
+            .content, .header, .footer {
+                width: 80%;
+                margin: auto;
+            }
+
+            a {
+                color:black;
+            }
+
+            a:hover {
+                text-decoration: none;
+                color:black;
+            }
+
+            .header {
+                background-color: white;
+                border-radius: 0px 0px 5px 5px;
+                margin-bottom: 16px;
+                padding: 10px;
+                height: 48px;
+            }
+
+            .header .logo-right {
+                float: right;
+                margin: 25px;
+            }
+
+            .header .logo-left {
+                margin-left: 15px;
+            }
+
+            .content {
+                border-radius: 5px;
+                padding: 10px;
             }
 
             body td {
-                padding: 2em;
+                padding: 0.5em;
                 width: 33%;
             }
 
-            .banner {
-                height: 193px;
+            h1 {
+                text-align: center;
+                font-weight: 900;
+                font-size: 1.2em;
+                line-height: 29px;
             }
 
-            .icons-mobile {
-                display: none;
+            .content h2, .content h3, .content p {
+                text-align: center;
             }
 
-            .icons td {
-                padding: 0px 0px 5px 20px;
+            .content p {
+                color: rgba(36, 48, 58, 0.6);
             }
 
-            .labels td {
-                padding: 0px 0px 20px 20px;
+            p, ul {
+                color: rgba(35, 47, 56, 0.7);
+                font-size: 0.7em;
             }
 
             #lbf-logo {
                 margin: auto;
                 display: block;
                 width: 200px;
+            }
+
+            .button {
+                font-size: 16px;
+                font-weight: bold;
+                text-transform: uppercase;
+                border-radius: 5px;
+                padding: 15px;
+                text-decoration: none;
+                display: block;
+                width: fit-content;
+                margin: auto;
+            }
+
+            .button.contact {
+                background-color: #fdf4e6;
+                color: #fa8100;
+            }
+
+            .footer {
+                color: #24303A;
+            }
+
+            .footer p {
+                text-align: center;
             }
 
             @media only screen and (max-width: 596px) {
@@ -44,61 +118,32 @@
                     padding: .5em;
                     width: 33%;
                 }
-
-                .labels, .icons {
-                    display: none;
-                }
-
-                .icons-mobile {
-                    display: inherit;
-                    background: white;
-                    width: 760px;
-                    padding: 20px 0px 50px 0px;
-                }
             }
         </style>
     </head>
-    <body style="background-color:#ebebeb;font-size:1.3em">
-        <center>
-            <table height="100%" cellspacing="0" cellpadding="0" border="0"
-                   style="font-family:Arial; background-color:white; font-size:1em;">
-                <tr>
-                    <td style="padding:2em" align="left" valign="middle"><img
-                                src="<%= hostname %>/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
-                    <td style="padding:2em" colspan="2" align="right" valign="middle">
-                        Propulsé par &nbsp;
-                        <img src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt=""
-                             style="vertical-align: middle;" />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="padding:0em 2em">
-                        <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
-                        <p>Nous n’avons pas pu prendre en compte votre avis car il comporte des propos à caractère
-                            injurieux ou diffamatoire, seules les notes seront publiées sur une formation similaire.
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="padding:0em 2em">
-                        <p>Nous vous remercions de votre compréhension,<br /> L'Equipe Anotéa.</p>
-                    </td>
-                </tr>
-            </table>
-            <table width="760px" cellspacing="0" cellpadding="0" border="0"
-                   style="font-family:Arial; background-color:white; font-size:1em;">
-                <tr>
-                    <td colspan="3" align="center"
-                        style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
-                        <%- include('./legal/mentions.ejs'); %>
+    <body style="background-color:#ebebeb">
+        <div class="header">
+            <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Horizontal_baseline2.png" alt="" /></td>
+            <img class="logo-right" src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" />
+        </div>
 
-                        <img id="lbf-logo" src="<%= hostname %>/static/images/lbf.jpg" />
+        <div class="content">
+            <h1>Votre commentaire a été rejeté</h1>
+            <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
+            <p>Il semblerait que votre avis comporte des propos à caractère injurieux ou diffamatoire et ne respecte donc pas notre charte. Seules les notes seront publiées sur une formation similaire.</p>
+            <p>
+                <a class="button contact" href="mailto:<%= email %>">Contacter Anotéa</a>
+            </p>
+            <p>Nous vous remercions de votre compréhension,<br /> L'Equipe Anotéa.</p>
+        </div>
 
-                        <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
-                                pouvez vous désinscrire</a>.</p>
-                    </td>
-                </tr>
-            </table>
-        </center>
+        <div class="footer">
+            <%- include('./legal/mentions.ejs'); %>
+
+            <img id="lbf-logo" src="<%= hostname %>/static/images/lbf.jpg" />
+
+            <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
+                    pouvez vous désinscrire</a>.</p>
+        </div>
     </body>
 </html>

@@ -45,10 +45,7 @@
             }
 
             .header p {
-                position: absolute;
-                top: 10px;
                 text-align: center;
-                width: 80%;
             }
 
 
@@ -138,38 +135,21 @@
                  alt="" /></td>
             <img class="logo-right"
                  src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" />
-            <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
-            </p>
         </div>
 
         <div class="content">
-            <h1>Donnez-nous votre avis en 1 minute.</h1>
-            <p>Vous avez suivi la formation de <strong class="trainingTitle"><%= trainee.training.title %></strong>
-                du <%= moment(trainee.training.startDate).format('DD/MM/YYYY') %>
-                au <%= moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %>
-                à <%= trainee.training.organisation.label %>.</p>
+            <h1>6 mois après votre formation où en êtes vous ?</h1>
+            <p>
+                Vous avez un autre point de vue sur votre formation de
+                <strong class="trainingTitle"><%= trainee.training.title %></strong>
+            <p>
+            <p>
+                En 2 minutes, dîtes aux futurs stagiaires si cette formation vous a aidé de retrouver un emploi
             <p>
                 <a href="<%= formLink %>" target="_blank" class="avis button">
-                    évaluer ma formation
+                    Cliquez ici
                 </a>
             </p>
-            <h2>Pourquoi donner votre avis ?</h2>
-
-            <h3>Aider les prochains à faire le bon choix</h3>
-
-            <p>Votre avis sera consulté par des centaines de personnes en recherche de formation.</p>
-
-            <hr />
-
-            <h3>100% anonyme</h3>
-
-            <p>Cet avis est totalement anonyme.</p>
-
-            <hr />
-
-            <h3>Participer à l'amélioration des formations</h3>
-
-            <p>Donnez des retours directs aux centres de formation ainsi qu'à Pôle Emploi.</p>
         </div>
 
         <div class="footer">

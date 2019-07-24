@@ -1,3 +1,5 @@
+Votre réponse n'a pas été prise en compte
+
 Bonjour,
 
 Nous avons pris connaissance de la réponse que vous avez formulée dans votre Espace Anotéa
@@ -17,10 +19,3 @@ Voici quelques conseils pour formuler votre réponse :
 - Ne faîtes pas mention de coordonnées téléphoniques ou mail
 
 Nous avons procédé au rejet de la réponse ci-dessus et nous vous invitons à la modifier dans votre Espace.
-
-Cordialement,
-L’Equipe Anotéa
-
-Plus d’infos sur Anotea: https://anotea.pole-emploi.fr/
-Je me connecte à mon Espace Anotéa : https://anotea.pole-emploi.fr/admin/
-En cas de besoin contactez : [<%= contact %>]
