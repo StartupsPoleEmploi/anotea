@@ -155,9 +155,10 @@ module.exports = function(db, logger, configuration, regions) {
                 reponse: reponse
             };
 
+            mailOptions.subject = `Anotéa - votre réponse n'a pas été prise en compte`;
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
-            mailOptions.subject = `Pôle Emploi - Votre réponse a été rejetée`;
+            mailOptions.subject = `Anotéa - votre réponse n'a pas été prise en compte`;
 
             sendMail('organisme_reponse_rejetee', params, mailOptions, successCallback, errorCallback);
         },
@@ -218,14 +219,14 @@ module.exports = function(db, logger, configuration, regions) {
         },
         sendMalformedImport: async (params, successCallback, errorCallback) => {
             let mailOptions = {};
+            let cc = configuration.smtp.import_error_cc;
+
             mailOptions.to = params.source === 'IDF' ? configuration.smtp.idf_error_to : configuration.smtp.pe_error_to;
             mailOptions.subject = 'Imports stagiaires IDF : une erreur est survenue';
-            mailOptions.from = configuration.smtp.from;
-            const cc = configuration.smtp.import_error_cc;
+
             sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
         },
         sendInjureMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
-            mailOptions.subject = `Rejet de votre avis sur votre formation ${trainee.training.title} à ${trainee.training.organisation.name}`;
 
             let unsubscribeLink = getUnsubscribeLink(trainee);
             let region = regions.findRegionByCodeRegion(trainee.codeRegion);
@@ -239,12 +240,14 @@ module.exports = function(db, logger, configuration, regions) {
                 hostname: configuration.app.public_hostname,
             };
 
-            mailOptions.replyTo = getReplyToEmail(region);
+            mailOptions.subject =
+                `Rejet de votre avis sur votre formation ${trainee.training.title} à ${trainee.training.organisation.name}`;
             mailOptions.list = Object.assign({}, list, {
                 unsubscribe: {
                     url: unsubscribeLink,
                 }
             });
+            mailOptions.replyTo = getReplyToEmail(region);
             sendMail('avis_injure', params, mailOptions, successCallback, errorCallback);
         }
     };

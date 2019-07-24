@@ -1,7 +1,7 @@
 const express = require('express');
 const { boomify } = require('boom');
 
-module.exports = ({ logger, middlewares }) => {
+module.exports = ({ middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createHMACAuthMiddleware } = middlewares;

@@ -210,6 +210,7 @@ module.exports = {
                 desktop: 1
             },
             codeRegion: '11',
+            archived: false
         }, custom, { test: true });
     },
     newIntercarif: (options = {}) => {

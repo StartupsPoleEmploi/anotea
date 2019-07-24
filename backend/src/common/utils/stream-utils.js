@@ -1,32 +1,100 @@
 const _ = require('lodash');
-const { Transform } = require('stream');
+const { Transform, Writable } = require('stream');
+const pipeline = require('stream').pipeline;
+const parse = require('csv-parse');
+const { encodeStream } = require('iconv-lite');
 
-let transformObject = (callback, options = { ignoreFirstLine: false, ignoreEmpty: false }) => {
+let transformObject = (transform, options = {}) => {
     let lines = 0;
-    let isFirstLine = () => options.ignoreFirstLine && lines++ === 0;
-    let isEmpty = value => options.ignoreEmpty && _.isEmpty(value);
+    let isFirstLine = () => (options.ignoreFirstLine || false) && lines++ === 0;
+    let isEmpty = value => (options.ignoreEmpty || false) && _.isEmpty(value);
+    let parallel = options.parallel || 1;
+
+    let promises = [];
 
     return new Transform({
         objectMode: true,
-        transform: async function(data, encoding, next) {
-            if (!isEmpty(data) && !isFirstLine()) {
-                try {
-                    let res = await callback(data);
-                    if (!isEmpty(res)) {
-                        this.push(res);
-                    }
-                } catch (e) {
-                    return next(e);
-                }
+        transform: async function(data, encoding, done) {
+
+            if (promises.length >= parallel) {
+                await Promise.all(promises);
+                promises = [];
             }
-            return next();
+
+            if (isEmpty(data) || isFirstLine()) {
+                return done();
+            }
+
+            try {
+                let value = transform(data);
+                promises.push(
+                    Promise.resolve(value)
+                    .then(res => {
+                        if (!isEmpty(res)) {
+                            this.push(res);
+                        }
+                        done();
+                    })
+                    .catch(e => done(e))
+                );
+            } catch (e) {
+                done(e);
+            }
+        },
+        async flush(done) {
+            await Promise.all(promises);
+            done();
         }
     });
 };
+
 module.exports = {
+    encodeStream: encodeStream,
+    encodeIntoUTF8: () => encodeStream('UTF-8'),
     transformObject: transformObject,
     ignoreEmpty: () => transformObject(data => data, { ignoreEmpty: true }),
     ignoreFirstLine: () => transformObject(data => data, { ignoreFirstLine: true }),
+    writeObject: (write, options = {}) => {
+        let parallel = options.parallel || 1;
+
+        let promises = [];
+
+        return new Writable({
+            objectMode: true,
+            write: async (data, enc, done) => {
+
+                if (promises.length >= parallel) {
+                    await Promise.all(promises);
+                    promises = [];
+                }
+
+                try {
+                    let value = write(data);
+                    promises.push(
+                        Promise.resolve(value)
+                        .then(() => done())
+                        .catch(e => done(e))
+                    );
+                } catch (e) {
+                    return done(e);
+                }
+            },
+            end: async done => {
+                await Promise.all(promises);
+                done();
+            }
+        });
+    },
+    pipeline: streams => {
+        return new Promise((resolve, reject) => {
+            pipeline(streams, err => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            });
+        });
+    },
     jsonStream: (wrapper = {}) => {
         let chunksSent = 0;
         return new Transform({
@@ -70,7 +138,8 @@ module.exports = {
             }
         });
     },
-    csvStream: columns => {
+    parseCSV: parse,
+    transformObjectIntoCSV: columns => {
         let lines = 0;
         return new Transform({
             objectMode: true,
@@ -85,6 +154,5 @@ module.exports = {
                 callback();
             }
         });
-
     }
 };

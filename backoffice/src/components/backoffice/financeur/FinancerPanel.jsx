@@ -19,8 +19,6 @@ import {
     getOrganisations,
     loadInventoryASelectedOrganisation
 } from './service/financeurService';
-import Dashboard from './stats/Dashboard';
-import SideMenu from './SideMenu';
 import getReponseStatus from '../common/utils/getReponseStatus';
 
 const DEFAULT_ORDER = 'advicesDate';
@@ -378,10 +376,6 @@ export default class FinancerPanel extends React.Component {
 
         return (
             <div className="organisationPanel mainPanel">
-
-                {this.state.currentPage === 'stats' &&
-                <Dashboard codeFinanceur={this.props.codeFinanceur} codeRegion={this.props.codeRegion} />
-                }
 
                 {this.state.currentPage === 'advices' &&
                 <div>

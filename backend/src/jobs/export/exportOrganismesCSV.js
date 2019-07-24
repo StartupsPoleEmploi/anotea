@@ -2,7 +2,8 @@ const cli = require('commander');
 const fs = require('fs');
 const path = require('path');
 const getOrganismeEmail = require('../../common/utils/getOrganismeEmail');
-const { execute, toCsvStream, promisifyStream } = require('../job-utils');
+const { execute } = require('../job-utils');
+const { pipeline, transformObjectIntoCSV } = require('../../common/utils/stream-utils');
 
 cli.description('Export organismes per active region')
 .parse(process.argv);
@@ -16,18 +17,18 @@ execute(async ({ db, logger, regions }) => {
         let csvFile = path.join(__dirname, `../../../../.data/organismes-${nom}-${codeRegion}.csv`);
         logger.info(`Generating CSV file ${csvFile}...`);
 
-        let stream = db.collection('accounts').find({ profile: 'organisme', codeRegion });
-        return promisifyStream(
-            toCsvStream(stream, {
+        return pipeline([
+            db.collection('accounts').find({ profile: 'organisme', codeRegion }),
+            transformObjectIntoCSV({
                 'Siret': organisme => `="${organisme.meta.siretAsString}"`,
                 'Raison sociale': organisme => organisme.raisonSociale,
                 'Email': organisme => getOrganismeEmail(organisme),
                 'Nombre Avis': organisme => organisme.score.nb_avis,
                 'Kairos': organisme => !!organisme.sources.find(s => s === 'kairos'),
-            })
-            .pipe(fs.createWriteStream(csvFile))
-        );
+            }),
+            fs.createWriteStream(csvFile)
+        ]);
     };
 
-    await Promise.all(regions.findActiveRegions().map(region => generateCSV(region)));
+    return Promise.all(regions.findActiveRegions().map(region => generateCSV(region)));
 });

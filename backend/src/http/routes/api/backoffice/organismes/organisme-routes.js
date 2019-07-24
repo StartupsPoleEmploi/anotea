@@ -94,7 +94,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         checkOrganisme(req);
 
         const projection = { token: 0 };
-        let filter = { 'training.organisation.siret': req.params.id };
+        let filter = { 'training.organisation.siret': req.params.id, 'archived': false };
         let order = { date: -1 };
         
         if (req.query.filter) {
@@ -187,7 +187,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         checkOrganisme(req);
 
         const projection = { token: 0 };
-        let filter = { 'training.organisation.siret': req.params.id };
+        let filter = { 'training.organisation.siret': req.params.id, 'archived': false };
         let order = { date: -1 };
 
         if (req.query.trainingId === 'null') {
@@ -263,7 +263,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
-            let filter = '';
+            let filter = { 'archived': false };
             if (req.query.postalCode) {
                 filter = Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
             }
@@ -321,7 +321,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
-            const filter = { 'training.organisation.siret': `${req.params.id}` };
+            const filter = { 'training.organisation.siret': `${req.params.id}`, 'archived': true };
 
             if (req.query.trainingId === 'null') {
                 Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
@@ -368,7 +368,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
 
         const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
-            const filter = { 'training.organisation.siret': `${req.params.id}` };
+            const filter = { 'training.organisation.siret': `${req.params.id}`, 'archived': true };
 
             let inventory = {};
 
@@ -415,7 +415,8 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                 {
                     $match: {
                         '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-                        'training.organisation.siret': `${req.params.id}`
+                        'training.organisation.siret': `${req.params.id}`,
+                        'archived': true
                     }
                 },
                 {

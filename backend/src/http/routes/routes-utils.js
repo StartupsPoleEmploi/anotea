@@ -1,4 +1,4 @@
-const { jsonStream, csvStream } = require('../../common/utils/stream-utils');
+const { jsonStream, transformObjectIntoCSV } = require('../../common/utils/stream-utils');
 const { encodeStream } = require('iconv-lite');
 
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
         res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
 
         stream
-        .pipe(csvStream(columns))
+        .pipe(transformObjectIntoCSV(columns))
         .pipe(encodeStream('UTF-8'))
         .pipe(res)
         .on('error', () => res.status(500))

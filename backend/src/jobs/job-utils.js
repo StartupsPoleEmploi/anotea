@@ -1,11 +1,8 @@
 const moment = require('moment');
 const _ = require('lodash');
 const config = require('config');
-const parse = require('csv-parse');
-const { encodeStream } = require('iconv-lite');
 const createComponents = require('../components');
 const createLogger = require('../common/components/logger');
-const { transformObject, csvStream } = require('../common/utils/stream-utils');
 const { IncomingWebhook } = require('@slack/webhook');
 
 module.exports = {
@@ -61,26 +58,6 @@ module.exports = {
             components.sentry.sendError(e);
             exit(e);
         }
-    },
-    toCsvStream: (inputStream, columns) => {
-        return inputStream
-        .pipe(csvStream(columns))
-        .pipe(encodeStream('UTF-8'));
-    },
-    fromCsvStream: (stream, parser, callback) => {
-        return stream
-        .pipe(parse(parser))
-        .pipe(transformObject(data => callback(data), { ignoreFirstLine: true }))
-        .on('unpipe', function() {
-            this.end();
-        });
-    },
-    promisifyStream: stream => {
-        return new Promise((resolve, reject) => {
-            stream
-            .on('error', e => reject(e))
-            .on('finish', async () => resolve());
-        });
     },
     promiseAll: async (promises, callback, options = { batchSize: 25 }) => {
         let chunks = _.chunk(promises, options.batchSize);

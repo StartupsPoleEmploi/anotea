@@ -545,4 +545,21 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(avis[0].formation.action.lieu_de_formation.code_postal, codePostal);
         assert.deepStrictEqual(avis[0].formation.action.organisme_formateur.siret, siret);
     });
+
+    it('can search avis and ignoring those with archived true', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('comment', newComment()),
+            insertIntoDatabase('comment', newComment({ archived: true }))
+        ]);
+
+        let response = await request(app)
+        .get('/api/v1/avis');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.avis);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+    });
 }));

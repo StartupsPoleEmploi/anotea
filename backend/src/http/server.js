@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const Boom = require('boom');
-const createMiddlewares = require('./middlewares');
+const createMiddlewares = require('./middlewares/middlewares');
 const compression = require('compression');
 
 module.exports = components => {
@@ -41,7 +41,7 @@ module.exports = components => {
     app.use('/', require('./routes/front/html-routes')(httpComponents));
 
     //API routes
-    app.use('/api/', middlewares.addRateLimit(sentry));
+    app.use('/api', middlewares.addRateLimit(sentry));
     app.use('/api', require('./routes/api/swagger-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/ping-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/avis-routes')(httpComponents));
@@ -56,11 +56,10 @@ module.exports = components => {
     app.use('/api', require('./routes/api/contactStagiaires-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/login-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/forgottenPassword-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/moderateur/moderation-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/moderateur/moderateur-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/organismes/consultation-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/organismes/organisme-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/moderateur/gestion-organismes-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/moderateur/stats')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/financeur/financeur-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/account-routes')(httpComponents));

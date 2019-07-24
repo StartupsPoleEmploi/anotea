@@ -7,10 +7,10 @@ const { withComponents } = require('./test-components');
 
 module.exports = {
     withMongoDB: callback => {
-        return withComponents(context => {
+        return withComponents(testContext => {
 
             let getTestDatabase = async () => {
-                let { db } = await context.getComponents();
+                let { db } = await testContext.getComponents();
                 return db;
             };
 
@@ -24,19 +24,17 @@ module.exports = {
                 return db.dropDatabase();
             });
 
-            return callback(Object.assign({}, context, {
+            return callback(Object.assign({}, testContext, {
                 getTestDatabase,
                 insertIntoDatabase,
                 createIndexes: async (...collectionNames) => {
                     let db = await getTestDatabase();
-                    return collectionNames.map(name => {
-                        return mongoIndexes[name](db);
-                    });
+                    return collectionNames.map(name => mongoIndexes[name](db));
                 },
                 importIntercarif: async file => {
                     let intercarifFile = path.join(__dirname, 'data', 'intercarif-data-test.xml');
                     let db = await getTestDatabase();
-                    let { regions } = await context.getComponents();
+                    let { regions } = await testContext.getComponents();
 
                     return importIntercarif(db, logger, file || intercarifFile, regions);
                 },

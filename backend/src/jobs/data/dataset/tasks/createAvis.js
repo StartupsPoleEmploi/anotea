@@ -45,6 +45,7 @@ const buildAvis = (session, custom = {}) => {
     return _.merge({
         token: randomize('token'),
         campaign: 'dataset',
+        archived: false,
         formacode: formation.domaine_formation.formacodes[0],
         idSession: session.numero,
         codeRegion: session.code_region,
@@ -117,21 +118,21 @@ module.exports = async (db, moderation, options = {}) => {
 
     let promises = [];
     let generateRandom = () => {
-        let range = number => _.range(number).map(() => ({}));
+        let range = (number, getData = () => ({})) => _.range(number).map(() => getData());
 
         return [
             ...range(20),
-            ...range(20, { reponse: buildReponse() }),
-            ...range(20, { comment: buildComment() }),
-            ...range(20, { comment: buildComment(), reponse: buildReponse() }),
+            ...range(20, () => ({ reponse: buildReponse() })),
+            ...range(20, () => ({ comment: buildComment() })),
+            ...range(20, () => ({ comment: buildComment(), reponse: buildReponse() })),
         ];
     };
 
     let session = await db.collection('sessionsReconciliees').findOne();
 
     promises.push(
-        ...(options.published || generateRandom()).map(custom => {
-            let avis = buildAvis(session, custom);
+        ...(options.published || generateRandom()).map(data => {
+            let avis = buildAvis(session, data);
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
                 db.collection('comment').insertOne(avis),
@@ -141,8 +142,8 @@ module.exports = async (db, moderation, options = {}) => {
     );
 
     promises.push(
-        ...(options.rejected || generateRandom()).map(custom => {
-            let avis = buildAvis(session, custom);
+        ...(options.rejected || generateRandom()).map(data => {
+            let avis = buildAvis(session, data);
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
                 db.collection('comment').insertOne(avis),
@@ -152,8 +153,8 @@ module.exports = async (db, moderation, options = {}) => {
     );
 
     promises.push(
-        ...(options.reported || generateRandom()).map(custom => {
-            let avis = buildAvis(session, custom);
+        ...(options.reported || generateRandom()).map(data => {
+            let avis = buildAvis(session, data);
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
                 db.collection('comment').insertOne(avis),
@@ -163,8 +164,8 @@ module.exports = async (db, moderation, options = {}) => {
     );
 
     promises.push(
-        ...(options.toModerate || generateRandom()).map(custom => {
-            let avis = buildAvis(session, custom);
+        ...(options.toModerate || generateRandom()).map(data => {
+            let avis = buildAvis(session, data);
             return Promise.all([
                 db.collection('trainee').insertOne(createStagiaire(avis)),
                 db.collection('comment').insertOne(avis),
