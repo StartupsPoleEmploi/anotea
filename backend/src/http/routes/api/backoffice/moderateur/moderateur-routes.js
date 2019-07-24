@@ -3,7 +3,7 @@ const Joi = require('joi');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
-const moderationStats = require('./utils/moderationStats');
+const computeModerationStats = require('./utils/computeModerationStats');
 const { objectId } = require('../../../../../common/validators');
 
 module.exports = ({ db, logger, middlewares, configuration, moderation, mailing }) => {
@@ -25,7 +25,6 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
     router.get('/backoffice/moderateur/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { computeStats } = moderationStats(db, codeRegion);
         let { status, reponseStatus, fulltext, page, sortBy } = await Joi.validate(req.query, {
             status: Joi.string(),
             reponseStatus: Joi.string(),
@@ -62,7 +61,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
         let [total, avis, stats] = await Promise.all([
             cursor.count(),
             cursor.toArray(),
-            computeStats(db, codeRegion),
+            computeModerationStats(db, codeRegion),
         ]);
 
         res.send({
@@ -84,6 +83,13 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
                 })
             }
         });
+    }));
+
+    router.get('/backoffice/moderateur/stats', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+
+        let codeRegion = req.user.codeRegion;
+
+        res.json(await computeModerationStats(db, codeRegion));
     }));
 
     router.put('/backoffice/moderateur/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {

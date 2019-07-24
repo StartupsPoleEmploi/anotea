@@ -10,7 +10,7 @@ const importIntercarif = require('../../import/intercarif/importIntercarif');
 const reconcile = require('../../reconciliation/tasks/reconcile');
 const synchronizeOrganismesWithAccounts = require('../../organismes/tasks/synchronizeAccountsWithIntercarif');
 const computeOrganismesScore = require('../../organismes/tasks/computeScore');
-const resetPasswords = require('../reset/passwords/resetPasswords');
+const resetPasswords = require('../reset/tasks/resetPasswords');
 const createAvis = require('./tasks/createAvis');
 const dumpAvis = require('./tasks/dumpAvis');
 
