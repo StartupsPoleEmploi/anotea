@@ -1,0 +1,126 @@
+<mjml>
+    <mj-head>
+        <mj-font name="Lato" href="https://fonts.googleapis.com/css?family=Lato" />
+        <mj-attributes>
+            <mj-all font-size="14px" />
+            <mj-all font-family="Lato" />
+            <mj-all color="#24303A" />
+        </mj-attributes>
+        <mj-style>
+            .op-6 {opacity:0.6;}
+            .px-0 {padding-left:0;padding-right:0;}
+            .py-10 {padding-top:10;padding-bottom:10;}
+            .text-bold { font-weight: bold; }
+            .link { color: inherit; }
+            .link:hover { color: inherit; }
+        </mj-style>
+    </mj-head>
+    <mj-body background-color="#f0f0f0">
+        <mj-section background-color="#fff">
+            <mj-column width="50%">
+                <mj-text align="left">
+                    <span>Logo Anotea</span>
+                </mj-text>
+            </mj-column>
+            <mj-column width="50%">
+                <mj-text align="right">
+                    <span>Logo PE</span>
+                    <span>Loggo Region</span>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section padding="10px"></mj-section>
+        <mj-section background-color="#fff">
+            <mj-column>
+                <mj-text font-size="24px" align="center">
+                    <div>Donnez-nous votre avis en 1 minute.</div>
+                </mj-text>
+                <mj-text align="center" css-class="op-6" line-height="22px">
+                    <div>
+                        <span>Vous avez suivi la formation de </span>
+                        <span class="text-bold"><%= trainee.training.title %></span>
+                    </div>
+                    <div>
+                        du <%= moment(trainee.training.startDate).format('DD/MM/YYYY') %>
+                        au <%= moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %>
+                        à <%= trainee.training.organisation.label %>
+                    </div>
+                </mj-text>
+                <mj-text align="center" css-class="op-6">
+                    <div>Partagez votre expérience afin d'aider les futurs stagiaires</div>
+                    <div>à bien choisir leur formation</div>
+                </mj-text>
+                <mj-button href="<%= formLink %>" background-color="#F28017" font-size="16px" font-weight="bold" color="white"
+                           text-transform="uppercase">
+                    Evaluer ma formation
+                </mj-button>
+                <mj-divider border-width="2px" border-color="#F4F4F5" />
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#fff" padding="0">
+            <mj-column>
+                <mj-text align="center" font-weight="bold">Pourquoi donner votre avis ?</mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#fff" text-align="center">
+            <mj-column>
+                <mj-text align="center" font-size="16px" font-weight="bold" padding-left="8px" padding-right="8px">
+                    <div>Aider les prochains à faire le bon choix</div>
+                </mj-text>
+                <mj-text align="center" css-class="op-6">
+                    Votre avis sera consulté par des centaines de personnes en recherche de formation.
+                </mj-text>
+            </mj-column>
+            <mj-column>
+                <mj-text align="center" font-size="16px" font-weight="bold" padding-left="8px" padding-right="8px">
+                    <div>100%</div>
+                    <div>anonyme</div>
+                </mj-text>
+                <mj-text align="center" css-class="op-6">
+                    Cet avis est totalement anonyme.
+                </mj-text>
+            </mj-column>
+            <mj-column>
+                <mj-text align="center" font-size="16px" font-weight="bold" padding-left="8px" padding-right="8px">
+                    <div>Participer à l'amélioration des formations</div>
+                </mj-text>
+                <mj-text align="center" css-class="op-6">
+                    Donnez des retours directs aux centres de formation ainsi qu'à Pôle Emploi.
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#FDF2E8" padding="0">
+            <mj-column>
+                <mj-text color="#F28017" align="center" font-weight="bold">
+                    <a class="link" href="google.com" target="_blank">Rendez-vous sur notre site pour plus
+                        d'informations.
+                    </a>
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column>
+                <mj-text align="center" font-size="12px">
+                    Pôle emploi traite vos données à caractère personnel (données professionnelles, données de contact)
+                    pour les besoins de la réalisation d’une enquête de satisfaction. Cette enquête est facultative.
+                    Pôle emploi a obtenu vos données soit directement si vous êtes demandeurs d’emploi, soit par le
+                    biais de votre Conseil Régional si vous y avez consenti.>
+                </mj-text>
+                <mj-text align="center" font-size="12px">
+                    Vos données seront conservées pendant la durée de l’enquête, pour les stagiaires n’ayant pas
+                    consenti à être contacté, ou jusqu’à la révocation du consentement et au maximum 3 ans pour les
+                    stagiaires ayant consentis à être contactés.
+                </mj-text>
+                <mj-text align="center" font-size="12px">
+                    Conformément aux articles 12 à 23 du règlement général (UE) sur la protection des données n°2016/679
+                    du 27 avril 2016 et à la loi Informatique et libertés n°78-17 du 6 janvier 1978 modifiée, vous
+                    bénéficiez notamment d’un droit d’accès, de rectification, d’effacement et le droit de porter une
+                    réclamation devant la Commission nationale de l’informatique et des libertés pour les données vous
+                    concernant. Pour exercer vos droits, vous pouvez vous adresser à votre agence ou au délégué à la
+                    protection des données de Pôle emploi (1 avenue du Docteur Gley, 75987 Paris cedex 20 ;
+                    courriers-cnil@pole-emploi.fr).
+                </mj-text>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

@@ -1,10 +1,11 @@
 const path = require('path');
+const { promisify } = require('util');
+const nodemailer = require('nodemailer');
+const renderFile = promisify(require('ejs').renderFile);
+const mjml = require('mjml');
+const moment = require('moment');
 
 module.exports = function(db, logger, configuration, regions) {
-
-    const nodemailer = require('nodemailer');
-    const ejs = require('ejs');
-    const moment = require('moment');
 
     const configSmtp = {
         host: configuration.smtp.host,
@@ -58,39 +59,25 @@ module.exports = function(db, logger, configuration, regions) {
         return `Anotea <${getRegionEmail(region)}>`;
     };
 
-    const buildContent = (template, extension, params) => {
-        return new Promise((resolve, reject) => {
-            ejs.renderFile(path.join(__dirname, `views/${template}.${extension}`), params, (err, str) => {
-                if (err) {
-                    logger.error(err);
-                    reject(err);
-                    return;
-                }
-                resolve(str);
-            });
-        });
+    const generateHTML = (template, extension, params) => {
+        return renderFile(path.join(__dirname, `views/${template}.${extension}`), params);
     };
 
-    const sendMail = (template, params, mailOptions, successCallback, errorCallback, cc, textOnly) => {
+    const sendMail = async (template, params, mailOptions, successCallback, errorCallback, options = {}) => {
+        mailOptions.from = `Anotea <${configuration.smtp.from}>`;
         if (process.env.ANOTEA_MAIL_BCC) {
             mailOptions.bcc = process.env.ANOTEA_MAIL_BCC;
         }
 
-        if (cc) {
-            mailOptions.cc = cc;
-        }
-        mailOptions.from = `Anotea <${configuration.smtp.from}>`;
-
-        let contents = [];
-        contents.push(buildContent(template, 'txt', params));
-        if (!textOnly) {
-            contents.push(buildContent(template, 'ejs', params));
+        if (options.cc) {
+            mailOptions.cc = options.cc;
         }
 
-        Promise.all(contents).then(values => {
-            mailOptions.text = values[0];
-            if (!textOnly) {
-                mailOptions.html = values[1];
+        try {
+            mailOptions.text = await generateHTML(template, 'txt', params);
+            if (!options.textOnly) {
+                let html = await generateHTML(template, options.mjml ? 'mjml' : 'ejs', params);
+                mailOptions.html = options.mjml ? mjml(html).html : html;
             }
 
             transporter.sendMail(mailOptions, (error, info) => {
@@ -105,10 +92,11 @@ module.exports = function(db, logger, configuration, regions) {
                     successCallback();
                 }
             });
-        }, reason => {
-            logger.error(`An error occurs while sending mail : ${reason}`);
-            errorCallback(reason);
-        });
+
+        } catch (e) {
+            logger.error(`An error occurs while sending mail : ${e}`);
+            errorCallback(e);
+        }
     };
 
     const list = {
@@ -213,7 +201,7 @@ module.exports = function(db, logger, configuration, regions) {
             });
             mailOptions.replyTo = getReplyToEmail(region);
 
-            sendMail('votre_avis', params, mailOptions, successCallback, errorCallback);
+            sendMail('votre_avis', params, mailOptions, successCallback, errorCallback, { mjml: true });
 
         },
         sendQuestionnaire6MoisMail: async (mailOptions, trainee, successCallback, errorCallback) => {
@@ -248,7 +236,7 @@ module.exports = function(db, logger, configuration, regions) {
             mailOptions.to = params.source === 'IDF' ? configuration.smtp.idf_error_to : configuration.smtp.pe_error_to;
             mailOptions.subject = 'Imports stagiaires IDF : une erreur est survenue';
 
-            sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
+            sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, { cc, textOnly: true });
         },
         sendInjureMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
 
