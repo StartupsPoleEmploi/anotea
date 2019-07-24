@@ -158,6 +158,7 @@ module.exports = function(db, logger, configuration, regions) {
             mailOptions.subject = `Anotéa - votre réponse n'a pas été prise en compte`;
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
+            mailOptions.subject = `Anotéa - votre réponse n'a pas été prise en compte`;
 
             sendMail('organisme_reponse_rejetee', params, mailOptions, successCallback, errorCallback);
         },
