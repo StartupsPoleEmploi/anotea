@@ -1,7 +1,7 @@
 import { _delete, _get, _put } from '../../../../utils/http-client';
 import queryString from 'query-string';
 
-export const stats = () => {
+export const getStats = () => {
     return _get(`/backoffice/moderateur/stats`);
 };
 

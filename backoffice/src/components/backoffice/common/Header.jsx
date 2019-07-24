@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Header.scss';
 import { NavLink, Route } from 'react-router-dom';
 import logo from './Header.svg';
-import { stats } from './../moderateur/moderation/moderationService';
+import { getStats } from './../moderateur/moderation/moderationService';
 
 const Link = ({ label, url, className }) => {
     return (
@@ -42,9 +42,9 @@ export default class Header extends React.Component {
     fetchStats = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let computedStats = await stats();
-                let avis = computedStats.status.none;
-                let reponses = computedStats.reponseStatus.none;
+                let stats = await getStats();
+                let avis = stats.status.none;
+                let reponses = stats.reponseStatus.none;
                 this.setState({ avis, reponses, loading: false }, () => resolve());
             });
         });
