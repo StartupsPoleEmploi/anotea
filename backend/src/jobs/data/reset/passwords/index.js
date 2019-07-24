@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 'use strict';
-
 const cli = require('commander');
+const { hashPassword } = require('../../../../common/components/password');
 const { execute } = require('../../../job-utils');
-const resetPasswords = require('./resetPasswords');
 
 cli.description('Reset password')
 .option('-p, --password [password]', 'Password for injected accounts')
@@ -12,8 +11,15 @@ cli.description('Reset password')
 execute(async ({ db, exit }) => {
 
     if (!cli.password) {
-        exit('Invalid arguments');
+        return exit('Invalid arguments');
     }
 
-    return resetPasswords(db, cli.password);
+    return Promise.all([
+        db.collection('accounts').updateMany({ passwordHash: { $ne: null } }, {
+            $set: {
+                'meta.rehashed': true,
+                'passwordHash': await hashPassword(cli.password),
+            }
+        }),
+    ]);
 });
