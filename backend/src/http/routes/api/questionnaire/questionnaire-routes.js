@@ -98,6 +98,7 @@ module.exports = ({ db, logger, configuration, regions }) => {
             pseudo: data.pseudo.replace(/ /g, '').replace(/\./g, ''),
             accord: data.accord,
             accordEntreprise: data.accordEntreprise,
+            archived: false
         };
 
         let text = data.commentaire.texte;

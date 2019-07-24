@@ -554,4 +554,38 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(response.body.avis.length, 1);
         assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
+
+    it('can search avis and ignoring those with archived true', async () => {
+
+        let app = await startServer();
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+            })),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+                archived: false,
+            })),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+                archived: true,
+            })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/v1/organismes-formateurs/22222222222222/avis');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.avis);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+    });
+
 }));

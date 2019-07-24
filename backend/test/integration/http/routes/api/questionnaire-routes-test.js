@@ -29,7 +29,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 titre: 'titre'
             },
             accord: true,
-            accordEntreprise: true
+            accordEntreprise: true,
         });
 
         assert.strictEqual(response.statusCode, 200);
@@ -84,7 +84,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             tracking: {
                 firstRead: date.toJSON()
             },
-            codeRegion: '11'
+            codeRegion: '11',
         });
 
         assert.deepStrictEqual(_.omit(response.body.infosRegion, ['trainee']), {
@@ -168,7 +168,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 text: 'texte'
             },
             accord: true,
-            accordEntreprise: true
+            accordEntreprise: true,
+            archived: false
         });
     });
 }));

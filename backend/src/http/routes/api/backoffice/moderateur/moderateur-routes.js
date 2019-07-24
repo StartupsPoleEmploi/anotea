@@ -39,6 +39,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
         let cursor = db.collection('comment')
         .find({
             codeRegion: codeRegion,
+            archived: false,
             ...(['none', 'published', 'rejected'].includes(status) ? { comment: { $ne: null } } : {}),
             ...(status === 'rejected' ? { rejected: true } : {}),
             ...(status === 'published' ? { published: true } : {}),
