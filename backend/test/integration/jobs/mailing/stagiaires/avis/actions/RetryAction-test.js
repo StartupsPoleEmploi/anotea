@@ -1,11 +1,11 @@
 const assert = require('assert');
 const configuration = require('config');
-const { withMongoDB } = require('../../../../../helpers/test-database');
-const { newTrainee, randomize } = require('../../../../../helpers/data/dataset');
-const logger = require('../../../../../helpers/test-logger');
-const AvisMailer = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/AvisMailer');
-const RetryAction = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/actions/RetryAction');
-const { successMailer } = require('../../fake-mailers');
+const { withMongoDB } = require('../../../../../../helpers/test-database');
+const { newTrainee, randomize } = require('../../../../../../helpers/data/dataset');
+const logger = require('../../../../../../helpers/test-logger');
+const AvisMailer = require('../../../../../../../src/jobs/mailing/stagiaires/avis/AvisMailer');
+const RetryAction = require('../../../../../../../src/jobs/mailing/stagiaires/avis/actions/RetryAction');
+const { successMailer } = require('../../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
@@ -34,7 +34,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await avisMailer.sendEmails(action);
 
-        assert.deepStrictEqual(emailsSent, [{ to: email }]);
+        assert.deepEqual(emailsSent, [{ to: email }]);
     });
 
 }));

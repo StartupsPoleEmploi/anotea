@@ -2,7 +2,7 @@
 'use strict';
 
 const cli = require('commander');
-const TraineeMailer = require('./tasks/AvisMailer');
+const TraineeMailer = require('./AvisMailer');
 const { capitalizeFirstLetter, execute } = require('../../../job-utils');
 
 cli.description('send email campaign')
