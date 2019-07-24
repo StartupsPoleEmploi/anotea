@@ -115,7 +115,8 @@ module.exports = ({ db, middlewares }) => {
 
                 } : {},
                 { rejected: false },
-            ]
+            ],
+            'archived': true,
         })
         .sort({ date: -1 })
         .limit(limit)

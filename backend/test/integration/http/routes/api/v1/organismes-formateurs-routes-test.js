@@ -558,23 +558,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis and ignoring those with archived true', async () => {
 
         let app = await startServer();
-        let date = new Date();
         let commentId = new ObjectID();
-        let pseudo = randomize('pseudo');
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 22222222222222,
             })),
             insertIntoDatabase('comment', newComment({
                 _id: commentId,
-                pseudo,
-                training: {
-                    organisation: {
-                        siret: '22222222222222',
-                    },
-                },
                 archived: true,
-            }, date)),
+            })),
         ]);
 
         let response = await request(app)

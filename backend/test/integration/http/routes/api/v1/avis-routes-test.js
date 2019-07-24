@@ -549,18 +549,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
     it('can search avis and ignoring those with archived true', async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
-        let date = new Date();
         let oid = new ObjectID();
 
-        await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase('comment', newComment({
                 _id: oid,
                 archived: true,
-                pseudo: pseudo,
-            }, date))
-        ]);
+            }));
 
         let response = await request(app)
         .get('/api/v1/avis');
