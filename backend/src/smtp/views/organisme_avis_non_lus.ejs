@@ -1,138 +1,103 @@
 <html>
-
-<head>
-    <title>Pôle Emploi - vous avez des nouveaux avis stagiaires</title>
-    <meta name="viewport" content="width=device-width">
-    <style>
-        body {
-            font-size: 1em;
-            padding: 0px;
-            margin: 0px;
-            background-color: #f4f3f5;
-            font-size: 1.3em;
-            font-family: lato, sans-serif;
-        }
-
-        .content,
-        .header {
-            background-color: white;
-            width: 80%;
-            margin: auto;
-        }
-
-        .header {
-            background-color: white;
-            border-radius: 0px 0px 5px 5px;
-            margin-bottom: 16px;
-            padding: 10px;
-            height: 48px;
-        }
-
-        .header .logo-right {
-            float: right;
-            margin: 10px;
-        }
-
-        .header .logo-left {
-            margin: 10px;
-        }
-
-        .content {
-            border-radius: 5px;
-            padding: 10px;
-        }
-
-        body td {
-            padding: 0.5em;
-            width: 33%;
-        }
-
-        h1 {
-            text-align: center;
-            font-weight: 900;
-            font-size: 1.2em;
-            line-height: 29px;
-        }
-
-        p,
-        ul {
-            color: rgba(35, 47, 56, 0.7);
-            font-size: 0.7em;
-        }
-
-        .comment {
-            font-style: italic;
-            font-weight: bold;
-        }
-
-        .button {
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 5px;
-            padding: 15px;
-            text-decoration: none;
-            display: block;
-            width: fit-content;
-            margin: auto;
-        }
-
-        .button.connect {
-            background-color: #24303a;
-            color: white;
-        }
-
-        .button.contact {
-            background-color: #fdf4e6;
-            color: #fa8100;
-        }
-
-        @media only screen and (max-width: 596px) {
+    <head>
+        <title>Pôle Emploi - vous avez des nouveaux avis stagiaires</title>
+        <meta name="viewport" content="width=device-width">
+        <style>
             body {
-                width: 100%;
                 font-size: 1em;
             }
 
             body td {
-                padding: .5em;
+                padding: 2em;
                 width: 33%;
             }
-        }
-    </style>
-</head>
 
-<body>
+            .banner {
+                height: 193px;
+            }
 
+            .icons-mobile {
+                display: none;
+            }
 
-    <div class="header">
-        <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Horizontal_baseline2.png" alt="" />
-        </td>
-        <img class="logo-right"
-            src="<%= hostname %>/static/images/regions/logo-email/logo_<%= organisme.codeRegion %>.png" alt="" />
-    </div>
+            .icons td {
+                padding: 0px 0px 5px 20px;
+            }
 
-    <div class="content">
-        <p>Bonjour,</p>
-        
-        <% if (comment) { %>
-        <p class="reponse">"<%= comment %>"</p>
-        <% } %>
+            .labels td {
+                padding: 0px 0px 20px 20px;
+            }
 
-        <p><strong>Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur
-                https://labonneformation.pole-emploi.fr</strong></p>
+            @media only screen and (max-width: 596px) {
+                body {
+                    width: 100%;
+                    font-size: 1em;
+                }
 
-        <p>Consultez-les et apportez des éléments de réponse permettant d'éclairer le choix de vos
-            futurs stagiaires.</p>
+                body td {
+                    padding: .5em;
+                    width: 33%;
+                }
 
-        <a class="button connect" href="https://anotea.pole-emploi.fr/admin/">Me connecter à mon espace</a>
-        </p>
-        
-        <p>
-            <a class="button contact" href="mailto:<%= contact %>">Contacter Anotéa</a>
-        </p>
-    </div>
+                .labels, .icons {
+                    display: none;
+                }
 
-    <img src="<%= trackingLink %>" alt="Lien de suivi" />
-</body>
-
+                .icons-mobile {
+                    display: inherit;
+                    background: white;
+                    width: 760px;
+                    padding: 20px 0px 50px 0px;
+                }
+            }
+        </style>
+    </head>
+    <body style="background-color:#ebebeb;font-size:1.3em">
+        <center>
+            <table height="100%" cellspacing="0" cellpadding="0" border="0"
+                   style="font-family:Arial; background-color:white; font-size:1em;">
+                <tr>
+                    <td style="padding:2em" align="left" valign="middle"><img
+                                src="<%= hostname %>/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
+                    <td style="padding:2em" colspan="2" align="right" valign="middle">
+                        Propulsé par &nbsp;
+                        <img src="<%= hostname %>/static/images/regions/logo-email/logo_<%= organisme.codeRegion %>.png" alt=""
+                             style="vertical-align: middle;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:2em" colspan="2" align="left" valign="middle">
+                        Bonjour,
+                </tr>
+                <% if (comment) { %>
+                    <tr>
+                        <td colspan="3" style="color:#555">
+                            <p style="font-family: Arial">"<%= comment %>"</p>
+                        </td>
+                    </tr>
+                <% } %>
+                <tr>
+                    <td colspan="3" style="padding:0em 2em">
+                        <p><strong>Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur
+                                https://labonneformation.pole-emploi.fr</strong></p>
+                        <p>Consultez-les et apportez des éléments de réponse permettant d'éclairer le choix de vos
+                            futurs stagiaires.</p>
+                    </td>
+                </tr>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:center">
+                        <p><strong>Je me connecte à mon espace Anotea : </strong>
+                            <small><a href="https://anotea.pole-emploi.fr/">https://anotea.pole-emploi.fr/admin/</a>
+                            </small>
+                        </p>
+                        <p><strong>En cas de besoin contactez : </strong>
+                            <small><a href="mailto:<%= contact %>"><%= contact %></a></small>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </center>
+        <img src="<%= trackingLink %>" alt="Lien de suivi" />
+    </body>
 </html>

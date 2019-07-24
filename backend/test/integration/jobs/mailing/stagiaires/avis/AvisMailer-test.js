@@ -2,7 +2,7 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/test-database');
 const { newTrainee, randomize } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/test-logger');
-const AvisMailer = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/AvisMailer');
+const AvisMailer = require('../../../../../../src/jobs/mailing/stagiaires/avis/AvisMailer');
 const { successMailer, errorMailer } = require('../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
@@ -27,12 +27,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             getQuery: () => ({ _id: id }),
         });
 
-        assert.deepStrictEqual(results, {
+        assert.deepEqual(results, {
             total: 1,
             sent: 1,
             error: 0,
         });
-        assert.deepStrictEqual(emailsSent, [{
+        assert.deepEqual(emailsSent, [{
             to: email,
         }]);
     });
@@ -58,9 +58,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let trainee = await db.collection('trainee').findOne({ _id: id });
         assert.ok(trainee.mailSent);
         assert.ok(trainee.mailSentDate);
-        assert.deepStrictEqual(trainee.mailError, undefined);
-        assert.deepStrictEqual(trainee.mailErrorDetail, undefined);
-        assert.deepStrictEqual(trainee.mailRetry, 0);
+        assert.deepEqual(trainee.mailError, undefined);
+        assert.deepEqual(trainee.mailErrorDetail, undefined);
+        assert.deepEqual(trainee.mailRetry, 0);
     });
 
     it('should increase maxRetry when an email has already been sent', async () => {
@@ -83,7 +83,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         });
 
         let trainee = await db.collection('trainee').findOne({ _id: id });
-        assert.deepStrictEqual(trainee.mailRetry, 1);
+        assert.deepEqual(trainee.mailRetry, 1);
     });
 
     it('should update trainee when mailer fails', async () => {
@@ -108,9 +108,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         } catch (e) {
             let trainee = await db.collection('trainee').findOne({ _id: id });
             assert.ok(trainee.mailSent);
-            assert.deepStrictEqual(trainee.mailError, 'smtpError');
-            assert.deepStrictEqual(trainee.mailErrorDetail, 'timeout');
-            assert.deepStrictEqual(e, {
+            assert.deepEqual(trainee.mailError, 'smtpError');
+            assert.deepEqual(trainee.mailErrorDetail, 'timeout');
+            assert.deepEqual(e, {
                 total: 1,
                 sent: 0,
                 error: 1,

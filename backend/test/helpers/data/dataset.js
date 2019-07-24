@@ -59,8 +59,8 @@ module.exports = {
             },
             unsubscribe: false,
             mailSent: true,
-            mailSentDate: date,
             token: randomize('token'),
+            mailSentDate: date,
             tracking: {
                 firstRead: date
             },

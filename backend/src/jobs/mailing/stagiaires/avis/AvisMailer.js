@@ -1,5 +1,5 @@
 let titleize = require('underscore.string/titleize');
-let { delay } = require('../../../../job-utils');
+let { delay } = require('../../../job-utils');
 
 class AvisMailer {
 
@@ -48,6 +48,7 @@ class AvisMailer {
             if (options.limit) {
                 cursor.limit(options.limit);
             }
+            cursor.batchSize(10);
 
             while (await cursor.hasNext()) {
                 stats.total++;

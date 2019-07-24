@@ -25,16 +25,15 @@
             border-radius: 0px 0px 5px 5px;
             margin-bottom: 16px;
             padding: 10px;
-            height: 48px;
         }
 
         .header .logo-right {
             float: right;
-            margin: 10px;
+            margin: 25px;
         }
 
         .header .logo-left {
-            margin: 10px;
+            margin-left: 15px;
         }
 
         .content {
@@ -49,14 +48,33 @@
 
         h1 {
             text-align: center;
+        }
+
+        h1 {
             font-weight: 900;
             font-size: 1.2em;
             line-height: 29px;
         }
 
         p, ul {
-            color: rgba(35, 47, 56, 0.7);
+            color: #91979C;
             font-size: 0.7em;
+        }
+        
+        .banner {
+            height: 193px;
+        }
+
+        .icons-mobile {
+            display: none;
+        }
+
+        .icons td {
+            padding: 0px 0px 5px 20px;
+        }
+
+        .labels td {
+            padding: 0px 0px 20px 20px;
         }
 
         .reponse {
@@ -96,18 +114,30 @@
                 padding: .5em;
                 width: 33%;
             }
+
+            .labels,
+            .icons {
+                display: none;
+            }
+
+            .icons-mobile {
+                display: inherit;
+                background: white;
+                width: 760px;
+                padding: 20px 0px 50px 0px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="header">
-            <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Horizontal_baseline2.png" alt="" /></td>
+            <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
             <img class="logo-right" src="<%= hostname %>/static/images/regions/logo-email/logo_<%= organisme.codeRegion %>.png" alt="" />
     </div>
 
     <div class="content">
-        <h1>Votre réponse n'a pas été prise en compte</h1>
+        <h1>Votre réponse a été rejetée</h1>
         <p>Bonjour,</p>
         <p>Nous avons pris connaissance de la réponse que vous avez formulée dans votre Espace Anotéa</p>
 
