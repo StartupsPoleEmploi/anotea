@@ -457,8 +457,11 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                 },
                 { $sort: { 'count': -1 } }]).toArray();
 
-            trainings[0].traineeCount = await db.collection('trainee').count({ 'training.organisation.siret': `${req.params.id}` });
-            
+            if (trainings.length > 0) {
+                let traineeCount = await db.collection('trainee').count({ 'training.organisation.siret': `${req.params.id}` });
+                trainings[0].traineeCount = traineeCount;
+            }
+
             res.status(200).send(trainings);
 
         } else {
