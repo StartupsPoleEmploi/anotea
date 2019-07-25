@@ -96,7 +96,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         const projection = { token: 0 };
         let filter = { 'training.organisation.siret': req.params.id, 'archived': false };
         let order = { date: -1 };
-        
+
         if (req.query.filter) {
             if (req.query.filter === 'reported') {
                 filter.reported = true;
@@ -321,7 +321,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
-            const filter = { 'training.organisation.siret': `${req.params.id}`, 'archived': true };
+            const filter = { 'training.organisation.siret': `${req.params.id}`, 'archived': false };
 
             if (req.query.trainingId === 'null') {
                 Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
@@ -368,7 +368,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
 
         const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
         if (organisation) {
-            const filter = { 'training.organisation.siret': `${req.params.id}`, 'archived': true };
+            const filter = { 'training.organisation.siret': `${req.params.id}`, 'archived': false };
 
             let inventory = {};
 
@@ -416,7 +416,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                     $match: {
                         '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
                         'training.organisation.siret': `${req.params.id}`,
-                        'archived': true
+                        'archived': false
                     }
                 },
                 {
@@ -457,8 +457,11 @@ module.exports = ({ db, configuration, password, middlewares }) => {
                 },
                 { $sort: { 'count': -1 } }]).toArray();
 
-            trainings[0].traineeCount = await db.collection('trainee').count({ 'training.organisation.siret': `${req.params.id}` });
-            
+            if (trainings.length > 0) {
+                let traineeCount = await db.collection('trainee').count({ 'training.organisation.siret': `${req.params.id}` });
+                trainings[0].traineeCount = traineeCount;
+            }
+
             res.status(200).send(trainings);
 
         } else {
