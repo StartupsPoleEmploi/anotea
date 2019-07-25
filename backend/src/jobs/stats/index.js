@@ -2,7 +2,7 @@
 'use strict';
 
 const cli = require('commander');
-const { execute } = require('../../job-utils');
+const { execute } = require('../job-utils');
 const computeOrganismesStats = require('./tasks/computeOrganismesStats');
 const computeAvisStats = require('./tasks/computeAvisStats');
 const computeApiStats = require('./tasks/computeApiStats');
