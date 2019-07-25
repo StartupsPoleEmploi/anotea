@@ -507,7 +507,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
         }
 
         let stream = await db.collection('comment').find(query, { token: 0 }).stream();
-        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;réponse OF;statut;id formation; titre formation;date début;date de fin prévue; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;code financeur\n';
+        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;réponse OF;statut;id formation; titre formation;date début;date de fin prévue;siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;code financeur\n';
 
         if (req.user.codeFinanceur === POLE_EMPLOI || req.query.status === 'rejected') {
             let array = lines.split(';');
