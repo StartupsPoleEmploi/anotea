@@ -101,7 +101,9 @@ L'application est accessible à l'url `http://localhost`
 Pour executer un script dans un conteneur docker, il faut lancer la commande :
 
 ```sh
-docker exec anotea_mongodb bash -c "node src/jobs/<nom du script>"
+cd backend
+docker build -t anotea_script .
+docker run anotea_script bash -c "node src/jobs/<nom du script>"
 ```
 
 #### Configurer un environnement
