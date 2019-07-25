@@ -61,7 +61,6 @@ module.exports = components => {
     app.use('/api', require('./routes/api/backoffice/organismes/organisme-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/moderateur/gestion-organismes-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/financeur/financeur-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/account-routes')(httpComponents));
     app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
 

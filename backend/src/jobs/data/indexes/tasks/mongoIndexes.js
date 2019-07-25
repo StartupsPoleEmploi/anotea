@@ -119,7 +119,6 @@ module.exports = {
             db.collection('forgottenPasswordTokens').createIndex({ 'token': 1 }),
             db.collection('forgottenPasswordTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 172800 }),
             db.collection('invalidAuthTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 86400 }),
-            db.collection('mailStats').createIndex({ 'token': 1 }),
             db.collection('kairos').createIndex({ 'siret': 1 }),
             db.collection('intercarif').createIndex({ 'actions.lieu_de_formation.coordonnees.adresse.region': 1 }),
             db.collection('statistics').createIndex({ 'date': 1 }),
