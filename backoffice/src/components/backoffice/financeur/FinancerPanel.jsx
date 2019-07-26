@@ -111,8 +111,7 @@ export default class FinancerPanel extends React.Component {
     }
 
     doGetAdvices = async (order = this.state.order) => {
-        const { props } = this;
-        const { state } = this;
+        const { props, state } = this;
 
         this.doLoadInventory();
 
@@ -132,9 +131,7 @@ export default class FinancerPanel extends React.Component {
     };
 
     doGetOrganisations = async () => {
-        const { props } = this;
-        const { state } = this;
-
+        const { props, state } = this;
         const organisations = await getOrganisations(props.codeRegion, state.currentFinancer._id);
 
         this.setState(prevState => ({
@@ -165,36 +162,46 @@ export default class FinancerPanel extends React.Component {
     };
 
     handleFinancerChange = (options, evt) => {
-        this.setState({
-            training: Object.assign(this.state.training, {
+        const { financers } = this.state;
+
+        this.setState(prevState => ({
+            training: {
+                ...prevState.training,
+                organisations: [],
                 currentOrganisation: '',
                 entities: [],
                 currentEntity: '',
-            }),
-            currentFinancer: this.state.financers.filter(function(financer) {
-                return financer._id === options.id;
-            })[0]
-        }, () => {
+            },
+            currentFinancer: financers.filter(financer => financer._id === options.id)[0]
+        }), () => {
             this.doGetOrganisations();
             this.doGetAdvices();
         });
+
     };
 
     unsetFinancer = () => {
-        this.setState({
-            currentFinancer: '',
-            training: Object.assign(this.state.training, {
+
+        this.setState(prevState => ({
+            training: {
+                ...prevState.training,
+                organisations: [],
                 currentOrganisation: '',
                 entities: [],
                 currentEntity: '',
-            })
-        }, () => {
+            },
+            currentFinancer: ''
+        }), () => {
             this.doGetOrganisations();
             this.doGetAdvices();
         });
+        
     };
 
     handleOrganisationChange = async (options, evt) => {
+        console.log(this.state.advices);
+        
+
         try {
             this.setState({
                 trainingId: null,
@@ -206,22 +213,30 @@ export default class FinancerPanel extends React.Component {
                     currentOrganisation: this.state.training.organisations.filter(function(organisation) {
                         return organisation._id === options.id;
                     })[0]
-                })
+                }),
+                advices: this.state.advices.filter(advice => advice.training.organisation.id === options.id)
             }, () => {
                 this.doGetOrganisationAdvices();
+                this.getPlaces();
             });
-            const entities = await getOrganisationPlaces(this.props.codeRegion, this.state.currentFinancer._id, options.id);
-            if (!entities.error) {
-                this.setState({
-                    training: Object.assign(this.state.training, {
-                        entities: entities,
-                    })
-                });
-            }
         } catch (error) {
             //handle eroor
         }
+
     };
+    
+    getPlaces = async () => {
+        const { props, state } = this;
+        const entities = await getOrganisationPlaces(props.codeRegion, state.currentFinancer._id, state.training.currentOrganisation._id);
+
+        this.setState(prevState => ({
+            training: {
+                ...prevState.training,
+                entities: entities,
+            }
+        }));
+        
+    }
 
     unsetOrganisation = () => {
         this.setState({
