@@ -23,38 +23,26 @@ import getReponseStatus from '../common/utils/getReponseStatus';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
+const FINANCERS = [
+    { _id: '4', title: `Pôle Emploi` },
+    { _id: '2', title: `Collectivité territoriale - Conseil régional` },
+    { _id: '10', title: `Béneficiaire de l'action` },
+    { _id: '0', title: `Autre` },
+    { _id: '16', title: `OPCA` },
+    { _id: '13', title: `Etat - Autre` },
+    { _id: '8', title: `Collectivité territoriale - Conseil général` },
+    { _id: '5', title: `Entreprise` },
+    { _id: '11', title: `Etat - Ministère chargé de l'emoploi` },
+    { _id: '15', title: `Collectivité territoriale - Autre` },
+    { _id: '14', title: `Fonds Européens - Autre` },
+    { _id: '3', title: `Fonds Européens - FSE` },
+    { _id: '12', title: `Etat - Ministère de l'éducation nationale` },
+    { _id: '7', title: `AGEFIPH` },
+    { _id: '17', title: `OPACIF` },
+    { _id: '9', title: `Collectivité territoriale - Commune` },
+];
 
 export default class FinancerPanel extends React.Component {
-
-    state = {
-        financerId: null,
-        reportedAdvicesCount: 0,
-        tab: 'all',
-        inventory: {
-            reported: 0,
-            commented: 0,
-            all: 0,
-        },
-        advices: [],
-        training: {
-            currentOrganisation: '',
-            organisations: [],
-            currentEntity: '',
-            entities: [],
-        },
-        trainingId: null,
-        currentSession: null,
-        pagination: {
-            current: null,
-            count: null,
-        },
-        order: DEFAULT_ORDER,
-        financers: [],
-        currentFinancer: {
-            _id: null
-        },
-        currentPage: 'advices'
-    };
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
@@ -66,42 +54,114 @@ export default class FinancerPanel extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            financerId: null,
+            reportedAdvicesCount: 0,
+            tab: 'all',
+            inventory: {
+                reported: 0,
+                commented: 0,
+                all: 0,
+            },
+            advices: [],
+            training: {
+                currentOrganisation: '',
+                organisations: [],
+                currentEntity: '',
+                entities: [],
+            },
+            trainingId: null,
+            currentSession: null,
+            pagination: {
+                current: null,
+                count: null,
+            },
+            order: DEFAULT_ORDER,
+            financers: [],
+            currentFinancer: {
+                _id: null
+            },
+            currentPage: 'advices'
+        };
+
+    }
+
+    componentDidMount = () => {
+        const { props } = this;
+
         if (props.codeFinanceur === POLE_EMPLOI) {
-            this.state.financers = [
-                { _id: '4', title: `Pôle Emploi` },
-                { _id: '2', title: `Collectivité territoriale - Conseil régional` },
-                { _id: '10', title: `Béneficiaire de l'action` },
-                { _id: '0', title: `Autre` },
-                { _id: '16', title: `OPCA` },
-                { _id: '13', title: `Etat - Autre` },
-                { _id: '8', title: `Collectivité territoriale - Conseil général` },
-                { _id: '5', title: `Entreprise` },
-                { _id: '11', title: `Etat - Ministère chargé de l'emoploi` },
-                { _id: '15', title: `Collectivité territoriale - Autre` },
-                { _id: '14', title: `Fonds Européens - Autre` },
-                { _id: '3', title: `Fonds Européens - FSE` },
-                { _id: '12', title: `Etat - Ministère de l'éducation nationale` },
-                { _id: '7', title: `AGEFIPH` },
-                { _id: '17', title: `OPACIF` },
-                { _id: '9', title: `Collectivité territoriale - Commune` },
-            ];
-            this.state.currentFinancer = '';
+            this.setState({
+                financers: FINANCERS,
+                currentFinancer: ''
+            }, () => {
+                this.doGetAdvices();
+                this.doGetOrganisations();
+            });
         } else {
-            this.state.currentFinancer._id = props.codeFinanceur;
+            this.setState({
+                currentFinancer: {
+                    _id: props.codeFinanceur
+                }
+            }, () => {
+                this.doGetAdvices();
+                this.doGetOrganisations();
+            });
         }
 
-        getOrganisations(props.codeRegion, props.codeFinanceur).then(organisations => {
-            this.setState(Object.assign(this.state, {
-                training: {
-                    organisations: organisations,
-                    currentOrganisation: '',
-                    currentEntity: '',
-                    entities: [],
-                }
-            }));
-        });
+    }
 
-        this.doGetAdvices();
+    doGetAdvices = async (order = this.state.order) => {
+        const { props } = this;
+        const { state } = this;
+
+        this.doLoadInventory();
+
+        const page = this.state.pagination.current;
+        const result = await getAdvices(props.codeRegion, state.currentFinancer._id, state.tab, order, page);
+
+        this.setState({
+            pagination: { current: result.page, count: result.pageCount },
+            advices: result.advices.map(advice => {
+
+                if (advice.comment) {
+                    advice.comment.text = advice.editedComment ? advice.editedComment.text : advice.comment.text;
+                }
+                return advice;
+            })
+        });
+    };
+
+    doGetOrganisations = async () => {
+        const { props } = this;
+        const { state } = this;
+
+        const organisations = await getOrganisations(props.codeRegion, state.currentFinancer._id);
+
+        this.setState(prevState => ({
+            training: {
+                ...prevState.training,
+                organisations: organisations
+            }
+        }));
+    };
+
+    doLoadInventory = async () => {
+        if (this.state.training.currentEntity) {
+            const inventory = await loadOragnisationLieuInventory(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.trainingId, this.state.training.currentEntity._id);
+            this.setState(Object.assign(this.state, {
+                inventory: inventory
+            }));
+        } else if (!this.state.training.currentOrganisation) {
+            const inventory = await loadInventoryForAllAdvicesWhenFinancerFirstConnexion(this.props.codeRegion, this.state.currentFinancer._id);
+            this.setState(Object.assign(this.state, {
+                inventory: inventory
+            }));
+        } else {
+            const inventory = await loadInventoryASelectedOrganisation(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id);
+            if (!inventory.error) {
+                this.setState({ inventory: inventory });
+            }
+        }
     };
 
     handleFinancerChange = (options, evt) => {
@@ -204,20 +264,6 @@ export default class FinancerPanel extends React.Component {
         });
     };
 
-    doGetOrganisations = async () => {
-
-        const organisations = await getOrganisations(this.props.codeRegion, this.state.currentFinancer._id);
-
-        this.setState(Object.assign(this.state, {
-            training: {
-                organisations: organisations,
-                currentOrganisation: '',
-                currentEntity: '',
-                entities: [],
-            }
-        }));
-    };
-
     doGetOrganisationAdvices = async (order = this.state.order) => {
         this.doLoadInventory();
 
@@ -252,43 +298,6 @@ export default class FinancerPanel extends React.Component {
                 return advice;
             })
         });
-    };
-
-    doGetAdvices = async (order = this.state.order) => {
-        this.doLoadInventory();
-
-        const page = this.state.pagination.current;
-        const result = await getAdvices(this.props.codeRegion, this.state.currentFinancer._id, this.state.tab, order, page);
-
-        this.setState({
-            pagination: { current: result.page, count: result.pageCount },
-            advices: result.advices.map(advice => {
-
-                if (advice.comment) {
-                    advice.comment.text = advice.editedComment ? advice.editedComment.text : advice.comment.text;
-                }
-                return advice;
-            })
-        });
-    };
-
-    doLoadInventory = async () => {
-        if (this.state.training.currentEntity) {
-            const inventory = await loadOragnisationLieuInventory(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.trainingId, this.state.training.currentEntity._id);
-            this.setState(Object.assign(this.state, {
-                inventory: inventory
-            }));
-        } else if (!this.state.training.currentOrganisation) {
-            const inventory = await loadInventoryForAllAdvicesWhenFinancerFirstConnexion(this.props.codeRegion, this.state.currentFinancer._id);
-            this.setState(Object.assign(this.state, {
-                inventory: inventory
-            }));
-        } else {
-            const inventory = await loadInventoryASelectedOrganisation(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id);
-            if (!inventory.error) {
-                this.setState({ inventory: inventory });
-            }
-        }
     };
 
     switchTab = tab => {
