@@ -180,6 +180,7 @@ class App extends Component {
     };
 
     showBackofficePages = () => {
+        const { profile } = this.state;
 
         //Use new design
         if (this.state.profile === 'moderateur') {
@@ -212,9 +213,11 @@ class App extends Component {
                             <Redirect exact from="/" to="/admin" />
                         </Switch>
 
-                        <Route
-                            path="/mon-compte"
-                            render={props => (<MonComptePanel {...props} />)} />
+                        { profile === 'moderateur' || profile === 'organisme' &&
+                            <Route
+                                path="/mon-compte"
+                                render={props => (<MonComptePanel {...props} />)} />
+                        }
 
                         <Route
                             path="/admin"
