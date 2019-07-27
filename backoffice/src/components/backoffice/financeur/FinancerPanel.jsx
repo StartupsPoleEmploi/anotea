@@ -199,23 +199,20 @@ export default class FinancerPanel extends React.Component {
     };
 
     handleOrganisationChange = async (options, evt) => {
-        console.log(this.state.advices);
-        
+        const { training } = this.state;
 
         try {
-            this.setState({
+            this.setState(prevState => ({
                 trainingId: null,
                 pagination: { current: null, count: null },
                 inventory: { reported: 0, commented: 0, all: 0 },
-                training: Object.assign(this.state.training, {
+                training: {
+                    ...prevState.training,
                     entities: [],
                     currentEntity: '',
-                    currentOrganisation: this.state.training.organisations.filter(function(organisation) {
-                        return organisation._id === options.id;
-                    })[0]
-                }),
-                advices: this.state.advices.filter(advice => advice.training.organisation.id === options.id)
-            }, () => {
+                    currentOrganisation: training.organisations.filter(organisation => organisation._id === options.id)[0]
+                },
+            }), () => {
                 this.doGetOrganisationAdvices();
                 this.getPlaces();
             });
@@ -224,7 +221,7 @@ export default class FinancerPanel extends React.Component {
         }
 
     };
-    
+
     getPlaces = async () => {
         const { props, state } = this;
         const entities = await getOrganisationPlaces(props.codeRegion, state.currentFinancer._id, state.training.currentOrganisation._id);
