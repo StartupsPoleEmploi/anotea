@@ -58,7 +58,7 @@ export const getOrganisationLieuTrainingSessions = (siren, idTraining, postalCod
     return _get(`/backoffice/financeur/organismes_formateurs/${siren}/training/${idTraining}/sessions?postalCode=${postalCode}`);
 };
 
-export const getOrganisationLieuAdvices = (idRegion, codeFinanceur, siren, trainingId, postalCode, filter, order, page) => {
+export const getPlacesAdvices = (idRegion, codeFinanceur, siren, trainingId, postalCode, filter, order, page) => {
 
     let query = '';
     if (codeFinanceur) {

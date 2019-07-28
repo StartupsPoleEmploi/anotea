@@ -17,6 +17,18 @@ export default class TrainingSearchForm extends React.PureComponent {
         this.changeTrainingSession = props.changeTrainingSession;
     }
 
+    componentDidMount = async () => {
+        const { props } = this;
+        const trainings = await getOrganisationLieuTrainings(props.codeRegion, props.codeFinanceur, props.id, props.currentEntity._id);
+
+        this.setState({
+            organisationId: props.id,
+            postalCode: props.currentEntity._id,
+            trainingList: trainings,
+            sessionList: [],
+        });
+    }
+
     componentWillReceiveProps = async nextProps => {
         if (nextProps.id && nextProps.currentEntity) {
             if (nextProps.id !== this.state.organisationId || nextProps.currentEntity._id !== this.state.postalCode) {
@@ -25,7 +37,6 @@ export default class TrainingSearchForm extends React.PureComponent {
                 this.setState({
                     organisationId: nextProps.id,
                     postalCode: nextProps.currentEntity._id,
-                    currentTraining: null,
                     trainingList: trainings,
                     sessionList: [],
                 });
@@ -34,12 +45,11 @@ export default class TrainingSearchForm extends React.PureComponent {
     };
 
     changeTraining = options => {
-        const training = this.state.trainingList.filter(training => {
-            if (training._id === options.id) {
-                return training;
-            }
-        })[0];
-        this.setState({ currentTraining: training }, () => {
+        const training = this.state.trainingList.filter(training => training._id === options.id)[0];
+
+        this.setState({
+            currentTraining: training
+        }, () => {
             this.changeTrainingSession(training._id, this.props.currentEntity._id);
             getOrganisationLieuTrainingSessions(this.state.organisationId, training._id, this.props.currentEntity._id).then(sessions => {
                 if (sessions.length > 0) {
@@ -54,7 +64,6 @@ export default class TrainingSearchForm extends React.PureComponent {
 
     render() {
         return (
-            this.state.trainingList.length > 0 &&
             <div className="SearchForm">
                 <div className="row">
                     <div className="col-md-6">

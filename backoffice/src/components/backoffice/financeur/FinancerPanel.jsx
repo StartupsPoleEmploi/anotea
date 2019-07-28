@@ -12,7 +12,7 @@ import CodeFinancerSearchForm from './CodeFinancerSearchForm';
 import {
     getOrganisationAdvices,
     getOrganisationPlaces,
-    getOrganisationLieuAdvices,
+    getPlacesAdvices,
     loadOragnisationLieuInventory,
     loadInventoryForAllAdvicesWhenFinancerFirstConnexion,
     getAdvices,
@@ -128,6 +128,7 @@ export default class FinancerPanel extends React.Component {
                 return advice;
             })
         });
+
     };
 
     doGetOrganisations = async () => {
@@ -140,6 +141,7 @@ export default class FinancerPanel extends React.Component {
                 organisations: organisations
             }
         }));
+
     };
 
     doLoadInventory = async () => {
@@ -203,9 +205,6 @@ export default class FinancerPanel extends React.Component {
 
         try {
             this.setState(prevState => ({
-                trainingId: null,
-                pagination: { current: null, count: null },
-                inventory: { reported: 0, commented: 0, all: 0 },
                 training: {
                     ...prevState.training,
                     entities: [],
@@ -236,51 +235,53 @@ export default class FinancerPanel extends React.Component {
     }
 
     unsetOrganisation = () => {
-        this.setState({
-            training: Object.assign(this.state.training, {
+        
+        this.setState(prevState => ({
+            training: {
+                ...prevState.training,
                 currentOrganisation: '',
                 entities: [],
                 currentEntity: '',
-            })
-        }, () => {
+            }
+        }), () => {
             this.doGetAdvices();
         });
+
     };
 
-
     handleEntityChange = (id, evt) => {
-        this.setState({
-            trainingId: null,
-            pagination: { current: null, count: null },
-            inventory: { reported: 0, commented: 0, all: 0 },
-            advices: [],
-            training: Object.assign(this.state.training, {
-                currentEntity: this.state.training.entities.filter(function(entity) {
-                    return entity._id === id;
-                })[0]
-            })
-        }, () => {
+        const { training } = this.state;
+
+        this.setState(prevState => ({
+            training: {
+                ...prevState.training,
+                currentEntity: training.entities.filter(entity => entity._id === id)[0]
+            }
+        }), () => {
             this.doLoadAdvices();
         });
+
     };
 
     unsetEntity = () => {
-        this.setState({
-            trainingId: null,
-            training: Object.assign(this.state.training, {
-                currentEntity: '',
 
-            })
-        }, () => {
+        this.setState(prevState => ({
+            training: {
+                ...prevState.training,
+                currentEntity: '',
+            }
+        }), () => {
             this.doGetOrganisationAdvices();
         });
+
     };
 
     doGetOrganisationAdvices = async (order = this.state.order) => {
         this.doLoadInventory();
 
+        const { state, props } = this;
         const page = this.state.pagination.current;
-        const avis = await getOrganisationAdvices(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.tab, order, page);
+        const avis = await getOrganisationAdvices(props.codeRegion, state.currentFinancer._id, state.training.currentOrganisation._id, state.tab, order, page);
 
         this.setState({
             pagination: { current: avis.page, count: avis.pageCount },
@@ -292,34 +293,44 @@ export default class FinancerPanel extends React.Component {
                 return advice;
             })
         });
+
     };
 
     doLoadAdvices = async (order = this.state.order) => {
         this.doLoadInventory();
 
+        const { state, props } = this;
         const page = this.state.pagination.current;
-        const result = await getOrganisationLieuAdvices(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.trainingId, this.state.training.currentEntity._id, this.state.tab, order, page);
+        const result = await getPlacesAdvices(props.codeRegion, state.currentFinancer._id, state.training.currentOrganisation._id, state.trainingId, state.training.currentEntity._id, state.tab, order, page);
 
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
             advices: result.advices.map(advice => {
-
                 if (advice.comment) {
                     advice.comment.text = advice.editedComment ? advice.editedComment.text : advice.comment.text;
                 }
                 return advice;
             })
         });
+
     };
 
     switchTab = tab => {
-        this.setState({ tab: tab, pagination: { current: null, count: null } }, () => {
+
+        this.setState({
+            tab: tab,
+            pagination: { current: null, count: null }
+        }, () => {
             this.orderBy(DEFAULT_ORDER);
         });
+
     };
 
     orderBy = order => {
-        this.setState({ order: order }, () => {
+
+        this.setState({
+            order: order
+        }, () => {
             if (this.state.training.currentEntity) {
                 this.doLoadAdvices(order);
             } else if (!this.state.training.currentOrganisation) {
@@ -328,24 +339,18 @@ export default class FinancerPanel extends React.Component {
                 this.doGetOrganisationAdvices(order);
             }
         });
+
     };
 
     changeTrainingSession = async (trainingId, session) => {
-        this.setState({ trainingId: trainingId, currentSession: session }, () => {
+
+        this.setState({
+            trainingId: trainingId,
+            currentSession: session
+        }, () => {
             this.doLoadAdvices(this.state.order);
         });
-        const result = await getOrganisationLieuAdvices(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, trainingId, session, this.state.tab, this.state.order);
-        this.setState({
-            pagination: { current: result.page, count: result.pageCount },
-            advices: result.advices.map(advice => {
 
-                if (advice.comment) {
-                    advice.comment.text = advice.editedComment ? advice.editedComment.text : advice.comment.text;
-                }
-                return advice;
-
-            })
-        });
     };
 
     handlePageClick = data => {
@@ -401,24 +406,29 @@ export default class FinancerPanel extends React.Component {
                 {this.state.currentPage === 'advices' &&
                 <div>
                     {this.props.codeFinanceur === POLE_EMPLOI &&
-                    <CodeFinancerSearchForm currentFinancer={currentFinancer} financers={financers}
-                                            handleFinancerChange={this.handleFinancerChange}
-                                            unsetFinancer={this.unsetFinancer} />
+                    <CodeFinancerSearchForm currentFinancer={currentFinancer}
+                        financers={financers}
+                        handleFinancerChange={this.handleFinancerChange}
+                        unsetFinancer={this.unsetFinancer} />
                     }
 
-                    <OrganisationSearchForm currentOrganisation={currentOrganisation} organisations={organisations}
-                                            handleOrganisationChange={this.handleOrganisationChange}
-                                            unsetOrganisation={this.unsetOrganisation} />
+                    <OrganisationSearchForm currentOrganisation={currentOrganisation}
+                        organisations={organisations}
+                        handleOrganisationChange={this.handleOrganisationChange}
+                        unsetOrganisation={this.unsetOrganisation} />
 
                     {currentOrganisation &&
-                    <EntitySearchForm currentEntity={currentEntity} entities={entities}
-                                      handleEntityChange={this.handleEntityChange} unsetEntity={this.unsetEntity} />
+                    <EntitySearchForm currentEntity={currentEntity}
+                        entities={entities}
+                        handleEntityChange={this.handleEntityChange}
+                        unsetEntity={this.unsetEntity} />
                     }
 
                     {currentEntity &&
-                    <TrainingSearchForm id={currentOrganisation._id} currentEntity={currentEntity}
-                                        codeFinanceur={currentFinancer._id} codeRegion={this.props.codeRegion}
-                                        changeTrainingSession={this.changeTrainingSession} />
+                    <TrainingSearchForm id={currentOrganisation._id}
+                        currentEntity={currentEntity}
+                        codeFinanceur={currentFinancer._id} codeRegion={this.props.codeRegion}
+                        changeTrainingSession={this.changeTrainingSession} />
                     }
 
                     <h2>Liste des notes et avis</h2>
@@ -526,23 +536,23 @@ export default class FinancerPanel extends React.Component {
 
                         {this.state.pagination.count > 1 &&
                         <ReactPaginate previousLabel={'<'}
-                                       nextLabel={'>'}
-                                       pageCount={this.state.pagination.count}
-                                       forcePage={this.state.pagination.current - 1}
-                                       marginPagesDisplayed={2}
-                                       pageRangeDisplayed={5}
-                                       onPageChange={this.handlePageClick}
-                                       breakClassName="page-item"
-                                       breakLabel={<button className="page-link">...</button>}
-                                       pageClassName="page-item"
-                                       previousClassName="page-item"
-                                       nextClassName="page-item"
-                                       pageLinkClassName="page-link"
-                                       previousLinkClassName="page-link"
-                                       nextLinkClassName="page-link"
-                                       activeClassName={'active'}
-                                       containerClassName={'pagination'}
-                                       disableInitialCallback={true} />
+                            nextLabel={'>'}
+                            pageCount={this.state.pagination.count}
+                            forcePage={this.state.pagination.current - 1}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            breakClassName="page-item"
+                            breakLabel={<button className="page-link">...</button>}
+                            pageClassName="page-item"
+                            previousClassName="page-item"
+                            nextClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousLinkClassName="page-link"
+                            nextLinkClassName="page-link"
+                            activeClassName={'active'}
+                            containerClassName={'pagination'}
+                            disableInitialCallback={true} />
                         }
                     </div>
                 </div>
