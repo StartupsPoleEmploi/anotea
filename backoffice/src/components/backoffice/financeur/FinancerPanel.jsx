@@ -10,6 +10,7 @@ import EntitySearchForm from './EntitySearchForm';
 import OrganisationSearchForm from './OrganisationSearchForm';
 import CodeFinancerSearchForm from './CodeFinancerSearchForm';
 import {
+    getRegions,
     getOrganisationAdvices,
     getOrganisationPlaces,
     getPlacesAdvices,
@@ -55,6 +56,7 @@ export default class FinancerPanel extends React.Component {
         super(props);
 
         this.state = {
+            regions: [],
             financerId: null,
             reportedAdvicesCount: 0,
             tab: 'all',
@@ -86,11 +88,13 @@ export default class FinancerPanel extends React.Component {
 
     }
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
         const { props } = this;
+        const regions = await getRegions();
 
         if (props.codeFinanceur === POLE_EMPLOI) {
             this.setState({
+                regions,
                 financers: FINANCERS,
                 currentFinancer: ''
             }, () => {
@@ -99,6 +103,7 @@ export default class FinancerPanel extends React.Component {
             });
         } else {
             this.setState({
+                regions,
                 currentFinancer: {
                     _id: props.codeFinanceur
                 }
