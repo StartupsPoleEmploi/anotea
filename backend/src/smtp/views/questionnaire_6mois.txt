@@ -1,8 +1,8 @@
 6 mois après votre formation où en êtes vous ?
 
-Vous avez un autre point de vue sur votre formation de "<%= trainee.training.title %>".
+Vous avez suivi une formation de "<%= trainee.training.title %>".
 
-En 2 minutes, dîtes aux futurs stagiaires si cette formation vous a aidé de retrouver un emploi
+En 2 minutes, dîtes aux futurs stagiaires si cette formation vous a aidé à retrouver un emploi
 
 Cliquez ici
 <%= formLink %>
