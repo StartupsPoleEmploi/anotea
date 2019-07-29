@@ -56,7 +56,7 @@ export default class FinancerPanel extends React.Component {
         super(props);
 
         this.state = {
-            regions: [],
+            departements: [],
             financerId: null,
             reportedAdvicesCount: 0,
             tab: 'all',
@@ -91,10 +91,11 @@ export default class FinancerPanel extends React.Component {
     componentDidMount = async () => {
         const { props } = this;
         const regions = await getRegions();
+        const departements = regions.filter(r => r.codeRegion === props.codeRegion)[0].departements;
 
         if (props.codeFinanceur === POLE_EMPLOI) {
             this.setState({
-                regions,
+                departements,
                 financers: FINANCERS,
                 currentFinancer: ''
             }, () => {
@@ -103,7 +104,7 @@ export default class FinancerPanel extends React.Component {
             });
         } else {
             this.setState({
-                regions,
+                departements,
                 currentFinancer: {
                     _id: props.codeFinanceur
                 }
