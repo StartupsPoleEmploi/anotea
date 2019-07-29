@@ -80,7 +80,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
                 date: new Date(),
             });
 
-            return stats.invalid === 0 ? resolve(stats) : reject(stats);
+            return resolve(stats);
         }
     });
 };
