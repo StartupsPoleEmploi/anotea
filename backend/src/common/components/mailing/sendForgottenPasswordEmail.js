@@ -20,7 +20,7 @@ module.exports = (db, mailer) => {
         });
 
         return new Promise((resolve, reject) => {
-            mailer.sendPasswordForgotten({ to: contact }, codeRegion, passwordToken,
+            mailer.sendPasswordForgotten({ to: contact }, codeRegion, passwordToken, account.profile,
                 async () => {
                     await db.collection('accounts').update({ _id }, {
                         $set: { mailSentDate: new Date() },

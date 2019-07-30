@@ -9,4 +9,4 @@ Contacter Anotéa : <%= email %>
 Nous vous remercions de votre compréhension,
 L’Equipe Anotéa
 
-<%- include('./legal/mentions.txt'); %>
+<%- include('./legal/stagiaires/mentions.txt'); %>

@@ -7,7 +7,7 @@ En 2 minutes, dîtes aux futurs stagiaires si cette formation vous a aidé de re
 Cliquez ici
 <%= formLink %>
 
-<%- include('./legal/mentions.txt'); %>
+<%- include('./legal/stagiaires/mentions.txt'); %>
 
 Si vous ne souhaitez plus participer à l'enquête vous pouvez vous désinscrire :
 <%= unsubscribeLink %>

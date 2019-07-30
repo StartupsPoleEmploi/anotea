@@ -8,3 +8,5 @@ Consultez-les et apportez des éléments de réponse permettant d’éclairer le
 
 Me connecter à mon espace : https://anotea.pole-emploi.fr/admin/
 Contacter Anotéa : [<%= contact %>]
+
+<%- include('./legal/organismes/mentions.txt'); %>

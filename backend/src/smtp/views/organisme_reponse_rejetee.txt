@@ -19,3 +19,5 @@ Voici quelques conseils pour formuler votre réponse :
 - Ne faîtes pas mention de coordonnées téléphoniques ou mail
 
 Nous avons procédé au rejet de la réponse ci-dessus et nous vous invitons à la modifier dans votre Espace.
+
+<%- include('./legal/organismes/mentions.txt'); %>

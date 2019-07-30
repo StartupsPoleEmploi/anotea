@@ -16,6 +16,9 @@
 
         .content, .header {
             background-color: white;
+        }
+
+        .content, .header, .footer {
             width: 80%;
             margin: auto;
         }
@@ -35,6 +38,14 @@
 
         .header .logo-left {
             margin: 10px;
+        }
+
+        .footer {
+            color: #24303A;
+        }
+
+        .footer p {
+            text-align: center;
         }
 
         .content {
@@ -140,6 +151,10 @@
         <p>
             <a class="button contact" href="mailto:<%= contact %>">Contacter Anotéa</a>
         </p>
+    </div>
+
+    <div class="footer">
+        <%- include('./legal/stagiaires/mentions.ejs'); %>
     </div>
 
     <img src="<%= trackingLink %>" alt="Lien de suivi" />
