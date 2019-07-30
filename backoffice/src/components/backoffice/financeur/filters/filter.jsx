@@ -12,7 +12,7 @@ export default function Filter({ options, onChange, placeholderText, selectValue
                 <VirtualizedSelect
                     onChange={onChange}
                     options={options}
-                    placeholder={selectValue.label ? selectValue.label : placeholderText }
+                    placeholder={placeholderText}
                     clearable
                     value={selectValue.label ? selectValue : placeholderText}
                 />
