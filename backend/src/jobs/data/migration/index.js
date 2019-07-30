@@ -6,6 +6,8 @@ const cli = require('commander');
 cli.parse(process.argv);
 
 execute(async ({ db }) => {
-    await require('./tasks/fixAvisCreated')(db);
-    return require('./tasks/markOrphanComments')(db);
+    let stats = {};
+    stats.fixAvisCreated = await require('./tasks/fixAvisCreated')(db);
+    stats.markOrphanComments = await require('./tasks/markOrphanComments')(db);
+    return stats;
 });
