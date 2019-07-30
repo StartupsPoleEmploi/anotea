@@ -93,7 +93,7 @@ module.exports = (db, regions) => {
             let hasNotBeenAlreadyImportedOrRemoved = async trainee => {
                 let email = trainee.trainee.email;
                 let numeroSession = trainee.training.infoCarif.numeroSession;
-                let [countTrainee, countRGPD] = await Promise.all([
+                let [countTrainee, countOptOut] = await Promise.all([
                     db.collection('trainee').countDocuments({
                         'trainee.email': email,
                         'training.infoCarif.numeroSession': numeroSession
@@ -103,7 +103,7 @@ module.exports = (db, regions) => {
                     })
                 ]);
 
-                return countTrainee === 0 && countRGPD === 0;
+                return countTrainee === 0 && countOptOut === 0;
             };
 
             return isValid(trainee) && isNotExcluded(trainee) && (await hasNotBeenAlreadyImportedOrRemoved(trainee));
