@@ -7,9 +7,8 @@ import AdviceRates from '../common/deprecated/AdviceRates';
 import DeprecatedToolbar from '../common/deprecated/DeprecatedToolbar';
 import TrainingSearchForm from './trainingSearchForm';
 import EntitySearchForm from './EntitySearchForm';
-import OrganisationSearchForm from './OrganisationSearchForm';
 import CodeFinancerSearchForm from './CodeFinancerSearchForm';
-import DepartementsFilter from './filters/departementsFilter';
+import Filter from './filters/filter';
 import {
     getRegions,
     getOrganisationAdvices,
@@ -210,20 +209,30 @@ export default class FinancerPanel extends React.Component {
 
     handleDepartementsChange = options => {
 
-        this.setState(prevState => ({
-            currentDepartement: {
-                ...prevState.currentDepartement,
-                id: options.id,
-                label: options.label
-            }
-        }));
+        if (options) {
+            this.setState(prevState => ({
+                currentDepartement: {
+                    ...prevState.currentDepartement,
+                    id: options.id,
+                    label: options.label
+                }
+            }));
+        } else {
+            this.setState(prevState => ({
+                currentDepartement: {
+                    ...prevState.currentDepartement,
+                    id: '',
+                    label: ''
+                }
+            }));
+        }
 
     }
 
     handleOrganisationChange = async (options, evt) => {
         const { training } = this.state;
 
-        try {
+        if (options) {
             this.setState(prevState => ({
                 training: {
                     ...prevState.training,
@@ -235,8 +244,17 @@ export default class FinancerPanel extends React.Component {
                 this.doGetOrganisationAdvices();
                 this.getPlaces();
             });
-        } catch (error) {
-            //handle eroor
+        } else {
+            this.setState(prevState => ({
+                training: {
+                    ...prevState.training,
+                    currentOrganisation: '',
+                    entities: [],
+                    currentEntity: '',
+                }
+            }), () => {
+                this.doGetAdvices();
+            });
         }
 
     };
@@ -253,21 +271,6 @@ export default class FinancerPanel extends React.Component {
         }));
         
     }
-
-    unsetOrganisation = () => {
-        
-        this.setState(prevState => ({
-            training: {
-                ...prevState.training,
-                currentOrganisation: '',
-                entities: [],
-                currentEntity: '',
-            }
-        }), () => {
-            this.doGetAdvices();
-        });
-
-    };
 
     handleEntityChange = (id, evt) => {
         const { training } = this.state;
@@ -418,7 +421,15 @@ export default class FinancerPanel extends React.Component {
 
     render() {
         const { currentOrganisation, currentEntity, organisations, entities } = this.state.training;
-        const { currentFinancer, financers, inventory, departements } = this.state;
+        const { currentFinancer, financers, inventory, departements, currentDepartement } = this.state;
+        const organisationsOptions = organisations.map(organisation => ({
+            label: organisation.name + ` (` + organisation.label + `) ` + organisation.count + `Avis`,
+            id: organisation._id,
+        }));
+        const departementsOptions = departements.map(dep => ({
+            label: dep,
+            id: dep,
+        }));
 
         return (
             <div className="organisationPanel mainPanel">
@@ -432,15 +443,19 @@ export default class FinancerPanel extends React.Component {
                         unsetFinancer={this.unsetFinancer} />
                     }
 
-                    <DepartementsFilter
-                        departements={departements}
+                    <Filter
+                        options={departementsOptions}
                         onChange={this.handleDepartementsChange}
-                        placeholderText="Veuillez choisir un département..." />
+                        placeholderText="Veuillez choisir un département..."
+                        selectValue={currentDepartement}
+                    />
 
-                    <OrganisationSearchForm currentOrganisation={currentOrganisation}
-                        organisations={organisations}
-                        handleOrganisationChange={this.handleOrganisationChange}
-                        unsetOrganisation={this.unsetOrganisation} />
+                    <Filter
+                        options={organisationsOptions}
+                        onChange={this.handleOrganisationChange}
+                        placeholderText="Choisir votre organisme de formation..."
+                        selectValue={currentOrganisation}
+                    />
 
                     {currentOrganisation &&
                     <EntitySearchForm currentEntity={currentEntity}
