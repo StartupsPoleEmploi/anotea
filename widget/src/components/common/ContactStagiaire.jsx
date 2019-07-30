@@ -62,7 +62,7 @@ export default class ContactStagiaire extends Component {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Indiquer une email ou un numéro de téléphone nous permettant de vous recontacter</label>
+                                <label>Indiquer une adresse mail ou un numéro de téléphone nous permettant de vous recontacter</label>
                                 <input
                                     name="contact"
                                     type="texte"
