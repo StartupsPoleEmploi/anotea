@@ -53,18 +53,72 @@ export default class AvisStatsTable extends Component {
                                     <span> Taux</span>
                                 </div>
                             </th>
-                            <th scope="col" className="section">Importés <i className="fas fa-question-circle"><span className="tooltip">Nombre de stagiaires présents dans le fichier datalake</span></i></th>
-                            <th scope="col">Contactés <i className="fas fa-question-circle"><span className="tooltip">Nombre de stagiaires à qui un mail à été envoyé</span></i></th>
-                            <th scope="col" className="section">Envoyés <i className="fas fa-question-circle"><span className="tooltip">Nombre de mails envoyés aux stagiaires</span></i></th>
-                            <th scope="col">Ouverts <i className="fas fa-question-circle"><span className="tooltip">Nombre de mails ouverts / nombre de stagiaires contactés</span></i></th>
-                            <th scope="col">Cliqués <i className="fas fa-question-circle"><span className="tooltip">Nombre de clics dans le mail / nombre de mails ouverts</span></i> </th>
-                            <th scope="col">Validés <i className="fas fa-question-circle"><span className="tooltip">Nombre de questionnaires validés / nombre de clics dans le lien</span></i></th>
-                            <th scope="col" className="section">Déposés <i className="fas fa-question-circle"><span className="tooltip">Nombre de questionnaires validés / nombre de stagiaires contactés</span></i></th>
-                            <th scope="col">Avec commentaires <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires / nombre de questionnaires validés</span></i></th>
-                            <th scope="col" className="section">À modérer <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires à modérer</span></i></th>
-                            <th scope="col">Positif/Neutre <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires tagués positifs / nombre de commentaires total</span></i></th>
-                            <th scope="col">Negatifs <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires tagués négatifs / nombre de commentaires total</span></i></th>
-                            <th scope="col">Rejetés <i className="fas fa-question-circle"><span className="tooltip">Nombre de commentaires rejetés / nombre de commentaires total</span></i></th>
+                            <th scope="col" className="section">I
+                                <span>Importés</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de stagiaires présents dans le fichier datalake</span></i>
+                            </th>
+                            <th scope="col">Co
+                                <span>Contactés</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de stagiaires à qui un mail à été envoyé</span></i>
+                            </th>
+                            <th scope="col" className="section">
+                                <span>Envoyés</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de mails envoyés aux stagiaires</span></i>
+                            </th>
+                            <th scope="col">
+                                <span>Ouverts</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de mails ouverts / nombre de stagiaires contactés</span></i>
+                            </th>
+                            <th scope="col">
+                                <span>Cliqués</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de clics dans le mail / nombre de mails ouverts</span></i>
+                            </th>
+                            <th scope="col">
+                                <span>Validés</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de questionnaires validés / nombre de clics dans le lien</span>
+                                </i>
+                            </th>
+                            <th scope="col" className="section">
+                                <span>Déposés</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de questionnaires validés / nombre de stagiaires contactés</span>
+                                </i>
+                            </th>
+                            <th scope="col">
+                                <span>Avec commentaires</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de commentaires / nombre de questionnaires validés</span>
+                                </i>
+                            </th>
+                            <th scope="col" className="section">
+                                <span>À modérer</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de commentaires à modérer</span></i>
+                            </th>
+                            <th scope="col">
+                                <span>Positif/Neutre</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de commentaires tagués positifs / nombre de commentaires total</span>
+                                </i>
+                            </th>
+                            <th scope="col">
+                                <span>Negatifs</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de commentaires tagués négatifs / nombre de commentaires total</span>
+                                </i>
+                            </th>
+                            <th scope="col">
+                                <span>Rejetés</span>
+                                <i className="fas fa-question-circle">
+                                    <span className="tooltip">Nombre de commentaires rejetés / nombre de commentaires total</span>
+                                </i>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -115,7 +169,7 @@ export default class AvisStatsTable extends Component {
                         }
                     </tbody>
                 </table>
-                
+
                 <div className="separator div-transparent"></div>
 
                 <table className="StatsTable table table-hover">
@@ -154,37 +208,37 @@ export default class AvisStatsTable extends Component {
                                 -
                             </td>
                             <td>
-                                { this.getTotal('mailSent') }
+                                {this.getTotal('mailSent')}
                             </td>
                             <td>
-                                { this.getTotal('mailOpen') }
+                                {this.getTotal('mailOpen')}
                             </td>
                             <td>
-                                { this.computeRate(this.getTotal('mailOpen'), this.getTotal('mailSent')) }
+                                {this.computeRate(this.getTotal('mailOpen'), this.getTotal('mailSent'))}
                             </td>
                             <td>
-                                { this.getTotal('linkClick') }
+                                {this.getTotal('linkClick')}
                             </td>
                             <td>
-                                { this.computeRate(this.getTotal('linkClick'), this.getTotal('mailOpen')) }
-                            </td>
-                            <td >
-                                { this.getTotal('formValidated') }
+                                {this.computeRate(this.getTotal('linkClick'), this.getTotal('mailOpen'))}
                             </td>
                             <td>
-                                { this.computeRate(this.getTotal('formValidated'), this.getTotal('mailSent')) }
+                                {this.getTotal('formValidated')}
                             </td>
                             <td>
-                                { this.getTotal('allowToContact') }
+                                {this.computeRate(this.getTotal('formValidated'), this.getTotal('mailSent'))}
                             </td>
                             <td>
-                                { this.getTotal('nbCommentaires') }
+                                {this.getTotal('allowToContact')}
                             </td>
                             <td>
-                                { this.computeRate(this.getTotal('nbCommentaires'), this.getTotal('formValidated')) }
+                                {this.getTotal('nbCommentaires')}
                             </td>
                             <td>
-                                { this.getTotal('nbCommentairesRejected') }
+                                {this.computeRate(this.getTotal('nbCommentaires'), this.getTotal('formValidated'))}
+                            </td>
+                            <td>
+                                {this.getTotal('nbCommentairesRejected')}
                             </td>
                         </tr>
                         {
@@ -211,7 +265,7 @@ export default class AvisStatsTable extends Component {
                                     <td>
                                         {this.computeRate(a.linkClick, a.mailOpen)}
                                     </td>
-                                    <td >
+                                    <td>
                                         {a.formValidated}
                                     </td>
                                     <td>
