@@ -6,11 +6,6 @@ import VirtualizedSelect from 'react-virtualized-select';
 
 export default function Filter({ options, onChange, placeholderText, selectValue }) {
 
-    const onClose = () => {
-        console.log('coco');
-        
-    }
-
     return (
         <h2 className="subtitle">
             <div className="dropdown">
@@ -18,7 +13,7 @@ export default function Filter({ options, onChange, placeholderText, selectValue
                     onChange={onChange}
                     options={options}
                     placeholder={selectValue.label ? selectValue.label : placeholderText }
-                    clearable={onClose}
+                    clearable
                     value={selectValue.label ? selectValue : placeholderText}
                 />
             </div>
