@@ -1,6 +1,7 @@
 const express = require('express');
 const Joi = require('joi');
 const Boom = require('boom');
+const isEmail = require('isemail').validate;
 const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
 const computeModerationStats = require('./utils/computeModerationStats');
@@ -13,13 +14,8 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
 
-    const getStagiaire = async fulltext => {
-
-        if (!fulltext) {
-            return null;
-        }
-
-        return db.collection('trainee').findOne({ 'trainee.email': fulltext });
+    const getStagiaire = async email => {
+        return db.collection('trainee').findOne({ 'trainee.email': email });
     };
 
     router.get('/backoffice/moderateur/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
@@ -33,8 +29,12 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
             sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
         }, { abortEarly: false });
 
+        let isEmailSearch = isEmail(fulltext);
+        let stagiaire = null;
+        if (isEmailSearch) {
+            stagiaire = await getStagiaire(fulltext);
+        }
 
-        let stagiaire = await getStagiaire(fulltext);
         let cursor = db.collection('comment')
         .find({
             codeRegion: codeRegion,
@@ -46,12 +46,8 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
             ...(status === 'none' ? { moderated: { $ne: true } } : {}),
             ...(reponseStatus ? { reponse: { $exists: true } } : {}),
             ...(['none', 'published', 'rejected'].includes(reponseStatus) ? { 'reponse.status': reponseStatus } : {}),
-            ...(fulltext ? {
-                $or: [
-                    { $text: { $search: fulltext } },
-                    { token: stagiaire ? stagiaire.token : 'unknown' },
-                ]
-            } : {}),
+            ...(isEmailSearch ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
+            ...(fulltext && !isEmailSearch ? { $text: { $search: fulltext } } : {}),
         })
         .project(fulltext ? { score: { $meta: 'textScore' } } : {})
         .sort(fulltext ? { score: { $meta: 'textScore' } } : { [sortBy]: -1 })
@@ -79,7 +75,8 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
                     stagiaire: {
                         email: stagiaire.trainee.email,
                         dnIndividuNational: stagiaire.trainee.dnIndividuNational,
-                    }
+                    },
+                    fulltext,
                 })
             }
         });
