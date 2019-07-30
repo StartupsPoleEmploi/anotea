@@ -7,7 +7,6 @@ import AdviceRates from '../common/deprecated/AdviceRates';
 import DeprecatedToolbar from '../common/deprecated/DeprecatedToolbar';
 import TrainingSearchForm from './trainingSearchForm';
 import EntitySearchForm from './EntitySearchForm';
-import CodeFinancerSearchForm from './CodeFinancerSearchForm';
 import Filter from './filters/filter';
 import {
     getRegions,
@@ -81,9 +80,7 @@ export default class FinancerPanel extends React.Component {
             },
             order: DEFAULT_ORDER,
             financers: [],
-            currentFinancer: {
-                _id: null
-            },
+            currentFinancer: {},
             currentPage: 'advices'
         };
 
@@ -98,7 +95,7 @@ export default class FinancerPanel extends React.Component {
             this.setState({
                 departements,
                 financers: FINANCERS,
-                currentFinancer: ''
+                currentFinancer: {}
             }, () => {
                 this.doGetAdvices();
                 this.doGetOrganisations();
@@ -171,40 +168,41 @@ export default class FinancerPanel extends React.Component {
     };
 
     handleFinancerChange = (options, evt) => {
-        const { financers } = this.state;
 
-        this.setState(prevState => ({
-            training: {
-                ...prevState.training,
-                organisations: [],
-                currentOrganisation: '',
-                entities: [],
-                currentEntity: '',
-            },
-            currentFinancer: financers.filter(financer => financer._id === options.id)[0]
-        }), () => {
-            this.doGetOrganisations();
-            this.doGetAdvices();
-        });
+        if (options) {
+            this.setState(prevState => ({
+                training: {
+                    ...prevState.training,
+                    organisations: [],
+                    currentOrganisation: '',
+                    entities: [],
+                    currentEntity: '',
+                },
+                currentFinancer: {
+                    ...prevState.currentFinancer,
+                    _id: options.id,
+                    label: options.label
+                },
+            }), () => {
+                this.doGetOrganisations();
+                this.doGetAdvices();
+            });
+        } else {
+            this.setState(prevState => ({
+                training: {
+                    ...prevState.training,
+                    organisations: [],
+                    currentOrganisation: '',
+                    entities: [],
+                    currentEntity: '',
+                },
+                currentFinancer: {}
+            }), () => {
+                this.doGetOrganisations();
+                this.doGetAdvices();
+            });
+        }
 
-    };
-
-    unsetFinancer = () => {
-
-        this.setState(prevState => ({
-            training: {
-                ...prevState.training,
-                organisations: [],
-                currentOrganisation: '',
-                entities: [],
-                currentEntity: '',
-            },
-            currentFinancer: ''
-        }), () => {
-            this.doGetOrganisations();
-            this.doGetAdvices();
-        });
-        
     };
 
     handleDepartementsChange = options => {
@@ -430,17 +428,24 @@ export default class FinancerPanel extends React.Component {
             label: dep,
             id: dep,
         }));
+        const financersOptions = financers.map(financer => ({
+            label: financer.title,
+            id: financer._id,
+        }));
 
         return (
             <div className="organisationPanel mainPanel">
 
                 {this.state.currentPage === 'advices' &&
                 <div>
+
                     {this.props.codeFinanceur === POLE_EMPLOI &&
-                    <CodeFinancerSearchForm currentFinancer={currentFinancer}
-                        financers={financers}
-                        handleFinancerChange={this.handleFinancerChange}
-                        unsetFinancer={this.unsetFinancer} />
+                    <Filter
+                        options={financersOptions}
+                        onChange={this.handleFinancerChange}
+                        placeholderText="Veuillez choisir un financeur..."
+                        selectValue={currentFinancer}
+                    />
                     }
 
                     <Filter
@@ -453,7 +458,7 @@ export default class FinancerPanel extends React.Component {
                     <Filter
                         options={organisationsOptions}
                         onChange={this.handleOrganisationChange}
-                        placeholderText="Choisir votre organisme de formation..."
+                        placeholderText="Veuillez choisir un organisme de formation..."
                         selectValue={currentOrganisation}
                     />
 

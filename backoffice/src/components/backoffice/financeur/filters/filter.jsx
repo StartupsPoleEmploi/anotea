@@ -5,7 +5,6 @@ import 'react-virtualized-select/styles.css';
 import VirtualizedSelect from 'react-virtualized-select';
 
 export default function Filter({ options, onChange, placeholderText, selectValue }) {
-
     return (
         <h2 className="subtitle">
             <div className="dropdown">
@@ -14,7 +13,7 @@ export default function Filter({ options, onChange, placeholderText, selectValue
                     options={options}
                     placeholder={placeholderText}
                     clearable
-                    value={selectValue.label ? selectValue : placeholderText}
+                    value={Object.entries(selectValue).length !== 0 ? selectValue : placeholderText}
                 />
             </div>
         </h2>
