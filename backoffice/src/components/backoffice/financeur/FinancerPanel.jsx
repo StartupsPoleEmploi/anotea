@@ -9,6 +9,7 @@ import TrainingSearchForm from './trainingSearchForm';
 import EntitySearchForm from './EntitySearchForm';
 import OrganisationSearchForm from './OrganisationSearchForm';
 import CodeFinancerSearchForm from './CodeFinancerSearchForm';
+import DepartementsFilter from './filters/departementsFilter';
 import {
     getRegions,
     getOrganisationAdvices,
@@ -57,6 +58,7 @@ export default class FinancerPanel extends React.Component {
 
         this.state = {
             departements: [],
+            currentDepartement: {},
             financerId: null,
             reportedAdvicesCount: 0,
             tab: 'all',
@@ -205,6 +207,18 @@ export default class FinancerPanel extends React.Component {
         });
         
     };
+
+    handleDepartementsChange = options => {
+
+        this.setState(prevState => ({
+            currentDepartement: {
+                ...prevState.currentDepartement,
+                id: options.id,
+                label: options.label
+            }
+        }));
+
+    }
 
     handleOrganisationChange = async (options, evt) => {
         const { training } = this.state;
@@ -404,7 +418,7 @@ export default class FinancerPanel extends React.Component {
 
     render() {
         const { currentOrganisation, currentEntity, organisations, entities } = this.state.training;
-        const { currentFinancer, financers, inventory } = this.state;
+        const { currentFinancer, financers, inventory, departements } = this.state;
 
         return (
             <div className="organisationPanel mainPanel">
@@ -417,6 +431,11 @@ export default class FinancerPanel extends React.Component {
                         handleFinancerChange={this.handleFinancerChange}
                         unsetFinancer={this.unsetFinancer} />
                     }
+
+                    <DepartementsFilter
+                        departements={departements}
+                        onChange={this.handleDepartementsChange}
+                        placeholderText="Veuillez choisir un département..." />
 
                     <OrganisationSearchForm currentOrganisation={currentOrganisation}
                         organisations={organisations}
@@ -442,23 +461,23 @@ export default class FinancerPanel extends React.Component {
                     <ul className="nav nav-tabs">
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('reported')}`}
-                                    onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
-                                className="badge reported">{inventory.reported}</span></button>
+                                onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
+                                    className="badge reported">{inventory.reported}</span></button>
                         </li>
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('commented')}`}
-                                    onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
-                                className="badge published">{inventory.commented}</span></button>
+                                onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
+                                    className="badge published">{inventory.commented}</span></button>
                         </li>
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`}
-                                    onClick={this.switchTab.bind(this, 'rejected')}>Avis rejetés <span
-                                className="badge rejected">{inventory.rejected}</span></button>
+                                onClick={this.switchTab.bind(this, 'rejected')}>Avis rejetés <span
+                                    className="badge rejected">{inventory.rejected}</span></button>
                         </li>
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`}
-                                    onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
-                                className="badge badge-secondary">{inventory.all}</span></button>
+                                onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
+                                    className="badge badge-secondary">{inventory.all}</span></button>
                         </li>
                     </ul>
 
@@ -525,15 +544,15 @@ export default class FinancerPanel extends React.Component {
                                             <strong>Session</strong> {advice.training.place.city}
                                             <div>
                                                 du <strong><FormattedDate
-                                                value={new Date(advice.training.startDate)}
-                                                day="numeric"
-                                                month="numeric"
-                                                year="numeric" /></strong>
+                                                    value={new Date(advice.training.startDate)}
+                                                    day="numeric"
+                                                    month="numeric"
+                                                    year="numeric" /></strong>
                                                 &nbsp;au <strong><FormattedDate
-                                                value={new Date(advice.training.scheduledEndDate)}
-                                                day="numeric"
-                                                month="numeric"
-                                                year="numeric" /></strong>
+                                                    value={new Date(advice.training.scheduledEndDate)}
+                                                    day="numeric"
+                                                    month="numeric"
+                                                    year="numeric" /></strong>
                                             </div>
                                         </div>
                                     </div>
