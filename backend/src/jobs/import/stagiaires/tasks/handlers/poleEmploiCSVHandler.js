@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const md5 = require('md5');
 const { buildToken, buildEmail } = require('../utils/utils');
 
 const parseDate = value => new Date(value + 'Z');
@@ -73,7 +74,7 @@ module.exports = (db, regions) => {
 
             let isValid = trainee => region && trainee.trainee.emailValid;
 
-            let isIncluded = trainee => {
+            let isNotExcluded = trainee => {
 
                 let isConseilRegional = trainee.training.codeFinanceur.includes('2');
 
@@ -89,93 +90,93 @@ module.exports = (db, regions) => {
                 return true;
             };
 
-            let doesNotExist = async trainee => {
-                let count = await db.collection('trainee').countDocuments({
-                    'trainee.email': trainee.trainee.email,
-                    'training.infoCarif.numeroSession': trainee.training.infoCarif.numeroSession
-                });
+            let hasNotBeenAlreadyImportedOrRemoved = async trainee => {
+                let email = trainee.trainee.email;
+                let numeroSession = trainee.training.infoCarif.numeroSession;
+                let [countTrainee, countRGPD] = await Promise.all([
+                    db.collection('trainee').countDocuments({
+                        'trainee.email': email,
+                        'training.infoCarif.numeroSession': numeroSession
+                    }),
+                    db.collection('optOut').countDocuments({
+                        'md5': md5(email),
+                    })
+                ]);
 
-                return count === 0;
+                return countTrainee === 0 && countRGPD === 0;
             };
 
-            return isValid(trainee) && isIncluded(trainee) && (await doesNotExist(trainee));
-
-
+            return isValid(trainee) && isNotExcluded(trainee) && (await hasNotBeenAlreadyImportedOrRemoved(trainee));
         },
         buildTrainee: async (record, campaign) => {
 
-            try {
-                if (_.isEmpty(record)) {
-                    return Promise.reject(new Error(`Données CSV invalides ${record}`));
-                }
-
-                let region = regions.findRegionByPostalCode(record['dc_cp_lieuformation']);
-                let token = buildToken(record['c_adresseemail']);
-                let { email, mailDomain } = buildEmail(record['c_adresseemail']);
-
-                return {
-                    _id: campaign.name + '/' + token,
-                    campaign: campaign.name,
-                    campaignDate: campaign.date,
-                    importDate: new Date(),
-                    unsubscribe: false,
-                    mailSent: false,
-                    avisCreated: false,
-                    token: token,
-                    codeRegion: region.codeRegion,
-                    trainee: {
-                        name: record['c_nomcorrespondance'],
-                        firstName: record['c_prenomcorrespondance'],
-                        mailDomain: mailDomain,
-                        email: email,
-                        phoneNumbers: [record['c_telephone1'], record['c_telephone2']],
-                        emailValid: record['c_validitemail_id'] === 'V',
-                        dnIndividuNational: record['dn_individu_national'],
-                        idLocal: record['c_individulocal']
-                    },
-                    training: {
-                        idFormation: record['dc_formation_id'],
-                        origineSession: record['dc_origine_session_id'],
-                        title: buildFormationTitle(record['dc_lblformation']),
-                        startDate: parseDate(record['dd_datedebutmodule']),
-                        scheduledEndDate: parseDate(record['dd_datefinmodule']),
-                        organisation: {
-                            id: record['dc_organisme_id'],
-                            siret: record['dc_siret'],
-                            label: record['dc_lblorganisme'],
-                            name: record['dc_raisonsociale']
-                        },
-                        place: {
-                            departement: record['departement'],
-                            postalCode: record['dc_cp_lieuformation'],
-                            city: record['dc_ville_lieuformation']
-                        },
-                        certifInfo: {
-                            id: record['dn_certifinfo_1_id'],
-                            label: record['dc_lblcertifinfo']
-                        },
-                        idSession: record['dn_session_id'],
-                        formacode: record['dc_formacode_ppal_id'],
-                        aesRecu: record['dc_aes_recue'],
-                        referencement: record['dc_referencement'],
-                        infoCarif: {
-                            numeroSession: record['dc_numeroicsession'],
-                            numeroAction: record['dc_numeroicaction']
-                        },
-                        codeFinanceur: buildCodeFinanceur(record['liste_financeur']),
-                        niveauEntree: parseInt(record['dc_niveauformation_entree_id'], 10) || null,
-                        niveauSortie: parseInt(record['dc_niveauformation_sortie_id'], 10) || null,
-                        dureeHebdo: parseInt(record['dn_dureehebdo'], 10) || null,
-                        dureeMaxi: parseInt(record['dn_dureemaxi'], 10) || null,
-                        dureeEntreprise: parseInt(record['dn_dureeentreprise'], 10) || null,
-                        dureeIndicative: record['dc_dureeindicative'],
-                        nombreHeuresCentre: parseInt(record['dn_nombreheurescentre'], 10) || null,
-                    }
-                };
-
-            } catch (e) {
-                return Promise.reject(e);
+            if (_.isEmpty(record)) {
+                throw new Error(`Données CSV invalides ${record}`);
             }
+
+            let region = regions.findRegionByPostalCode(record['dc_cp_lieuformation']);
+            let token = buildToken(record['c_adresseemail']);
+            let { email, mailDomain } = buildEmail(record['c_adresseemail']);
+
+            return {
+                _id: campaign.name + '/' + token,
+                campaign: campaign.name,
+                campaignDate: campaign.date,
+                importDate: new Date(),
+                unsubscribe: false,
+                mailSent: false,
+                avisCreated: false,
+                token: token,
+                codeRegion: region.codeRegion,
+                trainee: {
+                    name: record['c_nomcorrespondance'],
+                    firstName: record['c_prenomcorrespondance'],
+                    mailDomain: mailDomain,
+                    email: email,
+                    phoneNumbers: [record['c_telephone1'], record['c_telephone2']],
+                    emailValid: record['c_validitemail_id'] === 'V',
+                    dnIndividuNational: record['dn_individu_national'],
+                    idLocal: record['c_individulocal']
+                },
+                training: {
+                    idFormation: record['dc_formation_id'],
+                    origineSession: record['dc_origine_session_id'],
+                    title: buildFormationTitle(record['dc_lblformation']),
+                    startDate: parseDate(record['dd_datedebutmodule']),
+                    scheduledEndDate: parseDate(record['dd_datefinmodule']),
+                    organisation: {
+                        id: record['dc_organisme_id'],
+                        siret: record['dc_siret'],
+                        label: record['dc_lblorganisme'],
+                        name: record['dc_raisonsociale']
+                    },
+                    place: {
+                        departement: record['departement'],
+                        postalCode: record['dc_cp_lieuformation'],
+                        city: record['dc_ville_lieuformation']
+                    },
+                    certifInfo: {
+                        id: record['dn_certifinfo_1_id'],
+                        label: record['dc_lblcertifinfo']
+                    },
+                    idSession: record['dn_session_id'],
+                    formacode: record['dc_formacode_ppal_id'],
+                    aesRecu: record['dc_aes_recue'],
+                    referencement: record['dc_referencement'],
+                    infoCarif: {
+                        numeroSession: record['dc_numeroicsession'],
+                        numeroAction: record['dc_numeroicaction']
+                    },
+                    codeFinanceur: buildCodeFinanceur(record['liste_financeur']),
+                    niveauEntree: parseInt(record['dc_niveauformation_entree_id'], 10) || null,
+                    niveauSortie: parseInt(record['dc_niveauformation_sortie_id'], 10) || null,
+                    dureeHebdo: parseInt(record['dn_dureehebdo'], 10) || null,
+                    dureeMaxi: parseInt(record['dn_dureemaxi'], 10) || null,
+                    dureeEntreprise: parseInt(record['dn_dureeentreprise'], 10) || null,
+                    dureeIndicative: record['dc_dureeindicative'],
+                    nombreHeuresCentre: parseInt(record['dn_nombreheurescentre'], 10) || null,
+                }
+            };
         },
     };
 };

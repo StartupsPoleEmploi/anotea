@@ -5,7 +5,7 @@ const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
 const doImport = require('../../../../../src/jobs/import/rome/importer');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
     it('should create new mapping', async () => {
 
