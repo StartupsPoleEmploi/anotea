@@ -16,7 +16,6 @@ module.exports = (db, regions) => {
             avisNonLus,
             avisModeresNonRejetes,
             nbReponses,
-            nbReponsesAvecCommentaires,
             avisSignales
         ] = await Promise.all([
             organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'profile': 'organisme', ...filter }),
@@ -38,7 +37,6 @@ module.exports = (db, regions) => {
             }),
             avis.countDocuments({ 'moderated': true, 'rejected': false, ...filter }),
             avis.countDocuments({ 'reponse': { $exists: true }, ...filter }),
-            avis.countDocuments({ 'reponse': { $exists: true }, 'comment': { $exists: true }, ...filter }),
             avis.countDocuments({ 'reported': true, ...filter }),
         ]);
 
@@ -53,7 +51,6 @@ module.exports = (db, regions) => {
             organismesActifs,
             avisNonLus,
             nbReponses,
-            nbReponsesAvecCommentaires,
             avisSignales,
         };
     };
