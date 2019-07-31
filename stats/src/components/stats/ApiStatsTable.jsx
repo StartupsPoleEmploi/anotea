@@ -44,12 +44,42 @@ export default class ApiStatsTable extends Component {
                                 <span> Taux</span>
                             </div>
                         </th>
-                        <th scope="col" className="section">Total <i className="fas fa-question-circle"><span className="tooltip">Total avis recueillis</span></i></th>
-                        <th scope="col">Restitués <i className="fas fa-question-circle"><span className="tooltip">Avis pour lesquels une session similaire est en ligne (restitués par l&apos;API)</span></i></th>
-                        <th scope="col" className="section">Total <i className="fas fa-question-circle"><span className="tooltip">Nombre de sessions en ligne sur l&apos;InterCarif</span></i></th>
-                        <th scope="col">Avec avis <i className="fas fa-question-circle"><span className="tooltip">Nombre de sessions en ligne avec avis</span></i></th>
-                        <th scope="col">Certifiantes avec avis <i className="fas fa-question-circle"><span className="tooltip">Nombre de sessions certifiantes avec avis</span></i></th>
-                        <th scope="col">Nb avis par session <i className="fas fa-question-circle"><span className="tooltip">Nombre moyen d&apos;avis par session</span></i></th>
+                        <th scope="col" className="section">
+                            <span>Total</span>
+                            <i className="fas fa-question-circle">
+                                <span className="tooltip">Total avis recueillis</span>
+                            </i>
+                        </th>
+                        <th scope="col">
+                            <span>Restitués</span>
+                            <i className="fas fa-question-circle">
+                                <span className="tooltip">Avis pour lesquels une session similaire est en ligne (restitués par l&apos;API)</span>
+                            </i>
+                        </th>
+                        <th scope="col" className="section">
+                            <span>Total</span>
+                            <i className="fas fa-question-circle">
+                                <span className="tooltip">Nombre de sessions en ligne sur l&apos;InterCarif</span>
+                            </i>
+                        </th>
+                        <th scope="col">
+                            <span>Avec avis</span>
+                            <i className="fas fa-question-circle">
+                                <span className="tooltip">Nombre de sessions en ligne avec avis</span>
+                            </i>
+                        </th>
+                        <th scope="col">
+                            <span>Certifiantes avec avis</span>
+                            <i className="fas fa-question-circle">
+                                <span className="tooltip">Nombre de sessions certifiantes avec avis</span>
+                            </i>
+                        </th>
+                        <th scope="col">
+                            <span>Nb avis par session</span>
+                            <i className="fas fa-question-circle">
+                                <span className="tooltip">Nombre moyen d&apos;avis par session</span>
+                            </i>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
