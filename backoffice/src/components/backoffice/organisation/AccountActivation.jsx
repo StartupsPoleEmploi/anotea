@@ -126,7 +126,7 @@ export default class AccountActivation extends React.Component {
                     <p>Un Espace Anotéa a déjà été créé pour cet Organisme de Formation.</p>
 
                     <p>Cliquez sur <a onClick={this.handleForgottenPassword} role="button">Mot de passe oublié</a> : un
-                        e-mail contenant un lien pour modifier votre mot de passe vous sera transmis immédiatement.</p>
+                        mail contenant un lien pour modifier votre mot de passe vous sera transmis immédiatement.</p>
                 </div>
                 }
             </div>

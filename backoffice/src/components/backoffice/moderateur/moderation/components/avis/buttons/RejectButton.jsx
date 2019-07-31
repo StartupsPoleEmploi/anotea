@@ -24,7 +24,7 @@ export default class RejectButton extends React.Component {
                 text: (
                     <span>
                         L&apos;avis a été <b>rejeté</b> pour le motif <b>{updated.rejectReason}</b>.
-                        {reason === 'injure' ? ' Un email a été adressé au stagiaire.' : ''}
+                        {reason === 'injure' ? ' Un mail a été adressé au stagiaire.' : ''}
                     </span>),
                 type: 'local',
             }
@@ -41,7 +41,7 @@ export default class RejectButton extends React.Component {
                 title="Rejeter cet avis pour injure"
                 body={
                     <span>
-                        Le <b>rejet pour injure</b> entraîne <b>l&apos;envoi d&apos;un email </b> automatique au
+                        Le <b>rejet pour injure</b> entraîne <b>l&apos;envoi d&apos;un mail </b> automatique au
                         stagiaire pour l&apos;informer que le <b>commentaire ne sera pas publié</b>. Confirmez-vous
                         cette demande ?
                     </span>

@@ -178,10 +178,10 @@ module.exports = function(db, logger, configuration, regions) {
 
             sendMail('organisation_password', params, mailOptions, successCallback, errorCallback);
         },
-        sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, successCallback, errorCallback) => {
+        sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, profile, successCallback, errorCallback) => {
 
             let link = getPasswordForgottenLink(passwordToken);
-            let params = { link: link, hostname: configuration.app.public_hostname, codeRegion: codeRegion };
+            let params = { link: link, hostname: configuration.app.public_hostname, codeRegion: codeRegion, profile: profile };
             let region = regions.findRegionByCodeRegion(codeRegion);
 
             mailOptions.subject = 'Votre compte Anotéa : Demande de renouvellement de mot de passe';
