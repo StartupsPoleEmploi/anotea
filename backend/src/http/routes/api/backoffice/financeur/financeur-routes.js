@@ -453,9 +453,14 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             published: true,
             comment: { $ne: null }
         });
-
-        filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
-        inventory.all = await db.collection('comment').countDocuments(filter);
+        inventory.all = await db.collection('comment').countDocuments({
+            ...filter,
+            $or: [
+                { 'comment': null },
+                { 'comment': { $exists: false } },
+                { 'published': true }
+            ],
+        });
         res.status(200).send(inventory);
     }));
 
