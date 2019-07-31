@@ -3,8 +3,8 @@
 
 const cli = require('commander');
 const moment = require('moment');
-const { newTrainee } = require('../../../../test/helpers/data/dataset');
-const { execute } = require('../../job-utils');
+const { newTrainee } = require('../../helpers/data/dataset');
+const { execute } = require('../../../src/jobs/job-utils');
 const mailjet = require('./mailjet');
 
 cli.description('Create, configure and send email campaign with Mailjet')
