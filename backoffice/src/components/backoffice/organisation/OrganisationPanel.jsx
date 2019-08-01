@@ -9,8 +9,8 @@ import EntitySearchForm from './entitySearchForm';
 import Graphes from './Graphes';
 import Notice from './Notice';
 import getReponseStatus from '../common/utils/getReponseStatus';
-import PrintButton from './printButton.js';
-import SinglePage from './singlePage';
+import ExportToPDFButton from '../common/pdf/ExportToPDFButton';
+import ModalPDF from '../common/pdf/ModalPDF';
 
 import {
     getOrganisationInfo,
@@ -278,39 +278,16 @@ export default class OrganisationPanel extends React.Component {
 
     render() {
         const { currentEntity, entities } = this.state.training;
+        const GraphesComponent = <Graphes organisationId={this.state.organisationId} />;
 
         return (
             <div className="organisationPanel mainPanel">
 
                 <Notice codeRegion={this.props.codeRegion} />
 
-                <button
-                    type="button"
-                    className="btn btn-primary"
-                    data-toggle="modal"
-                    data-target="#exampleModalLong"
-                >
-                        EXPORTER EN PDF
-                </button>
+                <ExportToPDFButton />
 
-                <div className="modal fade" id="exampleModalLong" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                    <div className="modal-dialog modal-lg" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <SinglePage id={'singlePage'} organisationId={this.state.organisationId} />
-                            </div>
-                            <div className="modal-footer">
-                                <PrintButton id={'singlePage'} label={'Print single page'} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ModalPDF component={[GraphesComponent, GraphesComponent]}/>
 
                 <Graphes organisationId={this.state.organisationId} />
                 <h2 className="advicesGestion h2">Gestion des commentaires</h2>
