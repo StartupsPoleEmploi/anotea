@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Page from './page';
-import PrintButton from './printButton';
+import Page from './Page';
+import PrintButton from './PrintButton';
 
 const ModalPDF = ({ children }) => (
     <div className="modal fade" id="exampleModalLong" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
