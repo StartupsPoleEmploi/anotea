@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Page = ({ children, singleMode, id }) => (
     <div id={id}
@@ -8,5 +9,11 @@ const Page = ({ children, singleMode, id }) => (
         {children}
     </div>
 );
+
+Page.propTypes = {
+    children: PropTypes.array.isRequired,
+    singleMode: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+};
 
 export default Page;

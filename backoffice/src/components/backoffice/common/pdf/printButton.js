@@ -1,27 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import html2canvas from 'html2canvas';
 import JSPDF from 'jspdf';
 
-const pxToMm = px => {
-    return Math.floor(px / document.getElementById('myMm').offsetHeight);
-};
-const mmToPx = mm => {
-    return document.getElementById('myMm').offsetHeight * mm;
-};
-const range = (start, end) => {
-    return Array(end - start).join(0).split(0).map(function(val, id) {
-        return id + start
-        ;
-    });
-};
 const pdf = new JSPDF();
 
-const PrintButton = ({ id, label }) => (<div className="tc mb4 mt2">
-    {/*
-    Getting pixel height in milimeters:
-    https://stackoverflow.com/questions/7650413/pixel-to-mm-equation/27111621#27111621
-  */}
-    <div id="myMm" style={{ height: '1mm' }} />
+const PrintButton = ({ id, label }) => (
 
     <button
         type="button" className="btn btn-primary"
@@ -40,6 +24,12 @@ const PrintButton = ({ id, label }) => (<div className="tc mb4 mt2">
     >
         {label}
     </button>
-</div>);
+
+);
+
+PrintButton.propTypes = {
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+};
 
 export default PrintButton;

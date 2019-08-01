@@ -278,7 +278,6 @@ export default class OrganisationPanel extends React.Component {
 
     render() {
         const { currentEntity, entities } = this.state.training;
-        const GraphesComponent = <Graphes organisationId={this.state.organisationId} />;
 
         return (
             <div className="organisationPanel mainPanel">
@@ -287,7 +286,9 @@ export default class OrganisationPanel extends React.Component {
 
                 <ExportToPDFButton />
 
-                <ModalPDF component={[GraphesComponent, GraphesComponent]}/>
+                <ModalPDF>
+                    <Graphes organisationId={this.state.organisationId} />
+                </ModalPDF>
 
                 <Graphes organisationId={this.state.organisationId} />
                 <h2 className="advicesGestion h2">Gestion des commentaires</h2>

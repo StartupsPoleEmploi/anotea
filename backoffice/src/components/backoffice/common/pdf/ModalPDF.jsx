@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Page from './page';
-import PrintButton from './printButton.js';
+import PrintButton from './printButton';
 
-const ModalPDF = ({ component }) => (
+const ModalPDF = ({ children }) => (
     <div className="modal fade" id="exampleModalLong" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div className="modal-dialog modal-lg" role="document">
             <div className="modal-content">
@@ -14,15 +15,19 @@ const ModalPDF = ({ component }) => (
                 </div>
                 <div className="modal-body">
                     <Page singleMode={true} id="singlePage">
-                        {component}
+                        {children}
                     </Page>
                 </div>
                 <div className="modal-footer">
-                    <PrintButton id={'singlePage'} label={'Print single page'} />
+                    <PrintButton id={'singlePage'} label={'Imprimer cette page'} />
                 </div>
             </div>
         </div>
     </div>
 );
+
+ModalPDF.propTypes = {
+    children: PropTypes.array.isRequired,
+};
 
 export default ModalPDF;
