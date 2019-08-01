@@ -51,7 +51,7 @@ export const getOrganisationPlaces = (idRegion, codeFinanceur, siren) => {
     return _get(`/backoffice/financeur/region/${idRegion}/organisation/${siren}/places${query}`);
 };
 
-export const getOrganisationLieuTrainings = (idRegion, codeFinanceur, siren, postalCode) => {
+export const getOrganisationLieuFormations = (idRegion, codeFinanceur, siren, postalCode) => {
     let query = '';
     if (codeFinanceur) {
         query = `&codeFinanceur=${codeFinanceur}`;
@@ -63,7 +63,7 @@ export const getOrganisationLieuTrainingSessions = (siren, idTraining, postalCod
     return _get(`/backoffice/financeur/organismes_formateurs/${siren}/training/${idTraining}/sessions?postalCode=${postalCode}`);
 };
 
-export const getPlacesAdvices = (idRegion, codeFinanceur, siren, trainingId, postalCode, filter, order, page) => {
+export const getPlacesAdvices = (idRegion, codeFinanceur, siren, FormationId, postalCode, filter, order, page) => {
 
     let query = '';
     if (codeFinanceur) {
@@ -76,7 +76,7 @@ export const getPlacesAdvices = (idRegion, codeFinanceur, siren, trainingId, pos
         query += `&page=${page}`;
     }
 
-    return _get(`/backoffice/financeur/region/${idRegion}/organisme_lieu/${siren}/advices?trainingId=${trainingId}&postalCode=${postalCode}${query}`);
+    return _get(`/backoffice/financeur/region/${idRegion}/organisme_lieu/${siren}/advices?trainingId=${FormationId}&postalCode=${postalCode}${query}`);
 };
 
 export const loadOragnisationLieuInventory = (idRegion, codeFinanceur, siren, trainingId, postalCode) => {
