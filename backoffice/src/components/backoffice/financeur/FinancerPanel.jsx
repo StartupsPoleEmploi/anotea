@@ -309,7 +309,8 @@ export default class FinancerPanel extends React.Component {
     getFormations = async () => {
         const { currentFinancer, training } = this.state;
         const { codeRegion } = this.props;
-        const formations = await getOrganisationLieuFormations(codeRegion, currentFinancer.id, training.currentOrganisation._id, training.currentEntity._id);
+        const formations = await getOrganisationLieuFormations(codeRegion, currentFinancer._id, training.currentOrganisation._id, training.currentEntity._id);
+        
 
         this.setState(prevState => ({
             training: {
