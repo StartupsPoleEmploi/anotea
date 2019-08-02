@@ -13,10 +13,31 @@ export const getOrganisations = (idregion, codeFinanceur) => {
     return _get(`/backoffice/financeur/region/${idregion}/organisations${query}`);
 };
 
-export const getAdvices = (idRegion, codeFinanceur, filter, order, page) => {
+export const getAdvices = (idRegion, codeFinanceur, organisation, place, formation, filter, order, page) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
+    }
+    if (organisation) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}organisation=${organisation}`;
+    }
+    if (place) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}place=${place}`;
+    }
+    if (formation) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}formation=${formation}`;
     }
     if (filter) {
         let prefix = '&';
@@ -25,7 +46,7 @@ export const getAdvices = (idRegion, codeFinanceur, filter, order, page) => {
         }
         query += `${prefix}filter=${filter}&order=${order}`;
     }
-    if (page != null) {
+    if (page !== null) {
         let prefix = '&';
         if (query === '') {
             prefix = '?';
@@ -33,14 +54,6 @@ export const getAdvices = (idRegion, codeFinanceur, filter, order, page) => {
         query += `${prefix}page=${page}`;
     }
     return _get(`/backoffice/financeur/region/${idRegion}/advices${query}`);
-};
-
-export const loadInventoryForAllAdvicesWhenFinancerFirstConnexion = (idRegion, codeFinanceur) => {
-    let query = '';
-    if (codeFinanceur) {
-        query = `?codeFinanceur=${codeFinanceur}`;
-    }
-    return _get(`/backoffice/financeur/region/${idRegion}/inventory${query}`);
 };
 
 export const getOrganisationPlaces = (idRegion, codeFinanceur, siren) => {
@@ -51,7 +64,7 @@ export const getOrganisationPlaces = (idRegion, codeFinanceur, siren) => {
     return _get(`/backoffice/financeur/region/${idRegion}/organisation/${siren}/places${query}`);
 };
 
-export const getOrganisationLieuFormations = (idRegion, codeFinanceur, siren, postalCode) => {
+export const getFormations = (idRegion, codeFinanceur, siren, postalCode) => {
     let query = '';
     if (codeFinanceur) {
         query = `&codeFinanceur=${codeFinanceur}`;
@@ -63,59 +76,31 @@ export const getOrganisationLieuTrainingSessions = (siren, idTraining, postalCod
     return _get(`/backoffice/financeur/organismes_formateurs/${siren}/training/${idTraining}/sessions?postalCode=${postalCode}`);
 };
 
-export const getPlacesAdvices = (idRegion, codeFinanceur, siren, FormationId, postalCode, filter, order, page) => {
-
+export const getInventory = (idRegion, codeFinanceur, organisation, place, formation) => {
     let query = '';
-    if (codeFinanceur) {
-        query += `&codeFinanceur=${codeFinanceur}`;
-    }
-    if (filter) {
-        query += `&filter=${filter}&order=${order}`;
-    }
-    if (page != null) {
-        query += `&page=${page}`;
-    }
-
-    return _get(`/backoffice/financeur/region/${idRegion}/organisme_lieu/${siren}/advices?trainingId=${FormationId}&postalCode=${postalCode}${query}`);
-};
-
-export const loadOragnisationLieuInventory = (idRegion, codeFinanceur, siren, trainingId, postalCode) => {
-    let query = '';
-
-    if (codeFinanceur) {
-        query = `&codeFinanceur=${codeFinanceur}`;
-    }
-    return _get(`/backoffice/financeur/region/${idRegion}/organisme_lieu/${siren}/advices/inventory?trainingId=${trainingId}&postalCode=${postalCode}${query}`);
-};
-
-export const getOrganisationAdvices = (idRegion, codeFinanceur, siren, filter, order, page) => {
-    let query = '';
-
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
     }
-    if (filter) {
+    if (organisation) {
         let prefix = '&';
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}filter=${filter}&order=${order}`;
+        query += `${prefix}organisation=${organisation}`;
     }
-    if (page != null) {
+    if (place) {
         let prefix = '&';
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}page=${page}`;
+        query += `${prefix}place=${place}`;
     }
-    return _get(`/backoffice/financeur/region/${idRegion}/organisation/${siren}/avis${query}`);
-};
-
-export const loadInventoryASelectedOrganisation = (idRegion, codeFinanceur, siren) => {
-    let query = '';
-
-    if (codeFinanceur) {
-        query = `?codeFinanceur=${codeFinanceur}`;
+    if (formation) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}formation=${formation}`;
     }
-    return _get(`/backoffice/financeur/region/${idRegion}/organisation/${siren}/avis/inventory${query}`);
+    return _get(`/backoffice/financeur/region/${idRegion}/inventory${query}`);
 };
