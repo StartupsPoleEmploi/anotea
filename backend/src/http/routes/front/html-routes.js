@@ -7,6 +7,14 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
 
     const router = express.Router(); // eslint-disable-line new-cap
 
+    const getRegionEmail = region => {
+        return region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from;
+    };
+
+    const getReplyToEmail = region => {
+        return `Anotea <${getRegionEmail(region)}>`;
+    };
+
     const getTraineeFromToken = (req, res, next) => {
         db.collection('trainee').findOne({ token: req.params.token })
         .then(trainee => {
@@ -84,12 +92,156 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
         trainee.trainee.firstName = titleize(trainee.trainee.firstName);
         trainee.trainee.name = titleize(trainee.trainee.name);
 
-        res.render('front/mailing/votre_avis.ejs', {
+        res.render('../../smtp/views/votre_avis.ejs', {
             trainee: trainee,
+            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
             unsubscribeLink: unsubscribeLink,
+            trackingLink: `${configuration.app.public_hostname}/mail/${trainee.token}/track`,
             formLink: formLink,
             moment: moment,
             region: regions.findRegionByCodeRegion(trainee.codeRegion),
+            hostname: configuration.app.public_hostname,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:token/6mois', async (req, res) => {
+        const trainee = await db.collection('trainee').findOne({ token: req.params.token });
+        if (trainee === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const unsubscribeLink = mailer.getUnsubscribeLink(trainee);
+        trainee.trainee.firstName = titleize(trainee.trainee.firstName);
+        trainee.trainee.name = titleize(trainee.trainee.name);
+
+        res.render('../../smtp/views/questionnaire_6mois.ejs', {
+            trainee: trainee,
+            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/6mois?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
+            unsubscribeLink: unsubscribeLink,
+            trackingLink: `${configuration.app.public_hostname}/mail/${trainee.token}/track`,
+            formLink: 'https://avril_la_vae_facile.typeform.com/to/gIFh4q',
+            moment: moment,
+            region: regions.findRegionByCodeRegion(trainee.codeRegion),
+            hostname: configuration.app.public_hostname,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:tokenOrganisme/password', async (req, res) => {
+        const organisme = await db.collection('accounts').findOne({ token: req.params.tokenOrganisme });
+        if (organisme === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const region = regions.findRegionByCodeRegion(organisme.codeRegion);
+
+        res.render('../../smtp/views/organisation_password.ejs', {
+            trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
+            link: `${configuration.app.public_hostname}/admin?action=passwordLost&token=${req.params.tokenOrganisme}`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/password`,
+            contact: getRegionEmail(region),
+            hostname: configuration.app.public_hostname,
+            organisation: organisme,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:tokenOrganisme/nonLus', async (req, res) => {
+        const organisme = await db.collection('accounts').findOne({ token: req.params.tokenOrganisme });
+        if (organisme === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const avis = await db.collection('comment').find({ 'comment': { $ne: null },
+            'read': false,
+            'published': true,
+            'training.organisation.siret': organisme.SIRET
+        });
+
+        const region = regions.findRegionByCodeRegion(organisme.codeRegion);
+
+        res.render('../../smtp/views/organisme_avis_non_lus.ejs', {
+            trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
+            link: `${configuration.app.public_hostname}/admin?action=passwordLost&token=${req.params.tokenOrganisme}`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/nonLus`,
+            contact: getRegionEmail(region),
+            hostname: configuration.app.public_hostname,
+            comment: avis[0],
+            organisme,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:tokenOrganisme/reponseRejetee/:idAvis', async (req, res) => {
+        const organisme = await db.collection('accounts').findOne({ token: req.params.tokenOrganisme });
+        const avis = await db.collection('comment').findOne({ _id: req.params.idAvis });
+        if (organisme === null || avis === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const region = regions.findRegionByCodeRegion(organisme.codeRegion);
+
+        res.render('../../smtp/views/organisme_reponse_rejetee.ejs', {
+            trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
+            link: `${configuration.app.public_hostname}/admin?action=passwordLost&token=${req.params.tokenOrganisme}`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/reponseRejetee/${avis._id}`,
+            contact: getRegionEmail(region),
+            hostname: configuration.app.public_hostname,
+            organisme,
+            reponse: avis.reponse,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:token/passwordForgotten', async (req, res) => {
+        const forgottenPasswordToken = await db.collection('forgottenPasswordTokens').findOne({ token: req.params.token });
+        if (forgottenPasswordToken === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const account = await db.collection('accounts').findOne({ _id: forgottenPasswordToken.id });
+
+        res.render('../../smtp/views/password_forgotten.ejs', {
+            link: `${configuration.app.public_hostname}/admin?action=passwordLost&token=${req.params.token}`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${req.params.token}/passwordForgotten`,
+            region: regions.findRegionByCodeRegion(account.codeRegion),
+            hostname: configuration.app.public_hostname,
+            profile: forgottenPasswordToken.profile,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:token/injure', async (req, res) => {
+        const trainee = await db.collection('trainee').findOne({ token: req.params.token });
+        if (trainee === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const comment = await db.collection('comment').findOne({ token: req.params.token });
+
+        const unsubscribeLink = mailer.getUnsubscribeLink(trainee);
+        const formLink = mailer.getFormLink(trainee);
+        trainee.trainee.firstName = titleize(trainee.trainee.firstName);
+        trainee.trainee.name = titleize(trainee.trainee.name);
+        let region = regions.findRegionByCodeRegion(trainee.codeRegion);
+
+        res.render('../../smtp/views/avis_injure.ejs', {
+            trainee: trainee,
+            comment: comment,
+            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/injure?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
+            unsubscribeLink: unsubscribeLink,
+            formLink: formLink,
+            moment: moment,
+            email: getReplyToEmail(region),
+            hostname: configuration.app.public_hostname,
+            webView: true
         });
     });
 

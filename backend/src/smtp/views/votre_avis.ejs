@@ -51,7 +51,6 @@
                 width: 80%;
             }
 
-
             .header .logo-right {
                 float: right;
                 margin: 10px;
@@ -179,8 +178,20 @@
 
             <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
                     pouvez vous désinscrire</a>.</p>
+            
+            <img src="<%= trackingLink %>" />
         </div>
 
-        <img src="<%= trackingLink %>" />
+        <% if (webView) { %>
+            <%- include('../../http/views/analyticsTrackers'); %>
+            <script>
+                ga('send', {
+                    hitType: 'event',
+                    eventCategory: 'mail',
+                    eventAction: 'webview',
+                    eventLabel: 'Email en version Web'
+                });
+            </script>
+        <% } %>
     </body>
 </html>
