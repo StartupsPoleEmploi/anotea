@@ -81,6 +81,8 @@ module.exports = function(db, logger, configuration, regions) {
         }
         mailOptions.from = `Anotea <${configuration.smtp.from}>`;
 
+        params.webView = false;
+
         let contents = [];
         contents.push(buildContent(template, 'txt', params));
         if (!textOnly) {
@@ -132,6 +134,7 @@ module.exports = function(db, logger, configuration, regions) {
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
                 hostname: configuration.app.public_hostname,
+                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/nonLus`,
                 trackingLink: getTrackingLink(organisme),
                 organisme: organisme,
                 comment: pickedComment ? pickedComment.comment.text : null,
@@ -144,15 +147,16 @@ module.exports = function(db, logger, configuration, regions) {
 
             sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
         },
-        sendReponseRejeteeNotification: async (mailOptions, organisme, reponse, successCallback, errorCallback) => {
+        sendReponseRejeteeNotification: async (mailOptions, organisme, avis, successCallback, errorCallback) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
                 hostname: configuration.app.public_hostname,
                 trackingLink: getTrackingLink(organisme),
+                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/reponseRejetee/${avis.token}`,
                 contact: getRegionEmail(region),
                 organisme: organisme,
-                reponse: reponse
+                reponse: avis.reponse.text
             };
 
             mailOptions.subject = `Anotéa - votre réponse n'a pas été prise en compte`;
@@ -167,6 +171,7 @@ module.exports = function(db, logger, configuration, regions) {
             let params = {
                 link: getOrganisationPasswordLink(organisme),
                 trackingLink: getTrackingLink(organisme),
+                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/password`,
                 hostname: configuration.app.public_hostname,
                 organisation: organisme,
                 contact: getRegionEmail(region)
@@ -181,7 +186,8 @@ module.exports = function(db, logger, configuration, regions) {
         sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, profile, successCallback, errorCallback) => {
 
             let link = getPasswordForgottenLink(passwordToken);
-            let params = { link: link, hostname: configuration.app.public_hostname, codeRegion: codeRegion, profile: profile };
+            let consultationLink = `${configuration.app.public_hostname}/mail/${passwordToken}/passwordForgotten`;
+            let params = { link, hostname: configuration.app.public_hostname, codeRegion: codeRegion, profile, consultationLink };
             let region = regions.findRegionByCodeRegion(codeRegion);
 
             mailOptions.subject = 'Votre compte Anotéa : Demande de renouvellement de mot de passe';
@@ -225,6 +231,7 @@ module.exports = function(db, logger, configuration, regions) {
                 moment,
                 region,
                 unsubscribeLink: unsubscribeLink,
+                consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/6mois?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
                 formLink: 'https://avril_la_vae_facile.typeform.com/to/gIFh4q',
                 trackingLink: getTrackingLink(trainee),
                 hostname: configuration.app.public_hostname,
@@ -258,7 +265,7 @@ module.exports = function(db, logger, configuration, regions) {
                 trainee,
                 comment,
                 moment,
-                consultationLink: getConsultationLink(trainee),
+                consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/injure?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
                 unsubscribeLink: unsubscribeLink,
                 formLink: getFormLink(trainee),
                 hostname: configuration.app.public_hostname,

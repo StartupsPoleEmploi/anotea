@@ -45,9 +45,11 @@
             }
 
             .header p {
+                position: absolute;
+                top: 10px;
                 text-align: center;
+                width: 80%;
             }
-
 
             .header .logo-right {
                 float: right;
@@ -100,7 +102,7 @@
                 text-align: center;
             }
 
-            .content p {
+            .content p, .footer p {
                 color: rgba(36, 48, 58, 0.7);
             }
 
@@ -135,6 +137,7 @@
                  alt="" /></td>
             <img class="logo-right"
                  src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" />
+            <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
         </div>
 
         <div class="content">
@@ -159,8 +162,19 @@
 
             <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
                     pouvez vous désinscrire</a>.</p>
+            <img src="<%= trackingLink %>" />
         </div>
 
-        <img src="<%= trackingLink %>" />
+        <% if (webView) { %>
+            <%- include('../../http/views/analyticsTrackers'); %>
+            <script>
+                ga('send', {
+                    hitType: 'event',
+                    eventCategory: 'mail',
+                    eventAction: 'webview',
+                    eventLabel: 'Email en version Web'
+                });
+            </script>
+        <% } %>
     </body>
 </html>

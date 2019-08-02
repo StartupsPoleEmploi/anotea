@@ -31,6 +31,13 @@
             height: 48px;
         }
 
+        .header p {
+            position: absolute;
+            top: 10px;
+            text-align: center;
+            width: 80%;
+        }
+        
         .header .logo-right {
             float: right;
             margin: 10px;
@@ -120,6 +127,7 @@
         </td>
         <img class="logo-right"
             src="<%= hostname %>/static/images/regions/logo-email/logo_<%= organisme.codeRegion %>.png" alt="" />
+        <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
     </div>
 
     <div class="content">
@@ -148,6 +156,18 @@
     </div>
 
     <img src="<%= trackingLink %>" alt="Lien de suivi" />
+
+    <% if (webView) { %>
+        <%- include('../../http/views/analyticsTrackers'); %>
+        <script>
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'mail',
+                eventAction: 'webview',
+                eventLabel: 'Email en version Web'
+            });
+        </script>
+    <% } %>
 </body>
 
 </html>
