@@ -176,9 +176,9 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
         });
     });
 
-    router.get('/mail/:tokenOrganisme/reponseRejetee/:idAvis', async (req, res) => {
+    router.get('/mail/:tokenOrganisme/reponseRejetee/:tokenAvis', async (req, res) => {
         const organisme = await db.collection('accounts').findOne({ token: req.params.tokenOrganisme });
-        const avis = await db.collection('comment').findOne({ _id: req.params.idAvis });
+        const avis = await db.collection('comment').findOne({ token: req.params.tokenAvis });
         if (organisme === null || avis === null) {
             res.status(404).render('errors/404');
             return;
@@ -189,11 +189,11 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
         res.render('../../smtp/views/organisme_reponse_rejetee.ejs', {
             trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
             link: `${configuration.app.public_hostname}/admin?action=passwordLost&token=${req.params.tokenOrganisme}`,
-            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/reponseRejetee/${avis._id}`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/reponseRejetee/${avis.token}`,
             contact: getRegionEmail(region),
             hostname: configuration.app.public_hostname,
             organisme,
-            reponse: avis.reponse,
+            reponse: avis.reponse.text,
             webView: true
         });
     });
@@ -210,7 +210,7 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
         res.render('../../smtp/views/password_forgotten.ejs', {
             link: `${configuration.app.public_hostname}/admin?action=passwordLost&token=${req.params.token}`,
             consultationLink: `${configuration.app.public_hostname}/mail/${req.params.token}/passwordForgotten`,
-            region: regions.findRegionByCodeRegion(account.codeRegion),
+            codeRegion: account.codeRegion,
             hostname: configuration.app.public_hostname,
             profile: forgottenPasswordToken.profile,
             webView: true

@@ -153,7 +153,7 @@ module.exports = function(db, logger, configuration, regions) {
             let params = {
                 hostname: configuration.app.public_hostname,
                 trackingLink: getTrackingLink(organisme),
-                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/reponseRejetee/${avis._id}`,
+                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/reponseRejetee/${avis.token}`,
                 contact: getRegionEmail(region),
                 organisme: organisme,
                 reponse: avis.reponse.text
