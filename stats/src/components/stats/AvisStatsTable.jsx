@@ -53,12 +53,12 @@ export default class AvisStatsTable extends Component {
                                     <span> Taux</span>
                                 </div>
                             </th>
-                            <th scope="col" className="section">I
+                            <th scope="col" className="section">
                                 <span>Importés</span>
                                 <i className="fas fa-question-circle">
                                     <span className="tooltip">Nombre de stagiaires présents dans le fichier datalake</span></i>
                             </th>
-                            <th scope="col">Co
+                            <th scope="col">
                                 <span>Contactés</span>
                                 <i className="fas fa-question-circle">
                                     <span className="tooltip">Nombre de stagiaires à qui un mail à été envoyé</span></i>
