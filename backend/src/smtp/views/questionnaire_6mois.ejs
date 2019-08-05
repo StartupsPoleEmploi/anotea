@@ -137,7 +137,9 @@
                  alt="" /></td>
             <img class="logo-right"
                  src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" />
-            <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
+            <% if (webView) { %>
+                <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a></p>
+            <% } %>
         </div>
 
         <div class="content">
@@ -147,7 +149,7 @@
                 <strong class="trainingTitle"><%= trainee.training.title %></strong>
             <p>
             <p>
-                En 2 minutes, dîtes aux futurs stagiaires si cette formation vous a aidé à retrouver un emploi
+                En 2 minutes, dites aux futurs stagiaires si cette formation vous a aidé à retrouver un emploi
             <p>
                 <a href="<%= formLink %>" target="_blank" class="avis button">
                     Cliquez ici

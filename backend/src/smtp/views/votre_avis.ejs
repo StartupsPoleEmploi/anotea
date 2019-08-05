@@ -137,8 +137,9 @@
                  alt="" /></td>
             <img class="logo-right"
                  src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt="" />
-            <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
-            </p>
+            <% if (webView) { %>
+                <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a></p>
+            <% } %>
         </div>
 
         <div class="content">
