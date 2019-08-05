@@ -5,18 +5,32 @@ export const getRegions = () => {
     return _get(`/regions`);
 };
 
-export const getOrganisations = (idregion, codeFinanceur) => {
+export const getOrganisations = (idregion, codeFinanceur, departement) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
     }
+    if (departement) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}departement=${departement}`;
+    }
     return _get(`/backoffice/financeur/region/${idregion}/organisations${query}`);
 };
 
-export const getAdvices = (idRegion, codeFinanceur, organisation, place, formation, filter, order, page) => {
+export const getAdvices = (idRegion, codeFinanceur, departement, organisation, place, formation, filter, order, page) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
+    }
+    if (departement) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}departement=${departement}`;
     }
     if (organisation) {
         let prefix = '&';
@@ -56,10 +70,17 @@ export const getAdvices = (idRegion, codeFinanceur, organisation, place, formati
     return _get(`/backoffice/financeur/region/${idRegion}/advices${query}`);
 };
 
-export const getOrganisationPlaces = (idRegion, codeFinanceur, siren) => {
+export const getOrganisationPlaces = (idRegion, codeFinanceur, departement, siren) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
+    }
+    if (departement) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}departement=${departement}`;
     }
     return _get(`/backoffice/financeur/region/${idRegion}/organisation/${siren}/places${query}`);
 };
@@ -76,10 +97,17 @@ export const getOrganisationLieuTrainingSessions = (siren, idTraining, postalCod
     return _get(`/backoffice/financeur/organismes_formateurs/${siren}/training/${idTraining}/sessions?postalCode=${postalCode}`);
 };
 
-export const getInventory = (idRegion, codeFinanceur, organisation, place, formation) => {
+export const getInventory = (idRegion, codeFinanceur, departement, organisation, place, formation) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
+    }
+    if (departement) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}departement=${departement}`;
     }
     if (organisation) {
         let prefix = '&';

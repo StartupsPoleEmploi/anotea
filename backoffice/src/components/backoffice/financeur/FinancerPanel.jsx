@@ -112,12 +112,12 @@ export default class FinancerPanel extends React.Component {
     doGetAdvices = async (order = this.state.order) => {
         const { codeRegion } = this.props;
         const { currentOrganisation, currentEntity, currentFormation } = this.state.training;
-        const { currentFinancer, tab } = this.state;
+        const { currentFinancer, tab, currentDepartement } = this.state;
 
         this.doLoadInventory();
 
         const page = this.state.pagination.current;
-        const result = await getAdvices(codeRegion, currentFinancer._id, currentOrganisation._id, currentEntity._id, currentFormation._id, tab, order, page);
+        const result = await getAdvices(codeRegion, currentFinancer._id, currentDepartement._id, currentOrganisation._id, currentEntity._id, currentFormation._id, tab, order, page);
 
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
@@ -134,7 +134,7 @@ export default class FinancerPanel extends React.Component {
 
     doGetOrganisations = async () => {
         const { props, state } = this;
-        const organisations = await getOrganisations(props.codeRegion, state.currentFinancer._id);
+        const organisations = await getOrganisations(props.codeRegion, state.currentFinancer._id, state.currentDepartement._id);
 
         this.setState(prevState => ({
             training: {
@@ -148,7 +148,8 @@ export default class FinancerPanel extends React.Component {
     doLoadInventory = async () => {
         const { codeRegion } = this.props;
         const { currentOrganisation, currentEntity, currentFormation } = this.state.training;
-        const inventory = await getInventory(codeRegion, this.state.currentFinancer._id, currentOrganisation._id, currentEntity._id, currentFormation._id);
+        const { currentFinancer, currentDepartement } = this.state;
+        const inventory = await getInventory(codeRegion, currentFinancer._id, currentDepartement._id, currentOrganisation._id, currentEntity._id, currentFormation._id);
         
         this.setState(Object.assign(this.state, {
             inventory: inventory
@@ -165,6 +166,7 @@ export default class FinancerPanel extends React.Component {
                     currentOrganisation: {},
                     entities: [],
                     currentEntity: {},
+                    currentFormation: {}
                 },
                 currentFinancer: {
                     _id: options.id,
@@ -182,6 +184,7 @@ export default class FinancerPanel extends React.Component {
                     currentOrganisation: {},
                     entities: [],
                     currentEntity: {},
+                    currentFormation: {}
                 },
                 currentFinancer: {}
             }), () => {
@@ -195,15 +198,35 @@ export default class FinancerPanel extends React.Component {
     handleDepartementsChange = options => {
 
         if (options) {
-            this.setState({
+            this.setState(prevState => ({
                 currentDepartement: {
-                    id: options.id,
+                    _id: options.id,
                     label: options.label
-                }
+                },
+                training: {
+                    ...prevState.training,
+                    organisations: [],
+                    currentOrganisation: {},
+                    entities: [],
+                    currentEntity: {},
+                    currentFormation: {}
+                },
+            }), () => {
+                this.doGetAdvices();
+                this.doGetOrganisations();
             });
         } else {
-            this.setState({
-                currentDepartement: {}
+            this.setState(prevState => ({
+                currentDepartement: {},
+                training: {
+                    ...prevState.training,
+                    currentOrganisation: {},
+                    currentEntity: {},
+                    currentFormation: {}
+                },
+            }), () => {
+                this.doGetAdvices();
+                this.doGetOrganisations();
             });
         }
 
@@ -223,7 +246,8 @@ export default class FinancerPanel extends React.Component {
                     currentOrganisation: {
                         _id: options.id,
                         label: options.label
-                    }
+                    },
+                    currentFormation: {}
                 },
             }), () => {
                 this.doGetAdvices();
@@ -236,6 +260,7 @@ export default class FinancerPanel extends React.Component {
                     currentOrganisation: {},
                     entities: [],
                     currentEntity: {},
+                    currentFormation: {}
                 }
             }), () => {
                 this.doGetAdvices();
@@ -246,7 +271,7 @@ export default class FinancerPanel extends React.Component {
 
     getPlaces = async () => {
         const { props, state } = this;
-        const entities = await getOrganisationPlaces(props.codeRegion, state.currentFinancer._id, state.training.currentOrganisation._id);
+        const entities = await getOrganisationPlaces(props.codeRegion, state.currentFinancer._id, state.currentDepartement._id, state.training.currentOrganisation._id);
 
         this.setState(prevState => ({
             training: {
@@ -281,6 +306,7 @@ export default class FinancerPanel extends React.Component {
                 training: {
                     ...prevState.training,
                     currentEntity: {},
+                    currentFormation: {}
                 }
             }), () => {
                 this.doGetAdvices();

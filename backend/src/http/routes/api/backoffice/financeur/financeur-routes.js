@@ -36,6 +36,10 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
+        if (req.query.departement) {
+            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.departement}.*` } });
+        }
+
         const organisations = await db.collection('comment')
         .aggregate([
             { $match: filter },
@@ -63,6 +67,10 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
 
         if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
+        }
+
+        if (req.query.departement) {
+            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.departement}.*` } });
         }
 
         if (req.query.organisation) {
@@ -149,6 +157,10 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
 
         if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
+        }
+
+        if (req.query.departement) {
+            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.departement}.*` } });
         }
 
         const places = await db.collection('comment').aggregate([
@@ -246,6 +258,10 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
 
         if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
+        }
+
+        if (req.query.departement) {
+            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.departement}.*` } });
         }
 
         if (req.query.organisation) {
