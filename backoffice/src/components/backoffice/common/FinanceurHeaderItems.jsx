@@ -17,6 +17,12 @@ export default function ModerateurHeaderItems() {
                     label="Statistiques"
                     url="/admin/statistiques" />
             </li>
+            <li className="nav-item right">
+                <Link
+                    className="nav-link"
+                    url="/mon-compte"
+                    label="Mon compte" />
+            </li>
         </ul>
     );
 }
