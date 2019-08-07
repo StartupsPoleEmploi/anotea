@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const Boom = require('boom');
 const createMiddlewares = require('./middlewares/middlewares');
 const compression = require('compression');
+const session = require('express-session');
 
 module.exports = components => {
 
@@ -36,9 +37,18 @@ module.exports = components => {
             }
         }
     }));
+    app.use(session({
+        secret: 'keyboard cat',
+        resave: false,
+        saveUninitialized: true,
+        cookie: { maxAge: 60000, secure: process.env.NODE_ENV === 'production' }
+    }));
 
-    //Pubic routes with HTML server-side rendering
+    //Public routes with HTML server-side rendering
     app.use('/', require('./routes/front/html-routes')(httpComponents));
+
+    //PE Connect API callback
+    app.use('/', require('./routes/front/peconnect-routes')(httpComponents));
 
     //API routes
     app.use('/api', middlewares.addRateLimit(sentry));

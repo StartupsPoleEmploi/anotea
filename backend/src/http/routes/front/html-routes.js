@@ -3,8 +3,8 @@ const moment = require('moment');
 const titleize = require('underscore.string/titleize');
 const externalLinks = require('./utils/externalLinks');
 
-module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions }) => {
-
+module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => {
+    
     const router = express.Router(); // eslint-disable-line new-cap
 
     const getRegionEmail = region => {
@@ -29,7 +29,12 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
     };
 
     router.get('/', (req, res) => {
-        res.render('front/homepage', { data: configuration.front });
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.state
+        };
+        res.render('front/homepage', { data: configuration.front, connectionLink: connectionInfos.link });
     });
 
     router.get('/cgu', (req, res) => {

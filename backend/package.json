@@ -48,6 +48,7 @@
     "ejs": "2.7.1",
     "express": "4.17.1",
     "express-rate-limit": "3.3.2",
+    "express-session": "^1.15.6",
     "faker": "4.1.0",
     "fluent-logger": "3.3.1",
     "iconv-lite": "0.4.24",
@@ -69,6 +70,7 @@
     "swagger-ui-express": "4.0.7",
     "underscore.string": "3.3.5",
     "uuid": "3.3.3",
+    "urlsafe-base64": "^1.0.0",
     "xss": "1.0.6",
     "yamljs": "0.3.0"
   },
