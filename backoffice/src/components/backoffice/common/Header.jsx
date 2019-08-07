@@ -4,28 +4,8 @@ import './Header.scss';
 import { NavLink, Route } from 'react-router-dom';
 import logo from './Header.svg';
 import { getStats } from './../moderateur/moderation/moderationService';
-
-const Link = ({ label, url, className }) => {
-    return (
-        <NavLink
-            to={url}
-            isActive={(match, location) => {
-                //Ignore parameters when comparing the current location with the link url
-                let baseUrl = url.indexOf('?') === -1 ? url : url.split('?')[0];
-                return location.pathname.indexOf(baseUrl) !== -1;
-            }}
-            className={className}
-            activeClassName="active">
-            {label}
-        </NavLink>
-    );
-};
-
-Link.propTypes = {
-    label: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    className: PropTypes.string.isRequired,
-};
+import ModerateurHeaderItems from './ModerateurHeaderItems';
+import FinanceurHeaderItems from './FinanceurHeaderItems';
 
 export default class Header extends React.Component {
 
@@ -33,10 +13,13 @@ export default class Header extends React.Component {
 
     static propTypes = {
         onLogout: PropTypes.func.isRequired,
+        profile: PropTypes.string.isRequired
     };
 
     componentDidMount() {
-        this.fetchStats();
+        if (this.props.profile === 'moderation') {
+            this.fetchStats();
+        }
     }
 
     fetchStats = (options = {}) => {
@@ -51,6 +34,7 @@ export default class Header extends React.Component {
     };
 
     render() {
+        const { profile } = this.props;
 
         return (
             <Route render={({ location }) => {
@@ -60,7 +44,7 @@ export default class Header extends React.Component {
                 let isStagiairesTemplates = location.pathname.indexOf('/admin/courriels/templates-stagiaires') !== -1;
 
                 return (
-                    <div className={`Header ${isModeration ? 'moderation' : 'misc'}`}>
+                    <div className={`Header ${profile === 'financeur' || isModeration ? 'blue' : 'misc'}`}>
                         <div className="container">
                             <div className="row">
                                 <div className="col-sm-12">
@@ -68,71 +52,22 @@ export default class Header extends React.Component {
                                         <NavLink to="/admin">
                                             <img src={logo} className="logo" alt="logo" />
                                         </NavLink>
-                                        <ul className="nav">
-                                            <li className="nav-item dropdown">
-                                                <a href="#"
-                                                    className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
-                                                    data-toggle="dropdown"
-                                                    role="button"
-                                                    aria-haspopup="true"
-                                                    aria-expanded="false"
-                                                >
-                                                    Moderation
-                                                    {/* {!this.state.loading &&
-                                                        <span className="badge badge-light pastille"></span>
-                                                    } */}
-                                                </a>
-                                                <div className="dropdown-menu">
-                                                    <Link
-                                                        className="dropdown-item"
-                                                        label="Avis stagiaires"
-                                                        url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
-                                                    {!this.state.loading &&
-                                                        <span className="badge badge-light pastille">{this.state.avis}</span>
-                                                    }
-                                                    <Link
-                                                        className="dropdown-item"
-                                                        label="Réponses des organismes"
-                                                        url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
-                                                    {!this.state.loading &&
-                                                        <span className="badge badge-light pastille">{this.state.reponses}</span>
-                                                    }
-                                                </div>
-                                            </li>
-                                            <li className="nav-item">
-                                                <Link
-                                                    className="nav-link"
-                                                    label="Liste des organismes"
-                                                    url="/admin/moderateur/gestion/organismes?page=0&status=active" />
-                                            </li>
-                                            <li className="nav-item dropdown">
-                                                <a href="#"
-                                                    className={`nav-link dropdown-toggle  ${isStagiairesTemplates || isOrganismesTemplates ? 'active' : ''}`}
-                                                    data-toggle="dropdown"
-                                                    role="button"
-                                                    aria-haspopup="true"
-                                                    aria-expanded="false"
-                                                >
-                                                    Courriels
-                                                </a>
-                                                <div className="dropdown-menu">
-                                                    <Link
-                                                        className="nav-link"
-                                                        url="/admin/courriels/templates-stagiaires"
-                                                        label="Stagiaires" />
-                                                    <Link
-                                                        className="nav-link"
-                                                        url="/admin/courriels/templates-organismes"
-                                                        label="Organismes" />
-                                                </div>
-                                            </li>
-                                            <li className="nav-item">
-                                                <Link
-                                                    className="nav-link"
-                                                    url="/mon-compte"
-                                                    label="Mon compte" />
-                                            </li>
-                                        </ul>
+
+                                        {profile === 'moderateur' &&
+                                            <ModerateurHeaderItems
+                                                isModeration={isModeration}
+                                                isOrganismesTemplates={isOrganismesTemplates}
+                                                isStagiairesTemplates={isStagiairesTemplates}
+                                                avis={this.state.avis}
+                                                reponses={this.state.reponses}
+                                                loading={this.state.loading}
+                                            />
+                                        }
+
+                                        {profile === 'financeur' &&
+                                            <FinanceurHeaderItems />
+                                        }
+                                        
                                         <button
                                             onClick={this.props.onLogout}
                                             className="logout btn btn-outline-light">
@@ -144,8 +79,7 @@ export default class Header extends React.Component {
                         </div>
                     </div>
                 );
-            }} />
-
+            }}/>
         );
     }
 }

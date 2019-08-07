@@ -186,9 +186,42 @@ class App extends Component {
             return (
                 <Router>
                     <div className="anotea">
-                        <Header onLogout={this.handleLogout} />
+                        <Header onLogout={this.handleLogout} profile={this.state.profile} />
                         <ModerateurRoutes codeRegion={this.state.codeRegion} />
                         <MiscRoutes />
+                    </div>
+                </Router>
+            );
+        }
+
+        if (this.state.profile === 'financeur') {
+            return (
+                <Router>
+                    <div className="anotea-deprecated App">
+                        <Header
+                            onLogout={this.handleLogout}
+                            profile={this.state.profile} />
+
+                        <Switch>
+                            <Redirect exact from="/" to="/admin" />
+                        </Switch>
+
+                        <Route
+                            path="/mon-compte"
+                            render={props => (<MonComptePanel {...props} />)} />
+
+                        <Route
+                            path="/admin"
+                            render={() => (
+                                <div className="main">
+
+                                    <FinancerPanel
+                                        profile={this.state.profile}
+                                        id={this.state.id}
+                                        codeRegion={this.state.codeRegion}
+                                        codeFinanceur={this.state.codeFinanceur}
+                                        features={this.state.features} />
+                                </div>)} />
                     </div>
                 </Router>
             );
@@ -225,15 +258,6 @@ class App extends Component {
                                         profile={this.state.profile}
                                         id={this.state.id}
                                         codeRegion={this.state.codeRegion}
-                                        features={this.state.features} />
-                                    }
-
-                                    {this.state.profile === 'financeur' &&
-                                    <FinancerPanel
-                                        profile={this.state.profile}
-                                        id={this.state.id}
-                                        codeRegion={this.state.codeRegion}
-                                        codeFinanceur={this.state.codeFinanceur}
                                         features={this.state.features} />
                                     }
                                 </div>)} />
