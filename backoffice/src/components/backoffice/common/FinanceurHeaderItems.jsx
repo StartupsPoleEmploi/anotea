@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from './Link';
 
-export default function ModerateurHeaderItems() {
+export default function FinanceurHeaderItems() {
     
     return (
         <ul className="nav">

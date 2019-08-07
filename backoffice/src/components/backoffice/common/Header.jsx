@@ -17,7 +17,7 @@ export default class Header extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.profile === 'moderation') {
+        if (this.props.profile === 'moderateur') {
             this.fetchStats();
         }
     }

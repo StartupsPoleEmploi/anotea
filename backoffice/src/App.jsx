@@ -8,7 +8,6 @@ import { removeToken, setToken } from './utils/token';
 import { subscribeToHttpEvent } from './utils/http-client';
 import DeprecatedHeader from './components/backoffice/common/deprecated/DeprecatedHeader';
 import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel.jsx';
-import FinancerPanel from './components/backoffice/financeur/FinancerPanel.jsx';
 import AccountActivation from './components/backoffice/organisation/AccountActivation';
 import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
@@ -18,6 +17,7 @@ import MonComptePanel from './components/backoffice/account/MonComptePanel';
 import GridDisplayer from './components/backoffice/common/library/GridDisplayer';
 import Header from './components/backoffice/common/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
+import FinanceurRoutes from './components/backoffice/financeur/FinanceurRoutes';
 import './utils/moment-fr';
 import './App.scss';
 
@@ -201,27 +201,12 @@ class App extends Component {
                         <Header
                             onLogout={this.handleLogout}
                             profile={this.state.profile} />
-
-                        <Switch>
-                            <Redirect exact from="/" to="/admin" />
-                        </Switch>
-
-                        <Route
-                            path="/mon-compte"
-                            render={props => (<MonComptePanel {...props} />)} />
-
-                        <Route
-                            path="/admin"
-                            render={() => (
-                                <div className="main">
-
-                                    <FinancerPanel
-                                        profile={this.state.profile}
-                                        id={this.state.id}
-                                        codeRegion={this.state.codeRegion}
-                                        codeFinanceur={this.state.codeFinanceur}
-                                        features={this.state.features} />
-                                </div>)} />
+                        <FinanceurRoutes
+                            profile={this.state.profile}
+                            codeRegion={this.state.codeRegion}
+                            id={this.state.id}
+                            codeFinanceur={this.state.codeFinanceur}
+                            features={this.state.features} />
                     </div>
                 </Router>
             );
