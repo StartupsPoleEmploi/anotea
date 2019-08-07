@@ -5,20 +5,14 @@ import PropTypes from 'prop-types';
 
 import AdviceRates from '../common/deprecated/AdviceRates';
 import DeprecatedToolbar from '../common/deprecated/DeprecatedToolbar';
-import TrainingSearchForm from './trainingSearchForm';
-import EntitySearchForm from './EntitySearchForm';
-import OrganisationSearchForm from './OrganisationSearchForm';
-import CodeFinancerSearchForm from './CodeFinancerSearchForm';
+import Filter from './filters/filter';
 import {
     getRegions,
-    getOrganisationAdvices,
     getOrganisationPlaces,
-    getPlacesAdvices,
-    loadOragnisationLieuInventory,
-    loadInventoryForAllAdvicesWhenFinancerFirstConnexion,
+    getInventory,
     getAdvices,
     getOrganisations,
-    loadInventoryASelectedOrganisation
+    getFormations
 } from './service/financeurService';
 import getReponseStatus from '../common/utils/getReponseStatus';
 
@@ -57,8 +51,7 @@ export default class FinancerPanel extends React.Component {
 
         this.state = {
             departements: [],
-            financerId: null,
-            reportedAdvicesCount: 0,
+            currentDepartement: {},
             tab: 'all',
             inventory: {
                 reported: 0,
@@ -67,10 +60,12 @@ export default class FinancerPanel extends React.Component {
             },
             advices: [],
             training: {
-                currentOrganisation: '',
+                currentOrganisation: {},
                 organisations: [],
-                currentEntity: '',
+                currentEntity: {},
                 entities: [],
+                formations: [],
+                currentFormation: {},
             },
             trainingId: null,
             currentSession: null,
@@ -80,9 +75,7 @@ export default class FinancerPanel extends React.Component {
             },
             order: DEFAULT_ORDER,
             financers: [],
-            currentFinancer: {
-                _id: null
-            },
+            currentFinancer: {},
             currentPage: 'advices'
         };
 
@@ -97,7 +90,7 @@ export default class FinancerPanel extends React.Component {
             this.setState({
                 departements,
                 financers: FINANCERS,
-                currentFinancer: ''
+                currentFinancer: {}
             }, () => {
                 this.doGetAdvices();
                 this.doGetOrganisations();
@@ -117,12 +110,14 @@ export default class FinancerPanel extends React.Component {
     }
 
     doGetAdvices = async (order = this.state.order) => {
-        const { props, state } = this;
+        const { codeRegion } = this.props;
+        const { currentOrganisation, currentEntity, currentFormation } = this.state.training;
+        const { currentFinancer, tab, currentDepartement } = this.state;
 
         this.doLoadInventory();
 
         const page = this.state.pagination.current;
-        const result = await getAdvices(props.codeRegion, state.currentFinancer._id, state.tab, order, page);
+        const result = await getAdvices(codeRegion, currentFinancer._id, currentDepartement._id, currentOrganisation._id, currentEntity._id, currentFormation._id, tab, order, page);
 
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
@@ -139,7 +134,7 @@ export default class FinancerPanel extends React.Component {
 
     doGetOrganisations = async () => {
         const { props, state } = this;
-        const organisations = await getOrganisations(props.codeRegion, state.currentFinancer._id);
+        const organisations = await getOrganisations(props.codeRegion, state.currentFinancer._id, state.currentDepartement._id);
 
         this.setState(prevState => ({
             training: {
@@ -151,85 +146,132 @@ export default class FinancerPanel extends React.Component {
     };
 
     doLoadInventory = async () => {
-        if (this.state.training.currentEntity) {
-            const inventory = await loadOragnisationLieuInventory(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id, this.state.trainingId, this.state.training.currentEntity._id);
-            this.setState(Object.assign(this.state, {
-                inventory: inventory
-            }));
-        } else if (!this.state.training.currentOrganisation) {
-            const inventory = await loadInventoryForAllAdvicesWhenFinancerFirstConnexion(this.props.codeRegion, this.state.currentFinancer._id);
-            this.setState(Object.assign(this.state, {
-                inventory: inventory
-            }));
-        } else {
-            const inventory = await loadInventoryASelectedOrganisation(this.props.codeRegion, this.state.currentFinancer._id, this.state.training.currentOrganisation._id);
-            if (!inventory.error) {
-                this.setState({ inventory: inventory });
-            }
-        }
+        const { codeRegion } = this.props;
+        const { currentOrganisation, currentEntity, currentFormation } = this.state.training;
+        const { currentFinancer, currentDepartement } = this.state;
+        const inventory = await getInventory(codeRegion, currentFinancer._id, currentDepartement._id, currentOrganisation._id, currentEntity._id, currentFormation._id);
+        
+        this.setState(Object.assign(this.state, {
+            inventory: inventory
+        }));
     };
 
     handleFinancerChange = (options, evt) => {
-        const { financers } = this.state;
 
-        this.setState(prevState => ({
-            training: {
-                ...prevState.training,
-                organisations: [],
-                currentOrganisation: '',
-                entities: [],
-                currentEntity: '',
-            },
-            currentFinancer: financers.filter(financer => financer._id === options.id)[0]
-        }), () => {
-            this.doGetOrganisations();
-            this.doGetAdvices();
-        });
-
-    };
-
-    unsetFinancer = () => {
-
-        this.setState(prevState => ({
-            training: {
-                ...prevState.training,
-                organisations: [],
-                currentOrganisation: '',
-                entities: [],
-                currentEntity: '',
-            },
-            currentFinancer: ''
-        }), () => {
-            this.doGetOrganisations();
-            this.doGetAdvices();
-        });
-        
-    };
-
-    handleOrganisationChange = async (options, evt) => {
-        const { training } = this.state;
-
-        try {
+        if (options) {
             this.setState(prevState => ({
                 training: {
                     ...prevState.training,
+                    organisations: [],
+                    currentOrganisation: {},
                     entities: [],
-                    currentEntity: '',
-                    currentOrganisation: training.organisations.filter(organisation => organisation._id === options.id)[0]
+                    currentEntity: {},
+                    currentFormation: {}
+                },
+                currentFinancer: {
+                    _id: options.id,
+                    label: options.label
                 },
             }), () => {
-                this.doGetOrganisationAdvices();
+                this.doGetOrganisations();
+                this.doGetAdvices();
+            });
+        } else {
+            this.setState(prevState => ({
+                training: {
+                    ...prevState.training,
+                    organisations: [],
+                    currentOrganisation: {},
+                    entities: [],
+                    currentEntity: {},
+                    currentFormation: {}
+                },
+                currentFinancer: {}
+            }), () => {
+                this.doGetOrganisations();
+                this.doGetAdvices();
+            });
+        }
+
+    };
+
+    handleDepartementsChange = options => {
+
+        if (options) {
+            this.setState(prevState => ({
+                currentDepartement: {
+                    _id: options.id,
+                    label: options.label
+                },
+                training: {
+                    ...prevState.training,
+                    organisations: [],
+                    currentOrganisation: {},
+                    entities: [],
+                    currentEntity: {},
+                    currentFormation: {}
+                },
+            }), () => {
+                this.doGetAdvices();
+                this.doGetOrganisations();
+            });
+        } else {
+            this.setState(prevState => ({
+                currentDepartement: {},
+                training: {
+                    ...prevState.training,
+                    currentOrganisation: {},
+                    currentEntity: {},
+                    currentFormation: {}
+                },
+            }), () => {
+                this.doGetAdvices();
+                this.doGetOrganisations();
+            });
+        }
+
+    }
+
+    handleOrganisationChange = async (options, evt) => {
+
+        if (options) {
+            this.setState(prevState => ({
+                pagination: {
+                    current: null
+                },
+                training: {
+                    ...prevState.training,
+                    entities: [],
+                    currentEntity: {},
+                    currentOrganisation: {
+                        _id: options.id,
+                        label: options.label
+                    },
+                    currentFormation: {}
+                },
+            }), () => {
+                this.doGetAdvices();
                 this.getPlaces();
             });
-        } catch (error) {
-            //handle eroor
+        } else {
+            this.setState(prevState => ({
+                training: {
+                    ...prevState.training,
+                    currentOrganisation: {},
+                    entities: [],
+                    currentEntity: {},
+                    currentFormation: {}
+                }
+            }), () => {
+                this.doGetAdvices();
+            });
         }
 
     };
 
     getPlaces = async () => {
         const { props, state } = this;
-        const entities = await getOrganisationPlaces(props.codeRegion, state.currentFinancer._id, state.training.currentOrganisation._id);
+        const entities = await getOrganisationPlaces(props.codeRegion, state.currentFinancer._id, state.currentDepartement._id, state.training.currentOrganisation._id);
 
         this.setState(prevState => ({
             training: {
@@ -240,86 +282,53 @@ export default class FinancerPanel extends React.Component {
         
     }
 
-    unsetOrganisation = () => {
+    handleEntityChange = async (options, evt) => {
+
+        if (options) {
+            this.setState(prevState => ({
+                pagination: {
+                    current: null
+                },
+                training: {
+                    ...prevState.training,
+                    currentEntity: {
+                        _id: options.id,
+                        label: options.label
+                    },
+                    currentFormation: {}
+                }
+            }), () => {
+                this.doGetAdvices();
+                this.getFormations();
+            });
+        } else {
+            this.setState(prevState => ({
+                training: {
+                    ...prevState.training,
+                    currentEntity: {},
+                    currentFormation: {}
+                }
+            }), () => {
+                this.doGetAdvices();
+            });
+        }
+
+    };
+
+    getFormations = async () => {
+        const { currentFinancer, training } = this.state;
+        const { codeRegion } = this.props;
+        const formations = await getFormations(codeRegion, currentFinancer._id, training.currentOrganisation._id, training.currentEntity._id);
         
-        this.setState(prevState => ({
-            training: {
-                ...prevState.training,
-                currentOrganisation: '',
-                entities: [],
-                currentEntity: '',
-            }
-        }), () => {
-            this.doGetAdvices();
-        });
-
-    };
-
-    handleEntityChange = (id, evt) => {
-        const { training } = this.state;
 
         this.setState(prevState => ({
             training: {
                 ...prevState.training,
-                currentEntity: training.entities.filter(entity => entity._id === id)[0]
+                formations,
             }
-        }), () => {
-            this.doLoadAdvices();
-        });
-
-    };
-
-    unsetEntity = () => {
-
-        this.setState(prevState => ({
-            training: {
-                ...prevState.training,
-                currentEntity: '',
-            }
-        }), () => {
-            this.doGetOrganisationAdvices();
-        });
-
-    };
-
-    doGetOrganisationAdvices = async (order = this.state.order) => {
-        this.doLoadInventory();
-
-        const { state, props } = this;
-        const page = this.state.pagination.current;
-        const avis = await getOrganisationAdvices(props.codeRegion, state.currentFinancer._id, state.training.currentOrganisation._id, state.tab, order, page);
-
-        this.setState({
-            pagination: { current: avis.page, count: avis.pageCount },
-            advices: avis.advices.map(advice => {
-
-                if (advice.comment) {
-                    advice.comment.text = advice.editedComment ? advice.editedComment.text : advice.comment.text;
-                }
-                return advice;
-            })
-        });
-
-    };
-
-    doLoadAdvices = async (order = this.state.order) => {
-        this.doLoadInventory();
-
-        const { state, props } = this;
-        const page = this.state.pagination.current;
-        const result = await getPlacesAdvices(props.codeRegion, state.currentFinancer._id, state.training.currentOrganisation._id, state.trainingId, state.training.currentEntity._id, state.tab, order, page);
-
-        this.setState({
-            pagination: { current: result.page, count: result.pageCount },
-            advices: result.advices.map(advice => {
-                if (advice.comment) {
-                    advice.comment.text = advice.editedComment ? advice.editedComment.text : advice.comment.text;
-                }
-                return advice;
-            })
-        });
-
-    };
+        }));
+        
+    }
 
     switchTab = tab => {
 
@@ -337,51 +346,53 @@ export default class FinancerPanel extends React.Component {
         this.setState({
             order: order
         }, () => {
-            if (this.state.training.currentEntity) {
-                this.doLoadAdvices(order);
-            } else if (!this.state.training.currentOrganisation) {
-                this.doGetAdvices(order);
-            } else {
-                this.doGetOrganisationAdvices(order);
-            }
+            this.doGetAdvices(order);
         });
 
     };
 
-    changeTrainingSession = async (trainingId, session) => {
+    handleFormationChange = async (options, evt) => {
 
-        this.setState({
-            trainingId: trainingId,
-            currentSession: session
-        }, () => {
-            this.doLoadAdvices(this.state.order);
-        });
-
-    };
-
-    handlePageClick = data => {
-        if (this.state.training.currentEntity) {
-            this.setState({ pagination: { current: data.selected + 1 } }, () => {
-                this.doLoadAdvices();
-            });
-        } else if (!this.state.training.currentOrganisation) {
-            this.setState({ pagination: { current: data.selected + 1 } }, () => {
+        if (options) {
+            this.setState(prevState => ({
+                pagination: {
+                    current: null
+                },
+                training: {
+                    ...prevState.training,
+                    currentFormation: {
+                        _id: options.id,
+                        label: options.label
+                    }
+                }
+            }), () => {
                 this.doGetAdvices();
             });
-        } else if (!this.state.training.currentEntity && this.state.training.currentOrganisation) {
-            this.setState({ pagination: { current: data.selected + 1 } }, () => {
-                this.doGetOrganisationAdvices();
+        } else {
+            this.setState(prevState => ({
+                training: {
+                    ...prevState.training,
+                    currentFormation: {},
+                }
+            }), () => {
+                this.doGetAdvices();
             });
         }
 
     };
 
-    getActiveStatus = current => this.state.tab === current ? 'active' : '';
-
-    handleChangePage = page => {
-        this.setState({ currentPage: page });
+    handlePageClick = data => {
+        this.setState({
+            pagination: {
+                current: data.selected + 1
+            }
+        }, () => {
+            this.doGetAdvices();
+        });
     };
 
+    getActiveStatus = current => this.state.tab === current ? 'active' : '';
+    
     getExportFilters = () => {
         let str = `?status=${this.state.tab}`;
         if (this.state.currentFinancer) {
@@ -403,38 +414,74 @@ export default class FinancerPanel extends React.Component {
     };
 
     render() {
-        const { currentOrganisation, currentEntity, organisations, entities } = this.state.training;
-        const { currentFinancer, financers, inventory } = this.state;
+        const { currentOrganisation, currentEntity, organisations, entities, formations, currentFormation } = this.state.training;
+        const { currentFinancer, financers, inventory, departements, currentDepartement } = this.state;
+        const organisationsOptions = organisations.map(organisation => ({
+            label: organisation.name + ` (` + organisation.label + `) ` + organisation.count + `Avis`,
+            id: organisation._id,
+        }));
+        const departementsOptions = departements.map(dep => ({
+            label: dep,
+            id: dep,
+        }));
+        const financersOptions = financers.map(financer => ({
+            label: financer.title,
+            id: financer._id,
+        }));
+        const placesOptions = entities.map(place => ({
+            label: place.city,
+            id: place._id,
+        }));
+        const formationsOptions = formations.map(formation => ({
+            label: formation.title + ` (` + formation.count + `avis)`,
+            id: formation._id,
+        }));
 
         return (
             <div className="organisationPanel mainPanel">
 
                 {this.state.currentPage === 'advices' &&
                 <div>
+
                     {this.props.codeFinanceur === POLE_EMPLOI &&
-                    <CodeFinancerSearchForm currentFinancer={currentFinancer}
-                        financers={financers}
-                        handleFinancerChange={this.handleFinancerChange}
-                        unsetFinancer={this.unsetFinancer} />
+                    <Filter
+                        options={financersOptions}
+                        onChange={this.handleFinancerChange}
+                        placeholderText="Veuillez choisir un financeur..."
+                        selectValue={currentFinancer}
+                    />
                     }
 
-                    <OrganisationSearchForm currentOrganisation={currentOrganisation}
-                        organisations={organisations}
-                        handleOrganisationChange={this.handleOrganisationChange}
-                        unsetOrganisation={this.unsetOrganisation} />
+                    <Filter
+                        options={departementsOptions}
+                        onChange={this.handleDepartementsChange}
+                        placeholderText="Veuillez choisir un département..."
+                        selectValue={currentDepartement}
+                    />
 
-                    {currentOrganisation &&
-                    <EntitySearchForm currentEntity={currentEntity}
-                        entities={entities}
-                        handleEntityChange={this.handleEntityChange}
-                        unsetEntity={this.unsetEntity} />
+                    <Filter
+                        options={organisationsOptions}
+                        onChange={this.handleOrganisationChange}
+                        placeholderText="Veuillez choisir un organisme de formation..."
+                        selectValue={currentOrganisation}
+                    />
+
+                    {currentOrganisation._id &&
+                    <Filter
+                        options={placesOptions}
+                        onChange={this.handleEntityChange}
+                        placeholderText="Veuillez choisir un lieu..."
+                        selectValue={currentEntity}
+                    />
                     }
 
-                    {currentEntity &&
-                    <TrainingSearchForm id={currentOrganisation._id}
-                        currentEntity={currentEntity}
-                        codeFinanceur={currentFinancer._id} codeRegion={this.props.codeRegion}
-                        changeTrainingSession={this.changeTrainingSession} />
+                    {currentEntity._id &&
+                    <Filter
+                        options={formationsOptions}
+                        placeholderText="Veuillez choisir une formation..."
+                        onChange={this.handleFormationChange}
+                        selectValue={currentFormation}
+                    />
                     }
 
                     <h2>Liste des notes et avis</h2>
@@ -442,23 +489,23 @@ export default class FinancerPanel extends React.Component {
                     <ul className="nav nav-tabs">
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('reported')}`}
-                                    onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
-                                className="badge reported">{inventory.reported}</span></button>
+                                onClick={this.switchTab.bind(this, 'reported')}>Avis signalés <span
+                                    className="badge reported">{inventory.reported}</span></button>
                         </li>
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('commented')}`}
-                                    onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
-                                className="badge published">{inventory.commented}</span></button>
+                                onClick={this.switchTab.bind(this, 'commented')}>Avis avec commentaire <span
+                                    className="badge published">{inventory.commented}</span></button>
                         </li>
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('rejected')}`}
-                                    onClick={this.switchTab.bind(this, 'rejected')}>Avis rejetés <span
-                                className="badge rejected">{inventory.rejected}</span></button>
+                                onClick={this.switchTab.bind(this, 'rejected')}>Avis rejetés <span
+                                    className="badge rejected">{inventory.rejected}</span></button>
                         </li>
                         <li className="nav-item">
                             <button className={`nav-link btn btn-link ${this.getActiveStatus('all')}`}
-                                    onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
-                                className="badge badge-secondary">{inventory.all}</span></button>
+                                onClick={this.switchTab.bind(this, 'all')}>Toutes les notes et avis <span
+                                    className="badge badge-secondary">{inventory.all}</span></button>
                         </li>
                     </ul>
 
@@ -525,15 +572,15 @@ export default class FinancerPanel extends React.Component {
                                             <strong>Session</strong> {advice.training.place.city}
                                             <div>
                                                 du <strong><FormattedDate
-                                                value={new Date(advice.training.startDate)}
-                                                day="numeric"
-                                                month="numeric"
-                                                year="numeric" /></strong>
+                                                    value={new Date(advice.training.startDate)}
+                                                    day="numeric"
+                                                    month="numeric"
+                                                    year="numeric" /></strong>
                                                 &nbsp;au <strong><FormattedDate
-                                                value={new Date(advice.training.scheduledEndDate)}
-                                                day="numeric"
-                                                month="numeric"
-                                                year="numeric" /></strong>
+                                                    value={new Date(advice.training.scheduledEndDate)}
+                                                    day="numeric"
+                                                    month="numeric"
+                                                    year="numeric" /></strong>
                                             </div>
                                         </div>
                                     </div>
