@@ -23,30 +23,6 @@
             margin: auto;
         }
 
-        .header {
-            background-color: white;
-            border-radius: 0px 0px 5px 5px;
-            margin-bottom: 16px;
-            padding: 10px;
-            height: 48px;
-        }
-
-        .header p {
-            position: absolute;
-            top: 10px;
-            text-align: center;
-            width: 80%;
-        }
-        
-        .header .logo-right {
-            float: right;
-            margin: 10px;
-        }
-
-        .header .logo-left {
-            margin: 10px;
-        }
-
         .footer {
             color: #24303A;
         }
@@ -120,17 +96,7 @@
 </head>
 
 <body>
-
-
-    <div class="header">
-        <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Horizontal_baseline2.png" alt="" />
-        </td>
-        <img class="logo-right"
-            src="<%= hostname %>/static/images/regions/logo-email/logo_<%= organisme.codeRegion %>.png" alt="" />
-        <% if (!webView) { %>
-            <p>Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a></p>
-        <% } %>
-    </div>
+    <%- include('common/header', { hostname, codeRegion: trainee.codeRegion, webView, consultationLink }); %>
 
     <div class="content">
         <p>Bonjour,</p>
@@ -154,7 +120,7 @@
     </div>
 
     <div class="footer">
-        <%- include('./legal/stagiaires/mentions.ejs'); %>
+        <%- include('common/legal/stagiaires/mentions.ejs'); %>
     </div>
 
     <img src="<%= trackingLink %>" alt="Lien de suivi" />
