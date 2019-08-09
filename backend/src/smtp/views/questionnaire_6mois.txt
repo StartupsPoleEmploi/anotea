@@ -1,0 +1,13 @@
+6 mois après votre formation où en êtes vous ?
+
+Vous avez suivi une formation de "<%= trainee.training.title %>".
+
+En 2 minutes, dîtes aux futurs stagiaires si cette formation vous a aidé à retrouver un emploi
+
+Cliquez ici
+<%= formLink %>
+
+<%- include('common/legal/stagiaires/mentions.txt'); %>
+
+Si vous ne souhaitez plus participer à l'enquête vous pouvez vous désinscrire :
+<%= unsubscribeLink %>

@@ -111,7 +111,7 @@ module.exports = async (db, logger, file) => {
                 stats.invalid++;
                 logger.error(e);
             });
-        }, { parallel: 25 }),
+        }, { parallel: 100 }),
     ]);
 
     return stats.invalid === 0 ? Promise.resolve(stats) : Promise.reject(stats);

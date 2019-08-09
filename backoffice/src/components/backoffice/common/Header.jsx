@@ -105,7 +105,7 @@ export default class Header extends React.Component {
                                                     label="Liste des organismes"
                                                     url="/admin/moderateur/gestion/organismes?page=0&status=active" />
                                             </li>
-                                            {/* <li className="nav-item dropdown">
+                                            <li className="nav-item dropdown">
                                                 <a href="#"
                                                     className={`nav-link dropdown-toggle  ${isStagiairesTemplates || isOrganismesTemplates ? 'active' : ''}`}
                                                     data-toggle="dropdown"
@@ -125,7 +125,7 @@ export default class Header extends React.Component {
                                                         url="/admin/courriels/templates-organismes"
                                                         label="Organismes" />
                                                 </div>
-                                            </li> */}
+                                            </li>
                                             <li className="nav-item">
                                                 <Link
                                                     className="nav-link"

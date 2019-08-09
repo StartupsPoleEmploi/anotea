@@ -512,7 +512,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
         }
 
         let stream = await db.collection('comment').find(query, { token: 0 }).stream();
-        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;réponse OF;statut;campagne;date;accord;id formation; titre formation;date début;date de fin prévue;id organisme; siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;référencement;id session aude formation;numéro d\'action;numéro de session;code financeur\n';
+        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;réponse OF;statut;id formation; titre formation;date début;date de fin prévue;siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;code financeur\n';
 
         if (req.user.codeFinanceur === POLE_EMPLOI || req.query.status === 'rejected') {
             let array = lines.split(';');
@@ -565,15 +565,11 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') +
                 qualification + ';' +
                 (comment.reponse !== undefined ? s(comment.reponse.text).replaceAll(';', '').replaceAll('"', '').replaceAll('\n', '').s + '"' : '') + ';' +
-                (comment.reponse !== undefined ? getReponseStatus(comment.reponse) : '') + ';' +
-                comment.campaign + ';' +
-                comment.date + ';' +
-                comment.accord + ';' +
+                (comment.reponse !== undefined ? getReponseStatus(comment.reponse.status) : '') + ';' +
                 comment.training.idFormation + ';' +
                 comment.training.title + ';' +
                 moment(comment.training.startDate).format('DD/MM/YYYY') + ';' +
                 moment(comment.training.scheduledEndDate).format('DD/MM/YYYY') + ';' +
-                comment.training.organisation.id + ';' +
                 '"' + comment.training.organisation.siret + '";' +
                 comment.training.organisation.label + ';' +
                 comment.training.organisation.name + ';' +
@@ -584,10 +580,6 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
                 comment.training.idSession + ';' +
                 comment.training.formacode + ';' +
                 comment.training.aesRecu + ';' +
-                comment.training.referencement + ';' +
-                comment.training.idSessionAudeFormation + ';' +
-                (comment.infoCarif !== undefined ? comment.infoCarif.numeroAction : '') + ';' +
-                (comment.infoCarif !== undefined ? comment.infoCarif.numeroSession : '') + ';' +
                 comment.training.codeFinanceur + '\n';
         }))
         .pipe(encodeStream('UTF-16BE'))

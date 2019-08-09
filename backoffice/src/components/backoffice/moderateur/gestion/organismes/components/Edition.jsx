@@ -25,7 +25,7 @@ export default class Edition extends React.Component {
         this.props.onClose();
         this.props.onChange(updated, {
             message: {
-                text: 'L\'adresse email a été mise à jour',
+                text: 'L\'adresse mail a été mise à jour',
                 position: 'bottom',
             }
         });

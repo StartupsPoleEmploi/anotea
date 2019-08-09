@@ -1,32 +1,51 @@
 <html>
-    <head>                <tr>
-        <td colspan="3" valign="middle" align="center"
-            style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;">
-            Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
-        </td>
-    </tr>
+    <head>
         <title>Pôle Emploi vous demande votre avis sur votre formation</title>
         <meta name="viewport" content="width=device-width">
         <style>
             body {
-                font-size: 1em;
+                padding: 0px;
+                margin: 0px;
+                background-color: #f4f3f5;
+                font-family: lato, sans-serif;
             }
 
-            h1 {
-                font-size: 1.5em;
+            .content, .header {
+                background-color: white;
+            }
+
+            .content, .header, .footer {
+                width: 80%;
+                margin: auto;
+            }
+
+            .footer {
+                color: #24303A;
+            }
+
+            .footer p {
                 text-align: center;
             }
 
-            h2 {
-                background-color: #F4F4F5;
-                font-size: 1.1em;
-                line-height: 2.5em;
-                padding: 0.8em;
-                width: 90%;
-                height: 46px;
-                display: block;
-                border-radius: 9px;
-                margin: auto;
+            a {
+                color: black;
+            }
+
+            a:hover {
+                text-decoration: none;
+                color: black;
+            }
+
+            .content {
+                border-radius: 5px;
+                padding: 10px;
+            }
+
+            h1 {
+                text-align: center;
+                font-weight: 900;
+                font-size: 1.2em;
+                line-height: 29px;
             }
 
             h3 {
@@ -38,38 +57,29 @@
                 width: 33%;
             }
 
-            .avis-button {
-                text-decoration: none;
-                color: #f18030;
-                background-color: #fdf1e7;
-                line-height: 2em;
-                border-radius: 9px;
-                padding: 0.6em;
-                display: block;
-                font-size: 1.5em;
-                width: 90%;
-                height: 40px;
-                text-transform: uppercase;
+            .button {
+                font-size: 18px;
                 font-weight: bold;
+                text-transform: uppercase;
+                border-radius: 5px;
+                padding: 20px 27px;
+                text-decoration: none;
+                display: block;
+                width: fit-content;
                 margin: auto;
             }
 
-            p {
+            .button.avis {
+                background-color: #fdf1e7;
+                color: #f18030;
+            }
+
+            .content h2, .content h3, .content p {
                 text-align: center;
             }
-            
-            .intro p {
-                width: 80%;
-                margin: auto;
-            }
 
-            .intro p, .pourquoi p {
-                color: #24303A;
-                opacity: 0.6;
-            }
-
-            .intro .trainingTitle {
-                color: black;
+            .content p {
+                color: rgba(36, 48, 58, 0.7);
             }
 
             hr {
@@ -98,76 +108,59 @@
         </style>
     </head>
     <body style="background-color:#ebebeb;">
-        <center>
-            <table width="760px" cellspacing="0" cellpadding="0" border="0"
-                   style="font-family:Arial; background-color:white; font-size:1em;">
-                <tr>
-                    <td colspan="3" valign="middle" align="center"
-                        style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;">
-                        Si vous ne parvenez pas à lire ce mail, <a href="<%= consultationLink %>" target="_blank">cliquez-ici</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="1" align="left" valign="middle">
-                        <img src="<%= hostname %>/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
-                    <td colspan="2" align="right" valign="middle">
-                        <img src="<%= hostname %>/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt=""
-                             style="vertical-align: middle;" />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="padding:0em 2em" class="intro">
-                        <h1>Donnez-nous votre avis en 1 minute.</h1>
-                        <p>Vous avez suivi la formation de <strong class="trainingTitle"><%= trainee.training.title %></strong>
-                            du <%= moment(trainee.training.startDate).format('DD/MM/YYYY') %>
-                            au <%= moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %>
-                            à <%= trainee.training.organisation.label %>.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="text-align:center;padding:2em;padding-top:30px;">
-                        <a href="<%= formLink %>" target="_blank" class="avis-button">
-                            évaluer ma formation
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="text-align:center;padding:2em;padding-top:0px;" class="pourquoi">
-                        <h2>Pourquoi donner votre avis ?</h2>
+        <%- include('common/header', { hostname, codeRegion: trainee.codeRegion, webView, consultationLink }); %>
 
-                        <h3>Aider les prochains à faire le bon choix</h3>
+        <div class="content">
+            <h1>Donnez-nous votre avis en 1 minute.</h1>
+            <p>Vous avez suivi la formation de <strong class="trainingTitle"><%= trainee.training.title %></strong>
+                du <%= moment(trainee.training.startDate).format('DD/MM/YYYY') %>
+                au <%= moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %>
+                à <%= trainee.training.organisation.label %>.</p>
+            <p>
+                <a href="<%= formLink %>" target="_blank" class="avis button">
+                    évaluer ma formation
+                </a>
+            </p>
+            <h2>Pourquoi donner votre avis ?</h2>
 
-                        <p>Votre avis sera consulté par des centaines de personnes en recherche de formation.</p>
+            <h3>Aider les prochains à faire le bon choix</h3>
 
-                        <hr />
+            <p>Votre avis sera consulté par des centaines de personnes en recherche de formation.</p>
 
-                        <h3>100% anonyme</h3>
+            <hr />
 
-                        <p>Cet avis est totalement anonyme.</p>
+            <h3>100% anonyme</h3>
 
-                        <hr />
+            <p>Cet avis est totalement anonyme.</p>
 
-                        <h3>Participer à l'amélioration des formations</h3>
+            <hr />
 
-                        <p>Donnez des retours directs aux centres de formation ainsi qu'à Pôle Emploi.</p>
-                    </td>
-                </tr>
-            </table>
-            <table width="760px" cellspacing="0" cellpadding="0" border="0"
-                   style="font-family:Arial; background-color:white; font-size:1em;">
-                <tr>
-                    <td colspan="3" align="center"
-                        style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
-                        <%- include('./legal/mentions.ejs'); %>
+            <h3>Participer à l'amélioration des formations</h3>
 
-                        <img id="lbf-logo" src="<%= hostname %>/static/images/lbf.jpg" />
+            <p>Donnez des retours directs aux centres de formation ainsi qu'à Pôle Emploi.</p>
+        </div>
 
-                        <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
-                                pouvez vous désinscrire</a>.</p>
-                    </td>
-                </tr>
-            </table>
-        </center>
-        <img src="<%= trackingLink %>" />
+        <div class="footer">
+            <%- include('common/legal/stagiaires/mentions.ejs'); %>
+
+            <img id="lbf-logo" src="<%= hostname %>/static/images/lbf.jpg" />
+
+            <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
+                    pouvez vous désinscrire</a>.</p>
+            
+            <img src="<%= trackingLink %>" />
+        </div>
+
+        <% if (webView) { %>
+            <%- include('../../http/views/analyticsTrackers'); %>
+            <script>
+                ga('send', {
+                    hitType: 'event',
+                    eventCategory: 'mail',
+                    eventAction: 'webview',
+                    eventLabel: 'Email en version Web'
+                });
+            </script>
+        <% } %>
     </body>
 </html>

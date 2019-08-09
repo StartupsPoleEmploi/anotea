@@ -1,10 +1,15 @@
 <html>
     <head>
-        <title>Votre avis nous intéresse</title>
+        <title>Vous avez été désinscrit avec succès</title>
         <meta name="viewport" content="width=device-width">
         <style>
             body {
                 font-size: 1em;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                text-align: center;
             }
 
             body td {
@@ -12,38 +17,20 @@
                 width: 33%;
             }
 
-            .star {
-                width: 60px;
-                margin: 5px;
+            p {
+                text-align: center;
+                color: #24303A;
+                opacity: 0.6;
+            }
+            
+            .content p {
+                padding: 0em 0em 2em 0em;
             }
 
-            .avis-button {
-                text-decoration: none;
-                background-color: #FDB429;
-                line-height: 2em;
-                border-radius: 9px;
-                padding: 0.6em;
-                color: white;
-                display: block;
+            #lbf-logo {
                 margin: auto;
-                font-size: 30px;
-                width: 90%;
-            }
-
-            .banner {
-                height: 193px;
-            }
-
-            .icons-mobile {
-                display: none;
-            }
-
-            .icons td {
-                padding: 0px 0px 5px 20px;
-            }
-
-            .labels td {
-                padding: 0px 0px 20px 20px;
+                display: block;
+                width: 200px;
             }
 
             @media only screen and (max-width: 596px) {
@@ -56,17 +43,6 @@
                     padding: .5em;
                     width: 33%;
                 }
-
-                .labels, .icons {
-                    display: none;
-                }
-
-                .icons-mobile {
-                    display: inherit;
-                    background: white;
-                    width: 760px;
-                    padding: 20px 0px 50px 0px;
-                }
             }
         </style>
     </head>
@@ -76,17 +52,17 @@
                    style="font-family:Arial; background-color:white; font-size:1em;">
                 <tr>
                     <td colspan="1" align="left" valign="middle"><img
-                                src="/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
+                                src="/static/images/email/logo_Anotea_Horizontal_baseline2.png" alt="" /></td>
                     <td colspan="2" align="right" valign="middle">
-                        Propulsé par &nbsp;
                         <img src="/static/images/regions/logo-email/logo_<%= trainee.codeRegion %>.png" alt=""
-                             style="vertical-align: middle;" />
+                             style="vertical-align: middle;height: 80px;" />
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="padding:0em 2em; padding: 40px">
-                        Vous avez été désinscrit avec succès. Vous ne recevrez plus de courriers électroniques de notre
-                        part.
+                    <td colspan="3" style="padding:0em 2em" class="content">
+                        <h1>Vous avez été désinscrit avec succès.</h1>
+                        
+                        <p>Vous ne recevrez plus de courriers électroniques de notre part.</p>
                     </td>
                 </tr>
             </table>
@@ -95,21 +71,9 @@
                 <tr>
                     <td colspan="3" align="center"
                         style="color:#555; font-size:.7em; padding:.5em; background-color:#ebebeb;text-align: justify">
-                        <p>Pôle emploi traite vos données à caractère personnel (données professionnelles, données de
-                            contact) pour les besoins de la réalisation d’une enquête de satisfaction. Cette enquête est
-                            facultative. Pôle emploi a obtenu vos données soit directement si vous êtes demandeurs
-                            d’emploi, soit par le biais de votre Conseil Régional si vous y avez consenti.</p>
-                        <p>Vos données seront conservées pendant la durée de l’enquête, pour les stagiaires n’ayant pas
-                            consenti à être contacté, ou jusqu’à la révocation du consentement et au maximum 3 ans pour
-                            les stagiaires ayant consentis à être contactés.</p>
-                        <p>Conformément aux articles 12 à 23 du règlement général (UE) sur la protection des données
-                            n°2016/679 du 27 avril 2016 et à la loi Informatique et libertés n°78-17 du 6 janvier 1978
-                            modifiée, vous bénéficiez notamment d’un droit d’accès, de rectification, d’effacement et le
-                            droit de porter une réclamation devant la Commission nationale de l’informatique et des
-                            libertés pour les données vous concernant. Pour exercer vos droits, vous pouvez vous
-                            adresser à votre agence ou au délégué à la protection des données de Pôle emploi (1 avenue
-                            du Docteur Gley, 75987 Paris cedex 20 ; <a href="mailto:courriers-cnil@pole-emploi.fr">courriers-cnil@pole-emploi.fr</a>).
-                        </p>
+                        <%- include('../../../../smtp/views/common/legal/stagiaires/mentions.ejs'); %>
+
+                        <img id="lbf-logo" src="/static/images/lbf.jpg" />
                     </td>
                 </tr>
             </table>

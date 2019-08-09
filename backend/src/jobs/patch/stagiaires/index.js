@@ -3,7 +3,7 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const patchCertifinfos = require('./tasks/patchCertifInfos');
+const patchCertifinfos = require('./tasks/refreshCertifInfos');
 const refreshDataFromDatalake = require('./tasks/refreshDataFromDatalake');
 
 cli
@@ -11,11 +11,7 @@ cli
 .option('--datalake [datalake]', 'CSV file from datalake used to refresh data')
 .parse(process.argv);
 
-execute(async ({ logger, db, exit }) => {
-
-    if (!cli.certifInfos) {
-        return exit('certifInfos file is required');
-    }
+execute(async ({ logger, db }) => {
 
     let stats = {};
 
@@ -24,9 +20,11 @@ execute(async ({ logger, db, exit }) => {
         stats.datalake = await refreshDataFromDatalake(db, logger, cli.datalake);
     }
 
-    logger.info(`Patching certifInfos v2...`);
-    stats.certifInfos = await patchCertifinfos(db, logger, cli.certifInfos);
+    if (cli.certifInfos) {
+        logger.info(`Refreshing certifInfos...`);
+        stats.certifInfos = await patchCertifinfos(db, logger, cli.certifInfos);
+    }
 
     return stats;
 
-}, { slack: cli.slack });
+});

@@ -1,8 +1,12 @@
+Votre commentaire a été rejeté
+
 Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
 
-Nous n’avons pas pu prendre en compte votre avis car il comporte des propos à caractère injurieux ou diffamatoire, seules les notes seront publiées sur une formation similaire.
+Il semblerait que votre avis comporte des propos à caractère injurieux ou diffamatoire et ne respecte donc pas notre charte. Seules les notes seront publiées sur une formation similaire.
+
+Contacter Anotéa : <%= email %>
 
 Nous vous remercions de votre compréhension,
 L’Equipe Anotéa
 
-<%- include('./legal/mentions.txt'); %>
+<%- include('common/legal/stagiaires/mentions.txt'); %>

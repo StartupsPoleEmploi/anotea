@@ -16,24 +16,19 @@
 
         .content, .header {
             background-color: white;
+        }
+
+        .content, .header, .footer {
             width: 80%;
             margin: auto;
         }
 
-        .header {
-            background-color: white;
-            border-radius: 0px 0px 5px 5px;
-            margin-bottom: 16px;
-            padding: 10px;
+        .footer {
+            color: #24303A;
         }
 
-        .header .logo-right {
-            float: right;
-            margin: 25px;
-        }
-
-        .header .logo-left {
-            margin-left: 15px;
+        .footer p {
+            text-align: center;
         }
 
         .content {
@@ -48,33 +43,14 @@
 
         h1 {
             text-align: center;
-        }
-
-        h1 {
             font-weight: 900;
             font-size: 1.2em;
             line-height: 29px;
         }
 
         p, ul {
-            color: #91979C;
+            color: rgba(35, 47, 56, 0.7);
             font-size: 0.7em;
-        }
-        
-        .banner {
-            height: 193px;
-        }
-
-        .icons-mobile {
-            display: none;
-        }
-
-        .icons td {
-            padding: 0px 0px 5px 20px;
-        }
-
-        .labels td {
-            padding: 0px 0px 20px 20px;
         }
 
         .reponse {
@@ -114,30 +90,15 @@
                 padding: .5em;
                 width: 33%;
             }
-
-            .labels,
-            .icons {
-                display: none;
-            }
-
-            .icons-mobile {
-                display: inherit;
-                background: white;
-                width: 760px;
-                padding: 20px 0px 50px 0px;
-            }
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-            <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Vertical_baseline2.png" alt="" /></td>
-            <img class="logo-right" src="<%= hostname %>/static/images/regions/logo-email/logo_<%= organisme.codeRegion %>.png" alt="" />
-    </div>
+    <%- include('common/header', { hostname, codeRegion: organisme.codeRegion, webView, consultationLink }); %>
 
     <div class="content">
-        <h1>Votre réponse a été rejetée</h1>
+        <h1>Votre réponse n'a pas été prise en compte</h1>
         <p>Bonjour,</p>
         <p>Nous avons pris connaissance de la réponse que vous avez formulée dans votre Espace Anotéa</p>
 
@@ -172,7 +133,23 @@
         </p>
     </div>
 
+    <div class="footer">
+        <%- include('common/legal/organismes/mentions.ejs'); %>
+    </div>
+
     <img src="<%= trackingLink %>" alt="Lien de suivi" />
+
+    <% if (webView) { %>
+        <%- include('../../http/views/analyticsTrackers'); %>
+        <script>
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'mail',
+                eventAction: 'webview',
+                eventLabel: 'Email en version Web'
+            });
+        </script>
+    <% } %>
 </body>
 
 </html>

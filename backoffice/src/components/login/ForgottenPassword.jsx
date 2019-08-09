@@ -103,7 +103,7 @@ export default class ForgottenPassword extends React.Component {
                                 onKeyPress={this.handleKeyPress} />
                         </div>
 
-                        <p className="clarification">L&apos;adresse e-mail est celle sur laquelle vous avez reçu la
+                        <p className="clarification">L&apos;adresse mail est celle sur laquelle vous avez reçu la
                             proposition de création de compte Anotéa, si vous ne la connaissez pas, contactez nous: <a className="contactez-nous" href="mailto:anotea@pole-emploi.fr">anotea@pole-emploi.fr</a>.</p>
 
                         <div className="wrapper">

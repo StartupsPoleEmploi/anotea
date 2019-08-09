@@ -93,17 +93,13 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComp
         let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-departement.csv');
         let { regions } = await getComponents();
 
-        try {
-            await traineeImporter(db, logger, csvFile, poleEmploiCSVHandler(db, regions));
-            assert.fail('Should have fail');
-        } catch (e) {
-            assert.deepStrictEqual(e, {
-                invalid: 1,
-                ignored: 0,
-                imported: 0,
-                total: 1,
-            });
-        }
+        let stats = await traineeImporter(db, logger, csvFile, poleEmploiCSVHandler(db, regions));
+        assert.deepStrictEqual(stats, {
+            invalid: 1,
+            ignored: 0,
+            imported: 0,
+            total: 1,
+        });
     });
 
     it('should ignore trainee with not active region (Occitanie)', async () => {
