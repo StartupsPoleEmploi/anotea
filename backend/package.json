@@ -65,6 +65,7 @@
     "nodemailer": "4.7.0",
     "remove-accents": "0.4.2",
     "rotating-file-stream": "1.4.3",
+    "request": "2.88.0",
     "stream-transform": "1.0.8",
     "string": "3.3.3",
     "swagger-ui-express": "4.0.7",

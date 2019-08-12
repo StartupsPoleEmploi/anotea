@@ -14,6 +14,10 @@
             <span>Connexion échouée</span>
         <% } %>
 
+        <%if (notFound) { %>
+            <span>Pas de formation trouvée</span>
+        <% } %>
+
         <a href="<%= connectionLink %>" class="button-pe-connect"
             title="Connectez-vous &agrave; Anotéa en utilisant des identifiants p&ocirc;le emploi et b&eacute;n&eacute;ficiez d'un acc&egrave;s gratuit &agrave; ce service.">
             <img class="icon-pe-connect" src="/static/images/peconnect/pe-connect-barre-nav-b.svg"
