@@ -20,8 +20,8 @@
 
     .header .logo-right {
         float: right;
-        margin: 10px;
-        height: 80px;
+        margin: -12px;
+        height: 70px;
     }
 
     .header .logo-left {
@@ -29,7 +29,7 @@
     }
 </style>
 
-<% if (webView) { %>
+<% if (!webView) { %>
 <p class="consultationLink"><a href="<%= consultationLink %>" target="_blank">Si vous ne parvenez pas à lire ce mail,
         cliquez-ici</a></p>
 <% } %>
