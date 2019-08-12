@@ -9,7 +9,7 @@ export default function FinanceurHeaderItems() {
                 <Link
                     className="nav-link"
                     label="Avis stagiaire"
-                    url="/admin/financeur" />
+                    url="/admin/financeur/avis" />
             </li>
             <li className="nav-item">
                 <Link

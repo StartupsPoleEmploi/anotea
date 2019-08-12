@@ -44,7 +44,7 @@ export default class Header extends React.Component {
                 let isStagiairesTemplates = location.pathname.indexOf('/admin/courriels/templates-stagiaires') !== -1;
 
                 return (
-                    <div className={`Header ${profile === 'financeur' || isModeration ? 'blue' : 'misc'}`}>
+                    <div className={`Header ${isModeration ? 'blue' : 'misc'}`}>
                         <div className="container">
                             <div className="row">
                                 <div className="col-sm-12">

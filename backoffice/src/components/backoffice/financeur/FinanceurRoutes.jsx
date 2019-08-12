@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import queryString from 'query-string';
 import MonComptePanel from '../account/MonComptePanel';
 import FinancerPanel from './FinancerPanel';
+import StatistiquesPanel from './StatistiquesPanel';
 
 export default class FinanceurRoutes extends React.Component {
 
@@ -24,22 +24,25 @@ export default class FinanceurRoutes extends React.Component {
         return (
             <div>
                 <Switch>
-                    <Redirect exact from="/" to="/admin/financeur" />
+                    <Redirect exact from="/" to="/admin/financeur/avis" />
                     <Redirect exact from="/admin"
-                        to="/admin/financeur" />
+                        to="/admin/financeur/avis" />
                 </Switch>
                 <Route path="/mon-compte" component={MonComptePanel} />
                 <Route
-                    path="/admin/financeur"
+                    path="/admin/financeur/avis"
                     render={() => (
-                        <div className="main">
-                            <FinancerPanel
-                                profile={this.props.profile}
-                                id={this.props.id}
-                                codeRegion={this.props.codeRegion}
-                                codeFinanceur={this.props.codeFinanceur}
-                                features={this.props.features} />
-                        </div>
+                        <FinancerPanel
+                            profile={this.props.profile}
+                            id={this.props.id}
+                            codeRegion={this.props.codeRegion}
+                            codeFinanceur={this.props.codeFinanceur}
+                            features={this.props.features} />
+                    )} />
+                <Route
+                    path="/admin/financeur/statistiques"
+                    render={() => (
+                        <StatistiquesPanel />
                     )} />
             </div>
         );

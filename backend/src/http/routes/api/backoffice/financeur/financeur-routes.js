@@ -32,7 +32,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             'codeRegion': `${req.params.idregion}`
         };
 
-        if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
+        if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
@@ -65,7 +65,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
 
         let filter = { 'codeRegion': `${req.params.idregion}` };
 
-        if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
+        if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
@@ -155,7 +155,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             'codeRegion': `${req.params.idregion}`
         };
 
-        if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
+        if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
@@ -181,7 +181,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             'codeRegion': `${req.params.idregion}`
         };
 
-        if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
+        if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
@@ -256,7 +256,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             'codeRegion': `${req.params.idregion}`
         };
 
-        if (req.query.codeFinanceur && req.query.codeFinanceur !== POLE_EMPLOI) {
+        if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
@@ -315,6 +315,12 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             ];
         } else if (req.query.status === 'rejected') {
             query['rejected'] = true;
+        } else if (req.query.status === 'all') {
+            query['$or'] = [
+                { 'comment': null },
+                { 'comment': { $exists: false } },
+                { 'published': true }
+            ];
         }
 
         if (req.query.filter === 'region') {
@@ -325,20 +331,18 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             query['training.organisation.siret'] = req.user.siret;
         } else if (req.user.profile === 'financeur') {
             query['codeRegion'] = req.user.codeRegion;
-            if (req.user.codeFinanceur !== POLE_EMPLOI) {
-                query['training.codeFinanceur'] = { '$elemMatch': { '$eq': req.user.codeFinanceur } };
-            } else if (req.user.codeFinanceur === POLE_EMPLOI && req.query.codeFinanceur) {
+
+            if (req.query.codeFinanceur) {
                 query['training.codeFinanceur'] = { '$elemMatch': { '$eq': req.query.codeFinanceur } };
             }
-
             if (req.query.siret) {
                 query['training.organisation.siret'] = { '$regex': `${req.query.siret}` };
             }
             if (req.query.postalCode) {
                 query['training.place.postalCode'] = req.query.postalCode;
             }
-            if (req.query.trainingId) {
-                query['training.idFormation'] = req.query.trainingId;
+            if (req.query.formationId) {
+                query['training.idFormation'] = req.query.formationId;
             }
         }
 

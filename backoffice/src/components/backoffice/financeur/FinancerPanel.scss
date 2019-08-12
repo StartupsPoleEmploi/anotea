@@ -1,0 +1,136 @@
+@import '../../../styles/variables';
+
+.financer-panel {
+
+    height: 100%;
+
+    .header {
+        background-color: $color-green;
+        margin-bottom: -22px;
+        padding-bottom: 5rem;
+        position: relative;
+
+        .filters-area {
+            padding: 15.35px 16px;
+            width: 1110px;
+            border-radius: 5px;
+            background-color: $color-white;
+            box-shadow: 5px 5px 10px 0 rgba(0,0,0,0.1);
+
+            .custom-class {
+                font-family: Lato;
+                font-size: 12px;
+                line-height: 15px;
+            }
+
+            .init-filter-button {
+                height: 20px;
+                color: #24303A;
+                font-family: Lato;
+                font-size: 14px;
+                line-height: 20px;
+                margin-top: 8px;
+                border: none;
+                background-color: $color-white;
+                text-transform: uppercase;
+
+            }
+        }
+
+        .header-end {
+            position: absolute;
+            bottom: 16px;
+
+            >a {
+                height: 29px;
+                width: 143px;
+	            opacity: 0.6;
+                color: $color-white;
+                font-family: Lato;
+                font-size: 24px;
+                font-weight: 900;
+                line-height: 29px;
+                margin-right: 32px;
+                cursor: pointer;
+                text-decoration: none;
+            }
+        }
+    }
+
+    .container .financer-toolbar {
+        height: 86px;
+        background-color: $color-grey-5;
+
+        .onglet {
+            padding: 6px 0px;
+            margin-right: 32px;
+            border: none;
+            background-color: $color-grey-5;
+            height: 22px;
+            width: auto;
+            opacity: 0.6;
+            color: #24303A;
+            font-family: Lato;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 22px;
+            cursor: pointer;
+        }
+
+        :focus {
+            outline: 0;
+        }
+
+        .active {
+            opacity: 1;
+            color: $color-black;
+        }
+    }
+
+    .container {
+    
+        .resume {
+            margin-top: 16px;
+
+            .filters-resume {
+                >p {
+                    padding: 4px;
+                    margin-left: 8px;
+                    text-align: center;
+                    color: $color-green;
+                    height: auto;
+                    width: auto;
+                    border: 1px solid $color-green;
+                    border-radius: 14px;
+                    font-family: Lato;
+                    font-size: 14px;
+                    line-height: 20px;
+                }
+            }
+
+            .title {
+                margin-top: 8px;
+                margin-right: 16px;
+                color: $color-black;
+                font-family: Lato;
+                font-size: 16px;
+                font-weight: bold;
+                line-height: 19px;
+            }
+
+            .export-button {
+                height: 36px;
+                width: 105px;
+                border: 1px solid $color-black;
+                border-radius: 5px;
+                background-color: $color-white;
+                color: $color-black;
+            }
+        }
+
+        .pagination {
+            margin-top: 32px;
+        }
+    }
+}
+
