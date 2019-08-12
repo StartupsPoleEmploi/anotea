@@ -46,7 +46,7 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
             state: connectionInfos.state,
             nonce: connectionInfos.state
         };
-        res.render('front/connection', { connectionLink: connectionInfos.link });
+        res.render('front/connection', { connectionLink: connectionInfos.link, failed: req.query.failed, cancelled: req.query.cancelled === 'true' });
     });
 
     router.get('/doc/:name', (req, res) => {
