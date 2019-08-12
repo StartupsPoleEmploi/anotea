@@ -29,12 +29,7 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
     };
 
     router.get('/', (req, res) => {
-        const connectionInfos = peconnect.initConnection();
-        req.session.pe_connect = {
-            state: connectionInfos.state,
-            nonce: connectionInfos.state
-        };
-        res.render('front/homepage', { data: configuration.front, connectionLink: connectionInfos.link });
+        res.render('front/homepage', { data: configuration.front });
     });
 
     router.get('/cgu', (req, res) => {
@@ -43,6 +38,15 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
 
     router.get('/faq', (req, res) => {
         res.render('front/faq');
+    });
+
+    router.get('/connexion', (req, res) => {
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.state
+        };
+        res.render('front/connection', { connectionLink: connectionInfos.link });
     });
 
     router.get('/doc/:name', (req, res) => {
