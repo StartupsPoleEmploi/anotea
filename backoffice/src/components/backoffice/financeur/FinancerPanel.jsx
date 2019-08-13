@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 import Filter from './filters/filter';
 import {
     getRegions,
-    getOrganisationPlaces,
+    getPlaces,
     getInventory,
     getAdvices,
     getOrganisations,
@@ -97,6 +97,7 @@ export default class FinancerPanel extends React.Component {
             }, () => {
                 this.doGetAdvices();
                 this.doGetOrganisations();
+                this.doGetPlaces();
             });
         } else {
             this.setState({
@@ -109,6 +110,7 @@ export default class FinancerPanel extends React.Component {
             }, () => {
                 this.doGetAdvices();
                 this.doGetOrganisations();
+                this.doGetPlaces();
             });
         }
 
@@ -166,11 +168,15 @@ export default class FinancerPanel extends React.Component {
 
         if (options) {
             this.setState({
+                pagination: {
+                    current: null
+                },
                 loading: true,
                 currentFinancer: {
                     _id: options.id,
                     label: options.label
                 },
+                currentDepartement: {},
             }, () => {
                 this.initTraining();
             });
@@ -195,6 +201,7 @@ export default class FinancerPanel extends React.Component {
         }, () => {
             this.doGetOrganisations();
             this.doGetAdvices();
+            this.doGetPlaces();
         });
     };
 
@@ -215,6 +222,7 @@ export default class FinancerPanel extends React.Component {
         }, () => {
             this.doGetOrganisations();
             this.doGetAdvices();
+            this.doGetPlaces();
         });
     };
 
@@ -222,6 +230,9 @@ export default class FinancerPanel extends React.Component {
 
         if (options) {
             this.setState({
+                pagination: {
+                    current: null
+                },
                 loading: true,
                 currentDepartement: {
                     _id: options.id,
@@ -231,7 +242,23 @@ export default class FinancerPanel extends React.Component {
                 this.initTraining();
             });
         } else {
-            this.initFilters();
+            this.setState({
+                training: {
+                    organisations: [],
+                    currentOrganisation: {},
+                    entities: [],
+                    currentEntity: {},
+                    formations: [],
+                    currentFormation: {}
+                },
+                currentFinancer: {},
+                currentDepartement: {},
+                loading: true,
+            }, () => {
+                this.doGetOrganisations();
+                this.doGetAdvices();
+                this.doGetPlaces();
+            });
         }
 
     };
@@ -256,7 +283,7 @@ export default class FinancerPanel extends React.Component {
                 },
             }), () => {
                 this.doGetAdvices();
-                this.getPlaces();
+                this.doGetPlaces();
             });
         } else {
             this.setState(prevState => ({
@@ -270,15 +297,16 @@ export default class FinancerPanel extends React.Component {
                 }
             }), () => {
                 this.doGetAdvices();
+                this.doGetPlaces();
             });
         }
 
     };
 
-    getPlaces = async () => {
+    doGetPlaces = async () => {
         const { codeRegion } = this.props;
         const { currentFinancer, currentDepartement, training } = this.state;
-        const entities = await getOrganisationPlaces(codeRegion, currentFinancer._id, currentDepartement._id, training.currentOrganisation._id);
+        const entities = await getPlaces(codeRegion, currentFinancer._id, currentDepartement._id, training.currentOrganisation._id);
 
         this.setState(prevState => ({
             training: {
@@ -419,6 +447,13 @@ export default class FinancerPanel extends React.Component {
         return str;
     };
 
+    isActiveFilter = () => {
+        const { currentOrganisation, currentEntity, currentFormation } = this.state.training;
+        const { currentFinancer, currentDepartement } = this.state;
+        
+        return currentFinancer._id || currentOrganisation._id || currentEntity._id || currentFormation._id || currentDepartement._id ? 'active' : '';
+    }
+
     render() {
         const { currentOrganisation, currentEntity, organisations, entities, formations, currentFormation } = this.state.training;
         const { currentFinancer, financers, inventory, departements, currentDepartement } = this.state;
@@ -430,6 +465,7 @@ export default class FinancerPanel extends React.Component {
         const departementsOptions = departements.map(dep => ({
             label: dep,
             id: dep,
+            className: 'custom-class'
         }));
         const financersOptions = financers.map(financer => ({
             label: financer.title + ' (' + financer._id + ')',
@@ -437,7 +473,7 @@ export default class FinancerPanel extends React.Component {
             className: 'custom-class'
         }));
         const placesOptions = entities.map(place => ({
-            label: place.city,
+            label: place.city + ' (' + place._id + ')',
             id: place._id,
             className: 'custom-class'
         }));
@@ -474,7 +510,7 @@ export default class FinancerPanel extends React.Component {
                                         label="Département"
                                         options={departementsOptions}
                                         onChange={this.handleDepartementsChange}
-                                        placeholderText="Choisissez un département"
+                                        placeholderText="Choisisez un département"
                                         selectValue={currentDepartement}
                                     />
                                     <Filter
@@ -484,16 +520,14 @@ export default class FinancerPanel extends React.Component {
                                         placeholderText="Choisissez un organisme"
                                         selectValue={currentOrganisation}
                                     />
-                                    {currentOrganisation._id &&
-                                        <Filter
-                                            label="Lieu"
-                                            options={placesOptions}
-                                            onChange={this.handleEntityChange}
-                                            placeholderText="Choisissez un lieu"
-                                            selectValue={currentEntity}
-                                        />
-                                    }
-                                    {currentEntity._id &&
+                                    <Filter
+                                        label="Lieu"
+                                        options={placesOptions}
+                                        onChange={this.handleEntityChange}
+                                        placeholderText="Choisissez un lieu"
+                                        selectValue={currentEntity}
+                                    />
+                                    {currentEntity._id && currentOrganisation._id &&
                                         <Filter
                                             label="Formation"
                                             options={formationsOptions}
@@ -502,7 +536,7 @@ export default class FinancerPanel extends React.Component {
                                             selectValue={currentFormation}
                                         />
                                     }
-                                    <button className="init-filter-button" onClick={this.initFilters}>
+                                    <button className={`init-filter-button ${this.isActiveFilter()}`} onClick={this.initFilters}>
                                         <i className="fas fa-times"></i> réinitialiser les filtres
                                     </button>
                                 </div>
@@ -547,6 +581,8 @@ export default class FinancerPanel extends React.Component {
                                     currentEntity={currentEntity}
                                     currentFormation={currentFormation} />
                                 <Resume
+                                    advices={this.state.advices}
+                                    page={this.state.pagination.current}
                                     inventory={inventory[this.state.tab]}
                                     exportFilters={this.getExportFilters()} />
                             </div>

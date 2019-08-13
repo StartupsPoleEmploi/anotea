@@ -6,7 +6,8 @@ export default class DeprecatResume extends React.PureComponent {
 
     static propTypes = {
         exportFilters: PropTypes.string,
-        inventory: PropTypes.number.isRequired
+        inventory: PropTypes.number.isRequired,
+        advices: PropTypes.array.isRequired
     };
     
     getUrl = () => {
@@ -20,7 +21,7 @@ export default class DeprecatResume extends React.PureComponent {
     render() {
         return (
             <React.Fragment>
-                <p className="title bd-highlight">{this.props.inventory} avis</p>
+                <p className="title bd-highlight">{this.props.advices.length} avis affichés sur {this.props.inventory}</p>
                 <a className="btn export-button btn-sm bd-highlight" href={this.getUrl()}>
                     <span className="fas fa-download" /> EXPORTER
                 </a>

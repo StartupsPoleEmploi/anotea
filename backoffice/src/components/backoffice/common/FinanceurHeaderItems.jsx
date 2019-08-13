@@ -14,7 +14,7 @@ export default function FinanceurHeaderItems() {
             <li className="nav-item">
                 <Link
                     className="nav-link"
-                    label="Statistiques"
+                    label="Statistiques Anotéa"
                     url="/admin/statistiques" />
             </li>
             <li className="nav-item right">

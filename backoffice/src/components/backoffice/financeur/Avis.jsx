@@ -33,7 +33,7 @@ export default function Avis({ avis, codeFinanceur }) {
                                     le <PrettyDate date={new Date(avis.date)} /> &nbsp;
                                     {codeFinanceur === POLE_EMPLOI && avis.published &&
                                         <span className={`status ${avis.qualification === 'positif' ? 'published' : 'rejected'}`}>
-                                            (<span>{avis.qualification} </span>)
+                                            (<span>Publié le <PrettyDate date={new Date(avis.lastStatusUpdate)} /> &nbsp; comme <b>{avis.qualification}</b></span>)
                                         </span>
                                     }
                                 </div>

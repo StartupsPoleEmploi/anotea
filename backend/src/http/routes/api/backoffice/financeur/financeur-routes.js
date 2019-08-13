@@ -145,13 +145,12 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
         });
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisation/:siren/places', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/places', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-            'training.organisation.siret': { '$regex': `${req.params.siren}` },
             'codeRegion': `${req.params.idregion}`
         };
 
@@ -161,6 +160,10 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
 
         if (req.query.departement) {
             filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.departement}.*` } });
+        }
+        
+        if (req.query.siren) {
+            filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.siren}` } });
         }
 
         const places = await db.collection('comment').aggregate([

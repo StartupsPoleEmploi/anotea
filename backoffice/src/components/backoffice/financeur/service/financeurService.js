@@ -70,7 +70,7 @@ export const getAdvices = (idRegion, codeFinanceur, departement, organisation, p
     return _get(`/backoffice/financeur/region/${idRegion}/advices${query}`);
 };
 
-export const getOrganisationPlaces = (idRegion, codeFinanceur, departement, siren) => {
+export const getPlaces = (idRegion, codeFinanceur, departement, siren) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
@@ -82,7 +82,14 @@ export const getOrganisationPlaces = (idRegion, codeFinanceur, departement, sire
         }
         query += `${prefix}departement=${departement}`;
     }
-    return _get(`/backoffice/financeur/region/${idRegion}/organisation/${siren}/places${query}`);
+    if (siren) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}siren=${siren}`;
+    }
+    return _get(`/backoffice/financeur/region/${idRegion}/places${query}`);
 };
 
 export const getFormations = (idRegion, codeFinanceur, siren, postalCode) => {
