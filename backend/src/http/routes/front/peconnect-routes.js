@@ -61,3 +61,5 @@ module.exports = ({ db, logger, configuration, peconnect }) => {
 
     return router;
 };
+                    //console.log(req);
+                    //res.send(req.query);
