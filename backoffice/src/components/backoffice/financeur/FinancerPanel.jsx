@@ -447,7 +447,7 @@ export default class FinancerPanel extends React.Component {
         return str;
     };
 
-    isActiveFilter = () => {
+    someActiveFilter = () => {
         const { currentOrganisation, currentEntity, currentFormation } = this.state.training;
         const { currentFinancer, currentDepartement } = this.state;
         
@@ -500,13 +500,6 @@ export default class FinancerPanel extends React.Component {
                                         />
                                     }
                                     <Filter
-                                        label="Période"
-                                        options={departementsOptions}
-                                        onChange={this.handleDepartementsChange}
-                                        placeholderText="JJ/MM/AAAA à JJ/MM/AAAA"
-                                        selectValue={currentDepartement}
-                                    />
-                                    <Filter
                                         label="Département"
                                         options={departementsOptions}
                                         onChange={this.handleDepartementsChange}
@@ -536,7 +529,7 @@ export default class FinancerPanel extends React.Component {
                                             selectValue={currentFormation}
                                         />
                                     }
-                                    <button className={`init-filter-button ${this.isActiveFilter()}`} onClick={this.initFilters}>
+                                    <button className={`init-filter-button ${this.someActiveFilter()}`} onClick={this.initFilters}>
                                         <i className="fas fa-times"></i> réinitialiser les filtres
                                     </button>
                                 </div>
