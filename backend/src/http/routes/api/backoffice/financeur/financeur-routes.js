@@ -36,8 +36,8 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
-        if (req.query.departement) {
-            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.departement}.*` } });
+        if (req.query.lieu) {
+            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.lieu}.*` } });
         }
 
         const organisations = await db.collection('comment')
@@ -69,16 +69,12 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
-        if (req.query.departement) {
-            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.departement}.*` } });
+        if (req.query.lieu) {
+            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.lieu}.*` } });
         }
 
         if (req.query.organisation) {
             filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.organisation}` } });
-        }
-
-        if (req.query.place) {
-            filter = Object.assign(filter, { 'training.place.postalCode': req.query.place });
         }
 
         if (req.query.formation) {
@@ -157,10 +153,6 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
         if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
-
-        if (req.query.departement) {
-            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.departement}.*` } });
-        }
         
         if (req.query.siren) {
             filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.siren}` } });
@@ -188,8 +180,8 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
-        if (req.query.postalCode) {
-            filter = Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
+        if (req.query.lieu) {
+            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.lieu}.*` } });
         }
 
         const trainings = await db.collection('comment').aggregate([
@@ -263,16 +255,12 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
-        if (req.query.departement) {
-            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.departement}.*` } });
+        if (req.query.lieu) {
+            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.lieu}.*` } });
         }
 
         if (req.query.organisation) {
             filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.organisation}` } });
-        }
-
-        if (req.query.place) {
-            filter = Object.assign(filter, { 'training.place.postalCode': req.query.place });
         }
 
         if (req.query.formation) {

@@ -77,8 +77,10 @@ export default class FinancerPanel extends React.Component {
             order: DEFAULT_ORDER,
             financers: [],
             currentFinancer: {},
+            currentLieu: {},
             currentPage: 'advices',
-            loading: false
+            loading: false,
+            lieu: [],
         };
 
     }
@@ -118,13 +120,13 @@ export default class FinancerPanel extends React.Component {
 
     doGetAdvices = async (order = this.state.order) => {
         const { codeRegion } = this.props;
-        const { currentOrganisation, currentEntity, currentFormation } = this.state.training;
-        const { currentFinancer, tab, currentDepartement } = this.state;
+        const { currentOrganisation, currentFormation } = this.state.training;
+        const { currentFinancer, tab, currentLieu } = this.state;
 
         this.doLoadInventory();
 
         const page = this.state.pagination.current;
-        const result = await getAdvices(codeRegion, currentFinancer._id, currentDepartement._id, currentOrganisation._id, currentEntity._id, currentFormation._id, tab, order, page);
+        const result = await getAdvices(codeRegion, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id, tab, order, page);
 
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
@@ -142,7 +144,7 @@ export default class FinancerPanel extends React.Component {
 
     doGetOrganisations = async () => {
         const { props, state } = this;
-        const organisations = await getOrganisations(props.codeRegion, state.currentFinancer._id, state.currentDepartement._id);
+        const organisations = await getOrganisations(props.codeRegion, state.currentFinancer._id, state.currentLieu._id);
 
         this.setState(prevState => ({
             training: {
@@ -155,13 +157,41 @@ export default class FinancerPanel extends React.Component {
 
     doLoadInventory = async () => {
         const { codeRegion } = this.props;
-        const { currentOrganisation, currentEntity, currentFormation } = this.state.training;
-        const { currentFinancer, currentDepartement } = this.state;
-        const inventory = await getInventory(codeRegion, currentFinancer._id, currentDepartement._id, currentOrganisation._id, currentEntity._id, currentFormation._id);
+        const { currentOrganisation, currentFormation } = this.state.training;
+        const { currentFinancer, currentLieu } = this.state;
+        const inventory = await getInventory(codeRegion, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id);
         
         this.setState(Object.assign(this.state, {
             inventory: inventory
         }));
+    };
+
+    doGetPlaces = async () => {
+        const { codeRegion } = this.props;
+        const { currentFinancer, training } = this.state;
+        const entities = await getPlaces(codeRegion, currentFinancer._id, training.currentOrganisation._id);
+
+        this.setState(prevState => ({
+            training: {
+                ...prevState.training,
+                entities: entities,
+            },
+        }));
+        
+    };
+
+    getFormations = async () => {
+        const { currentFinancer, training, currentLieu } = this.state;
+        const { codeRegion } = this.props;
+        const formations = await getFormations(codeRegion, currentFinancer._id, training.currentOrganisation._id, currentLieu._id);
+        
+        this.setState(prevState => ({
+            training: {
+                ...prevState.training,
+                formations,
+            }
+        }));
+        
     };
 
     handleFinancerChange = (options, evt) => {
@@ -176,33 +206,27 @@ export default class FinancerPanel extends React.Component {
                     _id: options.id,
                     label: options.label
                 },
-                currentDepartement: {},
             }, () => {
                 this.initTraining();
             });
         } else {
-            this.initFilters();
+            this.setState({
+                training: {
+                    organisations: [],
+                    currentOrganisation: {},
+                    entities: [],
+                    currentEntity: {},
+                    formations: [],
+                    currentFormation: {}
+                },
+                loading: true,
+            }, () => {
+                this.doGetOrganisations();
+                this.doGetAdvices();
+                this.doGetPlaces();
+            });
         }
 
-    };
-
-    initTraining = () => {
-
-        this.setState({
-            training: {
-                organisations: [],
-                currentOrganisation: {},
-                entities: [],
-                currentEntity: {},
-                formations: [],
-                currentFormation: {}
-            },
-            loading: true,
-        }, () => {
-            this.doGetOrganisations();
-            this.doGetAdvices();
-            this.doGetPlaces();
-        });
     };
 
     initFilters = () => {
@@ -226,42 +250,40 @@ export default class FinancerPanel extends React.Component {
         });
     };
 
-    handleDepartementsChange = options => {
+    handleLocalisationChange = options => {
 
         if (options) {
             this.setState({
                 pagination: {
                     current: null
                 },
-                loading: true,
-                currentDepartement: {
+                currentLieu: {
                     _id: options.id,
                     label: options.label
-                },
+                }
             }, () => {
-                this.initTraining();
+                this.doGetOrganisations();
+                this.doGetAdvices();
+                this.getFormations();
             });
         } else {
-            this.setState({
+            this.setState(prevState => ({
+                currentLieu: {},
                 training: {
+                    ...prevState.training,
                     organisations: [],
                     currentOrganisation: {},
-                    entities: [],
-                    currentEntity: {},
                     formations: [],
                     currentFormation: {}
                 },
-                currentFinancer: {},
-                currentDepartement: {},
-                loading: true,
-            }, () => {
+            }), () => {
                 this.doGetOrganisations();
                 this.doGetAdvices();
                 this.doGetPlaces();
             });
         }
-
-    };
+        
+    }
 
     handleOrganisationChange = async (options, evt) => {
 
@@ -284,6 +306,7 @@ export default class FinancerPanel extends React.Component {
             }), () => {
                 this.doGetAdvices();
                 this.doGetPlaces();
+                this.getFormations();
             });
         } else {
             this.setState(prevState => ({
@@ -301,67 +324,6 @@ export default class FinancerPanel extends React.Component {
             });
         }
 
-    };
-
-    doGetPlaces = async () => {
-        const { codeRegion } = this.props;
-        const { currentFinancer, currentDepartement, training } = this.state;
-        const entities = await getPlaces(codeRegion, currentFinancer._id, currentDepartement._id, training.currentOrganisation._id);
-
-        this.setState(prevState => ({
-            training: {
-                ...prevState.training,
-                entities: entities,
-            }
-        }));
-        
-    };
-
-    handleEntityChange = async (options, evt) => {
-
-        if (options) {
-            this.setState(prevState => ({
-                pagination: {
-                    current: null
-                },
-                training: {
-                    ...prevState.training,
-                    currentEntity: {
-                        _id: options.id,
-                        label: options.label
-                    },
-                    currentFormation: {}
-                }
-            }), () => {
-                this.doGetAdvices();
-                this.getFormations();
-            });
-        } else {
-            this.setState(prevState => ({
-                training: {
-                    ...prevState.training,
-                    currentEntity: {},
-                    currentFormation: {}
-                }
-            }), () => {
-                this.doGetAdvices();
-            });
-        }
-
-    };
-
-    getFormations = async () => {
-        const { currentFinancer, training } = this.state;
-        const { codeRegion } = this.props;
-        const formations = await getFormations(codeRegion, currentFinancer._id, training.currentOrganisation._id, training.currentEntity._id);
-        
-        this.setState(prevState => ({
-            training: {
-                ...prevState.training,
-                formations,
-            }
-        }));
-        
     };
 
     switchTab = tab => {
@@ -448,22 +410,22 @@ export default class FinancerPanel extends React.Component {
     };
 
     someActiveFilter = () => {
-        const { currentOrganisation, currentEntity, currentFormation } = this.state.training;
-        const { currentFinancer, currentDepartement } = this.state;
+        const { currentOrganisation, currentFormation } = this.state.training;
+        const { currentFinancer, currentDepartement, currentLieu } = this.state;
         
-        return currentFinancer._id || currentOrganisation._id || currentEntity._id || currentFormation._id || currentDepartement._id ? 'active' : '';
+        return currentFinancer._id || currentOrganisation._id || currentLieu._id || currentFormation._id || currentDepartement._id ? 'active' : '';
     }
 
     render() {
-        const { currentOrganisation, currentEntity, organisations, entities, formations, currentFormation } = this.state.training;
-        const { currentFinancer, financers, inventory, departements, currentDepartement } = this.state;
+        const { currentOrganisation, organisations, entities, formations, currentFormation } = this.state.training;
+        const { currentFinancer, financers, inventory, departements, currentLieu } = this.state;
         const organisationsOptions = organisations.map(organisation => ({
             label: organisation.name.length >= 50 ? organisation.name.substring(0, 50).concat('...') : organisation.name,
             id: organisation._id,
             className: 'custom-class'
         }));
         const departementsOptions = departements.map(dep => ({
-            label: dep,
+            label: dep + ' (Dep)',
             id: dep,
             className: 'custom-class'
         }));
@@ -482,6 +444,7 @@ export default class FinancerPanel extends React.Component {
             id: formation._id,
             className: 'custom-class'
         }));
+        const localisationOptions = [...departementsOptions, ...placesOptions];
 
         return (
             <div className="financer-panel">
@@ -500,11 +463,11 @@ export default class FinancerPanel extends React.Component {
                                         />
                                     }
                                     <Filter
-                                        label="Département"
-                                        options={departementsOptions}
-                                        onChange={this.handleDepartementsChange}
-                                        placeholderText="Choisisez un département"
-                                        selectValue={currentDepartement}
+                                        label="Localisation"
+                                        options={localisationOptions}
+                                        onChange={this.handleLocalisationChange}
+                                        placeholderText="Lieu de formation"
+                                        selectValue={currentLieu}
                                     />
                                     <Filter
                                         label="Organisme de formation"
@@ -513,14 +476,7 @@ export default class FinancerPanel extends React.Component {
                                         placeholderText="Choisissez un organisme"
                                         selectValue={currentOrganisation}
                                     />
-                                    <Filter
-                                        label="Lieu"
-                                        options={placesOptions}
-                                        onChange={this.handleEntityChange}
-                                        placeholderText="Choisissez un lieu"
-                                        selectValue={currentEntity}
-                                    />
-                                    {currentEntity._id && currentOrganisation._id &&
+                                    {currentLieu._id && currentOrganisation._id &&
                                         <Filter
                                             label="Formation"
                                             options={formationsOptions}
@@ -570,8 +526,7 @@ export default class FinancerPanel extends React.Component {
                                 <FiltersResume
                                     currentFinancer={currentFinancer}
                                     currentOrganisation={currentOrganisation}
-                                    currentDepartement={currentDepartement}
-                                    currentEntity={currentEntity}
+                                    currentLieu={currentLieu}
                                     currentFormation={currentFormation} />
                                 <Resume
                                     advices={this.state.advices}
