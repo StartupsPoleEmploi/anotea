@@ -15,6 +15,11 @@ describe('Badwords', function() {
             assert.ok(!badwords.isGood('le formateur est un connard'));
             assert.ok(!badwords.isGood('fuck'));
             assert.ok(!badwords.isGood('PUTE'));
+            assert.ok(!badwords.isGood('salope.'));
+            assert.ok(!badwords.isGood('bonjour pute lol'));
+            assert.ok(!badwords.isGood('espèce de pompa !!'));
+            assert.ok(!badwords.isGood('le prof est un sacré pédophile'));
+            assert.ok(!badwords.isGood('moule à gauffre'));
         });
         it('should not find bad words in non-offensive', function() {
             assert.ok(badwords.isGood('titi')); // contains 'tit' but OK
@@ -22,6 +27,10 @@ describe('Badwords', function() {
             assert.ok(badwords.isGood('jhabite à Sucé-sur-Erdre')); // contains 'bite'  and 'sucé' but OK
             assert.ok(badwords.isGood('formation très sympatique, je recommande'));
             assert.ok(badwords.isGood('patrick')); // ends with 'trick' but OK
+            assert.ok(badwords.isGood('formation très importante.'));
+            assert.ok(badwords.isGood('super formation sur le pompage hydraulique'));
+            assert.ok(badwords.isGood('formation en pedopsychiatrie enrichissante'));
+            assert.ok(badwords.isGood('je me suis fait remouler'));
         });
         it('should not find bad words in empty content', function() {
             assert.ok(badwords.isGood(''));
