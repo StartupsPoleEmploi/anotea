@@ -197,7 +197,7 @@ class App extends Component {
         if (this.state.profile === 'financeur') {
             return (
                 <Router>
-                    <div className="anotea-deprecated App">
+                    <div className="anotea">
                         <Header
                             onLogout={this.handleLogout}
                             profile={this.state.profile} />

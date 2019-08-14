@@ -5,32 +5,32 @@ export const getRegions = () => {
     return _get(`/regions`);
 };
 
-export const getOrganisations = (idregion, codeFinanceur, departement) => {
+export const getOrganisations = (idregion, codeFinanceur, lieu) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
     }
-    if (departement) {
+    if (lieu) {
         let prefix = '&';
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}departement=${departement}`;
+        query += `${prefix}lieu=${lieu}`;
     }
     return _get(`/backoffice/financeur/region/${idregion}/organisations${query}`);
 };
 
-export const getAdvices = (idRegion, codeFinanceur, departement, organisation, place, formation, filter, order, page) => {
+export const getAdvices = (idRegion, codeFinanceur, lieu, organisation, formation, filter, order, page) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
     }
-    if (departement) {
+    if (lieu) {
         let prefix = '&';
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}departement=${departement}`;
+        query += `${prefix}lieu=${lieu}`;
     }
     if (organisation) {
         let prefix = '&';
@@ -38,13 +38,6 @@ export const getAdvices = (idRegion, codeFinanceur, departement, organisation, p
             prefix = '?';
         }
         query += `${prefix}organisation=${organisation}`;
-    }
-    if (place) {
-        let prefix = '&';
-        if (query === '') {
-            prefix = '?';
-        }
-        query += `${prefix}place=${place}`;
     }
     if (formation) {
         let prefix = '&';
@@ -70,44 +63,44 @@ export const getAdvices = (idRegion, codeFinanceur, departement, organisation, p
     return _get(`/backoffice/financeur/region/${idRegion}/advices${query}`);
 };
 
-export const getOrganisationPlaces = (idRegion, codeFinanceur, departement, siren) => {
+export const getPlaces = (idRegion, codeFinanceur, siren) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
     }
-    if (departement) {
+    if (siren) {
         let prefix = '&';
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}departement=${departement}`;
+        query += `${prefix}siren=${siren}`;
     }
-    return _get(`/backoffice/financeur/region/${idRegion}/organisation/${siren}/places${query}`);
+    return _get(`/backoffice/financeur/region/${idRegion}/places${query}`);
 };
 
-export const getFormations = (idRegion, codeFinanceur, siren, postalCode) => {
+export const getFormations = (idRegion, codeFinanceur, siren, lieu) => {
     let query = '';
     if (codeFinanceur) {
         query = `&codeFinanceur=${codeFinanceur}`;
     }
-    return _get(`/backoffice/financeur/region/${idRegion}/organisme_formateur/${siren}/trainings?postalCode=${postalCode}${query}`);
+    return _get(`/backoffice/financeur/region/${idRegion}/organisme_formateur/${siren}/trainings?lieu=${lieu}${query}`);
 };
 
 export const getOrganisationLieuTrainingSessions = (siren, idTraining, postalCode) => {
     return _get(`/backoffice/financeur/organismes_formateurs/${siren}/training/${idTraining}/sessions?postalCode=${postalCode}`);
 };
 
-export const getInventory = (idRegion, codeFinanceur, departement, organisation, place, formation) => {
+export const getInventory = (idRegion, codeFinanceur, lieu, organisation, formation) => {
     let query = '';
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
     }
-    if (departement) {
+    if (lieu) {
         let prefix = '&';
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}departement=${departement}`;
+        query += `${prefix}lieu=${lieu}`;
     }
     if (organisation) {
         let prefix = '&';
@@ -115,13 +108,6 @@ export const getInventory = (idRegion, codeFinanceur, departement, organisation,
             prefix = '?';
         }
         query += `${prefix}organisation=${organisation}`;
-    }
-    if (place) {
-        let prefix = '&';
-        if (query === '') {
-            prefix = '?';
-        }
-        query += `${prefix}place=${place}`;
     }
     if (formation) {
         let prefix = '&';

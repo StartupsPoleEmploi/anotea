@@ -4,23 +4,42 @@ import 'react-select/dist/react-select.css';
 import 'react-virtualized-select/styles.css';
 import VirtualizedSelect from 'react-virtualized-select';
 
-export default function Filter({ options, onChange, placeholderText, selectValue }) {
+const style = {
+    'width': '260px',
+    'height': '46px',
+    'marginBottom': '8px',
+    'backgroundColor': '#F4F4F5',
+    'border': 'none',
+    'borderRadius': '5px',
+};
+const pStyle = {
+    'padding': '0px',
+    'margin': '0px',
+    'color': '#24303A',
+    'fontFamily': 'Lato',
+    'fontSize': '18px',
+    'fontWeight': 'bold',
+    'lineHeight': '22px',
+};
+
+export default function Filter({ label, options, onChange, placeholderText, selectValue }) {
     return (
-        <h2 className="subtitle">
-            <div className="dropdown">
-                <VirtualizedSelect
-                    onChange={onChange}
-                    options={options}
-                    placeholder={placeholderText}
-                    clearable
-                    value={Object.entries(selectValue).length !== 0 ? selectValue : placeholderText}
-                />
-            </div>
-        </h2>
+        <div>
+            <p style={pStyle}>{label}</p>
+            <VirtualizedSelect
+                style={style}
+                onChange={onChange}
+                options={options}
+                placeholder={placeholderText}
+                clearable
+                value={Object.entries(selectValue).length !== 0 ? selectValue : placeholderText}
+            />
+        </div>
     );
 }
 
 Filter.propTypes = {
+    label: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
     placeholderText: PropTypes.string.isRequired,

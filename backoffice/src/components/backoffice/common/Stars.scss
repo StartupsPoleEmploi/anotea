@@ -1,0 +1,11 @@
+@import '../../../styles/variables';
+
+.stars {
+    font-size: 0.875rem;
+    letter-spacing: 5px;
+    color: $color-yellow;
+
+    &.empty {
+      color: $color-grey-25;
+    }
+}
