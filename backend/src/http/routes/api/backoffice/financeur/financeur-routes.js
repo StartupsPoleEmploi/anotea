@@ -329,8 +329,8 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             if (req.query.siret) {
                 query['training.organisation.siret'] = { '$regex': `${req.query.siret}` };
             }
-            if (req.query.postalCode) {
-                query['training.place.postalCode'] = req.query.postalCode;
+            if (req.query.lieu) {
+                query['training.place.postalCode'] = { '$regex': `^${req.query.lieu}.*` };
             }
             if (req.query.formationId) {
                 query['training.idFormation'] = req.query.formationId;

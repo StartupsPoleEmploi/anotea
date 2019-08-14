@@ -65,7 +65,6 @@ export default class FinancerPanel extends React.Component {
             training: {
                 currentOrganisation: {},
                 organisations: [],
-                currentEntity: {},
                 entities: [],
                 formations: [],
                 currentFormation: {},
@@ -206,47 +205,41 @@ export default class FinancerPanel extends React.Component {
                     _id: options.id,
                     label: options.label
                 },
+                currentDepartement: {},
             }, () => {
                 this.initTraining();
             });
         } else {
-            this.setState({
-                training: {
-                    organisations: [],
-                    currentOrganisation: {},
-                    entities: [],
-                    currentEntity: {},
-                    formations: [],
-                    currentFormation: {}
-                },
-                loading: true,
-            }, () => {
-                this.doGetOrganisations();
-                this.doGetAdvices();
-                this.doGetPlaces();
-            });
+            this.initFilters();
         }
 
     };
 
-    initFilters = () => {
+    initTraining = () => {
 
         this.setState({
             training: {
                 organisations: [],
                 currentOrganisation: {},
                 entities: [],
-                currentEntity: {},
                 formations: [],
                 currentFormation: {}
             },
-            currentFinancer: {},
-            currentDepartement: {},
             loading: true,
         }, () => {
             this.doGetOrganisations();
             this.doGetAdvices();
             this.doGetPlaces();
+        });
+    };
+
+    initFilters = () => {
+
+        this.setState({
+            currentFinancer: {},
+            currentDepartement: {},
+        }, () => {
+            this.initTraining();
         });
     };
 
@@ -260,7 +253,8 @@ export default class FinancerPanel extends React.Component {
                 currentLieu: {
                     _id: options.id,
                     label: options.label
-                }
+                },
+                loading: true,
             }, () => {
                 this.doGetOrganisations();
                 this.doGetAdvices();
@@ -276,6 +270,7 @@ export default class FinancerPanel extends React.Component {
                     formations: [],
                     currentFormation: {}
                 },
+                loading: true,
             }), () => {
                 this.doGetOrganisations();
                 this.doGetAdvices();
@@ -295,7 +290,6 @@ export default class FinancerPanel extends React.Component {
                 training: {
                     ...prevState.training,
                     entities: [],
-                    currentEntity: {},
                     currentOrganisation: {
                         _id: options.id,
                         label: options.label
@@ -314,7 +308,6 @@ export default class FinancerPanel extends React.Component {
                     ...prevState.training,
                     currentOrganisation: {},
                     entities: [],
-                    currentEntity: {},
                     formations: [],
                     currentFormation: {}
                 }
@@ -394,12 +387,12 @@ export default class FinancerPanel extends React.Component {
         if (this.state.currentFinancer._id) {
             str += `&codeFinanceur=${this.state.currentFinancer._id}`;
         }
+        if (this.state.currentLieu._id) {
+            str += `&lieu=${this.state.currentLieu._id}`;
+        }
         if (this.state.training) {
             if (this.state.training.currentOrganisation._id) {
                 str += `&siret=${this.state.training.currentOrganisation._id}`;
-            }
-            if (this.state.training.currentEntity._id) {
-                str += `&postalCode=${this.state.training.currentEntity._id}`;
             }
             if (this.state.training.currentFormation._id) {
                 str += `&formationId=${this.state.training.currentFormation._id}`;
