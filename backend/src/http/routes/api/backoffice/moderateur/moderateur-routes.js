@@ -32,9 +32,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
         let isEmailSearch = isEmail(fulltext);
         let stagiaire = null;
         if (isEmailSearch) {
-            console.log("coucou")
             stagiaire = await getStagiaire(fulltext);
-            console.log(stagiaire);
         }
 
         let cursor = db.collection('comment')
