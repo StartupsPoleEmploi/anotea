@@ -198,6 +198,40 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
         });
     });
 
+    router.get('/mail/:tokenOrganisme/signalementRejete/:tokenAvis', async (req, res) => {
+        const organisme = await db.collection('accounts').findOne({ token: req.params.tokenOrganisme });
+        const avis = await db.collection('comment').findOne({ token: req.params.tokenAvis });
+        if (organisme === null || avis === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        res.render('../../smtp/views/organisme_avis_signale_rejete.ejs', {
+            trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementRejete/${avis.token}`,
+            hostname: configuration.app.public_hostname,
+            avis: avis.comment.text,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:tokenOrganisme/signalementAccepte/:tokenAvis', async (req, res) => {
+        const organisme = await db.collection('accounts').findOne({ token: req.params.tokenOrganisme });
+        const avis = await db.collection('comment').findOne({ token: req.params.tokenAvis });
+        if (organisme === null || avis === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        res.render('../../smtp/views/organisme_avis_signale_publie.ejs', {
+            trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementAccepte/${avis.token}`,
+            hostname: configuration.app.public_hostname,
+            avis: avis.comment.text,
+            webView: true
+        });
+    });
+
     router.get('/mail/:token/passwordForgotten', async (req, res) => {
         const forgottenPasswordToken = await db.collection('forgottenPasswordTokens').findOne({ token: req.params.token });
         if (forgottenPasswordToken === null) {

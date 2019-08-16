@@ -1,0 +1,149 @@
+<html>
+
+<head>
+    <title>Pôle Emploi - avis signalé dans votre Espace Anotéa</title>
+    <meta name="viewport" content="width=device-width">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    <style>
+        body {
+            font-size: 1em;
+            padding: 0px;
+            margin: 0px;
+            background-color: #f4f3f5;
+            font-size: 1.3em;
+            font-family: lato, sans-serif;
+        }
+
+        .content, .header {
+            background-color: white;
+        }
+
+        .content, .header, .footer {
+            width: 80%;
+            margin: auto;
+        }
+
+        .footer {
+            color: #24303A;
+        }
+
+        .footer p {
+            text-align: center;
+        }
+
+        .content {
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        body td {
+            padding: 0.5em;
+            width: 33%;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 900;
+            font-size: 1.2em;
+            line-height: 29px;
+        }
+
+        p, ul {
+            color: rgba(35, 47, 56, 0.7);
+            font-size: 0.7em;
+        }
+
+        .avis {
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .button {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 5px;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+            width: fit-content;
+            margin: auto;
+        }
+
+        .button.connect {
+            background-color: #24303a;
+            color: white;
+        }
+
+        .button.contact {
+            background-color: #fdf4e6;
+            color: #fa8100;
+        }
+
+        @media only screen and (max-width: 596px) {
+            body {
+                width: 100%;
+                font-size: 1em;
+            }
+
+            body td {
+                padding: .5em;
+                width: 33%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('common/header', { hostname, codeRegion: organisme.codeRegion, webView, consultationLink }); %>
+
+    <div class="content">
+        <h1>Avis signalé dans votre Espace Anotéa</h1>
+        <p>Bonjour,</p>
+        <p>Nous avons pris connaissance de la réponse que vous avez formulée dans votre Espace Anotéa</p>
+
+        <p class="avis">"<%= avis %>"</p>
+
+        <p>
+            Le modérateur a pris connaissance de ce signalement et a procédé à la validation du commentaire en accord de l’article 4 de nos <a href="https://anotea.pole-emploi.fr/cgu">Conditions Générales d’Utilisation</a>. 
+        </p>
+        <p>
+            Faîtes des commentaires négatifs une opportunité pour améliorer votre e-réputation : en répondant, vous démontrez comment vous gérez votre relation clients.
+        </p>
+        <p>
+            Voici quelques conseils pour formuler votre réponse :
+        </p>
+        <ul>
+            <li><strong>Ayez à l’esprit qu’elle s’adresse aux personnes qui vont consulter les avis Anotéa en ligne</strong>
+            </li>
+            <li>Faites part de la prise en compte des remarques formulées par l’émetteur de l’avis</li>
+            <li>Objectivez en apportant des éléments factuels de réponse (nombre de retours à l’emploi, taux de réussite...,
+                travaux menés ou planifiés...)</li>
+            <li>Ne rédigez pas votre réponse comme une réponse à une réclamation</li>
+            <li>Respectez l’anonymat des formateurs et des stagiaires</li>
+            <li>Ne faites pas mention de coordonnées téléphoniques ou mail</li>
+        </ul>
+
+        <p><strong>Nous espérons que ces conseils vous ont été utiles.</strong></p>
+    </div>
+
+    <div class="footer">
+        <%- include('common/legal/organismes/mentions.ejs'); %>
+    </div>
+
+    <img src="<%= trackingLink %>" alt="Lien de suivi" />
+
+    <% if (webView) { %>
+        <%- include('../../http/views/analyticsTrackers'); %>
+        <script>
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'mail',
+                eventAction: 'webview',
+                eventLabel: 'Email en version Web'
+            });
+        </script>
+    <% } %>
+</body>
+
+</html>

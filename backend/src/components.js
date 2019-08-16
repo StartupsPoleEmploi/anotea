@@ -11,6 +11,8 @@ const sendForgottenPasswordEmail = require('./common/components/mailing/sendForg
 const sendOrganisationAccountEmail = require('./common/components/mailing/sendOrganisationAccountEmail');
 const sendVotreAvisEmail = require('./common/components/mailing/sendVotreAvisEmail');
 const sendReponseRejeteeNotification = require('./common/components/mailing/sendReponseRejeteeNotification');
+const sendSignalementRejeteNotification = require('./common/components/mailing/sendSignalementRejeteNotification');
+const sendSignalementAccepteNotification = require('./common/components/mailing/sendSignalementAccepteNotification');
 const sendInjureMail = require('./common/components/mailing/sendInjureMail');
 
 module.exports = async (options = {}) => {
@@ -37,6 +39,8 @@ module.exports = async (options = {}) => {
             sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
             sendVotreAvisEmail: sendVotreAvisEmail(db, mailer),
             sendReponseRejeteeNotification: sendReponseRejeteeNotification(db, mailer, logger),
+            sendSignalementRejeteNotification: sendSignalementRejeteNotification(db, mailer, logger),
+            sendSignalementAccepteNotification: sendSignalementAccepteNotification(db, mailer, logger),
             sendInjureMail: sendInjureMail(db, mailer, logger)
         }
     }, options || {});

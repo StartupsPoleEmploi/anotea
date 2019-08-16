@@ -6,6 +6,7 @@ const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
 const computeModerationStats = require('./utils/computeModerationStats');
 const { objectId } = require('../../../../../common/validators');
+const { IdNotFoundError } = require('../../../../../common/errors');
 
 module.exports = ({ db, logger, middlewares, configuration, moderation, mailing }) => {
 
@@ -115,7 +116,16 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { reason } = await Joi.validate(req.body, { reason: Joi.string().required() }, { abortEarly: false });
 
-        let avis = await moderation.reject(id, reason, { event: { origin: getRemoteAddress(req) } });
+        let avis = await db.collection('comment').findOne({ _id: new ObjectID(id) });
+        if (avis) {
+            if (avis.reported) {
+                await mailing.sendSignalementAccepteNotification(avis._id);
+            }
+        } else {
+            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+        }
+
+        avis = await moderation.reject(id, reason, { event: { origin: getRemoteAddress(req) } });
 
         if (reason === 'injure') {
             let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
@@ -146,7 +156,16 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { qualification } = await Joi.validate(req.body, { qualification: Joi.string().required() }, { abortEarly: false });
 
-        let avis = await moderation.publish(id, qualification, { event: { origin: getRemoteAddress(req) } });
+        let avis = await db.collection('comment').findOne({ _id: new ObjectID(id) });
+        if (avis) {
+            if (avis.reported) {
+                await mailing.sendSignalementRejeteNotification(avis._id);
+            }
+        } else {
+            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
+        }
+
+        avis = await moderation.publish(id, qualification, { event: { origin: getRemoteAddress(req) } });
 
         return res.json(avis);
     });
