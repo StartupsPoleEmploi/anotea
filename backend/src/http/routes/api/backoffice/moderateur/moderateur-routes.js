@@ -142,11 +142,20 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
     }));
 
     router.put('/backoffice/moderateur/avis/:id/publish', checkAuth, checkProfile('moderateur'), async (req, res) => {
+        const { sendAvisPublieMail } = mailing;
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { qualification } = await Joi.validate(req.body, { qualification: Joi.string().required() }, { abortEarly: false });
 
         let avis = await moderation.publish(id, qualification, { event: { origin: getRemoteAddress(req) } });
+
+        let trainee = await db.collection('trainee').findOne({ token: avis.token });
+        let email = trainee.trainee.email;
+        sendAvisPublieMail(email, trainee, avis, () => {
+            logger.info(`email sent to ${email} pour avis publié`);
+        }, err => {
+            logger.error(`Unable to send email to ${email}`, err);
+        });
 
         return res.json(avis);
     });
