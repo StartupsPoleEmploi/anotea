@@ -19,6 +19,8 @@ Participer à l'amélioration des formations
 
 Donnez des retours directs aux centres de formation ainsi qu'à Pôle Emploi.
 
+<%- include('common/signature.txt'); %>
+
 <%- include('common/legal/stagiaires/mentions.txt'); %>
 
 Si vous ne souhaitez plus participer à l'enquête vous pouvez vous désinscrire :

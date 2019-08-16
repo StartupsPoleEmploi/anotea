@@ -20,4 +20,6 @@ Voici quelques conseils pour formuler votre réponse :
 
 Nous avons procédé au rejet de la réponse ci-dessus et nous vous invitons à la modifier dans votre Espace.
 
+<%- include('common/signature.txt'); %>
+
 <%- include('common/legal/organismes/mentions.txt'); %>
