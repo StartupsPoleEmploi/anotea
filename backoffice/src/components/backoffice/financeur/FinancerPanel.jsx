@@ -18,6 +18,7 @@ import ResultDivider from '../common/panel/ResultDivider';
 import './FinancerPanel.scss';
 import FiltersResume from './FiltersResume';
 import Loader from '../common/Loader';
+import PeriodeFilter from './PeriodeFilter';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
@@ -469,6 +470,9 @@ export default class FinancerPanel extends React.Component {
                                         placeholderText="Choisissez un organisme"
                                         selectValue={currentOrganisation}
                                     />
+                                    <PeriodeFilter
+                                        label="Période"
+                                        placeholderText="JJ/MM/AAAA" />
                                     {currentLieu._id && currentOrganisation._id &&
                                         <Filter
                                             label="Formation"

@@ -24,6 +24,7 @@
     "query-string": "6.2.0",
     "react": "16.6.3",
     "react-chartjs-2": "2.7.4",
+    "react-datepicker": "2.8.0",
     "react-dom": "16.6.3",
     "react-intl": "2.7.2",
     "react-modal": "3.6.1",
