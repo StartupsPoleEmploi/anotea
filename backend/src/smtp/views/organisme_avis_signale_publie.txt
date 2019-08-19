@@ -21,4 +21,6 @@ Voici quelques conseils pour formuler votre réponse :
 
 Nous espérons que ces conseils vous ont été utiles.
 
+<%- include('common/signature.txt'); %>
+
 <%- include('common/legal/organismes/mentions.txt'); %>

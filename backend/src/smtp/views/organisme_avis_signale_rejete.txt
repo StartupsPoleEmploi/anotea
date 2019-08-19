@@ -10,4 +10,6 @@ Le modérateur a ré-éxaminé le commentaire laissé par le stagiaire et a déc
 
 Ce commentaire ne sera plus diffusé en ligne.
 
+<%- include('common/signature.txt'); %>
+
 <%- include('common/legal/organismes/mentions.txt'); %>
