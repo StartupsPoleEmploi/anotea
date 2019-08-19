@@ -147,6 +147,38 @@ module.exports = function(db, logger, configuration, regions) {
 
             sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
         },
+        sendSignalementAccepteNotification: async (mailOptions, organisme, avis, successCallback, errorCallback) => {
+            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
+            let params = {
+                hostname: configuration.app.public_hostname,
+                trackingLink: getTrackingLink(organisme),
+                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementAccepte/${avis.token}`,
+                avis: avis.comment.text,
+                organisme
+            };
+
+            mailOptions.subject = `Pôle Emploi - avis signalé dans votre Espace Anotéa`;
+            mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
+
+            sendMail('organisme_avis_signale_rejete', params, mailOptions, successCallback, errorCallback);
+        },
+        sendSignalementRejeteNotification: async (mailOptions, organisme, avis, successCallback, errorCallback) => {
+            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
+            let params = {
+                hostname: configuration.app.public_hostname,
+                trackingLink: getTrackingLink(organisme),
+                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementRejete/${avis.token}`,
+                avis: avis.comment.text,
+                organisme
+            };
+
+            mailOptions.subject = `Pôle Emploi - avis signalé dans votre Espace Anotéa`;
+            mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
+
+            sendMail('organisme_avis_signale_publie', params, mailOptions, successCallback, errorCallback);
+        },
         sendReponseRejeteeNotification: async (mailOptions, organisme, avis, successCallback, errorCallback) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
@@ -159,7 +191,7 @@ module.exports = function(db, logger, configuration, regions) {
                 reponse: avis.reponse.text
             };
 
-            mailOptions.subject = `Anotéa - votre réponse n'a pas été prise en compte`;
+            mailOptions.subject = `Pôle Emploi - votre réponse n'a pas été prise en compte`;
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
 
@@ -237,7 +269,7 @@ module.exports = function(db, logger, configuration, regions) {
                 hostname: configuration.app.public_hostname,
             };
 
-            mailOptions.subject = 'Pole Emploi - Suivi de votre formation';
+            mailOptions.subject = 'Pôle Emploi - Suivi de votre formation';
             mailOptions.list = Object.assign({}, list, {
                 unsubscribe: {
                     url: unsubscribeLink,
