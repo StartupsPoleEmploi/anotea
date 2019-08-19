@@ -80,6 +80,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             },
             unsubscribe: false,
             mailSent: true,
+            avisCreated: false,
             mailSentDate: date.toJSON(),
             tracking: {
                 firstRead: date.toJSON()
