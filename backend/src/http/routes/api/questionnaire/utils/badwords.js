@@ -21,15 +21,16 @@ module.exports = function(logger) {
             for (let i = 0; i < dictionnary.length; i++) {
                 if (string.contains(' ') && string.contains(' ' + dictionnary[i] + ' ')) {
                     return false;
-                } else if (string.contains('.') && string.contains(dictionnary[i] + '.')) {
+                } else if (string.contains('.') && string.contains(' ' + dictionnary[i] + '.')) {
                     return false;
-                } else if (string.contains(',') && string.contains(dictionnary[i] + ',')) {
+                } else if (string.contains(',') && string.contains(' ' + dictionnary[i] + ',')) {
                     return false;
                 } else if (string.endsWith(' ' + dictionnary[i])) {
-
                     return false;
                 } else if (string.s === dictionnary[i]) {
                     // one word
+                    return false;
+                } else if (string.s.startsWith(dictionnary[i] + ' ') || string.s.startsWith(dictionnary[i] + '.') || string.s.startsWith(dictionnary[i] + ',')) {
                     return false;
                 }
             }
