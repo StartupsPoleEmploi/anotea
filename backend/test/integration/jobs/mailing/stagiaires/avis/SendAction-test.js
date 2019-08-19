@@ -37,6 +37,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     email: 'not-sent@trainee.org',
                 },
             })),
+            insertIntoDatabase('trainee', newTrainee({
+                codeRegion: '11',
+                sourceIDF: null,
+                mailSent: false,
+                avisCreated: true,
+                unsubscribe: false,
+                trainee: {
+                    email: 'not-sent-either@trainee.org',
+                },
+            })),
         ]);
 
         await avisMailer.sendEmails(action);
