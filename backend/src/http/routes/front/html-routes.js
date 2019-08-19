@@ -105,6 +105,25 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
         });
     });
 
+    router.get('/mail/:token/publie', async (req, res) => {
+        const trainee = await db.collection('trainee').findOne({ token: req.params.token });
+        if (trainee === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const unsubscribeLink = mailer.getUnsubscribeLink(trainee);
+
+        res.render('../../smtp/views/avis_publie.ejs', {
+            trainee: trainee,
+            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/publie?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
+            unsubscribeLink: unsubscribeLink,
+            trackingLink: `${configuration.app.public_hostname}/mail/${trainee.token}/track`,
+            hostname: configuration.app.public_hostname,
+            webView: true
+        });
+    });
+
     router.get('/mail/:token/6mois', async (req, res) => {
         const trainee = await db.collection('trainee').findOne({ token: req.params.token });
         if (trainee === null) {

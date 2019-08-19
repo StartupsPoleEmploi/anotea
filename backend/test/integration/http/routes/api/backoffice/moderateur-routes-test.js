@@ -329,7 +329,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         const id = new ObjectID();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment({ _id: id })),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
         ]);
 
         let response = await request(app)
