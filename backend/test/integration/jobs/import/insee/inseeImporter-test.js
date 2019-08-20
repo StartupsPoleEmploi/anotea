@@ -10,7 +10,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
     it('should create new mapping', async () => {
 
         let db = await getTestDatabase();
-        let correspondancesFile = path.join(__dirname, '../../../../helpers/data', 'correspondances-code-insee-code-postal.csv');
+        let correspondancesFile = path.join(__dirname, '../../../../helpers/data', 'correspondance-code-insee-code-postal.csv');
 
         let importer = doImport(db, logger);
 
@@ -20,7 +20,15 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         assert.deepEqual(_.omit(doc, ['_id']), {
             insee: '77130',
             postalCode: '77580',
+            commune: 'COULOMMES'
         });
-    });
+
+        doc = await db.collection('inseeCode').findOne({ insee: '63402' });
+        assert.deepEqual(_.omit(doc, ['_id']), {
+            insee: '63402',
+            postalCode: '63550',
+            commune: 'SAINT-VICTOR-MONTVIANEIX'
+        });
+    }).timeout(10000);
 
 }));
