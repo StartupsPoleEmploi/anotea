@@ -44,7 +44,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/75111/rome/A1101?d=30');
-    });
+    }).timeout(10000);
 
     it('should get Offres Pôle Emploi link with a training having a postal code without INSEE mapping', async () => {
         let db = await getTestDatabase();
