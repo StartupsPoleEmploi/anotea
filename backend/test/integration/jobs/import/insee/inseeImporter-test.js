@@ -29,6 +29,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             postalCode: '63550',
             commune: 'SAINT-VICTOR-MONTVIANEIX'
         });
-    });
+    }).timeout(10000);
 
 }));
