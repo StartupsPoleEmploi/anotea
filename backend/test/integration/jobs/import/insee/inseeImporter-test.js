@@ -11,8 +11,8 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
     it('should create new mapping', async () => {
 
         let db = await getTestDatabase();
-        const correspondancesFile = path.join(__dirname, '../../../../helpers/data', 'correspondance-code-insee-code-postal.csv');
-        const cedexFile = path.join(__dirname, '../../../../helpers/data', 'liste-des-cedex.csv');
+        const correspondancesFile = path.join(__dirname, '../../../../helpers/data', 'correspondance-code-insee-code-postal-echantillon.csv');
+        const cedexFile = path.join(__dirname, '../../../../helpers/data', 'liste-des-cedex-echantillon.csv');
 
         let postalCodes = doImportPostalCodes(db, logger);
         let cedex = doImportCedex(db, logger);
@@ -35,6 +35,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             commune: 'MONTEUX',
             cedex: ['84202', '84207']
         });
-    }).timeout(40000);
+    });
 
 }));
