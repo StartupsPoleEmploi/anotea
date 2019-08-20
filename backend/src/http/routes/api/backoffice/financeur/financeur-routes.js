@@ -133,11 +133,14 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             }
             return advice;
         });
+        const allAdvices = await db.collection('comment').find(filter, projection).sort(order).toArray();
 
         res.send({
             advices: advices,
             page: page,
-            pageCount: Math.ceil(count / pagination)
+            pageCount: Math.ceil(count / pagination),
+            recentAvis: allAdvices[0],
+            oldestAvis: allAdvices.reverse()[0]
         });
     }));
 

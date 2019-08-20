@@ -81,6 +81,8 @@ export default class FinancerPanel extends React.Component {
             currentPage: 'advices',
             loading: false,
             lieu: [],
+            oldestAvis: '',
+            recentAvis: '',
         };
 
     }
@@ -138,6 +140,8 @@ export default class FinancerPanel extends React.Component {
                 return advice;
             }),
             loading: false,
+            oldestAvis: result.oldestAvis.date,
+            recentAvis: result.recentAvis.date,
         });
 
     };
@@ -472,7 +476,9 @@ export default class FinancerPanel extends React.Component {
                                     />
                                     <PeriodeFilter
                                         label="Période"
-                                        placeholderText="JJ/MM/AAAA" />
+                                        placeholderText="JJ/MM/AAAA"
+                                        oldestAvis={this.state.oldestAvis}
+                                        recentAvis={this.state.recentAvis}/>
                                     {currentLieu._id && currentOrganisation._id &&
                                         <Filter
                                             label="Formation"
