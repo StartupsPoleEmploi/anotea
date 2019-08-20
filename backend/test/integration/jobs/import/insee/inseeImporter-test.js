@@ -35,6 +35,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
             commune: 'MONTEUX',
             cedex: ['84202', '84207']
         });
-    }).timeout(30000);
+    }).timeout(40000);
 
 }));
