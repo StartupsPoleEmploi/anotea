@@ -18,7 +18,7 @@ module.exports = function(db, logger, configuration) {
                 let promise = new Promise(async (resolve, reject) => {
                     // skip CSV header
                     if (count > 0) {
-                        let inseeCode = { insee: record[0], postalCode: record[1] };
+                        let inseeCode = { insee: record[0], postalCode: record[1], commune: record[2] };
                         await db.collection('inseeCode').insertOne(inseeCode);
                     }
                     callback();
@@ -29,7 +29,7 @@ module.exports = function(db, logger, configuration) {
             }, { parallel: 10 }).on('finish', async () => {
                 await Promise.all(promises);
                 resolve();
-                logger.info(` Postal Code <-> City Code INSEE - completed (${count} mapping imported, ${moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS')}`);
+                logger.info(`Postal Code <-> City Code INSEE - completed (${count} mapping imported, ${moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS')})`);
             });
             input.pipe(parser).pipe(transformer);
         });
