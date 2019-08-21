@@ -20,7 +20,7 @@ module.exports = db => {
             }, {
                 $group: { _id: '$codeROME' }
             }]).toArray(),
-            db.collection('inseeCode').findOne({ postalCode: postalCode })
+            db.collection('inseeCode').findOne({ postalCode: { $elemMatch: { $eq: postalCode } } })
         ]);
 
         const romeList = romeMapping.map(mapping => {

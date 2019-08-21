@@ -4,6 +4,7 @@ import 'react-select/dist/react-select.css';
 
 import { getOrganisationTrainings } from './service/organismeService';
 import { getOrganisationLieuTrainingSessions } from '../financeur/service/financeurService';
+import PropTypes from 'prop-types';
 
 export default class SearchForm extends React.Component {
 
@@ -19,13 +20,21 @@ export default class SearchForm extends React.Component {
         this.unsetTraining = props.unsetTraining;
     }
 
+    static propTypes = {
+        changeTrainingSession: PropTypes.func.isRequired,
+        unsetTraining: PropTypes.func.isRequired,
+        id: PropTypes.string,
+        codeINSEE: PropTypes.string,
+        currentEntity: PropTypes.object,
+    }
+
     componentWillReceiveProps = nextProps => {
-        if (nextProps.id !== null && nextProps.currentEntity != null) {
-            if (nextProps.id !== this.state.organisationId || nextProps.currentEntity.id !== this.state.postalCode) {
-                getOrganisationTrainings(nextProps.id, nextProps.currentEntity.id).then(trainings => {
+        if (nextProps.id !== null && !!nextProps.currentEntity) {
+            if (nextProps.id !== this.state.organisationId || nextProps.currentEntity.codeINSEE !== this.state.codeINSEE) {
+                getOrganisationTrainings(nextProps.id, nextProps.currentEntity.codeINSEE).then(trainings => {
                     this.setState({
                         organisationId: nextProps.id,
-                        postalCode: nextProps.currentEntity.id,
+                        codeINSEE: nextProps.currentEntity.codeINSEE,
                         currentTraining: null,
                         trainingList: trainings,
                         sessionList: [],
@@ -43,11 +52,11 @@ export default class SearchForm extends React.Component {
         })[0];
         this.setState({ currentTraining: training }, () => {
             this.changeTrainingSession(training._id, this.props.currentEntity._id);
-            getOrganisationLieuTrainingSessions(this.state.organisationId, training._id, this.props.currentEntity._id).then(sessions => {
+            getOrganisationLieuTrainingSessions(this.state.organisationId, training._id, this.props.currentEntity.codeINSEE).then(sessions => {
                 if (sessions.length > 0) {
                     this.setState({
                         sessionList: sessions,
-                        currentSession: sessions[0].postalCode
+                        currentSession: sessions[0].codeINSEE
                     });
                 }
             });

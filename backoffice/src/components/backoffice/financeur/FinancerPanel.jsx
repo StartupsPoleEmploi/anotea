@@ -459,8 +459,8 @@ export default class FinancerPanel extends React.Component {
             className: 'custom-class'
         }));
         const placesOptions = entities.map(place => ({
-            label: place.city + ' (' + place._id + ')',
-            id: place._id,
+            label: place.city,
+            id: place.codeINSEE,
             className: 'custom-class'
         }));
         const formationsOptions = formations.map(formation => ({
