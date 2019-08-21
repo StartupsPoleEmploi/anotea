@@ -3,7 +3,7 @@ const path = require('path');
 const { withMongoDB } = require('../../../../../helpers/test-database');
 const { newTrainee } = require('../../../../../helpers/data/dataset');
 const doImportRome = require('../../../../../../src/jobs/import/rome/importer');
-const doImportINSEE = require('../../../../../../src/jobs/import/insee/importer');
+const doImportINSEE = require('../../../../../../src/jobs/import/insee/importers/postalCodes');
 const logger = require('../../../../../helpers/test-logger');
 const externalLinks = require('../../../../../../src/http/routes/front/utils/externalLinks');
 
@@ -26,7 +26,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         let importerINSEE = doImportINSEE(db, logger);
         await importerINSEE.doImport(correspondancesFile);
 
-        assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/44300/rome/A1101?d=30');
+        assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/44109/rome/A1101?d=30');
     }).timeout(10000);
 
     it('should get La Bonne Boite link with a training having a postal code with an INSEE mapping', async () => {
@@ -61,7 +61,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'pe'),
-            'https://candidat.pole-emploi.fr/offres/recherche?lieux=44300&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
+            'https://candidat.pole-emploi.fr/offres/recherche?lieux=44109&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
     }).timeout(10000);
 
     it('should get Offres Pôle Emploi link with a training having a postal code with an INSEE mapping', async () => {

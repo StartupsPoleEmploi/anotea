@@ -86,8 +86,8 @@ export const getFormations = (idRegion, codeFinanceur, siren, lieu) => {
     return _get(`/backoffice/financeur/region/${idRegion}/organisme_formateur/${siren}/trainings?lieu=${lieu}${query}`);
 };
 
-export const getOrganisationLieuTrainingSessions = (siren, idTraining, postalCode) => {
-    return _get(`/backoffice/financeur/organismes_formateurs/${siren}/training/${idTraining}/sessions?postalCode=${postalCode}`);
+export const getOrganisationLieuTrainingSessions = (siren, idTraining, codeINSEE) => {
+    return _get(`/backoffice/financeur/organismes_formateurs/${siren}/training/${idTraining}/sessions?codeINSEE=${codeINSEE}`);
 };
 
 export const getInventory = (idRegion, codeFinanceur, lieu, organisation, formation) => {

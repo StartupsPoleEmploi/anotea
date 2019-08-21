@@ -3,32 +3,38 @@ const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../../helpers/test-database');
 const logger = require('../../../../helpers/test-logger');
-const doImport = require('../../../../../src/jobs/import/insee/importer');
+const doImportPostalCodes = require('../../../../../src/jobs/import/insee/importers/postalCodes');
+const doImportCedex = require('../../../../../src/jobs/import/insee/importers/cedex');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
     it('should create new mapping', async () => {
 
         let db = await getTestDatabase();
-        let correspondancesFile = path.join(__dirname, '../../../../helpers/data', 'correspondance-code-insee-code-postal.csv');
+        const correspondancesFile = path.join(__dirname, '../../../../helpers/data', 'correspondance-code-insee-code-postal-echantillon.csv');
+        const cedexFile = path.join(__dirname, '../../../../helpers/data', 'liste-des-cedex-echantillon.csv');
 
-        let importer = doImport(db, logger);
+        let postalCodes = doImportPostalCodes(db, logger);
+        let cedex = doImportCedex(db, logger);
 
-        await importer.doImport(correspondancesFile);
+        await postalCodes.doImport(correspondancesFile);
+        await cedex.doImport(cedexFile);
 
         let doc = await db.collection('inseeCode').findOne({ insee: '77130' });
         assert.deepEqual(_.omit(doc, ['_id']), {
             insee: '77130',
-            postalCode: '77580',
-            commune: 'COULOMMES'
+            postalCode: ['77580'],
+            commune: 'COULOMMES',
+            cedex: []
         });
 
-        doc = await db.collection('inseeCode').findOne({ insee: '63402' });
+        doc = await db.collection('inseeCode').findOne({ insee: '84080' });
         assert.deepEqual(_.omit(doc, ['_id']), {
-            insee: '63402',
-            postalCode: '63550',
-            commune: 'SAINT-VICTOR-MONTVIANEIX'
+            insee: '84080',
+            postalCode: ['84170'],
+            commune: 'MONTEUX',
+            cedex: ['84202', '84207']
         });
-    }).timeout(10000);
+    });
 
 }));

@@ -5,17 +5,25 @@ const cli = require('commander');
 const { execute } = require('../../job-utils');
 
 cli.description('Import Postal Code <-> City Code INSEE mapping from CSV file')
-.option('-f, --file [file]', 'The CSV file to import')
+.option('-p, --postalCodes [postalCodes]', 'The postal codes CSV file to import')
+.option('-c, --cedex [cedex]', 'The cedex CSV file to import')
 .parse(process.argv);
 
 
 execute(async ({ logger, db, exit, configuration }) => {
 
-    let romeImporter = require(`./importer`)(db, logger, configuration);
+    let postalCodes = require('./importers/postalCodes')(db, logger, configuration);
+    let cedex = require('./importers/cedex')(db, logger, configuration);
 
-    if (!cli.file) {
+    if (!cli.postalCodes || !cli.cedex) {
         return exit('invalid arguments');
     }
 
-    return romeImporter.doImport(cli.file);
+    // step 1
+    await postalCodes.doImport(cli.postalCodes);
+
+    // step 2
+    await cedex.doImport(cli.cedex);
+
+    return;
 });
