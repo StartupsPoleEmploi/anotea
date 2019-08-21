@@ -137,7 +137,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             }
         }
 
-        const count = await db.collection('comment').countDocuments(filter);
+        const count = await db.collection('comment').countDocuments(filterFinal);
         
         if (count < skip) {
             res.send({ error: 404 });
@@ -196,6 +196,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             });
             if (inseeCity === null) {
                 place.city = place.city.toUpperCase() + ' - inconnue : ' + place._id;
+                place.codeINSEE = place._id;
                 return place;
             } else if (added[inseeCity.insee] !== true) {
                 added[inseeCity.insee] = true;
