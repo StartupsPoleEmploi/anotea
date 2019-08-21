@@ -32,6 +32,12 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             'codeRegion': `${req.params.idregion}`
         };
 
+        if (req.query.startDate && req.query.endDate) {
+            filter = Object.assign(filter,
+                { 'training.startDate': { $gte: new Date(req.query.startDate), $lte: new Date(req.query.endDate) } },
+            );
+        }
+
         if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
@@ -64,6 +70,13 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
         const projection = { token: 0 };
 
         let filter = { 'codeRegion': `${req.params.idregion}` };
+        let periodeFilter = {};
+
+        if (req.query.startDate && req.query.endDate) {
+            periodeFilter = Object.assign(periodeFilter,
+                { 'training.startDate': { $gte: new Date(req.query.startDate), $lte: new Date(req.query.endDate) } },
+            );
+        }
 
         if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
@@ -116,14 +129,15 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             }
         }
 
-        const count = await db.collection('comment').countDocuments(filter);
+        const finalFilter = { ...filter, ...periodeFilter };
+        const count = await db.collection('comment').countDocuments(finalFilter);
         
         if (count < skip) {
             res.send({ error: 404 });
             return;
         }
 
-        const results = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
+        const results = await db.collection('comment').find(finalFilter, projection).sort(order).skip(skip).limit(pagination).toArray();
         const advices = results.map(advice => {
             if (advice.pseudoMasked) {
                 advice.pseudo = '';
@@ -133,8 +147,9 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             }
             return advice;
         });
-        const allAdvices = await db.collection('comment').find(filter, projection).sort(order).toArray();
 
+        const allAdvices = await db.collection('comment').find(filter, projection).sort(order).toArray();
+        
         res.send({
             advices: advices,
             page: page,
@@ -178,6 +193,12 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             'training.organisation.siret': { '$regex': `${req.params.siren}` },
             'codeRegion': `${req.params.idregion}`
         };
+
+        if (req.query.startDate && req.query.endDate) {
+            filter = Object.assign(filter,
+                { 'training.startDate': { $gte: new Date(req.query.startDate), $lte: new Date(req.query.endDate) } },
+            );
+        }
 
         if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
@@ -253,6 +274,12 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
         let filter = {
             'codeRegion': `${req.params.idregion}`
         };
+
+        if (req.query.startDate && req.query.endDate) {
+            filter = Object.assign(filter,
+                { 'training.startDate': { $gte: new Date(req.query.startDate), $lte: new Date(req.query.endDate) } },
+            );
+        }
 
         if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });

@@ -20,34 +20,21 @@ export default class PeriodeFilter extends React.Component {
     static propTypes = {
         label: PropTypes.string.isRequired,
         placeholderText: PropTypes.string.isRequired,
-        recentAvis: PropTypes.string.isRequired,
-        oldestAvis: PropTypes.string.isRequired,
+        recentAvis: PropTypes.instanceOf(Date),
+        oldestAvis: PropTypes.instanceOf(Date),
+        startDate: PropTypes.instanceOf(Date),
+        endDate: PropTypes.instanceOf(Date),
+        onChangeStartDate: PropTypes.func.isRequired,
+        onChangeEndDate: PropTypes.func.isRequired,
+        onClearDates: PropTypes.func.isRequired,
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            startDate: null,
-        };
-    }
-
     handleChangeStart = date => {
-        this.setState({
-            startDate: date,
-        });
+        this.props.onChangeStartDate(date);
     }
 
     handleChangeEnd = date => {
-        this.setState({
-            endDate: date,
-        });
-    }
-
-    handleClear = () => {
-        this.setState({
-            startDate: null,
-            endDate: null
-        });
+        this.props.onChangeEndDate(date);
     }
 
     render() {
@@ -60,26 +47,26 @@ export default class PeriodeFilter extends React.Component {
                         openToDate={new Date(this.props.oldestAvis)}
                         dateFormat="dd/MM/yyyy"
                         selectsStart
-                        selected={this.state.startDate}
+                        selected={this.props.startDate}
                         onChange={this.handleChangeStart}
                         placeholderText={this.props.placeholderText}
                         minDate={new Date(this.props.oldestAvis)}
-                        maxDate={this.state.endDate ? this.state.endDate : new Date(this.props.recentAvis)}
+                        maxDate={this.props.endDate ? this.props.endDate : new Date(this.props.recentAvis)}
                     />
                     {'à '}
                     <DatePicker
-                        openToDate={this.state.startDate}
+                        openToDate={this.props.startDate}
                         dateFormat="dd/MM/yyyy"
                         selectsEnd
-                        selected={this.state.endDate}
+                        selected={this.props.endDate}
                         onChange={this.handleChangeEnd}
                         placeholderText={this.props.placeholderText}
-                        disabled={!this.state.startDate && true}
-                        minDate={this.state.startDate}
+                        disabled={!this.props.startDate && true}
+                        minDate={this.props.startDate}
                         maxDate={new Date(this.props.recentAvis)}
                     />
-                    {this.state.startDate &&
-                        <i className="fas fa-times-circle" onClick={this.handleClear} />
+                    {this.props.startDate &&
+                        <i className="fas fa-times-circle" onClick={this.props.onClearDates} />
                     }
                 </div>
             </div>
