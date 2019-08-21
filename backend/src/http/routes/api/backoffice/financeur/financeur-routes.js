@@ -184,27 +184,8 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             { $group: { _id: '$training.place.postalCode', city: { $first: '$training.place.city' } } },
             { $sort: { _id: 1 } }]).toArray();
 
-        let added = [];
-        const promise = places.map(async place => {
-            const inseeCity = await db.collection('inseeCode').findOne({
-                $or: [
-                    { cedex: { $elemMatch: { $eq: place._id } } },
-                    { postalCode: { $elemMatch: { $eq: place._id } } },
-                    { insee: place._id },
-                    { commune: place._id }
-                ]
-            });
-            if (inseeCity === null) {
-                place.city = place.city.toUpperCase() + ' - inconnue : ' + place._id;
-                place.codeINSEE = place._id;
-                return place;
-            } else if (added[inseeCity.insee] !== true) {
-                added[inseeCity.insee] = true;
-                return { codeINSEE: inseeCity.insee, city: inseeCity.commune };
-            }
-        });
 
-        const aggregatedPlaces = await Promise.all(promise);
+        const aggregatedPlaces = await postalCodes.getAggregatedPlaces(places);
 
         res.status(200).send(aggregatedPlaces.filter(place => place !== undefined));
     }));
@@ -236,11 +217,10 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
     router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
-        let filter = '';
+        let filter = {};
 
-        if (req.query.postalCode) {
-            filter = Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
-        }
+        const lieuFilter = await buildLieuFilter(req.query.codeINSEE);
+        filter = Object.assign(filter, lieuFilter);
 
         const trainings = await db.collection('comment').aggregate([
             {
@@ -308,8 +288,22 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         }
 
         let inventory = {};
-        inventory.reported = await db.collection('comment').countDocuments({ ...filter, reported: true });
-        inventory.rejected = await db.collection('comment').countDocuments({ ...filter, rejected: true });
+        inventory.reported = await db.collection('comment').countDocuments({
+            $and: [{
+                ...filter,
+                reported: true
+            },
+            lieuFilter
+            ]
+        });
+        inventory.rejected = await db.collection('comment').countDocuments({
+            $and: [{
+                ...filter,
+                rejected: true
+            },
+            lieuFilter
+            ]
+        });
         inventory.commented = await db.collection('comment').countDocuments({
             $and: [{
                 ...filter,
