@@ -173,7 +173,7 @@ module.exports = function(db, logger, configuration, regions) {
                 trackingLink: getTrackingLink(organisme),
                 consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/password`,
                 hostname: configuration.app.public_hostname,
-                organisme: organisme,
+                organisation: organisme,
                 contact: getRegionEmail(region)
             };
 
