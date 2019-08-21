@@ -7,7 +7,7 @@ const { transformObject, encodeStream } = require('../../../../../common/utils/s
 const getReponseStatus = require('../../../../../common/utils/getReponseStatus');
 
 
-module.exports = ({ db, middlewares, configuration, logger }) => {
+module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
     const POLE_EMPLOI = '4';
     let pagination = configuration.api.pagination;
@@ -23,6 +23,29 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
         }
     };
 
+    const buildLieuFilter = async lieu => {
+        if (lieu) {
+            if (lieu.length === 2 || lieu.length === 3) {
+                return { 'training.place.postalCode': { '$regex': `^${lieu}.*` } };
+            } else {
+                const inseeCode = await postalCodes.findINSEECodeByINSEE(lieu);
+                if (inseeCode) {
+                    return {
+                        '$or': [
+                            { 'training.place.postalCode': { '$in': inseeCode.cedex } },
+                            { 'training.place.postalCode': { '$in': inseeCode.postalCode } },
+                            { 'training.place.postalCode': inseeCode.insee },
+                            { 'training.place.postalCode': inseeCode.commune }
+                        ]
+                    };
+                } else {
+                    return { 'training.place.postalCode': lieu };
+                }
+            }
+        }
+        return {};
+    };
+
     router.get('/backoffice/financeur/region/:idregion/organisations', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
@@ -36,9 +59,8 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
-        if (req.query.lieu) {
-            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.lieu}.*` } });
-        }
+        const lieuFilter = await buildLieuFilter(req.query.lieu);
+        filter = Object.assign(filter, lieuFilter);
 
         const organisations = await db.collection('comment')
         .aggregate([
@@ -69,10 +91,6 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
-        if (req.query.lieu) {
-            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.lieu}.*` } });
-        }
-
         if (req.query.organisation) {
             filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.organisation}` } });
         }
@@ -94,6 +112,9 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
                 filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
             }
         }
+
+        const lieuFilter = await buildLieuFilter(req.query.lieu);
+        const filterFinal = { $and: [filter, lieuFilter] };
 
         let order = { date: 1 };
 
@@ -123,7 +144,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             return;
         }
 
-        const results = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
+        const results = await db.collection('comment').find(filterFinal, projection).sort(order).skip(skip).limit(pagination).toArray();
         const advices = results.map(advice => {
             if (advice.pseudoMasked) {
                 advice.pseudo = '';
@@ -163,7 +184,28 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             { $group: { _id: '$training.place.postalCode', city: { $first: '$training.place.city' } } },
             { $sort: { _id: 1 } }]).toArray();
 
-        res.status(200).send(places);
+        let added = [];
+        const promise = places.map(async place => {
+            const inseeCity = await db.collection('inseeCode').findOne({
+                $or: [
+                    { cedex: { $elemMatch: { $eq: place._id } } },
+                    { postalCode: { $elemMatch: { $eq: place._id } } },
+                    { insee: place._id },
+                    { commune: place._id }
+                ]
+            });
+            if (inseeCity === null) {
+                place.city = place.city.toUpperCase() + ' - inconnue : ' + place._id;
+                return place;
+            } else if (added[inseeCity.insee] !== true) {
+                added[inseeCity.insee] = true;
+                return { codeINSEE: inseeCity.insee, city: inseeCity.commune };
+            }
+        });
+
+        const aggregatedPlaces = await Promise.all(promise);
+
+        res.status(200).send(aggregatedPlaces.filter(place => place !== undefined));
     }));
 
     router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
@@ -180,9 +222,8 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
-        if (req.query.lieu) {
-            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.lieu}.*` } });
-        }
+        const lieuFilter = await buildLieuFilter(req.query.lieu);
+        filter = Object.assign(filter, lieuFilter);
 
         const trainings = await db.collection('comment').aggregate([
             { $match: filter },
@@ -255,9 +296,7 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
-        if (req.query.lieu) {
-            filter = Object.assign(filter, { 'training.place.postalCode': { '$regex': `^${req.query.lieu}.*` } });
-        }
+        const lieuFilter = await buildLieuFilter(req.query.lieu);
 
         if (req.query.organisation) {
             filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.organisation}` } });
@@ -271,17 +310,25 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
         inventory.reported = await db.collection('comment').countDocuments({ ...filter, reported: true });
         inventory.rejected = await db.collection('comment').countDocuments({ ...filter, rejected: true });
         inventory.commented = await db.collection('comment').countDocuments({
-            ...filter,
-            published: true,
-            comment: { $ne: null }
+            $and: [{
+                ...filter,
+                published: true,
+                comment: { $ne: null }
+            },
+            lieuFilter
+            ]
         });
         inventory.all = await db.collection('comment').countDocuments({
-            ...filter,
-            $or: [
-                { 'comment': null },
-                { 'comment': { $exists: false } },
-                { 'published': true }
-            ],
+            $and: [{
+                ...filter,
+                $or: [
+                    { 'comment': null },
+                    { 'comment': { $exists: false } },
+                    { 'published': true }
+                ],
+            },
+            lieuFilter
+            ]
         });
         res.status(200).send(inventory);
     }));
@@ -329,9 +376,8 @@ module.exports = ({ db, middlewares, configuration, logger }) => {
             if (req.query.siret) {
                 query['training.organisation.siret'] = { '$regex': `${req.query.siret}` };
             }
-            if (req.query.lieu) {
-                query['training.place.postalCode'] = { '$regex': `^${req.query.lieu}.*` };
-            }
+            const lieuFilter = await buildLieuFilter(req.query.lieu);
+            query = Object.assign(query, lieuFilter);
             if (req.query.formationId) {
                 query['training.idFormation'] = req.query.formationId;
             }

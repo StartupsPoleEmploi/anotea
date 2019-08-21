@@ -23,7 +23,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         let doc = await db.collection('inseeCode').findOne({ insee: '77130' });
         assert.deepEqual(_.omit(doc, ['_id']), {
             insee: '77130',
-            postalCode: '77580',
+            postalCode: ['77580'],
             commune: 'COULOMMES',
             cedex: []
         });
@@ -31,7 +31,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         doc = await db.collection('inseeCode').findOne({ insee: '84080' });
         assert.deepEqual(_.omit(doc, ['_id']), {
             insee: '84080',
-            postalCode: '84170',
+            postalCode: ['84170'],
             commune: 'MONTEUX',
             cedex: ['84202', '84207']
         });
