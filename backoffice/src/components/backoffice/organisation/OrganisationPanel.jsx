@@ -161,8 +161,8 @@ export default class OrganisationPanel extends React.Component {
             inventory: { reported: 0, commented: 0, all: 0 },
             advices: [],
             training: Object.assign(this.state.training, {
-                currentEntity: this.state.training.entities.filter(function (entity) {
-                    return entity.id === options.id;
+                currentEntity: this.state.training.entities.filter(entity => {
+                    return entity.codeINSEE === options.codeINSEE;
                 })[0]
             })
         }, () => {
@@ -186,7 +186,7 @@ export default class OrganisationPanel extends React.Component {
         const page = this.state.pagination.current;
 
         if (this.state.training.currentEntity) {
-            const result = await loadAdvices(this.state.organisationId, this.state.trainingId, this.state.training.currentEntity.id, this.state.tab, order, page);
+            const result = await loadAdvices(this.state.organisationId, this.state.trainingId, this.state.training.currentEntity.codeINSEE, this.state.tab, order, page);
             this.setState({
                 pagination: { current: result.page, count: result.pageCount },
                 advices: result.advices.map(advice => {
@@ -220,7 +220,7 @@ export default class OrganisationPanel extends React.Component {
 
     doLoadInventory = async () => {
         if (this.state.training.currentEntity) {
-            const inventory = await loadInventory(this.state.organisationId, this.state.trainingId, this.state.training.currentEntity.id);
+            const inventory = await loadInventory(this.state.organisationId, this.state.trainingId, this.state.training.currentEntity.codeINSEE);
             this.setState({ inventory: inventory });
         } else {
             const inventory = await loadAllInventory(this.state.organisationId);
