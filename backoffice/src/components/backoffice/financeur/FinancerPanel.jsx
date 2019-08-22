@@ -18,6 +18,7 @@ import ResultDivider from '../common/panel/ResultDivider';
 import './FinancerPanel.scss';
 import FiltersResume from './FiltersResume';
 import Loader from '../common/Loader';
+import PeriodeFilter from './PeriodeFilter';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
@@ -80,6 +81,10 @@ export default class FinancerPanel extends React.Component {
             currentPage: 'advices',
             loading: false,
             lieu: [],
+            oldestAvis: '',
+            recentAvis: '',
+            startDate: '',
+            endDate: ''
         };
 
     }
@@ -120,12 +125,12 @@ export default class FinancerPanel extends React.Component {
     doGetAdvices = async (order = this.state.order) => {
         const { codeRegion } = this.props;
         const { currentOrganisation, currentFormation } = this.state.training;
-        const { currentFinancer, tab, currentLieu } = this.state;
+        const { currentFinancer, tab, currentLieu, startDate, endDate } = this.state;
 
         this.doLoadInventory();
 
         const page = this.state.pagination.current;
-        const result = await getAdvices(codeRegion, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id, tab, order, page);
+        const result = await getAdvices(codeRegion, startDate, endDate, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id, tab, order, page);
 
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
@@ -137,13 +142,16 @@ export default class FinancerPanel extends React.Component {
                 return advice;
             }),
             loading: false,
+            oldestAvis: result.oldestAvis.date,
+            recentAvis: result.recentAvis.date,
         });
 
     };
 
     doGetOrganisations = async () => {
-        const { props, state } = this;
-        const organisations = await getOrganisations(props.codeRegion, state.currentFinancer._id, state.currentLieu._id);
+        const { props } = this;
+        const { startDate, endDate, currentFinancer, currentLieu } = this.state;
+        const organisations = await getOrganisations(props.codeRegion, startDate, endDate, currentFinancer._id, currentLieu._id);
 
         this.setState(prevState => ({
             training: {
@@ -157,8 +165,8 @@ export default class FinancerPanel extends React.Component {
     doLoadInventory = async () => {
         const { codeRegion } = this.props;
         const { currentOrganisation, currentFormation } = this.state.training;
-        const { currentFinancer, currentLieu } = this.state;
-        const inventory = await getInventory(codeRegion, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id);
+        const { currentFinancer, currentLieu, startDate, endDate } = this.state;
+        const inventory = await getInventory(codeRegion, startDate, endDate, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id);
         
         this.setState(Object.assign(this.state, {
             inventory: inventory
@@ -180,9 +188,9 @@ export default class FinancerPanel extends React.Component {
     };
 
     getFormations = async () => {
-        const { currentFinancer, training, currentLieu } = this.state;
+        const { currentFinancer, training, currentLieu, startDate, endDate } = this.state;
         const { codeRegion } = this.props;
-        const formations = await getFormations(codeRegion, currentFinancer._id, training.currentOrganisation._id, currentLieu._id);
+        const formations = await getFormations(codeRegion, startDate, endDate, currentFinancer._id, training.currentOrganisation._id, currentLieu._id);
         
         this.setState(prevState => ({
             training: {
@@ -409,6 +417,29 @@ export default class FinancerPanel extends React.Component {
         return currentFinancer._id || currentOrganisation._id || currentLieu._id || currentFormation._id || currentDepartement._id ? 'active' : '';
     }
 
+    handleChangeStart = date => {
+        this.setState({
+            startDate: date,
+        });
+    }
+
+    handleChangeEnd = date => {
+        this.setState({
+            endDate: date,
+        }, () => {
+            this.doGetAdvices();
+        });
+    }
+
+    handleClear = () => {
+        this.setState({
+            startDate: '',
+            endDate: ''
+        }, () => {
+            this.doGetAdvices();
+        });
+    }
+
     render() {
         const { currentOrganisation, organisations, entities, formations, currentFormation } = this.state.training;
         const { currentFinancer, financers, inventory, departements, currentLieu } = this.state;
@@ -469,6 +500,16 @@ export default class FinancerPanel extends React.Component {
                                         placeholderText="Choisissez un organisme"
                                         selectValue={currentOrganisation}
                                     />
+                                    <PeriodeFilter
+                                        startDate={this.state.startDate}
+                                        endDate={this.state.endDate}
+                                        label="Période"
+                                        placeholderText="JJ/MM/AAAA"
+                                        oldestAvis={this.state.oldestAvis}
+                                        recentAvis={this.state.recentAvis}
+                                        onChangeStartDate={date => this.handleChangeStart(date)}
+                                        onChangeEndDate={date => this.handleChangeEnd(date)}
+                                        onClearDates={() => this.handleClear()} />
                                     {currentLieu._id && currentOrganisation._id &&
                                         <Filter
                                             label="Formation"

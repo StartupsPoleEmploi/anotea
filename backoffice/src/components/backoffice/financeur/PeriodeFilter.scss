@@ -1,0 +1,29 @@
+.datepicker-container {
+    background-color: #F4F4F5;
+    height: 46px;
+    margin-bottom: 8px;
+    width: auto;
+
+    .react-datepicker-wrapper {
+        border-radius: 5px;
+        padding: 12px 10px;
+    
+        .react-datepicker__input-container {
+    
+            >input {
+                border: none;
+                width: 100px;
+                background-color: #F4F4F5;
+            }
+        }
+    }
+
+    >i {
+        color: #24303A;
+        background-color: #F4F4F5;
+        height: 18px;
+        width: 18px;
+        cursor: pointer;
+        padding-right: 5px;
+    }
+}
