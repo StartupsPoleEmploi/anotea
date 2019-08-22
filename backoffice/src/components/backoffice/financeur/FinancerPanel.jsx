@@ -559,6 +559,8 @@ export default class FinancerPanel extends React.Component {
                         <div className="resume">
                             <div className="d-flex bd-highlight mb-3">
                                 <FiltersResume
+                                    startDate={this.state.startDate}
+                                    endDate={this.state.endDate}
                                     currentFinancer={currentFinancer}
                                     currentOrganisation={currentOrganisation}
                                     currentLieu={currentLieu}
