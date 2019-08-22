@@ -127,7 +127,6 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         }
 
         const lieuFilter = await buildLieuFilter(req.query.lieu);
-        const filterFinal = { $and: [filter, lieuFilter] };
 
         let order = { date: 1 };
 
@@ -150,7 +149,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             }
         }
 
-        const finalFilter = { ...filter, ...periodeFilter };
+        const finalFilter = { ...filter, ...lieuFilter, ...periodeFilter };
         const count = await db.collection('comment').countDocuments(finalFilter);
         
         if (count < skip) {

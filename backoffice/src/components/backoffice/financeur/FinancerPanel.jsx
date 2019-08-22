@@ -142,8 +142,8 @@ export default class FinancerPanel extends React.Component {
                 return advice;
             }),
             loading: false,
-            oldestAvis: result.oldestAvis.date,
-            recentAvis: result.recentAvis.date,
+            oldestAvis: result.oldestAvis ? result.oldestAvis.date : '',
+            recentAvis: result.oldestAvis ? result.recentAvis.date : '',
         });
 
     };
