@@ -442,7 +442,7 @@ export default class FinancerPanel extends React.Component {
 
     render() {
         const { currentOrganisation, organisations, entities, formations, currentFormation } = this.state.training;
-        const { currentFinancer, financers, inventory, departements, currentLieu } = this.state;
+        const { currentFinancer, financers, inventory, departements, currentLieu, startDate, endDate } = this.state;
         const organisationsOptions = organisations.map(organisation => ({
             label: organisation.name.length >= 50 ? organisation.name.substring(0, 50).concat('...') : organisation.name,
             id: organisation._id,
@@ -558,6 +558,8 @@ export default class FinancerPanel extends React.Component {
                         <div className="resume">
                             <div className="d-flex bd-highlight mb-3">
                                 <FiltersResume
+                                    startDate={this.state.startDate}
+                                    endDate={this.state.endDate}
                                     currentFinancer={currentFinancer}
                                     currentOrganisation={currentOrganisation}
                                     currentLieu={currentLieu}
