@@ -168,14 +168,15 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             return advice;
         });
 
-        const allAdvices = await db.collection('comment').find(filter, projection).sort(order).toArray();
+        const periodeOrder = { 'training.startDate': 1 };
+        const allAdvices = await db.collection('comment').find(filter, projection).sort(periodeOrder).toArray();
         
         res.send({
             advices: advices,
             page: page,
             pageCount: Math.ceil(count / pagination),
-            recentAvis: allAdvices[0],
-            oldestAvis: allAdvices.reverse()[0]
+            recentAvis: allAdvices.slice(-1)[0],
+            oldestAvis: allAdvices[0]
         });
     }));
 
