@@ -131,7 +131,7 @@ export default class FinancerPanel extends React.Component {
 
         const page = this.state.pagination.current;
         const result = await getAdvices(codeRegion, startDate, endDate, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id, tab, order, page);
-
+        
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
             advices: result.advices.map(advice => {
@@ -142,8 +142,8 @@ export default class FinancerPanel extends React.Component {
                 return advice;
             }),
             loading: false,
-            oldestAvis: result.oldestAvis.date,
-            recentAvis: result.recentAvis.date,
+            oldestAvis: result.oldestAvis ? result.oldestAvis.training.startDate : '',
+            recentAvis: result.recentAvis ? result.recentAvis.training.startDate : '',
         });
 
     };

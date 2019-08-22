@@ -127,7 +127,6 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         }
 
         const lieuFilter = await buildLieuFilter(req.query.lieu);
-        const filterFinal = { $and: [filter, lieuFilter] };
 
         let order = { date: 1 };
 
@@ -150,7 +149,8 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             }
         }
 
-        const finalFilter = { ...filter, ...periodeFilter };
+        const finalFilter = { $and: [filter, lieuFilter, periodeFilter] };
+        
         const count = await db.collection('comment').countDocuments(finalFilter);
         
         if (count < skip) {
@@ -169,14 +169,15 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             return advice;
         });
 
-        const allAdvices = await db.collection('comment').find(filter, projection).sort(order).toArray();
+        const periodeOrder = { 'training.startDate': 1 };
+        const allAdvices = await db.collection('comment').find(filter, projection).sort(periodeOrder).toArray();
         
         res.send({
             advices: advices,
             page: page,
             pageCount: Math.ceil(count / pagination),
-            recentAvis: allAdvices[0],
-            oldestAvis: allAdvices.reverse()[0]
+            recentAvis: allAdvices.slice(-1)[0],
+            oldestAvis: allAdvices[0]
         });
     }));
 
