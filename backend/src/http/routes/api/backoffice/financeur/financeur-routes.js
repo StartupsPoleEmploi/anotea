@@ -149,7 +149,8 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             }
         }
 
-        const finalFilter = { ...filter, ...lieuFilter, ...periodeFilter };
+        const finalFilter = { $and: [filter, lieuFilter, periodeFilter] };
+        
         const count = await db.collection('comment').countDocuments(finalFilter);
         
         if (count < skip) {
