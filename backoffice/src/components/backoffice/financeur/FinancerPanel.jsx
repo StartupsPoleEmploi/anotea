@@ -22,22 +22,22 @@ import Loader from '../common/Loader';
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
 const FINANCERS = [
+    { _id: '2', title: `Conseil régional` },
     { _id: '4', title: `Pôle Emploi` },
-    { _id: '2', title: `Collectivité territoriale - CR` },
-    { _id: '10', title: `Béneficiaire de l'action` },
-    { _id: '0', title: `Autre` },
     { _id: '16', title: `OPCA` },
-    { _id: '13', title: `Etat - Autre` },
-    { _id: '8', title: `Collectivité territoriale - CR` },
-    { _id: '5', title: `Entreprise` },
-    { _id: '11', title: `Etat - Ministère chargé de l'emploi` },
-    { _id: '15', title: `Collectivité territoriale - Autre` },
-    { _id: '14', title: `Fonds Européens - Autre` },
-    { _id: '3', title: `Fonds Européens - FSE` },
-    { _id: '12', title: `Etat - Ministère de l'éducation nationale` },
-    { _id: '7', title: `AGEFIPH` },
     { _id: '17', title: `OPACIF` },
-    { _id: '9', title: `Collectivité territoriale - Commune` },
+    { _id: '11', title: `Ministère chargé de l'emploi` },
+    { _id: '7', title: `AGEFIPH` },
+    { _id: '3', title: `Fond social Européen` },
+    { _id: '12', title: `Education nationale` },
+    { _id: '14', title: `Fonds Européens - Autre` },
+    { _id: '13', title: `Etat - Autre` },
+    { _id: '8', title: `Conseil départemental` },
+    { _id: '9', title: `Commune` },
+    { _id: '15', title: `Collectivité territoriale - Autre` },
+    { _id: '10', title: `Béneficiaire de l'action` },
+    { _id: '5', title: `Entreprise` },
+    { _id: '0', title: `Autre` },
 ];
 
 export default class FinancerPanel extends React.Component {
@@ -238,6 +238,7 @@ export default class FinancerPanel extends React.Component {
         this.setState({
             currentFinancer: {},
             currentDepartement: {},
+            currentLieu: {},
         }, () => {
             this.initTraining();
         });
