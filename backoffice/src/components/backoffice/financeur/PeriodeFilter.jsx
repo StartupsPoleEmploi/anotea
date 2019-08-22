@@ -20,8 +20,8 @@ export default class PeriodeFilter extends React.Component {
     static propTypes = {
         label: PropTypes.string.isRequired,
         placeholderText: PropTypes.string.isRequired,
-        recentAvis: PropTypes.instanceOf(Date),
-        oldestAvis: PropTypes.instanceOf(Date),
+        recentAvis: PropTypes.string.isRequired,
+        oldestAvis: PropTypes.string.isRequired,
         startDate: PropTypes.instanceOf(Date),
         endDate: PropTypes.instanceOf(Date),
         onChangeStartDate: PropTypes.func.isRequired,

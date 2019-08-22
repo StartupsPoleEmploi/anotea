@@ -83,8 +83,8 @@ export default class FinancerPanel extends React.Component {
             lieu: [],
             oldestAvis: '',
             recentAvis: '',
-            startDate: '',
-            endDate: ''
+            startDate: null,
+            endDate: null
         };
 
     }
@@ -249,6 +249,7 @@ export default class FinancerPanel extends React.Component {
             currentLieu: {},
         }, () => {
             this.initTraining();
+            this.handleClear();
         });
     };
 
