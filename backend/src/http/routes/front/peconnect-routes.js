@@ -26,7 +26,7 @@ module.exports = ({ db, logger, configuration, peconnect }) => {
                                 res.redirect(`/questionnaire/${trainee[0].token}`);
                             } else {
                                 logger.error(`User fail logged in throw PE Connect: trainee not found email=${email}`);
-                                res.redirect('/connexion?notFound=true');
+                                res.render('front/peconnect/notFound');
                             }
                         }).catch(e => {
                             logger.error(`HTTP call to PE Connect API failed: ${e.error}`);
@@ -35,27 +35,27 @@ module.exports = ({ db, logger, configuration, peconnect }) => {
                     }).catch(e => {
                         if (e.error === 'nonce') {
                             logger.error('User attack detected: wrong nonce');
-                            res.redirect('/connexion?failed=unexpected');
+                            res.redirect('/?failed=unexpected');
                         } else {
                             logger.error(`User fail logged in throw PE Connect: ${e.error}`);
-                            res.redirect('/connexion?failed=pe');
+                            res.redirect('/?failed=pe');
                         }
                     });
                 } else {
                     logger.error('User attack detected: wrong state');
-                    res.redirect('/connexion?failed=unexpected');
+                    res.redirect('/?failed=unexpected');
                 }
 
             } else if (req.query.error === undefined) {
                 logger.info('User cancelled log in throw PE Connect');
-                res.redirect('/connexion?cancelled=true');
+                res.redirect('/');
             } else {
                 logger.error(`User fail logged in throw PE Connect: ${req.query.error}`);
-                res.redirect('/connexion?failed=pe');
+                res.redirect('/?failed=pe');
             }
         } catch (e) {
             logger.error(`User fail logged in throw PE Connect: ${e}`);
-            res.redirect('/connexion?failed=unexpected');
+            res.redirect('/?failed=unexpected');
         }
     });
 

@@ -35,10 +35,6 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
             nonce: connectionInfos.nonce
         };
 
-        if (req.query.notFound === 'true') {
-            res.render('front/peconnect/error');
-        }
-
         res.render('front/homepage', { data: configuration.front, connectionLink: connectionInfos.link, failed: req.query.failed });
     });
 
