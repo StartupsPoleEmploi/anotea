@@ -46,7 +46,12 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
             state: connectionInfos.state,
             nonce: connectionInfos.nonce
         };
-        res.render('front/connection', { connectionLink: connectionInfos.link, failed: req.query.failed, cancelled: req.query.cancelled === 'true', notFound: req.query.notFound === 'true' });
+
+        if (req.query.notFound === 'true') {
+            res.render('front/peconnect/error');
+        }
+
+        res.render('front/peconnect/connection', { connectionLink: connectionInfos.link, failed: req.query.failed });
     });
 
     router.get('/doc/:name', (req, res) => {
