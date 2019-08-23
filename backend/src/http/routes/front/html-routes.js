@@ -29,18 +29,6 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
     };
 
     router.get('/', (req, res) => {
-        res.render('front/homepage', { data: configuration.front });
-    });
-
-    router.get('/cgu', (req, res) => {
-        res.render('front/cgu');
-    });
-
-    router.get('/faq', (req, res) => {
-        res.render('front/faq');
-    });
-
-    router.get('/connexion', (req, res) => {
         const connectionInfos = peconnect.initConnection();
         req.session.pe_connect = {
             state: connectionInfos.state,
@@ -51,7 +39,15 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
             res.render('front/peconnect/error');
         }
 
-        res.render('front/peconnect/connection', { connectionLink: connectionInfos.link, failed: req.query.failed });
+        res.render('front/homepage', { data: configuration.front, connectionLink: connectionInfos.link, failed: req.query.failed });
+    });
+
+    router.get('/cgu', (req, res) => {
+        res.render('front/cgu');
+    });
+
+    router.get('/faq', (req, res) => {
+        res.render('front/faq');
     });
 
     router.get('/doc/:name', (req, res) => {
