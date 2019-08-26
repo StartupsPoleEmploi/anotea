@@ -12,7 +12,7 @@ export const getOrganisations = (idregion, startDate, endDate, codeFinanceur, li
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}startDate=${startDate}&endDate=${endDate}`;
+        query += `${prefix}startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
     }
     if (codeFinanceur) {
         query = `?codeFinanceur=${codeFinanceur}`;
@@ -29,15 +29,15 @@ export const getOrganisations = (idregion, startDate, endDate, codeFinanceur, li
 
 export const getAdvices = (idRegion, startDate, endDate, codeFinanceur, lieu, organisation, formation, filter, order, page) => {
     let query = '';
+    if (codeFinanceur) {
+        query = `?codeFinanceur=${codeFinanceur}`;
+    }
     if (startDate && endDate) {
         let prefix = '&';
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}startDate=${startDate}&endDate=${endDate}`;
-    }
-    if (codeFinanceur) {
-        query = `?codeFinanceur=${codeFinanceur}`;
+        query += `${prefix}startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
     }
     if (lieu) {
         let prefix = '&';
@@ -99,7 +99,7 @@ export const getFormations = (idRegion, startDate, endDate, codeFinanceur, siren
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}startDate=${startDate}&endDate=${endDate}`;
+        query += `${prefix}startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
     }
     if (codeFinanceur) {
         query = `&codeFinanceur=${codeFinanceur}`;
@@ -113,15 +113,15 @@ export const getOrganisationLieuTrainingSessions = (siren, idTraining, codeINSEE
 
 export const getInventory = (idRegion, startDate, endDate, codeFinanceur, lieu, organisation, formation) => {
     let query = '';
+    if (codeFinanceur) {
+        query = `?codeFinanceur=${codeFinanceur}`;
+    }
     if (startDate && endDate) {
         let prefix = '&';
         if (query === '') {
             prefix = '?';
         }
-        query += `${prefix}startDate=${startDate}&endDate=${endDate}`;
-    }
-    if (codeFinanceur) {
-        query = `?codeFinanceur=${codeFinanceur}`;
+        query += `${prefix}startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
     }
     if (lieu) {
         let prefix = '&';

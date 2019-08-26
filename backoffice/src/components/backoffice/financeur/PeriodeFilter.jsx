@@ -20,7 +20,6 @@ export default class PeriodeFilter extends React.Component {
     static propTypes = {
         label: PropTypes.string.isRequired,
         placeholderText: PropTypes.string.isRequired,
-        recentAvis: PropTypes.string.isRequired,
         oldestAvis: PropTypes.string.isRequired,
         startDate: PropTypes.instanceOf(Date),
         endDate: PropTypes.instanceOf(Date),
@@ -51,7 +50,7 @@ export default class PeriodeFilter extends React.Component {
                         onChange={this.handleChangeStart}
                         placeholderText={this.props.placeholderText}
                         minDate={new Date(this.props.oldestAvis)}
-                        maxDate={this.props.endDate ? this.props.endDate : new Date(this.props.recentAvis)}
+                        maxDate={this.props.endDate}
                     />
                     {'à '}
                     <DatePicker
@@ -63,7 +62,6 @@ export default class PeriodeFilter extends React.Component {
                         placeholderText={this.props.placeholderText}
                         disabled={!this.props.startDate && true}
                         minDate={this.props.startDate}
-                        maxDate={new Date(this.props.recentAvis)}
                     />
                     {this.props.startDate &&
                         <i className="fas fa-times-circle" onClick={this.props.onClearDates} />
