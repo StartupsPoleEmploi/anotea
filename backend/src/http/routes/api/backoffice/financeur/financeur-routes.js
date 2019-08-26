@@ -57,7 +57,10 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         if (req.query.startDate && req.query.endDate) {
             filter = Object.assign(filter,
-                { 'training.startDate': { $gte: new Date(req.query.startDate), $lte: new Date(req.query.endDate) } },
+                { $and: [{
+                    'training.startDate': { $gte: new Date(req.query.startDate) },
+                    'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
+                }] },
             );
         }
 
@@ -95,8 +98,11 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         let periodeFilter = {};
 
         if (req.query.startDate && req.query.endDate) {
-            periodeFilter = Object.assign(periodeFilter,
-                { 'training.startDate': { $gte: new Date(req.query.startDate), $lte: new Date(req.query.endDate) } },
+            filter = Object.assign(filter,
+                { $and: [{
+                    'training.startDate': { $gte: new Date(req.query.startDate) },
+                    'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
+                }] },
             );
         }
 
@@ -176,7 +182,6 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             advices: advices,
             page: page,
             pageCount: Math.ceil(count / pagination),
-            recentAvis: allAdvices.slice(-1)[0],
             oldestAvis: allAdvices[0]
         });
     }));
@@ -221,7 +226,10 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         if (req.query.startDate && req.query.endDate) {
             filter = Object.assign(filter,
-                { 'training.startDate': { $gte: new Date(req.query.startDate), $lte: new Date(req.query.endDate) } },
+                { $and: [{
+                    'training.startDate': { $gte: new Date(req.query.startDate) },
+                    'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
+                }] },
             );
         }
 
@@ -300,7 +308,10 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         if (req.query.startDate && req.query.endDate) {
             filter = Object.assign(filter,
-                { 'training.startDate': { $gte: new Date(req.query.startDate), $lte: new Date(req.query.endDate) } },
+                { $and: [{
+                    'training.startDate': { $gte: new Date(req.query.startDate) },
+                    'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
+                }] },
             );
         }
 

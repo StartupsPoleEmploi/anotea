@@ -82,7 +82,6 @@ export default class FinancerPanel extends React.Component {
             loading: false,
             lieu: [],
             oldestAvis: '',
-            recentAvis: '',
             startDate: null,
             endDate: null
         };
@@ -143,7 +142,6 @@ export default class FinancerPanel extends React.Component {
             }),
             loading: false,
             oldestAvis: result.oldestAvis ? result.oldestAvis.training.startDate : '',
-            recentAvis: result.recentAvis ? result.recentAvis.training.startDate : '',
         });
 
     };
@@ -435,8 +433,8 @@ export default class FinancerPanel extends React.Component {
 
     handleClear = () => {
         this.setState({
-            startDate: '',
-            endDate: ''
+            startDate: null,
+            endDate: null
         }, () => {
             this.doGetAdvices();
         });
@@ -508,7 +506,6 @@ export default class FinancerPanel extends React.Component {
                                         label="Période"
                                         placeholderText="JJ/MM/AAAA"
                                         oldestAvis={this.state.oldestAvis}
-                                        recentAvis={this.state.recentAvis}
                                         onChangeStartDate={date => this.handleChangeStart(date)}
                                         onChangeEndDate={date => this.handleChangeEnd(date)}
                                         onClearDates={() => this.handleClear()} />
