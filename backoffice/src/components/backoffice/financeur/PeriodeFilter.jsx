@@ -44,6 +44,8 @@ export default class PeriodeFilter extends React.Component {
                 <p style={pStyle}>{this.props.label}</p>
                 <div className="datepicker-container">
                     <DatePicker
+                        showYearDropdown
+                        scrollableYearDropdown
                         openToDate={new Date(this.props.oldestAvis)}
                         dateFormat="dd/MM/yyyy"
                         selectsStart
@@ -55,6 +57,8 @@ export default class PeriodeFilter extends React.Component {
                     />
                     {'à '}
                     <DatePicker
+                        showYearDropdown
+                        scrollableYearDropdown
                         openToDate={this.props.startDate}
                         dateFormat="dd/MM/yyyy"
                         selectsEnd
