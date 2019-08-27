@@ -206,12 +206,12 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         const places = await db.collection('comment').aggregate([
             { $match: filter },
             { $group: { _id: '$training.place.postalCode', city: { $first: '$training.place.city' } } },
-            { $sort: { _id: 1 } }]).toArray();
+            { $sort: { city: 1 } }]).toArray();
 
 
         const aggregatedPlaces = await postalCodes.getAggregatedPlaces(places);
 
-        res.status(200).send(aggregatedPlaces.filter(place => place !== undefined));
+        res.status(200).send(aggregatedPlaces.filter(place => place !== undefined).sort((a, b) => a.city > b.city ? 1 : -1));
     }));
 
     router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
