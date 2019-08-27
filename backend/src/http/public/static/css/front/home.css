@@ -593,18 +593,18 @@ h1 {
   }
 
 .pe-connect .content {
-	height: 360px;
-	border-radius: 4px;
-	background-color: #FFFFFF;
+    height: 360px;
+    border-radius: 4px;
+    background-color: #FFFFFF;
     box-shadow: 0 2px 10px 0 rgba(0,0,0,0.1);
     padding-top: 33px;
     margin: auto;
 }
 
 .pe-connect h1 {
-	color: #23333C;
-	font-weight: normal;
-	line-height: 42px;
+    color: #23333C;
+    font-weight: normal;
+    line-height: 42px;
     text-align: center;
     display: block;
     text-transform: uppercase;
@@ -617,7 +617,7 @@ h1 {
 
 .pe-connect p {
     padding-top: 25px;
-	color: #23333C;
+    color: #23333C;
     line-height: 22px;
     text-align: center;
     width: 400px;
