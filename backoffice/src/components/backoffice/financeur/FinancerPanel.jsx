@@ -175,16 +175,13 @@ export default class FinancerPanel extends React.Component {
         const { codeRegion } = this.props;
         const { currentFinancer, training } = this.state;
         const entities = await getPlaces(codeRegion, currentFinancer._id, training.currentOrganisation._id);
-        console.log("=============================================================")
-        console.log(JSON.stringify(entities))
-        console.log("=============================================================")
+
         this.setState(prevState => ({
             training: {
                 ...prevState.training,
                 entities: entities,
             },
         }));
-        
     };
 
     getFormations = async () => {
