@@ -211,7 +211,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         const aggregatedPlaces = await postalCodes.getAggregatedPlaces(places);
 
-        res.status(200).send(aggregatedPlaces.filter(place => place !== undefined).sort((a, b) => a.city > b.city ? 1 : -1));
+        res.status(200).send(aggregatedPlaces.filter(place => place !== undefined).sort((a, b) => a.city.toUpperCase() > b.city.toUpperCase() ? 1 : -1));
     }));
 
     router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
