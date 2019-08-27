@@ -5,7 +5,7 @@ const moment = require('moment/moment');
 const s = require('string');
 const { transformObject, encodeStream } = require('../../../../../common/utils/stream-utils');
 const getReponseStatus = require('../../../../../common/utils/getReponseStatus');
-
+const getStatus = require('../../../../../common/utils/getStatus');
 
 module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
@@ -421,7 +421,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         }
 
         let stream = await db.collection('comment').find(query, { token: 0 }).stream();
-        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;réponse OF;statut;id formation; titre formation;date début;date de fin prévue;siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;code financeur\n';
+        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;statut;réponse OF;statut;id formation; titre formation;date début;date de fin prévue;siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;code financeur\n';
 
         if (req.user.codeFinanceur === POLE_EMPLOI || req.query.status === 'rejected') {
             let array = lines.split(';');
@@ -473,6 +473,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
                 (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') +
                 qualification + ';' +
+                getStatus(comment) + ';' +
                 (comment.reponse !== undefined ? s(comment.reponse.text).replaceAll(';', '').replaceAll('"', '').replaceAll('\n', '').s + '"' : '') + ';' +
                 (comment.reponse !== undefined ? getReponseStatus(comment.reponse.status) : '') + ';' +
                 comment.training.idFormation + ';' +
