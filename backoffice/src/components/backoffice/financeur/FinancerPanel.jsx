@@ -182,7 +182,6 @@ export default class FinancerPanel extends React.Component {
                 entities: entities,
             },
         }));
-        
     };
 
     getFormations = async () => {
@@ -448,7 +447,7 @@ export default class FinancerPanel extends React.Component {
             id: organisation._id,
             className: 'custom-class'
         }));
-        const departementsOptions = departements.map(dep => ({
+        const departementsOptions = departements.sort((a, b) => a > b ? 1 : -1).map(dep => ({
             label: dep + ' (Dep)',
             id: dep,
             className: 'custom-class'
