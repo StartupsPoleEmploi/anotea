@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
+import { registerLocale, setDefaultLocale } from  "react-datepicker";
+import fr from 'date-fns/locale/fr';
 import './PeriodeFilter.scss';
 
 import 'react-datepicker/dist/react-datepicker.css';
+
+registerLocale('fr', fr);
 
 const pStyle = {
     'padding': '0px',
@@ -53,6 +57,7 @@ export default class PeriodeFilter extends React.Component {
                         placeholderText={this.props.placeholderText}
                         minDate={new Date(this.props.oldestAvis)}
                         maxDate={this.props.endDate}
+                        locale="fr"
                     />
                     {'à '}
                     <DatePicker
@@ -66,6 +71,7 @@ export default class PeriodeFilter extends React.Component {
                         placeholderText={this.props.placeholderText}
                         disabled={!this.props.startDate && true}
                         minDate={this.props.startDate}
+                        locale="fr"
                     />
                     {this.props.startDate &&
                         <i className="fas fa-times-circle" onClick={this.props.onClearDates} />
