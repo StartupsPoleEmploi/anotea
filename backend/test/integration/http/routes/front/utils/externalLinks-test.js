@@ -10,14 +10,14 @@ const externalLinks = require('../../../../../../src/http/routes/front/utils/ext
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
     let romeMappgingFile = path.join(__dirname, '../../../../../helpers/data', 'romeMapping.csv');
-    let correspondancesFile = path.join(__dirname, '../../../../../helpers/data', 'correspondance-code-insee-code-postal.csv');
+    let correspondancesFile = path.join(__dirname, '../../../../../helpers/data', 'correspondance-code-insee-code-postal-echantillon.csv');
 
     it('should get La Bonne Boite link with a training having a postal code without INSEE mapping', async () => {
         let db = await getTestDatabase();
         const trainee = newTrainee({
             training: {
                 formacode: '21032',
-                place: { postalCode: '44300' }
+                place: { postalCode: '84170' }
             }
         });
         let importerRome = doImportRome(db, logger);
@@ -26,15 +26,15 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         let importerINSEE = doImportINSEE(db, logger);
         await importerINSEE.doImport(correspondancesFile);
 
-        assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/44109/rome/A1101?d=30');
-    }).timeout(10000);
+        assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/84080/rome/A1101?d=30');
+    });
 
     it('should get La Bonne Boite link with a training having a postal code with an INSEE mapping', async () => {
         let db = await getTestDatabase();
         const trainee = newTrainee({
             training: {
                 formacode: '21032',
-                place: { postalCode: '75011' }
+                place: { postalCode: '84170' }
             }
         });
         let importerRome = doImportRome(db, logger);
@@ -43,15 +43,15 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         let importerINSEE = doImportINSEE(db, logger);
         await importerINSEE.doImport(correspondancesFile);
 
-        assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/75111/rome/A1101?d=30');
-    }).timeout(10000);
+        assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), 'https://labonneboite.pole-emploi.fr/entreprises/commune/84080/rome/A1101?d=30');
+    });
 
     it('should get Offres Pôle Emploi link with a training having a postal code without INSEE mapping', async () => {
         let db = await getTestDatabase();
         const trainee = newTrainee({
             training: {
                 formacode: '21032',
-                place: { postalCode: '44300' }
+                place: { postalCode: '84170' }
             }
         });
         let importerRome = doImportRome(db, logger);
@@ -61,15 +61,15 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'pe'),
-            'https://candidat.pole-emploi.fr/offres/recherche?lieux=44109&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
-    }).timeout(10000);
+            'https://candidat.pole-emploi.fr/offres/recherche?lieux=84080&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
+    });
 
     it('should get Offres Pôle Emploi link with a training having a postal code with an INSEE mapping', async () => {
         let db = await getTestDatabase();
         const trainee = newTrainee({
             training: {
                 formacode: '21032',
-                place: { postalCode: '75011' }
+                place: { postalCode: '84170' }
             }
         });
         let importerRome = doImportRome(db, logger);
@@ -79,27 +79,27 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'pe'),
-            'https://candidat.pole-emploi.fr/offres/recherche?lieux=75111&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
-    }).timeout(10000);
+            'https://candidat.pole-emploi.fr/offres/recherche?lieux=84080&motsCles=A1101&offresPartenaires=true&rayon=30&tri=0');
+    });
 
     it('should get Clara link', async () => {
         let db = await getTestDatabase();
         const trainee = newTrainee({
             training: {
                 formacode: '21032',
-                place: { postalCode: '75011' }
+                place: { postalCode: '84170' }
             }
         });
 
         assert.equal(await externalLinks(db).getLink(trainee, 'clara'), 'https://clara.pole-emploi.fr');
-    }).timeout(10000);
+    });
 
     it('should get null link when trying to get Offres Pôle Emploi link when training has no formacode', async () => {
         let db = await getTestDatabase();
         const trainee = newTrainee({
             training: {
                 formacode: null,
-                place: { postalCode: '75011' }
+                place: { postalCode: '84170' }
             }
         });
         let importerRome = doImportRome(db, logger);
@@ -109,14 +109,14 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'pe'), null);
-    }).timeout(10000);
+    });
 
     it('should get null link when trying to get La Bonne Boite link when training has no formacode', async () => {
         let db = await getTestDatabase();
         const trainee = newTrainee({
             training: {
                 formacode: null,
-                place: { postalCode: '75011' }
+                place: { postalCode: '84170' }
             }
         });
         let importerRome = doImportRome(db, logger);
@@ -126,7 +126,6 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
         await importerINSEE.doImport(correspondancesFile);
 
         assert.equal(await externalLinks(db).getLink(trainee, 'lbb'), null);
-    }).timeout(10000);
-
+    });
 
 }));
