@@ -18,7 +18,7 @@ module.exports = function(db, logger) {
                 let promise = new Promise(async (resolve, reject) => {
                     // skip CSV header
                     if (count > 0) {
-                        let inseeCode = { insee: record[0], postalCode: record[1].split('/'), commune: record[2], cedex: [] };
+                        let inseeCode = { insee: record[0], postalCode: record[2].split('/'), commune: record[1], cedex: [] };
                         await db.collection('inseeCode').insertOne(inseeCode);
                     }
                     callback();

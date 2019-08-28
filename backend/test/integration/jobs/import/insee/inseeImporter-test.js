@@ -11,7 +11,7 @@ describe(__filename, withMongoDB(({ getTestDatabase }) => {
     it('should create new mapping', async () => {
 
         let db = await getTestDatabase();
-        const correspondancesFile = path.join(__dirname, '../../../../helpers/data', 'correspondance-code-insee-code-postal-echantillon.csv');
+        const correspondancesFile = path.join(__dirname, '../../../../helpers/data', 'laposte_hexasmal-echantillon.csv');
         const cedexFile = path.join(__dirname, '../../../../helpers/data', 'liste-des-cedex-echantillon.csv');
 
         let postalCodes = doImportPostalCodes(db, logger);
