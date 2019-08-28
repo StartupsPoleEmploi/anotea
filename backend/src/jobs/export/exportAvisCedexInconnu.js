@@ -21,19 +21,23 @@ execute(async ({ logger, db }) => {
         db.collection('comment').find(),
         transformObject(async avis => {
             let trainee = await db.collection('trainee').findOne({ token: avis.token });
-            const place = trainee.training.place;
-            const inseeCity = await db.collection('inseeCode').findOne({
-                $or: [
-                    { cedex: { $elemMatch: { $eq: place._id } } },
-                    { postalCode: { $elemMatch: { $eq: place._id } } },
-                    { insee: place._id },
-                    { commune: place._id }
-                ]
-            });
-            if (inseeCity === null) {
-                return trainee;
-            } else {
-                return '';
+            try {
+                const place = trainee.training.place.postalCode;
+                const inseeCity = await db.collection('inseeCode').findOne({
+                    $or: [
+                        { cedex: { $elemMatch: { $eq: place } } },
+                        { postalCode: { $elemMatch: { $eq: place } } },
+                        { insee: place },
+                        { commune: place }
+                    ]
+                });
+                if (inseeCity === null) {
+                    return trainee;
+                } else {
+                    return '';
+                }
+            } catch (e) {
+                // ignore
             }
         }),
         ignoreEmpty(),
