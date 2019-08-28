@@ -10,7 +10,7 @@ const externalLinks = require('../../../../../../src/http/routes/front/utils/ext
 describe(__filename, withMongoDB(({ getTestDatabase }) => {
 
     let romeMappgingFile = path.join(__dirname, '../../../../../helpers/data', 'romeMapping.csv');
-    let correspondancesFile = path.join(__dirname, '../../../../../helpers/data', 'correspondance-code-insee-code-postal-echantillon.csv');
+    let correspondancesFile = path.join(__dirname, '../../../../../helpers/data', 'laposte_hexasmal-echantillon.csv');
 
     it('should get La Bonne Boite link with a training having a postal code without INSEE mapping', async () => {
         let db = await getTestDatabase();
