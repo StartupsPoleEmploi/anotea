@@ -3,6 +3,8 @@ import Link from '../common/header/Link';
 
 export default function FinanceurHeaderItems() {
 
+    let publicUrl = process.env.PUBLIC_URL ? '' : 'http://localhost:3003';
+
     return (
         <ul className="nav">
             <li className="nav-item">
@@ -12,10 +14,7 @@ export default function FinanceurHeaderItems() {
                     url="/admin/financeur/avis" />
             </li>
             <li className="nav-item">
-                <Link
-                    className="nav-link"
-                    label="Statistiques Anotéa"
-                    url="/admin/statistiques" />
+                <a href={`${publicUrl}/stats`} target="_blank" rel="noopener noreferrer" className="nav-link">Statistiques</a>
             </li>
             <li className="nav-item right">
                 <Link
