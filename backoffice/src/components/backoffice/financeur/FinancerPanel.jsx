@@ -215,7 +215,11 @@ export default class FinancerPanel extends React.Component {
                 this.initTraining();
             });
         } else {
-            this.initFilters();
+            this.setState({
+                currentFinancer: {},
+            }, () => {
+                this.doGetAdvices();
+            });
         }
 
     };
@@ -268,18 +272,9 @@ export default class FinancerPanel extends React.Component {
                 this.getFormations();
             });
         } else {
-            this.setState(prevState => ({
+            this.setState({
                 currentLieu: {},
-                training: {
-                    ...prevState.training,
-                    organisations: [],
-                    currentOrganisation: {},
-                    formations: [],
-                    currentFormation: {}
-                },
-                loading: true,
-            }), () => {
-                this.doGetOrganisations();
+            }, () => {
                 this.doGetAdvices();
                 this.doGetPlaces();
             });
