@@ -1,8 +1,8 @@
 import React from 'react';
-import Link from './Link';
+import Link from '../common/header/Link';
 
 export default function FinanceurHeaderItems() {
-    
+
     return (
         <ul className="nav">
             <li className="nav-item">

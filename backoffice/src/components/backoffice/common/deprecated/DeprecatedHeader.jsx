@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Logout from './Logout';
 import './header.css';
-import logo from '../../common/Header.svg';
+import logo from '../../common/header/Header.svg';
 import { NavLink } from 'react-router-dom';
 
 import financeurs from './../../constantes/financeurs';
@@ -41,7 +41,7 @@ export default class DeprecatedHeader extends React.PureComponent {
             </div>
         );
     }
-    
+
 
     render() {
         const { props } = this;
