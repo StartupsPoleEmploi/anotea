@@ -1,11 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import {
-    askNewPassword,
-    updatePassword,
-    checkIfPasswordTokenExists
-} from '../backoffice/account/service/forgottenPasswordService';
+import { askNewPassword, updatePassword, checkIfPasswordTokenExists } from './forgottenPasswordService';
 import { isPasswordStrongEnough, checkConfirm, passwordIsOK } from '../../utils/validation';
 import './ForgottenPassword.scss';
 import Loader from '../backoffice/common/Loader';

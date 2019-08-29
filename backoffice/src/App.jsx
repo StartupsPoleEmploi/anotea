@@ -13,13 +13,14 @@ import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
-import MonComptePanel from './components/backoffice/account/MonComptePanel';
+import MonComptePanel from './components/backoffice/account/mon-compte/MonComptePanel';
 import GridDisplayer from './components/backoffice/common/library/GridDisplayer';
 import Header from './components/backoffice/common/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
 import FinanceurRoutes from './components/backoffice/financeur/FinanceurRoutes';
 import './utils/moment-fr';
 import './App.scss';
+import MonComptesRoutes from './components/backoffice/account/MonCompteRoutes';
 
 addLocaleData([...fr]);
 
@@ -123,12 +124,12 @@ class App extends Component {
 
     handleError = () => {
         this.setState({ action: null, forgottenPassword: false });
-        history.pushState(null, "", location.href.split("?")[0])  // eslint-disable-line
+        history.pushState(null, '', location.href.split('?')[0]);  // eslint-disable-line
     };
 
     handleForgottenPassword = () => {
         this.setState({ forgottenPassword: true, action: null });
-        history.pushState(null, "", location.href.split("?")[0])  // eslint-disable-line
+        history.pushState(null, '', location.href.split('?')[0]);  // eslint-disable-line
     };
 
     showUnauthenticatedPages = () => {
@@ -181,32 +182,29 @@ class App extends Component {
 
     showBackofficePages = () => {
 
-        //Use new design
-        if (this.state.profile === 'moderateur') {
-            return (
-                <Router>
-                    <div className="anotea">
-                        <Header onLogout={this.handleLogout} profile={this.state.profile} />
-                        <ModerateurRoutes codeRegion={this.state.codeRegion} />
-                        <MiscRoutes />
-                    </div>
-                </Router>
-            );
-        }
+        let { profile, codeRegion, codeFinanceur, features, id } = this.state;
+        let defaultRoutePath = profile === 'moderateur' ?
+            '/admin/moderateur/moderation/avis/stagiaires?page=0&status=none' : '/admin/financeur/avis';
 
-        if (this.state.profile === 'financeur') {
+        //Use new design
+        if (['moderateur', 'financeur'].includes(this.state.profile)) {
             return (
                 <Router>
                     <div className="anotea">
-                        <Header
-                            onLogout={this.handleLogout}
-                            profile={this.state.profile} />
+                        <Switch>
+                            <Redirect exact from="/" to={defaultRoutePath} />
+                            <Redirect exact from="/admin" to={defaultRoutePath} />
+                        </Switch>
+                        <Header onLogout={this.handleLogout} profile={profile} />
+                        <MonComptesRoutes codeRegion={codeRegion} />
+                        <ModerateurRoutes codeRegion={codeRegion} />
                         <FinanceurRoutes
-                            profile={this.state.profile}
-                            codeRegion={this.state.codeRegion}
-                            id={this.state.id}
-                            codeFinanceur={this.state.codeFinanceur}
-                            features={this.state.features} />
+                            profile={profile}
+                            codeRegion={codeRegion}
+                            id={id}
+                            codeFinanceur={codeFinanceur}
+                            features={features} />
+                        <MiscRoutes />
                     </div>
                 </Router>
             );
@@ -220,10 +218,10 @@ class App extends Component {
                         <DeprecatedHeader
                             handleLogout={this.handleLogout}
                             loggedIn={this.state.loggedIn}
-                            profile={this.state.profile}
+                            profile={profile}
                             raisonSociale={this.state.raisonSociale}
-                            codeFinanceur={this.state.codeFinanceur}
-                            codeRegion={this.state.codeRegion}
+                            codeFinanceur={codeFinanceur}
+                            codeRegion={codeRegion}
                             region={this.state.region} />
 
                         <Switch>
@@ -238,12 +236,12 @@ class App extends Component {
                             path="/admin"
                             render={() => (
                                 <div className="main">
-                                    {this.state.profile === 'organisme' &&
+                                    {profile === 'organisme' &&
                                     <OrganisationPanel
-                                        profile={this.state.profile}
-                                        id={this.state.id}
-                                        codeRegion={this.state.codeRegion}
-                                        features={this.state.features} />
+                                        profile={profile}
+                                        id={id}
+                                        codeRegion={codeRegion}
+                                        features={features} />
                                     }
                                 </div>)} />
                     </div>
