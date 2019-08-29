@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import queryString from 'query-string';
-import MonComptePanel from '../account/MonComptePanel';
 import FinancerPanel from './FinancerPanel';
 import StatistiquesPanel from './StatistiquesPanel';
 
@@ -23,12 +22,6 @@ export default class FinanceurRoutes extends React.Component {
     render() {
         return (
             <div>
-                <Switch>
-                    <Redirect exact from="/" to="/admin/financeur/avis" />
-                    <Redirect exact from="/admin"
-                        to="/admin/financeur/avis" />
-                </Switch>
-                <Route path="/mon-compte" component={MonComptePanel} />
                 <Route
                     path="/admin/financeur/avis"
                     render={() => (
