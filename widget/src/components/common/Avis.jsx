@@ -37,7 +37,7 @@ export default class Avis extends Component {
                 {avis.reponse &&
                 <div className="reponse">
                     <div className="titre">Réponse de l'organisme</div>
-                    <div className="texte">{avis.reponse}</div>
+                    <div className="texte">{avis.reponse.texte}</div>
                 </div>
                 }
                 <div className="date with-tooltip d-inline-flex justify-content-between">
