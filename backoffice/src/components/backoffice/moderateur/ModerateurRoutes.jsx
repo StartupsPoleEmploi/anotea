@@ -66,9 +66,9 @@ export default class ModerateurRoutes extends React.Component {
     render() {
         return (
             <div>
-                <Route path="/admin/courriels/templates-stagiaires"
+                <Route path="/admin/moderateur/courriels/templates-stagiaires"
                        render={() => <TemplatesCourrielsPanel carouselSlidesData={carouselSlidesDataStagiaires} />} />
-                <Route path="/admin/courriels/templates-organismes"
+                <Route path="/admin/moderateur/courriels/templates-organismes"
                        render={() => <TemplatesCourrielsPanel carouselSlidesData={carouselSlidesDataOrganismes} />} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"
