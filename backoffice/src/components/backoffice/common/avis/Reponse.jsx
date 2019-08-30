@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Reponse.scss';
-import PrettyDate from '../../../../common/PrettyDate';
+import PrettyDate from '../PrettyDate';
 
 const Status = ({ avis }) => {
 
@@ -23,7 +23,7 @@ const Status = ({ avis }) => {
     }
 
 };
-Status.propTypes = { reponse: PropTypes.object.isRequired };
+Status.propTypes = { avis: PropTypes.object.isRequired };
 
 export default class Reponse extends React.Component {
 

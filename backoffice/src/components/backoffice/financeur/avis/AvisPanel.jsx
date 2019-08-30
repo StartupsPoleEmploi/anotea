@@ -3,16 +3,9 @@ import ReactPaginate from 'react-paginate';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import Filter from './Filter';
-import {
-    getRegions,
-    getPlaces,
-    getInventory,
-    getAdvices,
-    getOrganisations,
-    getFormations
-} from './financeurService';
+import { getAdvices, getFormations, getInventory, getOrganisations, getPlaces, getRegions } from './financeurService';
 import Resume from './Resume';
-import Avis from './Avis';
+import Avis from '../../common/avis/Avis';
 import ResultDivider from '../../common/panel/ResultDivider';
 import FiltersResume from './FiltersResume';
 import Loader from '../../common/Loader';
@@ -120,7 +113,7 @@ export default class AvisPanel extends React.Component {
             });
         }
 
-    }
+    };
 
     doGetAdvices = async (order = this.state.order) => {
         const { codeRegion } = this.props;
@@ -282,7 +275,7 @@ export default class AvisPanel extends React.Component {
             });
         }
 
-    }
+    };
 
     handleOrganisationChange = async (options, evt) => {
 
@@ -411,13 +404,13 @@ export default class AvisPanel extends React.Component {
         const { currentFinancer, currentDepartement, currentLieu } = this.state;
 
         return currentFinancer._id || currentOrganisation._id || currentLieu._id || currentFormation._id || currentDepartement._id ? 'active' : '';
-    }
+    };
 
     handleChangeStart = date => {
         this.setState({
             startDate: date,
         });
-    }
+    };
 
     handleChangeEnd = date => {
         this.setState({
@@ -425,7 +418,7 @@ export default class AvisPanel extends React.Component {
         }, () => {
             this.doGetAdvices();
         });
-    }
+    };
 
     handleClear = () => {
         this.setState({
@@ -434,7 +427,7 @@ export default class AvisPanel extends React.Component {
         }, () => {
             this.doGetAdvices();
         });
-    }
+    };
 
     render() {
         const { currentOrganisation, organisations, entities, formations, currentFormation } = this.state.training;
@@ -474,13 +467,13 @@ export default class AvisPanel extends React.Component {
                             <div className="filters-area">
                                 <div className="first-part d-flex flex-wrap flex-md-row justify-content-between align-items-center">
                                     {this.props.codeFinanceur === POLE_EMPLOI &&
-                                        <Filter
-                                            label="Financeur"
-                                            options={financersOptions}
-                                            onChange={this.handleFinancerChange}
-                                            placeholderText="Choisissez un code financeur"
-                                            selectValue={currentFinancer}
-                                        />
+                                    <Filter
+                                        label="Financeur"
+                                        options={financersOptions}
+                                        onChange={this.handleFinancerChange}
+                                        placeholderText="Choisissez un code financeur"
+                                        selectValue={currentFinancer}
+                                    />
                                     }
                                     <Filter
                                         label="Localisation"
@@ -532,18 +525,18 @@ export default class AvisPanel extends React.Component {
                         <div className="d-flex flex-wrap align-items-center">
                             <button
                                 className={`onglet ${this.getActiveStatus('all')}`}
-                                onClick={this.switchTab.bind(this, 'all')} >Tous
+                                onClick={this.switchTab.bind(this, 'all')}>Tous
                             </button>
                             <button
                                 className={`onglet ${this.getActiveStatus('reported')}`}
-                                onClick={this.switchTab.bind(this, 'reported')} >Signalés
+                                onClick={this.switchTab.bind(this, 'reported')}>Signalés
                             </button>
                             <button className={`onglet ${this.getActiveStatus('commented')}`}
-                                onClick={this.switchTab.bind(this, 'commented')}>Avec commentaires
+                                    onClick={this.switchTab.bind(this, 'commented')}>Avec commentaires
                             </button>
                             <button
                                 className={`onglet ${this.getActiveStatus('rejected')}`}
-                                onClick={this.switchTab.bind(this, 'rejected')} >Rejetés
+                                onClick={this.switchTab.bind(this, 'rejected')}>Rejetés
                             </button>
                         </div>
                     </div>
@@ -575,7 +568,9 @@ export default class AvisPanel extends React.Component {
                                         <div key={avis._id}>
                                             <Avis
                                                 avis={avis}
-                                                codeFinanceur={this.props.codeFinanceur}/>
+                                                readonly={true}
+                                                showStatus={this.props.codeFinanceur === '2'}
+                                                onChange={() => ({})} />
                                             <ResultDivider />
                                         </div>
                                     );
@@ -585,30 +580,31 @@ export default class AvisPanel extends React.Component {
                     }
 
                     {!this.state.loading &&
-                        <div className="Pagination">
-                            <div className="d-flex justify-content-center">
-                                {this.state.pagination.count > 1 &&
-                                <ReactPaginate previousLabel={'<'}
-                                    nextLabel={'>'}
-                                    pageCount={this.state.pagination.count}
-                                    forcePage={this.state.pagination.current - 1}
-                                    marginPagesDisplayed={1}
-                                    pageRangeDisplayed={2}
-                                    onPageChange={this.handlePageClick}
-                                    breakClassName="page-item"
-                                    breakLabel={<button className="page-link">...</button>}
-                                    pageClassName="page-item"
-                                    previousClassName="page-item"
-                                    nextClassName="page-item"
-                                    pageLinkClassName="page-link"
-                                    previousLinkClassName="page-link"
-                                    nextLinkClassName="page-link"
-                                    activeClassName={'active'}
-                                    containerClassName={'pagination'}
-                                    disableInitialCallback={true} />
-                                }
-                            </div>
+                    <div className="Pagination">
+                        <div className="d-flex justify-content-center">
+                            {this.state.pagination.count > 1 &&
+                            <ReactPaginate
+                                previousLabel={'<'}
+                                nextLabel={'>'}
+                                pageCount={this.state.pagination.count}
+                                forcePage={this.state.pagination.current - 1}
+                                marginPagesDisplayed={1}
+                                pageRangeDisplayed={2}
+                                onPageChange={this.handlePageClick}
+                                breakClassName="page-item"
+                                breakLabel={<button className="page-link">...</button>}
+                                pageClassName="page-item"
+                                previousClassName="page-item"
+                                nextClassName="page-item"
+                                pageLinkClassName="page-link"
+                                previousLinkClassName="page-link"
+                                nextLinkClassName="page-link"
+                                activeClassName={'active'}
+                                containerClassName={'pagination'}
+                                disableInitialCallback={true} />
+                            }
                         </div>
+                    </div>
                     }
                 </div>
             </div>

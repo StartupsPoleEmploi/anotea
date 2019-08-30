@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { publishReponse } from '../../../moderationService';
-import Button from '../../../../../common/library/Button';
+import { publishReponse } from '../../../moderateur/moderation/moderationService';
+import Button from '../../library/Button';
 
 export default class PublishReponseButton extends React.Component {
 

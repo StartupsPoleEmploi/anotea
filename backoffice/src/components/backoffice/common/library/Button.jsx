@@ -15,6 +15,7 @@ const Button = props => {
             type="button"
             {..._.omit(props, ['size', 'color', 'toggable', 'className'])}
             {...(props.toggable ? { 'data-toggle': 'dropdown' } : {})}
+            style={props.style || {}}
             className={`Button ${sizeClass} ${colorClass} ${disabledClass} ${toggableClass} ${props.className || ''}`} />
     );
 };
@@ -25,6 +26,7 @@ Button.propTypes = {
     disabled: PropTypes.bool,
     toggable: PropTypes.bool,
     className: PropTypes.string,
+    style: PropTypes.object,
 };
 
 export default Button;

@@ -10,7 +10,7 @@ import { Toolbar, Tab } from '../../common/panel/toolbar/Toolbar';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import AvisTitle from './components/summary/AvisTitle';
 import Pagination from '../../common/panel/Pagination';
-import Avis from './components/avis/Avis';
+import Avis from '../../common/avis/Avis';
 import ResultDivider from '../../common/panel/ResultDivider';
 
 export default class AvisReponsesPanel extends React.Component {
@@ -141,10 +141,9 @@ export default class AvisReponsesPanel extends React.Component {
                                         <div key={avis._id}>
                                             <Avis
                                                 avis={avis}
-                                                options={{
-                                                    showStatus: false,
-                                                    showReponse: query.status !== 'reported',
-                                                }}
+                                                readonly={true}
+                                                showStatus={false}
+                                                showReponse={query.status !== 'reported'}
                                                 onChange={(avis, options = {}) => {
                                                     let { message } = options;
                                                     if (message) {

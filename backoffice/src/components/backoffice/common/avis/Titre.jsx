@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { maskTitle } from '../../moderationService';
+import { maskTitle } from '../../moderateur/moderation/moderationService';
 import './Titre.scss';
 
 export default class Titre extends React.Component {
