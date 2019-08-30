@@ -161,9 +161,9 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         }
 
         const finalFilter = { $and: [filter, lieuFilter, periodeFilter] };
-        
+
         const count = await db.collection('comment').countDocuments(finalFilter);
-        
+
         if (count < skip) {
             res.send({ error: 404 });
             return;
@@ -182,7 +182,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         const periodeOrder = { 'training.startDate': 1 };
         const allAdvices = await db.collection('comment').find(filter, projection).sort(periodeOrder).toArray();
-        
+
         res.send({
             advices: advices,
             page: page,
@@ -203,7 +203,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
-        
+
         if (req.query.siren) {
             filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.siren}` } });
         }
@@ -216,7 +216,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         const aggregatedPlaces = await postalCodes.getAggregatedPlaces(places);
 
-        res.status(200).send(aggregatedPlaces.filter(place => place !== undefined).sort((a, b) => a.city.toUpperCase() > b.city.toUpperCase() ? 1 : -1));
+        res.status(200).send(aggregatedPlaces.filter(place => place !== undefined).sort((a, b) => a.city > b.city ? 1 : -1));
     }));
 
     router.get('/backoffice/financeur/region/:idregion/organisme_formateur', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {

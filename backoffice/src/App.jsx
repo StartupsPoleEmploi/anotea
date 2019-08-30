@@ -197,7 +197,6 @@ class App extends Component {
                 routes: <FinanceurRoutes
                     profile={profile}
                     codeRegion={codeRegion}
-                    id={id}
                     codeFinanceur={codeFinanceur}
                     features={features} />
             })

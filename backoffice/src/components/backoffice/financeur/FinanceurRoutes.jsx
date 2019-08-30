@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import queryString from 'query-string';
-import FinancerPanel from './FinancerPanel';
-import StatistiquesPanel from './StatistiquesPanel';
+import AvisPanel from './avis/AvisPanel';
+import StatistiquesPanel from './stats/StatistiquesPanel';
 
 export default class FinanceurRoutes extends React.Component {
 
@@ -11,7 +11,6 @@ export default class FinanceurRoutes extends React.Component {
         profile: PropTypes.string.isRequired,
         codeRegion: PropTypes.string.isRequired,
         codeFinanceur: PropTypes.string.isRequired,
-        id: PropTypes.string.isRequired,
         features: PropTypes.string.isRequired,
     };
 
@@ -25,9 +24,8 @@ export default class FinanceurRoutes extends React.Component {
                 <Route
                     path="/admin/financeur/avis"
                     render={() => (
-                        <FinancerPanel
+                        <AvisPanel
                             profile={this.props.profile}
-                            id={this.props.id}
                             codeRegion={this.props.codeRegion}
                             codeFinanceur={this.props.codeFinanceur}
                             features={this.props.features} />

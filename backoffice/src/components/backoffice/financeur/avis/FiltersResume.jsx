@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PrettyDate from '../common/PrettyDate';
+import PrettyDate from '../../common/PrettyDate';
 
 export default function FiltersResume({ startDate, endDate, currentFinancer, currentOrganisation, currentLieu, currentFormation }) {
-    
+
     return (
         <div className="d-flex flex-wrap mr-auto p-2 bd-highlight filters-resume">
             {endDate && <p><PrettyDate date={new Date(startDate)} /> à <PrettyDate date={new Date(endDate)} /></p>}

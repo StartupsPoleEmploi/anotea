@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Formation from '../moderateur/moderation/components/avis/Formation';
-import Commentaire from '../moderateur/moderation/components/avis/Commentaire';
-import Notes from '../moderateur/moderation/components/avis/Notes';
+import Formation from '../../moderateur/moderation/components/avis/Formation';
+import Commentaire from '../../moderateur/moderation/components/avis/Commentaire';
+import Notes from '../../moderateur/moderation/components/avis/Notes';
 import Titre from './Titre';
-import Stars from '../common/Stars';
-import PrettyDate from '../common/PrettyDate';
+import Stars from '../../common/Stars';
+import PrettyDate from '../../common/PrettyDate';
 
 const POLE_EMPLOI = '4';
 

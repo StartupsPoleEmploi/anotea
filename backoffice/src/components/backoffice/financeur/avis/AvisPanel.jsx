@@ -2,8 +2,7 @@ import React from 'react';
 import ReactPaginate from 'react-paginate';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-
-import Filter from './filters/filter';
+import Filter from './Filter';
 import {
     getRegions,
     getPlaces,
@@ -11,14 +10,14 @@ import {
     getAdvices,
     getOrganisations,
     getFormations
-} from './service/financeurService';
+} from './financeurService';
 import Resume from './Resume';
 import Avis from './Avis';
-import ResultDivider from '../common/panel/ResultDivider';
-import './FinancerPanel.scss';
+import ResultDivider from '../../common/panel/ResultDivider';
 import FiltersResume from './FiltersResume';
-import Loader from '../common/Loader';
+import Loader from '../../common/Loader';
 import PeriodeFilter from './PeriodeFilter';
+import './AvisPanel.scss';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
@@ -41,7 +40,7 @@ const FINANCERS = [
     { _id: '0', title: `Autre` },
 ];
 
-export default class FinancerPanel extends React.Component {
+export default class AvisPanel extends React.Component {
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
@@ -132,7 +131,7 @@ export default class FinancerPanel extends React.Component {
 
         const page = this.state.pagination.current;
         const result = await getAdvices(codeRegion, startDate, endDate, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id, tab, order, page);
-        
+
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
             advices: result.advices.map(advice => {
@@ -167,7 +166,7 @@ export default class FinancerPanel extends React.Component {
         const { currentOrganisation, currentFormation } = this.state.training;
         const { currentFinancer, currentLieu, startDate, endDate } = this.state;
         const inventory = await getInventory(codeRegion, startDate, endDate, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id);
-        
+
         this.setState(Object.assign(this.state, {
             inventory: inventory
         }));
@@ -190,14 +189,14 @@ export default class FinancerPanel extends React.Component {
         const { currentFinancer, training, currentLieu, startDate, endDate } = this.state;
         const { codeRegion } = this.props;
         const formations = await getFormations(codeRegion, startDate, endDate, currentFinancer._id, training.currentOrganisation._id, currentLieu._id);
-        
+
         this.setState(prevState => ({
             training: {
                 ...prevState.training,
                 formations,
             }
         }));
-        
+
     };
 
     handleFinancerChange = (options, evt) => {
@@ -282,7 +281,7 @@ export default class FinancerPanel extends React.Component {
                 this.doGetFormations();
             });
         }
-        
+
     }
 
     handleOrganisationChange = async (options, evt) => {
@@ -386,7 +385,7 @@ export default class FinancerPanel extends React.Component {
     };
 
     getActiveStatus = current => this.state.tab === current ? 'active' : '';
-    
+
     getExportFilters = () => {
         let str = `?status=${this.state.tab}`;
         if (this.state.currentFinancer._id) {
@@ -410,7 +409,7 @@ export default class FinancerPanel extends React.Component {
     someActiveFilter = () => {
         const { currentOrganisation, currentFormation } = this.state.training;
         const { currentFinancer, currentDepartement, currentLieu } = this.state;
-        
+
         return currentFinancer._id || currentOrganisation._id || currentLieu._id || currentFormation._id || currentDepartement._id ? 'active' : '';
     }
 
@@ -584,7 +583,7 @@ export default class FinancerPanel extends React.Component {
                             }
                         </div>
                     }
-                    
+
                     {!this.state.loading &&
                         <div className="Pagination">
                             <div className="d-flex justify-content-center">

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getToken } from '../../../utils/token';
+import { getToken } from '../../../../utils/token';
 
 export default class DeprecatResume extends React.PureComponent {
 
@@ -9,7 +9,7 @@ export default class DeprecatResume extends React.PureComponent {
         inventory: PropTypes.number.isRequired,
         advices: PropTypes.array.isRequired
     };
-    
+
     getUrl = () => {
         const publicUrl = process.env.PUBLIC_URL ? '' : 'http://localhost:8080';
         let filters = this.props.exportFilters !== undefined ? this.props.exportFilters : '';
