@@ -115,6 +115,14 @@ module.exports = {
             db.collection('events').createIndex({ 'date': 1 }),
         ]);
     },
+    inseeCode: db => {
+        return Promise.all([
+            db.collection('inseeCode').createIndex({ 'cedex': 1 }),
+            db.collection('inseeCode').createIndex({ 'postalCode': 1 }),
+            db.collection('inseeCode').createIndex({ 'insee': 1 }),
+            db.collection('inseeCode').createIndex({ 'commune': 1 }),
+        ]);
+    },
     misc: db => {
         return Promise.all([
             db.collection('forgottenPasswordTokens').createIndex({ 'token': 1 }),
