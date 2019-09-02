@@ -92,8 +92,11 @@ export const getPlaces = (idRegion, codeFinanceur, siren) => {
     return _get(`/backoffice/financeur/region/${idRegion}/places${query}`);
 };
 
-export const getFormations = (idRegion, startDate, endDate, codeFinanceur, siren, lieu) => {
+export const getFormations = (idRegion, startDate, endDate, codeFinanceur, organisation, lieu) => {
     let query = '';
+    if (codeFinanceur) {
+        query = `?codeFinanceur=${codeFinanceur}`;
+    }
     if (startDate && endDate) {
         let prefix = '&';
         if (query === '') {
@@ -101,10 +104,21 @@ export const getFormations = (idRegion, startDate, endDate, codeFinanceur, siren
         }
         query += `${prefix}startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
     }
-    if (codeFinanceur) {
-        query = `&codeFinanceur=${codeFinanceur}`;
+    if (lieu) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}lieu=${lieu}`;
     }
-    return _get(`/backoffice/financeur/region/${idRegion}/organisme_formateur/${siren}/trainings?lieu=${lieu}${query}`);
+    if (organisation) {
+        let prefix = '&';
+        if (query === '') {
+            prefix = '?';
+        }
+        query += `${prefix}organisation=${organisation}`;
+    }
+    return _get(`/backoffice/financeur/region/${idRegion}/organisme_formateur${query}`);
 };
 
 export const getOrganisationLieuTrainingSessions = (siren, idTraining, codeINSEE) => {

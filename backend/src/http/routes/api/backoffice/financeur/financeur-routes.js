@@ -219,13 +219,12 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         res.status(200).send(aggregatedPlaces.filter(place => place !== undefined).sort((a, b) => a.city.toUpperCase() > b.city.toUpperCase() ? 1 : -1));
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/organisme_formateur/:siren/trainings', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/region/:idregion/organisme_formateur', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         checkCodeRegionAndCodeFinanceur(req);
 
         let filter = {
             '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-            'training.organisation.siret': { '$regex': `${req.params.siren}` },
             'codeRegion': `${req.params.idregion}`
         };
 
@@ -238,15 +237,19 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
             );
         }
 
+        if (req.query.organisation) {
+            filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.organisation}` } });
+        }
+
         if (req.query.codeFinanceur) {
             filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
         }
 
         const lieuFilter = await buildLieuFilter(req.query.lieu);
-        filter = Object.assign(filter, lieuFilter);
+        const finalFilter = { $and: [filter, lieuFilter] };
 
         const trainings = await db.collection('comment').aggregate([
-            { $match: filter },
+            { $match: finalFilter },
             { $group: { _id: '$training.idFormation', title: { $first: '$training.title' }, count: { $sum: 1 } } },
             { $sort: { 'count': -1 } }]).toArray();
 

@@ -103,6 +103,7 @@ export default class FinancerPanel extends React.Component {
                 this.doGetAdvices();
                 this.doGetOrganisations();
                 this.doGetPlaces();
+                this.doGetFormations();
             });
         } else {
             this.setState({
@@ -116,6 +117,7 @@ export default class FinancerPanel extends React.Component {
                 this.doGetAdvices();
                 this.doGetOrganisations();
                 this.doGetPlaces();
+                this.doGetFormations();
             });
         }
 
@@ -184,7 +186,7 @@ export default class FinancerPanel extends React.Component {
         }));
     };
 
-    getFormations = async () => {
+    doGetFormations = async () => {
         const { currentFinancer, training, currentLieu, startDate, endDate } = this.state;
         const { codeRegion } = this.props;
         const formations = await getFormations(codeRegion, startDate, endDate, currentFinancer._id, training.currentOrganisation._id, currentLieu._id);
@@ -239,6 +241,7 @@ export default class FinancerPanel extends React.Component {
             this.doGetOrganisations();
             this.doGetAdvices();
             this.doGetPlaces();
+            this.doGetFormations();
         });
     };
 
@@ -269,14 +272,14 @@ export default class FinancerPanel extends React.Component {
             }, () => {
                 this.doGetOrganisations();
                 this.doGetAdvices();
-                this.getFormations();
+                this.doGetFormations();
             });
         } else {
             this.setState({
                 currentLieu: {},
             }, () => {
                 this.doGetAdvices();
-                this.doGetPlaces();
+                this.doGetFormations();
             });
         }
         
@@ -302,7 +305,7 @@ export default class FinancerPanel extends React.Component {
             }), () => {
                 this.doGetAdvices();
                 this.doGetPlaces();
-                this.getFormations();
+                this.doGetFormations();
             });
         } else {
             this.setState(prevState => ({
@@ -503,15 +506,13 @@ export default class FinancerPanel extends React.Component {
                                         onChangeStartDate={date => this.handleChangeStart(date)}
                                         onChangeEndDate={date => this.handleChangeEnd(date)}
                                         onClearDates={() => this.handleClear()} />
-                                    {currentLieu._id && currentOrganisation._id &&
-                                        <Filter
-                                            label="Formation"
-                                            options={formationsOptions}
-                                            placeholderText="Choisissez une formation"
-                                            onChange={this.handleFormationChange}
-                                            selectValue={currentFormation}
-                                        />
-                                    }
+                                    <Filter
+                                        label="Formation"
+                                        options={formationsOptions}
+                                        placeholderText="Choisissez une formation"
+                                        onChange={this.handleFormationChange}
+                                        selectValue={currentFormation}
+                                    />
                                     <button className={`init-filter-button ${this.someActiveFilter()}`} onClick={this.initFilters}>
                                         <i className="fas fa-times"></i> réinitialiser les filtres
                                     </button>
