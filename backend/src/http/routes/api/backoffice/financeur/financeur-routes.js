@@ -82,6 +82,11 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
                     label: { $first: '$training.organisation.label' },
                     count: { $sum: 1 }
                 }
+            },
+            {
+                $sort: {
+                    name: 1
+                }
             }])
         .toArray();
 
