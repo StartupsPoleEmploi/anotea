@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Route } from 'react-router-dom';
 import queryString from 'query-string';
-import OrganismePanel from './gestion/organismes/OrganismePanel';
-import AvisStagiairesPanel from './moderation/AvisStagiairesPanel';
-import AvisReponsesPanel from './moderation/AvisReponsesPanel';
-import TemplatesCourrielsPanel from './moderation/TemplatesCourrielsPanel';
+import OrganismePanel from './gestion-organismes/organismes/OrganismePanel';
+import AvisStagiairesPanel from './moderation-avis/AvisStagiairesPanel';
+import AvisReponsesPanel from './moderation-avis/AvisReponsesPanel';
+import TemplatesCourrielsPanel from './moderation-avis/TemplatesCourrielsPanel';
 import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
 
 const carouselSlidesDataStagiaires = [

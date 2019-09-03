@@ -56,7 +56,7 @@ module.exports = components => {
     app.use('/api', require('./routes/api/contactStagiaires-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/login-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/forgottenPassword-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/moderateur/moderateur-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/moderateur/moderation-avis-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/organismes/consultation-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/organismes/organisme-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/moderateur/gestion-organismes-routes')(httpComponents));
