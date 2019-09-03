@@ -19,10 +19,10 @@ export default class Header extends React.Component {
         return (
             <Route render={({ location }) => {
 
-                let isModeration = location.pathname.indexOf('/admin/moderateur/moderation/avis') !== -1;
+                let isModerateur = location.pathname.indexOf('/admin/moderateur') !== -1;
 
                 return (
-                    <div className={`Header ${isModeration ? 'blue' : 'misc'}`}>
+                    <div className={`Header ${isModerateur ? 'moderateur' : 'financeur'}`}>
                         <div className="container">
                             <div className="row">
                                 <div className="col-sm-12">
