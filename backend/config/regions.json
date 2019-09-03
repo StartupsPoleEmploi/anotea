@@ -2,6 +2,7 @@
   {
     "nom": "Auvergne-Rhône-Alpes",
     "active": true,
+    "since": "2018-01-01",
     "codeRegion": "2",
     "codeINSEE": "84",
     "contact": "anotea.69188",
@@ -28,6 +29,7 @@
   {
     "nom": "Bourgogne-Franche-Comté",
     "active": true,
+    "since": "2017-07-01",
     "codeRegion": "3",
     "codeINSEE": "27",
     "contact": "anotea.bfc",
@@ -52,6 +54,7 @@
   {
     "nom": "Bretagne",
     "active": true,
+    "since": "2018-05-01",
     "codeRegion": "4",
     "codeINSEE": "53",
     "contact": "anoteabretagne.35076",
@@ -76,6 +79,7 @@
   {
     "nom": "Centre-Val de Loire",
     "active": true,
+    "since": "2018-09-01",
     "codeRegion": "5",
     "codeINSEE": "24",
     "contact": "formationapplicatifspartenaires.45054",
@@ -100,6 +104,7 @@
   {
     "nom": "Corse",
     "active": true,
+    "since": "2017-07-01",
     "codeRegion": "6",
     "codeINSEE": "94",
     "contact": "anoteacorse.20010",
@@ -124,6 +129,7 @@
   {
     "nom": "Grand-Est",
     "active": true,
+    "since": "2017-07-01",
     "codeRegion": "7",
     "codeINSEE": "44",
     "contact": "anotea.67085",
@@ -148,6 +154,7 @@
   {
     "nom": "Guadeloupe",
     "active": true,
+    "since": "2018-05-01",
     "codeRegion": "8",
     "codeINSEE": "01",
     "contact": "anotea.97110",
@@ -172,6 +179,7 @@
   {
     "nom": "Guyane",
     "active": false,
+    "since": "2019-01-01",
     "codeRegion": "9",
     "codeINSEE": "03",
     "departements": ["973"],
@@ -195,6 +203,7 @@
   {
     "nom": "Hauts-de-France",
     "active": true,
+    "since": "2018-01-01",
     "codeRegion": "10",
     "codeINSEE": "32",
     "contact": "anotea.59212",
@@ -220,10 +229,11 @@
   },
   {
     "nom": "Île-de-France",
+    "active": true,
+    "since": "2016-05-01",
     "codeRegion": "11",
     "codeINSEE": "11",
     "contact": "anotea-idf",
-    "active": true,
     "departements": ["91", "92", "75", "93", "77", "95", "94", "78"],
     "mailing": {
       "stagiaires": {
@@ -247,6 +257,7 @@
   {
     "nom": "La Réunion-Mayotte",
     "active": false,
+    "since": "2019-01-01",
     "codeRegion": "12",
     "codeINSEE": "04",
     "departements": ["974", "976"],
@@ -270,6 +281,7 @@
   {
     "nom": "Martinique",
     "active": true,
+    "since": "2018-01-01",
     "codeRegion": "13",
     "codeINSEE": "02",
     "contact": "anotea.97210",
@@ -294,6 +306,7 @@
   {
     "nom": "Normandie",
     "active": true,
+    "since": "2018-01-01",
     "codeRegion": "14",
     "codeINSEE": "28",
     "contact": "anoteanormandie",
@@ -318,6 +331,7 @@
   {
     "nom": "Nouvelle-Aquitaine",
     "active": true,
+    "since": "2018-01-01",
     "codeRegion": "15",
     "codeINSEE": "75",
     "contact": "anotea.33127",
@@ -342,6 +356,7 @@
   {
     "nom": "Occitanie",
     "active": true,
+    "since": "2018-05-01",
     "codeRegion": "16",
     "codeINSEE": "76",
     "contact": "anotea.occitanie",
@@ -366,6 +381,7 @@
   {
     "nom": "Pays de la Loire",
     "active": true,
+    "since": "2017-07-01",
     "codeRegion": "17",
     "codeINSEE": "52",
     "contact": "anotea-pdll.44116",
@@ -392,6 +408,7 @@
   {
     "nom": "Provence-Alpes-Côte d'Azur",
     "active": true,
+    "since": "2018-07-01",
     "codeRegion": "18",
     "codeINSEE": "93",
     "contact": "anoteapepaca.13992",
