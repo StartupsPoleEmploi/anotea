@@ -75,13 +75,14 @@
   },
   {
     "nom": "Centre-Val de Loire",
-    "active": false,
+    "active": true,
     "codeRegion": "5",
     "codeINSEE": "24",
+    "contact": "formationapplicatifspartenaires.45054",
     "departements": ["28", "36", "37", "41", "45", "18"],
     "mailing": {
       "stagiaires": {
-        "avis": false
+        "avis": true
       },
       "organismes": {
         "accounts": false,
