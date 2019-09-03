@@ -566,11 +566,7 @@ export default class AvisPanel extends React.Component {
                                 this.state.advices.map(avis => {
                                     return (
                                         <div key={avis._id}>
-                                            <Avis
-                                                avis={avis}
-                                                readonly={true}
-                                                showStatus={this.props.codeFinanceur === '2'}
-                                                onChange={() => ({})} />
+                                            <Avis avis={avis} readonly={true} showStatus={true} onChange={() => ({})} />
                                             <ResultDivider />
                                         </div>
                                     );

@@ -89,7 +89,7 @@ export default class Stagiaire extends React.Component {
 
                 <div className="date">
                     le <PrettyDate date={new Date(avis.date)} /> &nbsp;
-                    {!readonly && showStatus &&
+                    {showStatus &&
                     <Status avis={avis} />
                     }
                 </div>
