@@ -69,7 +69,7 @@ module.exports = (db, regions) => {
                 'dc_numeroicaction',
                 'kn_session_id',
                 'liste_financeur',
-            ],
+            ]
         },
         shouldBeImported: async trainee => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
@@ -182,6 +182,13 @@ module.exports = (db, regions) => {
                     nombreHeuresCentre: parseInt(record['dn_nombreheurescentre'], 10) || null,
                 }
             };
+        },
+        buildRefreshedTrainee: (trainee, record) => {
+            return _.merge({}, trainee, {
+                place: {
+                    inseeCode: record['dc_insee_lieuformation'],
+                }
+            });
         },
     };
 };

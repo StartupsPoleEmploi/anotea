@@ -2,20 +2,19 @@ const path = require('path');
 const _ = require('lodash');
 const md5 = require('md5');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-database');
-const logger = require('../../../../helpers/test-logger');
-const importTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
-const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
+const { withMongoDB } = require('../../../../../helpers/test-database');
+const logger = require('../../../../../helpers/test-logger');
+const importTrainee = require('../../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
+const poleEmploiCSVHandler = require('../../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
 
-describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComponents }) => {
+describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComponents, getTestFile }) => {
 
     it('should import trainees from csv file', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
 
-        await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions));
+        await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), poleEmploiCSVHandler(db, regions));
 
         let count = await db.collection('trainee').countDocuments();
         assert.strictEqual(count, 4);
@@ -91,7 +90,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComp
     it('should fail to import trainee when codeRegion can not be found', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-invalid-departement.csv');
+        let csvFile = getTestFile('stagiaires-pe-invalid-departement.csv');
         let { regions } = await getComponents();
 
         let stats = await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions));
@@ -106,7 +105,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComp
     it('should ignore trainee with not active region (Occitanie)', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-inactive-region.csv');
+        let csvFile = getTestFile('stagiaires-pe-inactive-region.csv');
         let { regions } = await getComponents();
 
         await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions));
@@ -117,13 +116,11 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComp
 
     it('should ignore trainee already imported', async () => {
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
-        let csvFileWithDuplicates = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-doublons.csv');
         let handler = poleEmploiCSVHandler(db, regions);
 
-        await importTrainee(db, logger, csvFile, handler);
-        let results = await importTrainee(db, logger, csvFileWithDuplicates, handler);
+        await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
+        let results = await importTrainee(db, logger, getTestFile('stagiaires-pe-doublons.csv'), handler);
 
         assert.deepStrictEqual(results, {
             invalid: 0,
@@ -135,11 +132,11 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComp
 
     it('should ignore trainee already removed (opt out)', async () => {
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe.csv');
         let { regions } = await getComponents();
         await insertIntoDatabase('optOut', { type: 'stagiaire', md5: md5('email_1@pe.com') });
+        let handler = poleEmploiCSVHandler(db, regions);
 
-        let results = await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions));
+        let results = await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
 
         assert.deepStrictEqual(results, {
             invalid: 0,
@@ -151,7 +148,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComp
 
     it('should filter trainee with conseil regional filter (excluded)', async () => {
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-conseil-regional.csv');
+        let csvFile = getTestFile('stagiaires-pe-ara-conseil-regional.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
@@ -178,7 +175,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComp
 
     it('should filter trainee with conseil regional filter (certifications_only)', async () => {
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-ara-non-certifiantes.csv');
+        let csvFile = getTestFile('stagiaires-pe-ara-non-certifiantes.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
@@ -206,7 +203,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComp
 
     it('should ignore old trainee', async () => {
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-pe-old.csv');
+        let csvFile = getTestFile('stagiaires-pe-old.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
 

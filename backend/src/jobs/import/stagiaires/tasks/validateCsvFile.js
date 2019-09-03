@@ -1,8 +1,11 @@
 const fs = require('fs');
 const md5 = require('md5');
+const moment = require('moment');
 const parse = require('csv-parse');
 const readline = require('readline');
-const _ = require('underscore');
+const path = require('path');
+const colors = require('colors/safe');
+const _ = require('lodash');
 const validateTrainee = require('./utils/validateTrainee');
 const { getCampaignDate, getCampaignName } = require('./utils/utils');
 
@@ -53,11 +56,30 @@ const isLineValid = (file, handler, rawLine) => {
     });
 };
 
-module.exports = async (file, handler) => {
+module.exports = async (db, logger, file, handler, mailer) => {
+
     return new Promise((resolve, reject) => {
         let error = null;
         let promises = [];
         let lines = [];
+
+        const handleValidationError = (error, csvOptions) => {
+            let { line, type } = error;
+
+            if (error.type.name === 'BAD_HEADER') {
+                logger.error(`File is not valid due to '${error.type.name}'. Differences : ` +
+                    `${colors.red(`${_.difference(csvOptions.columns, line.split(csvOptions.delimiter))}`)}`);
+            } else {
+                logger.error(`File is not valid due to '${type.name}'.\n${line}`);
+            }
+
+            return mailer.sendMalformedImport({
+                filename: path.basename(file),
+                date: moment().format('DD/MM/YYYY'),
+                reason: type.message,
+                source: handler.name
+            }, () => resolve(error), reject);
+        };
 
         let rl = readline.createInterface({ input: fs.createReadStream(file) });
         rl.on('line', async line => {
@@ -67,6 +89,7 @@ module.exports = async (file, handler) => {
 
             if (lines.length === 0) {
                 if (!isHeaderValid(line, handler.csvOptions)) {
+                    console.log(line, handler.csvOptions);
                     error = {
                         type: ValidationErrorTypes.BAD_HEADER,
                         line: line
@@ -100,7 +123,8 @@ module.exports = async (file, handler) => {
             }
         }).on('close', async () => {
             await Promise.all(promises);
-            return resolve(error);
+
+            return error ? handleValidationError(error, handler.csvOptions) : resolve();
         });
     });
 };

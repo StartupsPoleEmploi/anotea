@@ -1,21 +1,19 @@
-const path = require('path');
 const _ = require('lodash');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-database');
-const logger = require('../../../../helpers/test-logger');
-const importTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
-const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/ileDeFranceCSVHandler');
+const { withMongoDB } = require('../../../../../helpers/test-database');
+const logger = require('../../../../../helpers/test-logger');
+const importTrainee = require('../../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
+const ileDeFranceCSVHandler = require('../../../../../../src/jobs/import/stagiaires/tasks/handlers/ileDeFranceCSVHandler');
 
-describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents }) => {
 
     it('should import trainees from CSV file', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-idf.csv');
         let { regions } = await getComponents();
         let handler = ileDeFranceCSVHandler(db, regions);
 
-        await importTrainee(db, logger, csvFile, handler);
+        await importTrainee(db, logger, getTestFile('stagiaires-idf.csv'), handler);
 
         let count = await db.collection('trainee').countDocuments();
         assert.strictEqual(count, 5);
@@ -90,7 +88,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
     it('should ignore trainees too old', async () => {
 
         let db = await getTestDatabase();
-        let csvFile = path.join(__dirname, '../../../../helpers/data', 'stagiaires-idf-old.csv');
+        let csvFile = getTestFile('stagiaires-idf-old.csv');
         let { regions } = await getComponents();
         let handler = ileDeFranceCSVHandler(db, regions);
 

@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const path = require('path');
-const _ = require('lodash');
-const moment = require('moment');
 const cli = require('commander');
-const colors = require('colors/safe');
 const { execute } = require('../../job-utils');
 const importTrainee = require('./tasks/importTrainee');
 const validateCsvFile = require('./tasks/validateCsvFile');
@@ -25,23 +21,6 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
         'PE': 'poleEmploi',
         'IDF': 'ileDeFrance',
     };
-    const handleValidationError = (validationError, csvOptions) => {
-        let { line, type } = validationError;
-
-        if (validationError.type.name === 'BAD_HEADER') {
-            logger.error(`File is not valid due to '${validationError.type.name}'. Differences : ` +
-                `${colors.red(`${_.difference(csvOptions.columns, line.split(csvOptions.delimiter))}`)}`);
-        } else {
-            logger.error(`File is not valid due to '${type.name}'.\n${line}`);
-        }
-
-        return mailer.sendMalformedImport({
-            filename: path.basename(cli.file),
-            date: moment().format('DD/MM/YYYY'),
-            reason: type.message,
-            source: source
-        }, () => ({}), e => exit(e));
-    };
 
     if (!file || !['PE', 'IDF'].includes(source)) {
         return exit('Invalid arguments');
@@ -54,10 +33,7 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
 
     if (validate) {
         logger.info(`Validating file ${file}...`);
-        let errors = await validateCsvFile(file, handler);
-        if (errors) {
-            handleValidationError(errors, handler.csvOptions);
-        }
+        await validateCsvFile(db, logger, file, handler, mailer);
     } else {
         logger.info(`Importing source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
         try {
