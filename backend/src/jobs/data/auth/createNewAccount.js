@@ -6,7 +6,7 @@ const { hashPassword } = require('../../../common/components/password');
 const { execute } = require('../../job-utils');
 
 cli.description('Create new account')
-.option('--email [email]')
+.option('--username [username]')
 .option('--region [region]')
 .option('--profile [profile]')
 .option('--password [password]')
@@ -14,14 +14,14 @@ cli.description('Create new account')
 
 execute(async ({ db, exit }) => {
 
-    let { email, password, region, profile } = cli;
+    let { username, password, region, profile } = cli;
 
-    if (!email || !password || !region || !profile) {
+    if (!username || !password || !region || !profile) {
         return exit('Invalid arguments');
     }
 
     return db.collection('accounts').insertOne({
-        courriel: email,
+        courriel: username,
         codeRegion: region,
         profile: profile,
         passwordHash: await hashPassword(password),
