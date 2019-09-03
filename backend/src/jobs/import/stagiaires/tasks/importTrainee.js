@@ -12,11 +12,8 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         date: getCampaignDate(file),
     };
 
-    const shouldBeImported = async trainee => {
-        let sameRegion = !filters.codeRegion || filters.codeRegion === trainee.codeRegion;
-        let isAfter = !filters.since || trainee.training.scheduledEndDate > filters.since;
-
-        return sameRegion && isAfter && await handler.shouldBeImported(trainee);
+    const isFiltered = trainee => {
+        return !filters.codeRegion || filters.codeRegion === trainee.codeRegion;
     };
 
     let stats = {
@@ -52,7 +49,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
                 stats.total++;
                 let trainee = await handler.buildTrainee(record, campaign);
 
-                if (await shouldBeImported(trainee)) {
+                if (isFiltered(trainee) && await handler.shouldBeImported(trainee)) {
                     await validateTrainee(trainee);
                     await db.collection('trainee').insertOne(trainee);
                     stats.imported++;

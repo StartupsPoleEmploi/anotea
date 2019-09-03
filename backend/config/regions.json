@@ -203,7 +203,7 @@
   {
     "nom": "Hauts-de-France",
     "active": true,
-    "since": "2018-01-01",
+    "since": "2018-06-01",
     "codeRegion": "10",
     "codeINSEE": "32",
     "contact": "anotea.59212",
@@ -356,7 +356,7 @@
   {
     "nom": "Occitanie",
     "active": true,
-    "since": "2018-05-01",
+    "since": "2018-07-01",
     "codeRegion": "16",
     "codeINSEE": "76",
     "contact": "anotea.occitanie",

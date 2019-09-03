@@ -10,24 +10,21 @@ const { execute } = require('../../job-utils');
 const importTrainee = require('./tasks/importTrainee');
 const validateCsvFile = require('./tasks/validateCsvFile');
 
-const sources = {
-    'PE': 'poleEmploi',
-    'IDF': 'ileDeFrance',
-};
-
 cli.description('Import des stagiaires')
 .option('--source [name]', 'Source to import (PE or IDF)')
 .option('--file [file]', 'The CSV file to import')
 .option('--region [codeRegion]', 'Code region to filter')
-.option('--since [since]', 'Import only trainee with a scheduled end date since start date', value => moment(`${value} 00Z`))
 .option('--slack', 'Send a slack notification when job is finished')
 .option('--validate', 'Validate CSV file but do not import it')
 .parse(process.argv);
 
 execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
 
-    let { file, source, region, since, validate } = cli;
-
+    let { file, source, region, validate } = cli;
+    let sources = {
+        'PE': 'poleEmploi',
+        'IDF': 'ileDeFrance',
+    };
     const handleValidationError = (validationError, csvOptions) => {
         let { line, type } = validationError;
 
@@ -46,27 +43,13 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
         }, () => ({}), e => exit(e));
     };
 
-    let allowedSources = Object.keys(sources);
-    if (source === undefined || !allowedSources.includes(source)) {
-        return exit(`Source param is required, please choose one : ${JSON.stringify(allowedSources)}`);
-    }
-
-    if (!file) {
-        return exit('CSV File is required');
-    }
-
-    if (region && isNaN(region)) {
-        return exit('Region is invalid');
-    }
-
-    if (since && !since.isValid()) {
-        return exit('since is invalid, please use format \'YYYY-MM-DD\'');
+    if (!file || !['PE', 'IDF'].includes(source)) {
+        return exit('Invalid arguments');
     }
 
     let handler = require(`./tasks/handlers/${sources[cli.source]}CSVHandler`)(db, regions);
     let filters = {
         codeRegion: region,
-        since: since && since.toDate(),
     };
 
     if (validate) {

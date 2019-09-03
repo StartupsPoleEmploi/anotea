@@ -99,6 +99,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 },
                 contact: 'anotea-idf',
                 active: true,
+                since: '2016-05-01',
                 departements: ['91', '92', '75', '93', '77', '95', '94', '78'],
                 mailing: {
                     stagiaires: {
