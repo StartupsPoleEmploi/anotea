@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PrettyDate from '../../common/PrettyDate';
+import PrettyDate from '../../../common/PrettyDate';
 
 export default function FiltersResume({ startDate, endDate, currentFinancer, currentOrganisation, currentLieu, currentFormation }) {
 

@@ -1,4 +1,4 @@
-@import '../../../../styles/variables';
+@import '../../../../../../styles/variables';
 
 // SASS variable for media query breakpoint
 $breakpoint-desktop: 992px;
@@ -40,7 +40,7 @@ $breakpoint-desktop: 992px;
     border: 1px solid #ddd;
 	border-radius: 5px;
     box-shadow: $shadow;
-    
+
     @media (max-width: $breakpoint-desktop - 1px) {
         max-width: 500px;
     }

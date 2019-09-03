@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getToken } from '../../../../utils/token';
+import { getToken } from '../../../../../utils/token';
 
 export default class DeprecatResume extends React.PureComponent {
 

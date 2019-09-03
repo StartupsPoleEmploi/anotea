@@ -88,11 +88,11 @@ export default class ModerateurHeaderItems extends React.Component {
                             <div className="dropdown-menu">
                                 <Link
                                     className="nav-link"
-                                    url="/admin/moderateur/courriels/templates-stagiaires"
+                                    url="/admin/moderateur/courriels/stagiaires"
                                     label="Stagiaires" />
                                 <Link
                                     className="nav-link"
-                                    url="/admin/moderateur/courriels/templates-organismes"
+                                    url="/admin/moderateur/courriels/organismes"
                                     label="Organismes" />
                             </div>
                         </li>
