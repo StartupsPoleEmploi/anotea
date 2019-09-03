@@ -99,7 +99,7 @@ export default class ModerateurHeaderItems extends React.Component {
                         <li className="nav-item">
                             <Link
                                 className="nav-link"
-                                url="/mon-compte"
+                                url="/admin/moderateur/mon-compte"
                                 label="Mon compte" />
                         </li>
                     </ul>

@@ -19,7 +19,7 @@ export default function FinanceurHeaderItems() {
             <li className="nav-item right">
                 <Link
                     className="nav-link"
-                    url="/mon-compte"
+                    url="/admin/financeur/mon-compte"
                     label="Mon compte" />
             </li>
         </ul>

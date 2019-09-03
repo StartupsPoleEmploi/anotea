@@ -7,6 +7,7 @@ import OrganismePanel from './gestion/organismes/OrganismePanel';
 import AvisStagiairesPanel from './moderation/AvisStagiairesPanel';
 import AvisReponsesPanel from './moderation/AvisReponsesPanel';
 import TemplatesCourrielsPanel from './moderation/TemplatesCourrielsPanel';
+import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
 
 const carouselSlidesDataStagiaires = [
     {
@@ -100,6 +101,8 @@ export default class ModerateurRoutes extends React.Component {
                                 history.push(`/admin/moderateur/moderation/avis/reponses?${this.buildParameters(options)}`);
                             }} />;
                     }} />
+
+                <Route path="/admin/moderateur/mon-compte" component={MonComptePanel} />
             </div>
         );
     }

@@ -6,21 +6,20 @@ import jwtDecode from 'jwt-decode';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { removeToken, setToken } from './utils/token';
 import { subscribeToHttpEvent } from './utils/http-client';
-import DeprecatedHeader from './components/backoffice/common/deprecated/DeprecatedHeader';
+import DeprecatedHeader from './components/backoffice/common/deprecated/header/DeprecatedHeader';
 import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel.jsx';
 import AccountActivation from './components/backoffice/organisation/AccountActivation';
 import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
-import MonComptePanel from './components/backoffice/account/mon-compte/MonComptePanel';
+import MonComptePanel from './components/backoffice/misc/account/mon-compte/MonComptePanel';
 import GridDisplayer from './components/backoffice/common/library/GridDisplayer';
 import Header from './components/backoffice/common/header/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
 import FinanceurRoutes from './components/backoffice/financeur/FinanceurRoutes';
 import './utils/moment-fr';
 import './App.scss';
-import MonComptesRoutes from './components/backoffice/account/MonCompteRoutes';
 import ModerateurHeaderItems from './components/backoffice/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/backoffice/financeur/FinanceurHeaderItems';
 
@@ -216,7 +215,6 @@ class App extends Component {
 
                         <Header onLogout={this.handleLogout} items={layout.headerItems} />
 
-                        <MonComptesRoutes codeRegion={codeRegion} />
                         <MiscRoutes />
                         {layout.routes}
                     </div>

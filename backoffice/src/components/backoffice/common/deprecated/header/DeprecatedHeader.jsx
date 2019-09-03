@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Logout from './Logout';
+import Logout from '../Logout';
 import './header.css';
-import logo from '../../common/header/Header.svg';
+import logo from '../../header/Header.svg';
 import { NavLink } from 'react-router-dom';
 
-import financeurs from './../../constantes/financeurs';
-import regions from './../../constantes/regions';
+import financeurs from './financeurs';
+import regions from './regions';
 
 export default class DeprecatedHeader extends React.PureComponent {
 
