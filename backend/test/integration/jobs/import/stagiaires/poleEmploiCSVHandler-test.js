@@ -55,6 +55,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, getComp
                 place: {
                     departement: '91',
                     postalCode: '91130',
+                    inseeCode: '91521',
                     city: 'Ris-Orangis'
                 },
                 certifInfo: {
