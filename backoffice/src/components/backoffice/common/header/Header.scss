@@ -4,15 +4,15 @@
   padding-top: 0.8em;
   padding-bottom: 2.5em;
 
-  &.blue {
+  &.moderateur {
     background-color: $color-blue;
+
+    .dropdown-menu {
+      background-color: $color-blue;
+    }
   }
 
-  .dropdown-menu {
-    background-color: $color-blue;
-  }
-
-  &.misc {
+  &.financeur {
     background-color: $color-green;
 
     .dropdown-menu {

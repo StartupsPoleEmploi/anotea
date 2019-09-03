@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { login } from '../backoffice/account/service/loginService';
+import { login } from './loginService';
 import './LoginForm.scss';
 
 export default class LoginForm extends React.Component {

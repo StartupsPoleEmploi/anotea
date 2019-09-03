@@ -1,4 +1,4 @@
-import { _post, _get } from '../../../../utils/http-client';
+import { _post, _get } from '../../utils/http-client';
 
 export const login = credentials => _post('/backoffice/login', credentials);
 

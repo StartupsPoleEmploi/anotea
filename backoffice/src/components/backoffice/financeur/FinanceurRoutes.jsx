@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import queryString from 'query-string';
 import AvisPanel from './avis/AvisPanel';
 import StatistiquesPanel from './stats/StatistiquesPanel';
+import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
 
 export default class FinanceurRoutes extends React.Component {
 
@@ -35,6 +36,7 @@ export default class FinanceurRoutes extends React.Component {
                     render={() => (
                         <StatistiquesPanel />
                     )} />
+                <Route path="/admin/financeur/mon-compte" component={MonComptePanel} />
             </div>
         );
     }

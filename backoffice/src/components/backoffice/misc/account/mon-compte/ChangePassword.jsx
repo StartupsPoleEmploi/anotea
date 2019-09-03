@@ -1,6 +1,6 @@
 import React from 'react';
 import './changePassword.scss';
-import { checkPasswordComplexity } from '../../../../utils/password';
+import { checkPasswordComplexity } from '../../../../../utils/password';
 import { updatePassword } from './MonCompteService';
 
 export class ChangePassword extends React.Component {

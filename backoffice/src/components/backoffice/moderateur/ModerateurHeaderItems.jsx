@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from '../common/header/Link';
-import { getStats } from './moderation/moderationService';
+import { getStats } from './moderation-avis/moderationService';
 import { Route } from 'react-router-dom';
 
 export default class ModerateurHeaderItems extends React.Component {
@@ -88,18 +88,18 @@ export default class ModerateurHeaderItems extends React.Component {
                             <div className="dropdown-menu">
                                 <Link
                                     className="nav-link"
-                                    url="/admin/moderateur/courriels/templates-stagiaires"
+                                    url="/admin/moderateur/courriels/stagiaires"
                                     label="Stagiaires" />
                                 <Link
                                     className="nav-link"
-                                    url="/admin/moderateur/courriels/templates-organismes"
+                                    url="/admin/moderateur/courriels/organismes"
                                     label="Organismes" />
                             </div>
                         </li>
                         <li className="nav-item">
                             <Link
                                 className="nav-link"
-                                url="/mon-compte"
+                                url="/admin/moderateur/mon-compte"
                                 label="Mon compte" />
                         </li>
                     </ul>

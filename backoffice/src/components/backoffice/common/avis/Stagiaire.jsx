@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PrettyDate from '../PrettyDate';
-import { maskPseudo } from '../../moderateur/moderation/moderationService';
+import { maskPseudo } from '../../moderateur/moderation-avis/moderationService';
 import './Stagiaire.scss';
 
 const Stars = props => {
