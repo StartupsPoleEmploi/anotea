@@ -5,9 +5,9 @@ import './CarouselIndicator.scss';
 const CarouselIndicator = ({ index, activeIndex, onClick }) => (
     <li>
         <a
-            className={ index === activeIndex ?
+            className={index === activeIndex ?
                 'carousel__indicator carousel__indicator--active' :
-                'carousel__indicator' }
+                'carousel__indicator'}
             onClick={onClick}
         />
     </li>

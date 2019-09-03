@@ -10,7 +10,7 @@ module.exports = (db, path) => {
         streamOut.once('open', function() {
             streamOut.write('Email stagiaire;Prénom;Nom;Titre datalake;Titre anonymisé;Date d\'import;Région;Avis déposés\n');
             let stream = db.collection('trainee').find().sort({ importDate: -1 }).stream();
-        
+
             stream.on('data', trainee => {
                 const result = getAnonymizedTitle(trainee);
 

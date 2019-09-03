@@ -23,7 +23,7 @@ module.exports = db => {
                     db.collection('trainee').updateOne(query, update),
                     db.collection('comment').updateOne({ token: trainee.token }, update)
                 ]);
-                
+
                 promises.push(p);
             }
         });

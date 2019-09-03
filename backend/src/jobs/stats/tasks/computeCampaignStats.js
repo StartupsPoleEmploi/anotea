@@ -69,10 +69,10 @@ module.exports = db => {
             },
             {
                 $unwind:
-                        {
-                            path: '$stats',
-                            preserveNullAndEmptyArrays: true
-                        }
+                    {
+                        path: '$stats',
+                        preserveNullAndEmptyArrays: true
+                    }
             },
             {
                 $group: {
@@ -93,7 +93,7 @@ module.exports = db => {
                 }
             }
         ]).toArray();
-        
+
     };
 
     return getCampaignReconciliesStats();

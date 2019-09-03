@@ -13,7 +13,7 @@ export class ChangePassword extends React.Component {
         ok: false,
         success: false,
         serverSideError: null
-    }
+    };
 
 
     change = (item, event) => {
@@ -31,7 +31,7 @@ export class ChangePassword extends React.Component {
             }
             this.setState({ errors: errors });
         });
-    }
+    };
 
     update = () => {
         updatePassword(this.state.actualPassword, this.state.newPassword, sessionStorage.userId, sessionStorage.userProfile).then(result => {
@@ -51,11 +51,11 @@ export class ChangePassword extends React.Component {
                 this.setState({ serverSideError: null });
             }, 5000);
         });
-    }
+    };
 
     passwordIsOk = () => {
         return this.state.newPassword === this.state.confirmPassword && checkPasswordComplexity(this.state.newPassword);
-    }
+    };
 
     render() {
 

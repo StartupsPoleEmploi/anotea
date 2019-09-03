@@ -1,4 +1,4 @@
-import { _put, _get, _post } from '../../../../utils/http-client';
+import { _get, _post, _put } from '../../../../utils/http-client';
 import queryString from 'query-string';
 
 export const searchOrganismes = (options = {}) => {

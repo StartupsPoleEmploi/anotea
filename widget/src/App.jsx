@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ListeWidget from './components/ListeWidget';
-import { getScore, getAvis } from './services/widgetService';
+import { getAvis, getScore } from './services/widgetService';
 import GridDisplayer from './components/common/library/GridDisplayer';
 import OptionsContext from './components/common/options/OptionsContext';
 import ScoreWidget from './components/ScoreWidget';

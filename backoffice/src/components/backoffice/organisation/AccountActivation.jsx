@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { getActivationAccountStatus, activateAccount } from './service/organismeService';
-import { isPasswordStrongEnough, checkConfirm, passwordIsOK } from '../../../utils/validation';
+import { activateAccount, getActivationAccountStatus } from './service/organismeService';
+import { checkConfirm, isPasswordStrongEnough, passwordIsOK } from '../../../utils/validation';
 
 export default class AccountActivation extends React.Component {
 
@@ -14,7 +14,7 @@ export default class AccountActivation extends React.Component {
         passwordConfirm: null,
         token: null,
         alreadyCreated: null
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -36,24 +36,24 @@ export default class AccountActivation extends React.Component {
 
     handlePasswordChange = evt => {
         this.setState({ password: evt.target.value });
-    }
+    };
 
     handlePasswordConfirmChange = evt => {
         this.setState({ passwordConfirm: evt.target.value });
-    }
+    };
 
     handleActivation = evt => {
         activateAccount(this.state.token, this.state.password).then(result => {
             if (!result.error) {
                 this.setState({ accountCreated: true, userInfo: result.userInfo });
-                history.pushState(null, "", location.href.split("?")[0])  // eslint-disable-line
+                history.pushState(null, '', location.href.split('?')[0]);  // eslint-disable-line
             }
         });
-    }
+    };
 
     onSuccess = evt => {
         this.onSuccessCallback(this.state.userInfo);
-    }
+    };
 
     render() {
         return (

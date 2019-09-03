@@ -56,13 +56,13 @@ export default class DropDown extends Component {
                             }}>
                                 {this.props.items.map((e, index) => (
                                     ((index + 1 === this.props.items.length) ?
-                                        (<div key={index}>
-                                            <button className="menu-button"><span>{e.intitule}</span></button>
-                                        </div>) :
-                                        (<div key={index}>
-                                            <button className="menu-button"><span>{e.intitule}</span></button>
-                                            <div className="dropdown-divider"></div>
-                                        </div>)
+                                            (<div key={index}>
+                                                <button className="menu-button"><span>{e.intitule}</span></button>
+                                            </div>) :
+                                            (<div key={index}>
+                                                <button className="menu-button"><span>{e.intitule}</span></button>
+                                                <div className="dropdown-divider"></div>
+                                            </div>)
                                     )
                                 ))}
                             </div>

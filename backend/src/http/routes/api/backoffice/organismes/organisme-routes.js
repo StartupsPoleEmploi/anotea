@@ -358,7 +358,7 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
                     read: { $ne: true },
                     reported: { $ne: true }
                 },
-                lieuFilter
+                    lieuFilter
                 ]
             });
             inventory.read = await db.collection('comment').countDocuments({
@@ -367,7 +367,7 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
                     read: true,
                     reported: { $ne: true },
                 },
-                lieuFilter
+                    lieuFilter
                 ]
             });
             inventory.reported = await db.collection('comment').countDocuments({
@@ -375,7 +375,7 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
                     ...filter,
                     reported: true
                 },
-                lieuFilter
+                    lieuFilter
                 ]
             });
             inventory.answered = await db.collection('comment').countDocuments({
@@ -383,7 +383,7 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
                     ...filter,
                     reponse: { $exists: true },
                 },
-                lieuFilter
+                    lieuFilter
                 ]
             });
             inventory.answerRejected = await db.collection('comment').countDocuments({
@@ -391,7 +391,7 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
                     ...filter,
                     'reponse.status': 'rejected',
                 },
-                lieuFilter
+                    lieuFilter
                 ]
             });
 
@@ -404,7 +404,7 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
                         { 'published': true }
                     ]
                 },
-                lieuFilter
+                    lieuFilter
                 ]
             });
             res.status(200).send(inventory);

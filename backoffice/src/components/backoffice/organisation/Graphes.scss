@@ -1,14 +1,14 @@
 @import '../../../styles/variables.scss';
 
 .graphes {
-    .repondants {
-        h3 {
-            font-size: 32px;
-            font-weight: bold;
-        }
-    
-        p {
-            color: $color-grey-50; 
-        }
+  .repondants {
+    h3 {
+      font-size: 32px;
+      font-weight: bold;
     }
+
+    p {
+      color: $color-grey-50;
+    }
+  }
 }

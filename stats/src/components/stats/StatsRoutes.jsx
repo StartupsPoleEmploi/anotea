@@ -26,7 +26,7 @@ export default class StatsRoutes extends Component {
     render() {
 
         let { stats } = this.state;
-        
+
         if (_.isEmpty(stats)) {
             return <Loader />;
         }
