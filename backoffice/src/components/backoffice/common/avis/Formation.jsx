@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Formation.scss';
-import PrettyDate from '../../../../common/PrettyDate';
+import PrettyDate from '../PrettyDate';
 
 export default class Formation extends React.Component {
 

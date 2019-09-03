@@ -37,8 +37,7 @@ export default class ModerateurHeaderItems extends React.Component {
             <Route render={({ location }) => {
 
                 let isModeration = location.pathname.indexOf('/admin/moderateur/moderation/avis') !== -1;
-                let isOrganismesTemplates = location.pathname.indexOf('/admin/courriels/templates-organismes') !== -1;
-                let isStagiairesTemplates = location.pathname.indexOf('/admin/courriels/templates-stagiaires') !== -1;
+                let isCourriels = location.pathname.indexOf('/admin/moderateur/courriels') !== -1;
 
                 return (
                     <ul className="nav">
@@ -76,23 +75,24 @@ export default class ModerateurHeaderItems extends React.Component {
                                 url="/admin/moderateur/gestion/organismes?page=0&status=active" />
                         </li>
                         <li className="nav-item dropdown">
-                            <a href="#"
-                               className={`nav-link dropdown-toggle  ${isStagiairesTemplates || isOrganismesTemplates ? 'active' : ''}`}
-                               data-toggle="dropdown"
-                               role="button"
-                               aria-haspopup="true"
-                               aria-expanded="false"
+                            <a
+                                href="#"
+                                className={`nav-link dropdown-toggle  ${isCourriels ? 'active' : ''}`}
+                                data-toggle="dropdown"
+                                role="button"
+                                aria-haspopup="true"
+                                aria-expanded="false"
                             >
                                 Courriels
                             </a>
                             <div className="dropdown-menu">
                                 <Link
                                     className="nav-link"
-                                    url="/admin/courriels/templates-stagiaires"
+                                    url="/admin/moderateur/courriels/templates-stagiaires"
                                     label="Stagiaires" />
                                 <Link
                                     className="nav-link"
-                                    url="/admin/courriels/templates-organismes"
+                                    url="/admin/moderateur/courriels/templates-organismes"
                                     label="Organismes" />
                             </div>
                         </li>

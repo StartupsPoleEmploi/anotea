@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Notes.scss';
-import Button from "../../../../common/library/Button";
+import Button from '../library/Button';
 
 const Note = ({ label, note }) => {
     return (
@@ -18,7 +18,6 @@ export default class Notes extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        readonly: PropTypes.bool,
     };
 
     constructor(props) {
@@ -44,20 +43,21 @@ export default class Notes extends React.Component {
     };
 
     render() {
-        let { avis, readonly } = this.props;
+        let { avis } = this.props;
         let buttonText = (
             <span className="text">
                 Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
             </span>
         );
 
-        if (readonly) {
-            return <div className="Notes">{buttonText}</div>;
-        }
-
         return (
             <div className="Notes">
-                <Button size="small" color="blue" className="pl-0" onClick={this.toggleDetails}>
+                <Button
+                    size="small"
+                    color="blue"
+                    className="pl-0"
+                    onClick={this.toggleDetails}
+                    style={{ backgroundColor: 'unset' }}>
                     {buttonText}
                 </Button>
                 {this.state.showDetails &&

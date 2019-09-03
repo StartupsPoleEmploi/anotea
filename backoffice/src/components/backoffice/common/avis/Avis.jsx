@@ -13,7 +13,7 @@ import RejectReponseButton from './buttons/RejectReponseButton';
 import PublishButton from './buttons/PublishButton';
 import RejectButton from './buttons/RejectButton';
 import EditButton from './buttons/EditButton';
-import LocalMessage from '../../../../common/message/LocalMessage';
+import LocalMessage from '../message/LocalMessage';
 import './Avis.scss';
 
 export default class Avis extends React.Component {
@@ -21,7 +21,9 @@ export default class Avis extends React.Component {
     static propTypes = {
         avis: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
-        options: PropTypes.object,
+        showStatus: PropTypes.bool,
+        showReponse: PropTypes.bool,
+        readonly: PropTypes.bool,
     };
 
     constructor(props) {
@@ -52,8 +54,7 @@ export default class Avis extends React.Component {
     };
 
     render() {
-        let { avis, options } = this.props;
-        let readonly = options.showReponse;
+        let { avis, showReponse, showStatus, readonly } = this.props;
         let disabledClass = this.state.message ? 'a-disabled' : '';
 
         return (
@@ -70,11 +71,11 @@ export default class Avis extends React.Component {
                     </div>
 
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
-                        <div className={`${readonly ? 'readonly' : ''}`}>
+                        <div className={`${showReponse ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
                                 <Stagiaire
                                     avis={avis}
-                                    showStatus={options.showStatus}
+                                    showStatus={showStatus}
                                     readonly={readonly}
                                     onChange={this.handleChange} />
                             </div>
@@ -94,7 +95,7 @@ export default class Avis extends React.Component {
                             </div>
 
                             <div className="mt-2 d-none d-lg-block">
-                                <Notes avis={avis} readonly={readonly} />
+                                <Notes avis={avis} />
                             </div>
                         </div>
                     </div>
@@ -110,7 +111,7 @@ export default class Avis extends React.Component {
                     }
                 </div>
                 {
-                    options.showReponse && avis.reponse &&
+                    showReponse && avis.reponse &&
                     <div className="row mt-3">
                         <div className={`offset-sm-3 offset-md-4 col-sm-7 col-md-6 ${disabledClass}`}>
                             <Reponse avis={avis} />

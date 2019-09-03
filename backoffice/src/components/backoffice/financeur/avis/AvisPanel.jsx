@@ -2,23 +2,15 @@ import React from 'react';
 import ReactPaginate from 'react-paginate';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-
-import Filter from './filters/filter';
-import {
-    getRegions,
-    getPlaces,
-    getInventory,
-    getAdvices,
-    getOrganisations,
-    getFormations
-} from './service/financeurService';
+import Filter from './Filter';
+import { getAdvices, getFormations, getInventory, getOrganisations, getPlaces, getRegions } from './financeurService';
 import Resume from './Resume';
-import Avis from './Avis';
-import ResultDivider from '../common/panel/ResultDivider';
-import './FinancerPanel.scss';
+import Avis from '../../common/avis/Avis';
+import ResultDivider from '../../common/panel/ResultDivider';
 import FiltersResume from './FiltersResume';
-import Loader from '../common/Loader';
+import Loader from '../../common/Loader';
 import PeriodeFilter from './PeriodeFilter';
+import './AvisPanel.scss';
 
 const DEFAULT_ORDER = 'advicesDate';
 const POLE_EMPLOI = '4';
@@ -41,7 +33,7 @@ const FINANCERS = [
     { _id: '0', title: `Autre` },
 ];
 
-export default class FinancerPanel extends React.Component {
+export default class AvisPanel extends React.Component {
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
@@ -121,7 +113,7 @@ export default class FinancerPanel extends React.Component {
             });
         }
 
-    }
+    };
 
     doGetAdvices = async (order = this.state.order) => {
         const { codeRegion } = this.props;
@@ -132,7 +124,7 @@ export default class FinancerPanel extends React.Component {
 
         const page = this.state.pagination.current;
         const result = await getAdvices(codeRegion, startDate, endDate, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id, tab, order, page);
-        
+
         this.setState({
             pagination: { current: result.page, count: result.pageCount },
             advices: result.advices.map(advice => {
@@ -167,7 +159,7 @@ export default class FinancerPanel extends React.Component {
         const { currentOrganisation, currentFormation } = this.state.training;
         const { currentFinancer, currentLieu, startDate, endDate } = this.state;
         const inventory = await getInventory(codeRegion, startDate, endDate, currentFinancer._id, currentLieu._id, currentOrganisation._id, currentFormation._id);
-        
+
         this.setState(Object.assign(this.state, {
             inventory: inventory
         }));
@@ -190,14 +182,14 @@ export default class FinancerPanel extends React.Component {
         const { currentFinancer, training, currentLieu, startDate, endDate } = this.state;
         const { codeRegion } = this.props;
         const formations = await getFormations(codeRegion, startDate, endDate, currentFinancer._id, training.currentOrganisation._id, currentLieu._id);
-        
+
         this.setState(prevState => ({
             training: {
                 ...prevState.training,
                 formations,
             }
         }));
-        
+
     };
 
     handleFinancerChange = (options, evt) => {
@@ -282,8 +274,8 @@ export default class FinancerPanel extends React.Component {
                 this.doGetFormations();
             });
         }
-        
-    }
+
+    };
 
     handleOrganisationChange = async (options, evt) => {
 
@@ -386,7 +378,7 @@ export default class FinancerPanel extends React.Component {
     };
 
     getActiveStatus = current => this.state.tab === current ? 'active' : '';
-    
+
     getExportFilters = () => {
         let str = `?status=${this.state.tab}`;
         if (this.state.currentFinancer._id) {
@@ -410,15 +402,15 @@ export default class FinancerPanel extends React.Component {
     someActiveFilter = () => {
         const { currentOrganisation, currentFormation } = this.state.training;
         const { currentFinancer, currentDepartement, currentLieu } = this.state;
-        
+
         return currentFinancer._id || currentOrganisation._id || currentLieu._id || currentFormation._id || currentDepartement._id ? 'active' : '';
-    }
+    };
 
     handleChangeStart = date => {
         this.setState({
             startDate: date,
         });
-    }
+    };
 
     handleChangeEnd = date => {
         this.setState({
@@ -426,7 +418,7 @@ export default class FinancerPanel extends React.Component {
         }, () => {
             this.doGetAdvices();
         });
-    }
+    };
 
     handleClear = () => {
         this.setState({
@@ -435,7 +427,7 @@ export default class FinancerPanel extends React.Component {
         }, () => {
             this.doGetAdvices();
         });
-    }
+    };
 
     render() {
         const { currentOrganisation, organisations, entities, formations, currentFormation } = this.state.training;
@@ -475,13 +467,13 @@ export default class FinancerPanel extends React.Component {
                             <div className="filters-area">
                                 <div className="first-part d-flex flex-wrap flex-md-row justify-content-between align-items-center">
                                     {this.props.codeFinanceur === POLE_EMPLOI &&
-                                        <Filter
-                                            label="Financeur"
-                                            options={financersOptions}
-                                            onChange={this.handleFinancerChange}
-                                            placeholderText="Choisissez un code financeur"
-                                            selectValue={currentFinancer}
-                                        />
+                                    <Filter
+                                        label="Financeur"
+                                        options={financersOptions}
+                                        onChange={this.handleFinancerChange}
+                                        placeholderText="Choisissez un code financeur"
+                                        selectValue={currentFinancer}
+                                    />
                                     }
                                     <Filter
                                         label="Localisation"
@@ -533,18 +525,18 @@ export default class FinancerPanel extends React.Component {
                         <div className="d-flex flex-wrap align-items-center">
                             <button
                                 className={`onglet ${this.getActiveStatus('all')}`}
-                                onClick={this.switchTab.bind(this, 'all')} >Tous
+                                onClick={this.switchTab.bind(this, 'all')}>Tous
                             </button>
                             <button
                                 className={`onglet ${this.getActiveStatus('reported')}`}
-                                onClick={this.switchTab.bind(this, 'reported')} >Signalés
+                                onClick={this.switchTab.bind(this, 'reported')}>Signalés
                             </button>
                             <button className={`onglet ${this.getActiveStatus('commented')}`}
-                                onClick={this.switchTab.bind(this, 'commented')}>Avec commentaires
+                                    onClick={this.switchTab.bind(this, 'commented')}>Avec commentaires
                             </button>
                             <button
                                 className={`onglet ${this.getActiveStatus('rejected')}`}
-                                onClick={this.switchTab.bind(this, 'rejected')} >Rejetés
+                                onClick={this.switchTab.bind(this, 'rejected')}>Rejetés
                             </button>
                         </div>
                     </div>
@@ -574,9 +566,7 @@ export default class FinancerPanel extends React.Component {
                                 this.state.advices.map(avis => {
                                     return (
                                         <div key={avis._id}>
-                                            <Avis
-                                                avis={avis}
-                                                codeFinanceur={this.props.codeFinanceur}/>
+                                            <Avis avis={avis} readonly={true} showStatus={true} onChange={() => ({})} />
                                             <ResultDivider />
                                         </div>
                                     );
@@ -584,32 +574,33 @@ export default class FinancerPanel extends React.Component {
                             }
                         </div>
                     }
-                    
+
                     {!this.state.loading &&
-                        <div className="Pagination">
-                            <div className="d-flex justify-content-center">
-                                {this.state.pagination.count > 1 &&
-                                <ReactPaginate previousLabel={'<'}
-                                    nextLabel={'>'}
-                                    pageCount={this.state.pagination.count}
-                                    forcePage={this.state.pagination.current - 1}
-                                    marginPagesDisplayed={1}
-                                    pageRangeDisplayed={2}
-                                    onPageChange={this.handlePageClick}
-                                    breakClassName="page-item"
-                                    breakLabel={<button className="page-link">...</button>}
-                                    pageClassName="page-item"
-                                    previousClassName="page-item"
-                                    nextClassName="page-item"
-                                    pageLinkClassName="page-link"
-                                    previousLinkClassName="page-link"
-                                    nextLinkClassName="page-link"
-                                    activeClassName={'active'}
-                                    containerClassName={'pagination'}
-                                    disableInitialCallback={true} />
-                                }
-                            </div>
+                    <div className="Pagination">
+                        <div className="d-flex justify-content-center">
+                            {this.state.pagination.count > 1 &&
+                            <ReactPaginate
+                                previousLabel={'<'}
+                                nextLabel={'>'}
+                                pageCount={this.state.pagination.count}
+                                forcePage={this.state.pagination.current - 1}
+                                marginPagesDisplayed={1}
+                                pageRangeDisplayed={2}
+                                onPageChange={this.handlePageClick}
+                                breakClassName="page-item"
+                                breakLabel={<button className="page-link">...</button>}
+                                pageClassName="page-item"
+                                previousClassName="page-item"
+                                nextClassName="page-item"
+                                pageLinkClassName="page-link"
+                                previousLinkClassName="page-link"
+                                nextLinkClassName="page-link"
+                                activeClassName={'active'}
+                                containerClassName={'pagination'}
+                                disableInitialCallback={true} />
+                            }
                         </div>
+                    </div>
                     }
                 </div>
             </div>

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { editAvis, publishAvis } from '../../moderationService';
-import Button from '../../../../common/library/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from '../../../../common/library/Dropdown';
+import { editAvis, publishAvis } from '../../moderateur/moderation/moderationService';
+import Button from '../library/Button';
+import { Dropdown, DropdownDivider, DropdownItem } from '../library/Dropdown';
 
 export default class Edition extends React.Component {
 

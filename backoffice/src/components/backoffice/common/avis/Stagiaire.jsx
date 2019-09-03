@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PrettyDate from '../../../../common/PrettyDate';
-import { maskPseudo } from '../../moderationService';
+import PrettyDate from '../PrettyDate';
+import { maskPseudo } from '../../moderateur/moderation/moderationService';
 import './Stagiaire.scss';
 
 const Stars = props => {
@@ -89,7 +89,7 @@ export default class Stagiaire extends React.Component {
 
                 <div className="date">
                     le <PrettyDate date={new Date(avis.date)} /> &nbsp;
-                    {!readonly && showStatus &&
+                    {showStatus &&
                     <Status avis={avis} />
                     }
                 </div>
