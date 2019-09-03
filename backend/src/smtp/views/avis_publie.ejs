@@ -22,12 +22,12 @@
             }
 
             a {
-                color:black;
+                color: black;
             }
 
             a:hover {
                 text-decoration: none;
-                color:black;
+                color: black;
             }
 
             .content {
@@ -110,8 +110,9 @@
         <div class="content">
             <h1>Nous avons bien pris en compte votre commentaire</h1>
             <p>Bonjour,</p>
-            <p>Nous vous informons que nous allons prendre contact avec "<%= avis.training.organisation.label %>" suite au commentaire que vous avez déposé sur "<%= avis.training.title %>".</p>
-            
+            <p>Nous vous informons que nous allons prendre contact avec "<%= avis.training.organisation.label %>" suite
+                au commentaire que vous avez déposé sur "<%= avis.training.title %>".</p>
+
             <%- include('common/signature.ejs'); %>
         </div>
 

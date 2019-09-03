@@ -26,7 +26,7 @@ export default class SearchForm extends React.Component {
         id: PropTypes.string,
         codeINSEE: PropTypes.string,
         currentEntity: PropTypes.object,
-    }
+    };
 
     componentWillReceiveProps = nextProps => {
         if (nextProps.id !== null && !!nextProps.currentEntity) {

@@ -175,7 +175,8 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
             return;
         }
 
-        const avis = await db.collection('comment').find({ 'comment': { $ne: null },
+        const avis = await db.collection('comment').find({
+            'comment': { $ne: null },
             'read': false,
             'published': true,
             'training.organisation.siret': organisme.SIRET

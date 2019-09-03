@@ -11,7 +11,7 @@ module.exports = function(db, logger) {
         let promises = [];
         return new Promise((resolve, reject) => {
             let launchTime = new Date().getTime();
-            let parser = parse({ delimiter: ';'});
+            let parser = parse({ delimiter: ';' });
             let input = fs.createReadStream(file, { encoding: 'utf-8' });
             let count = 0;
             let transformer = transform(async (record, callback) => {

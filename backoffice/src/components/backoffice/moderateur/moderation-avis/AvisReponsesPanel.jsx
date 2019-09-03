@@ -6,7 +6,7 @@ import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
 import ReponseTitle from './components/summary/ReponseTitle';
 import Summary from '../../common/panel/Summary';
-import { Toolbar, Tab } from '../../common/panel/toolbar/Toolbar';
+import { Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import AvisTitle from './components/summary/AvisTitle';
 import Pagination from '../../common/panel/Pagination';

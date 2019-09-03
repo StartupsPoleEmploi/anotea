@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DatePicker from 'react-datepicker';
-import { registerLocale, setDefaultLocale } from  "react-datepicker";
+import DatePicker, { registerLocale } from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import './PeriodeFilter.scss';
 
@@ -34,14 +33,14 @@ export default class PeriodeFilter extends React.Component {
 
     handleChangeStart = date => {
         this.props.onChangeStartDate(date);
-    }
+    };
 
     handleChangeEnd = date => {
         this.props.onChangeEndDate(date);
-    }
+    };
 
     render() {
-        
+
         return (
             <div>
                 <p style={pStyle}>{this.props.label}</p>
@@ -74,7 +73,7 @@ export default class PeriodeFilter extends React.Component {
                         locale="fr"
                     />
                     {this.props.startDate &&
-                        <i className="fas fa-times-circle" onClick={this.props.onClearDates} />
+                    <i className="fas fa-times-circle" onClick={this.props.onClearDates} />
                     }
                 </div>
             </div>

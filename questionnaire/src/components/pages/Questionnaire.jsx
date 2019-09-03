@@ -195,23 +195,23 @@ export default class Questionnaire extends Component {
                                     </Button>
                                 </div>
                                 }
-                                { this.state.page === 1 &&
-                                    <div>
-                                        <Button
-                                            className="go-back"
-                                            size="large"
-                                            color="blue"
-                                            onClick={this.goBack}>
-                                            Retour
-                                        </Button>
-                                        <Button
-                                            className="send-button"
-                                            size="large"
-                                            color="blue"
-                                            onClick={this.openModal}>
-                                            Envoyer
-                                        </Button>
-                                    </div>
+                                {this.state.page === 1 &&
+                                <div>
+                                    <Button
+                                        className="go-back"
+                                        size="large"
+                                        color="blue"
+                                        onClick={this.goBack}>
+                                        Retour
+                                    </Button>
+                                    <Button
+                                        className="send-button"
+                                        size="large"
+                                        color="blue"
+                                        onClick={this.openModal}>
+                                        Envoyer
+                                    </Button>
+                                </div>
                                 }
                             </div>
                         </div>

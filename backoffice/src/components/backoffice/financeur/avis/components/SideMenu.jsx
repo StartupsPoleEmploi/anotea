@@ -8,17 +8,17 @@ export default class SideMenu extends React.PureComponent {
     state = {
         currentPage: 'advices',
         features: []
-    }
+    };
 
     static propTypes = {
         onChangePage: PropTypes.func.isRequired,
         features: PropTypes.string.isRequired
-    }
+    };
 
     changePage = page => {
         this.setState({ currentPage: page });
         this.props.onChangePage(page);
-    }
+    };
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.features) {

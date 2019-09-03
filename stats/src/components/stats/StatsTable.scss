@@ -10,7 +10,7 @@
 
     &:hover {
       color: rgb(253, 186, 60);
-      
+
       .tooltip {
         visibility: visible;
         opacity: 2;
@@ -62,19 +62,18 @@
   position: relative;
   margin-top: 50px;
   margin-bottom: 30px;
-	height: 1px;
+  height: 1px;
 }
 
-.div-transparent:before
-{
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 5%;
-	right: 5%;
-	width: 90%;
-	height: 1px;
-	background-image: linear-gradient(to right, transparent, rgb(48,49,51), transparent);
+.div-transparent:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 5%;
+  right: 5%;
+  width: 90%;
+  height: 1px;
+  background-image: linear-gradient(to right, transparent, rgb(48, 49, 51), transparent);
 }
 
 

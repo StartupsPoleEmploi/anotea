@@ -57,10 +57,12 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         if (req.query.startDate && req.query.endDate) {
             filter = Object.assign(filter,
-                { $and: [{
-                    'training.startDate': { $gte: new Date(req.query.startDate) },
-                    'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
-                }] },
+                {
+                    $and: [{
+                        'training.startDate': { $gte: new Date(req.query.startDate) },
+                        'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
+                    }]
+                },
             );
         }
 
@@ -104,10 +106,12 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         if (req.query.startDate && req.query.endDate) {
             filter = Object.assign(filter,
-                { $and: [{
-                    'training.startDate': { $gte: new Date(req.query.startDate) },
-                    'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
-                }] },
+                {
+                    $and: [{
+                        'training.startDate': { $gte: new Date(req.query.startDate) },
+                        'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
+                    }]
+                },
             );
         }
 
@@ -230,10 +234,12 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         if (req.query.startDate && req.query.endDate) {
             filter = Object.assign(filter,
-                { $and: [{
-                    'training.startDate': { $gte: new Date(req.query.startDate) },
-                    'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
-                }] },
+                {
+                    $and: [{
+                        'training.startDate': { $gte: new Date(req.query.startDate) },
+                        'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
+                    }]
+                },
             );
         }
 
@@ -316,10 +322,12 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
 
         if (req.query.startDate && req.query.endDate) {
             filter = Object.assign(filter,
-                { $and: [{
-                    'training.startDate': { $gte: new Date(req.query.startDate) },
-                    'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
-                }] },
+                {
+                    $and: [{
+                        'training.startDate': { $gte: new Date(req.query.startDate) },
+                        'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
+                    }]
+                },
             );
         }
 
@@ -343,7 +351,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
                 ...filter,
                 reported: true
             },
-            lieuFilter
+                lieuFilter
             ]
         });
         inventory.rejected = await db.collection('comment').countDocuments({
@@ -351,7 +359,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
                 ...filter,
                 rejected: true
             },
-            lieuFilter
+                lieuFilter
             ]
         });
         inventory.commented = await db.collection('comment').countDocuments({
@@ -360,7 +368,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
                 published: true,
                 comment: { $ne: null }
             },
-            lieuFilter
+                lieuFilter
             ]
         });
         inventory.all = await db.collection('comment').countDocuments({
@@ -372,7 +380,7 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
                     { 'published': true }
                 ],
             },
-            lieuFilter
+                lieuFilter
             ]
         });
         res.status(200).send(inventory);

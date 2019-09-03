@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pie, defaults } from 'react-chartjs-2';
+import { defaults, Pie } from 'react-chartjs-2';
 import 'chartjs-plugin-labels';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
@@ -8,9 +8,7 @@ import Stars from '../common/deprecated/Stars';
 
 import './Graphes.scss';
 
-import {
-    getOrganisationStates
-} from './service/organismeService';
+import { getOrganisationStates } from './service/organismeService';
 
 const labels = ['Pas du tout satisfait (%)', 'Pas satisfait (%)', 'Moyennement satisfait (%)', 'Satisfait (%)', 'Très satisfait (%)'];
 const backgroundColor = [
@@ -92,14 +90,14 @@ export default class Graphes extends React.Component {
         },
         traineeCount: 0
     };
-    
+
     static propTypes = {
         organisationId: PropTypes.string.isRequired
     };
 
     getPercentage = (value, total) => {
         return Math.round(value / total * 100);
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -224,7 +222,7 @@ export default class Graphes extends React.Component {
 
     getTauxRepondants = () => {
         return `${(this.state.countAdvices / this.state.traineeCount * 100).toFixed(2).replace('.', ',')} %`;
-    }
+    };
 
     render() {
         const { countAdvices } = this.state;

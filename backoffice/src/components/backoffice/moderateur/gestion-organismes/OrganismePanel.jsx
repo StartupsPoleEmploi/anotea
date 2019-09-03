@@ -5,7 +5,7 @@ import { searchOrganismes } from './gestionOrganismesService';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
-import { Toolbar, Tab, SearchInputTab } from '../../common/panel/toolbar/Toolbar';
+import { SearchInputTab, Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
 import Organisme from './components/Organisme';
 import Summary from '../../common/panel/Summary';
 import Pagination from '../../common/panel/Pagination';

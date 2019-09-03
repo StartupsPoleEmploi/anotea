@@ -52,14 +52,14 @@
           background-color: rgba(255, 255, 255, 0.19);
           border-radius: 5px;
         }
-        }
+      }
     }
 
     .nav-link {
       color: $color-white;
       display: inline-block;
       opacity: 0.6;
-      white-space:nowrap;
+      white-space: nowrap;
       padding-right: 0.5em;
 
       &.active {
@@ -79,11 +79,11 @@
     }
 
     .badge.pastille {
-        background-color: $color-red;
-        color: $color-white;
-        border-radius: 10px;
-        font-size: 0.7em;
-        padding: 0.3em 0.6em;
+      background-color: $color-red;
+      color: $color-white;
+      border-radius: 10px;
+      font-size: 0.7em;
+      padding: 0.3em 0.6em;
     }
   }
 

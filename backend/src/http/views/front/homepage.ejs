@@ -22,23 +22,23 @@
                     if (current < count - 1) {
                         current++;
                     }
-                    $('.content-how ul li').addClass("hide");
-                    $($('.content-how ul li')[current]).removeClass("hide");
-                })
+                    $('.content-how ul li').addClass('hide');
+                    $($('.content-how ul li')[current]).removeClass('hide');
+                });
                 $('#goPrev').click(function() {
                     if (current > 0) {
                         current--;
                     }
-                    $('.content-how ul li').addClass("hide");
-                    $($('.content-how ul li')[current]).removeClass("hide");
-                })
+                    $('.content-how ul li').addClass('hide');
+                    $($('.content-how ul li')[current]).removeClass('hide');
+                });
 
                 setTimeout(function(e) {
                     $('#cookie-bar-prompt-button').click(function(e) {
                         document.location = '/cgu';
                         e.preventDefault();
-                    })
-                }, 200)
+                    });
+                }, 200);
             });
         </script>
     </head>

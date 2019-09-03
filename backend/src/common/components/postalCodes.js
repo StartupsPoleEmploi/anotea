@@ -21,7 +21,7 @@ module.exports = db => {
                     return { codeINSEE: inseeCity.insee, city: inseeCity.commune };
                 }
             });
-    
+
             return await Promise.all(promise);
         }
     };
