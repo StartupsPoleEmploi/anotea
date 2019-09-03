@@ -4,15 +4,16 @@ import 'react-select/dist/react-select.css';
 import 'react-virtualized-select/styles.css';
 import VirtualizedSelect from 'react-virtualized-select';
 
-const style = {
+const optionStyles = {
     'width': '260px',
     'height': '46px',
     'marginBottom': '8px',
     'backgroundColor': '#F4F4F5',
     'border': 'none',
     'borderRadius': '5px',
+
 };
-const pStyle = {
+const titleStyle = {
     'padding': '0px',
     'margin': '0px',
     'color': '#24303A',
@@ -25,9 +26,10 @@ const pStyle = {
 export default function Filter({ label, options, onChange, placeholderText, selectValue }) {
     return (
         <div>
-            <p style={pStyle}>{label}</p>
+            <p style={titleStyle}>{label}</p>
             <VirtualizedSelect
-                style={style}
+                optionHeight={50}
+                style={optionStyles}
                 onChange={onChange}
                 options={options}
                 placeholder={placeholderText}
