@@ -25,7 +25,6 @@ describe(__filename, withServer(({ startServer }) => {
         .get('/api/regions?active=true');
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.length, 14);
         assert.strictEqual(response.body.filter(r => r.codeRegion === '17').length, 1);
         assert.strictEqual(response.body.filter(r => r.codeRegion === '9').length, 0);
     });
