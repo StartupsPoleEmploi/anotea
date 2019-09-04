@@ -183,10 +183,12 @@ module.exports = (db, regions) => {
                 }
             };
         },
-        buildRefreshedTrainee: (trainee, record) => {
+        rebuildTrainee: (trainee, record) => {
             return _.merge({}, trainee, {
-                place: {
-                    inseeCode: record['dc_insee_lieuformation'],
+                training: {
+                    place: {
+                        inseeCode: record['dc_insee_lieuformation'],
+                    }
                 }
             });
         },

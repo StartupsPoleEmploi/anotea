@@ -5,18 +5,20 @@ const cli = require('commander');
 const { execute } = require('../../job-utils');
 const importTrainee = require('./tasks/importTrainee');
 const validateCsvFile = require('./tasks/validateCsvFile');
+const refreshTrainee = require('./tasks/refreshTrainee');
 
 cli.description('Import des stagiaires')
 .option('--source [name]', 'Source to import (PE or IDF)')
 .option('--file [file]', 'The CSV file to import')
+.option('--validate', 'Validate CSV file but do not import it')
+.option('--refresh', 'Refresh stagiaires data from CSV file')
 .option('--region [codeRegion]', 'Code region to filter')
 .option('--slack', 'Send a slack notification when job is finished')
-.option('--validate', 'Validate CSV file but do not import it')
 .parse(process.argv);
 
 execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
 
-    let { file, source, region, validate } = cli;
+    let { file, source, region, validate, refresh } = cli;
     let sources = {
         'PE': 'poleEmploi',
         'IDF': 'ileDeFrance',
@@ -34,6 +36,9 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
     if (validate) {
         logger.info(`Validating file ${file}...`);
         await validateCsvFile(db, logger, file, handler, mailer);
+    } else if (refresh) {
+        logger.info(`Refreshing data with ${file}...`);
+        await refreshTrainee(file, handler);
     } else {
         logger.info(`Importing source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
         try {
