@@ -89,7 +89,6 @@ module.exports = async (db, logger, file, handler, mailer) => {
 
             if (lines.length === 0) {
                 if (!isHeaderValid(line, handler.csvOptions)) {
-                    console.log(line, handler.csvOptions);
                     error = {
                         type: ValidationErrorTypes.BAD_HEADER,
                         line: line

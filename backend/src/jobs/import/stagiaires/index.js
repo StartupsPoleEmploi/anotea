@@ -38,7 +38,7 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
         await validateCsvFile(db, logger, file, handler, mailer);
     } else if (refresh) {
         logger.info(`Refreshing data with ${file}...`);
-        await refreshTrainee(file, handler);
+        return refreshTrainee(db, logger, file, handler);
     } else {
         logger.info(`Importing source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
         try {

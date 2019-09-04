@@ -17,13 +17,21 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
         let previous = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
 
-        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-new-insee.csv'), handler);
+        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
         assert.deepStrictEqual(next.training.place.inseeCode, '99999');
+        assert.deepStrictEqual(next.training.organisation, {
+            id: '14000000000000008098',
+            label: 'ANOTEA FORMATION (SARL)',
+            name: 'ANOTEA ACCES FORMATION (SARL)',
+            siret: '82436343601239',
+        });
         assert.deepStrictEqual(next.meta.refreshed.length, 1);
         delete previous.training.place.inseeCode;
+        delete previous.training.organisation;
         delete next.training.place.inseeCode;
+        delete next.training.organisation;
         delete next.meta;
         assert.deepStrictEqual(previous, next);
     });
@@ -40,7 +48,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             token: previous.token,
         }));
 
-        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-new-insee.csv'), handler);
+        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
 
         let next = await db.collection('comment').findOne({ token: previous.token });
         assert.deepStrictEqual(next.training.place.inseeCode, '99999');
