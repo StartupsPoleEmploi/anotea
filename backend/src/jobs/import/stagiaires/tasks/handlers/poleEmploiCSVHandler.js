@@ -183,9 +183,9 @@ module.exports = (db, regions) => {
                 }
             };
         },
-        rebuildTrainee: (trainee, record) => {
+        rebuildTrainee: (previous, record) => {
 
-            return _.merge({}, trainee, {
+            return _.merge({}, previous, {
                 training: {
                     organisation: {
                         siret: record['dc_siret'],
