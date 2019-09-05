@@ -7,6 +7,7 @@ cli.parse(process.argv);
 
 execute(async ({ db, regions }) => {
     let stats = {};
+    stats.unsetRefreshedStatus = await require('./tasks/unsetRefreshedStatus')(db);
     stats.removeInvalidStagiares = await require('./tasks/removeInvalidStagiares')(db, regions);
     return stats;
 });

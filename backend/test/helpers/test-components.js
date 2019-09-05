@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const { randomize } = require('./data/dataset');
@@ -58,9 +57,12 @@ module.exports = {
                 });
             });
 
-            return callback({
+            let testContext = {
                 getComponents: () => _componentsHolder,
-            });
+                getTestFile: fileName => path.join(__dirname, 'data', fileName)
+            };
+
+            return callback(testContext);
         };
     }
 };
