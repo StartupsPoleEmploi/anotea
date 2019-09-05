@@ -29,7 +29,7 @@
   {
     "nom": "Bourgogne-Franche-Comté",
     "active": true,
-    "since": "2017-07-01",
+    "since": "2017-09-01",
     "codeRegion": "3",
     "codeINSEE": "27",
     "contact": "anotea.bfc",
@@ -104,7 +104,7 @@
   {
     "nom": "Corse",
     "active": true,
-    "since": "2017-07-01",
+    "since": "2017-09-01",
     "codeRegion": "6",
     "codeINSEE": "94",
     "contact": "anoteacorse.20010",
@@ -203,7 +203,7 @@
   {
     "nom": "Hauts-de-France",
     "active": true,
-    "since": "2018-06-01",
+    "since": "2018-05-27",
     "codeRegion": "10",
     "codeINSEE": "32",
     "contact": "anotea.59212",
@@ -306,7 +306,7 @@
   {
     "nom": "Normandie",
     "active": true,
-    "since": "2018-01-01",
+    "since": "2017-09-01",
     "codeRegion": "14",
     "codeINSEE": "28",
     "contact": "anoteanormandie",
@@ -356,7 +356,7 @@
   {
     "nom": "Occitanie",
     "active": true,
-    "since": "2018-07-01",
+    "since": "2018-06-01",
     "codeRegion": "16",
     "codeINSEE": "76",
     "contact": "anotea.occitanie",
