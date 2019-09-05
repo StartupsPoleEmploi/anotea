@@ -28,8 +28,6 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         return stats;
     }
 
-    logger.info(`Import des stagiaires pour la campagne ${handler.name}/${campaign.name}...`);
-
     await pipeline([
         fs.createReadStream(file),
         parseCSV(handler.csvOptions),
