@@ -38,6 +38,7 @@ module.exports = trainee => {
             place: {
                 departement: Joi.string().optional(),
                 postalCode: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/).required(),
+                inseeCode: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/),
                 city: Joi.string().required()
             },
             certifInfo: {

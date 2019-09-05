@@ -29,12 +29,22 @@ module.exports = {
             };
         }
     },
-    getCampaignName: getCampaignName,
+    getCampaignName,
     getCampaignDate: file => {
         const name = getCampaignName(file);
         let array = name.split('_');
         let dateAsString = array[array.length - 1];
         let date = new Date(dateAsString);
         return moment(date).isValid() ? date : new Date();
+    },
+    sanitizeCsvLine: line => {
+        let keys = Object.keys(line);
+        return keys.reduce((acc, key) => {
+            let value = line[key];
+            return {
+                ...acc,
+                [key]: value === 'NULL' ? '' : value,
+            };
+        }, {});
     },
 };

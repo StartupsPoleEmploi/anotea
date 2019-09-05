@@ -2,7 +2,7 @@ const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../helpers/test-database');
 const { newTrainee } = require('../../../helpers/data/dataset');
-const patchCertifInfos = require('../../../../src/jobs/patch/stagiaires/tasks/refreshCertifInfos');
+const patchCertifInfos = require('../../../../src/jobs/patch/certifInfos/tasks/refreshCertifInfos');
 const logger = require('../../../helpers/test-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {

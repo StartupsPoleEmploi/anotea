@@ -2,7 +2,7 @@ const fs = require('fs');
 const md5File = require('md5-file/promise');
 const validateTrainee = require('./utils/validateTrainee');
 const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../common/utils/stream-utils');
-const { getCampaignDate, getCampaignName } = require('./utils/utils');
+const { getCampaignDate, getCampaignName, sanitizeCsvLine } = require('./utils/utils');
 
 module.exports = async (db, logger, file, handler, filters = {}) => {
 
@@ -28,22 +28,11 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         return stats;
     }
 
-    logger.info(`Import des stagiaires pour la campagne ${handler.name}/${campaign.name}...`);
-
     await pipeline([
         fs.createReadStream(file),
         parseCSV(handler.csvOptions),
         ignoreFirstLine(),
-        transformObject(record => {
-            let keys = Object.keys(record);
-            return keys.reduce((acc, key) => {
-                let value = record[key];
-                return {
-                    ...acc,
-                    [key]: value === 'NULL' ? '' : value,
-                };
-            }, {});
-        }),
+        transformObject(sanitizeCsvLine),
         writeObject(async record => {
             try {
                 stats.total++;

@@ -49,6 +49,7 @@ module.exports = (db, regions) => {
                 'dd_datefinmodule',
                 'dc_organisme_id',
                 'dc_cp_lieuformation',
+                'dc_insee_lieuformation',
                 'dc_ville_lieuformation',
                 'dc_formacode_ppal_id',
                 'dn_certifinfo_1_id',
@@ -68,7 +69,7 @@ module.exports = (db, regions) => {
                 'dc_numeroicaction',
                 'kn_session_id',
                 'liste_financeur',
-            ],
+            ]
         },
         shouldBeImported: async trainee => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
@@ -156,6 +157,7 @@ module.exports = (db, regions) => {
                     place: {
                         departement: record['departement'],
                         postalCode: record['dc_cp_lieuformation'],
+                        inseeCode: record['dc_insee_lieuformation'],
                         city: record['dc_ville_lieuformation']
                     },
                     certifInfo: {
