@@ -5,9 +5,8 @@ const cli = require('commander');
 
 cli.parse(process.argv);
 
-execute(async ({ db, regions }) => {
+execute(async ({ db }) => {
     let stats = {};
     stats.unsetRefreshedStatus = await require('./tasks/unsetRefreshedStatus')(db);
-    stats.removeInvalidStagiares = await require('./tasks/removeInvalidStagiares')(db, regions);
     return stats;
 });
