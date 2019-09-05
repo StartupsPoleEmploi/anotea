@@ -28,7 +28,7 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
         return exit('Invalid arguments');
     }
 
-    let handler = require(`./tasks/handlers/${sources[cli.source]}CSVHandler`)(db, regions);
+    let handler = require(`./tasks/handlers/${sources[source]}CSVHandler`)(db, regions);
     let filters = {
         codeRegion: region,
     };
@@ -36,9 +36,11 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
     if (validate) {
         logger.info(`Validating file ${file}...`);
         await validateCsvFile(db, logger, file, handler, mailer);
+
     } else if (refresh) {
         logger.info(`Refreshing data with ${file}...`);
-        return refreshTrainee(db, logger, file, handler);
+        return source === 'PE' ? refreshTrainee(db, logger, file, handler) : exit('Can only refresh Pôle Emploi CSV file');
+
     } else {
         logger.info(`Importing source ${source} from file ${file}. Filtering with ${JSON.stringify(filters, null, 2)}...`);
         try {

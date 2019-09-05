@@ -183,20 +183,5 @@ module.exports = (db, regions) => {
                 }
             };
         },
-        rebuildTrainee: (previous, record) => {
-
-            return _.merge({}, previous, {
-                training: {
-                    organisation: {
-                        siret: record['dc_siret'],
-                        label: record['dc_lblorganisme'],
-                        name: record['dc_raisonsociale'],
-                    },
-                    place: {
-                        inseeCode: record['dc_insee_lieuformation'],
-                    }
-                }
-            });
-        },
     };
 };

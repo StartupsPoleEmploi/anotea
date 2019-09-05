@@ -112,8 +112,5 @@ module.exports = (db, regions) => {
                 return Promise.reject(e);
             }
         },
-        rebuildTrainee: () => {
-            throw new Error('Operatio not supported');
-        },
     };
 };

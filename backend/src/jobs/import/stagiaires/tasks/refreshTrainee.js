@@ -1,48 +1,50 @@
 const fs = require('fs');
 const parse = require('csv-parse');
-const { updatedDiff } = require('deep-object-diff');
-const { writeObject, pipeline, ignoreFirstLine } = require('../../../../common/utils/stream-utils');
+const { mergeDeep, isDeepEquals, getDifferences } = require('../../../../common/utils/object-utils');
+const { writeObject, pipeline, ignoreFirstLine, transformObject } = require('../../../../common/utils/stream-utils');
+const { sanitizeCsvLine } = require('./utils/utils');
 
 module.exports = async (db, logger, file, handler) => {
 
     let stats = {
-        updated: 0,
+        trainee: 0,
+        comment: 0,
         invalid: 0,
         total: 0,
     };
 
-    let refresh = async (trainee, record) => {
+    let refreshStagiaire = async (trainee, newValues) => {
 
-        let newTrainee = handler.rebuildTrainee(trainee, record);
+        let newTrainee = mergeDeep({}, trainee, newValues);
+        if (!isDeepEquals(trainee, newTrainee)) {
+            newTrainee = mergeDeep(newTrainee, {
+                meta: {
+                    refreshed: [getDifferences(trainee, newTrainee)]
+                }
+            });
 
-        if (JSON.stringify(trainee) !== JSON.stringify(newTrainee)) {
-            let diff = updatedDiff(newTrainee, trainee);
-            console.log(stats.total, trainee.token, trainee.training.organisation, newTrainee.training.organisation);
-            console.log('----');
-            newTrainee.meta = newTrainee.meta || {};
-            newTrainee.meta.refreshed = [...(newTrainee.meta.refreshed || []), { diff, date: new Date() }];
+            let res = await db.collection('trainee').replaceOne({ token: trainee.token }, newTrainee);
+            stats.trainee += res.result.nModified;
+        }
+    };
 
-            await Promise.all([
-                db.collection('trainee').replaceOne({ token: trainee.token }, newTrainee),
-                db.collection('comment').updateOne(
-                    { token: trainee.token },
-                    {
-                        $set: {
-                            //TODO reuse code in questionnaire-routes.buildAvis
-                            campaign: newTrainee.campaign,
-                            formacode: newTrainee.training.formacode,
-                            idSession: newTrainee.training.idSession,
-                            training: newTrainee.training,
-                            codeRegion: newTrainee.codeRegion,
-                        },
-                        $push: {
-                            'meta.refreshed': new Date(),
-                        }
-                    }
-                ),
-            ]);
+    let refreshAvis = async (token, newValues) => {
 
-            stats.updated++;
+        let comment = await db.collection('comment').findOne({ token });
+        if (!comment) {
+            return;
+        }
+
+        let newComment = mergeDeep({}, comment, newValues);
+        if (!isDeepEquals(comment, newComment)) {
+            newComment = mergeDeep(newComment, {
+                meta: {
+                    refreshed: [getDifferences(comment, newComment)]
+                }
+            });
+
+            let res = await db.collection('comment').replaceOne({ token }, newComment);
+            stats.comment += res.result.nModified;
         }
     };
 
@@ -50,20 +52,38 @@ module.exports = async (db, logger, file, handler) => {
         fs.createReadStream(file),
         parse(handler.csvOptions),
         ignoreFirstLine(),
+        transformObject(sanitizeCsvLine),
         writeObject(async record => {
-            stats.total++;
 
             let trainee = await db.collection('trainee').findOne({
                 'trainee.email': record['c_adresseemail'].toLowerCase(),
                 'trainee.dnIndividuNational': record['dn_individu_national'],
                 'training.idSession': record['dn_session_id'],
+                'training.scheduledEndDate': new Date(record['dd_datefinmodule'] + 'Z'),
             });
 
             if (!trainee) {
                 return Promise.resolve();
             }
 
-            return refresh(trainee, record)
+            stats.total++;
+            let newValues = {
+                training: {
+                    organisation: {
+                        id: record['dc_organisme_id'],
+                        siret: record['dc_siret'],
+                        label: record['dc_lblorganisme'],
+                        name: record['dc_raisonsociale'],
+                    },
+                    place: {
+                        inseeCode: record['dc_insee_lieuformation'],
+                    }
+                }
+            };
+            return Promise.all([
+                refreshStagiaire(trainee, newValues),
+                refreshAvis(trainee.token, newValues),
+            ])
             .catch(e => {
                 stats.invalid++;
                 logger.error(e);
