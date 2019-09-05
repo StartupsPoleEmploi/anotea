@@ -9,6 +9,7 @@ describe(__filename, () => {
         assert.deepStrictEqual(region, {
             nom: 'Pays de la Loire',
             active: true,
+            since: '2017-07-01',
             codeRegion: '17',
             codeINSEE: '52',
             contact: 'anotea-pdll.44116',
@@ -56,6 +57,7 @@ describe(__filename, () => {
         assert.deepStrictEqual(region, {
             nom: 'Pays de la Loire',
             active: true,
+            since: '2017-07-01',
             codeRegion: '17',
             codeINSEE: '52',
             contact: 'anotea-pdll.44116',

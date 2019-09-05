@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const md5 = require('md5');
+const moment = require('moment');
 const { buildToken, buildEmail } = require('../utils/utils');
 
 const parseDate = value => new Date(value + 'Z');
@@ -72,9 +73,11 @@ module.exports = (db, regions) => {
         shouldBeImported: async trainee => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
 
-            let isValid = trainee => region && trainee.trainee.emailValid;
+            let isValid = () => region && trainee.trainee.emailValid;
 
-            let isNotExcluded = trainee => {
+            let isAfter = () => moment(trainee.training.scheduledEndDate).isAfter(moment(`${region.since} -0000`, 'YYYYMMDD Z'));
+
+            let isNotExcluded = () => {
 
                 let isConseilRegional = trainee.training.codeFinanceur.includes('2');
 
@@ -90,7 +93,7 @@ module.exports = (db, regions) => {
                 return true;
             };
 
-            let hasNotBeenAlreadyImportedOrRemoved = async trainee => {
+            let hasNotBeenAlreadyImportedOrRemoved = async () => {
                 let email = trainee.trainee.email;
                 let numeroSession = trainee.training.infoCarif.numeroSession;
                 let [countTrainee, countOptOut] = await Promise.all([
@@ -106,7 +109,7 @@ module.exports = (db, regions) => {
                 return countTrainee === 0 && countOptOut === 0;
             };
 
-            return isValid(trainee) && isNotExcluded(trainee) && (await hasNotBeenAlreadyImportedOrRemoved(trainee));
+            return isValid() && isAfter() && isNotExcluded() && (await hasNotBeenAlreadyImportedOrRemoved());
         },
         buildTrainee: async (record, campaign) => {
 

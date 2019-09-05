@@ -4,7 +4,7 @@ const { buildToken, buildEmail } = require('../utils/utils');
 
 const parseDate = value => new Date(moment(value, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'Z');
 
-module.exports = () => {
+module.exports = (db, regions) => {
     return {
         name: 'Île-De-France',
         csvOptions: {
@@ -29,7 +29,11 @@ module.exports = () => {
                 'Id Session DOKELIO',
             ]
         },
-        shouldBeImported: async trainee => trainee.trainee.emailValid && trainee.training.infoCarif.numeroSession === null,
+        shouldBeImported: async trainee => {
+            let idf = regions.findRegionByCodeRegion('11');
+            let isAfter = moment(trainee.training.scheduledEndDate).isAfter(moment(`${idf.since}-0000`, 'YYYYMMDD Z'));
+            return isAfter && trainee.trainee.emailValid && trainee.training.infoCarif.numeroSession === null;
+        },
         buildTrainee: (record, campaign) => {
 
             try {
