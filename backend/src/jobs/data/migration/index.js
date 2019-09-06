@@ -7,6 +7,7 @@ cli.parse(process.argv);
 
 execute(async ({ db }) => {
     let stats = {};
-    stats.unsetRefreshedStatus = await require('./tasks/unsetRefreshedStatus')(db);
+    stats.unsetRefreshedStatus = await require('./tasks/unsetDeprecatedMeta')(db);
+    stats.dropDeprecatedCollections = await require('./tasks/dropDeprecatedCollections')(db);
     return stats;
 });
