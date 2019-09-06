@@ -35,7 +35,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         }));
 
         assert.deepStrictEqual(stats, {
-            trainee: 2,
+            trainee: 1,
             comment: 0,
             invalid: 0,
             total: 2
@@ -71,7 +71,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
-    it('should handle missing inseeCode', async () => {
+    it('should ignore missing inseeCode', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
@@ -81,7 +81,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_2@pe.com' });
-        assert.ok(!next.training.place.inseeCode);
+        assert.strictEqual(next.training.place.inseeCode, '91521');
     });
 
     it('should update data in comment', async () => {
@@ -125,7 +125,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             }
         });
         assert.deepStrictEqual(stats, {
-            trainee: 2,
+            trainee: 1,
             comment: 1,
             invalid: 0,
             total: 2,
