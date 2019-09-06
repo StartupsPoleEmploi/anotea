@@ -9,17 +9,17 @@ const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile, insertIntoDatabase }) => {
 
-    it('should update inseeCode in trainee', async () => {
+    it('should update data in trainee', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
         await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
+        let previous = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
 
         let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
-        let previous = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
         assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
             training: {
                 organisation: {
@@ -34,6 +34,24 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             }
         }));
 
+        assert.deepStrictEqual(stats, {
+            trainee: 2,
+            comment: 0,
+            invalid: 0,
+            total: 2
+        });
+    });
+
+    it('should store refresh status', async () => {
+
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
+        await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
+
+        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+
+        let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
         assert.deepStrictEqual(next.meta.refreshed.length, 1);
         let refreshed = next.meta.refreshed[0];
         assert.ok(refreshed.date);
@@ -51,15 +69,22 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 }
             }
         });
-        assert.deepStrictEqual(stats, {
-            trainee: 1,
-            comment: 0,
-            invalid: 0,
-            total: 1
-        });
     });
 
-    it('should update inseeCode in comment', async () => {
+    it('should handle missing inseeCode', async () => {
+
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
+        await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
+
+        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+
+        let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_2@pe.com' });
+        assert.ok(!next.training.place.inseeCode);
+    });
+
+    it('should update data in comment', async () => {
 
         let db = await getTestDatabase();
         let { regions } = await getComponents();
@@ -100,10 +125,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             }
         });
         assert.deepStrictEqual(stats, {
-            trainee: 1,
+            trainee: 2,
             comment: 1,
             invalid: 0,
-            total: 1
+            total: 2,
         });
     });
 }));

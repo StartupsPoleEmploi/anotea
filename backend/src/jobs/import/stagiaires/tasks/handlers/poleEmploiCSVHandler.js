@@ -121,6 +121,7 @@ module.exports = (db, regions) => {
             let region = regions.findRegionByPostalCode(record['dc_cp_lieuformation']);
             let token = buildToken(record['c_adresseemail']);
             let { email, mailDomain } = buildEmail(record['c_adresseemail']);
+            let inseeCode = record['dc_insee_lieuformation'];
 
             return {
                 _id: campaign.name + '/' + token,
@@ -157,7 +158,7 @@ module.exports = (db, regions) => {
                     place: {
                         departement: record['departement'],
                         postalCode: record['dc_cp_lieuformation'],
-                        inseeCode: record['dc_insee_lieuformation'],
+                        ...(_.isEmpty(inseeCode) ? {} : { inseeCode }),
                         city: record['dc_ville_lieuformation']
                     },
                     certifInfo: {
