@@ -1,4 +1,5 @@
 const fs = require('fs');
+const _ = require('lodash');
 const parse = require('csv-parse');
 const { mergeDeep, isDeepEquals, getDifferences } = require('../../../../common/utils/object-utils');
 const { writeObject, pipeline, ignoreFirstLine, transformObject } = require('../../../../common/utils/stream-utils');
@@ -67,6 +68,7 @@ module.exports = async (db, logger, file, handler) => {
             }
 
             stats.total++;
+            let inseeCode = record['dc_insee_lieuformation'];
             let newValues = {
                 training: {
                     organisation: {
@@ -75,9 +77,7 @@ module.exports = async (db, logger, file, handler) => {
                         label: record['dc_lblorganisme'],
                         name: record['dc_raisonsociale'],
                     },
-                    place: {
-                        inseeCode: record['dc_insee_lieuformation'],
-                    }
+                    ...(_.isEmpty(inseeCode) ? {} : { place: { inseeCode } }),
                 }
             };
             return Promise.all([
