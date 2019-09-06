@@ -47,7 +47,7 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
             if (configuration.env === 'dev' && !req.query['load_anotea_widget_iframe_from_localhost']) {
                 return res.redirect('/doc/widget?load_anotea_widget_iframe_from_localhost=true');
             }
-            return res.render(`front/doc/widget${req.query.test ? '-tests' : ''}`);
+            return res.render('front/doc/widget');
         }
 
         return res.render(`front/doc/${template}`);
