@@ -14,16 +14,16 @@
   ],
   "homepage": "https://anotea.pole-emploi.fr/widget",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "5.8.2",
+    "@fortawesome/fontawesome-free": "5.10.2",
     "bootstrap": "4.3.1",
     "iframe-resizer": "4.1.1",
     "moment": "2.24.0",
     "npm": "6.9.0",
-    "query-string": "6.5.0",
-    "react": "16.8.5",
-    "react-app-polyfill": "1.0.1",
-    "react-dom": "16.8.5",
-    "react-scripts": "2.1.8",
+    "query-string": "6.8.3",
+    "react": "16.9.0",
+    "react-app-polyfill": "1.0.2",
+    "react-dom": "16.9.0",
+    "react-scripts": "3.1.1",
     "webfontloader": "1.6.28"
   },
   "scripts": {
@@ -36,7 +36,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "node-sass-chokidar": "1.3.4"
+    "node-sass-chokidar": "1.3.5"
   },
   "proxy": "http://localhost:8080/",
   "browserslist": [
