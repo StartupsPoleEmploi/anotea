@@ -2,7 +2,7 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
+const { tryAndCatch, sendArrayAsJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createSessionDTO, createPaginationDTO } = require('./utils/dto');
@@ -47,9 +47,9 @@ module.exports = ({ db, middlewares }) => {
             transform: session => createSessionDTO(session, { notes_decimales: parameters.notes_decimales })
         });
 
-        return sendJsonStream(stream, res, {
-            objectPropertyName: 'sessions',
-            object: {
+        return sendArrayAsJsonStream(stream, res, {
+            arrayPropertyName: 'sessions',
+            arrayWrapper: {
                 meta: {
                     pagination: createPaginationDTO(pagination, total)
                 },

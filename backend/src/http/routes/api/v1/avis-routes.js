@@ -3,7 +3,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
-const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
+const { tryAndCatch, sendArrayAsJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const { createPaginationDTO, createAvisDTO } = require('./utils/dto');
 
@@ -83,9 +83,9 @@ module.exports = ({ db, middlewares }) => {
             transform: comment => createAvisDTO(comment, { notes_decimales: parameters.notes_decimales })
         });
 
-        return sendJsonStream(stream, res, {
-            objectPropertyName: 'avis',
-            object: {
+        return sendArrayAsJsonStream(stream, res, {
+            arrayPropertyName: 'avis',
+            arrayWrapper: {
                 meta: {
                     pagination: createPaginationDTO(pagination, total)
                 },

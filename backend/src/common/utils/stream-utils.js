@@ -95,16 +95,16 @@ module.exports = {
             });
         });
     },
-    jsonStream: (wrapper = {}) => {
+    jsonStream: (options = {}) => {
         let chunksSent = 0;
         return new Transform({
             objectMode: true,
             transform: function(data, encoding, callback) {
                 if (chunksSent === 0) {
-                    if (wrapper.object) {
-                        let value = JSON.stringify(wrapper.object);
+                    if (options.arrayWrapper) {
+                        let value = JSON.stringify(options.arrayWrapper);
                         value = value.substring(0, value.length - 1);
-                        value += String(`,"${wrapper.objectPropertyName}":[`);
+                        value += String(`,"${options.arrayPropertyName}":[`);
                         this.push(Buffer.from(value));
                     } else {
                         this.push(Buffer.from('['));
@@ -120,9 +120,9 @@ module.exports = {
             flush: function(callback) {
                 if (chunksSent === 0) {
                     //nothing sent
-                    if (wrapper.object) {
-                        let value = _.cloneDeep(wrapper.object);
-                        value[wrapper.objectPropertyName] = [];
+                    if (options.arrayWrapper) {
+                        let value = _.cloneDeep(options.arrayWrapper);
+                        value[options.arrayPropertyName] = [];
                         this.push(Buffer.from(JSON.stringify(value)));
                     } else {
                         this.push(Buffer.from('[]'));
@@ -130,7 +130,7 @@ module.exports = {
                 } else {
                     //Close json properly
                     this.push(Buffer.from(']'));
-                    if (wrapper.object) {
+                    if (options.arrayWrapper) {
                         this.push(Buffer.from('}'));
                     }
                 }

@@ -14,7 +14,7 @@ module.exports = {
             }
         };
     },
-    sendJsonStream: (stream, res, wrapper) => {
+    sendArrayAsJsonStream: (stream, res, wrapper) => {
         res.setHeader('Content-Type', 'application/json');
         stream
         .pipe(jsonStream(wrapper))
