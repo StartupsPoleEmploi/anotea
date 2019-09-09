@@ -1,9 +1,8 @@
 import React from 'react';
 import Select from 'react-select';
-import 'react-select/dist/react-select.css';
 
 import { getOrganisationTrainings } from './service/organismeService';
-import { getOrganisationLieuTrainingSessions } from '../financeur/avis/components/financeurService';
+import { getOrganisationLieuTrainingSessions } from '../financeur/avis/financeurService';
 import PropTypes from 'prop-types';
 
 export default class SearchForm extends React.Component {

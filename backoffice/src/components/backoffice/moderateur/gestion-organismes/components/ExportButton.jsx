@@ -1,5 +1,5 @@
 import React from 'react';
-import { getToken } from '../../../../utils/token';
+import { getToken } from '../../../../../utils/token';
 
 import './ExportButton.scss';
 

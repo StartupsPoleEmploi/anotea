@@ -6,13 +6,13 @@ import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
 import AvisTitle from './components/summary/AvisTitle';
 import { SearchInputTab, Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
-import Summary from '../../common/panel/Summary';
-import Pagination from '../../common/panel/Pagination';
+import Summary from '../../common/panel/results/Summary';
+import Pagination from '../../common/panel/results/Pagination';
 import Avis from '../../common/avis/Avis';
-import ResultDivider from '../../common/panel/ResultDivider';
+import ResultDivider from '../../common/panel/results/ResultDivider';
 import GlobalMessage from '../../common/message/GlobalMessage';
 
-export default class AvisStagiairesPanel extends React.Component {
+export default class ModerationAvisPanel extends React.Component {
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,

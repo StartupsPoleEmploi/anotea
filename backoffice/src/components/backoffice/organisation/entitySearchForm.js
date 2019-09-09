@@ -1,7 +1,6 @@
 import React from 'react';
 import VirtualizedSelect from 'react-virtualized-select';
 import PropTypes from 'prop-types';
-import 'react-select/dist/react-select.css';
 import 'react-virtualized-select/styles.css';
 
 export default class EntitySearchForm extends React.PureComponent {

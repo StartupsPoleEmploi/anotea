@@ -14,11 +14,26 @@ describe(__filename, () => {
             codeINSEE: '52',
             contact: 'anotea-pdll.44116',
             departements: [
-                '44',
-                '53',
-                '49',
-                '85',
-                '72'
+                {
+                    code: '44',
+                    label: 'Loire-Atlantique'
+                },
+                {
+                    code: '53',
+                    label: 'Mayenne'
+                },
+                {
+                    code: '49',
+                    label: 'Maine-et-Loire'
+                },
+                {
+                    code: '85',
+                    label: 'Vendée'
+                },
+                {
+                    code: '72',
+                    label: 'Sarthe'
+                }
             ],
             mailing: {
                 stagiaires: {
@@ -61,7 +76,28 @@ describe(__filename, () => {
             codeRegion: '17',
             codeINSEE: '52',
             contact: 'anotea-pdll.44116',
-            departements: ['44', '53', '49', '85', '72'],
+            departements: [
+                {
+                    code: '44',
+                    label: 'Loire-Atlantique'
+                },
+                {
+                    code: '53',
+                    label: 'Mayenne'
+                },
+                {
+                    code: '49',
+                    label: 'Maine-et-Loire'
+                },
+                {
+                    code: '85',
+                    label: 'Vendée'
+                },
+                {
+                    code: '72',
+                    label: 'Sarthe'
+                }
+            ],
             mailing: {
                 stagiaires: {
                     avis: true

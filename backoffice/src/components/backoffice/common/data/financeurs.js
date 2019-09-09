@@ -1,4 +1,4 @@
-const FINANCEURS = [
+export default [
     { code: '4', label: `Pôle Emploi ` },
     { code: '2', label: `Conseil régional ` },
     { code: '10', label: `Béneficiaire de l'action ` },
@@ -15,5 +15,3 @@ const FINANCEURS = [
     { code: '17', label: `OPACIF ` },
     { code: '9', label: `Collectivité territoriale - Commune ` }
 ];
-
-export default FINANCEURS;

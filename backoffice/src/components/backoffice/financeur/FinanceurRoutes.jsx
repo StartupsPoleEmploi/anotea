@@ -1,22 +1,30 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import queryString from 'query-string';
-import AvisPanel from './avis/AvisPanel';
-import StatistiquesPanel from './stats/StatistiquesPanel';
+import FinanceurStatistiquesPanel from './stats/FinanceurStatistiquesPanel';
 import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
+import FinanceurAvisPanel from './avis/FinanceurAvisPanel';
 
 export default class FinanceurRoutes extends React.Component {
 
     static propTypes = {
-        profile: PropTypes.string.isRequired,
         codeRegion: PropTypes.string.isRequired,
         codeFinanceur: PropTypes.string.isRequired,
-        features: PropTypes.string.isRequired,
     };
 
     parse = location => {
         return queryString.parse(location.search);
+    };
+
+    buildParameters = options => {
+        let newQuery = _(_.merge({ page: 0 }, options))
+        .omitBy(_.isNil)
+        .omitBy(value => value === '')
+        .value();
+
+        return queryString.stringify(newQuery);
     };
 
     render() {
@@ -24,17 +32,19 @@ export default class FinanceurRoutes extends React.Component {
             <div>
                 <Route
                     path="/admin/financeur/avis"
-                    render={() => (
-                        <AvisPanel
-                            profile={this.props.profile}
+                    render={({ history, location }) => (
+                        <FinanceurAvisPanel
                             codeRegion={this.props.codeRegion}
                             codeFinanceur={this.props.codeFinanceur}
-                            features={this.props.features} />
+                            query={this.parse(location)}
+                            onNewQuery={options => {
+                                history.push(`/admin/financeur/avis?${this.buildParameters(options)}`);
+                            }} />
                     )} />
                 <Route
                     path="/admin/financeur/statistiques"
                     render={() => (
-                        <StatistiquesPanel />
+                        <FinanceurStatistiquesPanel />
                     )} />
                 <Route path="/admin/financeur/mon-compte" component={MonComptePanel} />
             </div>

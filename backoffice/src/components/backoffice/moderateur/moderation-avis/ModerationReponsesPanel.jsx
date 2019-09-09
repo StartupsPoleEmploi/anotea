@@ -5,15 +5,15 @@ import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
 import ReponseTitle from './components/summary/ReponseTitle';
-import Summary from '../../common/panel/Summary';
+import Summary from '../../common/panel/results/Summary';
 import { Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import AvisTitle from './components/summary/AvisTitle';
-import Pagination from '../../common/panel/Pagination';
+import Pagination from '../../common/panel/results/Pagination';
 import Avis from '../../common/avis/Avis';
-import ResultDivider from '../../common/panel/ResultDivider';
+import ResultDivider from '../../common/panel/results/ResultDivider';
 
-export default class AvisReponsesPanel extends React.Component {
+export default class ModerationReponsesPanel extends React.Component {
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,

@@ -1,10 +1,9 @@
-@import '../../../../styles/variables';
+@import '../../../../../styles/variables';
 
 .Summary {
 
   font-size: 1.125rem;
   font-weight: $font-weight-400;
-  text-align: center;
   position: relative;
 
   .type {

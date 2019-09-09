@@ -1,0 +1,13 @@
+@import '../../../../../styles/variables';
+
+.DateRange {
+  padding: 0.60rem 0.30rem;
+  background-color: $color-grey-5;
+  border: 1px solid $color-grey-5;
+  border-radius: 6px;
+
+  .fa-calendar {
+    padding-left: 0.5rem;
+    padding-right: 1rem;
+  }
+}

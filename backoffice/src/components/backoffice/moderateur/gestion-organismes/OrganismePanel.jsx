@@ -7,10 +7,10 @@ import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
 import { SearchInputTab, Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
 import Organisme from './components/Organisme';
-import Summary from '../../common/panel/Summary';
-import Pagination from '../../common/panel/Pagination';
-import ResultDivider from '../../common/panel/ResultDivider';
-import ExportButton from '../../common/panel/ExportButton';
+import Summary from '../../common/panel/results/Summary';
+import Pagination from '../../common/panel/results/Pagination';
+import ResultDivider from '../../common/panel/results/ResultDivider';
+import ExportButton from './components/ExportButton';
 import './OrganismePanel.scss';
 
 export default class OrganismePanel extends React.Component {

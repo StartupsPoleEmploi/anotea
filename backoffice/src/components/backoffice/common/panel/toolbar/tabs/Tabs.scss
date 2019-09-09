@@ -1,0 +1,29 @@
+@import '../../../../../../styles/variables';
+
+.Tabs {
+
+  text-align: center;
+  font-size: 1.125rem;
+  color: $color-black;
+
+  .nav {
+
+    .nav-item {
+
+      opacity: 0.6;
+
+      &.active {
+        opacity: 1;
+
+        &:hover, &:focus {
+          font-weight: $font-weight-400;
+        }
+      }
+
+      &:hover, &:focus {
+        cursor: pointer;
+        font-weight: $font-weight-700;
+      }
+    }
+  }
+}

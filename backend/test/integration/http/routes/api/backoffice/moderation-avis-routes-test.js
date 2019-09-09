@@ -4,7 +4,7 @@ const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/test-server');
 const { newComment, newTrainee, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme, logAsFinancer, insertIntoDatabase, getTestDatabase, getComponents, createIndexes }) => {
+describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme, logAsFinanceur, insertIntoDatabase, getTestDatabase, getComponents, createIndexes }) => {
 
     it('can search all avis with filter', async () => {
 
@@ -33,7 +33,6 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
                 none: 0
             }
         });
-
     });
 
     it('can search avis with status=all (return avis with and without commentaires)', async () => {
@@ -75,7 +74,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.deepStrictEqual(response.body.avis.length, 1);
     });
 
-    it('can search avis with filter!=all (should return avis with commentaires)', async () => {
+    it('can search avis with status=rejected', async () => {
 
         let app = await startServer();
         let [token, avisWithoutComment] = await Promise.all([
@@ -505,7 +504,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
 
         let app = await startServer();
 
-        let token = await logAsFinancer(app, 'organisme@pole-emploi.fr', '2');
+        let token = await logAsFinanceur(app, 'organisme@pole-emploi.fr', '2');
 
         let response = await request(app).get('/api/backoffice/moderateur/avis?status=all')
         .set('authorization', `Bearer ${token}`);

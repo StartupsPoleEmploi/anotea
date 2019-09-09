@@ -45,7 +45,7 @@ module.exports = {
 
                     return response.body.access_token;
                 },
-                logAsFinancer: async (app, courriel, codeFinanceur) => {
+                logAsFinanceur: async (app, courriel, codeFinanceur) => {
 
                     await context.insertIntoDatabase('accounts', newFinancerAccount({
                         courriel,

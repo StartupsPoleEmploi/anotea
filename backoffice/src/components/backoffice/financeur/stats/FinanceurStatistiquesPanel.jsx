@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function StatistiquesPanel() {
+export default function FinanceurStatistiquesPanel() {
     return (
         <div>stats test</div>
     );

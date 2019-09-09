@@ -1,20 +1,20 @@
+const Joi = require('joi');
 const express = require('express');
-const { tryAndCatch } = require('../../../routes-utils');
+const { tryAndCatch, sendArrayAsJsonStream } = require('../../../routes-utils');
 const Boom = require('boom');
-const moment = require('moment/moment');
+const moment = require('moment');
 const s = require('string');
 const { transformObject, encodeStream } = require('../../../../../common/utils/stream-utils');
 const getReponseStatus = require('../../../../../common/utils/getReponseStatus');
 const getStatus = require('../../../../../common/utils/getStatus');
 
-module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
+module.exports = ({ db, middlewares, configuration, logger, postalCodes, regions }) => {
 
     const POLE_EMPLOI = '4';
-    let pagination = configuration.api.pagination;
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let allProfiles = checkProfile('moderateur', 'financeur', 'organisme');
+    let itemsPerPage = configuration.api.pagination;
 
     const checkCodeRegionAndCodeFinanceur = req => {
         if (req.params.idregion !== req.user.codeRegion ||
@@ -46,344 +46,135 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes }) => {
         return {};
     };
 
-    router.get('/backoffice/financeur/region/:idregion/organisations', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/departements', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
-        checkCodeRegionAndCodeFinanceur(req);
+        let region = regions.findRegionByCodeRegion(req.user.codeRegion);
+        return res.json(region.departements);
+    }));
 
-        let filter = {
-            '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-            'codeRegion': `${req.params.idregion}`
-        };
+    router.get('/backoffice/financeur/organismes', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
-        if (req.query.startDate && req.query.endDate) {
-            filter = Object.assign(filter,
-                {
-                    $and: [{
-                        'training.startDate': { $gte: new Date(req.query.startDate) },
-                        'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
-                    }]
-                },
-            );
-        }
-
-        if (req.query.codeFinanceur) {
-            filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
-        }
-
-        const lieuFilter = await buildLieuFilter(req.query.lieu);
-        filter = Object.assign(filter, lieuFilter);
-
-        const organisations = await db.collection('comment')
+        const stream = await db.collection('comment')
         .aggregate([
-            { $match: filter },
+            {
+                $match: {
+                    codeRegion: req.user.codeRegion,
+                }
+            },
             {
                 $group: {
                     _id: { $substr: ['$training.organisation.siret', 0, 9] },
-                    city: { $first: '$training.place.city' },
+                    siren: { $first: { $substr: ['$training.organisation.siret', 0, 9] } },
                     name: { $first: '$training.organisation.name' },
-                    label: { $first: '$training.organisation.label' },
-                    count: { $sum: 1 }
+                    nbAvis: { $sum: 1 }
                 }
             },
             {
                 $sort: {
                     name: 1
                 }
-            }])
-        .toArray();
-
-        res.status(200).send(organisations);
-    }));
-
-    router.get('/backoffice/financeur/region/:idregion/advices', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
-
-        checkCodeRegionAndCodeFinanceur(req);
-
-        const projection = { token: 0 };
-
-        let filter = { 'codeRegion': `${req.params.idregion}` };
-        let periodeFilter = {};
-
-        if (req.query.startDate && req.query.endDate) {
-            filter = Object.assign(filter,
-                {
-                    $and: [{
-                        'training.startDate': { $gte: new Date(req.query.startDate) },
-                        'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
-                    }]
-                },
-            );
-        }
-
-        if (req.query.codeFinanceur) {
-            filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
-        }
-
-        if (req.query.organisation) {
-            filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.organisation}` } });
-        }
-
-        if (req.query.formation) {
-            filter = Object.assign(filter, { 'training.idFormation': req.query.formation });
-        }
-
-        if (req.query.filter) {
-            if (req.query.filter === 'reported') {
-                filter.reported = true;
-            } else if (req.query.filter === 'commented') {
-                filter.published = true;
-                filter.comment = { $exists: true };
-                filter.comment = { $ne: null };
-            } else if (req.query.filter === 'rejected') {
-                filter.rejected = true;
-            } else if (req.query.filter === 'all') {
-                filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
-            }
-        }
-
-        const lieuFilter = await buildLieuFilter(req.query.lieu);
-
-        let order = { date: 1 };
-
-        if (req.query.order && req.query.order === 'advicesDate') {
-            order = { date: -1 };
-        }
-
-        let skip = 0;
-        let page = 1;
-
-        if (req.query.page) {
-            try {
-                page = parseInt(req.query.page);
-                if (page - 1) {
-                    skip = (page - 1) * pagination;
-                }
-            } catch (e) {
-                res.send({ error: 404 });
-                return;
-            }
-        }
-
-        const finalFilter = { $and: [filter, lieuFilter, periodeFilter] };
-
-        const count = await db.collection('comment').countDocuments(finalFilter);
-
-        if (count < skip) {
-            res.send({ error: 404 });
-            return;
-        }
-
-        const results = await db.collection('comment').find(finalFilter, projection).sort(order).skip(skip).limit(pagination).toArray();
-        const advices = results.map(advice => {
-            if (advice.pseudoMasked) {
-                advice.pseudo = '';
-            }
-            if (advice.titleMasked && advice.comment) {
-                advice.comment.title = '';
-            }
-            return advice;
-        });
-
-        const periodeOrder = { 'training.startDate': 1 };
-        const allAdvices = await db.collection('comment').find(filter, projection).sort(periodeOrder).toArray();
-
-        res.send({
-            advices: advices,
-            page: page,
-            pageCount: Math.ceil(count / pagination),
-            oldestAvis: allAdvices[0]
-        });
-    }));
-
-    router.get('/backoffice/financeur/region/:idregion/places', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
-
-        checkCodeRegionAndCodeFinanceur(req);
-
-        let filter = {
-            '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-            'codeRegion': `${req.params.idregion}`
-        };
-
-        if (req.query.codeFinanceur) {
-            filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
-        }
-
-        if (req.query.siren) {
-            filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.siren}` } });
-        }
-
-        const places = await db.collection('comment').aggregate([
-            { $match: filter },
-            { $group: { _id: '$training.place.postalCode', city: { $first: '$training.place.city' } } },
-            { $sort: { city: 1 } }]).toArray();
-
-
-        const aggregatedPlaces = await postalCodes.getAggregatedPlaces(places);
-
-        res.status(200).send(aggregatedPlaces.filter(place => place !== undefined).sort((a, b) => a.city > b.city ? 1 : -1));
-    }));
-
-    router.get('/backoffice/financeur/region/:idregion/organisme_formateur', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
-
-        checkCodeRegionAndCodeFinanceur(req);
-
-        let filter = {
-            '$or': [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }],
-            'codeRegion': `${req.params.idregion}`
-        };
-
-        if (req.query.startDate && req.query.endDate) {
-            filter = Object.assign(filter,
-                {
-                    $and: [{
-                        'training.startDate': { $gte: new Date(req.query.startDate) },
-                        'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
-                    }]
-                },
-            );
-        }
-
-        if (req.query.organisation) {
-            filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.organisation}` } });
-        }
-
-        if (req.query.codeFinanceur) {
-            filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
-        }
-
-        const lieuFilter = await buildLieuFilter(req.query.lieu);
-        const finalFilter = { $and: [filter, lieuFilter] };
-
-        const trainings = await db.collection('comment').aggregate([
-            { $match: finalFilter },
-            { $group: { _id: '$training.idFormation', title: { $first: '$training.title' }, count: { $sum: 1 } } },
-            { $sort: { 'count': -1 } }]).toArray();
-
-        res.status(200).send(trainings);
-    }));
-
-    router.get('/backoffice/financeur/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
-
-        let filter = {};
-
-        const lieuFilter = await buildLieuFilter(req.query.codeINSEE);
-        filter = Object.assign(filter, lieuFilter);
-
-        const trainings = await db.collection('comment').aggregate([
-            {
-                $match: Object.assign(filter, {
-                    'training.organisation.siret': { '$regex': `${req.params.siren}` },
-                    'training.idFormation': req.params.idTraining
-                })
             },
             {
                 $project: {
-                    date: '$date',
-                    place: '$training.place',
-                    endDate: '$training.scheduledEndDate',
-                    commentExist: { $cond: { if: { $eq: ['$comment', null] }, then: 0, else: 1 } }
+                    _id: 0,
+                }
+            }
+        ])
+        .stream();
+
+        return sendArrayAsJsonStream(stream, res);
+    }));
+
+    router.get('/backoffice/financeur/organismes/:siren/formations', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
+
+        let { siren } = await Joi.validate(req.params, {
+            siren: Joi.string().required(),
+        }, { abortEarly: false });
+
+        let stream = await db.collection('comment')
+        .aggregate([
+            {
+                $match: {
+                    'codeRegion': req.user.codeRegion,
+                    'training.organisation.siret': new RegExp(`^${siren}`),
                 }
             },
-            { $sort: { 'date': 1 } },
             {
                 $group: {
-                    _id: '$place.postalCode',
-                    city: { $first: '$place.city' },
-                    endDate: { $first: '$endDate' },
-                    lastAdviceDate: { $last: '$date' },
-                    advicesCount: { $sum: 1 },
-                    commentsCount: { $sum: '$commentExist' }
+                    _id: '$training.idFormation',
+                    idFormation: { $first: '$training.idFormation' },
+                    title: { $first: '$training.title' },
+                    nbAvis: { $sum: 1 }
+                }
+            },
+            {
+                $sort: {
+                    titre: 1
                 }
             },
             {
                 $project: {
                     _id: 0,
-                    postalCode: '$_id',
-                    city: 1,
-                    endDate: 1,
-                    lastAdviceDate: 1,
-                    advicesCount: 1,
-                    commentsCount: 1
                 }
-            },
-            { $sort: { 'endDate': -1 } }]).toArray();
+            }
+        ])
+        .stream();
 
-        res.status(200).send(trainings);
-
+        return sendArrayAsJsonStream(stream, res);
     }));
 
-    router.get('/backoffice/financeur/region/:idregion/inventory', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/avis', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
-        checkCodeRegionAndCodeFinanceur(req);
+        let codeRegion = req.user.codeRegion;
+        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate, status, page, sortBy } = await Joi.validate(req.query, {
+            departement: Joi.string(),
+            codeFinanceur: Joi.string(),
+            siren: Joi.string(),
+            idFormation: Joi.string(),
+            startDate: Joi.number(),
+            scheduledEndDate: Joi.number(),
+            status: Joi.string(),
+            page: Joi.number().min(0).default(0),
+            sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
+        }, { abortEarly: false });
 
-        let filter = {
-            'codeRegion': `${req.params.idregion}`
-        };
+        let cursor = db.collection('comment')
+        .find({
+            codeRegion: codeRegion,
+            ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
+            ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
+            ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
+            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
+            ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
+            ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
+            ...(['none', 'published', 'rejected'].includes(status) ? { comment: { $ne: null } } : {}),
+            ...(status === 'rejected' ? { rejected: true } : {}),
+            ...(status === 'published' ? { published: true } : {}),
+            ...(status === 'reported' ? { reported: true } : {}),
+            ...(status === 'none' ? { moderated: { $ne: true } } : {}),
+        })
+        .sort({ [sortBy]: -1 })
+        .skip((page || 0) * itemsPerPage)
+        .limit(itemsPerPage);
 
-        if (req.query.startDate && req.query.endDate) {
-            filter = Object.assign(filter,
-                {
-                    $and: [{
-                        'training.startDate': { $gte: new Date(req.query.startDate) },
-                        'training.scheduledEndDate': { $lte: new Date(req.query.endDate) }
-                    }]
+        let [total, avis] = await Promise.all([
+            cursor.count(),
+            cursor.toArray(),
+        ]);
+
+        res.send({
+            avis: avis,
+            meta: {
+                pagination: {
+                    page: page,
+                    itemsPerPage,
+                    itemsOnThisPage: avis.length,
+                    totalItems: total,
+                    totalPages: Math.ceil(total / itemsPerPage),
                 },
-            );
-        }
-
-        if (req.query.codeFinanceur) {
-            filter = Object.assign(filter, { 'training.codeFinanceur': { $in: [`${req.query.codeFinanceur}`] } });
-        }
-
-        const lieuFilter = await buildLieuFilter(req.query.lieu);
-
-        if (req.query.organisation) {
-            filter = Object.assign(filter, { 'training.organisation.siret': { '$regex': `${req.query.organisation}` } });
-        }
-
-        if (req.query.formation) {
-            filter = Object.assign(filter, { 'training.idFormation': req.query.formation });
-        }
-
-        let inventory = {};
-        inventory.reported = await db.collection('comment').countDocuments({
-            $and: [{
-                ...filter,
-                reported: true
-            },
-                lieuFilter
-            ]
+            }
         });
-        inventory.rejected = await db.collection('comment').countDocuments({
-            $and: [{
-                ...filter,
-                rejected: true
-            },
-                lieuFilter
-            ]
-        });
-        inventory.commented = await db.collection('comment').countDocuments({
-            $and: [{
-                ...filter,
-                published: true,
-                comment: { $ne: null }
-            },
-                lieuFilter
-            ]
-        });
-        inventory.all = await db.collection('comment').countDocuments({
-            $and: [{
-                ...filter,
-                $or: [
-                    { 'comment': null },
-                    { 'comment': { $exists: false } },
-                    { 'published': true }
-                ],
-            },
-                lieuFilter
-            ]
-        });
-        res.status(200).send(inventory);
     }));
 
     // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
