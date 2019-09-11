@@ -1,9 +1,7 @@
 import React from 'react';
-import VirtualizedSelect from 'react-virtualized-select';
-import PropTypes from 'prop-types';
-import 'react-virtualized-select/styles.css';
+import ReactSelect from 'react-select';
 
-export default class EntitySearchForm extends React.PureComponent {
+export default class OrganisationSearchForm extends React.PureComponent {
 
     state = {};
 
@@ -13,18 +11,11 @@ export default class EntitySearchForm extends React.PureComponent {
         this.unsetEntity = props.unsetEntity;
     }
 
-    static propTypes = {
-        handleEntityChange: PropTypes.func.isRequired,
-        unsetEntity: PropTypes.func.isRequired,
-        entities: PropTypes.array.isRequired,
-        currentEntity: PropTypes.object.isRequired
-    };
-
     render() {
         const { entities, currentEntity } = this.props;
         const options = entities.map(entity => ({
-            label: entity.city,
-            codeINSEE: entity.codeINSEE,
+            label: entity.city + ` (` + entity.id + `)`,
+            id: entity.id,
         }));
 
         return (
@@ -33,19 +24,19 @@ export default class EntitySearchForm extends React.PureComponent {
                 <div>
                     <strong>Lieu : {' '}
                         {currentEntity.city}{' '}
+                        {/*<small>({currentOrganisation.count}Avis)</small>*/}
                     </strong>
                     <button type="button" className="close" aria-label="Close" onClick={this.unsetEntity}>
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 }
-                <div className="dropdown">
-                    <VirtualizedSelect
-                        onChange={this.handleEntityChange}
-                        options={options}
-                        placeholder="Sélectionner un lieu..."
-                    />
-                </div>
+                <ReactSelect
+                    value={null}
+                    onChange={this.handleEntityChange}
+                    options={options}
+                    placeholder="Sélectionner un lieu..."
+                />
             </h2>
         );
     }

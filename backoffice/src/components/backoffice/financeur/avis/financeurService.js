@@ -16,8 +16,3 @@ export const getFormations = siren => {
 export const searchAvis = (options = {}) => {
     return _get(`/backoffice/financeur/avis?${queryString.stringify(options)}`);
 };
-
-export const getOrganisationLieuTrainingSessions = (siren, idTraining, codeINSEE) => {
-    return _get(`/backoffice/financeur/organismes_formateurs/${siren}/training/${idTraining}/sessions?codeINSEE=${codeINSEE}`);
-};
-

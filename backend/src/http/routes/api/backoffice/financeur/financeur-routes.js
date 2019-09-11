@@ -8,43 +8,13 @@ const { transformObject, encodeStream } = require('../../../../../common/utils/s
 const getReponseStatus = require('../../../../../common/utils/getReponseStatus');
 const getStatus = require('../../../../../common/utils/getStatus');
 
-module.exports = ({ db, middlewares, configuration, logger, postalCodes, regions }) => {
+module.exports = ({ db, middlewares, configuration, logger, regions }) => {
 
     const POLE_EMPLOI = '4';
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
-
-    const checkCodeRegionAndCodeFinanceur = req => {
-        if (req.params.idregion !== req.user.codeRegion ||
-            (req.query.codeFinanceur && req.user.codeFinanceur !== POLE_EMPLOI && req.query.codeFinanceur !== req.user.codeFinanceur)) {
-            throw Boom.forbidden('Action non autorisé');
-        }
-    };
-
-    const buildLieuFilter = async lieu => {
-        if (lieu) {
-            if (lieu.length === 2 || lieu.length === 3) {
-                return { 'training.place.postalCode': { '$regex': `^${lieu}.*` } };
-            } else {
-                const inseeCode = await postalCodes.findINSEECodeByINSEE(lieu);
-                if (inseeCode) {
-                    return {
-                        '$or': [
-                            { 'training.place.postalCode': { '$in': inseeCode.cedex } },
-                            { 'training.place.postalCode': { '$in': inseeCode.postalCode } },
-                            { 'training.place.postalCode': inseeCode.insee },
-                            { 'training.place.postalCode': inseeCode.commune }
-                        ]
-                    };
-                } else {
-                    return { 'training.place.postalCode': lieu };
-                }
-            }
-        }
-        return {};
-    };
 
     router.get('/backoffice/financeur/departements', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
@@ -220,8 +190,9 @@ module.exports = ({ db, middlewares, configuration, logger, postalCodes, regions
             if (req.query.siret) {
                 query['training.organisation.siret'] = { '$regex': `${req.query.siret}` };
             }
-            const lieuFilter = await buildLieuFilter(req.query.lieu);
-            query = Object.assign(query, lieuFilter);
+            if (req.query.lieu) {
+                query['training.place.postalCode'] = { '$regex': `^${req.query.lieu}.*` };
+            }
             if (req.query.formationId) {
                 query['training.idFormation'] = req.query.formationId;
             }
