@@ -13,7 +13,7 @@
     "start": "npm run start:default",
     "start:default": "node index.js",
     "start:watch": "nodemon --inspect --ignore test/ index.js",
-    "lint": "eslint components jobs routes scripts test",
+    "lint": "eslint src test",
     "smtp:start": "docker rm smtp; docker run -d --name smtp -p 1025:1025 -p 8025:8025 mailhog/mailhog",
     "smtp:stop": "docker stop smtp"
   },
@@ -76,7 +76,7 @@
     "node": ">= 10.14.1"
   },
   "devDependencies": {
-    "eslint": "5.10.0",
+    "eslint": "6.3.0",
     "linebyline": "1.3.0",
     "md5": "2.2.1",
     "mocha": "5.2.0",
