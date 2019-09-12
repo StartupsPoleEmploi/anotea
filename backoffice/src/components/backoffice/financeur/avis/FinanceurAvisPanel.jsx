@@ -345,7 +345,6 @@ export default class FinanceurAvisPanel extends React.Component {
                             buttons={
                                 <Button
                                     size="medium"
-                                    color="green"
                                     onClick={() => window.open(getExportAvisUrl(_.omit(query, ['page'])))}>
                                     <i className="fas fa-download pr-2"></i>Exporter
                                 </Button>
