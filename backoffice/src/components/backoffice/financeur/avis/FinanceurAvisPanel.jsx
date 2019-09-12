@@ -309,6 +309,21 @@ export default class FinanceurAvisPanel extends React.Component {
                             onClick={() => onNewQuery(this.createQuery({ status: 'all', sortBy: 'date' }))} />
 
                         <Tab
+                            label="Commentaires"
+                            isActive={() => query.qualification === 'all'}
+                            onClick={() => onNewQuery(this.createQuery({ qualification: 'all', sortBy: 'date' }))} />
+
+                        <Tab
+                            label="Négatifs"
+                            isActive={() => query.qualification === 'négatif'}
+                            onClick={() => onNewQuery(this.createQuery({ qualification: 'négatif', sortBy: 'date' }))} />
+
+                        <Tab
+                            label="Positifs ou neutres"
+                            isActive={() => query.qualification === 'positif'}
+                            onClick={() => onNewQuery(this.createQuery({ qualification: 'positif', sortBy: 'date' }))} />
+
+                        <Tab
                             label="Signalés"
                             isActive={() => query.status === 'reported'}
                             getNbElements={() => _.get(results.meta.stats, 'status.reported')}

@@ -92,14 +92,15 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
     router.get('/backoffice/financeur/avis', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
-        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate, status, page, sortBy } = await Joi.validate(req.query, {
+        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate, status, qualification, page, sortBy } = await Joi.validate(req.query, {
             departement: Joi.string(),
             codeFinanceur: Joi.string(),
             siren: Joi.string(),
             idFormation: Joi.string(),
             startDate: Joi.number(),
             scheduledEndDate: Joi.number(),
-            status: Joi.string(),
+            status: Joi.string().allow(['all', 'reported', 'rejected']).default('all'),
+            qualification: Joi.string().allow(['all', 'négatif', 'positif']).default('all'),
             page: Joi.number().min(0).default(0),
             sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
         }, { abortEarly: false });
@@ -114,11 +115,9 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
             ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
             ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
             ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
-            ...(['none', 'published', 'rejected'].includes(status) ? { comment: { $ne: null } } : {}),
-            ...(status === 'rejected' ? { rejected: true } : {}),
-            ...(status === 'published' ? { published: true } : {}),
+            ...(qualification === 'all' ? { comment: { $ne: null } } : { qualification }),
             ...(status === 'reported' ? { reported: true } : {}),
-            ...(status === 'none' ? { moderated: { $ne: true } } : {}),
+            ...(status === 'rejected' ? { rejected: true } : {}),
         })
         .sort({ [sortBy]: -1 })
         .skip((page || 0) * itemsPerPage)

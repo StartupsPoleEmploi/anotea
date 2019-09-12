@@ -115,4 +115,41 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         });
     });
 
+    it('can search avis with qualification', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            insertIntoDatabase('comment', newComment({ qualification: 'positif' })),
+            insertIntoDatabase('comment', newComment({ qualification: 'négatif' })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/financeur/avis?qualification=positif')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.avis);
+        assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis[0].qualification, 'positif');
+    });
+
+    it('can search avis with commentaires', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            insertIntoDatabase('comment', newComment({ qualification: 'positif' })),
+            insertIntoDatabase('comment', newComment({ qualification: 'négatif' })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/financeur/avis?qualification=all')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.avis);
+        assert.deepStrictEqual(response.body.avis.length, 2);
+    });
+
 }));

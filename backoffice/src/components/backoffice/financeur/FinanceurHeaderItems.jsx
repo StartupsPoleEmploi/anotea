@@ -10,11 +10,11 @@ export default function FinanceurHeaderItems() {
             <li className="nav-item">
                 <Link
                     className="nav-link"
-                    label="Avis stagiaire"
+                    label="Avis stagiaires"
                     url="/admin/financeur/avis" />
             </li>
             <li className="nav-item">
-                <a href={`${publicUrl}/stats`} target="_blank" rel="noopener noreferrer" className="nav-link">Statistiques</a>
+                <a href={`${publicUrl}/stats`} target="_blank" rel="noopener noreferrer" className="nav-link">Statistiques Anotéa</a>
             </li>
             <li className="nav-item right">
                 <Link

@@ -191,7 +191,7 @@ class App extends Component {
                 routes: <ModerateurRoutes codeRegion={codeRegion} />,
             }),
             financeur: () => ({
-                defaultPath: '/admin/financeur/avis?page=0&status=none',
+                defaultPath: '/admin/financeur/avis?page=0&status=all',
                 headerItems: <FinanceurHeaderItems />,
                 routes: <FinanceurRoutes codeRegion={codeRegion} codeFinanceur={codeFinanceur} />
             })
