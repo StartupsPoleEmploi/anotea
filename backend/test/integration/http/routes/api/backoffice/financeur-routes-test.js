@@ -144,7 +144,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/financeur/avis?qualification=all')
+        .get('/api/backoffice/financeur/avis.json?qualification=all')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
