@@ -5,7 +5,7 @@ import { searchOrganismes } from './gestionOrganismesService';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
-import { SearchInputTab, Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
+import { SearchInputFilter, Filter, Toolbar } from '../../common/panel/filters/Toolbar';
 import Organisme from './components/Organisme';
 import Summary from '../../common/panel/results/Summary';
 import Pagination from '../../common/panel/results/Pagination';
@@ -76,27 +76,27 @@ export default class OrganismePanel extends React.Component {
                         <h1 className="title">Gestion des organismes</h1>
                     </div>
                 }
-                toolbar={
+                filters={
                     <Toolbar>
-                        <Tab
+                        <Filter
                             label="Actifs"
                             onClick={() => onNewQuery({ status: 'active' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'active'} />
 
-                        <Tab
+                        <Filter
                             label="Inactifs"
                             onClick={() => onNewQuery({ status: 'inactive' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'inactive'} />
 
-                        <Tab
+                        <Filter
                             label="Tous"
                             onClick={() => onNewQuery({ status: 'all' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'all'} />
 
-                        <SearchInputTab
+                        <SearchInputFilter
                             label="Rechercher un organisme"
                             onSubmit={search => onNewQuery({ search })}
                             isActive={active => this.setState({ tabsDisabled: active })} />

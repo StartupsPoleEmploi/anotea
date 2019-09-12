@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default class SearchInputTab extends React.Component {
+export default class SearchInputFilter extends React.Component {
 
     static propTypes = {
         label: PropTypes.string.isRequired,
@@ -22,7 +22,7 @@ export default class SearchInputTab extends React.Component {
         let submit = () => this.props.onSubmit(this.state.searchInputValue);
 
         return (
-            <li className="SearchInputTab nav-item nav-search">
+            <li className="SearchInputFilter nav-item nav-search">
                 <div className="d-flex align-items-center">
                     <div className={`input-group ${this.state.searchInputValue ? 'active' : ''}`}>
                         <div className="input-group-prepend">

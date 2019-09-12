@@ -5,7 +5,7 @@ import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
 import Summary from '../../common/panel/results/Summary';
-import { Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
+import { Filter, Toolbar } from '../../common/panel/filters/Toolbar';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import Pagination from '../../common/panel/results/Pagination';
 import Avis from '../../common/avis/Avis';
@@ -74,15 +74,15 @@ export default class ModerationReponsesPanel extends React.Component {
                         </p>
                     </div>
                 }
-                toolbar={
+                filters={
                     <Toolbar>
-                        <Tab
+                        <Filter
                             label="À modérer"
                             onClick={() => onNewQuery({ reponseStatus: 'none', sortBy: 'reponse.lastStatusUpdate' })}
                             isActive={() => query.reponseStatus === 'none'}
                             getNbElements={() => _.get(results.meta.stats, 'reponseStatus.none')} />
 
-                        <Tab
+                        <Filter
                             label="Publiés"
                             onClick={() => onNewQuery({
                                 reponseStatus: 'published',
@@ -90,7 +90,7 @@ export default class ModerationReponsesPanel extends React.Component {
                             })}
                             isActive={() => query.reponseStatus === 'published'} />
 
-                        <Tab
+                        <Filter
                             label="Rejetés"
                             onClick={() => onNewQuery({
                                 reponseStatus: 'rejected',
@@ -98,13 +98,13 @@ export default class ModerationReponsesPanel extends React.Component {
                             })}
                             isActive={() => query.reponseStatus === 'rejected'} />
 
-                        <Tab
+                        <Filter
                             label="Signalés"
                             onClick={() => onNewQuery({ status: 'reported', sortBy: 'lastStatusUpdate' })}
                             isActive={() => query.status === 'reported'}
                             getNbElements={() => _.get(results.meta.stats, 'status.reported')} />
 
-                        <Tab
+                        <Filter
                             label="Tous"
                             onClick={() => onNewQuery({ reponseStatus: 'all', sortBy: 'date' })}
                             isActive={() => query.reponseStatus === 'all'} />

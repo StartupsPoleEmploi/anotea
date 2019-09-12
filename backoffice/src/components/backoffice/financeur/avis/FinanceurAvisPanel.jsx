@@ -5,7 +5,7 @@ import Loader from '../../common/Loader';
 import Summary from '../../common/panel/results/Summary';
 import Pagination from '../../common/panel/results/Pagination';
 import NewPanel from '../../common/panel/NewPanel';
-import { Tab, Tabs } from '../../common/panel/toolbar/tabs/Tabs';
+import { Filter, Filters } from '../../common/panel/filters/Filters';
 import { DateRange, Form, Select } from '../../common/panel/form/Form';
 import { getDepartements, getExportAvisUrl, getFormations, getOrganismes, searchAvis } from './financeurService';
 import FINANCEURS from '../../common/data/financeurs';
@@ -301,40 +301,40 @@ export default class FinanceurAvisPanel extends React.Component {
                         </div>
                     </Form>
                 }
-                tabs={
-                    <Tabs>
-                        <Tab
+                filters={
+                    <Filters>
+                        <Filter
                             label="Tous"
                             isActive={() => query.status === 'all'}
                             onClick={() => onNewQuery(this.createQuery({ status: 'all', sortBy: 'date' }))} />
 
-                        <Tab
+                        <Filter
                             label="Commentaires"
                             isActive={() => query.qualification === 'all'}
                             onClick={() => onNewQuery(this.createQuery({ qualification: 'all', sortBy: 'date' }))} />
 
-                        <Tab
+                        <Filter
                             label="Négatifs"
                             isActive={() => query.qualification === 'négatif'}
                             onClick={() => onNewQuery(this.createQuery({ qualification: 'négatif', sortBy: 'date' }))} />
 
-                        <Tab
+                        <Filter
                             label="Positifs ou neutres"
                             isActive={() => query.qualification === 'positif'}
                             onClick={() => onNewQuery(this.createQuery({ qualification: 'positif', sortBy: 'date' }))} />
 
-                        <Tab
+                        <Filter
                             label="Signalés"
                             isActive={() => query.status === 'reported'}
                             getNbElements={() => _.get(results.meta.stats, 'status.reported')}
                             onClick={() => onNewQuery(this.createQuery({ status: 'reported', sortBy: 'lastStatusUpdate' }))} />
 
-                        <Tab
+                        <Filter
                             label="Rejetés"
                             isActive={() => query.status === 'rejected'}
                             onClick={() => onNewQuery(this.createQuery({ status: 'rejected', sortBy: 'lastStatusUpdate' }))} />
 
-                    </Tabs>
+                    </Filters>
                 }
                 summary={
                     this.state.loading ? <div /> :

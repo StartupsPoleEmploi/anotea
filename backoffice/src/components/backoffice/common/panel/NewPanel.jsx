@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './NewPanel.scss';
 
-const NewPanel = ({ header, form, tabs, summary, results, pagination, className, type }) => {
+const NewPanel = ({ header, form, filters, summary, results, pagination, className, type }) => {
 
     return (
         <div className={`NewPanel mb-0 ${className || ''}`}>
@@ -27,11 +27,18 @@ const NewPanel = ({ header, form, tabs, summary, results, pagination, className,
                 </div>
             </div>
 
-            <div className={`tabs`}>
+            <div className={`tabs a-${type}`}>
                 <div className="container">
-                    {tabs}
+
                 </div>
             </div>
+
+            {filters &&
+            <div className={`filters`}>
+                <div className="container">
+                    {filters}
+                </div>
+            </div>}
 
             <div className={`container main`}>
                 <div>
@@ -53,7 +60,7 @@ const NewPanel = ({ header, form, tabs, summary, results, pagination, className,
 NewPanel.propTypes = {
     header: PropTypes.node,
     form: PropTypes.node,
-    tabs: PropTypes.node,
+    filters: PropTypes.node,
     summary: PropTypes.node,
     results: PropTypes.node,
     pagination: PropTypes.node,

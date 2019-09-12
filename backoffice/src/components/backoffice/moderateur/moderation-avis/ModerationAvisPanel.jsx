@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
-import { SearchInputTab, Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
+import { SearchInputFilter, Filter, Toolbar } from '../../common/panel/filters/Toolbar';
 import Summary from '../../common/panel/results/Summary';
 import Pagination from '../../common/panel/results/Pagination';
 import Avis from '../../common/avis/Avis';
@@ -77,34 +77,34 @@ export default class ModerationAvisPanel extends React.Component {
                         </p>
                     </div>
                 }
-                toolbar={
+                filters={
                     <Toolbar>
-                        <Tab
+                        <Filter
                             label="À modérer"
                             onClick={() => onNewQuery({ status: 'none', sortBy: 'lastStatusUpdate' })}
                             isActive={() => !isTabsDisabled() && query.status === 'none'}
                             isDisabled={isTabsDisabled}
                             getNbElements={() => _.get(results.meta.stats, 'status.none')} />
 
-                        <Tab
+                        <Filter
                             label="Publiés"
                             onClick={() => onNewQuery({ status: 'published', sortBy: 'lastStatusUpdate' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'published'} />
 
-                        <Tab
+                        <Filter
                             label="Rejetés"
                             onClick={() => onNewQuery({ status: 'rejected', sortBy: 'lastStatusUpdate' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'rejected'} />
 
-                        <Tab
+                        <Filter
                             label="Tous"
                             onClick={() => onNewQuery({ status: 'all', sortBy: 'date' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => query.status === 'all'} />
 
-                        <SearchInputTab
+                        <SearchInputFilter
                             label="Rechercher un avis"
                             isActive={active => this.setState({ tabsDisabled: active })}
                             onSubmit={fulltext => {

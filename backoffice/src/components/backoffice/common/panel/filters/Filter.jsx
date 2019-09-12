@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Tab = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false }) => {
+const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false }) => {
 
     return (
-        <li className={`Tab nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
+        <li className={`Filter nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
             <a
                 className={`nav-link`}
                 onClick={onClick}>
@@ -19,7 +19,7 @@ const Tab = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = 
         </li>
     );
 };
-Tab.propTypes = {
+Filter.propTypes = {
     label: PropTypes.string.isRequired,
     isActive: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
@@ -27,4 +27,4 @@ Tab.propTypes = {
     isDisabled: PropTypes.func,
 };
 
-export default Tab;
+export default Filter;

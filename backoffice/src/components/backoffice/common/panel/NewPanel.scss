@@ -27,8 +27,6 @@
 
   .form {
 
-    padding-bottom: 2rem;
-
     .form-holder {
       background-color: $color-white;
       padding: 1rem;
@@ -39,6 +37,11 @@
   }
 
   .tabs {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
+
+  .filters {
     padding-top: 0.125rem;
     padding-bottom: 0.125rem;
     background-color: $color-grey-5;
