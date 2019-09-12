@@ -1,4 +1,3 @@
-/* global fetch */
 import { getToken } from '../utils/token';
 import EventEmitter from 'events';
 
@@ -9,7 +8,6 @@ class HTTPError extends Error {
     }
 }
 
-const baseUrl = '/api';
 const emitter = new EventEmitter();
 const handleResponse = (path, response) => {
     let statusCode = response.status;
@@ -21,7 +19,7 @@ const handleResponse = (path, response) => {
 };
 
 export const _get = path => {
-    return fetch(`${baseUrl}${path}`, {
+    return fetch(`/api${path}`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -33,7 +31,7 @@ export const _get = path => {
 };
 
 export const _post = (path, body) => {
-    return fetch(`${baseUrl}${path}`, {
+    return fetch(`/api${path}`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -46,7 +44,7 @@ export const _post = (path, body) => {
 };
 
 export const _put = (path, body = {}) => {
-    return fetch(`${baseUrl}${path}`, {
+    return fetch(`/api${path}`, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
@@ -59,7 +57,7 @@ export const _put = (path, body = {}) => {
 };
 
 export const _delete = path => {
-    return fetch(`${baseUrl}${path}`, {
+    return fetch(`/api${path}`, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json',

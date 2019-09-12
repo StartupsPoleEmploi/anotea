@@ -1,14 +1,10 @@
 const Joi = require('joi');
+const _ = require('lodash');
 const express = require('express');
-const { tryAndCatch, sendArrayAsJsonStream } = require('../../../routes-utils');
-const Boom = require('boom');
+const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../../routes-utils');
 const moment = require('moment');
-const s = require('string');
-const { transformObject, encodeStream } = require('../../../../../common/utils/stream-utils');
-const getReponseStatus = require('../../../../../common/utils/getReponseStatus');
-const getStatus = require('../../../../../common/utils/getStatus');
 
-module.exports = ({ db, middlewares, configuration, logger, regions }) => {
+module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
     const POLE_EMPLOI = '4';
     let router = express.Router(); // eslint-disable-line new-cap
@@ -147,80 +143,41 @@ module.exports = ({ db, middlewares, configuration, logger, regions }) => {
         });
     }));
 
-    // TODO : don't generate on the fly (use cron for every region : see /jobs/export/region)
-    router.get('/backoffice/export/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/financeur/avis.csv', checkAuth, async (req, res) => {
 
-        let query = {};
+        let codeRegion = req.user.codeRegion;
+        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate, status, sortBy } = await Joi.validate(req.query, {
+            departement: Joi.string(),
+            codeFinanceur: Joi.string(),
+            siren: Joi.string(),
+            idFormation: Joi.string(),
+            startDate: Joi.number(),
+            scheduledEndDate: Joi.number(),
+            status: Joi.string(),
+            sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
+            token: Joi.string().required(),
+        }, { abortEarly: false });
 
-        if (req.query.status === 'reported') {
-            query['reported'] = true;
-        } else if (req.query.status === 'commented') {
-            query['published'] = true;
-            query['$and'] = [
-                { 'comment': { $ne: null } },
-                {
-                    $or: [
-                        { 'comment.title': { $ne: '' } },
-                        { 'comment.text': { $ne: '' } }
-                    ]
-                }
-            ];
-        } else if (req.query.status === 'rejected') {
-            query['rejected'] = true;
-        } else if (req.query.status === 'all') {
-            query['$or'] = [
-                { 'comment': null },
-                { 'comment': { $exists: false } },
-                { 'published': true }
-            ];
-        }
+        let stream = db.collection('comment')
+        .find({
+            codeRegion: codeRegion,
+            ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
+            ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
+            ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
+            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
+            ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
+            ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
+            ...(['none', 'published', 'rejected'].includes(status) ? { comment: { $ne: null } } : {}),
+            ...(status === 'rejected' ? { rejected: true } : {}),
+            ...(status === 'published' ? { published: true } : {}),
+            ...(status === 'reported' ? { reported: true } : {}),
+            ...(status === 'none' ? { moderated: { $ne: true } } : {}),
+        })
+        .sort({ [sortBy]: -1 })
+        .stream();
 
-        if (req.query.filter === 'region') {
-            query['training.infoRegion'] = { $ne: null };
-        }
-
-        if (req.user.profile === 'organisme') {
-            query['training.organisation.siret'] = req.user.siret;
-        } else if (req.user.profile === 'financeur') {
-            query['codeRegion'] = req.user.codeRegion;
-
-            if (req.query.codeFinanceur) {
-                query['training.codeFinanceur'] = { '$elemMatch': { '$eq': req.query.codeFinanceur } };
-            }
-            if (req.query.siret) {
-                query['training.organisation.siret'] = { '$regex': `${req.query.siret}` };
-            }
-            if (req.query.lieu) {
-                query['training.place.postalCode'] = { '$regex': `^${req.query.lieu}.*` };
-            }
-            if (req.query.formationId) {
-                query['training.idFormation'] = req.query.formationId;
-            }
-        }
-
-        let stream = await db.collection('comment').find(query, { token: 0 }).stream();
-        let lines = 'id;note accueil;note contenu formation;note equipe formateurs;note matériel;note accompagnement;note global;pseudo;titre;commentaire;statut;réponse OF;statut;id formation; titre formation;date début;date de fin prévue;siret organisme;libellé organisme;nom organisme;code postal;ville;id certif info;libellé certifInfo;id session;formacode;AES reçu;code financeur\n';
-
-        if (req.user.codeFinanceur === POLE_EMPLOI || req.query.status === 'rejected') {
-            let array = lines.split(';');
-            array.splice(10, 0, 'qualification');
-            lines = array.join(';');
-        }
-
-        res.setHeader('Content-disposition', 'attachment; filename=avis.csv');
-        res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
-        res.write(lines);
-
-        let handleError = e => {
-            logger.error('An error occurred', e);
-            res.status(500);
-            stream.push(Boom.boomify(e).output.payload);
-        };
-
-        stream
-        .on('error', handleError)
-        .pipe(transformObject(async comment => {
-
+        let getQualification = comment => {
             let qualification = '';
 
             if (req.query.status === 'rejected') {
@@ -233,47 +190,69 @@ module.exports = ({ db, middlewares, configuration, logger, regions }) => {
                     qualification += comment.rejectReason !== undefined ? comment.rejectReason : '';
                 }
             }
+            return qualification;
+        };
 
-            if (comment.comment !== undefined && comment.comment !== null) {
-                comment.comment.pseudo = (comment.comment.pseudo !== undefined) ? comment.comment.pseudo.replace(/\r?\n|\r/g, ' ') : '';
-                comment.comment.title = (comment.comment.title !== undefined) ? comment.comment.title.replace(/\r?\n|\r/g, ' ') : '';
-                comment.comment.text = (comment.comment.text !== undefined) ? comment.comment.text.replace(/\r?\n|\r/g, ' ') : '';
+        let getStatus = comment => {
+            if (comment.archived === true) {
+                return 'Archivé';
+            } else if (comment.published === true || comment.comment === undefined || comment.comment === null) {
+                return 'Publié';
+            } else {
+                return 'En attente de modération';
             }
+        };
 
-            return comment._id + ';' +
-                (comment.rates !== undefined ? `${comment.rates.accueil}`.replace(/\./g, ',') : '') + ';' +
-                (comment.rates !== undefined ? `${comment.rates.contenu_formation}`.replace(/\./g, ',') : '') + ';' +
-                (comment.rates !== undefined ? `${comment.rates.equipe_formateurs}`.replace(/\./g, ',') : '') + ';' +
-                (comment.rates !== undefined ? `${comment.rates.moyen_materiel}`.replace(/\./g, ',') : '') + ';' +
-                (comment.rates !== undefined ? `${comment.rates.accompagnement}`.replace(/\./g, ',') : '') + ';' +
-                (comment.rates !== undefined ? `${comment.rates.global}`.replace(/\./g, ',') : '') + ';' +
-                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.pseudo).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
-                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.title).replaceAll(';', '').replaceAll('"', '').s + '"' : '') + ';' +
-                (comment.comment !== undefined && comment.comment !== null ? '"' + s(comment.comment.text).replaceAll(';', '').replaceAll('"', '').s + '"' : '') +
-                qualification + ';' +
-                getStatus(comment) + ';' +
-                (comment.reponse !== undefined ? s(comment.reponse.text).replaceAll(';', '').replaceAll('"', '').replaceAll('\n', '').s + '"' : '') + ';' +
-                (comment.reponse !== undefined ? getReponseStatus(comment.reponse.status) : '') + ';' +
-                comment.training.idFormation + ';' +
-                comment.training.title + ';' +
-                moment(comment.training.startDate).format('DD/MM/YYYY') + ';' +
-                moment(comment.training.scheduledEndDate).format('DD/MM/YYYY') + ';' +
-                '"' + comment.training.organisation.siret + '";' +
-                comment.training.organisation.label + ';' +
-                comment.training.organisation.name + ';' +
-                comment.training.place.postalCode + ';' +
-                comment.training.place.city + ';' +
-                '\'' + comment.training.certifInfo.id + '\';' +
-                comment.training.certifInfo.label + ';' +
-                comment.training.idSession + ';' +
-                comment.training.formacode + ';' +
-                comment.training.aesRecu + ';' +
-                comment.training.codeFinanceur + '\n';
-        }))
-        .pipe(encodeStream('UTF-16BE'))
-        .pipe(res)
-        .on('end', () => res.end());
-    }));
+        let getReponseStatus = reponse => {
+            if (reponse.status === 'rejected') {
+                return 'Rejetée';
+            } else if (reponse.status === 'published') {
+                return 'Validée';
+            } else {
+                return 'En attente de modération';
+            }
+        };
+
+        let sanitizeNote = note => `${note}`.replace(/\./g, ',');
+        let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').replace(/\r/g, ' ').replace(/\n/g, ' ').trim();
+
+        try {
+            await sendCSVStream(stream, res, {
+                'id': comment => comment._id,
+                'note accueil': comment => sanitizeNote(comment.rates.accueil),
+                'note contenu formation': comment => sanitizeNote(comment.rates.contenu_formation),
+                'note equipe formateurs': comment => sanitizeNote(comment.rates.equipe_formateurs),
+                'note matériel': comment => sanitizeNote(comment.rates.moyen_materiel),
+                'note accompagnement': comment => sanitizeNote(comment.rates.accompagnement),
+                'note global': comment => sanitizeNote(comment.rates.global),
+                'pseudo': comment => sanitizeString(_.get(comment, 'comment.pseudo', '')),
+                'titre': comment => sanitizeString(_.get(comment, 'comment.title', '')),
+                'commentaire': comment => sanitizeString(_.get(comment, 'comment.text', '')),
+                'qualification': comment => getQualification(comment),
+                'statut': comment => getStatus(comment),
+                'réponse OF': comment => sanitizeString(_.get(comment, 'reponse.text', '')),
+                'réponse statut': comment => comment.reponse ? getReponseStatus(comment.reponse.status) : '',
+                'id formation': comment => comment.training.idFormation,
+                'titre formation': comment => comment.training.title,
+                'date début': comment => moment(comment.training.startDate).format('DD/MM/YYYY'),
+                'date de fin prévue': comment => moment(comment.training.scheduledEndDate).format('DD/MM/YYYY'),
+                'siret organisme': comment => comment.training.organisation.siret,
+                'libellé organisme': comment => comment.training.organisation.label,
+                'nom organisme': comment => comment.training.organisation.name,
+                'code postal': comment => comment.training.place.postalCode,
+                'ville': comment => comment.training.place.city,
+                'id certif info': comment => comment.training.certifInfo.id,
+                'libellé certifInfo': comment => comment.training.certifInfo.label,
+                'id session': comment => comment.training.idSession,
+                'formacode': comment => comment.training.formacode,
+                'AES reçu': comment => comment.training.aesRecu,
+                'code financeur': comment => comment.training.codeFinanceur,
+            }, { filename: 'avis.csv' });
+        } catch (e) {
+            logger.error('Unable to send CSV file', e);
+        }
+
+    });
 
     return router;
 };

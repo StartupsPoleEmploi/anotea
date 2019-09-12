@@ -7,7 +7,7 @@ import Pagination from '../../common/panel/results/Pagination';
 import NewPanel from '../../common/panel/NewPanel';
 import { Tab, Tabs } from '../../common/panel/toolbar/tabs/Tabs';
 import { DateRange, Form, Select } from '../../common/panel/form/Form';
-import { getDepartements, getFormations, getOrganismes, searchAvis } from './financeurService';
+import { getDepartements, getExportAvisUrl, getFormations, getOrganismes, searchAvis } from './financeurService';
 import FINANCEURS from '../../common/data/financeurs';
 import Button from '../../common/library/Button';
 import './FinanceurAvisPanel.scss';
@@ -323,7 +323,19 @@ export default class FinanceurAvisPanel extends React.Component {
                 }
                 summary={
                     this.state.loading ? <div /> :
-                        <Summary title={this.getQuerySummary()} paginationLabel="avis" pagination={results.meta.pagination} />
+                        <Summary
+                            title={this.getQuerySummary()}
+                            paginationLabel="avis"
+                            pagination={results.meta.pagination}
+                            buttons={
+                                <Button
+                                    size="medium"
+                                    color="green"
+                                    onClick={() => window.open(getExportAvisUrl(_.omit(query, ['page'])))}>
+                                    <i className="fas fa-download pr-2"></i>Exporter
+                                </Button>
+                            }
+                        />
                 }
                 results={
                     this.state.loading ?

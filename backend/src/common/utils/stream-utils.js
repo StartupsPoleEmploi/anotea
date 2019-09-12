@@ -144,14 +144,17 @@ module.exports = {
         return new Transform({
             objectMode: true,
             transform: function(chunk, encoding, callback) {
-                if (lines++ === 0) {
-                    this.push(`${Object.keys(columns).join(';')}\n`);
+                try {
+                    if (lines++ === 0) {
+                        this.push(`${Object.keys(columns).join(';')}\n`);
+                    }
+
+                    let line = Object.keys(columns).map(key => columns[key](chunk)).join(';');
+                    this.push(`${line}\n`);
+                    callback();
+                } catch (e) {
+                    callback(e);
                 }
-
-                let line = Object.keys(columns).map(key => columns[key](chunk)).join(';');
-                this.push(`${line}\n`);
-
-                callback();
             }
         });
     }
