@@ -4,11 +4,9 @@ import _ from 'lodash';
 import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
-import ReponseTitle from './components/summary/ReponseTitle';
 import Summary from '../../common/panel/results/Summary';
 import { Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
 import GlobalMessage from '../../common/message/GlobalMessage';
-import AvisTitle from './components/summary/AvisTitle';
 import Pagination from '../../common/panel/results/Pagination';
 import Avis from '../../common/avis/Avis';
 import ResultDivider from '../../common/panel/results/ResultDivider';
@@ -114,17 +112,10 @@ export default class ModerationReponsesPanel extends React.Component {
                 }
                 summary={
                     this.state.loading ? <div /> :
-                        query.status === 'reported' ?
-                            <Summary
-                                paginationLabel="avis"
-                                pagination={results.meta.pagination}
-                                empty="Pas d'avis pour le moment"
-                                title={<AvisTitle query={query} results={results} />} /> :
-                            <Summary
-                                paginationLabel="réponse(s)"
-                                pagination={results.meta.pagination}
-                                empty="Pas de réponses pour le moment"
-                                title={<ReponseTitle query={query} />} />
+                        <Summary
+                            pagination={results.meta.pagination}
+                            paginationLabel={query.status === 'reported' ? 'avis' : 'réponse(s)'}
+                        />
                 }
                 results={
                     this.state.loading ?

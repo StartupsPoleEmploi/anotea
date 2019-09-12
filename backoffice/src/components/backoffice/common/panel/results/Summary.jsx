@@ -8,29 +8,25 @@ export default class Summary extends React.Component {
         pagination: PropTypes.object.isRequired,
         paginationLabel: PropTypes.node.isRequired,
         title: PropTypes.node,
-    };
-
-    getPaginationData = () => {
-
-        let { paginationLabel } = this.props;
-        let { totalItems, itemsOnThisPage } = this.props.pagination;
-
-        return (
-            <div className="pages col-sm-3 text-right">
-                <span>{itemsOnThisPage} {paginationLabel} affiché(s) sur {totalItems}</span>
-            </div>
-        );
+        buttons: PropTypes.node,
     };
 
     render() {
-        let { pagination, title } = this.props;
+        let { pagination, paginationLabel, title, buttons } = this.props;
+        let { totalItems, itemsOnThisPage } = this.props.pagination;
 
         return (
             <div className="Summary row">
-                <div className="offset-md-1 col-sm-7">
-                    {title || <div/>}
+                <div className="offset-md-1 col-sm-6">
+                    {title || <div />}
                 </div>
-                {pagination.totalItems > 0 && this.getPaginationData()}
+
+                {pagination.totalItems > 0 &&
+                <div className="pages col-sm-4 text-right">
+                    <span className="pr-3">{itemsOnThisPage} {paginationLabel} affiché(s) sur {totalItems}</span>
+                    {buttons}
+                </div>
+                }
             </div>
         );
     }

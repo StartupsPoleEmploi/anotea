@@ -4,7 +4,6 @@ import _ from 'lodash';
 import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
-import AvisTitle from './components/summary/AvisTitle';
 import { SearchInputTab, Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
 import Summary from '../../common/panel/results/Summary';
 import Pagination from '../../common/panel/results/Pagination';
@@ -118,11 +117,7 @@ export default class ModerationAvisPanel extends React.Component {
                 }
                 summary={
                     this.state.loading ? <div /> :
-                        <Summary
-                            paginationLabel="avis"
-                            pagination={results.meta.pagination}
-                            empty="Pas d'avis pour le moment"
-                            title={<AvisTitle query={query} results={results} />} />
+                        <Summary paginationLabel="avis" pagination={results.meta.pagination} />
                 }
                 results={
                     this.state.loading ?

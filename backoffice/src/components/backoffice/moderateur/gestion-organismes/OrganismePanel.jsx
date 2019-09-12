@@ -104,23 +104,7 @@ export default class OrganismePanel extends React.Component {
                 }
                 summary={
                     this.state.loading ? <div /> :
-                        <Summary
-                            paginationLabel="organisme(s)"
-                            pagination={results.meta.pagination}
-                            empty="Pas d'organisme pour le moment"
-                            title={
-                                <div>
-                                    <span className="name">Tous les organismes</span>
-                                    {
-                                        query.status === 'all' ? <span /> :
-                                            <span className="type">
-                                                {query.status === 'active' ? ' actifs' : ' inactifs'}
-                                            </span>
-                                    }
-                                </div>
-                            }>
-
-                        </Summary>
+                        <Summary paginationLabel="organisme(s)" pagination={results.meta.pagination}/>
                 }
                 results={
                     this.state.loading ?

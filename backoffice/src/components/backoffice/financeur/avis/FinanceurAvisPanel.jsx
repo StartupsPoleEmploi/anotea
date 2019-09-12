@@ -181,7 +181,7 @@ export default class FinanceurAvisPanel extends React.Component {
                 {organisme && <Badge color="green" text={organisme.name} />}
                 {formation && <Badge color="green" text={formation.title} />}
                 {financeur && <Badge color="green" text={financeur.label} />}
-                {(query.startDate || query.scheduledEndDate) && <Badge text={periode} />}
+                {(query.startDate || query.scheduledEndDate) && <Badge color="green" text={periode} />}
             </div>
         );
     };
@@ -323,10 +323,7 @@ export default class FinanceurAvisPanel extends React.Component {
                 }
                 summary={
                     this.state.loading ? <div /> :
-                        <Summary
-                            title={this.getQuerySummary()}
-                            paginationLabel="avis"
-                            pagination={results.meta.pagination} />
+                        <Summary title={this.getQuerySummary()} paginationLabel="avis" pagination={results.meta.pagination} />
                 }
                 results={
                     this.state.loading ?
