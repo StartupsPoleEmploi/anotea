@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import moment from 'moment';
 import Loader from '../../common/Loader';
 import Summary from '../../common/panel/results/Summary';
 import Pagination from '../../common/panel/results/Pagination';
@@ -10,12 +11,11 @@ import { DateRange, Form, Select } from '../../common/panel/form/Form';
 import { getDepartements, getExportAvisUrl, getFormations, getOrganismes, searchAvis } from '../financeurService';
 import FINANCEURS from '../../common/data/financeurs';
 import Button from '../../common/library/Button';
-import './FinanceurAvisPanel.scss';
-import moment from 'moment';
-import Badge from '../components/Badge';
 import AvisResults from '../../common/panel/results/AvisResults';
+import './FinanceurPanel.scss';
+import QuerySummary from '../components/QuerySummary';
 
-export default class FinanceurAvisPanel extends React.Component {
+export default class FinanceurPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -163,28 +163,6 @@ export default class FinanceurAvisPanel extends React.Component {
         }));
     };
 
-    getQuerySummary = () => {
-        let { query } = this.props;
-
-        let departement = this.state.departements.results.find(f => f.code === query.departement);
-        let organisme = this.state.organismes.results.find(f => f.siren === query.siren);
-        let formation = this.state.formations.results.find(f => f.idFormation === query.idFormation);
-        let financeur = this.state.financeurs.results.find(f => f.code === query.codeFinanceur);
-        let periode = `${query.startDate ? moment(parseInt(query.startDate)).format('DD/MM/YYYY') : ''}` +
-            `${query.startDate && query.scheduledEndDate ? '-' : ''}` +
-            `${query.scheduledEndDate ? moment(parseInt(query.scheduledEndDate)).format('DD/MM/YYYY') : ''}`;
-
-        return (
-            <div className="d-flex flex-wrap">
-                {departement && <Badge color="green" text={departement.label} />}
-                {organisme && <Badge color="green" text={organisme.name} />}
-                {formation && <Badge color="green" text={formation.title} />}
-                {financeur && <Badge color="green" text={financeur.label} />}
-                {(query.startDate || query.scheduledEndDate) && <Badge color="green" text={periode} />}
-            </div>
-        );
-    };
-
     createQuery = (parameters = {}) => {
 
         let state = this.state;
@@ -217,7 +195,7 @@ export default class FinanceurAvisPanel extends React.Component {
 
         return (
             <NewPanel
-                className="FinanceurAvisPanel"
+                className="FinanceurPanel"
                 type="financeur"
                 form={
                     <Form>
@@ -338,7 +316,7 @@ export default class FinanceurAvisPanel extends React.Component {
                 summary={
                     this.state.loading ? <div /> :
                         <Summary
-                            title={this.getQuerySummary()}
+                            title={<QuerySummary form={this.state} query={query} />}
                             paginationLabel="avis"
                             pagination={results.meta.pagination}
                             buttons={
