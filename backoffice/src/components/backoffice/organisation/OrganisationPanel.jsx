@@ -8,7 +8,7 @@ import SearchForm from './searchForm';
 import EntitySearchForm from './entitySearchForm';
 import Graphes from './Graphes';
 import Notice from './Notice';
-import getReponseStatus from '../common/utils/getReponseStatus';
+import getReponseStatus from './getReponseStatus';
 
 import { getOrganisationInfo, loadAdvices, loadAllAdvices, loadAllInventory, loadInventory } from './service/organismeService';
 import { addReponse, markAvisAsNotRead, markAvisAsRead, removeReponse, reportAvis, unreportAvis } from './service/consultationService';

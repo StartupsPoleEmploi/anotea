@@ -4,10 +4,10 @@ import _ from 'lodash';
 import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
-import Summary from '../../common/panel/results/Summary';
+import Summary from '../../common/panel/summary/Summary';
 import { Filter, Toolbar } from '../../common/panel/filters/Toolbar';
 import GlobalMessage from '../../common/message/GlobalMessage';
-import Pagination from '../../common/panel/results/Pagination';
+import Pagination from '../../common/panel/pagination/Pagination';
 import Avis from '../../common/avis/Avis';
 import ResultDivider from '../../common/panel/results/ResultDivider';
 
