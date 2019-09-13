@@ -25,32 +25,35 @@ export default class FinanceurPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
+            type: 'avis',
             message: null,
-            periode: {
-                startDate: null,
-                endDate: null,
+            form: {
+                periode: {
+                    startDate: null,
+                    endDate: null,
+                },
+                departements: {
+                    selected: null,
+                    loading: true,
+                    results: [],
+                },
+                organismes: {
+                    selected: null,
+                    loading: true,
+                    results: [],
+                },
+                formations: {
+                    selected: null,
+                    loading: false,
+                    results: [],
+                },
+                financeurs: {
+                    selected: null,
+                    loading: true,
+                    results: [],
+                },
             },
-            departements: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-            organismes: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
-            formations: {
-                selected: null,
-                loading: false,
-                results: [],
-            },
-            financeurs: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
+            loading: false,
             results: {
                 avis: [],
                 meta: {
@@ -65,6 +68,10 @@ export default class FinanceurPanel extends React.Component {
                 }
             },
         };
+    }
+
+    setStateDeep(data, callback) {
+        return this.setState(_.merge({}, this.state, data), callback);
     }
 
     async componentDidMount() {
@@ -95,11 +102,13 @@ export default class FinanceurPanel extends React.Component {
             return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur));
         });
 
-        this.setState({
-            periode: {
-                startDate: query.startDate ? moment(parseInt(query.startDate)).toDate() : null,
-                endDate: query.startDate ? moment(parseInt(query.scheduledEndDate)).toDate() : null,
-            },
+        this.setStateDeep({
+            form: {
+                periode: {
+                    startDate: query.startDate ? moment(parseInt(query.startDate)).toDate() : null,
+                    endDate: query.startDate ? moment(parseInt(query.scheduledEndDate)).toDate() : null,
+                },
+            }
         });
     }
 
@@ -110,70 +119,80 @@ export default class FinanceurPanel extends React.Component {
     }
 
     loadSelectBox = async (type, loader) => {
-        this.setState({
-            [type]: {
-                selected: null,
-                loading: true,
-                results: [],
-            },
+
+        this.setStateDeep({
+            form: {
+                [type]: {
+                    selected: null,
+                    loading: true,
+                    results: [],
+                },
+            }
         });
 
         let results = await loader();
 
         return new Promise(resolve => {
-            this.setState({
-                [type]: {
-                    selected: null,
-                    loading: false,
-                    results,
-                },
+            this.setStateDeep({
+                form: {
+                    [type]: {
+                        selected: null,
+                        loading: false,
+                        results,
+                    },
+                }
             }, () => resolve(results));
         });
     };
 
     updateSelectBox = (type, option) => {
         return new Promise(resolve => {
-            this.setState({
-                [type]: {
-                    ...this.state[type],
-                    selected: option
-                },
+
+            this.setStateDeep({
+                form: {
+                    [type]: {
+                        ...this.state[type],
+                        selected: option
+                    },
+                }
             }, resolve);
         });
     };
 
     resetForm = () => {
-        this.setState(_.merge({}, this.state, {
-            periode: {
-                startDate: null,
-                endDate: null,
-            },
-            departements: {
-                selected: null,
-            },
-            organismes: {
-                selected: null,
-            },
-            formations: {
-                selected: null,
-            },
-            financeurs: {
-                selected: null,
-            },
-        }));
+        this.setStateDeep({
+            form: {
+                periode: {
+                    startDate: null,
+                    endDate: null,
+                },
+                departements: {
+                    selected: null,
+                },
+                organismes: {
+                    selected: null,
+                },
+                formations: {
+                    selected: null,
+                },
+                financeurs: {
+                    selected: null,
+                },
+            }
+        });
     };
 
     createQuery = (parameters = {}) => {
 
-        let state = this.state;
+        let form = this.state.form;
 
         return {
-            codeFinanceur: _.get(state, 'financeurs.selected.code', null),
-            departement: _.get(state, 'departements.selected.code', null),
-            siren: _.get(state, 'organismes.selected.siren', null),
-            idFormation: _.get(state, 'formations.selected.idFormation', null),
-            startDate: state.periode.startDate ? moment(state.periode.startDate).valueOf() : null,
-            scheduledEndDate: state.periode.endDate ? moment(state.periode.endDate).valueOf() : null,
+            codeFinanceur: _.get(form, 'financeurs.selected.code', null),
+            departement: _.get(form, 'departements.selected.code', null),
+            siren: _.get(form, 'organismes.selected.siren', null),
+            idFormation: _.get(form, 'formations.selected.idFormation', null),
+            startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
+            scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
             status: 'all',
             sortBy: 'date',
             ...parameters,
@@ -191,7 +210,8 @@ export default class FinanceurPanel extends React.Component {
 
     render() {
         let { query, onNewQuery } = this.props;
-        let { departements, organismes, formations, financeurs, periode, results } = this.state;
+        let { form, results } = this.state;
+        let { departements, organismes, formations, financeurs, periode } = form;
 
         return (
             <NewPanel
@@ -204,7 +224,7 @@ export default class FinanceurPanel extends React.Component {
                                 <label>Période</label>
                                 <DateRange
                                     range={periode}
-                                    onChange={range => this.setState({ periode: range })}
+                                    onChange={periode => this.setStateDeep({ form: { periode } })}
                                 />
                             </div>
                             <div className="form-group col-lg-6 col-xl-3">
@@ -316,7 +336,7 @@ export default class FinanceurPanel extends React.Component {
                 summary={
                     this.state.loading ? <div /> :
                         <Summary
-                            title={<QuerySummary form={this.state} query={query} />}
+                            title={<QuerySummary form={this.state.form} query={query} />}
                             paginationLabel="avis"
                             pagination={results.meta.pagination}
                             buttons={
