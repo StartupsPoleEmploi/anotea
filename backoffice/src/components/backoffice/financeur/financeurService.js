@@ -1,6 +1,6 @@
 import queryString from 'query-string';
-import { _get } from '../../../../utils/http-client';
-import { getToken } from '../../../../utils/token';
+import { _get } from '../../../utils/http-client';
+import { getToken } from '../../../utils/token';
 
 export const getDepartements = () => {
     return _get(`/backoffice/financeur/departements`);

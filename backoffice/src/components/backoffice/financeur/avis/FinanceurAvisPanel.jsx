@@ -7,7 +7,7 @@ import Pagination from '../../common/panel/results/Pagination';
 import NewPanel from '../../common/panel/NewPanel';
 import { Filter, Filters } from '../../common/panel/filters/Filters';
 import { DateRange, Form, Select } from '../../common/panel/form/Form';
-import { getDepartements, getExportAvisUrl, getFormations, getOrganismes, searchAvis } from './financeurService';
+import { getDepartements, getExportAvisUrl, getFormations, getOrganismes, searchAvis } from '../financeurService';
 import FINANCEURS from '../../common/data/financeurs';
 import Button from '../../common/library/Button';
 import './FinanceurAvisPanel.scss';
@@ -18,7 +18,6 @@ import AvisResults from '../../common/panel/results/AvisResults';
 export default class FinanceurAvisPanel extends React.Component {
 
     static propTypes = {
-        codeRegion: PropTypes.string.isRequired,
         query: PropTypes.object.isRequired,
         onNewQuery: PropTypes.func.isRequired,
     };

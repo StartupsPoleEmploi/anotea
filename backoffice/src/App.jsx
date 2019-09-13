@@ -188,12 +188,12 @@ class App extends Component {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?page=0&status=none',
                 headerItems: <ModerateurHeaderItems />,
-                routes: <ModerateurRoutes codeRegion={codeRegion} />,
+                routes: <ModerateurRoutes />,
             }),
             financeur: () => ({
                 defaultPath: '/admin/financeur/avis?page=0&status=all',
                 headerItems: <FinanceurHeaderItems />,
-                routes: <FinanceurRoutes codeRegion={codeRegion} codeFinanceur={codeFinanceur} />
+                routes: <FinanceurRoutes />
             })
         };
 

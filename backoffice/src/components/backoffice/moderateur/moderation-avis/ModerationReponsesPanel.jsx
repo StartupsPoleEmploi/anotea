@@ -14,7 +14,6 @@ import ResultDivider from '../../common/panel/results/ResultDivider';
 export default class ModerationReponsesPanel extends React.Component {
 
     static propTypes = {
-        codeRegion: PropTypes.string.isRequired,
         query: PropTypes.object.isRequired,
         onNewQuery: PropTypes.func.isRequired,
     };

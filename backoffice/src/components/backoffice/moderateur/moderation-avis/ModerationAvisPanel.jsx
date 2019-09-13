@@ -14,7 +14,6 @@ import GlobalMessage from '../../common/message/GlobalMessage';
 export default class ModerationAvisPanel extends React.Component {
 
     static propTypes = {
-        codeRegion: PropTypes.string.isRequired,
         query: PropTypes.object.isRequired,
         onNewQuery: PropTypes.func.isRequired,
     };
