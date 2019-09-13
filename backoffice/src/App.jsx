@@ -184,7 +184,7 @@ class App extends Component {
     showBackofficePages = () => {
 
         let { profile, codeRegion, codeFinanceur, features, id } = this.state;
-        let layouts = {
+        let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?page=0&status=none',
                 headerItems: <ModerateurHeaderItems />,
@@ -200,7 +200,7 @@ class App extends Component {
         //Use new design
         if (['moderateur', 'financeur'].includes(this.state.profile)) {
 
-            let layout = layouts[profile]();
+            let layout = backoffices[profile]();
             return (
                 <Router>
                     <div className="anotea">

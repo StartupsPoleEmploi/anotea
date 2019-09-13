@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './NewPanel.scss';
+import './Layout.scss';
 
-const NewPanel = ({ header, form, filters, summary, results, pagination, className, type }) => {
+const Layout = ({ header, form, tabs, filters, summary, results, pagination, className, type }) => {
 
     return (
-        <div className={`NewPanel mb-0 ${className || ''}`}>
+        <div className={`Layout mb-0 ${className || ''}`}>
 
             {header &&
             <div className={`header a-${type}`}>
@@ -29,7 +29,7 @@ const NewPanel = ({ header, form, filters, summary, results, pagination, classNa
 
             <div className={`tabs a-${type}`}>
                 <div className="container">
-
+                    {tabs}
                 </div>
             </div>
 
@@ -57,10 +57,11 @@ const NewPanel = ({ header, form, filters, summary, results, pagination, classNa
     );
 };
 
-NewPanel.propTypes = {
+Layout.propTypes = {
     header: PropTypes.node,
     form: PropTypes.node,
     filters: PropTypes.node,
+    tabs: PropTypes.node,
     summary: PropTypes.node,
     results: PropTypes.node,
     pagination: PropTypes.node,
@@ -68,4 +69,4 @@ NewPanel.propTypes = {
     type: PropTypes.string,
 };
 
-export default NewPanel;
+export default Layout;

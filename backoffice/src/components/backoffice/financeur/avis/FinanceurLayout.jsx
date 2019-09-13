@@ -5,17 +5,18 @@ import moment from 'moment';
 import Loader from '../../common/Loader';
 import Summary from '../../common/panel/summary/Summary';
 import Pagination from '../../common/panel/pagination/Pagination';
-import NewPanel from '../../common/panel/NewPanel';
-import { Filter, Filters } from '../../common/panel/filters/Filters';
+import Layout from '../../common/panel/Layout';
+import { Tab, Tabs } from '../../common/panel/tabs/Tabs';
 import { DateRange, Form, Select } from '../../common/panel/form/Form';
 import { getDepartements, getExportAvisUrl, getFormations, getOrganismes, searchAvis } from '../financeurService';
 import FINANCEURS from '../../common/data/financeurs';
 import Button from '../../common/library/Button';
 import AvisResults from '../../common/panel/results/AvisResults';
-import './FinanceurPanel.scss';
 import QuerySummary from '../components/QuerySummary';
+import { Filters } from '../../common/panel/filters/Filters';
+import Filter from '../../common/panel/filters/Filter';
 
-export default class FinanceurPanel extends React.Component {
+export default class FinanceurLayout extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -25,7 +26,7 @@ export default class FinanceurPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            type: 'avis',
+            currentTab: 'avis',
             message: null,
             form: {
                 periode: {
@@ -210,12 +211,11 @@ export default class FinanceurPanel extends React.Component {
 
     render() {
         let { query, onNewQuery } = this.props;
-        let { form, results } = this.state;
+        let { form, results, currentTab } = this.state;
         let { departements, organismes, formations, financeurs, periode } = form;
 
         return (
-            <NewPanel
-                className="FinanceurPanel"
+            <Layout
                 type="financeur"
                 form={
                     <Form>
@@ -283,11 +283,9 @@ export default class FinanceurPanel extends React.Component {
                                 />
                             </div>
                         </div>
-                        <div className="form-row">
-                        </div>
                         <div className="form-row justify-content-center">
                             <div className="form-group buttons">
-                                <Button size="small" onClick={this.resetForm} className="mr-3 reset">
+                                <Button size="small" onClick={this.resetForm} className="mr-3" style={{ opacity: 0.6 }}>
                                     <i className="fas fa-times mr-2"></i>
                                     Réinitialiser les filtres
                                 </Button>
@@ -298,40 +296,54 @@ export default class FinanceurPanel extends React.Component {
                         </div>
                     </Form>
                 }
+                tabs={
+                    <Tabs>
+                        <Tab
+                            label="Vue graphique"
+                            isActive={() => currentTab === 'stats'}
+                            onClick={() => onNewQuery(this.setStateDeep({ currentTab: 'stats' }))} />
+
+                        <Tab
+                            label="Liste des avis"
+                            isActive={() => currentTab === 'avis'}
+                            onClick={() => onNewQuery(this.setStateDeep({ currentTab: 'avis' }))} />
+                    </Tabs>
+                }
                 filters={
-                    <Filters>
-                        <Filter
-                            label="Tous"
-                            isActive={() => query.status === 'all'}
-                            onClick={() => onNewQuery(this.createQuery({ status: 'all', sortBy: 'date' }))} />
+                    currentTab !== 'avis' ? <div /> :
+                        <Filters>
+                            <Filter
+                                label="Tous"
+                                isActive={() => query.status === 'all'}
+                                onClick={() => onNewQuery(this.createQuery({ status: 'all', sortBy: 'date' }))} />
 
-                        <Filter
-                            label="Commentaires"
-                            isActive={() => query.qualification === 'all'}
-                            onClick={() => onNewQuery(this.createQuery({ qualification: 'all', sortBy: 'date' }))} />
+                            <Filter
+                                label="Commentaires"
+                                isActive={() => query.qualification === 'all'}
+                                onClick={() => onNewQuery(this.createQuery({ qualification: 'all', sortBy: 'date' }))} />
 
-                        <Filter
-                            label="Négatifs"
-                            isActive={() => query.qualification === 'négatif'}
-                            onClick={() => onNewQuery(this.createQuery({ qualification: 'négatif', sortBy: 'date' }))} />
+                            <Filter
+                                label="Négatifs"
+                                isActive={() => query.qualification === 'négatif'}
+                                onClick={() => onNewQuery(this.createQuery({ qualification: 'négatif', sortBy: 'date' }))} />
 
-                        <Filter
-                            label="Positifs ou neutres"
-                            isActive={() => query.qualification === 'positif'}
-                            onClick={() => onNewQuery(this.createQuery({ qualification: 'positif', sortBy: 'date' }))} />
+                            <Filter
+                                label="Positifs ou neutres"
+                                isActive={() => query.qualification === 'positif'}
+                                onClick={() => onNewQuery(this.createQuery({ qualification: 'positif', sortBy: 'date' }))} />
 
-                        <Filter
-                            label="Signalés"
-                            isActive={() => query.status === 'reported'}
-                            getNbElements={() => _.get(results.meta.stats, 'status.reported')}
-                            onClick={() => onNewQuery(this.createQuery({ status: 'reported', sortBy: 'lastStatusUpdate' }))} />
+                            <Filter
+                                label="Signalés"
+                                isActive={() => query.status === 'reported'}
+                                getNbElements={() => _.get(results.meta.stats, 'status.reported')}
+                                onClick={() => onNewQuery(this.createQuery({ status: 'reported', sortBy: 'lastStatusUpdate' }))} />
 
-                        <Filter
-                            label="Rejetés"
-                            isActive={() => query.status === 'rejected'}
-                            onClick={() => onNewQuery(this.createQuery({ status: 'rejected', sortBy: 'lastStatusUpdate' }))} />
+                            <Filter
+                                label="Rejetés"
+                                isActive={() => query.status === 'rejected'}
+                                onClick={() => onNewQuery(this.createQuery({ status: 'rejected', sortBy: 'lastStatusUpdate' }))} />
+                        </Filters>
 
-                    </Filters>
                 }
                 summary={
                     this.state.loading ? <div /> :
@@ -354,7 +366,7 @@ export default class FinanceurPanel extends React.Component {
                         <AvisResults results={results} message={this.state.message} />
                 }
                 pagination={
-                    this.state.loading ?
+                    this.state.loading || currentTab !== 'avis' ?
                         <div /> :
                         <Pagination
                             pagination={results.meta.pagination}

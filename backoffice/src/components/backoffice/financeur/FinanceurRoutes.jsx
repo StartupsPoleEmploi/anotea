@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Route } from 'react-router-dom';
 import queryString from 'query-string';
 import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
-import FinanceurPanel from './avis/FinanceurPanel';
+import FinanceurLayout from './avis/FinanceurLayout';
 
 export default class FinanceurRoutes extends React.Component {
 
@@ -26,7 +26,7 @@ export default class FinanceurRoutes extends React.Component {
                 <Route
                     path="/admin/financeur/avis"
                     render={({ history, location }) => (
-                        <FinanceurPanel
+                        <FinanceurLayout
                             query={this.parse(location)}
                             onNewQuery={options => {
                                 history.push(`/admin/financeur/avis?${this.buildParameters(options)}`);
