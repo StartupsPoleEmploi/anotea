@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import OrganismePanel from './gestion-organismes/OrganismePanel';
 import ModerationAvisPanel from './moderation-avis/ModerationAvisPanel';
 import ModerationReponsesPanel from './moderation-avis/ModerationReponsesPanel';
-import CourrielsPanel from './courrriels/CourrielsPanel';
+import CourrielsPanel from './courriels/CourrielsPanel';
 import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
 
 export default class ModerateurRoutes extends React.Component {
