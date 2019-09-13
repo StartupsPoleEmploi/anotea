@@ -1,0 +1,33 @@
+@import '../../../../../styles/variables';
+
+.Date {
+
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+
+  .DayPickerInput {
+    width: 90px;
+
+    .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+      background-color: $color-green;
+    }
+
+    input {
+      background-color: $color-grey-5;
+      border: none;
+      box-shadow: none;
+      text-shadow: 0 0 0 gray;
+      color: $color-black;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+      }
+
+      &::placeholder {
+        color: $color-black;
+        opacity: 0.8;
+      }
+    }
+  }
+}

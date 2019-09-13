@@ -105,7 +105,6 @@ export default class CourrielsPanel extends Component {
         return (
             <div>
                 <Panel
-                    className={'OrganismePanel'}
                     header={
                         <div>
                             <h1 className="title">Modèles de courriel</h1>

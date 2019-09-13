@@ -100,7 +100,40 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 contact: 'anotea-idf',
                 active: true,
                 since: '2016-05-01',
-                departements: ['91', '92', '75', '93', '77', '95', '94', '78'],
+                departements: [
+                    {
+                        code: '91',
+                        label: 'Essonne'
+                    },
+                    {
+                        code: '92',
+                        label: 'Hauts-de-Seine'
+                    },
+                    {
+                        code: '75',
+                        label: 'Paris'
+                    },
+                    {
+                        code: '93',
+                        label: 'Seine-Saint-Denis'
+                    },
+                    {
+                        code: '77',
+                        label: 'Seine-et-Marne'
+                    },
+                    {
+                        code: '94',
+                        label: 'Val-de-Marne'
+                    },
+                    {
+                        code: '95',
+                        label: 'Val-d\'Oise'
+                    },
+                    {
+                        code: '78',
+                        label: 'Yvelines'
+                    }
+                ],
                 mailing: {
                     stagiaires: {
                         avis: true

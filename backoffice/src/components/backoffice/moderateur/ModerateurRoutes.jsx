@@ -4,8 +4,8 @@ import _ from 'lodash';
 import { Route } from 'react-router-dom';
 import queryString from 'query-string';
 import OrganismePanel from './gestion-organismes/OrganismePanel';
-import AvisStagiairesPanel from './moderation-avis/AvisStagiairesPanel';
-import AvisReponsesPanel from './moderation-avis/AvisReponsesPanel';
+import ModerationAvisPanel from './moderation-avis/ModerationAvisPanel';
+import ModerationReponsesPanel from './moderation-avis/ModerationReponsesPanel';
 import CourrielsPanel from './courrriels/CourrielsPanel';
 import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
 
@@ -46,7 +46,7 @@ export default class ModerateurRoutes extends React.Component {
                 <Route
                     path="/admin/moderateur/moderation/avis/stagiaires"
                     render={({ history, location }) => {
-                        return <AvisStagiairesPanel
+                        return <ModerationAvisPanel
                             codeRegion={this.props.codeRegion}
                             query={this.parse(location)}
                             onNewQuery={options => {
@@ -56,7 +56,7 @@ export default class ModerateurRoutes extends React.Component {
                 <Route
                     path="/admin/moderateur/moderation/avis/reponses"
                     render={({ history, location }) => {
-                        return <AvisReponsesPanel
+                        return <ModerationReponsesPanel
                             codeRegion={this.props.codeRegion}
                             query={this.parse(location)}
                             onNewQuery={options => {

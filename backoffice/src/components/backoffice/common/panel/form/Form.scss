@@ -1,0 +1,13 @@
+@import '../../../../../styles/variables';
+
+.Form {
+
+  label {
+    font-size: 1.125rem;
+    font-weight: $font-weight-700;
+  }
+
+  .buttons {
+    margin-bottom: 0;
+  }
+}

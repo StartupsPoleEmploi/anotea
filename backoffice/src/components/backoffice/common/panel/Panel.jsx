@@ -5,7 +5,7 @@ import './Panel.scss';
 const Panel = ({ header, toolbar, summary, results, pagination, className }) => {
 
     return (
-        <div className={`Panel mb-0 ${className}`}>
+        <div className={`Panel mb-0 ${className || ''}`}>
 
             {header &&
             <div className="header">

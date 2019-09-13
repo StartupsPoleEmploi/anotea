@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Toolbar.scss';
 
-export { default as Tab } from './Tab';
+export { default as Tab } from './tabs/Tab';
 export { default as SearchInputTab } from './SearchInputTab';
 export const Toolbar = ({ children }) => {
 

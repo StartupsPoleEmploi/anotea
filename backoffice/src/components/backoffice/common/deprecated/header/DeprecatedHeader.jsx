@@ -5,7 +5,7 @@ import './header.css';
 import logo from '../../header/Header.svg';
 import { NavLink } from 'react-router-dom';
 
-import financeurs from './financeurs';
+import financeurs from '../../data/financeurs';
 import regions from './regions';
 
 export default class DeprecatedHeader extends React.PureComponent {

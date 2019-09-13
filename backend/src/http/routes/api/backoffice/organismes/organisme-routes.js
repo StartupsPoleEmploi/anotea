@@ -2,7 +2,7 @@ const express = require('express');
 const Boom = require('boom');
 const { tryAndCatch } = require('../../../routes-utils');
 
-module.exports = ({ db, configuration, password, middlewares, postalCodes }) => {
+module.exports = ({ db, configuration, password, middlewares }) => {
 
     let pagination = configuration.api.pagination;
     let router = express.Router(); // eslint-disable-line new-cap
@@ -15,25 +15,6 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
         if (req.params.id !== req.user.id) {
             throw Boom.forbidden('Action non autorisé');
         }
-    };
-
-    const buildLieuFilter = async codeINSEE => {
-        if (codeINSEE) {
-            const inseeCode = await postalCodes.findINSEECodeByINSEE(codeINSEE);
-            if (inseeCode) {
-                return {
-                    '$or': [
-                        { 'training.place.postalCode': { '$in': inseeCode.cedex } },
-                        { 'training.place.postalCode': { '$in': inseeCode.postalCode } },
-                        { 'training.place.postalCode': inseeCode.insee },
-                        { 'training.place.postalCode': inseeCode.commune }
-                    ]
-                };
-            } else {
-                return { 'training.place.postalCode': codeINSEE };
-            }
-        }
-        return {};
     };
 
     router.get('/backoffice/organisme/getActivationAccountStatus', tryAndCatch(async (req, res) => {
@@ -97,7 +78,6 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
                 { $group: { _id: '$training.place.postalCode', city: { $first: '$training.place.city' } } },
                 { $sort: { _id: 1 } }]).toArray();
 
-            organisation.places = await postalCodes.getAggregatedPlaces(organisation.places);
 
             delete organisation.passwordHash;
             delete organisation.mailErrorDetail;
@@ -182,12 +162,12 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
 
         if (organisation) {
             let filter = { $or: [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }] };
-
-            const lieuFilter = await buildLieuFilter(req.query.codeINSEE);
-
+            if (req.query.postalCode) {
+                filter = Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
+            }
             filter = Object.assign(filter, { 'training.organisation.siret': `${req.params.id}` });
             const trainings = await db.collection('comment').aggregate([
-                { $match: { $and: [filter, lieuFilter] } },
+                { $match: filter },
                 {
                     $group: {
                         _id: '$training.idFormation',
@@ -210,13 +190,14 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
         let filter = { 'training.organisation.siret': req.params.id, 'archived': false };
         let order = { date: -1 };
 
-        let lieuFilter = {};
-
-        if (req.query.trainingId !== 'null') {
-            filter = Object.assign(filter, { 'training.idFormation': req.query.trainingId });
+        if (req.query.trainingId === 'null') {
+            Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
+        } else {
+            Object.assign(filter, {
+                'training.place.postalCode': req.query.postalCode,
+                'training.idFormation': req.query.trainingId
+            });
         }
-
-        lieuFilter = await buildLieuFilter(req.query.codeINSEE);
 
         if (req.query.filter) {
             if (req.query.filter === 'reported') {
@@ -238,8 +219,6 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
             }
         }
 
-        const filterFinal = { $and: [filter, lieuFilter] };
-
         let skip = 0;
         let page = 1;
         if (req.query.page) {
@@ -254,12 +233,12 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
             }
         }
 
-        const count = await db.collection('comment').countDocuments(filterFinal);
+        const count = await db.collection('comment').countDocuments(filter);
         if (count < skip) {
             res.send({ error: 404 });
             return;
         }
-        const results = await db.collection('comment').find(filterFinal, projection).sort(order).skip(skip).limit(pagination).toArray();
+        const results = await db.collection('comment').find(filter, projection).sort(order).skip(skip).limit(pagination).toArray();
         const advices = results.map(advice => {
             if (advice.pseudoMasked) {
                 advice.pseudo = '';
@@ -333,6 +312,8 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
     }));
 
     router.get('/backoffice/organisme/:id/advices/inventory', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+
         if (req.params.id !== req.user.id) {
             throw Boom.forbidden('Action non autorisé');
         }
@@ -340,73 +321,41 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
         const organisation = await db.collection('accounts').findOne({ _id: parseInt(req.params.id) });
 
         if (organisation) {
-            let filter = { 'training.organisation.siret': `${req.params.id}`, 'archived': false };
-            let lieuFilter = {};
+            const filter = { 'training.organisation.siret': `${req.params.id}`, 'archived': false };
 
-            if (req.query.trainingId !== 'null') {
-                filter = Object.assign(filter, { 'training.idFormation': req.query.trainingId });
+            if (req.query.trainingId === 'null') {
+                Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
+            } else {
+                Object.assign(filter, {
+                    'training.place.postalCode': req.query.postalCode,
+                    'training.idFormation': req.query.trainingId
+                });
             }
-
-            lieuFilter = await buildLieuFilter(req.query.codeINSEE);
-
 
             let inventory = {};
             inventory.unread = await db.collection('comment').countDocuments({
-                $and: [{
-                    ...filter,
-                    published: true,
-                    read: { $ne: true },
-                    reported: { $ne: true }
-                },
-                    lieuFilter
-                ]
+                ...filter,
+                published: true,
+                read: { $ne: true },
+                reported: { $ne: true }
             });
             inventory.read = await db.collection('comment').countDocuments({
-                $and: [{
-                    ...filter,
-                    read: true,
-                    reported: { $ne: true },
-                },
-                    lieuFilter
-                ]
+                ...filter,
+                read: true,
+                reported: { $ne: true },
             });
-            inventory.reported = await db.collection('comment').countDocuments({
-                $and: [{
-                    ...filter,
-                    reported: true
-                },
-                    lieuFilter
-                ]
-            });
+            inventory.reported = await db.collection('comment').countDocuments({ ...filter, reported: true });
             inventory.answered = await db.collection('comment').countDocuments({
-                $and: [{
-                    ...filter,
-                    reponse: { $exists: true },
-                },
-                    lieuFilter
-                ]
+                ...filter,
+                reponse: { $exists: true },
             });
             inventory.answerRejected = await db.collection('comment').countDocuments({
-                $and: [{
-                    ...filter,
-                    'reponse.status': 'rejected',
-                },
-                    lieuFilter
-                ]
+                ...filter,
+                'reponse.status': 'rejected',
             });
 
-            inventory.all = await db.collection('comment').countDocuments({
-                $and: [{
-                    ...filter,
-                    $or: [
-                        { 'comment': { $exists: false } },
-                        { 'comment': null },
-                        { 'published': true }
-                    ]
-                },
-                    lieuFilter
-                ]
-            });
+            filter.$or = [{ 'comment': { $exists: false } }, { 'comment': null }, { 'published': true }];
+            inventory.all = await db.collection('comment').countDocuments(filter);
             res.status(200).send(inventory);
         } else {
             res.status(404).send({ 'error': 'Not found' });
@@ -518,6 +467,58 @@ module.exports = ({ db, configuration, password, middlewares, postalCodes }) => 
         } else {
             res.status(404).send({ 'error': 'Not found' });
         }
+    }));
+
+
+    router.get('/backoffice/organisme/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        let filter = '';
+
+        if (req.query.postalCode) {
+            filter = Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
+        }
+
+        const trainings = await db.collection('comment').aggregate([
+            {
+                $match: Object.assign(filter, {
+                    'training.organisation.siret': { '$regex': `${req.params.siren}` },
+                    'training.idFormation': req.params.idTraining
+                })
+            },
+            {
+                $project: {
+                    date: '$date',
+                    place: '$training.place',
+                    endDate: '$training.scheduledEndDate',
+                    commentExist: { $cond: { if: { $eq: ['$comment', null] }, then: 0, else: 1 } }
+                }
+            },
+            { $sort: { 'date': 1 } },
+            {
+                $group: {
+                    _id: '$place.postalCode',
+                    city: { $first: '$place.city' },
+                    endDate: { $first: '$endDate' },
+                    lastAdviceDate: { $last: '$date' },
+                    advicesCount: { $sum: 1 },
+                    commentsCount: { $sum: '$commentExist' }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    postalCode: '$_id',
+                    city: 1,
+                    endDate: 1,
+                    lastAdviceDate: 1,
+                    advicesCount: 1,
+                    commentsCount: 1
+                }
+            },
+            { $sort: { 'endDate': -1 } }]).toArray();
+
+        res.status(200).send(trainings);
+
     }));
 
     return router;

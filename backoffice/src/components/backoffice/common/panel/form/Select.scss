@@ -1,0 +1,29 @@
+@import '../../../../../styles/variables';
+
+.Select {
+  padding: 0.30rem;
+  background-color: $color-grey-5;
+  border: 1px solid $color-grey-5;
+  border-radius: 6px;
+
+  .Select__control {
+    background-color: $color-grey-5;
+    border-radius: unset;
+    border-style: unset;
+    box-shadow: unset;
+  }
+
+  .Select__option {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    border-bottom: solid 1px $color-grey-5;
+  }
+
+  .Select__option--is-focused {
+    background-color: $color-grey-5;
+  }
+
+  .Select__option--is-selected {
+    background-color: $color-grey-25;
+  }
+}

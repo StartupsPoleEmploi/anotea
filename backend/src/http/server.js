@@ -73,6 +73,7 @@ module.exports = components => {
     //Error middleware
     app.use((rawError, req, res, next) => { // eslint-disable-line no-unused-vars
 
+        console.log('miidel');
         let error = req.err = rawError;
         if (!rawError.isBoom) {
             if (rawError.name === 'ValidationError') {
