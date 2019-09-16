@@ -89,8 +89,8 @@
         "avis": true
       },
       "organismes": {
-        "accounts": false,
-        "notifications": false
+        "accounts": true,
+        "notifications": true
       }
     },
     "conseil_regional": {
