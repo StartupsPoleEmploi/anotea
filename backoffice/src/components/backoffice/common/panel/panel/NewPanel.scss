@@ -1,0 +1,24 @@
+@import '../../../../../styles/variables';
+
+.NewPanel {
+
+  .filters {
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+    background-color: $color-grey-5;
+  }
+
+  .main {
+
+    background-color: $color-white;
+
+    .summary {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .a-pagination {
+      margin-top: 2rem;
+    }
+  }
+}

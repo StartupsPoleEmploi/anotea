@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GlobalMessage from '../../message/GlobalMessage';
-import NoResults from './NoResults';
-import Avis from '../../avis/Avis';
+import GlobalMessage from '../../../message/GlobalMessage';
+import EmptyResults from './EmptyResults';
 import ResultDivider from './ResultDivider';
 
-const AvisResults = ({ results, message }) => {
+const AvisResults = ({ results, message, renderAvis }) => {
     return (
         <div>
             {message &&
@@ -15,11 +14,11 @@ const AvisResults = ({ results, message }) => {
             }
             {
                 results.meta.pagination.totalItems === 0 ?
-                    <NoResults /> :
+                    <EmptyResults /> :
                     results.avis.map(avis => {
                         return (
                             <div key={avis._id}>
-                                <Avis avis={avis} readonly={true} showStatus={true} onChange={() => ({})} />
+                                {renderAvis(avis)}
                                 <ResultDivider />
                             </div>
                         );
@@ -31,6 +30,7 @@ const AvisResults = ({ results, message }) => {
 
 AvisResults.propTypes = {
     results: PropTypes.object.isRequired,
+    renderAvis: PropTypes.func.isRequired,
     message: PropTypes.object,
 };
 

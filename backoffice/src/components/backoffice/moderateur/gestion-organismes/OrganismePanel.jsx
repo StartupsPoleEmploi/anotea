@@ -5,11 +5,11 @@ import { searchOrganismes } from './gestionOrganismesService';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
-import { SearchInputFilter, Filter, Toolbar } from '../../common/panel/filters/Toolbar';
+import { Filter, SearchInputFilter, Toolbar } from '../../common/panel/panel/filters/Toolbar';
 import Organisme from './components/Organisme';
-import Summary from '../../common/panel/summary/Summary';
-import Pagination from '../../common/panel/pagination/Pagination';
-import ResultDivider from '../../common/panel/results/ResultDivider';
+import Summary from '../../common/panel/panel/summary/Summary';
+import Pagination from '../../common/panel/panel/pagination/Pagination';
+import ResultDivider from '../../common/panel/panel/results/ResultDivider';
 import ExportButton from './components/ExportButton';
 import './OrganismePanel.scss';
 
@@ -103,7 +103,7 @@ export default class OrganismePanel extends React.Component {
                 }
                 summary={
                     this.state.loading ? <div /> :
-                        <Summary paginationLabel="organisme(s)" pagination={results.meta.pagination}/>
+                        <Summary paginationLabel="organisme(s)" pagination={results.meta.pagination} />
                 }
                 results={
                     this.state.loading ?

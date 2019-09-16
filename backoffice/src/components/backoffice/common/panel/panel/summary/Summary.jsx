@@ -5,15 +5,14 @@ import './Summary.scss';
 export default class Summary extends React.Component {
 
     static propTypes = {
-        pagination: PropTypes.object.isRequired,
-        paginationLabel: PropTypes.node.isRequired,
         title: PropTypes.node,
+        pagination: PropTypes.object,
+        paginationLabel: PropTypes.node,
         buttons: PropTypes.node,
     };
 
     render() {
         let { pagination, paginationLabel, title, buttons } = this.props;
-        let { totalItems, itemsOnThisPage } = this.props.pagination;
 
         return (
             <div className="Summary row">
@@ -21,9 +20,9 @@ export default class Summary extends React.Component {
                     {title || <div />}
                 </div>
 
-                {pagination.totalItems > 0 &&
+                {pagination && pagination.totalItems > 0 &&
                 <div className="pages col-sm-4 text-right">
-                    <span className="pr-3">{itemsOnThisPage} {paginationLabel} affiché(s) sur {totalItems}</span>
+                    <span className="pr-3">{pagination.itemsOnThisPage} {paginationLabel} affiché(s) sur {pagination.totalItems}</span>
                     {buttons}
                 </div>
                 }

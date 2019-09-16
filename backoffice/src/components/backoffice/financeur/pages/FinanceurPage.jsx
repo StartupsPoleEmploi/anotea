@@ -2,32 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
-import Loader from '../../common/Loader';
-import Summary from '../../common/panel/summary/Summary';
-import Pagination from '../../common/panel/pagination/Pagination';
-import Layout from '../../common/panel/Layout';
+import { Route } from 'react-router-dom';
+import Page from '../../common/panel/Page';
 import { Tab, Tabs } from '../../common/panel/tabs/Tabs';
 import { DateRange, Form, Select } from '../../common/panel/form/Form';
-import { getDepartements, getExportAvisUrl, getFormations, getOrganismes, searchAvis } from '../financeurService';
+import { getDepartements, getFormations, getOrganismes } from '../financeurService';
 import FINANCEURS from '../../common/data/financeurs';
 import Button from '../../common/library/Button';
-import AvisResults from '../../common/panel/results/AvisResults';
-import QuerySummary from '../components/QuerySummary';
-import { Filters } from '../../common/panel/filters/Filters';
-import Filter from '../../common/panel/filters/Filter';
+import FinanceurAvisPanel from './panels/FinanceurAvisPanel';
 
-export default class FinanceurLayout extends React.Component {
+export default class FinanceurPage extends React.Component {
 
     static propTypes = {
-        query: PropTypes.object.isRequired,
-        onNewQuery: PropTypes.func.isRequired,
+        navigator: PropTypes.object.isRequired,
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            currentTab: 'avis',
-            message: null,
             form: {
                 periode: {
                     startDate: null,
@@ -54,20 +46,6 @@ export default class FinanceurLayout extends React.Component {
                     results: [],
                 },
             },
-            loading: false,
-            results: {
-                avis: [],
-                meta: {
-                    stats: {},
-                    pagination: {
-                        itemsOnThisPage: 0,
-                        itemsPerPage: 0,
-                        page: 0,
-                        totalItems: 0,
-                        totalPages: 0,
-                    }
-                }
-            },
         };
     }
 
@@ -77,9 +55,7 @@ export default class FinanceurLayout extends React.Component {
 
     async componentDidMount() {
 
-        let { query } = this.props;
-
-        this.search();
+        let query = this.props.navigator.getQuery();
 
         this.loadSelectBox('departements', () => getDepartements())
         .then(results => {
@@ -111,12 +87,6 @@ export default class FinanceurLayout extends React.Component {
                 },
             }
         });
-    }
-
-    componentDidUpdate(previous) {
-        if (this.props.query !== previous.query) {
-            this.search();
-        }
     }
 
     loadSelectBox = async (type, loader) => {
@@ -183,10 +153,8 @@ export default class FinanceurLayout extends React.Component {
         });
     };
 
-    createQuery = (parameters = {}) => {
-
-        let form = this.state.form;
-
+    getFormAsQuery = () => {
+        let { form } = this.state;
         return {
             codeFinanceur: _.get(form, 'financeurs.selected.code', null),
             departement: _.get(form, 'departements.selected.code', null),
@@ -194,29 +162,29 @@ export default class FinanceurLayout extends React.Component {
             idFormation: _.get(form, 'formations.selected.idFormation', null),
             startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
             scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
-            status: 'all',
-            sortBy: 'date',
-            ...parameters,
         };
     };
 
-    search = (options = {}) => {
-        return new Promise(resolve => {
-            this.setState({ loading: !options.silent }, async () => {
-                let results = await searchAvis(this.props.query);
-                this.setState({ results, loading: false }, () => resolve());
-            });
+    onSubmit = () => {
+        return this.props.navigator.refreshCurrentPage(this.getFormAsQuery());
+    };
+
+    onTabClicked = (tab, data) => {
+        return this.props.navigator.goToPage(`/admin/financeur/${tab}`, {
+            ...this.getFormAsQuery(),
+            ...data
         });
     };
 
     render() {
-        let { query, onNewQuery } = this.props;
-        let { form, results, currentTab } = this.state;
+        let { navigator } = this.props;
+        let { form } = this.state;
         let { departements, organismes, formations, financeurs, periode } = form;
 
         return (
-            <Layout
-                type="financeur"
+            <Page
+                color="green"
+                loading={this.state.loading}
                 form={
                     <Form>
                         <div className="form-row">
@@ -289,7 +257,7 @@ export default class FinanceurLayout extends React.Component {
                                     <i className="fas fa-times mr-2"></i>
                                     Réinitialiser les filtres
                                 </Button>
-                                <Button size="large" color="green" onClick={() => onNewQuery(this.createQuery())}>
+                                <Button size="large" color="green" onClick={() => this.onSubmit()}>
                                     Rechercher
                                 </Button>
                             </div>
@@ -300,77 +268,34 @@ export default class FinanceurLayout extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => currentTab === 'stats'}
-                            onClick={() => onNewQuery(this.setStateDeep({ currentTab: 'stats' }))} />
+                            isActive={() => navigator.isActive('/admin/financeur/stats')}
+                            onClick={() => this.onTabClicked('stats')} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => currentTab === 'avis'}
-                            onClick={() => onNewQuery(this.setStateDeep({ currentTab: 'avis' }))} />
+                            isActive={() => navigator.isActive('/admin/financeur/avis')}
+                            onClick={() => this.onTabClicked('avis', { status: 'all' })} />
                     </Tabs>
                 }
-                filters={
-                    currentTab !== 'avis' ? <div /> :
-                        <Filters>
-                            <Filter
-                                label="Tous"
-                                isActive={() => query.status === 'all'}
-                                onClick={() => onNewQuery(this.createQuery({ status: 'all', sortBy: 'date' }))} />
-
-                            <Filter
-                                label="Commentaires"
-                                isActive={() => query.qualification === 'all'}
-                                onClick={() => onNewQuery(this.createQuery({ qualification: 'all', sortBy: 'date' }))} />
-
-                            <Filter
-                                label="Négatifs"
-                                isActive={() => query.qualification === 'négatif'}
-                                onClick={() => onNewQuery(this.createQuery({ qualification: 'négatif', sortBy: 'date' }))} />
-
-                            <Filter
-                                label="Positifs ou neutres"
-                                isActive={() => query.qualification === 'positif'}
-                                onClick={() => onNewQuery(this.createQuery({ qualification: 'positif', sortBy: 'date' }))} />
-
-                            <Filter
-                                label="Signalés"
-                                isActive={() => query.status === 'reported'}
-                                getNbElements={() => _.get(results.meta.stats, 'status.reported')}
-                                onClick={() => onNewQuery(this.createQuery({ status: 'reported', sortBy: 'lastStatusUpdate' }))} />
-
-                            <Filter
-                                label="Rejetés"
-                                isActive={() => query.status === 'rejected'}
-                                onClick={() => onNewQuery(this.createQuery({ status: 'rejected', sortBy: 'lastStatusUpdate' }))} />
-                        </Filters>
-
-                }
-                summary={
-                    this.state.loading ? <div /> :
-                        <Summary
-                            title={<QuerySummary form={this.state.form} query={query} />}
-                            paginationLabel="avis"
-                            pagination={results.meta.pagination}
-                            buttons={
-                                <Button
-                                    size="medium"
-                                    onClick={() => window.open(getExportAvisUrl(_.omit(query, ['page'])))}>
-                                    <i className="fas fa-download pr-2"></i>Exporter
-                                </Button>
-                            }
+                panel={
+                    <>
+                        <Route
+                            path={'/admin/financeur/avis'}
+                            render={() => {
+                                return (
+                                    <FinanceurAvisPanel
+                                        query={navigator.getQuery()}
+                                        form={form}
+                                        onNewQuery={data => {
+                                            return navigator.refreshCurrentPage({
+                                                ...this.getFormAsQuery(),
+                                                ...data,
+                                            });
+                                        }} />
+                                );
+                            }}
                         />
-                }
-                results={
-                    this.state.loading ?
-                        <div className="d-flex justify-content-center"><Loader /></div> :
-                        <AvisResults results={results} message={this.state.message} />
-                }
-                pagination={
-                    this.state.loading || currentTab !== 'avis' ?
-                        <div /> :
-                        <Pagination
-                            pagination={results.meta.pagination}
-                            onClick={page => onNewQuery(_.merge({}, query, { page }))} />
+                    </>
                 }
             />
         );

@@ -1,0 +1,39 @@
+@import '../../../../styles/variables';
+
+.Page {
+
+  height: 100%;
+
+  .form {
+
+    &.green {
+      background-color: $color-green;
+    }
+
+    &.blue {
+      background-color: $color-blue;
+    }
+
+    .form-holder {
+      background-color: $color-white;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      box-shadow: $shadow;
+    }
+  }
+
+  .tabs {
+
+    &.green {
+      background-color: $color-green;
+    }
+
+    &.blue {
+      background-color: $color-blue;
+    }
+
+    padding-top: 1.5rem;
+    padding-bottom: 0.5rem;
+  }
+}

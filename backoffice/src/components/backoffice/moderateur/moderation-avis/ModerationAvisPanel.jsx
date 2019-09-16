@@ -4,12 +4,11 @@ import _ from 'lodash';
 import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
 import Panel from '../../common/panel/Panel';
-import { SearchInputFilter, Filter, Toolbar } from '../../common/panel/filters/Toolbar';
-import Summary from '../../common/panel/summary/Summary';
-import Pagination from '../../common/panel/pagination/Pagination';
+import { Filter, SearchInputFilter, Toolbar } from '../../common/panel/panel/filters/Toolbar';
+import Summary from '../../common/panel/panel/summary/Summary';
+import Pagination from '../../common/panel/panel/pagination/Pagination';
 import Avis from '../../common/avis/Avis';
-import ResultDivider from '../../common/panel/results/ResultDivider';
-import GlobalMessage from '../../common/message/GlobalMessage';
+import AvisResults from '../../common/panel/panel/results/AvisResults';
 
 export default class ModerationAvisPanel extends React.Component {
 
@@ -121,34 +120,25 @@ export default class ModerationAvisPanel extends React.Component {
                 results={
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
-                        <div>
-                            {this.state.message &&
-                            <GlobalMessage
-                                message={this.state.message}
-                                onClose={() => this.setState({ message: null })} />
-                            }
-                            {
-                                results.avis.map(avis => {
-                                    return (
-                                        <div key={avis._id}>
-                                            <Avis
-                                                avis={avis}
-                                                showStatus={['all', 'rejected'].includes(query.status)}
-                                                showReponse={false}
-                                                onChange={(avis, options) => {
-                                                    let { message } = options;
-                                                    if (message) {
-                                                        this.setState({ message });
-                                                    }
-                                                    return this.search({ silent: true });
-                                                }}>
-                                            </Avis>
-                                            <ResultDivider />
-                                        </div>
-                                    );
-                                })
-                            }
-                        </div>
+                        <AvisResults
+                            results={results}
+                            message={this.state.message}
+                            renderAvis={avis => {
+                                return (
+                                    <Avis
+                                        avis={avis}
+                                        showStatus={['all', 'rejected'].includes(query.status)}
+                                        showReponse={false}
+                                        onChange={(avis, options) => {
+                                            let { message } = options;
+                                            if (message) {
+                                                this.setState({ message });
+                                            }
+                                            return this.search({ silent: true });
+                                        }}>
+                                    </Avis>
+                                );
+                            }} />
                 }
                 pagination={
                     this.state.loading ?

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const NoResults = () => {
+const EmptyResults = () => {
     return (
         <div className="row">
             <div className="col-sm-12 d-flex justify-content-center">
@@ -10,4 +10,4 @@ const NoResults = () => {
     );
 };
 
-export default NoResults;
+export default EmptyResults;

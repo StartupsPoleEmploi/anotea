@@ -18,6 +18,10 @@ export const searchAvis = (options = {}) => {
     return _get(`/backoffice/financeur/avis?${queryString.stringify(options)}`);
 };
 
+export const getStats = (options = {}) => {
+    return _get(`/backoffice/financeur/stats?${queryString.stringify(options)}`);
+};
+
 export const getExportAvisUrl = (options = {}) => {
     let publicUrl = process.env.PUBLIC_URL ? '' : 'http://localhost:8080';
     let token = getToken();
