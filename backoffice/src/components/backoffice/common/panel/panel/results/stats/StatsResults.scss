@@ -1,0 +1,67 @@
+@import '../../../../../../../styles/variables';
+
+.StatsResults {
+  .stats-title {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: $font-weight-900;
+  }
+
+  .stats {
+
+    @include box();
+
+    .data {
+      border-right: solid 1px $color-grey-25;
+      margin-right: 1rem;
+      text-align: center;
+      width: 100%;
+      padding: 2.5rem;
+
+      .value {
+        font-size: 1.5rem;
+        font-weight: $font-weight-900;
+
+        .icon {
+          font-size: 1rem;
+        }
+      }
+
+      .label {
+        font-size: 1rem;
+        font-weight: $font-weight-700;
+        color: $color-black-60;
+      }
+
+      &.last {
+        border-right: unset;
+      }
+
+    }
+
+    .chart {
+      width: 300px;
+      padding: 1rem;
+
+      &.first, &.second {
+        border-right: solid 1px $color-grey-25;
+      }
+
+      &.last {
+        border-right: unset;
+      }
+
+      .title {
+        font-size: 1.125rem;
+        font-weight: $font-weight-700;
+      }
+
+      .description {
+        font-size: 0.875rem;
+        padding-bottom: 1rem;
+        opacity: 0.6;
+      }
+    }
+  }
+}

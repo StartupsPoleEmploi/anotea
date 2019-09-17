@@ -6,10 +6,8 @@ import Button from '../../../common/library/Button';
 import { getExportAvisUrl, getStats } from '../../financeurService';
 import NewPanel from '../../../common/panel/panel/NewPanel';
 import SummaryBadgeTitle from '../components/SummaryBadgeTitle';
-import './StatsPanel.scss';
-import Pie from '../../../common/panel/panel/results/Pie';
 import Loader from '../../../common/Loader';
-import NoteDetails from '../components/NoteDetails';
+import StatsResults from '../../../common/panel/panel/results/stats/StatsResults';
 
 export default class StatsPanel extends React.Component {
 
@@ -47,13 +45,11 @@ export default class StatsPanel extends React.Component {
 
     render() {
 
-        let { results } = this.state;
         let { query, form } = this.props;
-
 
         return (
             <NewPanel
-                className="StatsPanel"
+                backgroundColor="grey"
                 summary={
                     <div className="row">
                         <div className="col-sm-10">
@@ -73,70 +69,8 @@ export default class StatsPanel extends React.Component {
                     <div>
                         {this.state.loading ?
                             <div className="d-flex justify-content-center"><Loader /></div> :
-                            <>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="stats-title">Les commentaires</div>
-                                        <div className="d-flex justify-content-center stats">
-                                            <div className="chart">
-                                                <div className="title">Modération des commentaires</div>
-                                                <div className="description">Sur {results.nbCommentaires} commentaires au total</div>
-                                                <Pie data={[
-                                                    {
-                                                        'id': 'Publiés',
-                                                        'value': results.nbPublished,
-                                                    },
-                                                    {
-                                                        'id': 'Rejetés',
-                                                        'value': results.nbRejected,
-                                                    },
-                                                ]} />
-                                            </div>
-                                            <div className="chart">
-                                                <div className="title">Commentaires publiés</div>
-                                                <div className="description">Sur {results.nbCommentaires} commentaires au total</div>
-                                                <Pie data={[
-                                                    {
-                                                        'id': 'Positifs',
-                                                        'value': results.nbPositifs,
-                                                    },
-                                                    {
-                                                        'id': 'Négatifs',
-                                                        'value': results.nbNegatifs,
-                                                    },
-                                                ]} />
-                                            </div>
-                                            <div className="chart last">
-                                                <div className="title">Commentaires rejetés</div>
-                                                <div className="description">Sur {results.nbCommentaires} commentaires au total</div>
-                                                <Pie data={[
-                                                    {
-                                                        'id': 'Non concernés',
-                                                        'value': results.nbNonConcernes,
-                                                    },
-                                                    {
-                                                        'id': 'Négatifs',
-                                                        'value': results.nbNegatifs,
-                                                    },
-                                                    {
-                                                        'id': 'Injures',
-                                                        'value': results.nbInjures,
-                                                    },
-                                                ]} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="stats-title">Les notes</div>
-                                        <NoteDetails notes={results.notes} total={results.total} />
-                                    </div>
-                                </div>
-                            </>
+                            <StatsResults stats={this.state.results} />
                         }
-
-
                     </div>
                 }
             />

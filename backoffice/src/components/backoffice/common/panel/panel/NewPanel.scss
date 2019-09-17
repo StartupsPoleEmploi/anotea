@@ -5,6 +5,10 @@
   background-color: $color-white;
   height: 100%;
 
+  .grey {
+    background-color: $color-grey-5;
+  }
+
   .filters-holder {
     padding-top: 0.125rem;
     padding-bottom: 0.125rem;

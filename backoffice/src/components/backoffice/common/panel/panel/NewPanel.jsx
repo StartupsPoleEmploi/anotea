@@ -6,7 +6,7 @@ import './NewPanel.scss';
 const NewPanel = props => {
 
     return (
-        <div className={`NewPanel ${props.className || ''}`}>
+        <div className={`NewPanel ${props.className || ''} ${props.backgroundColor || ''}`}>
             {props.filters &&
             <div className="filters-holder">
                 <div className="container">
@@ -38,6 +38,7 @@ NewPanel.propTypes = {
     pagination: PropTypes.node,
     loading: PropTypes.bool,
     className: PropTypes.string,
+    backgroundColor: PropTypes.string,
 };
 
 export default NewPanel;
