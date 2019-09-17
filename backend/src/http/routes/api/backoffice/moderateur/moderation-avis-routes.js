@@ -139,7 +139,6 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
             } else if (reason === 'alerte') {
                 sendMail = sendAlerteMail;
             }
-            console.log("coucou")
             sendMail(email, trainee, comment, reason);
         }
 
