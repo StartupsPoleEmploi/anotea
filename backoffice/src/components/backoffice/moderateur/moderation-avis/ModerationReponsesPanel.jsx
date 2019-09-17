@@ -132,7 +132,7 @@ export default class ModerationReponsesPanel extends React.Component {
                                         <div key={avis._id}>
                                             <Avis
                                                 avis={avis}
-                                                readonly={true}
+                                                readonly={query.status !== 'reported'}
                                                 showStatus={false}
                                                 showReponse={query.status !== 'reported'}
                                                 onChange={(avis, options = {}) => {
