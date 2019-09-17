@@ -170,11 +170,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
 
         let trainee = await db.collection('trainee').findOne({ token: avis.token });
         let email = trainee.trainee.email;
-        sendAvisPublieMail(email, trainee, avis, () => {
-            logger.info(`email sent to ${email} pour avis publié`);
-        }, err => {
-            logger.error(`Unable to send email to ${email}`, err);
-        });
+        sendAvisPublieMail(email, trainee, avis, 'avis publié');
 
         return res.json(avis);
     });
