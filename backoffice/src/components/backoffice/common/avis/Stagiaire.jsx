@@ -28,11 +28,11 @@ Stars.propTypes = { note: PropTypes.number.isRequired };
 
 const Status = ({ avis }) => {
 
-    if (!avis.comment) {
+    if (avis.archived) {
+        return (<span className="status">(Archivé)</span>);
+    } else if (!avis.comment) {
         return (<span />);
-    }
-
-    if (avis.published) {
+    } else if (avis.published) {
         return (
             <span className="status published">
                 (<span>Publié le </span>
@@ -49,6 +49,7 @@ const Status = ({ avis }) => {
     } else if (!avis.moderated) {
         return (<span className="status toModerate">(&Agrave; modérer)</span>);
     }
+
     return (<span />);
 
 };
