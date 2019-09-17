@@ -54,6 +54,7 @@ export default class ModerationReponsesPanel extends React.Component {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
                 let results = await searchAvis(this.props.query);
+                console.log(results)
                 this.setState({ results, loading: false }, () => resolve());
             });
         });
@@ -88,7 +89,8 @@ export default class ModerationReponsesPanel extends React.Component {
                                 reponseStatus: 'published',
                                 sortBy: 'reponse.lastStatusUpdate'
                             })}
-                            isActive={() => query.reponseStatus === 'published'} />
+                            isActive={() => query.reponseStatus === 'published'}
+                            getNbElements={() => _.get(results.meta.stats, 'status.published')} />
 
                         <Tab
                             label="Rejetés"
@@ -132,7 +134,7 @@ export default class ModerationReponsesPanel extends React.Component {
                                         <div key={avis._id}>
                                             <Avis
                                                 avis={avis}
-                                                readonly={true}
+                                                readonly={query.status !== 'reported'}
                                                 showStatus={false}
                                                 showReponse={query.status !== 'reported'}
                                                 onChange={(avis, options = {}) => {
