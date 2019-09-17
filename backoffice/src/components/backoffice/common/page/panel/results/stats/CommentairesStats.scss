@@ -1,0 +1,31 @@
+@import '../../../../../../../styles/variables';
+
+.CommentairesStats {
+
+  @include box();
+
+  .chart {
+    width: 300px;
+    padding: 1rem;
+
+    &.first, &.second {
+      border-right: solid 1px $color-grey-25;
+    }
+
+    &.last {
+      border-right: unset;
+    }
+
+    .title {
+      font-size: 1.125rem;
+      font-weight: $font-weight-700;
+    }
+
+    .description {
+      font-size: 0.875rem;
+      padding-bottom: 1rem;
+      opacity: 0.6;
+    }
+  }
+}
+

@@ -107,7 +107,7 @@ NoteGlobale.propTypes = {
 const NoteDetails = ({ notes, total }) => {
 
     return (
-        <div className="NoteDetails d-flex justify-content-between">
+        <div className="NoteDetails d-flex flex-wrap justify-content-between">
             <NoteGlobale note={notes.global} total={total} />
             <NoteRepartition label="Accueil" note={notes.accueil} total={total} />
             <NoteRepartition label="Contenu" note={notes.contenu_formation} total={total} />

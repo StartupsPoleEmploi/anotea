@@ -1,15 +1,9 @@
 @import '../../../../../../../styles/variables';
 
-.StatsResults {
-  .stats-title {
-    padding-top: 2rem;
-    padding-bottom: 1rem;
-    font-size: 1.5rem;
-    font-weight: $font-weight-900;
-  }
+.StagiairesStats {
+
 
   .stats {
-
     @include box();
 
     .data {
@@ -37,7 +31,6 @@
       &.last {
         border-right: unset;
       }
-
     }
 
     .chart {
@@ -65,3 +58,4 @@
     }
   }
 }
+
