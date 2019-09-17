@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Panel from '../../common/panel/Panel';
+import DeprecatedPanel from '../../common/page/DeprecatedPanel';
 import LeftArrow from './components/slider/LeftArrow';
 import CarouselSlide from './components/slider/CarouselSlide';
 import RightArrow from './components/slider/RightArrow';
@@ -104,7 +104,7 @@ export default class CourrielsPanel extends Component {
 
         return (
             <div>
-                <Panel
+                <DeprecatedPanel
                     header={
                         <div>
                             <h1 className="title">Modèles de courriel</h1>

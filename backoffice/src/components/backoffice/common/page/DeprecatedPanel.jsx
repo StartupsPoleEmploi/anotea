@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Panel.scss';
+import './DeprecatedPanel.scss';
 
-const Panel = ({ header, filters, summary, results, pagination, className }) => {
+const DeprecatedPanel = ({ header, filters, summary, results, pagination, className }) => {
 
     return (
-        <div className={`Panel mb-0 ${className || ''}`}>
+        <div className={`DeprecatedPanel mb-0 ${className || ''}`}>
 
             {header &&
             <div className="header">
@@ -39,7 +39,7 @@ const Panel = ({ header, filters, summary, results, pagination, className }) => 
     );
 };
 
-Panel.propTypes = {
+DeprecatedPanel.propTypes = {
     header: PropTypes.node,
     filters: PropTypes.node,
     summary: PropTypes.node,
@@ -48,4 +48,4 @@ Panel.propTypes = {
     className: PropTypes.string,
 };
 
-export default Panel;
+export default DeprecatedPanel;

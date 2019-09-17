@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
-import Panel from '../../common/panel/Panel';
-import Summary from '../../common/panel/summary/Summary';
-import { Filter, Toolbar } from '../../common/panel/filters/Toolbar';
-import GlobalMessage from '../../common/message/GlobalMessage';
-import Pagination from '../../common/panel/pagination/Pagination';
+import DeprecatedPanel from '../../common/page/DeprecatedPanel';
+import Summary from '../../common/page/panel/summary/Summary';
+import { Filter, Toolbar } from '../../common/page/panel/filters/Toolbar';
+import Pagination from '../../common/page/panel/pagination/Pagination';
 import Avis from '../../common/avis/Avis';
-import ResultDivider from '../../common/panel/results/ResultDivider';
+import AvisResults from '../../common/page/panel/results/AvisResults';
 
 export default class ModerationReponsesPanel extends React.Component {
 
@@ -63,7 +62,7 @@ export default class ModerationReponsesPanel extends React.Component {
         let results = this.state.results;
 
         return (
-            <Panel
+            <DeprecatedPanel
                 header={
                     <div>
                         <h1 className="title">Réponses des organismes</h1>
@@ -119,35 +118,26 @@ export default class ModerationReponsesPanel extends React.Component {
                 results={
                     this.state.loading ?
                         <div className="d-flex justify-content-center"><Loader /></div> :
-                        <div>
-                            {this.state.message &&
-                            <GlobalMessage
-                                message={this.state.message}
-                                onClose={() => this.setState({ message: null })} />
-                            }
-                            {
-                                results.avis.map(avis => {
-                                    return (
-                                        <div key={avis._id}>
-                                            <Avis
-                                                avis={avis}
-                                                readonly={query.status !== 'reported'}
-                                                showStatus={false}
-                                                showReponse={query.status !== 'reported'}
-                                                onChange={(avis, options = {}) => {
-                                                    let { message } = options;
-                                                    if (message) {
-                                                        this.setState({ message });
-                                                    }
-                                                    this.search({ silent: true });
-                                                }}>
-                                            </Avis>
-                                            <ResultDivider />
-                                        </div>
-                                    );
-                                })
-                            }
-                        </div>
+                        <AvisResults
+                            results={results}
+                            message={this.state.message}
+                            renderAvis={avis => {
+                                return (
+                                    <Avis
+                                        avis={avis}
+                                        readonly={query.status !== 'reported'}
+                                        showStatus={false}
+                                        showReponse={query.status !== 'reported'}
+                                        onChange={(avis, options = {}) => {
+                                            let { message } = options;
+                                            if (message) {
+                                                this.setState({ message });
+                                            }
+                                            this.search({ silent: true });
+                                        }}>
+                                    </Avis>
+                                );
+                            }} />
 
                 }
                 pagination={

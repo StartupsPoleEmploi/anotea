@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './LibraryPanel.scss';
-import Button from '../common/library/Button';
-import Panel from '../common/panel/Panel';
-import { Dropdown, DropdownDivider, DropdownItem } from '../common/library/Dropdown';
+import Button from '../common/Button';
+import DeprecatedPanel from '../common/page/DeprecatedPanel';
+import { Dropdown, DropdownDivider, DropdownItem } from '../common/Dropdown';
 
 const ButtonShowcase = ({ size, color }) => {
     return (
@@ -69,7 +69,7 @@ const LibraryPanel = () => {
 
     return (
         <div className="Library">
-            <Panel
+            <DeprecatedPanel
                 header={
                     <div>
                         <h1 className="title">Composants</h1>

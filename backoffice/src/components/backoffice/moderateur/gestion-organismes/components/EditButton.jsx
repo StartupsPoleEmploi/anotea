@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { removeEditedCourriel, resendEmailAccount } from '../gestionOrganismesService';
-import Button from '../../../common/library/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from '../../../common/library/Dropdown';
+import Button from '../../../common/Button';
+import { Dropdown, DropdownDivider, DropdownItem } from '../../../common/Dropdown';
 
 export default class EditButton extends React.Component {
 

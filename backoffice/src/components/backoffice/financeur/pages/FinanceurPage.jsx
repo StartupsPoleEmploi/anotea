@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
 import { Route } from 'react-router-dom';
-import Page from '../../common/panel/Page';
-import { Tab, Tabs } from '../../common/panel/tabs/Tabs';
-import { DateRange, Form, Select } from '../../common/panel/form/Form';
+import Page from '../../common/page/Page';
+import { Tab, Tabs } from '../../common/page/tabs/Tabs';
+import { DateRange, Form, Select } from '../../common/page/form/Form';
 import { getDepartements, getFormations, getOrganismes } from '../financeurService';
 import FINANCEURS from '../../common/data/financeurs';
-import Button from '../../common/library/Button';
+import Button from '../../common/Button';
 import AvisPanel from './panels/AvisPanel';
 import StatsPanel from './panels/StatsPanel';
 

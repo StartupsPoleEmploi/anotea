@@ -14,7 +14,7 @@ import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import MonComptePanel from './components/backoffice/misc/account/mon-compte/MonComptePanel';
-import GridDisplayer from './components/backoffice/common/library/GridDisplayer';
+import GridDisplayer from './components/backoffice/common/GridDisplayer';
 import Header from './components/backoffice/common/header/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
 import FinanceurRoutes from './components/backoffice/financeur/FinanceurRoutes';

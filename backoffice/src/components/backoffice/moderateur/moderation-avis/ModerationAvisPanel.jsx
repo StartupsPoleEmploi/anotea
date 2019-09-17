@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { searchAvis } from './moderationService';
 import Loader from '../../common/Loader';
-import Panel from '../../common/panel/Panel';
-import { Filter, SearchInputFilter, Toolbar } from '../../common/panel/panel/filters/Toolbar';
-import Summary from '../../common/panel/panel/summary/Summary';
-import Pagination from '../../common/panel/panel/pagination/Pagination';
+import DeprecatedPanel from '../../common/page/DeprecatedPanel';
+import { Filter, SearchInputFilter, Toolbar } from '../../common/page/panel/filters/Toolbar';
+import Summary from '../../common/page/panel/summary/Summary';
+import Pagination from '../../common/page/panel/pagination/Pagination';
 import Avis from '../../common/avis/Avis';
-import AvisResults from '../../common/panel/panel/results/AvisResults';
+import AvisResults from '../../common/page/panel/results/AvisResults';
 
 export default class ModerationAvisPanel extends React.Component {
 
@@ -65,7 +65,7 @@ export default class ModerationAvisPanel extends React.Component {
         let isTabsDisabled = () => this.state.tabsDisabled;
 
         return (
-            <Panel
+            <DeprecatedPanel
                 header={
                     <div>
                         <h1 className="title">Avis et données stagiaires</h1>

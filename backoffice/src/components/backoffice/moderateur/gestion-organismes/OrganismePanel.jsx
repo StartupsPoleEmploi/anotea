@@ -4,12 +4,12 @@ import _ from 'lodash';
 import { searchOrganismes } from './gestionOrganismesService';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import Loader from '../../common/Loader';
-import Panel from '../../common/panel/Panel';
-import { Filter, SearchInputFilter, Toolbar } from '../../common/panel/panel/filters/Toolbar';
+import DeprecatedPanel from '../../common/page/DeprecatedPanel';
+import { Filter, SearchInputFilter, Toolbar } from '../../common/page/panel/filters/Toolbar';
 import Organisme from './components/Organisme';
-import Summary from '../../common/panel/panel/summary/Summary';
-import Pagination from '../../common/panel/panel/pagination/Pagination';
-import ResultDivider from '../../common/panel/panel/results/ResultDivider';
+import Summary from '../../common/page/panel/summary/Summary';
+import Pagination from '../../common/page/panel/pagination/Pagination';
+import ResultDivider from '../../common/page/panel/results/ResultDivider';
 import ExportButton from './components/ExportButton';
 import './OrganismePanel.scss';
 
@@ -68,7 +68,7 @@ export default class OrganismePanel extends React.Component {
         let isTabsDisabled = () => this.state.tabsDisabled;
 
         return (
-            <Panel
+            <DeprecatedPanel
                 className={'OrganismePanel'}
                 header={
                     <div>

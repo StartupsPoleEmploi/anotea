@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import '../components/SummaryBadgeTitle.scss';
-import { Filters } from '../../../common/panel/panel/filters/Filters';
-import Filter from '../../../common/panel/panel/filters/Filter';
+import { Filters } from '../../../common/page/panel/filters/Filters';
+import Filter from '../../../common/page/panel/filters/Filter';
 import _ from 'lodash';
-import Summary from '../../../common/panel/panel/summary/Summary';
-import Button from '../../../common/library/Button';
+import Summary from '../../../common/page/panel/summary/Summary';
+import Button from '../../../common/Button';
 import { getExportAvisUrl, searchAvis } from '../../financeurService';
-import AvisResults from '../../../common/panel/panel/results/AvisResults';
+import AvisResults from '../../../common/page/panel/results/AvisResults';
 import Avis from '../../../common/avis/Avis';
-import Pagination from '../../../common/panel/panel/pagination/Pagination';
+import Pagination from '../../../common/page/panel/pagination/Pagination';
 import SummaryBadgeTitle from '../components/SummaryBadgeTitle';
-import NewPanel from '../../../common/panel/panel/NewPanel';
+import NewPanel from '../../../common/page/panel/NewPanel';
 
 export default class AvisPanel extends React.Component {
 

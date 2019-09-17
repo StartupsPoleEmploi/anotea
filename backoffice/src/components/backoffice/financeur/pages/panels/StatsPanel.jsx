@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../components/SummaryBadgeTitle.scss';
 import _ from 'lodash';
-import Button from '../../../common/library/Button';
+import Button from '../../../common/Button';
 import { getExportAvisUrl, getStats } from '../../financeurService';
-import NewPanel from '../../../common/panel/panel/NewPanel';
+import NewPanel from '../../../common/page/panel/NewPanel';
 import SummaryBadgeTitle from '../components/SummaryBadgeTitle';
 import Loader from '../../../common/Loader';
-import StatsResults from '../../../common/panel/panel/results/stats/StatsResults';
+import StatsResults from '../../../common/page/panel/results/stats/StatsResults';
 
 export default class StatsPanel extends React.Component {
 
