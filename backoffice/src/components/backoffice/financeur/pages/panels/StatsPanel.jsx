@@ -55,14 +55,6 @@ export default class StatsPanel extends React.Component {
                         <div className="col-sm-10">
                             <SummaryBadgeTitle form={form} query={query} ellipsis={30} />
                         </div>
-
-                        <div className="col-sm-2 text-right">
-                            <Button
-                                size="medium"
-                                onClick={() => window.open(getExportAvisUrl(_.omit(query, ['page'])))}>
-                                <i className="fas fa-download pr-2"></i>Exporter
-                            </Button>
-                        </div>
                     </div>
                 }
                 results={
