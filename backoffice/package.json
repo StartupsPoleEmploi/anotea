@@ -15,6 +15,7 @@
   "homepage": "https://anotea.pole-emploi.fr/admin",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.10.2",
+    "@nivo/pie": "0.59.1",
     "bootstrap": "4.3.1",
     "chart.js": "2.7.3",
     "chartjs-plugin-labels": "1.1.0",

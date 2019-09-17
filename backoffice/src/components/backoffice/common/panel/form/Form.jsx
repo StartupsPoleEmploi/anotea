@@ -8,9 +8,11 @@ export { default as DateRange } from './DateRange';
 export const Form = ({ children }) => {
 
     return (
-        <form className="Form">
-            {children}
-        </form>
+        <div className="Form">
+            <form>
+                {children}
+            </form>
+        </div>
     );
 };
 

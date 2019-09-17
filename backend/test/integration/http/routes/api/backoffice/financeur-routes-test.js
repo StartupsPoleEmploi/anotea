@@ -152,7 +152,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.deepStrictEqual(response.body.avis.length, 2);
     });
 
-    it('can search stats', async () => {
+    it('can compute stats', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -179,8 +179,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
             })),
             insertIntoDatabase('comment', newComment({
                 rates: {
-                    accueil: 1,
-                    contenu_formation: 1,
+                    accueil: 2,
+                    contenu_formation: 2,
                     equipe_formateurs: 1,
                     moyen_materiel: 1,
                     accompagnement: 1,
@@ -196,42 +196,57 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
             total: 3,
-            accueil: 2.3333333333333335,
-            accueil_1: 3,
-            accueil_2: 2,
-            accueil_3: 2,
-            accueil_4: 0,
-            accueil_5: 0,
-            contenu_formation: 2.3333333333333335,
-            contenu_formation_1: 3,
-            contenu_formation_2: 2,
-            contenu_formation_3: 2,
-            contenu_formation_4: 0,
-            contenu_formation_5: 0,
-            equipe_formateurs: 2.3333333333333335,
-            equipe_formateurs_1: 3,
-            equipe_formateurs_2: 2,
-            equipe_formateurs_3: 2,
-            equipe_formateurs_4: 0,
-            equipe_formateurs_5: 0,
-            moyen_materiel: 2.3333333333333335,
-            moyen_materiel_1: 3,
-            moyen_materiel_2: 2,
-            moyen_materiel_3: 2,
-            moyen_materiel_4: 0,
-            moyen_materiel_5: 0,
-            accompagnement: 2.3333333333333335,
-            accompagnement_1: 3,
-            accompagnement_2: 2,
-            accompagnement_3: 2,
-            accompagnement_4: 0,
-            accompagnement_5: 0,
-            global: 2.3333333333333335,
-            global_1: 3,
-            global_2: 2,
-            global_3: 2,
-            global_4: 0,
-            global_5: 0,
+            notes: {
+                accueil: {
+                    moyenne: 2.7,
+                    1: 0,
+                    2: 1,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+                contenu_formation: {
+                    moyenne: 2.7,
+                    1: 0,
+                    2: 1,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+                equipe_formateurs: {
+                    moyenne: 2.3,
+                    1: 1,
+                    2: 0,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+                moyen_materiel: {
+                    moyenne: 2.3,
+                    1: 1,
+                    2: 0,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+                accompagnement: {
+                    moyenne: 2.3,
+                    1: 1,
+                    2: 0,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+                global: {
+                    moyenne: 2.3,
+                    1: 1,
+                    2: 0,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+            },
+            nbNotesSeules: 0,
             nbCommentaires: 3,
             nbPublished: 3,
             nbRejected: 0,

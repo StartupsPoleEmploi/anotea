@@ -6,9 +6,9 @@ import './NewPanel.scss';
 const NewPanel = props => {
 
     return (
-        <div className="NewPanel">
+        <div className={`NewPanel ${props.className || ''}`}>
             {props.filters &&
-            <div className={`filters`}>
+            <div className="filters-holder">
                 <div className="container">
                     {props.filters}
                 </div>
@@ -17,17 +17,13 @@ const NewPanel = props => {
 
             {props.loading ?
                 <div className="d-flex justify-content-center"><Loader /></div> :
-                <div className="container main">
-                    <div>
-                        <div className="summary">
-                            {props.summary}
-                        </div>
-                        <div className="results">
-                            {props.results}
-                        </div>
-                        <div className="a-pagination">
-                            {props.pagination}
-                        </div>
+                <div className="container">
+                    <div className="summary-holder">
+                        {props.summary}
+                    </div>
+                    {props.results}
+                    <div className="pagination-holder">
+                        {props.pagination}
                     </div>
                 </div>
             }
@@ -41,6 +37,7 @@ NewPanel.propTypes = {
     results: PropTypes.node,
     pagination: PropTypes.node,
     loading: PropTypes.bool,
+    className: PropTypes.string,
 };
 
 export default NewPanel;

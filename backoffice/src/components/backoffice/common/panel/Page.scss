@@ -5,33 +5,11 @@
   height: 100%;
 
   .form {
-
-    &.green {
-      background-color: $color-green;
-    }
-
-    &.blue {
-      background-color: $color-blue;
-    }
-
-    .form-holder {
-      background-color: $color-white;
-      padding: 1rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      box-shadow: $shadow;
-    }
+    @include backoffice-color();
   }
 
   .tabs {
-
-    &.green {
-      background-color: $color-green;
-    }
-
-    &.blue {
-      background-color: $color-blue;
-    }
+    @include backoffice-color();
 
     padding-top: 1.5rem;
     padding-bottom: 0.5rem;

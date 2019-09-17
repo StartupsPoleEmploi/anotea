@@ -25,7 +25,7 @@ const Page = props => {
             </div>
             }
 
-            <div className="panel">
+            <div className={`panel`}>
                 {props.panel}
             </div>
         </div>

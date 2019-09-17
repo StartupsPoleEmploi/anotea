@@ -2,6 +2,8 @@
 
 .Form {
 
+  @include box();
+
   label {
     font-size: 1.125rem;
     font-weight: $font-weight-700;

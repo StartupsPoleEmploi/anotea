@@ -2,6 +2,7 @@ const Joi = require('joi');
 const _ = require('lodash');
 const express = require('express');
 const moment = require('moment');
+const { round } = require('../../../../../common/utils/number-utils');
 const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../../routes-utils');
 
 module.exports = ({ db, middlewares, configuration, regions, logger }) => {
@@ -88,26 +89,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         return sendArrayAsJsonStream(stream, res);
     }));
 
-    let getQuery = (codeRegion, parameters) => {
-        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate, status, qualification } = parameters;
-
-        return {
-            codeRegion,
-            ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
-            ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
-            ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
-            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
-            ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
-            ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
-            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
-            ...(qualification ? { comment: { $ne: null } } : {}),
-            ...(['positif', 'négatif'].includes(qualification) ? { qualification } : {}),
-            ...(status === 'reported' ? { reported: true } : {}),
-            ...(status === 'rejected' ? { rejected: true } : {}),
-        };
-    };
-
-    let getQueryParametersValidators = () => {
+    let getFormQueryValidators = () => {
         return {
             departement: Joi.string(),
             codeFinanceur: Joi.string(),
@@ -118,11 +100,37 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         };
     };
 
+    let getFormQuery = parameters => {
+        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate, status, qualification } = parameters;
+
+        return {
+            ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
+            ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
+            ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
+            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
+            ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
+            ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
+        };
+    };
+
+    let getListQuery = parameters => {
+        let { status, qualification } = parameters;
+
+        return {
+            ...getFormQuery(parameters),
+            ...(qualification ? { comment: { $ne: null } } : {}),
+            ...(['positif', 'négatif'].includes(qualification) ? { qualification } : {}),
+            ...(status === 'reported' ? { reported: true } : {}),
+            ...(status === 'rejected' ? { rejected: true } : {}),
+        };
+    };
+
     router.get('/backoffice/financeur/avis', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         let codeRegion = req.user.codeRegion;
         let parameters = await Joi.validate(req.query, {
-            ...getQueryParametersValidators(),
+            ...getFormQueryValidators(),
             status: Joi.string().allow(['all', 'reported', 'rejected']),
             qualification: Joi.string().allow(['all', 'négatif', 'positif']),
             page: Joi.number().min(0).default(0),
@@ -131,7 +139,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
 
         let cursor = db.collection('comment')
-        .find(getQuery(codeRegion, parameters))
+        .find({ codeRegion, ...getListQuery(parameters) })
         .sort({ [parameters.sortBy]: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
@@ -161,14 +169,14 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
         let codeRegion = req.user.codeRegion;
         let parameters = await Joi.validate(req.query, {
-            ...getQueryParametersValidators(),
+            ...getFormQueryValidators(),
             status: Joi.string().allow(['all', 'reported', 'rejected']),
             qualification: Joi.string().allow(['all', 'négatif', 'positif']),
             token: Joi.string(),
         }, { abortEarly: false });
 
         let cursor = db.collection('comment')
-        .find(getQuery(codeRegion, parameters))
+        .find({ codeRegion, ...getListQuery(parameters) })
         .sort({ [parameters.sortBy]: -1 });
 
         let sanitizeNote = note => `${note}`.replace(/\./g, ',');
@@ -236,13 +244,14 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
         let codeRegion = req.user.codeRegion;
         let parameters = await Joi.validate(req.query, {
-            ...getQueryParametersValidators(),
+            ...getFormQueryValidators(),
         }, { abortEarly: false });
 
         let results = await db.collection('comment').aggregate([
             {
                 $match: {
-                    ...getQuery(codeRegion, parameters),
+                    codeRegion,
+                    ...getFormQuery(parameters),
                     $or: [
                         { comment: { $exists: false } },
                         { published: true },
@@ -254,42 +263,43 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
                 $group: {
                     _id: 'null',
                     total: { $sum: 1 },
-                    accueil: { $avg: '$rates.accueil' },
-                    accueil_1: { $sum: { $cond: [{ $gte: ['$rates.accueil', 1] }, 1, 0] } },
-                    accueil_2: { $sum: { $cond: [{ $gte: ['$rates.accueil', 2] }, 1, 0] } },
-                    accueil_3: { $sum: { $cond: [{ $gte: ['$rates.accueil', 3] }, 1, 0] } },
-                    accueil_4: { $sum: { $cond: [{ $gte: ['$rates.accueil', 4] }, 1, 0] } },
-                    accueil_5: { $sum: { $cond: [{ $gte: ['$rates.accueil', 5] }, 1, 0] } },
-                    contenu_formation: { $avg: '$rates.contenu_formation' },
-                    contenu_formation_1: { $sum: { $cond: [{ $gte: ['$rates.contenu_formation', 1] }, 1, 0] } },
-                    contenu_formation_2: { $sum: { $cond: [{ $gte: ['$rates.contenu_formation', 2] }, 1, 0] } },
-                    contenu_formation_3: { $sum: { $cond: [{ $gte: ['$rates.contenu_formation', 3] }, 1, 0] } },
-                    contenu_formation_4: { $sum: { $cond: [{ $gte: ['$rates.contenu_formation', 4] }, 1, 0] } },
-                    contenu_formation_5: { $sum: { $cond: [{ $gte: ['$rates.contenu_formation', 5] }, 1, 0] } },
-                    equipe_formateurs: { $avg: '$rates.equipe_formateurs' },
-                    equipe_formateurs_1: { $sum: { $cond: [{ $gte: ['$rates.equipe_formateurs', 1] }, 1, 0] } },
-                    equipe_formateurs_2: { $sum: { $cond: [{ $gte: ['$rates.equipe_formateurs', 2] }, 1, 0] } },
-                    equipe_formateurs_3: { $sum: { $cond: [{ $gte: ['$rates.equipe_formateurs', 3] }, 1, 0] } },
-                    equipe_formateurs_4: { $sum: { $cond: [{ $gte: ['$rates.equipe_formateurs', 4] }, 1, 0] } },
-                    equipe_formateurs_5: { $sum: { $cond: [{ $gte: ['$rates.equipe_formateurs', 5] }, 1, 0] } },
-                    moyen_materiel: { $avg: '$rates.moyen_materiel' },
-                    moyen_materiel_1: { $sum: { $cond: [{ $gte: ['$rates.moyen_materiel', 1] }, 1, 0] } },
-                    moyen_materiel_2: { $sum: { $cond: [{ $gte: ['$rates.moyen_materiel', 2] }, 1, 0] } },
-                    moyen_materiel_3: { $sum: { $cond: [{ $gte: ['$rates.moyen_materiel', 3] }, 1, 0] } },
-                    moyen_materiel_4: { $sum: { $cond: [{ $gte: ['$rates.moyen_materiel', 4] }, 1, 0] } },
-                    moyen_materiel_5: { $sum: { $cond: [{ $gte: ['$rates.moyen_materiel', 5] }, 1, 0] } },
-                    accompagnement: { $avg: '$rates.accompagnement' },
-                    accompagnement_1: { $sum: { $cond: [{ $gte: ['$rates.accompagnement', 1] }, 1, 0] } },
-                    accompagnement_2: { $sum: { $cond: [{ $gte: ['$rates.accompagnement', 2] }, 1, 0] } },
-                    accompagnement_3: { $sum: { $cond: [{ $gte: ['$rates.accompagnement', 3] }, 1, 0] } },
-                    accompagnement_4: { $sum: { $cond: [{ $gte: ['$rates.accompagnement', 4] }, 1, 0] } },
-                    accompagnement_5: { $sum: { $cond: [{ $gte: ['$rates.accompagnement', 5] }, 1, 0] } },
-                    global: { $avg: '$rates.global' },
-                    global_1: { $sum: { $cond: [{ $gte: ['$rates.global', 1] }, 1, 0] } },
-                    global_2: { $sum: { $cond: [{ $gte: ['$rates.global', 2] }, 1, 0] } },
-                    global_3: { $sum: { $cond: [{ $gte: ['$rates.global', 3] }, 1, 0] } },
-                    global_4: { $sum: { $cond: [{ $gte: ['$rates.global', 4] }, 1, 0] } },
-                    global_5: { $sum: { $cond: [{ $gte: ['$rates.global', 5] }, 1, 0] } },
+                    accueil__moyenne: { $avg: '$rates.accueil' },
+                    accueil__1: { $sum: { $cond: [{ $eq: ['$rates.accueil', 1] }, 1, 0] } },
+                    accueil__2: { $sum: { $cond: [{ $eq: ['$rates.accueil', 2] }, 1, 0] } },
+                    accueil__3: { $sum: { $cond: [{ $eq: ['$rates.accueil', 3] }, 1, 0] } },
+                    accueil__4: { $sum: { $cond: [{ $eq: ['$rates.accueil', 4] }, 1, 0] } },
+                    accueil__5: { $sum: { $cond: [{ $eq: ['$rates.accueil', 5] }, 1, 0] } },
+                    contenu_formation__moyenne: { $avg: '$rates.contenu_formation' },
+                    contenu_formation__1: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 1] }, 1, 0] } },
+                    contenu_formation__2: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 2] }, 1, 0] } },
+                    contenu_formation__3: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 3] }, 1, 0] } },
+                    contenu_formation__4: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 4] }, 1, 0] } },
+                    contenu_formation__5: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 5] }, 1, 0] } },
+                    equipe_formateurs__moyenne: { $avg: '$rates.equipe_formateurs' },
+                    equipe_formateurs__1: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 1] }, 1, 0] } },
+                    equipe_formateurs__2: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 2] }, 1, 0] } },
+                    equipe_formateurs__3: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 3] }, 1, 0] } },
+                    equipe_formateurs__4: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 4] }, 1, 0] } },
+                    equipe_formateurs__5: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 5] }, 1, 0] } },
+                    moyen_materiel__moyenne: { $avg: '$rates.moyen_materiel' },
+                    moyen_materiel__1: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 1] }, 1, 0] } },
+                    moyen_materiel__2: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 2] }, 1, 0] } },
+                    moyen_materiel__3: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 3] }, 1, 0] } },
+                    moyen_materiel__4: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 4] }, 1, 0] } },
+                    moyen_materiel__5: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 5] }, 1, 0] } },
+                    accompagnement__moyenne: { $avg: '$rates.accompagnement' },
+                    accompagnement__1: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 1] }, 1, 0] } },
+                    accompagnement__2: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 2] }, 1, 0] } },
+                    accompagnement__3: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 3] }, 1, 0] } },
+                    accompagnement__4: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 4] }, 1, 0] } },
+                    accompagnement__5: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 5] }, 1, 0] } },
+                    global__moyenne: { $avg: '$rates.global' },
+                    global__1: { $sum: { $cond: [{ $eq: ['$rates.global', 1] }, 1, 0] } },
+                    global__2: { $sum: { $cond: [{ $eq: ['$rates.global', 2] }, 1, 0] } },
+                    global__3: { $sum: { $cond: [{ $eq: ['$rates.global', 3] }, 1, 0] } },
+                    global__4: { $sum: { $cond: [{ $eq: ['$rates.global', 4] }, 1, 0] } },
+                    global__5: { $sum: { $cond: [{ $eq: ['$rates.global', 5] }, 1, 0] } },
+                    nbNotesSeules: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 1, else: 0 } } },
                     nbCommentaires: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 0, else: 1 } } },
                     nbPublished: { $sum: { $cond: { if: { $eq: ['$published', true] }, then: 1, else: 0 } } },
                     nbRejected: { $sum: { $cond: { if: { $eq: ['$rejected', true] }, then: 1, else: 0 } } },
@@ -308,7 +318,21 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         ])
         .toArray();
 
-        return res.json(results[0]);
+        let rounded = Object.keys(results[0]).reduce((acc, key) => {
+
+            let roundedValue = round(results[0][key]);
+
+            if (key.indexOf('_') !== -1) {
+                let parentPropertyName = key.split('__')[0];
+                let propertyName = key.split('__')[1];
+                acc.notes[parentPropertyName] = Object.assign({}, acc.notes[parentPropertyName] || {}, { [propertyName]: roundedValue });
+            } else {
+                acc[key] = roundedValue;
+            }
+            return acc;
+        }, { notes: {} });
+
+        return res.json(rounded);
     }));
 
     return router;

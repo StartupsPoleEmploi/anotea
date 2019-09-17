@@ -44,7 +44,7 @@ export default class ModerationReponsesPanel extends React.Component {
     }
 
     componentDidUpdate(previous) {
-        if (this.props.query !== previous.query) {
+        if (!_.isEqual(this.props.query, previous.query)) {
             this.search();
         }
     }

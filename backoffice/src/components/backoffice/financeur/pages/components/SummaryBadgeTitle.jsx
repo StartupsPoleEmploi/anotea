@@ -9,7 +9,7 @@ const Badge = props => {
 
     let className = `${props.className || ''}`;
     let color = `${props.color || ''}`;
-    let maxLength = 20;
+    let maxLength = props.ellipsis || 20;
     let showTooltip = props.text.length > maxLength;
 
     return (
@@ -24,9 +24,10 @@ Badge.propTypes = {
     text: PropTypes.string.isRequired,
     className: PropTypes.string,
     color: PropTypes.string,
+    ellipsis: PropTypes.number,
 };
 
-const SummaryBadgeTitle = ({ form, query }) => {
+const SummaryBadgeTitle = ({ form, query, ellipsis }) => {
 
     let { departements, organismes, formations, financeurs } = form;
 
@@ -40,10 +41,10 @@ const SummaryBadgeTitle = ({ form, query }) => {
 
     return (
         <div className="d-flex flex-wrap">
-            {departement && <Badge color="green" text={departement.label} />}
-            {organisme && <Badge color="green" text={organisme.name} />}
-            {formation && <Badge color="green" text={formation.title} />}
-            {financeur && <Badge color="green" text={financeur.label} />}
+            {departement && <Badge ellipsis={ellipsis} color="green" text={departement.label} />}
+            {organisme && <Badge ellipsis={ellipsis} color="green" text={organisme.name} />}
+            {formation && <Badge ellipsis={ellipsis} color="green" text={formation.title} />}
+            {financeur && <Badge ellipsis={ellipsis} color="green" text={financeur.label} />}
             {(query.startDate || query.scheduledEndDate) && <Badge color="green" text={periode} />}
         </div>
     );
@@ -52,6 +53,7 @@ const SummaryBadgeTitle = ({ form, query }) => {
 SummaryBadgeTitle.propTypes = {
     query: PropTypes.object.isRequired,
     form: PropTypes.object.isRequired,
+    ellipsis: PropTypes.number,
 };
 
 export default SummaryBadgeTitle;

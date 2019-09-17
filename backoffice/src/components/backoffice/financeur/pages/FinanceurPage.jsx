@@ -9,7 +9,8 @@ import { DateRange, Form, Select } from '../../common/panel/form/Form';
 import { getDepartements, getFormations, getOrganismes } from '../financeurService';
 import FINANCEURS from '../../common/data/financeurs';
 import Button from '../../common/library/Button';
-import FinanceurAvisPanel from './panels/FinanceurAvisPanel';
+import AvisPanel from './panels/AvisPanel';
+import StatsPanel from './panels/StatsPanel';
 
 export default class FinanceurPage extends React.Component {
 
@@ -278,24 +279,27 @@ export default class FinanceurPage extends React.Component {
                     </Tabs>
                 }
                 panel={
-                    <>
+                    navigator.isActive('/admin/financeur/avis') ?
+                        <AvisPanel
+                            query={navigator.getQuery()}
+                            form={form}
+                            onNewQuery={data => {
+                                return navigator.refreshCurrentPage({
+                                    ...this.getFormAsQuery(),
+                                    ...data,
+                                });
+                            }} /> :
                         <Route
-                            path={'/admin/financeur/avis'}
+                            path={'/admin/financeur/stats'}
                             render={() => {
                                 return (
-                                    <FinanceurAvisPanel
+                                    <StatsPanel
                                         query={navigator.getQuery()}
                                         form={form}
-                                        onNewQuery={data => {
-                                            return navigator.refreshCurrentPage({
-                                                ...this.getFormAsQuery(),
-                                                ...data,
-                                            });
-                                        }} />
+                                    />
                                 );
                             }}
                         />
-                    </>
                 }
             />
         );

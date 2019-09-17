@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './SummaryBadgeTitle.scss';
+import '../components/SummaryBadgeTitle.scss';
 import { Filters } from '../../../common/panel/panel/filters/Filters';
 import Filter from '../../../common/panel/panel/filters/Filter';
 import _ from 'lodash';
@@ -10,10 +10,10 @@ import { getExportAvisUrl, searchAvis } from '../../financeurService';
 import AvisResults from '../../../common/panel/panel/results/AvisResults';
 import Avis from '../../../common/avis/Avis';
 import Pagination from '../../../common/panel/panel/pagination/Pagination';
-import SummaryBadgeTitle from './SummaryBadgeTitle';
+import SummaryBadgeTitle from '../components/SummaryBadgeTitle';
 import NewPanel from '../../../common/panel/panel/NewPanel';
 
-export default class FinanceurAvisPanel extends React.Component {
+export default class AvisPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -47,7 +47,7 @@ export default class FinanceurAvisPanel extends React.Component {
     }
 
     componentDidUpdate(previous) {
-        if (this.props.query !== previous.query) {
+        if (!_.isEqual(this.props.query, previous.query)) {
             this.search();
         }
     }

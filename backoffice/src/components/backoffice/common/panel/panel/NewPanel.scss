@@ -2,23 +2,22 @@
 
 .NewPanel {
 
-  .filters {
+  background-color: $color-white;
+  height: 100%;
+
+  .filters-holder {
     padding-top: 0.125rem;
     padding-bottom: 0.125rem;
     background-color: $color-grey-5;
   }
 
-  .main {
-
-    background-color: $color-white;
-
-    .summary {
-      margin-top: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .a-pagination {
-      margin-top: 2rem;
-    }
+  .summary-holder {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
   }
+
+  .pagination-holder {
+    margin-top: 2rem;
+  }
+
 }
