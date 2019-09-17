@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../components/SummaryBadgeTitle.scss';
+import '../components/QueryBadges.scss';
 import { Filters } from '../../../common/page/panel/filters/Filters';
 import Filter from '../../../common/page/panel/filters/Filter';
 import _ from 'lodash';
@@ -10,7 +10,7 @@ import { getExportAvisUrl, searchAvis } from '../../financeurService';
 import AvisResults from '../../../common/page/panel/results/AvisResults';
 import Avis from '../../../common/avis/Avis';
 import Pagination from '../../../common/page/panel/pagination/Pagination';
-import SummaryBadgeTitle from '../components/SummaryBadgeTitle';
+import QueryBadges from '../components/QueryBadges';
 import NewPanel from '../../../common/page/panel/NewPanel';
 
 export default class AvisPanel extends React.Component {
@@ -112,7 +112,7 @@ export default class AvisPanel extends React.Component {
                 }
                 summary={
                     <Summary
-                        title={<SummaryBadgeTitle form={form} query={query} />}
+                        title={<QueryBadges form={form} query={query} />}
                         paginationLabel="avis"
                         pagination={results.meta.pagination}
                         buttons={

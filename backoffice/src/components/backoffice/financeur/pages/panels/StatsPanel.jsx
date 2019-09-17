@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../components/SummaryBadgeTitle.scss';
+import '../components/QueryBadges.scss';
 import _ from 'lodash';
 import Button from '../../../common/Button';
 import { getExportAvisUrl, getStats } from '../../financeurService';
 import NewPanel from '../../../common/page/panel/NewPanel';
-import SummaryBadgeTitle from '../components/SummaryBadgeTitle';
+import QueryBadges from '../components/QueryBadges';
 import Loader from '../../../common/Loader';
 import StatsResults from '../../../common/page/panel/results/stats/StatsResults';
 
@@ -53,7 +53,7 @@ export default class StatsPanel extends React.Component {
                 summary={
                     <div className="row">
                         <div className="col-sm-10">
-                            <SummaryBadgeTitle form={form} query={query} ellipsis={30} />
+                            <QueryBadges form={form} query={query} ellipsis={30} />
                         </div>
                     </div>
                 }
