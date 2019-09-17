@@ -4,11 +4,13 @@ import './Page.scss';
 
 const Page = props => {
 
+    let color = props.color || 'green';
+
     return (
         <div className={`Page mb-0 ${props.className || ''}`}>
 
             {props.form &&
-            <div className={`form ${props.color}`}>
+            <div className={`form ${color}`}>
                 <div className="container">
                     <div className="form-holder">
                         {props.form}
@@ -33,7 +35,6 @@ const Page = props => {
 };
 
 Page.propTypes = {
-    header: PropTypes.node,
     form: PropTypes.node,
     tabs: PropTypes.node,
     panel: PropTypes.node,
