@@ -19,8 +19,6 @@ export default class Periode extends React.Component {
     render() {
         let { periode, min } = this.props;
 
-        console.log(JSON.stringify({ meta: 'Periode.jsx:22', data: this.props }, null, 2));
-
         return (
             <div className="Periode d-flex justify-content-between align-items-center">
                 <i className="far fa-calendar"></i>

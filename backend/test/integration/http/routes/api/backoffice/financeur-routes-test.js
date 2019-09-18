@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/test-server');
-const { newComment, newTrainee } = require('../../../../../helpers/data/dataset');
+const { newComment } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinanceur }) => {
 
@@ -9,7 +9,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment({
                 moderated: false,
                 pseudo: 'joe'
@@ -39,7 +39,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let avisWithoutComment = insertIntoDatabase('comment', newComment());
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment()),
             avisWithoutComment,
         ]);
@@ -59,7 +59,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token, avisWithoutComment] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment()),
             insertIntoDatabase('comment', newComment({
                 rejected: true,
@@ -81,7 +81,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment()),
             insertIntoDatabase('comment', newComment()),
             insertIntoDatabase('comment', newComment()),
@@ -119,7 +119,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment({ qualification: 'positif' })),
             insertIntoDatabase('comment', newComment({ qualification: 'négatif' })),
         ]);
@@ -138,7 +138,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment({ qualification: 'positif' })),
             insertIntoDatabase('comment', newComment({ qualification: 'négatif' })),
         ]);
@@ -152,11 +152,40 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.deepStrictEqual(response.body.avis.length, 2);
     });
 
+    it('can not search without with another code financeur', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/financeur/avis?codeFinanceur=10')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body.details[0].context.key, 'codeFinanceur');
+    });
+
+    it('can search without with another code financeur (pole emploi)', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/financeur/avis?codeFinanceur=10')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+    });
+
     it('can compute stats', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment({
                 rates: {
                     accueil: 3,
@@ -262,7 +291,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
         ]);
 
         let response = await request(app)
@@ -281,7 +310,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment({
                 training: {
                     organisation: {
@@ -308,7 +337,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsFinanceur(app, 'financer@pole-emploi.fr', '2'),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment({
                 training: {
                     organisation: {

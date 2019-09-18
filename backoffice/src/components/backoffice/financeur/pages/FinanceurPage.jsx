@@ -9,10 +9,13 @@ import { Form, Periode, Select } from '../../common/page/form/Form';
 import { getDepartements, getFormations, getOrganismes } from '../financeurService';
 import FINANCEURS from '../../common/data/financeurs';
 import Button from '../../common/Button';
+import UserContext from '../../../UserContext';
 import AvisPanel from './panels/AvisPanel';
 import StatsPanel from './panels/StatsPanel';
 
 export default class FinanceurPage extends React.Component {
+
+    static contextType = UserContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -54,6 +57,10 @@ export default class FinanceurPage extends React.Component {
         return this.setState(_.merge({}, this.state, data), callback);
     }
 
+    isPoleEmploi() {
+        return this.context.codeFinanceur === '4';
+    }
+
     async componentDidMount() {
 
         let query = this.props.navigator.getQuery();
@@ -75,10 +82,12 @@ export default class FinanceurPage extends React.Component {
             });
         }
 
-        this.loadSelectBox('financeurs', () => FINANCEURS)
-        .then(results => {
-            return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur));
-        });
+        if (this.isPoleEmploi()) {
+            this.loadSelectBox('financeurs', () => FINANCEURS)
+            .then(results => {
+                return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur));
+            });
+        }
 
         this.setStateDeep({
             form: {
@@ -241,16 +250,20 @@ export default class FinanceurPage extends React.Component {
                             </div>
                             }
                             <div className="form-group col-lg-6">
-                                <label>Financeur</label>
-                                <Select
-                                    value={financeurs.selected}
-                                    options={financeurs.results}
-                                    loading={financeurs.loading}
-                                    optionKey="code"
-                                    optionLabel="label"
-                                    placeholder={'Tous les financeurs'}
-                                    onChange={option => this.updateSelectBox('financeurs', option)}
-                                />
+                                {this.isPoleEmploi() &&
+                                <>
+                                    <label>Financeur</label>
+                                    <Select
+                                        value={financeurs.selected}
+                                        options={financeurs.results}
+                                        loading={financeurs.loading}
+                                        optionKey="code"
+                                        optionLabel="label"
+                                        placeholder={'Tous les financeurs'}
+                                        onChange={option => this.updateSelectBox('financeurs', option)}
+                                    />
+                                </>
+                                }
                             </div>
                         </div>
                         <div className="form-row justify-content-center">

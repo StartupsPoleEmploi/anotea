@@ -41,7 +41,6 @@ export default class Date extends React.Component {
                 endDate: max ? this.formatDate(max) : null,
                 clearBtn: true,
                 onChange: () => {
-                    console.log(input.value);
                     return input.value ? this.props.onChange(moment(`${input.value}-0000`, `${pattern} Z`)) : null;
                 },
             });

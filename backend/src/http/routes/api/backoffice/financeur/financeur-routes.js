@@ -3,6 +3,7 @@ const _ = require('lodash');
 const express = require('express');
 const moment = require('moment');
 const { round } = require('../../../../../common/utils/number-utils');
+const { isPoleEmploi } = require('../../../../../common/utils/financeurs');
 const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../../routes-utils');
 
 module.exports = ({ db, middlewares, configuration, regions, logger }) => {
@@ -89,10 +90,10 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         return sendArrayAsJsonStream(stream, res);
     }));
 
-    let getFormQueryValidators = () => {
+    let getFormQueryValidators = user => {
         return {
             departement: Joi.string(),
-            codeFinanceur: Joi.string(),
+            codeFinanceur: isPoleEmploi(user.codeFinanceur) ? Joi.string() : Joi.string().valid([user.codeFinanceur]),
             siren: Joi.string(),
             idFormation: Joi.string(),
             startDate: Joi.number(),
@@ -129,9 +130,8 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
     router.get('/backoffice/financeur/avis', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
-        let codeRegion = req.user.codeRegion;
         let parameters = await Joi.validate(req.query, {
-            ...getFormQueryValidators(),
+            ...getFormQueryValidators(req.user),
             status: Joi.string().allow(['all', 'reported', 'rejected']),
             qualification: Joi.string().allow(['all', 'négatif', 'positif']),
             page: Joi.number().min(0).default(0),
@@ -140,7 +140,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
 
         let cursor = db.collection('comment')
-        .find(getListQuery(codeRegion, parameters))
+        .find(getListQuery(req.user.codeRegion, parameters))
         .sort({ [parameters.sortBy]: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
@@ -168,16 +168,15 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
     router.get('/backoffice/financeur/avis.csv', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
-        let codeRegion = req.user.codeRegion;
         let parameters = await Joi.validate(req.query, {
-            ...getFormQueryValidators(),
+            ...getFormQueryValidators(req.user),
             status: Joi.string().allow(['all', 'reported', 'rejected']),
             qualification: Joi.string().allow(['all', 'négatif', 'positif']),
             token: Joi.string(),
         }, { abortEarly: false });
 
         let cursor = db.collection('comment')
-        .find(getListQuery(codeRegion, parameters))
+        .find(getListQuery(req.user.codeRegion, parameters))
         .sort({ [parameters.sortBy]: -1 });
 
         let sanitizeNote = note => `${note}`.replace(/\./g, ',');
@@ -243,15 +242,14 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
     router.get('/backoffice/financeur/stats', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
-        let codeRegion = req.user.codeRegion;
         let parameters = await Joi.validate(req.query, {
-            ...getFormQueryValidators(),
+            ...getFormQueryValidators(req.user),
         }, { abortEarly: false });
 
         let results = await db.collection('comment').aggregate([
             {
                 $match: {
-                    ...getFormQuery(codeRegion, parameters),
+                    ...getFormQuery(req.user.codeRegion, parameters),
                     $or: [
                         { comment: { $exists: false } },
                         { published: true },
