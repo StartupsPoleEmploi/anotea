@@ -187,16 +187,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
                     global: 1,
                 },
             })),
-            insertIntoDatabase('trainee', newTrainee({
-                mailSent: true,
-            })),
-            insertIntoDatabase('trainee', newTrainee({
-                mailSent: false,
-            })),
-            insertIntoDatabase('trainee', newTrainee({
-                mailSent: true,
-                avisCreated: true,
-            })),
         ]);
 
         let response = await request(app)
@@ -205,73 +195,66 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            avis: {
-                total: 3,
-                notes: {
-                    accueil: {
-                        moyenne: 2.7,
-                        1: 0,
-                        2: 1,
-                        3: 2,
-                        4: 0,
-                        5: 0,
-                    },
-                    contenu_formation: {
-                        moyenne: 2.7,
-                        1: 0,
-                        2: 1,
-                        3: 2,
-                        4: 0,
-                        5: 0,
-                    },
-                    equipe_formateurs: {
-                        moyenne: 2.3,
-                        1: 1,
-                        2: 0,
-                        3: 2,
-                        4: 0,
-                        5: 0,
-                    },
-                    moyen_materiel: {
-                        moyenne: 2.3,
-                        1: 1,
-                        2: 0,
-                        3: 2,
-                        4: 0,
-                        5: 0,
-                    },
-                    accompagnement: {
-                        moyenne: 2.3,
-                        1: 1,
-                        2: 0,
-                        3: 2,
-                        4: 0,
-                        5: 0,
-                    },
-                    global: {
-                        moyenne: 2.3,
-                        1: 1,
-                        2: 0,
-                        3: 2,
-                        4: 0,
-                        5: 0,
-                    },
+            total: 3,
+            notes: {
+                accueil: {
+                    moyenne: 2.7,
+                    1: 0,
+                    2: 1,
+                    3: 2,
+                    4: 0,
+                    5: 0,
                 },
-                nbNotesSeules: 0,
-                nbCommentaires: 3,
-                nbPublished: 3,
-                nbRejected: 0,
-                nbPositifs: 3,
-                nbNegatifs: 0,
-                nbAlertes: 0,
-                nbInjures: 0,
-                nbNonConcernes: 0
+                contenu_formation: {
+                    moyenne: 2.7,
+                    1: 0,
+                    2: 1,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+                equipe_formateurs: {
+                    moyenne: 2.3,
+                    1: 1,
+                    2: 0,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+                moyen_materiel: {
+                    moyenne: 2.3,
+                    1: 1,
+                    2: 0,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+                accompagnement: {
+                    moyenne: 2.3,
+                    1: 1,
+                    2: 0,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
+                global: {
+                    moyenne: 2.3,
+                    1: 1,
+                    2: 0,
+                    3: 2,
+                    4: 0,
+                    5: 0,
+                },
             },
-            stagiaires: {
-                nbAvisDeposes: 1,
-                nbEmailsEnvoyes: 2,
-                total: 3,
-            },
+            nbNotesSeules: 0,
+            nbCommentaires: 3,
+            nbPublished: 3,
+            nbRejected: 0,
+            nbPositifs: 3,
+            nbNegatifs: 0,
+            nbAlertes: 0,
+            nbInjures: 0,
+            nbNonConcernes: 0
         });
     });
 

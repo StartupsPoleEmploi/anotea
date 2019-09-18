@@ -6,7 +6,6 @@ import { getStats } from '../../financeurService';
 import NewPanel from '../../../common/page/panel/NewPanel';
 import QueryBadges from '../components/QueryBadges';
 import Loader from '../../../common/Loader';
-import StagiairesStats from '../../../common/page/panel/results/stats/StagiairesStats';
 import CommentairesStats from '../../../common/page/panel/results/stats/CommentairesStats';
 import NoteDetails from '../../../common/page/panel/results/stats/NoteDetails';
 import EmptyResults from '../../../common/page/panel/results/EmptyResults';
@@ -61,33 +60,23 @@ export default class StatsPanel extends React.Component {
                     </div>
                 }
                 results={
-                    <div>
-                        {this.state.loading ?
-                            <div className="d-flex justify-content-center"><Loader /></div> :
-                            !stats.avis ? <EmptyResults /> :
-                                <>
-                                    <div className="row">
-                                        <div className="col-sm-12">
-                                            <div className="section-title">Campagne Anotéa</div>
-                                            <StagiairesStats stats={stats} />
-                                        </div>
-
+                    this.state.loading ?
+                        <div className="d-flex justify-content-center"><Loader /></div> :
+                        _.isEmpty(stats) ? <EmptyResults /> :
+                            <>
+                                <div className="row">
+                                    <div className="col-sm-12">
+                                        <div className="section-title">Les commentaires</div>
+                                        <CommentairesStats stats={stats} />
                                     </div>
-                                    <div className="row">
-                                        <div className="col-sm-12">
-                                            <div className="section-title">Les commentaires</div>
-                                            <CommentairesStats stats={stats} />
-                                        </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-12">
+                                        <div className="section-title">Les notes</div>
+                                        <NoteDetails notes={stats.notes} total={stats.total} />
                                     </div>
-                                    <div className="row">
-                                        <div className="col-sm-12">
-                                            <div className="section-title">Les notes</div>
-                                            <NoteDetails notes={stats.avis.notes} total={stats.avis.total} />
-                                        </div>
-                                    </div>
-                                </>
-                        }
-                    </div>
+                                </div>
+                            </>
                 }
             />
         );

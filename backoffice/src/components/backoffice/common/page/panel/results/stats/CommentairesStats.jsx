@@ -5,53 +5,51 @@ import Pie from './Pie';
 
 const CommentairesStats = ({ stats }) => {
 
-    let { avis } = stats;
-
     return (
         <div className="CommentairesStats d-flex flex-wrap flex-row">
             <div className="chart first">
                 <div className="title">Modération des commentaires</div>
-                <div className="description">Sur {avis.nbCommentaires} commentaires au total</div>
+                <div className="description">Sur {stats.nbCommentaires} commentaires au total</div>
                 <Pie data={[
                     {
                         'id': 'Publiés',
-                        'value': avis.nbPublished,
+                        'value': stats.nbPublished,
                     },
                     {
                         'id': 'Rejetés',
-                        'value': avis.nbRejected,
+                        'value': stats.nbRejected,
                     },
                 ]} />
             </div>
             <div className="chart second">
                 <div className="title">Commentaires publiés</div>
-                <div className="description">Sur {avis.nbPublished} commentaires au total</div>
+                <div className="description">Sur {stats.nbPublished} commentaires au total</div>
                 <Pie data={[
                     {
                         'id': 'Positifs',
-                        'value': avis.nbPositifs,
+                        'value': stats.nbPositifs,
                     },
                     {
                         'id': 'Négatifs',
-                        'value': avis.nbNegatifs,
+                        'value': stats.nbNegatifs,
                     },
                 ]} />
             </div>
             <div className="chart last">
                 <div className="title">Commentaires rejetés</div>
-                <div className="description">Sur {avis.nbRejected} commentaires au total</div>
+                <div className="description">Sur {stats.nbRejected} commentaires au total</div>
                 <Pie data={[
                     {
                         'id': 'Non concernés',
-                        'value': avis.nbNonConcernes,
+                        'value': stats.nbNonConcernes,
                     },
                     {
                         'id': 'Alertes',
-                        'value': avis.nbAlertes,
+                        'value': stats.nbAlertes,
                     },
                     {
                         'id': 'Injures',
-                        'value': avis.nbInjures,
+                        'value': stats.nbInjures,
                     },
                 ]} />
             </div>
