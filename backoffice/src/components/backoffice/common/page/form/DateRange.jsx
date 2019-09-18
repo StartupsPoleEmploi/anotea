@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Date } from './Form';
-import uuid from 'uuid'; //See https://github.com/gpbl/react-day-picker/issues/886
 import './DateRange.scss';
 
 
@@ -24,14 +23,14 @@ export default class DateRange extends React.Component {
             <div className="DateRange">
                 <i className="far fa-calendar"></i>
                 <Date
-                    key={`${range.startDate}${uuid.v4()}`}
+                    key={`${range.startDate}${Math.random()}`}
                     value={range.startDate}
                     onChange={date => this.onDateChange('startDate', date)}
                     disabledDays={[{ after: range.endDate }]}
                 />
                 <span className="between">à</span>
                 <Date
-                    key={`${range.endDate}${uuid.v4()}`}
+                    key={`${range.endDate}${Math.random()}`}
                     value={range.endDate}
                     onChange={date => this.onDateChange('endDate', date)}
                     disabledDays={[{ before: range.startDate }]}
