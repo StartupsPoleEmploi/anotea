@@ -3,9 +3,9 @@
 .NewPanel {
 
   background-color: $color-white;
-  height: 100%;
+  padding-bottom: 3rem;
 
-  .grey {
+  &.grey {
     background-color: $color-grey-5;
   }
 

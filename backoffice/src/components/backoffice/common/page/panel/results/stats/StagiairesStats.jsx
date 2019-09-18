@@ -8,8 +8,8 @@ const StagiairesStats = ({ stats }) => {
     let { stagiaires, avis } = stats;
 
     return (
-        <div className="StagiairesStats d-flex flex-wrap justify-content-around">
-            <div className="d-flex justify-content-around align-items-stretch stats">
+        <div className="StagiairesStats d-flex flex-wrap flex-row">
+            <div className="d-flex justify-content-around align-items-stretch stats mr-3">
                 <div className="data">
                     <div className="value">{stagiaires.nbEmailsEnvoyes} <i className="icon fas fa-envelope"></i></div>
                     <div className="label">Mails envoyés</div>

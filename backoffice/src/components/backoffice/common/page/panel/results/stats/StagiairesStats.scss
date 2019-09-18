@@ -5,8 +5,7 @@
   .stats {
 
     @include box();
-
-    min-width: 300px;
+    flex-grow: 1;
 
     .data {
       width: 33%;

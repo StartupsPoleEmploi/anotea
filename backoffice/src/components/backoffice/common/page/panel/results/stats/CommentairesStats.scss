@@ -5,6 +5,7 @@
   @include box();
 
   .chart {
+    flex-grow: 1;
     min-width: 300px;
     padding: 0 2rem;
 
