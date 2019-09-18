@@ -15,6 +15,7 @@ const sendReponseRejeteeNotification = require('./common/components/mailing/send
 const sendSignalementRejeteNotification = require('./common/components/mailing/sendSignalementRejeteNotification');
 const sendSignalementAccepteNotification = require('./common/components/mailing/sendSignalementAccepteNotification');
 const sendInjureMail = require('./common/components/mailing/sendInjureMail');
+const sendAlerteMail = require('./common/components/mailing/sendAlerteMail');
 const sendAvisPublieMail = require('./common/components/mailing/sendAvisPublieMail');
 
 module.exports = async (options = {}) => {
@@ -45,6 +46,7 @@ module.exports = async (options = {}) => {
             sendSignalementRejeteNotification: sendSignalementRejeteNotification(db, mailer, logger),
             sendSignalementAccepteNotification: sendSignalementAccepteNotification(db, mailer, logger),
             sendInjureMail: sendInjureMail(db, mailer, logger),
+            sendAlerteMail: sendAlerteMail(db, mailer, logger),
             sendAvisPublieMail: sendAvisPublieMail(db, mailer, logger)
         }
     }, options || {});

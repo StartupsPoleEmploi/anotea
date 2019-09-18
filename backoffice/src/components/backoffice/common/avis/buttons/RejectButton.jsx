@@ -38,16 +38,16 @@ export default class RejectButton extends React.Component {
     getModal = () => {
         return (
             <Modal
-                title="Rejeter cet avis pour injure"
+                title={`Rejeter cet avis pour ${this.state.reason}`}
                 body={
                     <span>
-                        Le <b>rejet pour injure</b> entraîne <b>l&apos;envoi d&apos;un mail </b> automatique au
+                        Le <b>rejet pour {this.state.reason}</b> entraîne <b>l&apos;envoi d&apos;un mail </b> automatique au
                         stagiaire pour l&apos;informer que le <b>commentaire ne sera pas publié</b>. Confirmez-vous
                         cette demande ?
                     </span>
                 }
                 onClose={this.handleCancel}
-                onConfirmed={() => this.reject(this.props.avis, 'injure')} />
+                onConfirmed={() => this.reject(this.props.avis, this.state.reason)} />
         );
     };
 
@@ -67,11 +67,11 @@ export default class RejectButton extends React.Component {
                     }
                     items={
                         <div>
-                            <DropdownItem onClick={() => this.setState({ showModal: true })}>
+                            <DropdownItem onClick={() => this.setState({ showModal: true, reason: 'injure' })}>
                                 Injure
                             </DropdownItem>
                             <DropdownDivider />
-                            <DropdownItem onClick={() => this.reject(avis, 'alerte')}>
+                            <DropdownItem onClick={() => this.setState({ showModal: true, reason: 'alerte' })}>
                                 Alerte
                             </DropdownItem>
                             <DropdownDivider />

@@ -352,12 +352,13 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         const id = new ObjectID();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment({ _id: id })),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
         ]);
 
         let response = await request(app)
         .put(`/api/backoffice/moderateur/avis/${id}/reject`)
-        .send({ reason: 'alerte' })
+        .send({ reason: 'injure' })
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -365,7 +366,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         assert.deepStrictEqual(response.body.published, false);
         assert.deepStrictEqual(response.body.rejected, true);
         assert.deepStrictEqual(response.body.reported, false);
-        assert.deepStrictEqual(response.body.rejectReason, 'alerte');
+        assert.deepStrictEqual(response.body.rejectReason, 'injure');
         assert.ok(response.body.lastStatusUpdate);
     });
 

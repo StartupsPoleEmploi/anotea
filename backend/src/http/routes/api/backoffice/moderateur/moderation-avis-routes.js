@@ -111,7 +111,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
     }));
 
     router.put('/backoffice/moderateur/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let { sendInjureMail } = mailing;
+        let { sendInjureMail, sendAlerteMail } = mailing;
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { reason } = await Joi.validate(req.body, { reason: Joi.string().required() }, { abortEarly: false });
@@ -127,16 +127,19 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
 
         avis = await moderation.reject(id, reason, { event: { origin: getRemoteAddress(req) } });
 
-        if (reason === 'injure') {
+        if (reason === 'injure' || reason === 'alerte') {
             let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
             let trainee = await db.collection('trainee').findOne({ token: comment.token });
 
             let email = trainee.trainee.email;
-            sendInjureMail(email, trainee, comment, () => {
-                logger.info(`email sent to ${email} pour`, reason);
-            }, err => {
-                logger.error(`Unable to send email to ${email}`, err);
-            });
+            let sendMail;
+            
+            if (reason === 'injure') {
+                sendMail = sendInjureMail;
+            } else if (reason === 'alerte') {
+                sendMail = sendAlerteMail;
+            }
+            sendMail(email, trainee, comment, reason);
         }
 
         return res.json(avis);

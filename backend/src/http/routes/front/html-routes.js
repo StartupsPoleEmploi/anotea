@@ -299,6 +299,34 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
         });
     });
 
+    router.get('/mail/:token/alerte', async (req, res) => {
+        const trainee = await db.collection('trainee').findOne({ token: req.params.token });
+        if (trainee === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const comment = await db.collection('comment').findOne({ token: req.params.token });
+
+        const unsubscribeLink = mailer.getUnsubscribeLink(trainee);
+        const formLink = mailer.getFormLink(trainee);
+        trainee.trainee.firstName = titleize(trainee.trainee.firstName);
+        trainee.trainee.name = titleize(trainee.trainee.name);
+        let region = regions.findRegionByCodeRegion(trainee.codeRegion);
+
+        res.render('../../smtp/views/avis_alerte.ejs', {
+            trainee: trainee,
+            comment: comment,
+            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/alerte?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
+            unsubscribeLink: unsubscribeLink,
+            formLink: formLink,
+            moment: moment,
+            email: getReplyToEmail(region),
+            hostname: configuration.app.public_hostname,
+            webView: true
+        });
+    });
+
     router.get('/mail/:token/track', async (req, res) => {
 
         const trainee = await db.collection('trainee').findOne({ token: req.params.token });
