@@ -14,7 +14,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let email = `${randomize('name')}@email.fr`;
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
-                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-02-01',
+                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-03-29',
                 mailSent: false,
                 mailSentDate: null,
                 trainee: {
@@ -51,7 +51,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             insertIntoDatabase('trainee', newTrainee({
                 mailSent: false,
                 mailSentDate: null,
-                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-02-01',
+                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-03-29',
                 trainee: {
                     email,
                 },
