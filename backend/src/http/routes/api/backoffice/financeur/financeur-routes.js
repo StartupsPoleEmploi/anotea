@@ -100,24 +100,26 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         };
     };
 
-    let getFormQuery = parameters => {
+    let getFormQuery = (codeRegion, parameters) => {
         let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate } = parameters;
+        let region = regions.findRegionByCodeRegion(codeRegion);
 
         return {
+            codeRegion,
+            'training.startDate': { $gte: moment(startDate || region.since).toDate() },
             ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
             ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
             ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
             ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
-            ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
             ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
         };
     };
 
-    let getListQuery = parameters => {
+    let getListQuery = (codeRegion, parameters) => {
         let { status, qualification } = parameters;
 
         return {
-            ...getFormQuery(parameters),
+            ...getFormQuery(codeRegion, parameters),
             ...(qualification ? { comment: { $ne: null } } : {}),
             ...(['positif', 'négatif'].includes(qualification) ? { qualification } : {}),
             ...(status === 'reported' ? { reported: true } : {}),
@@ -138,7 +140,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
 
         let cursor = db.collection('comment')
-        .find({ codeRegion, ...getListQuery(parameters) })
+        .find(getListQuery(codeRegion, parameters))
         .sort({ [parameters.sortBy]: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
@@ -175,7 +177,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         }, { abortEarly: false });
 
         let cursor = db.collection('comment')
-        .find({ codeRegion, ...getListQuery(parameters) })
+        .find(getListQuery(codeRegion, parameters))
         .sort({ [parameters.sortBy]: -1 });
 
         let sanitizeNote = note => `${note}`.replace(/\./g, ',');
@@ -246,12 +248,13 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
             ...getFormQueryValidators(),
         }, { abortEarly: false });
 
+        console.log(getFormQuery(codeRegion, parameters));
+
         let [stagiaires, avis] = await Promise.all([
             db.collection('trainee').aggregate([
                 {
                     $match: {
-                        codeRegion,
-                        ...getFormQuery(parameters),
+                        ...getFormQuery(codeRegion, parameters),
                     }
                 },
                 {
@@ -271,8 +274,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
             db.collection('comment').aggregate([
                 {
                     $match: {
-                        codeRegion,
-                        ...getFormQuery(parameters),
+                        ...getFormQuery(codeRegion, parameters),
                         $or: [
                             { comment: { $exists: false } },
                             { published: true },
@@ -339,6 +341,10 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
             ])
             .toArray()
         ]);
+
+        if (avis.length === 0) {
+            return res.json({});
+        }
 
         return res.json({
             stagiaires: stagiaires[0],
