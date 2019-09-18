@@ -5,8 +5,7 @@
   @include box();
 
   .chart {
-    flex-grow: 1;
-    min-width: 300px;
+    flex: 1 0 300px;
     padding: 0 2rem;
 
     &.first, &.second {
@@ -14,6 +13,7 @@
     }
 
     &.last {
+      flex: 4 0 300px;
       border-right: unset;
     }
 

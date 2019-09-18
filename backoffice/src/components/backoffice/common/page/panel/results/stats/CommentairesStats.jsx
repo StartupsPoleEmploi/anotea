@@ -12,12 +12,14 @@ const CommentairesStats = ({ stats }) => {
                 <div className="description">Sur {stats.nbCommentaires} commentaires au total</div>
                 <Pie data={[
                     {
-                        'id': 'Publiés',
-                        'value': stats.nbPublished,
+                        id: 'Publiés',
+                        value: stats.nbPublished,
+                        label: 'commentaires',
                     },
                     {
-                        'id': 'Rejetés',
-                        'value': stats.nbRejected,
+                        id: 'Rejetés',
+                        value: stats.nbRejected,
+                        label: 'commentaires',
                     },
                 ]} />
             </div>
@@ -26,12 +28,14 @@ const CommentairesStats = ({ stats }) => {
                 <div className="description">Sur {stats.nbPublished} commentaires au total</div>
                 <Pie data={[
                     {
-                        'id': 'Positifs',
-                        'value': stats.nbPositifs,
+                        id: 'Positifs',
+                        value: stats.nbPositifs,
+                        label: 'commentaires',
                     },
                     {
-                        'id': 'Négatifs',
-                        'value': stats.nbNegatifs,
+                        id: 'Négatifs',
+                        value: stats.nbNegatifs,
+                        label: 'commentaires',
                     },
                 ]} />
             </div>
@@ -40,16 +44,19 @@ const CommentairesStats = ({ stats }) => {
                 <div className="description">Sur {stats.nbRejected} commentaires au total</div>
                 <Pie data={[
                     {
-                        'id': 'Non concernés',
-                        'value': stats.nbNonConcernes,
+                        id: 'Non concernés',
+                        value: stats.nbNonConcernes,
+                        label: 'commentaires',
                     },
                     {
-                        'id': 'Alertes',
-                        'value': stats.nbAlertes,
+                        id: 'Alertes',
+                        value: stats.nbAlertes,
+                        label: 'commentaires',
                     },
                     {
-                        'id': 'Injures',
-                        'value': stats.nbInjures,
+                        id: 'Injures',
+                        value: stats.nbInjures,
+                        label: 'commentaires',
                     },
                 ]} />
             </div>

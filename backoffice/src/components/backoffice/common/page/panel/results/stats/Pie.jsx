@@ -10,9 +10,10 @@ let round = value => Number(Math.round(value + 'e1') + 'e-1');
 const Pie = ({ data }) => {
 
     let total = _.sumBy(data, d => d.value);
+    let prettyLabel = data => `${data.id} (${round((data.value / total) * 100)}%)`;
 
     return (
-        <div className="Pie" style={{ height: '130px' }}>
+        <div className="Pie">
             {total === 0 ? <div className="empty">Pas de résultats</div> :
                 <AutoSizer>
                     {({ height, width }) => {
@@ -28,17 +29,22 @@ const Pie = ({ data }) => {
                                     bottom: 20,
                                     left: 20,
                                 }}
-                                isInteractive={false}
-                                //startAngle={-90}
+                                isInteractive={true}
                                 enableSlicesLabels={false}
-                                theme={{ fontFamily: 'Lato', textColor: '#24303A' }}
+                                theme={{ fontSize: 12, fontFamily: 'Lato', textColor: '#24303A' }}
                                 colors={['#007E54', '#E5F2ED', '#66B298']}
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
-                                radialLabelsLinkHorizontalLength={10}
-                                radialLabel={e => `${e.id} (${round((e.value / total) * 100)}%)`}
-                            />
-                        );
+                                radialLabelsLinkHorizontalLength={5}
+                                radialLabel={e => prettyLabel(e)}
+                                tooltip={data => {
+                                    return (
+                                        <div style={{ fontSize: '10px' }}>
+                                            {data.value} {data.label}
+                                        </div>
+                                    );
+                                }}
+                            />);
                     }}
                 </AutoSizer>
             }
