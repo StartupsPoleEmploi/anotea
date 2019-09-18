@@ -8,7 +8,7 @@ const CommentairesStats = ({ stats }) => {
     let { avis } = stats;
 
     return (
-        <div className="CommentairesStats d-flex flex-row">
+        <div className="CommentairesStats d-flex flex-wrap flex-row">
             <div className="chart first">
                 <div className="title">Modération des commentaires</div>
                 <div className="description">Sur {avis.nbCommentaires} commentaires au total</div>

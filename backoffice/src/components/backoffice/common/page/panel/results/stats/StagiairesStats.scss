@@ -8,11 +8,11 @@
     flex-grow: 1;
 
     .data {
+      flex-grow: 1;
       width: 33%;
       border-right: solid 1px $color-grey-25;
-      margin-right: 1rem;
+      padding: 2rem 0.5rem;
       text-align: center;
-      padding: 2rem;
 
       .value {
         font-size: 1.5rem;
@@ -35,8 +35,8 @@
     }
 
     .chart {
-      width: 300px;
-      padding: 0 2rem;
+      flex-grow: 1;
+      min-width: 300px;
 
       &.first, &.second {
         border-right: solid 1px $color-grey-25;

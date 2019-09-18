@@ -24,25 +24,19 @@ const Pie = ({ data }) => {
                                 width={width}
                                 margin={{
                                     top: 20,
-                                    right: 100,
+                                    right: 20,
                                     bottom: 20,
-                                    left: 10,
+                                    left: 20,
                                 }}
-                                legends={[{
-                                    anchor: 'right',
-                                    direction: 'column',
-                                    itemWidth: 80,
-                                    itemHeight: 18,
-                                    translateX: 80,
-                                }]}
                                 isInteractive={false}
+                                //startAngle={-90}
                                 enableSlicesLabels={false}
                                 theme={{ fontFamily: 'Lato', textColor: '#24303A' }}
                                 colors={['#007E54', '#E5F2ED', '#66B298']}
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
                                 radialLabelsLinkHorizontalLength={10}
-                                radialLabel={e => `${round((e.value / total) * 100)}%`}
+                                radialLabel={e => `${e.id} (${round((e.value / total) * 100)}%)`}
                             />
                         );
                     }}

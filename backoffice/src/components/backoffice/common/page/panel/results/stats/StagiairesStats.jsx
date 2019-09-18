@@ -29,7 +29,7 @@ const StagiairesStats = ({ stats }) => {
                     </div>
                 </div>
             </div>
-            <div className="d-flex justify-content-center stats">
+            <div className="d-flex justify-content-center stats mt-md-3 mt-lg-0">
                 <div className="chart">
                     <div className="title">Dépôt d'avis</div>
                     <Pie data={[
