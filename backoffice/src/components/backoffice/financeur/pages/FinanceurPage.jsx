@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Route } from 'react-router-dom';
 import Page from '../../common/page/Page';
 import { Tab, Tabs } from '../../common/page/tabs/Tabs';
-import { DateRange, Form, Select } from '../../common/page/form/Form';
+import { Form, Periode, Select } from '../../common/page/form/Form';
 import { getDepartements, getFormations, getOrganismes } from '../financeurService';
 import FINANCEURS from '../../common/data/financeurs';
 import Button from '../../common/Button';
@@ -84,7 +84,7 @@ export default class FinanceurPage extends React.Component {
             form: {
                 periode: {
                     startDate: query.startDate ? moment(parseInt(query.startDate)).toDate() : null,
-                    endDate: query.startDate ? moment(parseInt(query.scheduledEndDate)).toDate() : null,
+                    endDate: query.scheduledEndDate ? moment(parseInt(query.scheduledEndDate)).toDate() : null,
                 },
             }
         });
@@ -191,8 +191,9 @@ export default class FinanceurPage extends React.Component {
                         <div className="form-row">
                             <div className="form-group col-lg-6 col-xl-3">
                                 <label>Période</label>
-                                <DateRange
-                                    range={periode}
+                                <Periode
+                                    periode={periode}
+                                    min={moment('2016-01-01 Z').toDate()}
                                     onChange={periode => this.setStateDeep({ form: { periode } })}
                                 />
                             </div>

@@ -7,7 +7,7 @@ import NewPanel from '../common/page/panel/NewPanel';
 import Filter from '../common/page/panel/filters/Filter';
 import { Filters } from '../common/page/panel/filters/Filters';
 import Pagination from '../common/page/panel/pagination/Pagination';
-import { DateRange, Form, Select } from '../common/page/form/Form';
+import { Periode, Form, Select } from '../common/page/form/Form';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
 import Page from '../common/page/Page';
 import Pie from '../common/page/panel/results/stats/Pie';
@@ -154,9 +154,9 @@ const LibraryPage = () => {
             form={
                 <Form>
                     <div className="form-group">
-                        <label>DateRange</label>
-                        <DateRange
-                            range={{ startDate: new Date(), endDate: new Date() }}
+                        <label>Periode</label>
+                        <Periode
+                            periode={{ startDate: new Date(), endDate: new Date() }}
                             onChange={noop}
                         />
                     </div>
