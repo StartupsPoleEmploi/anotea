@@ -5,8 +5,8 @@
   @include box();
 
   .chart {
-    width: 300px;
-    padding: 1rem;
+    min-width: 300px;
+    padding: 0 2rem;
 
     &.first, &.second {
       border-right: solid 1px $color-grey-25;

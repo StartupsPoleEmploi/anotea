@@ -2,16 +2,18 @@
 
 .StagiairesStats {
 
-
   .stats {
+
     @include box();
 
+    min-width: 300px;
+
     .data {
+      width: 33%;
       border-right: solid 1px $color-grey-25;
       margin-right: 1rem;
       text-align: center;
-      width: 100%;
-      padding: 2.5rem;
+      padding: 2rem;
 
       .value {
         font-size: 1.5rem;
@@ -35,7 +37,7 @@
 
     .chart {
       width: 300px;
-      padding: 1rem;
+      padding: 0 2rem;
 
       &.first, &.second {
         border-right: solid 1px $color-grey-25;

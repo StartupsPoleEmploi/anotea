@@ -10,6 +10,7 @@ import Pagination from '../common/page/panel/pagination/Pagination';
 import { DateRange, Form, Select } from '../common/page/form/Form';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
 import Page from '../common/page/Page';
+import Pie from '../common/page/panel/results/stats/Pie';
 
 const ButtonShowcase = ({ size, color }) => {
     return (
@@ -135,6 +136,34 @@ const LibraryPage = () => {
                     }
                     results={
                         <div>
+
+                            <div className="row py-3">
+                                <div className="col-6">
+                                    <Pie data={[
+                                        {
+                                            'id': 'Commentaires',
+                                            'value': 80,
+                                        },
+                                        {
+                                            'id': 'Notes seules',
+                                            'value': 20,
+                                        },
+                                    ]}/>
+                                </div>
+                                <div className="col-6">
+                                    <Pie data={[
+                                        {
+                                            'id': 'Commentaires',
+                                            'value': 50,
+                                        },
+                                        {
+                                            'id': 'Notes seules',
+                                            'value': 50,
+                                        },
+                                    ]}/>
+                                </div>
+                            </div>
+
                             <div className="row py-3">
                                 <div className="offset-1 col-2">
                                     <h3>BUTTONS</h3>

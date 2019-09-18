@@ -12,6 +12,7 @@ import Avis from '../../../common/avis/Avis';
 import Pagination from '../../../common/page/panel/pagination/Pagination';
 import QueryBadges from '../components/QueryBadges';
 import NewPanel from '../../../common/page/panel/NewPanel';
+import Loader from '../../../common/Loader';
 
 export default class AvisPanel extends React.Component {
 
@@ -124,10 +125,14 @@ export default class AvisPanel extends React.Component {
                         }
                     />}
                 results={
-                    <AvisResults
-                        results={results}
-                        message={message}
-                        renderAvis={avis => <Avis avis={avis} readonly={true} showStatus={true} onChange={() => ({})} />} />
+                    this.state.loading ?
+                        <div className="d-flex justify-content-center"><Loader /></div> :
+                        <AvisResults
+                            results={results}
+                            message={message}
+                            renderAvis={avis => {
+                                return <Avis avis={avis} readonly={true} showStatus={true} onChange={() => ({})} />;
+                            }} />
                 }
                 pagination={
                     <Pagination
