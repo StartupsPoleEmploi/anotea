@@ -248,8 +248,6 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
             ...getFormQueryValidators(),
         }, { abortEarly: false });
 
-        console.log(getFormQuery(codeRegion, parameters));
-
         let [stagiaires, avis] = await Promise.all([
             db.collection('trainee').aggregate([
                 {
@@ -259,7 +257,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
                 },
                 {
                     $group: {
-                        _id: 'null',
+                        _id: null,
                         total: { $sum: 1 },
                         nbEmailsEnvoyes: { $sum: { $cond: [{ $eq: ['$mailSent', true] }, 1, 0] } },
                         nbAvisDeposes: { $sum: { $cond: [{ $eq: ['$avisCreated', true] }, 1, 0] } },

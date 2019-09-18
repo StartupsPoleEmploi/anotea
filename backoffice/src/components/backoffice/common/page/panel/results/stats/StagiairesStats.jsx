@@ -7,6 +7,9 @@ const StagiairesStats = ({ stats }) => {
 
     let { stagiaires, avis } = stats;
 
+    let rate = stagiaires.nbEmailsEnvoyes ?
+        `${Math.round((stagiaires.nbAvisDeposes / stagiaires.nbEmailsEnvoyes) * 100)}%` : '0%';
+
     return (
         <div className="StagiairesStats d-flex flex-wrap flex-row">
             <div className="d-flex justify-content-around align-items-stretch stats mr-3">
@@ -19,7 +22,7 @@ const StagiairesStats = ({ stats }) => {
                     <div className="label">Avis déposés</div>
                 </div>
                 <div className="data last">
-                    <div className="value">3 <i className="icon fas fa-user-friends"></i></div>
+                    <div className="value">{rate} <i className="icon fas fa-user-friends"></i></div>
                     <div className="label">
                         <div>des stagiaires interrogés</div>
                         <div>ont déposé un avis</div>
