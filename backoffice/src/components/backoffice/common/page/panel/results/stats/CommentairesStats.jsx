@@ -25,7 +25,7 @@ const CommentairesStats = ({ stats }) => {
             </div>
             <div className="chart second">
                 <div className="title">Commentaires publiés</div>
-                <div className="description">Sur {avis.nbCommentaires} commentaires au total</div>
+                <div className="description">Sur {avis.nbPublished} commentaires au total</div>
                 <Pie data={[
                     {
                         'id': 'Positifs',
@@ -39,15 +39,15 @@ const CommentairesStats = ({ stats }) => {
             </div>
             <div className="chart last">
                 <div className="title">Commentaires rejetés</div>
-                <div className="description">Sur {avis.nbCommentaires} commentaires au total</div>
+                <div className="description">Sur {avis.nbRejected} commentaires au total</div>
                 <Pie data={[
                     {
                         'id': 'Non concernés',
                         'value': avis.nbNonConcernes,
                     },
                     {
-                        'id': 'Négatifs',
-                        'value': avis.nbNegatifs,
+                        'id': 'Alertes',
+                        'value': avis.nbAlertes,
                     },
                     {
                         'id': 'Injures',
