@@ -46,6 +46,7 @@ class Questionnaire6MoisMailer {
             let cursor = this.db.collection('trainee').aggregate([
                 {
                     $match: {
+                        'mailing.questionnaire6Mois.mailSent': { $exists: false },
                         'campaign': 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-03-29',
                         '$or': [
                             { 'training.certifInfo.id': { $ne: 'NULL' } },
