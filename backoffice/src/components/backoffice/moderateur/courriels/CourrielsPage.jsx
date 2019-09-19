@@ -6,7 +6,7 @@ import RightArrow from './components/slider/RightArrow';
 import CarouselIndicator from './components/slider/CarouselIndicator';
 import './CourrielsPage.scss';
 import Page from '../../common/page/Page';
-import NewPanel from '../../common/page/panel/NewPanel';
+import Panel from '../../common/page/panel/Panel';
 
 const carousels = {
     stagiaires: [
@@ -105,7 +105,7 @@ export default class CourrielsPanel extends Component {
             <Page
                 className="CourrielsPage"
                 panel={
-                    <NewPanel
+                    <Panel
                         results={
                             <div className="carousel-container">
                                 <div className="carousel">
