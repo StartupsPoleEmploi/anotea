@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DeprecatedPanel from '../../common/page/DeprecatedPanel';
 import LeftArrow from './components/slider/LeftArrow';
 import CarouselSlide from './components/slider/CarouselSlide';
 import RightArrow from './components/slider/RightArrow';
 import CarouselIndicator from './components/slider/CarouselIndicator';
-import './CourrielsPanel.scss';
+import './CourrielsPage.scss';
+import Page from '../../common/page/Page';
+import NewPanel from '../../common/page/panel/NewPanel';
 
 const carousels = {
     stagiaires: [
@@ -99,50 +100,48 @@ export default class CourrielsPanel extends Component {
     };
 
     render() {
-
         let carousel = carousels[this.props.type];
-
         return (
-            <div>
-                <DeprecatedPanel
-                    header={
-                        <div>
-                            <h1 className="title">Modèles de courriel</h1>
-                        </div>
-                    }
-                />
-                <div className="carousel-container">
-                    <div className="carousel">
+            <Page
+                className="CourrielsPage"
+                panel={
+                    <NewPanel
+                        results={
+                            <div className="carousel-container">
+                                <div className="carousel">
 
-                        <LeftArrow onClick={e => this.goToPrevSlide(e)} />
+                                    <LeftArrow onClick={e => this.goToPrevSlide(e)} />
 
-                        <ul className="carousel__slides">
-                            {carousel.map((slide, index) =>
-                                <CarouselSlide
-                                    key={index}
-                                    index={index}
-                                    activeIndex={this.state.activeIndex}
-                                    slide={slide}
-                                />
-                            )}
-                        </ul>
+                                    <ul className="carousel__slides">
+                                        {carousel.map((slide, index) =>
+                                            <CarouselSlide
+                                                key={index}
+                                                index={index}
+                                                activeIndex={this.state.activeIndex}
+                                                slide={slide}
+                                            />
+                                        )}
+                                    </ul>
 
-                        <RightArrow onClick={e => this.goToNextSlide(e)} />
+                                    <RightArrow onClick={e => this.goToNextSlide(e)} />
 
-                        <ul className="carousel__indicators">
-                            {carousel.map((slide, index) =>
-                                <CarouselIndicator
-                                    key={index}
-                                    index={index}
-                                    activeIndex={this.state.activeIndex}
-                                    isActive={this.state.activeIndex === index}
-                                    onClick={e => this.goToSlide(index)}
-                                />
-                            )}
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                                    <ul className="carousel__indicators">
+                                        {carousel.map((slide, index) =>
+                                            <CarouselIndicator
+                                                key={index}
+                                                index={index}
+                                                activeIndex={this.state.activeIndex}
+                                                isActive={this.state.activeIndex === index}
+                                                onClick={e => this.goToSlide(index)}
+                                            />
+                                        )}
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    />
+                }
+            />
         );
     }
 }

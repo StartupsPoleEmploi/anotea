@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import OrganismePanel from './gestion-organismes/OrganismePanel';
 import ModerationAvisPanel from './moderation-avis/ModerationAvisPanel';
 import ModerationReponsesPanel from './moderation-avis/ModerationReponsesPanel';
-import CourrielsPanel from './courriels/CourrielsPanel';
+import CourrielsPage from './courriels/CourrielsPage';
 import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
 
 export default class ModerateurRoutes extends React.Component {
@@ -26,8 +26,8 @@ export default class ModerateurRoutes extends React.Component {
     render() {
         return (
             <div>
-                <Route path="/admin/moderateur/courriels/stagiaires" render={() => <CourrielsPanel type="stagiaires" />} />
-                <Route path="/admin/moderateur/courriels/organismes" render={() => <CourrielsPanel type="organismes" />} />
+                <Route path="/admin/moderateur/courriels/stagiaires" render={() => <CourrielsPage type="stagiaires" />} />
+                <Route path="/admin/moderateur/courriels/organismes" render={() => <CourrielsPage type="organismes" />} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"
                     render={({ history, location }) => {
