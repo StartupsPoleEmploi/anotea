@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ListeWidget from './components/ListeWidget';
 import { getAvis, getScore } from './services/widgetService';
 import GridDisplayer from './components/common/library/GridDisplayer';
-import OptionsContext from './components/common/options/OptionsContext';
+import WidgetContext from './components/common/options/WidgetContext';
 import ScoreWidget from './components/ScoreWidget';
 import CarrouselWidget from './components/CarrouselWidget';
 import './App.scss';
@@ -89,9 +89,9 @@ class App extends Component {
             <div className="anotea">
                 {false && <GridDisplayer />}
                 <div className="container-fluid">
-                    <OptionsContext.Provider value={this.getOptions()}>
+                    <WidgetContext.Provider value={this.props}>
                         {widget}
-                    </OptionsContext.Provider>
+                    </WidgetContext.Provider>
                 </div>
             </div>
         );
