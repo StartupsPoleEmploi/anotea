@@ -141,17 +141,5 @@ module.exports = ({ db, middlewares }) => {
         }, { filename: 'domainMailing.csv' });
     }));
 
-
-    router.get('/exports/contactStagiaires.csv', checkAuth, tryAndCatch(async (req, res) => {
-
-        let stream = db.collection('contactStagiaires').find().stream();
-
-        return sendCSVStream(stream, res, {
-            'Contact': doc => `="${doc.contact}"`,
-            'Question': doc => doc.question.replace(/\n/g, ' ').trim(),
-            'Source': doc => doc.referrer,
-        }, { filename: 'contactStagiaires.csv' });
-    }));
-
     return router;
 };

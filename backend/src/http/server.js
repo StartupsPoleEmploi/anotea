@@ -53,7 +53,6 @@ module.exports = components => {
     app.use('/api', require('./routes/api/regions-routes')(httpComponents));
     app.use('/api', require('./routes/api/stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/kairos-routes')(httpComponents));
-    app.use('/api', require('./routes/api/contactStagiaires-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/login-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/auth/forgottenPassword-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/moderateur/moderation-avis-routes')(httpComponents));

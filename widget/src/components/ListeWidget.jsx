@@ -6,7 +6,6 @@ import Verified from './common/Verified';
 import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
-import ContactStagiaire from './common/ContactStagiaire';
 import Option from './common/options/Option';
 import './ListeWidget.scss';
 
@@ -148,14 +147,6 @@ export default class ListeWidget extends Component {
                             </div>
                             <Verified />
                         </div>
-                        {this.getListe()}
-                        <Option value="contact-stagiaire" render={() => {
-                            return (
-                                <div className="d-flex justify-content-center py-2">
-                                    <ContactStagiaire />
-                                </div>
-                            );
-                        }} />
                         <div className="d-flex justify-content-center mt-3">
                             <div className="d-xs-block d-sm-none">
                                 <Propulsed />
