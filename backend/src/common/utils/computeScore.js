@@ -1,6 +1,6 @@
-module.exports = avis => {
+const { round } = require('./number-utils');
 
-    let round = value => Number(Math.round(value + 'e1') + 'e-1');
+module.exports = avis => {
 
     if (avis.length === 0) {
         return { nb_avis: 0 };

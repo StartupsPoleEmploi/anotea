@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { updateEditedCourriel } from '../gestionOrganismesService';
-import Button from '../../../common/library/Button';
+import Button from '../../../common/Button';
 
 export default class Edition extends React.Component {
 

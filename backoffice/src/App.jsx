@@ -14,10 +14,11 @@ import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import MonComptePanel from './components/backoffice/misc/account/mon-compte/MonComptePanel';
-import GridDisplayer from './components/backoffice/common/library/GridDisplayer';
+import GridDisplayer from './components/backoffice/common/GridDisplayer';
 import Header from './components/backoffice/common/header/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
 import FinanceurRoutes from './components/backoffice/financeur/FinanceurRoutes';
+import UserContext from './components/UserContext';
 import './utils/moment-fr';
 import './App.scss';
 import ModerateurHeaderItems from './components/backoffice/moderateur/ModerateurHeaderItems';
@@ -184,36 +185,40 @@ class App extends Component {
     showBackofficePages = () => {
 
         let { profile, codeRegion, codeFinanceur, features, id } = this.state;
-        let layouts = {
+        let userContext = { codeRegion, codeFinanceur };
+        let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?page=0&status=none',
                 headerItems: <ModerateurHeaderItems />,
-                routes: <ModerateurRoutes codeRegion={codeRegion} />,
+                routes: <ModerateurRoutes />,
             }),
             financeur: () => ({
-                defaultPath: '/admin/financeur/avis?page=0&status=all',
+                defaultPath: '/admin/financeur/avis?status=all',
                 headerItems: <FinanceurHeaderItems />,
-                routes: <FinanceurRoutes codeRegion={codeRegion} codeFinanceur={codeFinanceur} />
+                routes: <FinanceurRoutes />
             })
         };
 
         //Use new design
         if (['moderateur', 'financeur'].includes(this.state.profile)) {
 
-            let layout = layouts[profile]();
+            let layout = backoffices[profile]();
+
             return (
                 <Router>
-                    <div className="anotea">
-                        <Switch>
-                            <Redirect exact from="/" to={layout.defaultPath} />
-                            <Redirect exact from="/admin" to={layout.defaultPath} />
-                        </Switch>
+                    <UserContext.Provider value={userContext}>
+                        <div className="anotea">
+                            <Switch>
+                                <Redirect exact from="/" to={layout.defaultPath} />
+                                <Redirect exact from="/admin" to={layout.defaultPath} />
+                            </Switch>
 
-                        <Header onLogout={this.handleLogout} items={layout.headerItems} />
+                            <Header onLogout={this.handleLogout} items={layout.headerItems} />
 
-                        <MiscRoutes />
-                        {layout.routes}
-                    </div>
+                            <MiscRoutes />
+                            {layout.routes}
+                        </div>
+                    </UserContext.Provider>
                 </Router>
             );
         }

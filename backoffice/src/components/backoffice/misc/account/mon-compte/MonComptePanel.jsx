@@ -1,11 +1,11 @@
 import React from 'react';
 import { ChangePassword } from './ChangePassword';
-import Panel from '../../../common/panel/Panel';
+import DeprecatedPanel from '../../../common/page/DeprecatedPanel';
 import './MonComptePanel.scss';
 
 export default class MonComptePanel extends React.Component {
 
     render() {
-        return <Panel className="MonComptePanel" results={<ChangePassword />} />;
+        return <DeprecatedPanel className="MonComptePanel" results={<ChangePassword />} />;
     }
 }

@@ -4,19 +4,18 @@ import _ from 'lodash';
 import { searchOrganismes } from './gestionOrganismesService';
 import GlobalMessage from '../../common/message/GlobalMessage';
 import Loader from '../../common/Loader';
-import Panel from '../../common/panel/Panel';
-import { SearchInputTab, Tab, Toolbar } from '../../common/panel/toolbar/Toolbar';
+import DeprecatedPanel from '../../common/page/DeprecatedPanel';
+import { Filter, SearchInputFilter, Toolbar } from '../../common/page/panel/filters/Toolbar';
 import Organisme from './components/Organisme';
-import Summary from '../../common/panel/results/Summary';
-import Pagination from '../../common/panel/results/Pagination';
-import ResultDivider from '../../common/panel/results/ResultDivider';
+import Summary from '../../common/page/panel/summary/Summary';
+import Pagination from '../../common/page/panel/pagination/Pagination';
+import ResultDivider from '../../common/page/panel/results/ResultDivider';
 import ExportButton from './components/ExportButton';
 import './OrganismePanel.scss';
 
 export default class OrganismePanel extends React.Component {
 
     static propTypes = {
-        codeRegion: PropTypes.string.isRequired,
         query: PropTypes.object.isRequired,
         onNewQuery: PropTypes.func.isRequired,
     };
@@ -48,7 +47,7 @@ export default class OrganismePanel extends React.Component {
     }
 
     componentDidUpdate(previous) {
-        if (this.props.query !== previous.query) {
+        if (!_.isEqual(this.props.query, previous.query)) {
             this.search();
         }
     }
@@ -69,34 +68,34 @@ export default class OrganismePanel extends React.Component {
         let isTabsDisabled = () => this.state.tabsDisabled;
 
         return (
-            <Panel
+            <DeprecatedPanel
                 className={'OrganismePanel'}
                 header={
                     <div>
                         <h1 className="title">Gestion des organismes</h1>
                     </div>
                 }
-                toolbar={
+                filters={
                     <Toolbar>
-                        <Tab
+                        <Filter
                             label="Actifs"
                             onClick={() => onNewQuery({ status: 'active' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'active'} />
 
-                        <Tab
+                        <Filter
                             label="Inactifs"
                             onClick={() => onNewQuery({ status: 'inactive' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'inactive'} />
 
-                        <Tab
+                        <Filter
                             label="Tous"
                             onClick={() => onNewQuery({ status: 'all' })}
                             isDisabled={isTabsDisabled}
                             isActive={() => !isTabsDisabled() && query.status === 'all'} />
 
-                        <SearchInputTab
+                        <SearchInputFilter
                             label="Rechercher un organisme"
                             onSubmit={search => onNewQuery({ search })}
                             isActive={active => this.setState({ tabsDisabled: active })} />
@@ -104,7 +103,7 @@ export default class OrganismePanel extends React.Component {
                 }
                 summary={
                     this.state.loading ? <div /> :
-                        <Summary paginationLabel="organisme(s)" pagination={results.meta.pagination}/>
+                        <Summary paginationLabel="organisme(s)" pagination={results.meta.pagination} />
                 }
                 results={
                     this.state.loading ?

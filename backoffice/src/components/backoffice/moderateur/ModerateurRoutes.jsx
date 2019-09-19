@@ -1,19 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Route } from 'react-router-dom';
 import queryString from 'query-string';
 import OrganismePanel from './gestion-organismes/OrganismePanel';
 import ModerationAvisPanel from './moderation-avis/ModerationAvisPanel';
 import ModerationReponsesPanel from './moderation-avis/ModerationReponsesPanel';
-import CourrielsPanel from './courrriels/CourrielsPanel';
+import CourrielsPanel from './courriels/CourrielsPanel';
 import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
 
 export default class ModerateurRoutes extends React.Component {
-
-    static propTypes = {
-        codeRegion: PropTypes.string.isRequired,
-    };
 
     parse = location => {
         return queryString.parse(location.search);
@@ -37,7 +32,6 @@ export default class ModerateurRoutes extends React.Component {
                     path="/admin/moderateur/gestion/organismes"
                     render={({ history, location }) => {
                         return <OrganismePanel
-                            codeRegion={this.props.codeRegion}
                             query={this.parse(location)}
                             onNewQuery={options => {
                                 history.push(`/admin/moderateur/gestion/organismes?${this.buildParameters(options)}`);
@@ -47,7 +41,6 @@ export default class ModerateurRoutes extends React.Component {
                     path="/admin/moderateur/moderation/avis/stagiaires"
                     render={({ history, location }) => {
                         return <ModerationAvisPanel
-                            codeRegion={this.props.codeRegion}
                             query={this.parse(location)}
                             onNewQuery={options => {
                                 history.push(`/admin/moderateur/moderation/avis/stagiaires?${this.buildParameters(options)}`);
@@ -57,7 +50,6 @@ export default class ModerateurRoutes extends React.Component {
                     path="/admin/moderateur/moderation/avis/reponses"
                     render={({ history, location }) => {
                         return <ModerationReponsesPanel
-                            codeRegion={this.props.codeRegion}
                             query={this.parse(location)}
                             onNewQuery={options => {
                                 history.push(`/admin/moderateur/moderation/avis/reponses?${this.buildParameters(options)}`);

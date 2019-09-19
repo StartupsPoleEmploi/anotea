@@ -1,8 +1,10 @@
 const Joi = require('joi');
 const _ = require('lodash');
 const express = require('express');
-const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../../routes-utils');
 const moment = require('moment');
+const { round } = require('../../../../../common/utils/number-utils');
+const { isPoleEmploi } = require('../../../../../common/utils/financeurs');
+const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../../routes-utils');
 
 module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
@@ -10,70 +12,6 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
-
-    const exportAsCsv = async (cursor, res) => {
-
-        let getStatus = comment => {
-            if (comment.archived === true) {
-                return 'Archivé';
-            } else if (comment.published === true || comment.comment === undefined || comment.comment === null) {
-                return 'Publié';
-            } else {
-                return 'En attente de modération';
-            }
-        };
-
-        let getReponseStatus = reponse => {
-            switch (reponse.status) {
-                case 'rejected':
-                    return 'Rejetée';
-                case 'published':
-                    return 'Validée';
-                default:
-                    return 'En attente de modération';
-            }
-        };
-
-        let sanitizeNote = note => `${note}`.replace(/\./g, ',');
-        let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').replace(/\r/g, ' ').replace(/\n/g, ' ').trim();
-
-        try {
-            await sendCSVStream(cursor.stream(), res, {
-                'id': comment => comment._id,
-                'note accueil': comment => sanitizeNote(comment.rates.accueil),
-                'note contenu formation': comment => sanitizeNote(comment.rates.contenu_formation),
-                'note equipe formateurs': comment => sanitizeNote(comment.rates.equipe_formateurs),
-                'note matériel': comment => sanitizeNote(comment.rates.moyen_materiel),
-                'note accompagnement': comment => sanitizeNote(comment.rates.accompagnement),
-                'note global': comment => sanitizeNote(comment.rates.global),
-                'pseudo': comment => sanitizeString(_.get(comment, 'comment.pseudo', '')),
-                'titre': comment => sanitizeString(_.get(comment, 'comment.title', '')),
-                'commentaire': comment => sanitizeString(_.get(comment, 'comment.text', '')),
-                'qualification': comment => `${comment.qualification} ${comment.rejectReason}`,
-                'statut': comment => getStatus(comment),
-                'réponse': comment => sanitizeString(_.get(comment, 'reponse.text', '')),
-                'réponse statut': comment => comment.reponse ? getReponseStatus(comment.reponse.status) : '',
-                'id formation': comment => comment.training.idFormation,
-                'titre formation': comment => comment.training.title,
-                'date début': comment => moment(comment.training.startDate).format('DD/MM/YYYY'),
-                'date de fin prévue': comment => moment(comment.training.scheduledEndDate).format('DD/MM/YYYY'),
-                'siret organisme': comment => comment.training.organisation.siret,
-                'libellé organisme': comment => comment.training.organisation.label,
-                'nom organisme': comment => comment.training.organisation.name,
-                'code postal': comment => comment.training.place.postalCode,
-                'ville': comment => comment.training.place.city,
-                'id certif info': comment => comment.training.certifInfo.id,
-                'libellé certifInfo': comment => comment.training.certifInfo.label,
-                'id session': comment => comment.training.idSession,
-                'formacode': comment => comment.training.formacode,
-                'AES reçu': comment => comment.training.aesRecu,
-                'code financeur': comment => comment.training.codeFinanceur,
-            }, { filename: 'avis.csv' });
-        } catch (e) {
-            logger.error('Unable to send CSV file', e);
-        }
-    };
-
 
     router.get('/backoffice/financeur/departements', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
@@ -152,45 +90,60 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         return sendArrayAsJsonStream(stream, res);
     }));
 
-    router.get('/backoffice/financeur/avis:extension?', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
-
-        let codeRegion = req.user.codeRegion;
-        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate, status, qualification, page, sortBy } = await Joi.validate(req.query, {
+    let getFormQueryValidators = user => {
+        return {
             departement: Joi.string(),
-            codeFinanceur: Joi.string(),
+            codeFinanceur: isPoleEmploi(user.codeFinanceur) ? Joi.string() : Joi.string().valid([user.codeFinanceur]),
             siren: Joi.string(),
             idFormation: Joi.string(),
             startDate: Joi.number(),
             scheduledEndDate: Joi.number(),
-            status: Joi.string().allow(['all', 'reported', 'rejected']),
-            qualification: Joi.string().allow(['all', 'négatif', 'positif']),
-            page: Joi.number().min(0).default(0),
-            sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
-            token: Joi.string(),
-        }, { abortEarly: false });
+        };
+    };
 
-        let cursor = db.collection('comment')
-        .find({
-            codeRegion: codeRegion,
+    let getFormQuery = (codeRegion, parameters) => {
+        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate } = parameters;
+        let region = regions.findRegionByCodeRegion(codeRegion);
+
+        return {
+            codeRegion,
+            'training.startDate': { $gte: moment(startDate || region.since).toDate() },
             ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
             ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
             ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
             ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
-            ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
             ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
-            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
+        };
+    };
+
+    let getListQuery = (codeRegion, parameters) => {
+        let { status, qualification } = parameters;
+
+        return {
+            ...getFormQuery(codeRegion, parameters),
             ...(qualification ? { comment: { $ne: null } } : {}),
             ...(['positif', 'négatif'].includes(qualification) ? { qualification } : {}),
             ...(status === 'reported' ? { reported: true } : {}),
             ...(status === 'rejected' ? { rejected: true } : {}),
-        })
-        .sort({ [sortBy]: -1 });
+        };
+    };
 
-        if (req.params.extension === '.csv') {
-            return exportAsCsv(cursor, res);
-        }
+    router.get('/backoffice/financeur/avis', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
-        cursor.skip((page || 0) * itemsPerPage).limit(itemsPerPage);
+        let parameters = await Joi.validate(req.query, {
+            ...getFormQueryValidators(req.user),
+            status: Joi.string().allow(['all', 'reported', 'rejected']),
+            qualification: Joi.string().allow(['all', 'négatif', 'positif']),
+            page: Joi.number().min(0).default(0),
+            sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
+        }, { abortEarly: false });
+
+
+        let cursor = db.collection('comment')
+        .find(getListQuery(req.user.codeRegion, parameters))
+        .sort({ [parameters.sortBy]: -1 })
+        .skip((parameters.page || 0) * itemsPerPage)
+        .limit(itemsPerPage);
 
         let [total, itemsOnThisPage] = await Promise.all([
             cursor.count(),
@@ -202,7 +155,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
             arrayWrapper: {
                 meta: {
                     pagination: {
-                        page: page,
+                        page: parameters.page,
                         itemsPerPage,
                         itemsOnThisPage,
                         totalItems: total,
@@ -211,6 +164,181 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
                 }
             }
         });
+    }));
+
+    router.get('/backoffice/financeur/avis.csv', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
+
+        let parameters = await Joi.validate(req.query, {
+            ...getFormQueryValidators(req.user),
+            status: Joi.string().allow(['all', 'reported', 'rejected']),
+            qualification: Joi.string().allow(['all', 'négatif', 'positif']),
+            token: Joi.string(),
+        }, { abortEarly: false });
+
+        let cursor = db.collection('comment')
+        .find(getListQuery(req.user.codeRegion, parameters))
+        .sort({ [parameters.sortBy]: -1 });
+
+        let sanitizeNote = note => `${note}`.replace(/\./g, ',');
+        let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').replace(/\r/g, ' ').replace(/\n/g, ' ').trim();
+        let getStatus = comment => {
+            if (comment.archived === true) {
+                return 'Archivé';
+            } else if (comment.published === true || comment.comment === undefined || comment.comment === null) {
+                return 'Publié';
+            } else {
+                return 'En attente de modération';
+            }
+        };
+
+        let getReponseStatus = reponse => {
+            switch (reponse.status) {
+                case 'rejected':
+                    return 'Rejetée';
+                case 'published':
+                    return 'Validée';
+                default:
+                    return 'En attente de modération';
+            }
+        };
+
+        try {
+            await sendCSVStream(cursor.stream(), res, {
+                'id': comment => comment._id,
+                'note accueil': comment => sanitizeNote(comment.rates.accueil),
+                'note contenu formation': comment => sanitizeNote(comment.rates.contenu_formation),
+                'note equipe formateurs': comment => sanitizeNote(comment.rates.equipe_formateurs),
+                'note matériel': comment => sanitizeNote(comment.rates.moyen_materiel),
+                'note accompagnement': comment => sanitizeNote(comment.rates.accompagnement),
+                'note global': comment => sanitizeNote(comment.rates.global),
+                'pseudo': comment => sanitizeString(_.get(comment, 'comment.pseudo', '')),
+                'titre': comment => sanitizeString(_.get(comment, 'comment.title', '')),
+                'commentaire': comment => sanitizeString(_.get(comment, 'comment.text', '')),
+                'qualification': comment => `${comment.qualification} ${comment.rejectReason}`,
+                'statut': comment => getStatus(comment),
+                'réponse': comment => sanitizeString(_.get(comment, 'reponse.text', '')),
+                'réponse statut': comment => comment.reponse ? getReponseStatus(comment.reponse.status) : '',
+                'id formation': comment => comment.training.idFormation,
+                'titre formation': comment => comment.training.title,
+                'date début': comment => moment(comment.training.startDate).format('DD/MM/YYYY'),
+                'date de fin prévue': comment => moment(comment.training.scheduledEndDate).format('DD/MM/YYYY'),
+                'siret organisme': comment => comment.training.organisation.siret,
+                'libellé organisme': comment => comment.training.organisation.label,
+                'nom organisme': comment => comment.training.organisation.name,
+                'code postal': comment => comment.training.place.postalCode,
+                'ville': comment => comment.training.place.city,
+                'id certif info': comment => comment.training.certifInfo.id,
+                'libellé certifInfo': comment => comment.training.certifInfo.label,
+                'id session': comment => comment.training.idSession,
+                'formacode': comment => comment.training.formacode,
+                'AES reçu': comment => comment.training.aesRecu,
+                'code financeur': comment => comment.training.codeFinanceur,
+            }, { filename: 'avis.csv' });
+        } catch (e) {
+            //FIXME we must handle errors
+            logger.error('Unable to send CSV file', e);
+        }
+    }));
+
+    router.get('/backoffice/financeur/stats', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
+
+        let parameters = await Joi.validate(req.query, {
+            ...getFormQueryValidators(req.user),
+        }, { abortEarly: false });
+
+        let results = await db.collection('comment').aggregate([
+            {
+                $match: {
+                    ...getFormQuery(req.user.codeRegion, parameters),
+                    $or: [
+                        { comment: { $exists: false } },
+                        { published: true },
+                        { rejected: true },
+                    ],
+                }
+            },
+            {
+                $group: {
+                    _id: 'null',
+                    total: { $sum: 1 },
+                    accueil__moyenne: { $avg: '$rates.accueil' },
+                    accueil__1: { $sum: { $cond: [{ $eq: ['$rates.accueil', 1] }, 1, 0] } },
+                    accueil__2: { $sum: { $cond: [{ $eq: ['$rates.accueil', 2] }, 1, 0] } },
+                    accueil__3: { $sum: { $cond: [{ $eq: ['$rates.accueil', 3] }, 1, 0] } },
+                    accueil__4: { $sum: { $cond: [{ $eq: ['$rates.accueil', 4] }, 1, 0] } },
+                    accueil__5: { $sum: { $cond: [{ $eq: ['$rates.accueil', 5] }, 1, 0] } },
+                    contenu_formation__moyenne: { $avg: '$rates.contenu_formation' },
+                    contenu_formation__1: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 1] }, 1, 0] } },
+                    contenu_formation__2: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 2] }, 1, 0] } },
+                    contenu_formation__3: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 3] }, 1, 0] } },
+                    contenu_formation__4: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 4] }, 1, 0] } },
+                    contenu_formation__5: { $sum: { $cond: [{ $eq: ['$rates.contenu_formation', 5] }, 1, 0] } },
+                    equipe_formateurs__moyenne: { $avg: '$rates.equipe_formateurs' },
+                    equipe_formateurs__1: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 1] }, 1, 0] } },
+                    equipe_formateurs__2: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 2] }, 1, 0] } },
+                    equipe_formateurs__3: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 3] }, 1, 0] } },
+                    equipe_formateurs__4: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 4] }, 1, 0] } },
+                    equipe_formateurs__5: { $sum: { $cond: [{ $eq: ['$rates.equipe_formateurs', 5] }, 1, 0] } },
+                    moyen_materiel__moyenne: { $avg: '$rates.moyen_materiel' },
+                    moyen_materiel__1: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 1] }, 1, 0] } },
+                    moyen_materiel__2: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 2] }, 1, 0] } },
+                    moyen_materiel__3: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 3] }, 1, 0] } },
+                    moyen_materiel__4: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 4] }, 1, 0] } },
+                    moyen_materiel__5: { $sum: { $cond: [{ $eq: ['$rates.moyen_materiel', 5] }, 1, 0] } },
+                    accompagnement__moyenne: { $avg: '$rates.accompagnement' },
+                    accompagnement__1: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 1] }, 1, 0] } },
+                    accompagnement__2: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 2] }, 1, 0] } },
+                    accompagnement__3: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 3] }, 1, 0] } },
+                    accompagnement__4: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 4] }, 1, 0] } },
+                    accompagnement__5: { $sum: { $cond: [{ $eq: ['$rates.accompagnement', 5] }, 1, 0] } },
+                    global__moyenne: { $avg: '$rates.global' },
+                    global__1: { $sum: { $cond: [{ $eq: ['$rates.global', 1] }, 1, 0] } },
+                    global__2: { $sum: { $cond: [{ $eq: ['$rates.global', 2] }, 1, 0] } },
+                    global__3: { $sum: { $cond: [{ $eq: ['$rates.global', 3] }, 1, 0] } },
+                    global__4: { $sum: { $cond: [{ $eq: ['$rates.global', 4] }, 1, 0] } },
+                    global__5: { $sum: { $cond: [{ $eq: ['$rates.global', 5] }, 1, 0] } },
+                    nbNotesSeules: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 1, else: 0 } } },
+                    nbCommentaires: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 0, else: 1 } } },
+                    nbPublished: { $sum: { $cond: { if: { $eq: ['$published', true] }, then: 1, else: 0 } } },
+                    nbRejected: { $sum: { $cond: { if: { $eq: ['$rejected', true] }, then: 1, else: 0 } } },
+                    nbPositifs: { $sum: { $cond: [{ $and: [{ $eq: ['$published', true] }, { $eq: ['$qualification', 'positif'] }] }, 1, 0] } },
+                    nbNegatifs: { $sum: { $cond: [{ $and: [{ $eq: ['$published', true] }, { $eq: ['$qualification', 'négatif'] }] }, 1, 0] } },
+                    nbAlertes: { $sum: { $cond: [{ $and: [{ $eq: ['$rejected', true] }, { $eq: ['$rejectReason', 'alerte'] }] }, 1, 0] } },
+                    nbInjures: { $sum: { $cond: [{ $and: [{ $eq: ['$rejected', true] }, { $eq: ['$rejectReason', 'injure'] }] }, 1, 0] } },
+                    nbNonConcernes: { $sum: { $cond: [{ $and: [{ $eq: ['$rejected', true] }, { $eq: ['$rejectReason', 'non concerné'] }] }, 1, 0] } },
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                }
+            }
+        ])
+        .toArray();
+
+        let stats = results[0];
+        if (!stats) {
+            return res.json({});
+        }
+
+        return res.json(Object.keys(stats).reduce((acc, key) => {
+
+            //Mongo can not round with 2 digits yet
+            let roundedValue = round(stats[key]);
+
+            //Wrap all notes under a parent property (can be done painfully with $project)
+            if (key.indexOf('_') !== -1) {
+                let parentPropertyName = key.split('__')[0];
+                let propertyName = key.split('__')[1];
+                acc.notes[parentPropertyName] = Object.assign(
+                    {},
+                    acc.notes[parentPropertyName] || {},
+                    { [propertyName]: roundedValue });
+            } else {
+                acc[key] = roundedValue;
+            }
+            return acc;
+        }, { notes: {} }));
     }));
 
     return router;

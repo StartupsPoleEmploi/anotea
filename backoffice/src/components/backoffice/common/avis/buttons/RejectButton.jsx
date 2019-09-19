@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { rejectAvis } from '../../../moderateur/moderation-avis/moderationService';
-import Modal from '../../library/Modal';
-import Button from '../../library/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from '../../library/Dropdown';
+import Modal from '../../Modal';
+import Button from '../../Button';
+import { Dropdown, DropdownDivider, DropdownItem } from '../../Dropdown';
 
 export default class RejectButton extends React.Component {
 

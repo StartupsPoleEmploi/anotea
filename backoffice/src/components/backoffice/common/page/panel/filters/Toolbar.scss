@@ -1,0 +1,136 @@
+@import '../../../../../../styles/variables';
+
+.Toolbar {
+
+  .bar {
+    text-align: center;
+    font-size: 1rem;
+    border-radius: 8px;
+    box-shadow: $shadow;
+
+    .nav {
+      background: $color-white;
+      font-weight: $font-weight-400;
+      border-radius: 6px;
+
+      .nav-item {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        border-right: 2px solid $color-grey-5;
+        color: $color-grey-50;
+        position: relative;
+
+        &.active {
+          border: 1px solid $color-grey-5;
+          color: $color-black;
+          background-color: $color-grey-5;
+          font-weight: $font-weight-700;
+        }
+
+        &.disabled {
+          pointer-events: none;
+          opacity: 0.2;
+        }
+
+        .pastille {
+          position: absolute;
+          top: 5px;
+          background-color: $color-red;
+          color: $color-white;
+          font-weight: $font-weight-700;
+          font-size: 0.6rem;
+        }
+
+        &:hover, &:focus {
+          cursor: pointer;
+          color: $color-black;
+          background-color: $color-grey-5;
+          font-weight: $font-weight-700;
+          transition: background-color 0.2s linear;
+        }
+
+        &:first-child {
+          border-bottom-left-radius: 6px;
+          border-top-left-radius: 6px;
+        }
+
+        &:last-child {
+          border-right: unset;
+          border-bottom-right-radius: 6px;
+          border-top-right-radius: 6px;
+        }
+
+        .nav-link {
+          font-size: 1rem;
+          letter-spacing: 0.3px;
+          line-height: 1.187rem;
+          padding: 0.5rem 1rem 0.4rem 1rem;
+        }
+
+        &.nav-search {
+
+          background-color: $color-white;
+          border-bottom-right-radius: 6px;
+          border-top-right-radius: 6px;
+
+          &:hover, &:focus {
+            background-color: $color-white;
+          }
+
+          .input-group {
+            opacity: 0.6;
+            background-color: $color-white;
+
+            &.active {
+              opacity: 1;
+            }
+
+            .input-group-text {
+              font-size: 1.2rem;
+              border: none;
+              border-radius: unset;
+              background-color: $color-white;
+            }
+
+            input {
+              background-color: $color-white;
+              border: none;
+              box-shadow: none;
+            }
+
+            .form-control {
+              padding-left: 0;
+            }
+
+            .cancel {
+              margin-top: 10px;
+              margin-right: 10px;
+            }
+          }
+
+          button {
+            border: none;
+            box-shadow: none;
+            border-top-left-radius: unset;
+            border-bottom-left-radius: unset;
+            padding-bottom: 0.5rem;
+            background-color: $color-white;
+            color: $color-black;
+            font-weight: $font-weight-700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.6;
+
+            &.active {
+              opacity: 1;
+            }
+
+            &:hover {
+              background-color: $color-grey-5;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Notes.scss';
-import Button from '../library/Button';
+import Button from '../Button';
 
 const Note = ({ label, note }) => {
     return (

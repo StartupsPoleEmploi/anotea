@@ -1,0 +1,15 @@
+@import '../../../../styles/variables';
+
+.Page {
+
+  .form {
+    @include backoffice-color();
+  }
+
+  .tabs {
+    @include backoffice-color();
+
+    padding-top: 1.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
