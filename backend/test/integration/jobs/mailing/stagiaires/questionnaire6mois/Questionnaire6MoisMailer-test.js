@@ -7,7 +7,7 @@ const { successMailer, errorMailer } = require('../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
-    it('should send email to trainee', async () => {
+    it('should send email to stagiaire', async () => {
 
         let emailsSent = [];
         let db = await getTestDatabase();
@@ -15,15 +15,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
                 campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-03-29',
-                mailSent: false,
-                mailSentDate: null,
                 trainee: {
                     email,
                 },
             })),
             insertIntoDatabase('trainee', newTrainee({
-                mailSent: false,
-                mailSentDate: null,
                 trainee: {
                     email: 'not-sent@trainee.org',
                 },
@@ -43,14 +39,39 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         assert.deepStrictEqual(status.mailRetry, 0);
     });
 
+    it('should not resend email to stagiaire', async () => {
+
+        let emailsSent = [];
+        let db = await getTestDatabase();
+        let email = `${randomize('name')}@email.fr`;
+        await Promise.all([
+            insertIntoDatabase('trainee', newTrainee({
+                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-03-29',
+                mailSent: false,
+                mailSentDate: null,
+                trainee: {
+                    email,
+                },
+                mailing: {
+                    questionnaire6Mois: {
+                        mailSent: true,
+                    }
+                }
+            })),
+        ]);
+
+        let mailer = new Questionnaire6MoisMailer(db, logger, successMailer(emailsSent));
+        await mailer.sendEmails();
+
+        assert.deepStrictEqual(emailsSent, []);
+    });
+
     it('should flag trainee when mailer fails', async () => {
 
         let db = await getTestDatabase();
         let email = `${randomize('name')}@email.fr`;
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
-                mailSent: false,
-                mailSentDate: null,
                 campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-03-29',
                 trainee: {
                     email,
