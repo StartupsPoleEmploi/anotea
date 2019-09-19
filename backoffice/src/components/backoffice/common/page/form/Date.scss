@@ -9,10 +9,11 @@
     text-shadow: 0 0 0 gray;
     color: $color-black;
     display: inline-block;
-    width: 105px;
+    width: 96px;
     vertical-align: middle;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+
 
     &:focus {
       outline: none;
@@ -20,7 +21,7 @@
 
     &::placeholder {
       color: $color-black;
-      opacity: 0.8;
+      opacity: 0.6;
     }
   }
 }
