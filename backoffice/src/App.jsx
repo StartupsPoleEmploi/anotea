@@ -23,6 +23,9 @@ import './utils/moment-fr';
 import './App.scss';
 import ModerateurHeaderItems from './components/backoffice/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/backoffice/financeur/FinanceurHeaderItems';
+import logoModerateur from './components/backoffice/common/header/logo-moderateur.svg';
+import logoFinanceur from './components/backoffice/common/header/logo-financeur.svg';
+
 
 addLocaleData([...fr]);
 
@@ -185,17 +188,19 @@ class App extends Component {
     showBackofficePages = () => {
 
         let { profile, codeRegion, codeFinanceur, features, id } = this.state;
-        let userContext = { codeRegion, codeFinanceur };
+        let userContext = { codeRegion, codeFinanceur, profile };
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?page=0&status=none',
                 headerItems: <ModerateurHeaderItems />,
                 routes: <ModerateurRoutes />,
+                logo: logoModerateur,
             }),
             financeur: () => ({
                 defaultPath: '/admin/financeur/avis/stats',
                 headerItems: <FinanceurHeaderItems />,
-                routes: <FinanceurRoutes />
+                routes: <FinanceurRoutes />,
+                logo: logoFinanceur,
             })
         };
 
@@ -213,7 +218,12 @@ class App extends Component {
                                 <Redirect exact from="/admin" to={layout.defaultPath} />
                             </Switch>
 
-                            <Header onLogout={this.handleLogout} items={layout.headerItems} />
+                            <Header
+                                profile={profile}
+                                items={layout.headerItems}
+                                logo={layout.logo}
+                                onLogout={this.handleLogout}
+                            />
 
                             <MiscRoutes />
                             {layout.routes}
