@@ -231,6 +231,7 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
             consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementRejete/${avis.token}`,
             hostname: configuration.app.public_hostname,
             avis: avis.comment.text,
+            organisme,
             webView: true
         });
     });
@@ -248,6 +249,7 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
             consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementAccepte/${avis.token}`,
             hostname: configuration.app.public_hostname,
             avis: avis.comment.text,
+            organisme,
             webView: true
         });
     });
