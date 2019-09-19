@@ -102,7 +102,7 @@ App.defaultProps = {
     format: 'carrousel',
     type: 'action',
     identifiant: '26_100646|26_145859_7591',
-    options: 'json-ld,contact-stagiaire,avis-details',
+    options: 'json-ld,avis-details',
 };
 
 export default App;
