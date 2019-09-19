@@ -10,7 +10,7 @@ export default class FinanceurRoutes extends React.Component {
         return (
             <div>
                 <Route
-                    path={'/admin/financeur'}
+                    path={'/admin/financeur/avis'}
                     render={props => {
                         let navigator = createNavigator(props);
                         return <FinanceurPage navigator={navigator} />;

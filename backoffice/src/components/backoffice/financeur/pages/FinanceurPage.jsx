@@ -213,7 +213,7 @@ export default class FinanceurPage extends React.Component {
     };
 
     onTabClicked = (tab, data) => {
-        return this.props.navigator.goToPage(`/admin/financeur/${tab}`, {
+        return this.props.navigator.goToPage(`/admin/financeur/avis/${tab}`, {
             ...this.getFormAsQuery(),
             ...data
         });
@@ -321,17 +321,17 @@ export default class FinanceurPage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => navigator.isActive('/admin/financeur/stats')}
+                            isActive={() => navigator.isActive('/admin/financeur/avis/stats')}
                             onClick={() => this.onTabClicked('stats')} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => navigator.isActive('/admin/financeur/avis')}
-                            onClick={() => this.onTabClicked('avis', { status: 'all' })} />
+                            isActive={() => navigator.isActive('/admin/financeur/avis/liste')}
+                            onClick={() => this.onTabClicked('liste', { status: 'all' })} />
                     </Tabs>
                 }
                 panel={
-                    navigator.isActive('/admin/financeur/avis') ?
+                    navigator.isActive('/admin/financeur/avis/liste') ?
                         <AvisPanel
                             query={navigator.getQuery()}
                             form={form}
@@ -342,7 +342,7 @@ export default class FinanceurPage extends React.Component {
                                 });
                             }} /> :
                         <Route
-                            path={'/admin/financeur/stats'}
+                            path={'/admin/financeur/avis/stats'}
                             render={() => {
                                 return (
                                     <StatsPanel

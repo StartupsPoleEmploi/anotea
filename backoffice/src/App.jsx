@@ -193,7 +193,7 @@ class App extends Component {
                 routes: <ModerateurRoutes />,
             }),
             financeur: () => ({
-                defaultPath: '/admin/financeur/avis?status=all',
+                defaultPath: '/admin/financeur/avis/liste?status=all',
                 headerItems: <FinanceurHeaderItems />,
                 routes: <FinanceurRoutes />
             })
