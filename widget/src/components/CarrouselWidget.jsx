@@ -7,7 +7,6 @@ import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
 import Button from './common/library/Button';
-import Option from './common/options/Option';
 import './CarrouselWidget.scss';
 
 export default class CarrouselWidget extends Component {

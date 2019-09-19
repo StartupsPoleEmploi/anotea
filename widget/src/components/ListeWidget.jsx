@@ -6,7 +6,6 @@ import Verified from './common/Verified';
 import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
-import Option from './common/options/Option';
 import './ListeWidget.scss';
 
 export default class ListeWidget extends Component {

@@ -16,36 +16,36 @@ export default class Notes extends Component {
 
         return (
             <div className="Notes d-flex flex-column">
-                <div className="d-flex with-tooltip">
+                <div className="d-flex align-content-center with-tooltip">
                     <div className="name pr-2">Accueil</div>
                     <Tooltip message="Réunions d'information collective et entretiens à l'entrée en formation." />
-                    <div className="star ml-auto align-self-center">
+                    <div className="star ml-auto">
                         <Stars note={notes.accueil} />
                     </div>
                 </div>
 
-                <div className="d-flex">
+                <div className="d-flex align-content-center">
                     <div className="name">Contenu</div>
-                    <div className="star ml-auto align-self-center">
+                    <div className="star ml-auto">
                         <Stars note={notes.contenu_formation} />
                     </div>
                 </div>
-                <div className="d-flex">
+                <div className="d-flex align-content-center">
                     <div className="name">Formateurs</div>
-                    <div className="star ml-auto align-self-center">
+                    <div className="star ml-auto">
                         <Stars note={notes.equipe_formateurs} />
                     </div>
                 </div>
-                <div className="d-flex">
+                <div className="d-flex align-content-center">
                     <div className="name">Matériels</div>
-                    <div className="star ml-auto align-self-center">
+                    <div className="star ml-auto">
                         <Stars note={notes.moyen_materiel} />
                     </div>
                 </div>
-                <div className="d-flex with-tooltip">
+                <div className="d-flex align-content-center with-tooltip">
                     <div className="name pr-2">Accompagnement</div>
                     <Tooltip message="Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises." />
-                    <div className="star ml-auto align-self-center">
+                    <div className="star ml-auto">
                         <Stars note={notes.accompagnement} />
                     </div>
                 </div>
