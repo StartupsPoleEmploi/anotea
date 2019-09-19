@@ -7,7 +7,7 @@ import NewPanel from '../common/page/panel/NewPanel';
 import Filter from '../common/page/panel/filters/Filter';
 import { Filters } from '../common/page/panel/filters/Filters';
 import Pagination from '../common/page/panel/pagination/Pagination';
-import { Periode, Form, Select } from '../common/page/form/Form';
+import { Form, Periode, Select } from '../common/page/form/Form';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
 import Page from '../common/page/Page';
 import Pie from '../common/page/panel/results/stats/Pie';
@@ -164,7 +164,7 @@ const LibraryPage = () => {
                         <label>Select</label>
                         <Select
                             value={null}
-                            options={[{ code: 'code', label: 'label' }]}
+                            options={[{ code: 'code', label: 'label' }, { code: 'code2', label: 'label2' }]}
                             loading={false}
                             optionKey="code"
                             optionLabel="label"
