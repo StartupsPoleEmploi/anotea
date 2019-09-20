@@ -8,7 +8,7 @@
   font-weight: $font-weight-400;
   color: $color-black;
   background-color: $color-white;
-  min-height: 1000px;
+  height: 100%;
 
   .a-disabled {
     pointer-events: none;
@@ -39,3 +39,73 @@
     font-size: 0.875rem;
   }
 }
+
+.datepicker {
+
+  table {
+    tr, td {
+      padding: 0.5rem;
+    }
+  }
+
+  .datepicker-years {
+
+    .datepicker-switch {
+      visibility: hidden;
+    }
+
+    .year {
+
+      &.disabled, &.new {
+        display: none;
+      }
+
+      &.active, &.focused {
+        color: $color-black;
+        background-color: unset;
+        background-image: unset;
+
+        &:hover {
+          background-color: $color-grey-5;
+        }
+      }
+    }
+  }
+
+  .datepicker-months {
+    .month {
+      &.disabled, &.new {
+        display: none;
+      }
+
+      &.active, &.focused {
+        color: $color-black;
+        background-color: unset;
+        background-image: unset;
+
+        &:hover {
+          background-color: $color-grey-5;
+        }
+      }
+    }
+  }
+
+  .datepicker-days {
+    .day {
+      &.disabled, &.new {
+        display: none;
+      }
+
+      &.active, &.focused {
+        color: $color-black;
+        background-color: unset;
+        background-image: unset;
+
+        &:hover {
+          background-color: $color-grey-5;
+        }
+      }
+    }
+  }
+}
+

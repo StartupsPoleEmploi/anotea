@@ -6,7 +6,56 @@
     "codeRegion": "2",
     "codeINSEE": "84",
     "contact": "anotea.69188",
-    "departements": ["03", "07", "15", "26", "43", "74", "38", "01", "42", "63", "73", "69"],
+    "departements": [
+      {
+        "code": "03",
+        "label": "Allier"
+      },
+      {
+        "code": "07",
+        "label": "Ardèche"
+      },
+      {
+        "code": "15",
+        "label": "Cantal"
+      },
+      {
+        "code": "26",
+        "label": "Drôme"
+      },
+      {
+        "code": "43",
+        "label": "Haute-Loire"
+      },
+      {
+        "code": "74",
+        "label": "Haute-Savoie"
+      },
+      {
+        "code": "38",
+        "label": "Isère"
+      },
+      {
+        "code": "01",
+        "label": "Ain"
+      },
+      {
+        "code": "42",
+        "label": "Loire"
+      },
+      {
+        "code": "63",
+        "label": "Puy-de-Dôme"
+      },
+      {
+        "code": "73",
+        "label": "Savoie"
+      },
+      {
+        "code": "69",
+        "label": "Rhône"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -33,7 +82,40 @@
     "codeRegion": "3",
     "codeINSEE": "27",
     "contact": "anotea.bfc",
-    "departements": ["21", "25", "39", "58", "71", "90", "89", "70"],
+    "departements": [
+      {
+        "code": "21",
+        "label": "Côte-d'Or"
+      },
+      {
+        "code": "25",
+        "label": "Doubs"
+      },
+      {
+        "code": "39",
+        "label": "Jura"
+      },
+      {
+        "code": "58",
+        "label": "Nièvre"
+      },
+      {
+        "code": "71",
+        "label": "Saône-et-Loire"
+      },
+      {
+        "code": "90",
+        "label": "DE"
+      },
+      {
+        "code": "89",
+        "label": "Yonne"
+      },
+      {
+        "code": "70",
+        "label": "Haute-Saône"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -58,7 +140,24 @@
     "codeRegion": "4",
     "codeINSEE": "53",
     "contact": "anoteabretagne.35076",
-    "departements": ["22", "29", "35", "56"],
+    "departements": [
+      {
+        "code": "22",
+        "label": "Côtes-d'Armor"
+      },
+      {
+        "code": "29",
+        "label": "Finistère"
+      },
+      {
+        "code": "35",
+        "label": "Ille-et-Vilaine"
+      },
+      {
+        "code": "56",
+        "label": "Morbihan"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -83,7 +182,32 @@
     "codeRegion": "5",
     "codeINSEE": "24",
     "contact": "formationapplicatifspartenaires.45054",
-    "departements": ["28", "36", "37", "41", "45", "18"],
+    "departements": [
+      {
+        "code": "28",
+        "label": "Eure-et-Loir"
+      },
+      {
+        "code": "36",
+        "label": "Indre"
+      },
+      {
+        "code": "37",
+        "label": "Indre-et-Loire"
+      },
+      {
+        "code": "41",
+        "label": "Loir-et-Cher"
+      },
+      {
+        "code": "45",
+        "label": "Loiret"
+      },
+      {
+        "code": "18",
+        "label": "Cher"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -108,7 +232,12 @@
     "codeRegion": "6",
     "codeINSEE": "94",
     "contact": "anoteacorse.20010",
-    "departements": ["20"],
+    "departements": [
+      {
+        "code": "20",
+        "label": "Corse"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -133,7 +262,48 @@
     "codeRegion": "7",
     "codeINSEE": "44",
     "contact": "anotea.67085",
-    "departements": ["68", "08", "10", "52", "67", "51", "54", "55", "88", "57"],
+    "departements": [
+      {
+        "code": "68",
+        "label": "Haut-Rhin"
+      },
+      {
+        "code": "08",
+        "label": "Ardennes"
+      },
+      {
+        "code": "10",
+        "label": "Aube"
+      },
+      {
+        "code": "52",
+        "label": "Haute-Marne"
+      },
+      {
+        "code": "67",
+        "label": "Bas-Rhin"
+      },
+      {
+        "code": "51",
+        "label": "Marne"
+      },
+      {
+        "code": "54",
+        "label": "Meurthe-et-Moselle"
+      },
+      {
+        "code": "55",
+        "label": "Meuse"
+      },
+      {
+        "code": "88",
+        "label": "Vosges"
+      },
+      {
+        "code": "57",
+        "label": "Moselle"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -158,7 +328,24 @@
     "codeRegion": "8",
     "codeINSEE": "01",
     "contact": "anotea.97110",
-    "departements": ["971", "977", "970", "975", "978"],
+    "departements": [
+      {
+        "code": "971",
+        "label": "Guadeloupe"
+      },
+      {
+        "code": "977",
+        "label": "Saint-Barthélemy"
+      },
+      {
+        "code": "975",
+        "label": "Saint-Pierre-et-Miquelon"
+      },
+      {
+        "code": "978",
+        "label": "Saint-Martin"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -182,7 +369,12 @@
     "since": "2019-01-01",
     "codeRegion": "9",
     "codeINSEE": "03",
-    "departements": ["973"],
+    "departements": [
+      {
+        "code": "973",
+        "label": "Guyane"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": false
@@ -207,7 +399,28 @@
     "codeRegion": "10",
     "codeINSEE": "32",
     "contact": "anotea.59212",
-    "departements": ["02", "59", "62", "60", "80"],
+    "departements": [
+      {
+        "code": "02",
+        "label": "Aisne"
+      },
+      {
+        "code": "59",
+        "label": "Nord"
+      },
+      {
+        "code": "62",
+        "label": "Pas-de-Calais"
+      },
+      {
+        "code": "60",
+        "label": "Oise"
+      },
+      {
+        "code": "80",
+        "label": "Somme"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -234,7 +447,40 @@
     "codeRegion": "11",
     "codeINSEE": "11",
     "contact": "anotea-idf",
-    "departements": ["91", "92", "75", "93", "77", "95", "94", "78"],
+    "departements": [
+      {
+        "code": "91",
+        "label": "Essonne"
+      },
+      {
+        "code": "92",
+        "label": "Hauts-de-Seine"
+      },
+      {
+        "code": "75",
+        "label": "Paris"
+      },
+      {
+        "code": "93",
+        "label": "Seine-Saint-Denis"
+      },
+      {
+        "code": "77",
+        "label": "Seine-et-Marne"
+      },
+      {
+        "code": "94",
+        "label": "Val-de-Marne"
+      },
+      {
+        "code": "95",
+        "label": "Val-d'Oise"
+      },
+      {
+        "code": "78",
+        "label": "Yvelines"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -260,7 +506,16 @@
     "since": "2019-01-01",
     "codeRegion": "12",
     "codeINSEE": "04",
-    "departements": ["974", "976"],
+    "departements": [
+      {
+        "code": "974",
+        "label": "La Réunion"
+      },
+      {
+        "code": "976",
+        "label": "Mayotte"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": false
@@ -285,7 +540,12 @@
     "codeRegion": "13",
     "codeINSEE": "02",
     "contact": "anotea.97210",
-    "departements": ["972"],
+    "departements": [
+      {
+        "code": "972",
+        "label": "Martinique"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -310,7 +570,28 @@
     "codeRegion": "14",
     "codeINSEE": "28",
     "contact": "anoteanormandie",
-    "departements": ["14", "27", "27", "50", "76", "61"],
+    "departements": [
+      {
+        "code": "14",
+        "label": "Calvados"
+      },
+      {
+        "code": "27",
+        "label": "Eure"
+      },
+      {
+        "code": "50",
+        "label": "Manche"
+      },
+      {
+        "code": "76",
+        "label": "Seine-Maritime"
+      },
+      {
+        "code": "61",
+        "label": "Orne"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -335,7 +616,56 @@
     "codeRegion": "15",
     "codeINSEE": "75",
     "contact": "anotea.33127",
-    "departements": ["19", "16", "17", "23", "79", "24", "24", "33", "87", "40", "47", "64", "86", "33"],
+    "departements": [
+      {
+        "code": "19",
+        "label": "Corrèze"
+      },
+      {
+        "code": "16",
+        "label": "Charente"
+      },
+      {
+        "code": "17",
+        "label": "Charente-Maritime"
+      },
+      {
+        "code": "23",
+        "label": "Creuse"
+      },
+      {
+        "code": "79",
+        "label": "Deux-Sèvres"
+      },
+      {
+        "code": "24",
+        "label": "Dordogne"
+      },
+      {
+        "code": "33",
+        "label": "Gironde"
+      },
+      {
+        "code": "87",
+        "label": "Haute-Vienne"
+      },
+      {
+        "code": "40",
+        "label": "Landes"
+      },
+      {
+        "code": "47",
+        "label": "Lot-et-Garonne"
+      },
+      {
+        "code": "64",
+        "label": "Pyrénées-Atlantiques"
+      },
+      {
+        "code": "86",
+        "label": "Vienne"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -360,7 +690,60 @@
     "codeRegion": "16",
     "codeINSEE": "76",
     "contact": "anotea.occitanie",
-    "departements": ["32", "09", "11", "12", "30", "31", "34", "65", "46", "48", "66", "81", "82"],
+    "departements": [
+      {
+        "code": "32",
+        "label": "Gers"
+      },
+      {
+        "code": "09",
+        "label": "Ariège"
+      },
+      {
+        "code": "11",
+        "label": "Aude"
+      },
+      {
+        "code": "12",
+        "label": "Aveyron"
+      },
+      {
+        "code": "30",
+        "label": "Gard"
+      },
+      {
+        "code": "31",
+        "label": "Haute-Garonne"
+      },
+      {
+        "code": "34",
+        "label": "Hérault"
+      },
+      {
+        "code": "65",
+        "label": "Hautes-Pyrénées"
+      },
+      {
+        "code": "46",
+        "label": "Lot"
+      },
+      {
+        "code": "48",
+        "label": "Lozère"
+      },
+      {
+        "code": "66",
+        "label": "Pyrénées-Orientales"
+      },
+      {
+        "code": "81",
+        "label": "Tarn"
+      },
+      {
+        "code": "82",
+        "label": "Tarn-et-Garonne"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -385,7 +768,28 @@
     "codeRegion": "17",
     "codeINSEE": "52",
     "contact": "anotea-pdll.44116",
-    "departements": ["44", "53", "49", "85", "72"],
+    "departements": [
+      {
+        "code": "44",
+        "label": "Loire-Atlantique"
+      },
+      {
+        "code": "53",
+        "label": "Mayenne"
+      },
+      {
+        "code": "49",
+        "label": "Maine-et-Loire"
+      },
+      {
+        "code": "85",
+        "label": "Vendée"
+      },
+      {
+        "code": "72",
+        "label": "Sarthe"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true
@@ -412,7 +816,32 @@
     "codeRegion": "18",
     "codeINSEE": "93",
     "contact": "anoteapepaca.13992",
-    "departements": ["04", "13", "06", "83", "84", "05"],
+    "departements": [
+      {
+        "code": "04",
+        "label": "Alpes-de-Haute-Provence"
+      },
+      {
+        "code": "13",
+        "label": "Bouches-du-Rhône"
+      },
+      {
+        "code": "06",
+        "label": "Alpes-Maritimes"
+      },
+      {
+        "code": "83",
+        "label": "Var"
+      },
+      {
+        "code": "84",
+        "label": "Vaucluse"
+      },
+      {
+        "code": "05",
+        "label": "Hautes-Alpes"
+      }
+    ],
     "mailing": {
       "stagiaires": {
         "avis": true

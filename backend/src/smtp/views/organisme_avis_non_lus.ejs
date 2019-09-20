@@ -1,141 +1,145 @@
 <html>
 
-<head>
-    <title>Pôle Emploi - vous avez des nouveaux avis stagiaires</title>
-    <meta name="viewport" content="width=device-width">
-    <style>
-        body {
-            font-size: 1em;
-            padding: 0px;
-            margin: 0px;
-            background-color: #f4f3f5;
-            font-size: 1.3em;
-            font-family: lato, sans-serif;
-        }
+    <head>
+        <title>Pôle Emploi - vous avez des nouveaux avis stagiaires</title>
+        <meta name="viewport" content="width=device-width">
+        <style>
+            body {
+                font-size: 1em;
+                padding: 0px;
+                margin: 0px;
+                background-color: #f4f3f5;
+                font-size: 1.3em;
+                font-family: lato, sans-serif;
+            }
 
 
-        .content, .header {
+            .content, .header {
                 background-color: white;
             }
 
-        .content, .header, .footer {
-            width: 80%;
-            margin: auto;
-        }
+            .content, .header, .footer {
+                width: 80%;
+                margin: auto;
+            }
 
-        .footer {
-            color: #24303A;
-        }
+            .footer {
+                color: #24303A;
+            }
 
-        .footer p {
-            text-align: center;
-        }
-        
-        .content {
-            border-radius: 5px;
-            padding: 10px;
-        }
+            .footer p {
+                text-align: center;
+            }
 
-        body td {
-            padding: 0.5em;
-            width: 33%;
-        }
-
-        h1 {
-            text-align: center;
-            font-weight: 900;
-            font-size: 1.2em;
-            line-height: 29px;
-        }
-
-        p,
-        ul {
-            color: rgba(35, 47, 56, 0.7);
-            font-size: 0.7em;
-        }
-
-        .comment {
-            font-style: italic;
-            font-weight: bold;
-        }
-
-        .button {
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 5px;
-            padding: 15px;
-            text-decoration: none;
-            display: block;
-            width: fit-content;
-            margin: auto;
-        }
-
-        .button.connect {
-            background-color: #24303a;
-            color: white;
-        }
-
-        .button.contact {
-            background-color: #fdf4e6;
-            color: #fa8100;
-        }
-
-        @media only screen and (max-width: 596px) {
-            body {
-                width: 100%;
-                font-size: 1em;
+            .content {
+                border-radius: 5px;
+                padding: 10px;
             }
 
             body td {
-                padding: .5em;
+                padding: 0.5em;
                 width: 33%;
             }
-        }
-    </style>
-</head>
 
-<body>
-    <%- include('common/header', { hostname, codeRegion: organisme.codeRegion, webView, consultationLink }); %>
+            h1 {
+                text-align: center;
+                font-weight: 900;
+                font-size: 1.2em;
+                line-height: 29px;
+            }
 
-    <div class="content">
-        <p>Bonjour,</p>
-        
-        <% if (comment) { %>
-        <p class="reponse">"<%= comment %>"</p>
+            p,
+            ul {
+                color: rgba(35, 47, 56, 0.7);
+                font-size: 0.7em;
+            }
+
+            .comment {
+                font-style: italic;
+                font-weight: bold;
+            }
+
+            .button {
+                font-size: 16px;
+                font-weight: bold;
+                text-transform: uppercase;
+                border-radius: 5px;
+                padding: 15px;
+                text-decoration: none;
+                display: block;
+                width: fit-content;
+                margin: auto;
+            }
+
+            .button.connect {
+                background-color: #24303a;
+                color: white;
+            }
+
+            .button.contact {
+                background-color: #fdf4e6;
+                color: #fa8100;
+            }
+
+            @media only screen and (max-width: 596px) {
+                body {
+                    width: 100%;
+                    font-size: 1em;
+                }
+
+                body td {
+                    padding: .5em;
+                    width: 33%;
+                }
+            }
+            
+            <%- include('common/header.css'); %>
+        </style>
+    </head>
+
+    <body>
+        <%- include('common/header', { hostname, codeRegion: organisme.codeRegion, webView, consultationLink }); %>
+
+        <div class="content">
+            <p>Bonjour,</p>
+
+            <% if (comment) { %>
+                <p class="reponse">"<%= comment %>"</p>
+            <% } %>
+
+            <p><strong>Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur
+                    https://labonneformation.pole-emploi.fr</strong></p>
+
+            <p>Consultez-les et apportez des éléments de réponse permettant d'éclairer le choix de vos
+                futurs stagiaires.</p>
+
+            <a class="button connect" href="https://anotea.pole-emploi.fr/admin/">Me connecter à mon espace</a>
+            </p>
+
+            <p>
+                <a class="button contact" href="mailto:<%= contact %>">Contacter Anotéa</a>
+            </p>
+
+            <%- include('common/signature.ejs'); %>
+        </div>
+
+        <div class="footer">
+            <%- include('common/legal/organismes/mentions.ejs'); %>
+        </div>
+
+        <img src="<%= trackingLink %>" alt="Lien de suivi" />
+
+        <% if (webView) { %>
+            <%- include('../../http/views/analyticsTrackers'); %>
+            <script>
+                ga('send', {
+                    hitType: 'event',
+                    eventCategory: 'mail',
+                    eventAction: 'webview',
+                    eventLabel: 'Email en version Web'
+                });
+            </script>
         <% } %>
-
-        <p><strong>Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur
-                https://labonneformation.pole-emploi.fr</strong></p>
-
-        <p>Consultez-les et apportez des éléments de réponse permettant d'éclairer le choix de vos
-            futurs stagiaires.</p>
-
-        <a class="button connect" href="https://anotea.pole-emploi.fr/admin/">Me connecter à mon espace</a>
-        </p>
-        
-        <p>
-            <a class="button contact" href="mailto:<%= contact %>">Contacter Anotéa</a>
-        </p>
-    </div>
-
-    <div class="footer">
-        <%- include('common/legal/organismes/mentions.ejs'); %>
-    </div>
-
-    <img src="<%= trackingLink %>" alt="Lien de suivi" />
-
-    <% if (webView) { %>
-        <%- include('../../http/views/analyticsTrackers'); %>
-        <script>
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'mail',
-                eventAction: 'webview',
-                eventLabel: 'Email en version Web'
-            });
-        </script>
-    <% } %>
-</body>
+    </body>
 
 </html>

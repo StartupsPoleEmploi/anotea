@@ -6,7 +6,7 @@ export default class Logout extends React.PureComponent {
 
     static propTypes = {
         handleLogout: PropTypes.func.isRequired
-    }
+    };
 
     render() {
         return (

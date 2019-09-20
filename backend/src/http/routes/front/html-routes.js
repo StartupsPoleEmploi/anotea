@@ -105,6 +105,25 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
         });
     });
 
+    router.get('/mail/:token/publie', async (req, res) => {
+        const trainee = await db.collection('trainee').findOne({ token: req.params.token });
+        if (trainee === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const unsubscribeLink = mailer.getUnsubscribeLink(trainee);
+
+        res.render('../../smtp/views/avis_publie.ejs', {
+            trainee: trainee,
+            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/publie?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
+            unsubscribeLink: unsubscribeLink,
+            trackingLink: `${configuration.app.public_hostname}/mail/${trainee.token}/track`,
+            hostname: configuration.app.public_hostname,
+            webView: true
+        });
+    });
+
     router.get('/mail/:token/6mois', async (req, res) => {
         const trainee = await db.collection('trainee').findOne({ token: req.params.token });
         if (trainee === null) {
@@ -156,7 +175,8 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
             return;
         }
 
-        const avis = await db.collection('comment').find({ 'comment': { $ne: null },
+        const avis = await db.collection('comment').find({
+            'comment': { $ne: null },
             'read': false,
             'published': true,
             'training.organisation.siret': organisme.SIRET
@@ -194,6 +214,42 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
             hostname: configuration.app.public_hostname,
             organisme,
             reponse: avis.reponse.text,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:tokenOrganisme/signalementRejete/:tokenAvis', async (req, res) => {
+        const organisme = await db.collection('accounts').findOne({ token: req.params.tokenOrganisme });
+        const avis = await db.collection('comment').findOne({ token: req.params.tokenAvis });
+        if (organisme === null || avis === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        res.render('../../smtp/views/organisme_avis_signale_rejete.ejs', {
+            trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementRejete/${avis.token}`,
+            hostname: configuration.app.public_hostname,
+            avis: avis.comment.text,
+            organisme,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:tokenOrganisme/signalementAccepte/:tokenAvis', async (req, res) => {
+        const organisme = await db.collection('accounts').findOne({ token: req.params.tokenOrganisme });
+        const avis = await db.collection('comment').findOne({ token: req.params.tokenAvis });
+        if (organisme === null || avis === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        res.render('../../smtp/views/organisme_avis_signale_publie.ejs', {
+            trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementAccepte/${avis.token}`,
+            hostname: configuration.app.public_hostname,
+            avis: avis.comment.text,
+            organisme,
             webView: true
         });
     });
@@ -236,6 +292,34 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
             trainee: trainee,
             comment: comment,
             consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/injure?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
+            unsubscribeLink: unsubscribeLink,
+            formLink: formLink,
+            moment: moment,
+            email: getReplyToEmail(region),
+            hostname: configuration.app.public_hostname,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:token/alerte', async (req, res) => {
+        const trainee = await db.collection('trainee').findOne({ token: req.params.token });
+        if (trainee === null) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        const comment = await db.collection('comment').findOne({ token: req.params.token });
+
+        const unsubscribeLink = mailer.getUnsubscribeLink(trainee);
+        const formLink = mailer.getFormLink(trainee);
+        trainee.trainee.firstName = titleize(trainee.trainee.firstName);
+        trainee.trainee.name = titleize(trainee.trainee.name);
+        let region = regions.findRegionByCodeRegion(trainee.codeRegion);
+
+        res.render('../../smtp/views/avis_alerte.ejs', {
+            trainee: trainee,
+            comment: comment,
+            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/alerte?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
             unsubscribeLink: unsubscribeLink,
             formLink: formLink,
             moment: moment,

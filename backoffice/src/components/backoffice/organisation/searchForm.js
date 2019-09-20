@@ -1,9 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-import 'react-select/dist/react-select.css';
-
-import { getOrganisationTrainings } from './service/organismeService';
-import { getOrganisationLieuTrainingSessions } from '../financeur/service/financeurService';
+import { getOrganisationLieuTrainingSessions, getOrganisationTrainings } from './service/organismeService';
 
 export default class SearchForm extends React.Component {
 
@@ -82,6 +79,7 @@ export default class SearchForm extends React.Component {
                     }
                     <div className="dropdown">
                         <Select
+                            value={null}
                             onChange={this.changeTraining}
                             options={this.state.trainingList.map(training => ({
                                 label: training.title + ` (` + training.count + `avis)`,

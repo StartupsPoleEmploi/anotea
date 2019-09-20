@@ -2,7 +2,7 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
+const { tryAndCatch, sendArrayAsJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
 const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
@@ -55,9 +55,9 @@ module.exports = ({ db, middlewares }) => {
             transform: organisme => createOrganismeFomateurDTO(organisme, { notes_decimales: parameters.notes_decimales })
         });
 
-        return sendJsonStream(stream, res, {
-            objectPropertyName: 'organismes_formateurs',
-            object: {
+        return sendArrayAsJsonStream(stream, res, {
+            arrayPropertyName: 'organismes_formateurs',
+            arrayWrapper: {
                 meta: {
                     pagination: createPaginationDTO(pagination, total)
                 },
@@ -135,9 +135,9 @@ module.exports = ({ db, middlewares }) => {
             transform: comment => createAvisDTO(comment, { notes_decimales: parameters.notes_decimales })
         });
 
-        return sendJsonStream(stream, res, {
-            objectPropertyName: 'avis',
-            object: {
+        return sendArrayAsJsonStream(stream, res, {
+            arrayPropertyName: 'avis',
+            arrayWrapper: {
                 meta: {
                     pagination: createPaginationDTO(pagination, total)
                 },

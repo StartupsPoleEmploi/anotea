@@ -25,7 +25,7 @@
                     })
                     .catch(function(e) {
                         anoteaTab.close();
-                    })
+                    });
                 }, sleepDurationMs);
             };
 
@@ -36,8 +36,8 @@
                     .then(function() {
                         window.open('https://anotea.pole-emploi.fr/api/v1/ping/anonymous', '_blank');
                     });
-                }, sleepDurationMs)
-            }
+                }, sleepDurationMs);
+            };
         </script>
 
     </head>

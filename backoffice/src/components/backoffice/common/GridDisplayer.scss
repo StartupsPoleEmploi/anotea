@@ -1,0 +1,17 @@
+
+.GridDisplayer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  pointer-events: none;
+
+  span {
+    display: block;
+    height: 100vh;
+    background: rgba(128, 128, 128, .1);
+    color: rgba(0, 0, 0, .3);
+  }
+}

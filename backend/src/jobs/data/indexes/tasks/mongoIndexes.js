@@ -10,10 +10,13 @@ module.exports = {
             db.collection('trainee').createIndex({ 'campaign': 1 }),
             db.collection('trainee').createIndex({ 'unsubscribe': 1 }),
             db.collection('trainee').createIndex({ 'trainee.email': 1 }),
+            db.collection('comment').createIndex({ 'training.place.postalCode': 1 }),
             db.collection('trainee').createIndex({ 'trainee.dnIndividuNational': 1 }),
             db.collection('trainee').createIndex({ 'training.codeFinanceur': 1 }),
             db.collection('trainee').createIndex({ 'training.organisation.siret': 1 }),
             db.collection('trainee').createIndex({ 'training.scheduledEndDate': 1 }),
+            db.collection('trainee').createIndex({ 'training.idFormation': 1 }),
+            db.collection('trainee').createIndex({ 'training.startDate': 1 }),
             db.collection('trainee').createIndex({ 'training.infoCarif.numeroSession': 1 }),
             db.collection('trainee').createIndex({ 'avisCreated': 1 }),
             db.collection('trainee').createIndex({ 'tracking.firstRead': 1 }),
@@ -35,6 +38,7 @@ module.exports = {
             db.collection('comment').createIndex({ 'reported': 1 }),
             db.collection('comment').createIndex({ 'date': 1 }),
             db.collection('comment').createIndex({ 'comment': 1 }),
+            db.collection('comment').createIndex({ 'training.codeFinanceur': 1 }),
             db.collection('comment').createIndex({ 'training.idFormation': 1 }),
             db.collection('comment').createIndex({ 'training.place.postalCode': 1 }),
             db.collection('comment').createIndex({ 'training.organisation.siret': 1 }),
@@ -44,6 +48,8 @@ module.exports = {
             db.collection('comment').createIndex({ 'reponse.status': 1 }),
             db.collection('comment').createIndex({ 'reponse.date': 1 }),
             db.collection('comment').createIndex({ 'meta.reconciliations': 1 }),
+            db.collection('comment').createIndex({ 'training.startDate': 1 }),
+            db.collection('comment').createIndex({ 'training.scheduledEndDate': 1 }),
             db.collection('comment').createIndex({
                 'training.place.city': 1,
                 'training.place.postalCode': 1,
@@ -58,7 +64,16 @@ module.exports = {
                 'comment.text': 'text',
                 'training.title': 'text',
                 'training.organisation.label': 'text',
-            }, { name: 'comment_fulltext' }),
+            }, { name: 'bo-moderation-search-fulltext' }),
+            db.collection('trainee').createIndex({
+                'codeRegion': 1,
+                'training.place.postalCode': 1,
+                'training.codeFinanceur': 1,
+                'training.organisation.siret': 1,
+                'training.idFormation': 1,
+                'training.startDate': 1,
+                'training.scheduledEndDate': 1,
+            }, { name: 'bo-financeur-stats' }),
         ]);
     },
     accounts: db => {
@@ -112,6 +127,14 @@ module.exports = {
             db.collection('events').createIndex({ 'source.user': 1 }),
             db.collection('events').createIndex({ 'type': 1 }),
             db.collection('events').createIndex({ 'date': 1 }),
+        ]);
+    },
+    inseeCode: db => {
+        return Promise.all([
+            db.collection('inseeCode').createIndex({ 'cedex': 1 }),
+            db.collection('inseeCode').createIndex({ 'postalCode': 1 }),
+            db.collection('inseeCode').createIndex({ 'insee': 1 }),
+            db.collection('inseeCode').createIndex({ 'commune': 1 }),
         ]);
     },
     misc: db => {

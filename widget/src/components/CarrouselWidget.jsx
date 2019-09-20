@@ -7,8 +7,6 @@ import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
 import Button from './common/library/Button';
-import Option from './common/options/Option';
-import ContactStagiaire from './common/ContactStagiaire';
 import './CarrouselWidget.scss';
 
 export default class CarrouselWidget extends Component {
@@ -113,18 +111,6 @@ export default class CarrouselWidget extends Component {
                 <div className="row my-3">
                     <div className="col-12">
                         {this.getCarrousel()}
-                    </div>
-                </div>
-
-                <div className="row my-3">
-                    <div className="col-12 text-center">
-                        <Option value="contact-stagiaire" render={() => {
-                            return (
-                                <div className="d-flex justify-content-center py-2">
-                                    <ContactStagiaire />
-                                </div>
-                            );
-                        }} />
                     </div>
                 </div>
 

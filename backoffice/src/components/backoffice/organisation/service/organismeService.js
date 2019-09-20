@@ -52,3 +52,6 @@ export const getOrganisationStates = id => {
     return _get(`/backoffice/organisme/${id}/states`);
 };
 
+export const getOrganisationLieuTrainingSessions = (siren, idTraining, postalCode) => {
+    return _get(`/backoffice/organisme/organismes_formateurs/${siren}/training/${idTraining}/sessions?postalCode=${postalCode}`);
+};

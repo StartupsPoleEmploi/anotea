@@ -22,12 +22,12 @@
             }
 
             a {
-                color:black;
+                color: black;
             }
 
             a:hover {
                 text-decoration: none;
-                color:black;
+                color: black;
             }
 
             .content {
@@ -102,6 +102,8 @@
                     width: 33%;
                 }
             }
+        
+            <%- include('common/header.css'); %>
         </style>
     </head>
     <body style="background-color:#ebebeb">
@@ -110,11 +112,14 @@
         <div class="content">
             <h1>Votre commentaire a été rejeté</h1>
             <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
-            <p>Il semblerait que votre avis comporte des propos à caractère injurieux ou diffamatoire et ne respecte donc pas notre charte. Seules les notes seront publiées sur une formation similaire.</p>
+            <p>Il semblerait que votre avis comporte des propos à caractère injurieux ou diffamatoire et ne respecte
+                donc pas notre charte. Seules les notes seront publiées sur une formation similaire.</p>
             <p>
                 <a class="button contact" href="mailto:<%= email %>">Contacter Anotéa</a>
             </p>
-            <p>Nous vous remercions de votre compréhension,<br /> L'Equipe Anotéa.</p>
+            <p>Nous vous remercions de votre compréhension,
+                <%- include('common/signature.ejs'); %>
+            </p>
         </div>
 
         <div class="footer">

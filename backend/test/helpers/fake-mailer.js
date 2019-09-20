@@ -19,5 +19,7 @@ module.exports = () => {
         sendMalformedImport: (...args) => registerCall(args),
         sendAvisHorsSujetMail: (...args) => registerCall(args),
         sendReponseRejeteeNotification: (...args) => registerCall(args),
+        sendAvisPublieMail: (...args) => registerCall(args),
+        sendInjureMail: (...args) => registerCall(args),
     };
 };

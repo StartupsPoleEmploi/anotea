@@ -1,7 +1,5 @@
 import React from 'react';
-import VirtualizedSelect from 'react-virtualized-select';
-import 'react-select/dist/react-select.css';
-import 'react-virtualized-select/styles.css';
+import ReactSelect from 'react-select';
 
 export default class OrganisationSearchForm extends React.PureComponent {
 
@@ -33,13 +31,12 @@ export default class OrganisationSearchForm extends React.PureComponent {
                     </button>
                 </div>
                 }
-                <div className="dropdown">
-                    <VirtualizedSelect
-                        onChange={this.handleEntityChange}
-                        options={options}
-                        placeholder="Sélectionner un lieu..."
-                    />
-                </div>
+                <ReactSelect
+                    value={null}
+                    onChange={this.handleEntityChange}
+                    options={options}
+                    placeholder="Sélectionner un lieu..."
+                />
             </h2>
         );
     }

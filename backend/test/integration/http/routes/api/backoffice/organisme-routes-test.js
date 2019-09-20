@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withServer } = require('../../../../../helpers/test-server');
 const { newOrganismeAccount, randomize } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase, logAsFinancer, logAsOrganisme }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase, logAsFinanceur, logAsOrganisme }) => {
 
     it('can get organisation by activation token', async () => {
 
@@ -150,7 +150,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             },
         }));
 
-        let token = await logAsFinancer(app, 'financer@pole-emploi.fr', '2');
+        let token = await logAsFinanceur(app, 'financer@pole-emploi.fr', '2');
 
         let response = await request(app).get(`/api/backoffice/organisme/${id}/allAdvices`)
         .set('authorization', `Bearer ${token}`);

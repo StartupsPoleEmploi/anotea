@@ -1,4 +1,4 @@
-const { jsonStream, transformObjectIntoCSV } = require('../../common/utils/stream-utils');
+const { jsonStream, transformObjectIntoCSV, pipeline } = require('../../common/utils/stream-utils');
 const { encodeStream } = require('iconv-lite');
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
             }
         };
     },
-    sendJsonStream: (stream, res, wrapper) => {
+    sendArrayAsJsonStream: (stream, res, wrapper) => {
         res.setHeader('Content-Type', 'application/json');
         stream
         .pipe(jsonStream(wrapper))
@@ -23,14 +23,16 @@ module.exports = {
         .on('end', () => res.end());
     },
     sendCSVStream: (stream, res, columns, options = {}) => {
-        res.setHeader('Content-disposition', `attachment; filename=${options.filename || 'export.csv'}`);
-        res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
+        let encoding = options.encoding || 'UTF-8';
 
-        stream
-        .pipe(transformObjectIntoCSV(columns))
-        .pipe(encodeStream('UTF-8'))
-        .pipe(res)
-        .on('error', () => res.status(500))
-        .on('end', () => res.end());
+        res.setHeader('Content-disposition', `attachment; filename=${options.filename || 'export.csv'}`);
+        res.setHeader('Content-Type', `text/csv; charset=${encoding}`);
+
+        return pipeline([
+            stream,
+            transformObjectIntoCSV(columns),
+            encodeStream(encoding),
+            res
+        ]);
     },
 };

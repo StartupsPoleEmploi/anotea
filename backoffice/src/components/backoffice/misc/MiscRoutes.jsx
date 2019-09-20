@@ -1,13 +1,13 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import LibraryPanel from './LibraryPanel';
+import LibraryPage from './LibraryPage';
 
 export default class MiscRoutes extends React.Component {
 
     render() {
         return (
             <div>
-                <Route exact path="/admin/library" component={LibraryPanel} />
+                <Route exact path="/admin/library" render={() => <LibraryPage />} />
             </div>
         );
     }

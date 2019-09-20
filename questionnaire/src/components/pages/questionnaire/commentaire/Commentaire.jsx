@@ -67,7 +67,7 @@ class Commentaire extends Component {
                                     onBlur={this.onBlur}
                                     onChange={this.onChange} />
                                 {!commentaire.texte.isValid && <Badwords />}
-                                <div className="chars-count">Il vous reste {200-this.state.texte.length} caractères.</div>
+                                <div className="chars-count">Il vous reste {200 - this.state.texte.length} caractères.</div>
                             </div>
                         </div>
                         <div className="row inner-row field">
@@ -83,7 +83,7 @@ class Commentaire extends Component {
                                     onBlur={this.onBlur}
                                     onChange={this.onChange} />
                                 {!commentaire.titre.isValid && <Badwords />}
-                                <div className="chars-count">Il vous reste {50-this.state.titre.length} caractères.</div>
+                                <div className="chars-count">Il vous reste {50 - this.state.titre.length} caractères.</div>
                             </div>
                         </div>
                         <div className="row inner-row field">

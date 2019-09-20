@@ -1,163 +1,163 @@
 @import '../../styles/variables';
-    
-    .loginForm {
-        background-color: #384EAA;
-        height: 100vh;
-    }
 
-    .loginForm h1 {
-        text-align: center;
-        margin-bottom: 64px;
-        color: $color-white;
-        font-family: Lato;
-        font-size: 2rem;
-        font-weight: 900;
-        line-height: 2.1875rem;
-    }
+.loginForm {
+  background-color: #384EAA;
+  height: 100vh;
+}
 
-    .loginForm .block {
-        margin: auto;
-        height: auto;
-        width: 21.875em;
-        border-radius: 5px;
-        background-color: $color-white;
-        box-shadow: 0 2px 4px 0 rgba(17,24,30,0.1);
-    }
+.loginForm h1 {
+  text-align: center;
+  margin-bottom: 64px;
+  color: $color-white;
+  font-family: Lato;
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 2.1875rem;
+}
 
-    .loginForm .block h4 {
-        padding-top: 16px;
-        margin-bottom: 0px;
-        color: $color-blue;
-        text-align: center;
-        font-family: Lato;
-        font-size: 1.5rem;
-        font-weight: 900;
-        line-height: 1.8125rem;
-    }
+.loginForm .block {
+  margin: auto;
+  height: auto;
+  width: 21.875em;
+  border-radius: 5px;
+  background-color: $color-white;
+  box-shadow: 0 2px 4px 0 rgba(17, 24, 30, 0.1);
+}
 
-    .loginForm .block .error {
-        background-color: $color-red-10;
-        border-radius: 5px;
-        margin: 0px 16px 0px 16px;
-        width: 19.875em;
-        height: 40px;
-        border: none;
-        color: #DD3433;
-        padding: .5rem;
-    }
+.loginForm .block h4 {
+  padding-top: 16px;
+  margin-bottom: 0px;
+  color: $color-blue;
+  text-align: center;
+  font-family: Lato;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1.8125rem;
+}
 
-    .password-error {
-        background-color: $color-red-10;
-        border-radius: 5px;
-        margin: 0px 16px 0px 16px;
-        width: 19.875em;
-        height: 40px;
-        border: none;
-        padding: .8rem;
-    }
+.loginForm .block .error {
+  background-color: $color-red-10;
+  border-radius: 5px;
+  margin: 0px 16px 0px 16px;
+  width: 19.875em;
+  height: 40px;
+  border: none;
+  color: #DD3433;
+  padding: .5rem;
+}
 
-    .loginForm .block .form-control {
-        border-radius: 5px;
-        margin: 0px 16px 0px 16px;
-        width: 19.875em;
-        height: 40px;
-        background-color: $color-grey-5;
-        border: none;
-        font-size: 1rem;
+.password-error {
+  background-color: $color-red-10;
+  border-radius: 5px;
+  margin: 0px 16px 0px 16px;
+  width: 19.875em;
+  height: 40px;
+  border: none;
+  padding: .8rem;
+}
 
-        &:focus {
-            box-shadow: none;
-        }
-    }
+.loginForm .block .form-control {
+  border-radius: 5px;
+  margin: 0px 16px 0px 16px;
+  width: 19.875em;
+  height: 40px;
+  background-color: $color-grey-5;
+  border: none;
+  font-size: 1rem;
 
-    .loginForm .loginHelp {
-        margin-top: 34px;
-    }
+  &:focus {
+    box-shadow: none;
+  }
+}
 
-    .loginForm .loginHelp .btn {
-        text-decoration: underline;
-        font-family: lato;
-        font-size: 1rem;
-        color: $color-blue;
-    }
+.loginForm .loginHelp {
+  margin-top: 34px;
+}
 
-    .loginForm .block .wrapper {
-        margin-top: 10px;
-    }
-    
-    .wrapper .group-btn .btn {
-        margin-bottom: 16px;
-        height: 40px;
-        width: 7.750em;
-        font-size: 1rem;
-        line-height: 1.25rem;
-        color: $color-blue;
-        font-weight: bold;
-        letter-spacing: 0.5px;
-        border: none;
-        border-radius: 5px;
-        background-color: #EBEDF6;
-        cursor: pointer;
-        text-transform: uppercase;
-        font-family: lato;
+.loginForm .loginHelp .btn {
+  text-decoration: underline;
+  font-family: lato;
+  font-size: 1rem;
+  color: $color-blue;
+}
 
-        &:focus {
-            background-color: $color-blue-60;
-            box-shadow: none;
-        }
+.loginForm .block .wrapper {
+  margin-top: 10px;
+}
 
-        &:hover {
-        background-color: $color-blue-30;
-        }
-    }
+.wrapper .group-btn .btn {
+  margin-bottom: 16px;
+  height: 40px;
+  width: 7.750em;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: $color-blue;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #EBEDF6;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: lato;
 
-    .bad-credential {
-        color: $color-red;
-        width: 19.875em;
-        height: 16px;
-        font-size: 0.75rem;
-        margin-left: 1rem;
-        font-family: Lato;
-    }
+  &:focus {
+    background-color: $color-blue-60;
+    box-shadow: none;
+  }
 
-    
-    .loginForm .block .wrapper, .loginForm .loginHelp {
-        text-align: center;
-    }
+  &:hover {
+    background-color: $color-blue-30;
+  }
+}
 
-    .identifiant h1 {
-        margin-left: 16px;
-        margin-top: 32px;
-        margin-bottom: 8px;
-        height: 19px;
-        color: $color-black;
-        text-align: left;
-        font-family: Lato;
-        font-size: 1rem;
-        font-weight: bold;
-        line-height: 1.1875rem;
-    }
+.bad-credential {
+  color: $color-red;
+  width: 19.875em;
+  height: 16px;
+  font-size: 0.75rem;
+  margin-left: 1rem;
+  font-family: Lato;
+}
 
-    .mot-de-passe h1 {
-        margin-left: 16px;
-        margin-top: 23px;
-        margin-bottom: 8px;
-        height: 19px;
-        color: $color-black;
-        text-align: left;
-        font-family: Lato;
-        font-size: 1rem;
-        font-weight: bold;
-        line-height: 1.1875rem;
-    }
 
-    .identifiant-incorrect {
-        width: 21.875em;
-        background-color: #FBEAEA;
-        height: 56px;
-        border-radius: 5px;
-        color: $color-red;
-        margin: auto;
-        padding: .8rem;
-        margin-top: 16px;
-    }
+.loginForm .block .wrapper, .loginForm .loginHelp {
+  text-align: center;
+}
+
+.identifiant h1 {
+  margin-left: 16px;
+  margin-top: 32px;
+  margin-bottom: 8px;
+  height: 19px;
+  color: $color-black;
+  text-align: left;
+  font-family: Lato;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.1875rem;
+}
+
+.mot-de-passe h1 {
+  margin-left: 16px;
+  margin-top: 23px;
+  margin-bottom: 8px;
+  height: 19px;
+  color: $color-black;
+  text-align: left;
+  font-family: Lato;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.1875rem;
+}
+
+.identifiant-incorrect {
+  width: 21.875em;
+  background-color: #FBEAEA;
+  height: 56px;
+  border-radius: 5px;
+  color: $color-red;
+  margin: auto;
+  padding: .8rem;
+  margin-top: 16px;
+}

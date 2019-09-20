@@ -469,5 +469,57 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         }
     }));
 
+
+    router.get('/backoffice/organisme/organismes_formateurs/:siren/training/:idTraining/sessions', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        let filter = '';
+
+        if (req.query.postalCode) {
+            filter = Object.assign(filter, { 'training.place.postalCode': req.query.postalCode });
+        }
+
+        const trainings = await db.collection('comment').aggregate([
+            {
+                $match: Object.assign(filter, {
+                    'training.organisation.siret': { '$regex': `${req.params.siren}` },
+                    'training.idFormation': req.params.idTraining
+                })
+            },
+            {
+                $project: {
+                    date: '$date',
+                    place: '$training.place',
+                    endDate: '$training.scheduledEndDate',
+                    commentExist: { $cond: { if: { $eq: ['$comment', null] }, then: 0, else: 1 } }
+                }
+            },
+            { $sort: { 'date': 1 } },
+            {
+                $group: {
+                    _id: '$place.postalCode',
+                    city: { $first: '$place.city' },
+                    endDate: { $first: '$endDate' },
+                    lastAdviceDate: { $last: '$date' },
+                    advicesCount: { $sum: 1 },
+                    commentsCount: { $sum: '$commentExist' }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    postalCode: '$_id',
+                    city: 1,
+                    endDate: 1,
+                    lastAdviceDate: 1,
+                    advicesCount: 1,
+                    commentsCount: 1
+                }
+            },
+            { $sort: { 'endDate': -1 } }]).toArray();
+
+        res.status(200).send(trainings);
+
+    }));
+
     return router;
 };

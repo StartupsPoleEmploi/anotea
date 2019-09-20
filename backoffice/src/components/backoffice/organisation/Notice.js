@@ -7,15 +7,15 @@ export default class SideMenu extends React.PureComponent {
 
     state = {
         shown: true
-    }
+    };
 
     static propTypes = {
         codeRegion: PropTypes.string.isRequired,
-    }
+    };
 
     hide = () => {
         this.setState({ shown: false });
-    }
+    };
 
     render() {
         return (

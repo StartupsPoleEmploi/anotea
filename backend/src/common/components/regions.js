@@ -5,7 +5,7 @@ module.exports = () => ({
     findRegionByPostalCode: postalCode => {
         let code = postalCode.substr(0, 2) !== '97' ? postalCode.substr(0, 2) : postalCode.substr(0, 3);
 
-        let region = regions.find(region => region.departements.find(dep => dep === code));
+        let region = regions.find(region => region.departements.find(departement => departement.code === code));
 
         if (!region) {
             throw new Error(`Code region inconnu pour le departement ${code}`);

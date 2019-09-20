@@ -1,4 +1,3 @@
-
 module.exports = (valueExpression, decimals) => {
     let multiplier = Math.pow(10, decimals || 0);
 

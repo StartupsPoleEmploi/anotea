@@ -6,20 +6,23 @@ import jwtDecode from 'jwt-decode';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { removeToken, setToken } from './utils/token';
 import { subscribeToHttpEvent } from './utils/http-client';
-import DeprecatedHeader from './components/backoffice/common/deprecated/DeprecatedHeader';
+import DeprecatedHeader from './components/backoffice/common/deprecated/header/DeprecatedHeader';
 import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel.jsx';
-import FinancerPanel from './components/backoffice/financeur/FinancerPanel.jsx';
 import AccountActivation from './components/backoffice/organisation/AccountActivation';
 import ForgottenPassword from './components/login/ForgottenPassword';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
-import MonComptePanel from './components/backoffice/account/MonComptePanel';
-import GridDisplayer from './components/backoffice/common/library/GridDisplayer';
-import Header from './components/backoffice/common/Header';
+import MonComptePanel from './components/backoffice/misc/account/mon-compte/MonComptePanel';
+import GridDisplayer from './components/backoffice/common/GridDisplayer';
+import Header from './components/backoffice/common/header/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
+import FinanceurRoutes from './components/backoffice/financeur/FinanceurRoutes';
+import UserContext from './components/UserContext';
 import './utils/moment-fr';
 import './App.scss';
+import ModerateurHeaderItems from './components/backoffice/moderateur/ModerateurHeaderItems';
+import FinanceurHeaderItems from './components/backoffice/financeur/FinanceurHeaderItems';
 
 addLocaleData([...fr]);
 
@@ -123,12 +126,12 @@ class App extends Component {
 
     handleError = () => {
         this.setState({ action: null, forgottenPassword: false });
-        history.pushState(null, "", location.href.split("?")[0])  // eslint-disable-line
+        history.pushState(null, '', location.href.split('?')[0]);  // eslint-disable-line
     };
 
     handleForgottenPassword = () => {
         this.setState({ forgottenPassword: true, action: null });
-        history.pushState(null, "", location.href.split("?")[0])  // eslint-disable-line
+        history.pushState(null, '', location.href.split('?')[0]);  // eslint-disable-line
     };
 
     showUnauthenticatedPages = () => {
@@ -181,15 +184,41 @@ class App extends Component {
 
     showBackofficePages = () => {
 
+        let { profile, codeRegion, codeFinanceur, features, id } = this.state;
+        let userContext = { codeRegion, codeFinanceur };
+        let backoffices = {
+            moderateur: () => ({
+                defaultPath: '/admin/moderateur/moderation/avis/stagiaires?page=0&status=none',
+                headerItems: <ModerateurHeaderItems />,
+                routes: <ModerateurRoutes />,
+            }),
+            financeur: () => ({
+                defaultPath: '/admin/financeur/avis/stats',
+                headerItems: <FinanceurHeaderItems />,
+                routes: <FinanceurRoutes />
+            })
+        };
+
         //Use new design
-        if (this.state.profile === 'moderateur') {
+        if (['moderateur', 'financeur'].includes(this.state.profile)) {
+
+            let layout = backoffices[profile]();
+
             return (
                 <Router>
-                    <div className="anotea">
-                        <Header onLogout={this.handleLogout} />
-                        <ModerateurRoutes codeRegion={this.state.codeRegion} />
-                        <MiscRoutes />
-                    </div>
+                    <UserContext.Provider value={userContext}>
+                        <div className="anotea">
+                            <Switch>
+                                <Redirect exact from="/" to={layout.defaultPath} />
+                                <Redirect exact from="/admin" to={layout.defaultPath} />
+                            </Switch>
+
+                            <Header onLogout={this.handleLogout} items={layout.headerItems} />
+
+                            <MiscRoutes />
+                            {layout.routes}
+                        </div>
+                    </UserContext.Provider>
                 </Router>
             );
         }
@@ -202,10 +231,10 @@ class App extends Component {
                         <DeprecatedHeader
                             handleLogout={this.handleLogout}
                             loggedIn={this.state.loggedIn}
-                            profile={this.state.profile}
+                            profile={profile}
                             raisonSociale={this.state.raisonSociale}
-                            codeFinanceur={this.state.codeFinanceur}
-                            codeRegion={this.state.codeRegion}
+                            codeFinanceur={codeFinanceur}
+                            codeRegion={codeRegion}
                             region={this.state.region} />
 
                         <Switch>
@@ -220,21 +249,12 @@ class App extends Component {
                             path="/admin"
                             render={() => (
                                 <div className="main">
-                                    {this.state.profile === 'organisme' &&
+                                    {profile === 'organisme' &&
                                     <OrganisationPanel
-                                        profile={this.state.profile}
-                                        id={this.state.id}
-                                        codeRegion={this.state.codeRegion}
-                                        features={this.state.features} />
-                                    }
-
-                                    {this.state.profile === 'financeur' &&
-                                    <FinancerPanel
-                                        profile={this.state.profile}
-                                        id={this.state.id}
-                                        codeRegion={this.state.codeRegion}
-                                        codeFinanceur={this.state.codeFinanceur}
-                                        features={this.state.features} />
+                                        profile={profile}
+                                        id={id}
+                                        codeRegion={codeRegion}
+                                        features={features} />
                                     }
                                 </div>)} />
                     </div>
