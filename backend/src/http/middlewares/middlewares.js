@@ -125,18 +125,17 @@ module.exports = (auth, logger, configuration) => {
 
                 let relativeUrl = (req.baseUrl || '') + (req.url || '');
                 let startTime = new Date().getTime();
-                let recorder = null;
-                if (relativeUrl.startsWith('/api/kairos/') || relativeUrl.startsWith('/api/backoffice/generate-auth-url')) {
-                    recorder = createResponseRecorder();
-                    recorder.record(res);
-                }
+                let mustRecordBody = relativeUrl.startsWith('/api/kairos/') ||
+                    relativeUrl.startsWith('/api/backoffice/generate-auth-url');
+
+                let recorder = createResponseRecorder({ mustRecordBody });
+                recorder.record(res);
 
                 let log = () => {
 
                     try {
                         let error = req.err;
-                        let body = recorder ? recorder.getBody() : null;
-
+                        let body = recorder.getBody();
                         let data = {
                             type: 'http',
                             ...(!error ? {} : {
@@ -162,7 +161,8 @@ module.exports = (auth, logger, configuration) => {
                                 statusCode: res.statusCode,
                                 statusCodeAsString: `${res.statusCode}`,
                                 headers: res._headers,
-                                body,
+                                body: body ? body : undefined,
+                                size: recorder.getSize(),
                             },
                         };
 
