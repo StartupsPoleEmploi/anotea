@@ -1,0 +1,32 @@
+@import '../../../../../../styles/variables';
+
+.Filter {
+
+  &.nav-item {
+
+    opacity: 0.6;
+    position: relative;
+
+    &.active {
+      opacity: 1;
+
+      &:hover, &:focus {
+        font-weight: $font-weight-400;
+      }
+    }
+
+    &:hover, &:focus {
+      cursor: pointer;
+      font-weight: $font-weight-700;
+    }
+
+    .pastille {
+      position: absolute;
+      top: 5px;
+      background-color: $color-red;
+      color: $color-white;
+      font-weight: $font-weight-700;
+      font-size: 0.6rem;
+    }
+  }
+}

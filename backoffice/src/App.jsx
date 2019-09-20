@@ -191,7 +191,7 @@ class App extends Component {
         let userContext = { codeRegion, codeFinanceur, profile };
         let backoffices = {
             moderateur: () => ({
-                defaultPath: '/admin/moderateur/moderation/avis/stagiaires?page=0&status=none',
+                defaultPath: '/admin/moderateur/moderation/avis/stagiaires',
                 headerItems: <ModerateurHeaderItems />,
                 routes: <ModerateurRoutes />,
                 logo: logoModerateur,

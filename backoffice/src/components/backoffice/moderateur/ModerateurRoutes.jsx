@@ -3,11 +3,11 @@ import _ from 'lodash';
 import { Route } from 'react-router-dom';
 import queryString from 'query-string';
 import GestionOrganismePage from './gestion-organismes/GestionOrganismePage';
-import ModerationAvisPanel from './moderation-avis/ModerationAvisPanel';
 import ModerationReponsesPanel from './moderation-avis/ModerationReponsesPanel';
 import CourrielsPage from './courriels/CourrielsPage';
 import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
 import { createNavigator } from '../../../utils/route-utils';
+import ModerationAvisPage from './moderation-avis/ModerationAvisPage';
 
 export default class ModerateurRoutes extends React.Component {
 
@@ -34,16 +34,15 @@ export default class ModerateurRoutes extends React.Component {
                     render={props => {
                         let navigator = createNavigator(props);
                         return <GestionOrganismePage navigator={navigator} />;
-                    }} />
+                    }}
+                />
                 <Route
                     path="/admin/moderateur/moderation/avis/stagiaires"
-                    render={({ history, location }) => {
-                        return <ModerationAvisPanel
-                            query={this.parse(location)}
-                            onNewQuery={options => {
-                                history.push(`/admin/moderateur/moderation/avis/stagiaires?${this.buildParameters(options)}`);
-                            }} />;
-                    }} />
+                    render={props => {
+                        let navigator = createNavigator(props);
+                        return <ModerationAvisPage navigator={navigator} />;
+                    }}
+                />
                 <Route
                     path="/admin/moderateur/moderation/avis/reponses"
                     render={({ history, location }) => {
@@ -52,7 +51,8 @@ export default class ModerateurRoutes extends React.Component {
                             onNewQuery={options => {
                                 history.push(`/admin/moderateur/moderation/avis/reponses?${this.buildParameters(options)}`);
                             }} />;
-                    }} />
+                    }}
+                />
 
                 <Route path="/admin/moderateur/mon-compte" component={MonComptePanel} />
             </div>

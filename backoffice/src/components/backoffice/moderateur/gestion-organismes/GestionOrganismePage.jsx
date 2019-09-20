@@ -59,7 +59,7 @@ export default class GestionOrganismePage extends React.Component {
 
     componentDidUpdate(previous) {
         let query = this.props.navigator.getQuery();
-        if (!_.isEqual(query, previous.navigator.getQuery('old'))) {
+        if (!_.isEqual(query, previous.navigator.getQuery())) {
             this.search();
         }
     }
@@ -67,7 +67,8 @@ export default class GestionOrganismePage extends React.Component {
     search = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let results = await searchOrganismes(this.props.navigator.getQuery());
+                let query = this.props.navigator.getQuery();
+                let results = await searchOrganismes(query);
                 this.setState({ results, loading: false }, () => resolve());
             });
         });
@@ -206,7 +207,8 @@ export default class GestionOrganismePage extends React.Component {
                         pagination={
                             <Pagination
                                 pagination={results.meta.pagination}
-                                onClick={page => navigator.refreshCurrentPage(_.merge({}, query, { page }))} />
+                                onClick={page => navigator.refreshCurrentPage(_.merge({}, query, { page }))}
+                            />
                         }
                     />
                 }
