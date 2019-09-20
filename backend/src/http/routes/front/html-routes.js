@@ -352,7 +352,7 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
         } else {
             const organisme = await db.collection('accounts').findOne({ token: req.params.token });
             if (organisme !== null) {
-                trackRouteHandler('organismes', organisme, true, res);
+                trackRouteHandler('accounts', organisme, true, res);
             } else {
                 trackRouteHandler(null, null, false, res);
             }
