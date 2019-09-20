@@ -2,10 +2,10 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import GestionOrganismePage from './gestion-organismes/GestionOrganismePage';
 import CourrielsPage from './courriels/CourrielsPage';
-import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
 import { createNavigator } from '../../../utils/route-utils';
 import ModerationAvisPage from './moderation-avis/ModerationAvisPage';
 import ModerationReponsesPage from './moderation-avis/ModerationReponsesPage';
+import MonComptePage from '../misc/account/mon-compte/MonComptePage';
 
 export default class ModerateurRoutes extends React.Component {
 
@@ -36,7 +36,10 @@ export default class ModerateurRoutes extends React.Component {
                     }}
                 />
 
-                <Route path="/admin/moderateur/mon-compte" component={MonComptePanel} />
+                <Route
+                    path={'/admin/moderateur/mon-compte'}
+                    component={MonComptePage}
+                />
             </div>
         );
     }
