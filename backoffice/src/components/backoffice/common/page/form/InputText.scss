@@ -1,0 +1,60 @@
+@import '../../../../../styles/variables';
+
+.InputText {
+
+  flex-grow: 1;
+
+  .icon {
+    flex: 0 0 auto;
+    background-color: $color-grey-5;
+    color: $color-black-80;
+    font-size: 1.125rem;
+    padding: 0.5rem;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+
+  .reset {
+    flex: 0 0 auto;
+    background-color: $color-grey-5;
+    color: $color-black-80;
+    font-size: 1.125rem;
+    padding: 0.5rem;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+
+  input {
+    flex: 1 1 auto;
+    background-color: $color-grey-5;
+    border: none;
+    border-radius: 0.25rem;
+    box-shadow: none;
+    text-shadow: 0 0 0 gray;
+    color: $color-black;
+    display: inline-block;
+    width: 96px;
+    vertical-align: middle;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+
+    &.with-icon {
+      border-top-left-radius: unset;
+      border-bottom-left-radius: unset;
+    }
+
+    &.with-reset {
+      border-top-right-radius: unset;
+      border-bottom-right-radius: unset;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: $color-black;
+      opacity: 0.6;
+    }
+  }
+}

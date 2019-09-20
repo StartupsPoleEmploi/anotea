@@ -6,12 +6,10 @@ export { default as Filter } from './Filter';
 export const Filters = ({ children }) => {
 
     return (
-        <div className="Filters row">
-            <div className="col-sm-12 offset-md-1 col-md-10">
-                <nav className="nav justify-content-center">
-                    {children}
-                </nav>
-            </div>
+        <div className="Filters d-flex justify-content-center">
+            <nav className="nav justify-content-center">
+                {children}
+            </nav>
         </div>
     );
 };

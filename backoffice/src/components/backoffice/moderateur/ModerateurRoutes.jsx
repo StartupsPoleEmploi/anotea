@@ -2,11 +2,12 @@ import React from 'react';
 import _ from 'lodash';
 import { Route } from 'react-router-dom';
 import queryString from 'query-string';
-import OrganismePanel from './gestion-organismes/OrganismePanel';
+import GestionOrganismePage from './gestion-organismes/GestionOrganismePage';
 import ModerationAvisPanel from './moderation-avis/ModerationAvisPanel';
 import ModerationReponsesPanel from './moderation-avis/ModerationReponsesPanel';
 import CourrielsPage from './courriels/CourrielsPage';
 import MonComptePanel from '../misc/account/mon-compte/MonComptePanel';
+import { createNavigator } from '../../../utils/route-utils';
 
 export default class ModerateurRoutes extends React.Component {
 
@@ -30,12 +31,9 @@ export default class ModerateurRoutes extends React.Component {
                 <Route path="/admin/moderateur/courriels/organismes" render={() => <CourrielsPage type="organismes" />} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"
-                    render={({ history, location }) => {
-                        return <OrganismePanel
-                            query={this.parse(location)}
-                            onNewQuery={options => {
-                                history.push(`/admin/moderateur/gestion/organismes?${this.buildParameters(options)}`);
-                            }} />;
+                    render={props => {
+                        let navigator = createNavigator(props);
+                        return <GestionOrganismePage navigator={navigator} />;
                     }} />
                 <Route
                     path="/admin/moderateur/moderation/avis/stagiaires"

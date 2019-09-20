@@ -150,7 +150,6 @@ const LibraryPage = () => {
     return (
         <Page
             className="LibraryPage"
-            color="green"
             form={
                 <Form>
                     <div className="form-group">

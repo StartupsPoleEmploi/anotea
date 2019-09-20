@@ -42,12 +42,13 @@ export default class ModerateurHeaderItems extends React.Component {
                 return (
                     <ul className="nav">
                         <li className="nav-item dropdown">
-                            <a href="#"
-                               className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
-                               data-toggle="dropdown"
-                               role="button"
-                               aria-haspopup="true"
-                               aria-expanded="false"
+                            <a
+                                href="#"
+                                className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
+                                data-toggle="dropdown"
+                                role="button"
+                                aria-haspopup="true"
+                                aria-expanded="false"
                             >
                                 Moderation
                             </a>
@@ -72,7 +73,7 @@ export default class ModerateurHeaderItems extends React.Component {
                             <Link
                                 className="nav-link"
                                 label="Liste des organismes"
-                                url="/admin/moderateur/gestion/organismes?page=0&status=active" />
+                                url="/admin/moderateur/gestion/organismes" />
                         </li>
                         <li className="nav-item dropdown">
                             <a
