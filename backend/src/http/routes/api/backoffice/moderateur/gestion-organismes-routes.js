@@ -2,7 +2,7 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const { IdNotFoundError } = require('../../../../../common/errors');
-const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
+const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../../routes-utils');
 const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
 const convertOrganismeToDTO = require('./utils/convertOrganismeToDTO');
 const { transformObject, encodeStream } = require('../../../../../common/utils/stream-utils');
@@ -44,10 +44,29 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
         .skip((page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 
-        let [total, organismes] = await Promise.all([
+        let [total, itemsOnThisPage] = await Promise.all([
             cursor.count(),
-            cursor.toArray(),
+            cursor.count(true),
         ]);
+
+        let stream = cursor.transformStream({
+            transform: o => convertOrganismeToDTO(o),
+        });
+
+        return sendArrayAsJsonStream(stream, res, {
+            arrayPropertyName: 'organismes',
+            arrayWrapper: {
+                meta: {
+                    pagination: {
+                        page,
+                        itemsPerPage,
+                        itemsOnThisPage,
+                        totalItems: total,
+                        totalPages: Math.ceil(total / itemsPerPage),
+                    },
+                }
+            }
+        });
 
         res.send({
             organismes: organismes.map(o => convertOrganismeToDTO(o)),
