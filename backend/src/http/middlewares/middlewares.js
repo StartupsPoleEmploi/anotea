@@ -124,7 +124,7 @@ module.exports = (auth, logger, configuration) => {
             return (req, res, next) => {
 
                 let relativeUrl = (req.baseUrl || '') + (req.url || '');
-
+                let startTime = new Date().getTime();
                 let recorder = null;
                 if (relativeUrl.startsWith('/api/kairos/') || relativeUrl.startsWith('/api/backoffice/generate-auth-url')) {
                     recorder = createResponseRecorder();
@@ -145,6 +145,7 @@ module.exports = (auth, logger, configuration) => {
                                     stack: error.stack,
                                 }
                             }),
+                            elapsedTime: (new Date().getTime()) - startTime,
                             request: {
                                 requestId: req.requestId,
                                 url: {
