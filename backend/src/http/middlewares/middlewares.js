@@ -6,6 +6,7 @@ const RateLimit = require('express-rate-limit');
 const { tryAndCatch } = require('../routes/routes-utils');
 const createDatalakeExporter = require('./utils/createDatalakeExporter');
 const createResponseRecorder = require('./utils/createResponseRecorder');
+const findApplication = require('./utils/findApplication');
 
 module.exports = (auth, logger, configuration) => {
     return {
@@ -145,6 +146,7 @@ module.exports = (auth, logger, configuration) => {
                                 }
                             }),
                             elapsedTime: (new Date().getTime()) - startTime,
+                            application: findApplication(req),
                             request: {
                                 requestId: req.requestId,
                                 url: {
