@@ -109,16 +109,16 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         return avis;
     };
 
-    const validateAvis = avis => {
+    const validateAvis = async avis => {
 
         if (avis.pseudo.length > 50 ||
             (avis.comment !== undefined && (avis.comment.title.length > 50 || avis.comment.text.length > 200))) {
             return { error: 'too long' };
         }
 
-        let pseudoOK = avis.pseudo ? badwords.isGood(avis.pseudo) : true;
-        let commentOK = avis.comment ? badwords.isGood(avis.comment.text) : true;
-        let commentTitleOK = avis.comment ? badwords.isGood(avis.comment.title) : true;
+        let pseudoOK = avis.pseudo ? await badwords.isGood(avis.pseudo) : true;
+        let commentOK = avis.comment ? await badwords.isGood(avis.comment.text) : true;
+        let commentTitleOK = avis.comment ? await badwords.isGood(avis.comment.title) : true;
 
         if (pseudoOK && commentOK && commentTitleOK) {
             return { error: null, avis };
@@ -146,7 +146,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     };
 
     router.get('/questionnaire/checkBadwords', tryAndCatch(async (req, res) => {
-        res.send({ isGood: badwords.isGood(req.query.sentence) });
+        res.send({ isGood: await badwords.isGood(req.query.sentence) });
     }));
 
     router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
@@ -189,7 +189,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
             const avis = buildAvis(resultNotes.value, req.params.token, req.body, req.trainee);
 
-            let validation = validateAvis(avis);
+            let validation = await validateAvis(avis);
             if (validation.error === null) {
                 avis.rates.global = calculateAverageRate(avis);
                 await Promise.all([
