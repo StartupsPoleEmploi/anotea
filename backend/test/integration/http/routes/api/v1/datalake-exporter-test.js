@@ -85,7 +85,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
         let lines = await getFileContent(configuration);
 
         let line = JSON.parse(lines[tests++]);
-        assert.strictEqual(line.application, 'public');
+        assert.strictEqual(line.application, 'unknown');
         assert.strictEqual(line.widget, true);
     });
 
