@@ -101,7 +101,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         //can login with new password
         response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: '11111111111111', password: 'A1234!' });
+        .send({ identifiant: '11111111111111', password: 'A1234!' });
         assert.strictEqual(response.statusCode, 200);
 
         //should flag account as rehashed

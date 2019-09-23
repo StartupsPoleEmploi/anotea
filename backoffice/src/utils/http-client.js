@@ -1,4 +1,4 @@
-import { getToken } from '../utils/token';
+import { getToken } from './session';
 import EventEmitter from 'events';
 
 class HTTPError extends Error {

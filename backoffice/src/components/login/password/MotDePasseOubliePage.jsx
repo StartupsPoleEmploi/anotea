@@ -52,7 +52,7 @@ export default class MotDePasseOubliePage extends React.Component {
                         backgroundColor="blue"
                         results={
                             <AuthForm
-                                title="Mot de pass oublié"
+                                title="Mot de passe oublié"
                                 elements={
                                     <>
                                         <label>Entrez votre identifiant et confirmer l'envoi</label>
