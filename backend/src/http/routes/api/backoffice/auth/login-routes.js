@@ -11,7 +11,7 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
     const logLoginEvent = (req, profile, id) => {
         return db.collection('events').insertOne({
             date: new Date(),
-            type: 'log in',
+            type: 'login',
             source: { user: req.body.username, profile, ip: getRemoteAddress(req), id }
         });
     };
@@ -21,6 +21,7 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
             date: new Date(),
             type: 'login-access-token',
             source: {
+                profile: 'organisme',
                 siret: organisme.meta.siretAsString,
                 ip: getRemoteAddress(req),
                 id

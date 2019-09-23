@@ -103,7 +103,7 @@ module.exports = db => {
 
             return result.value;
         },
-        report: async (id, text, options = {}) => {
+        report: async (id, options = {}) => {
 
             let oid = new ObjectID(id);
 
@@ -126,9 +126,8 @@ module.exports = db => {
 
             saveEvent(id, 'report', {
                 app: 'organisation',
-                user: 'admin',
                 profile: 'organisme',
-                ...(options.events || {}),
+                ...options,
             });
 
             return result.value;

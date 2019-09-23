@@ -41,7 +41,8 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
 
         saveEvent(id, 'reponse', {
             app: 'organisation',
-            user: req.query.userId,
+            profile: 'organisme',
+            user: req.user.id,
             ip: getRemoteAddress(req),
             reponse: text
         });
@@ -62,9 +63,10 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
             throw new IdNotFoundError(`Avis with identifier ${id} not found`);
         }
 
-        saveEvent(id, 'reponse removed', {
+        saveEvent(id, 'reponse-removed', {
             app: 'organisation',
-            user: req.query.userId,
+            profile: 'organisme',
+            user: req.user.id,
             ip: getRemoteAddress(req)
         });
 
@@ -84,9 +86,10 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
                     logger.error(err);
                     res.status(500).send({ 'error': 'An error occurs' });
                 } else if (result.value) {
-                    saveEvent(id, 'markAsRead', {
+                    saveEvent(id, 'mark-as-read', {
                         app: 'organisation',
-                        user: req.query.userId,
+                        profile: 'organisme',
+                        user: req.user.id,
                         ip: getRemoteAddress(req)
                     });
                     res.json(result.value);
@@ -107,9 +110,10 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
                     logger.error(err);
                     res.status(500).send({ 'error': 'An error occurs' });
                 } else if (result.value) {
-                    saveEvent(id, 'markAsNotRead', {
+                    saveEvent(id, 'mark-as-not-read', {
                         app: 'organisation',
-                        user: req.query.userId,
+                        profile: 'organisme',
+                        user: req.user.id,
                         ip: getRemoteAddress(req)
                     });
                     res.json(result.value);
@@ -123,7 +127,7 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
 
         const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
 
-        let avis = await moderation.report(id, { event: { origin: getRemoteAddress(req) } });
+        let avis = await moderation.report(id, { user: req.user.id, ip: getRemoteAddress(req) });
 
         return res.json(avis);
     }));
@@ -139,9 +143,10 @@ module.exports = ({ db, logger, middlewares, moderation }) => {
                     logger.error(err);
                     res.status(500).send({ 'error': 'An error occurs' });
                 } else if (result.value) {
-                    saveEvent(id, 'report', {
+                    saveEvent(id, 'unreport', {
                         app: 'organisation',
-                        user: req.query.userId,
+                        profile: 'organisme',
+                        user: req.user.id,
                         ip: getRemoteAddress(req)
                     });
                     res.json(result.value);
