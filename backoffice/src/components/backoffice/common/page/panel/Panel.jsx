@@ -16,7 +16,7 @@ const Panel = props => {
             }
 
             {props.loading ?
-                <div className="d-flex justify-content-center"><Loader /></div> :
+                <Loader centered={true} /> :
                 <div className="container">
                     <div className="summary-holder">
                         {props.summary}

@@ -5,9 +5,10 @@ import Panel from '../backoffice/common/page/panel/Panel';
 import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
 import { AuthForm } from './AuthForm';
-import { login } from './loginService';
+import { login, loginWithAccessToken } from './loginService';
 import './LoginPage.scss';
 import { NavLink } from 'react-router-dom';
+import Loader from '../backoffice/common/Loader';
 
 export default class LoginPage extends React.Component {
 
@@ -19,6 +20,8 @@ export default class LoginPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loginWithAccessToken: false,
+            loading: false,
             errors: false,
             identifiant: '',
             password: '',
@@ -33,7 +36,33 @@ export default class LoginPage extends React.Component {
         .catch(() => this.setState({ error: true, loading: false }));
     };
 
+    handleAccessToken = data => {
+        loginWithAccessToken(data.access_token, data.origin)
+        .then(result => this.props.handleLoginSucceed(result))
+        .catch(e => {
+            console.log(e);
+            return this.setState({ loginWithAccessToken: false });
+        });
+    };
+
+    componentDidMount() {
+        let query = this.props.navigator.getQuery();
+        if (query.origin && query.access_token) {
+            this.setState({ loginWithAccessToken: true }, () => {
+                this.handleAccessToken(query);
+            });
+        }
+    }
+
     render() {
+
+        if (this.state.loginWithAccessToken) {
+            return <Page
+                className="LoginPage"
+                title={'Connexion en cours à votre espace Anotéa...'}
+                panel={<Loader centered={true} />}
+            />;
+        }
 
         return (
             <Page

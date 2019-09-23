@@ -63,12 +63,6 @@ class App extends Component {
                 action: 'creation',
                 token: qs.token
             };
-        } else if (qs.action === 'loginWithAccessToken') {
-            this.state = {
-                action: 'loginWithAccessToken',
-                access_token: qs.access_token,
-                origin: qs.origin,
-            };
         }
     }
 
@@ -122,7 +116,6 @@ class App extends Component {
         if (!profile || ['moderateur', 'financeur'].includes(this.state.profile)) {
 
             let layout = backoffices[profile || 'default']();
-            let showLoginWithAccessToken = !this.state.loggedIn && this.state.action === 'loginWithAccessToken';
 
             return (
                 <UserContext.Provider value={userContext}>
@@ -179,12 +172,12 @@ class App extends Component {
 
     render() {
         return (
-            <div>
+            <>
                 <IntlProvider locale="fr">
                     {this.showBackofficePages()}
                 </IntlProvider>
                 {false && <GridDisplayer />}
-            </div>
+            </>
         );
     }
 }

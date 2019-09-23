@@ -141,7 +141,7 @@ module.exports = ({ db, auth, configuration, password }) => {
                 invalidateAuthToken(organisme._id, parameters.access_token),
                 logLoginWithAccessTokenEvent(req, organisme, organisme._id),
             ]);
-            return res.status(200).send(token);
+            return res.json(token);
         } else {
             throw Boom.badRequest('Token invalide');
         }

@@ -1,6 +1,10 @@
 @import 'styles/deprecated/anotea-deprecated.scss';
 @import 'styles/variables';
 
+html, body, #root {
+  height: 100vh;
+}
+
 .anotea {
 
   font-size: 1em;

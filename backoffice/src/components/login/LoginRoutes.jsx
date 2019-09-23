@@ -36,7 +36,6 @@ export default class LoginRoutes extends React.Component {
                         return <ReinitialisationMotDePassePage navigator={navigator} />;
                     }}
                 />
-
             </>
         );
     }
