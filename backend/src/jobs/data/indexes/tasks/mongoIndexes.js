@@ -129,12 +129,11 @@ module.exports = {
             db.collection('events').createIndex({ 'date': 1 }),
         ]);
     },
-    inseeCode: db => {
+    communes: db => {
         return Promise.all([
-            db.collection('inseeCode').createIndex({ 'cedex': 1 }),
-            db.collection('inseeCode').createIndex({ 'postalCode': 1 }),
-            db.collection('inseeCode').createIndex({ 'insee': 1 }),
-            db.collection('inseeCode').createIndex({ 'commune': 1 }),
+            db.collection('communes').createIndex({ 'inseeCode': 1 }, { unique: true }),
+            db.collection('communes').createIndex({ 'cedex': 1 }),
+            db.collection('communes').createIndex({ 'postalCode': 1 }),
         ]);
     },
     misc: db => {

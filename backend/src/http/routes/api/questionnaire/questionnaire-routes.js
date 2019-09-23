@@ -7,7 +7,7 @@ const { sanitize } = require('./utils/userInput');
 const { tryAndCatch } = require('../../routes-utils');
 const { AlreadySentError, BadDataError } = require('../../../../common/errors');
 
-module.exports = ({ db, logger, configuration, regions }) => {
+module.exports = ({ db, logger, configuration, regions, communes }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let badwords = require('./utils/badwords')(logger, configuration);
@@ -145,7 +145,7 @@ module.exports = ({ db, logger, configuration, regions }) => {
         return {
             trainee: trainee,
             region: region,
-            showLinks: await externalLinks(db).getLink(trainee, 'pe') !== null && !trainingTooOld
+            showLinks: await externalLinks(db, communes).getLink(trainee, 'pe') !== null && !trainingTooOld
         };
     };
 

@@ -3,7 +3,7 @@ const moment = require('moment');
 const titleize = require('underscore.string/titleize');
 const externalLinks = require('./utils/externalLinks');
 
-module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions }) => {
+module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
@@ -77,7 +77,7 @@ module.exports = ({ db, logger, configuration, deprecatedStats, mailer, regions 
             });
         }
 
-        res.redirect(await externalLinks(db).getLink(trainee, goto));
+        res.redirect(await externalLinks(db, communes).getLink(trainee, goto));
     });
 
     router.get('/mail/:token', async (req, res) => {
