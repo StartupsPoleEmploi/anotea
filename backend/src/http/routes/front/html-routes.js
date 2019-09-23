@@ -107,7 +107,8 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
 
     router.get('/mail/:token/publie', async (req, res) => {
         const trainee = await db.collection('trainee').findOne({ token: req.params.token });
-        if (trainee === null) {
+        const avis = await db.collection('comment').findOne({ token: req.params.token });
+        if (trainee === null || avis === null) {
             res.status(404).render('errors/404');
             return;
         }
@@ -115,7 +116,8 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
         const unsubscribeLink = mailer.getUnsubscribeLink(trainee);
 
         res.render('../../smtp/views/avis_publie.ejs', {
-            trainee: trainee,
+            trainee,
+            avis,
             consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/publie?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
             unsubscribeLink: unsubscribeLink,
             trackingLink: `${configuration.app.public_hostname}/mail/${trainee.token}/track`,
