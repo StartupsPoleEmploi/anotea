@@ -1,8 +1,7 @@
 import React from 'react';
-import './MonComptePanel.scss';
 import Page from '../../../common/page/Page';
 import { ChangePassword } from './ChangePassword';
-import DeprecatedPanel from '../../../common/page/DeprecatedPanel';
+import DeprecatedPanel from '../../../organisation/DeprecatedPanel';
 
 export default class MonComptePage extends React.Component {
 

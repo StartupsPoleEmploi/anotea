@@ -226,7 +226,6 @@ export default class FinanceurPage extends React.Component {
 
         return (
             <Page
-                color="green"
                 loading={this.state.loading}
                 form={
                     <Form>

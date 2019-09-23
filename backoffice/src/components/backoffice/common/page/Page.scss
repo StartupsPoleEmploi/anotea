@@ -2,14 +2,25 @@
 
 .Page {
 
-  .form {
-    @include backoffice-color();
-  }
+  .holder {
+    @include profile-color();
+    padding-bottom: 1rem;
 
-  .tabs {
-    @include backoffice-color();
+    .title-holder {
+      padding-bottom: 0.5rem;
+      font-size: 2em;
+      font-weight: $font-weight-900;
+      line-height: 2.5rem;
+      text-align: center;
+      color: $color-white;
+    }
 
-    padding-top: 1.5rem;
-    padding-bottom: 0.5rem;
+    .form-holder {
+      padding-bottom: 1rem;
+    }
+
+    .tabs-holder {
+      padding-top: 1rem;
+    }
   }
 }

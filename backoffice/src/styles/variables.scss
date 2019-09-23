@@ -44,12 +44,12 @@ $color-yellow-10: #FDF7EA;
 
 $shadow: 0 0.115rem 0.625rem -2px rgba(0, 0, 0, 0.15) !important;
 
-@mixin backoffice-color() {
-  &.green {
+@mixin profile-color() {
+  &.financeur {
     background-color: $color-green;
   }
 
-  &.blue {
+  &.moderateur {
     background-color: $color-blue;
   }
 }

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Loader from '../../Loader';
-import './NewPanel.scss';
+import './Panel.scss';
 
-const NewPanel = props => {
+const Panel = props => {
 
     return (
-        <div className={`NewPanel ${props.className || ''} ${props.backgroundColor || ''}`}>
+        <div className={`Panel ${props.className || ''} ${props.backgroundColor || ''}`}>
             {props.filters &&
             <div className="filters-holder">
                 <div className="container">
@@ -31,7 +31,7 @@ const NewPanel = props => {
     );
 };
 
-NewPanel.propTypes = {
+Panel.propTypes = {
     filters: PropTypes.node,
     summary: PropTypes.node,
     results: PropTypes.node,
@@ -41,4 +41,4 @@ NewPanel.propTypes = {
     backgroundColor: PropTypes.string,
 };
 
-export default NewPanel;
+export default Panel;

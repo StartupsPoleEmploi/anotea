@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './LibraryPage.scss';
 import Button from '../common/Button';
 import { Dropdown, DropdownDivider, DropdownItem } from '../common/Dropdown';
-import NewPanel from '../common/page/panel/NewPanel';
+import Panel from '../common/page/panel/Panel';
 import Filter from '../common/page/panel/filters/Filter';
 import { Filters } from '../common/page/panel/filters/Filters';
 import Pagination from '../common/page/panel/pagination/Pagination';
@@ -150,7 +150,6 @@ const LibraryPage = () => {
     return (
         <Page
             className="LibraryPage"
-            color="green"
             form={
                 <Form>
                     <div className="form-group">
@@ -181,7 +180,7 @@ const LibraryPage = () => {
                 </Tabs>
             }
             panel={
-                <NewPanel
+                <Panel
                     filters={
                         <Filters>
                             <Filter

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './Filter.scss';
 
 const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false }) => {
 
