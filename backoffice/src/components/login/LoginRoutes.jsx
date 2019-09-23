@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import ReinitialisationMotDePassePage from './ReinitialisationMotDePassePage';
+import ReinitialisationMotDePassePage from './password/ReinitialisationMotDePassePage';
 import { createNavigator } from '../../utils/route-utils';
-import MotDePasseOubliePage from './MotDePasseOubliePage';
+import MotDePasseOubliePage from './password/MotDePasseOubliePage';
 
 export default class LoginRoutes extends React.Component {
 
