@@ -8,8 +8,7 @@ import { removeToken, setToken } from './utils/token';
 import { subscribeToHttpEvent } from './utils/http-client';
 import DeprecatedHeader from './components/backoffice/common/deprecated/header/DeprecatedHeader';
 import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel.jsx';
-import AccountActivation from './components/backoffice/organisation/AccountActivation';
-import ForgottenPassword from './components/login/ForgottenPassword';
+import AccountActivation from './components/login/AccountActivation';
 import LoginForm from './components/login/LoginForm';
 import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
@@ -25,9 +24,32 @@ import ModerateurHeaderItems from './components/backoffice/moderateur/Moderateur
 import FinanceurHeaderItems from './components/backoffice/financeur/FinanceurHeaderItems';
 import logoModerateur from './components/backoffice/common/header/logo-moderateur.svg';
 import logoFinanceur from './components/backoffice/common/header/logo-financeur.svg';
+import logoDefault from './components/backoffice/common/header/logo-default.svg';
+import LoginRoutes from './components/login/LoginRoutes';
 
 
 addLocaleData([...fr]);
+
+let backoffices = {
+    moderateur: () => ({
+        defaultPath: '/admin/moderateur/moderation/avis/stagiaires',
+        headerItems: <ModerateurHeaderItems />,
+        routes: <ModerateurRoutes />,
+        logo: logoModerateur,
+    }),
+    financeur: () => ({
+        defaultPath: '/admin/financeur/avis/stats',
+        headerItems: <FinanceurHeaderItems />,
+        routes: <FinanceurRoutes />,
+        logo: logoFinanceur,
+    }),
+    default: () => ({
+        defaultPath: '/admin',
+        headerItems: <div />,
+        routes: <LoginRoutes />,
+        logo: logoDefault,
+    })
+};
 
 class App extends Component {
 
@@ -133,9 +155,9 @@ class App extends Component {
     };
 
     handleForgottenPassword = () => {
-        this.setState({ forgottenPassword: true, action: null });
         history.pushState(null, '', location.href.split('?')[0]);  // eslint-disable-line
     };
+
 
     showUnauthenticatedPages = () => {
 
@@ -143,44 +165,59 @@ class App extends Component {
 
         let showLoginForm = ((!this.state.loggedIn && this.state.action === null) && !this.state.forgottenPassword);
         let showLoginWithAccessToken = !this.state.loggedIn && this.state.action === 'loginWithAccessToken';
+        let layout = backoffices['default']();
 
         return (
             <Router>
-                <div className="anotea-deprecated App">
-                    <DeprecatedHeader
-                        handleLogout={this.handleLogout}
-                        loggedIn={this.state.loggedIn}
-                        profile={this.state.profile}
-                        raisonSociale={this.state.raisonSociale}
-                        codeFinanceur={this.state.codeFinanceur}
-                        codeRegion={this.state.codeRegion} />
+                <Switch>
+                    <Redirect exact from="/" to={layout.defaultPath} />
+                    <Route path={['/admin/reinitialisation-mot-de-passe', '/admin/mot-de-passe-oublie']} render={() => {
+                        return (
+                            <div className="anotea">
+                                <Header
+                                    items={layout.headerItems}
+                                    logo={layout.logo}
+                                />
+                                {layout.routes}
+                            </div>
+                        );
+                    }}
+                    />
+                    <Route path="*" render={({ history }) => {
+                        return (
+                            <div className="anotea-deprecated App">
+                                <DeprecatedHeader
+                                    handleLogout={this.handleLogout}
+                                    loggedIn={this.state.loggedIn}
+                                    profile={this.state.profile}
+                                    raisonSociale={this.state.raisonSociale}
+                                    codeFinanceur={this.state.codeFinanceur}
+                                    codeRegion={this.state.codeRegion} />
 
-                    {this.state.action === 'creation' &&
-                    <AccountActivation
-                        handleForgottenPassword={this.handleForgottenPassword}
-                        token={this.state.token}
-                        onError={this.handleError} onSuccess={this.handleLogout} />}
+                                {this.state.action === 'creation' &&
+                                <AccountActivation
+                                    handleForgottenPassword={this.handleForgottenPassword}
+                                    token={this.state.token}
+                                    onError={this.handleError} onSuccess={this.handleLogout} />}
 
-                    {this.state.forgottenPassword &&
-                    <ForgottenPassword
-                        passwordLost={this.state.action === 'passwordLost'}
-                        token={this.state.token}
-                        onError={this.handleError}
-                        onSuccess={this.handleLogout} />}
+                                {showLoginWithAccessToken &&
+                                <LoginWithAccessToken
+                                    access_token={this.state.access_token}
+                                    origin={this.state.origin}
+                                    handleLoggedIn={this.handleLoggedIn}
+                                    handleLogout={this.handleLogout} />}
 
-                    {showLoginWithAccessToken &&
-                    <LoginWithAccessToken
-                        access_token={this.state.access_token}
-                        origin={this.state.origin}
-                        handleLoggedIn={this.handleLoggedIn}
-                        handleLogout={this.handleLogout} />}
-
-                    {showLoginForm &&
-                    <LoginForm
-                        handleForgottenPassword={this.handleForgottenPassword}
-                        handleLoggedIn={this.handleLoggedIn} />
-                    }
-                </div>
+                                {showLoginForm &&
+                                <LoginForm
+                                    handleForgottenPassword={() => {
+                                        history.push('/admin/mot-de-passe-oublie');
+                                    }}
+                                    handleLoggedIn={this.handleLoggedIn} />
+                                }
+                            </div>
+                        );
+                    }} />
+                </Switch>
             </Router>
         );
     };
@@ -189,20 +226,6 @@ class App extends Component {
 
         let { profile, codeRegion, codeFinanceur, features, id } = this.state;
         let userContext = { codeRegion, codeFinanceur, profile };
-        let backoffices = {
-            moderateur: () => ({
-                defaultPath: '/admin/moderateur/moderation/avis/stagiaires',
-                headerItems: <ModerateurHeaderItems />,
-                routes: <ModerateurRoutes />,
-                logo: logoModerateur,
-            }),
-            financeur: () => ({
-                defaultPath: '/admin/financeur/avis/stats',
-                headerItems: <FinanceurHeaderItems />,
-                routes: <FinanceurRoutes />,
-                logo: logoFinanceur,
-            })
-        };
 
         //Use new design
         if (['moderateur', 'financeur'].includes(this.state.profile)) {

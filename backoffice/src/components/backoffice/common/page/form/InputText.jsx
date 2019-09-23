@@ -24,7 +24,7 @@ export default class InputText extends React.Component {
 
                 <input
                     type="text"
-                    className={`${icon ? 'with-icon' : ''} ${reset ? 'with-reset' : ''} h-100`}
+                    className={`form-control ${icon ? 'with-icon' : ''} ${reset ? 'with-reset' : ''} h-100`}
                     {..._.omit(this.props, ['icon', 'reset'])}
                 />
 

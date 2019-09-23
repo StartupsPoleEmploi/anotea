@@ -1,0 +1,13 @@
+@import '../../styles/variables';
+
+.MotDePasseOubliePage {
+
+  .clarification {
+    color: $color-black-60;
+    font-size: 0.875rem;
+
+    .contactez-nous {
+      color: $color-blue;
+    }
+  }
+}

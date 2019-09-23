@@ -6,7 +6,7 @@ import './Page.scss';
 const Page = props => {
 
     let user = useContext(UserContext);
-    let profile = user.profile;
+    let profile = user ? user.profile : 'default';
 
     return (
         <div className={`Page mb-0 ${props.className || ''}`}>

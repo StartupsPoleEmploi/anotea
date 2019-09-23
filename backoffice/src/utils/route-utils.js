@@ -23,7 +23,7 @@ export const createNavigator = ({ history, location }) => {
         refreshCurrentPage: query => {
             return history.push(`${location.pathname}?${(stringifyQuery(query))}`);
         },
-        goToPage: (url, query) => {
+        goToPage: (url, query = {}) => {
             return history.push(`${url}?${(stringifyQuery(query))}`);
         }
     };

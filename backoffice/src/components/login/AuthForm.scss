@@ -1,0 +1,26 @@
+@import '../../styles/variables';
+
+.AuthForm {
+
+  label {
+    font-size: 1rem;
+    font-weight: $font-weight-700;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    color: $color-blue;
+    font-weight: $font-weight-900;
+    text-align: center;
+  }
+
+  .input-error {
+    color: $color-red;
+    background-color: $color-red-10;
+  }
+
+  .input-error-details {
+    color: $color-red;
+    font-size: 0.825rem
+  }
+}

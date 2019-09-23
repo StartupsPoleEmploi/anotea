@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { activateAccount, getActivationAccountStatus } from './service/organismeService';
-import { checkConfirm, isPasswordStrongEnough, passwordIsOK } from '../../../utils/validation';
+import { activateAccount, getActivationAccountStatus } from '../backoffice/organisation/service/organismeService';
+import { checkConfirm, isPasswordStrongEnough, passwordIsOK } from '../../utils/validation';
 
 export default class AccountActivation extends React.Component {
 
