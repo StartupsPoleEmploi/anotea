@@ -9,6 +9,8 @@
   .summary {
     font-size: 0.75rem;
     text-transform: uppercase;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 
   .line {
@@ -18,35 +20,11 @@
   .pagination {
     font-size: 0.75rem;
 
-    .current {
-      background-color: $color-grey-25;
-    }
-
     .nav {
-      opacity: 0.6;
-      border-top: 1px solid $color-grey-25;
-      border-bottom: 1px solid $color-grey-25;
-      border-right: 1px solid $color-grey-25;
-      padding: 0.5rem 1rem;
 
-      &:first-child {
-        border-left: 1px solid $color-grey-25;
-        border-bottom-left-radius: 6px;
-        border-top-left-radius: 6px;
-      }
-
-      &:last-child {
-        border-bottom-right-radius: 6px;
-        border-top-right-radius: 6px;
-      }
-
-      &:hover,
-      &:focus {
-        cursor: pointer;
-        font-weight: $font-weight-700;
-        opacity: 1;
-        transition: opacity 0.2s linear;
-      }
+      color: $color-black;
+      padding: 0.25rem 0.5rem;
+      text-transform: unset;
 
       &.inactive {
         visibility: hidden;
