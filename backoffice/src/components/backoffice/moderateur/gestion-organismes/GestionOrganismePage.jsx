@@ -88,7 +88,7 @@ export default class GestionOrganismePage extends React.Component {
 
         return (
             <Page
-                title={<h1 className="title">Gestion des organismes</h1>}
+                title="Gestion des organismes"
                 className="GestionOrganismePage"
                 form={
                     <div className="d-flex justify-content-center">
