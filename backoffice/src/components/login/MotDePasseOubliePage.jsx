@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Page from '../../backoffice/common/page/Page';
-import Panel from '../../backoffice/common/page/panel/Panel';
-import InputText from '../../backoffice/common/page/form/InputText';
-import Button from '../../backoffice/common/Button';
-import { AuthForm } from '../AuthForm';
+import Page from '../backoffice/common/page/Page';
+import Panel from '../backoffice/common/page/panel/Panel';
+import InputText from '../backoffice/common/page/form/InputText';
+import Button from '../backoffice/common/Button';
+import { AuthForm } from './AuthForm';
 import { askNewPassword } from './passwordService';
 
 export default class MotDePasseOubliePage extends React.Component {

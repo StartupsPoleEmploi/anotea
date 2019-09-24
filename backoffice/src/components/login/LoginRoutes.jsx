@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
-import ReinitialisationMotDePassePage from './password/ReinitialisationMotDePassePage';
-import MotDePasseOubliePage from './password/MotDePasseOubliePage';
+import ReinitialisationMotDePassePage from './ReinitialisationMotDePassePage';
+import MotDePasseOubliePage from './MotDePasseOubliePage';
 import LoginPage from './LoginPage';
 import ActivationComptePage from './ActivationComptePage';
 
