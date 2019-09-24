@@ -2,6 +2,7 @@ const express = require('express');
 const moment = require('moment');
 const _ = require('lodash');
 const { getDeviceType } = require('./utils/analytics');
+const Boom = require('boom');
 const Joi = require('joi');
 const externalLinks = require('../../front/utils/externalLinks');
 const { sanitize } = require('./utils/userInput');
@@ -146,7 +147,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     };
 
     router.get('/questionnaire/checkBadwords', tryAndCatch(async (req, res) => {
-        res.send({ isGood: await badwords.isGood(req.query.sentence) });
+        if (await badwords.isGood(req.query.sentence)) {
+            return res.json({ isGood: true });
+        }
+        throw Boom.badRequest('Mot invalide');
+
     }));
 
     router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {

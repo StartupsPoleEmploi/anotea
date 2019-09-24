@@ -352,10 +352,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let response = await request(app)
         .get(`/api/questionnaire/checkBadwords?sentence=C'est de la merde.`);
 
-        assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body, {
-            isGood: false
-        });
+        assert.strictEqual(response.statusCode, 400);
     });
 
     it('can check badwords (valid)', async () => {
