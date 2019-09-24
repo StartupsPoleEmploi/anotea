@@ -32,7 +32,7 @@ export default class MotDePasseOubliePage extends React.Component {
             });
         })
         .catch(() => {
-            this.setState({ error: true, loading: false });
+            this.setState({ error: 'Une erreur est survenue', loading: false });
         });
     };
 
@@ -51,9 +51,9 @@ export default class MotDePasseOubliePage extends React.Component {
                                     <>
                                         <label>Entrez votre identifiant</label>
                                         <InputText
-                                            className={this.state.error ? 'input-error' : ''}
                                             value={this.state.identifiant}
                                             placeholder="Adresse email ou siret"
+                                            error={this.state.error}
                                             onChange={event => this.setState({ identifiant: event.target.value })}
                                         />
                                         <p className="clarification mt-3">

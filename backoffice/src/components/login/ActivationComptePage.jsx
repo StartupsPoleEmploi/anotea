@@ -6,7 +6,7 @@ import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
 import { AuthForm } from './AuthForm';
-import { checkConfirm, isPasswordStrongEnough } from '../../utils/validation';
+import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
 import { activateAccount, getOrganismeByToken } from '../backoffice/organisation/service/organismeService';
 import { login } from '../login/loginService';
 import { NavLink } from 'react-router-dom';
@@ -25,8 +25,8 @@ export default class ActivationComptePage extends React.Component {
             password: '',
             confirmation: '',
             errors: {
-                isNotSamePassword: false,
-                passwordNotStrongEnough: false,
+                isNotSamePassword: null,
+                passwordNotStrongEnough: null,
             },
             organisme: {
                 raisonSociale: '',
@@ -55,8 +55,10 @@ export default class ActivationComptePage extends React.Component {
         let { password, confirmation, organisme } = this.state;
         this.setState({
             errors: {
-                isNotSamePassword: !checkConfirm(password, confirmation),
-                passwordNotStrongEnough: !isPasswordStrongEnough(password),
+                isNotSamePassword: isSamePassword(password, confirmation) ?
+                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
+                passwordNotStrongEnough: isPasswordStrongEnough(password) ?
+                    null : 'Les mots de passes ne sont pas identiques.',
             }
         }, async () => {
             if (this.formIsValid()) {
@@ -105,29 +107,20 @@ export default class ActivationComptePage extends React.Component {
                                                 <label>Choisissez un mot de passe</label>
                                                 <InputText
                                                     type="password"
-                                                    className={errors.passwordNotStrongEnough ? 'input-error' : ''}
-                                                    value={this.state.password}
                                                     placeholder="Mot de passe"
+                                                    value={this.state.password}
+                                                    error={errors.passwordNotStrongEnough}
                                                     onChange={event => this.setState({ password: event.target.value })}
                                                 />
-                                                {errors.passwordNotStrongEnough &&
-                                                <span className="input-error-details">
-                                                    Le mot de passe doit contenir au moins 6 caractères
-                                                    dont une majuscule et un caractère spécial.
-                                                </span>
-                                                }
 
                                                 <label className="mt-3">Confirmer le mot de passe</label>
                                                 <InputText
                                                     type="password"
-                                                    className={errors.isNotSamePassword ? 'input-error' : ''}
-                                                    value={this.state.confirmation}
                                                     placeholder="Mot de passe"
+                                                    value={this.state.confirmation}
+                                                    error={errors.isNotSamePassword}
                                                     onChange={event => this.setState({ confirmation: event.target.value })}
                                                 />
-                                                {errors.isNotSamePassword &&
-                                                <span className="input-error-details"> Les mots de passes ne sont pas identiques.</span>
-                                                }
                                                 <p className="clarification mt-3">
                                                     Vous souhaitez en savoir plus sur le service Anotéa : consultez
                                                     <a href="http://anotea.pole-emploi.fr" target="blank">

@@ -30,6 +30,25 @@ export default class LoginPage extends React.Component {
         };
     }
 
+    componentDidMount() {
+        let query = this.props.navigator.getQuery();
+        if (query.origin && query.access_token) {
+            this.setState({ loginWithAccessToken: true }, () => {
+                this.handleAccessToken(query);
+            });
+        }
+        if (query.message) {
+            this.setState({ message: query.message });
+        }
+    }
+
+    componentDidUpdate(previous) {
+        let query = this.props.navigator.getQuery();
+        if (query.message !== previous.navigator.getQuery().message) {
+            this.setState({ message: query.message });
+        }
+    }
+
     onSubmit = () => {
         this.setState({ loading: true });
 
@@ -47,26 +66,6 @@ export default class LoginPage extends React.Component {
         });
     };
 
-    componentDidMount() {
-        let query = this.props.navigator.getQuery();
-        if (query.origin && query.access_token) {
-            this.setState({ loginWithAccessToken: true }, () => {
-                this.handleAccessToken(query);
-            });
-        }
-        if (query.message) {
-            this.setState({ message: query.message });
-        }
-    }
-
-    componentDidUpdate(previous) {
-        let query = this.props.navigator.getQuery();
-        if (query.message !== previous.navigator.getQuery().message) {
-            console.log(query.message);
-            this.setState({ message: query.message });
-        }
-    }
-
     render() {
 
         let { message } = this.state;
@@ -75,7 +74,7 @@ export default class LoginPage extends React.Component {
         if (this.state.loginWithAccessToken) {
             return <Page
                 className="LoginPage"
-                title={'Connexion en cours à votre espace Anotéa...'}
+                title={'Connexion à votre espace Anotéa en cours...'}
                 panel={<Loader centered={true} />}
             />;
         }
@@ -94,26 +93,20 @@ export default class LoginPage extends React.Component {
                                     <>
                                         <label>Identifiant</label>
                                         <InputText
-                                            className={this.state.error ? 'input-error' : ''}
                                             value={this.state.identifiant}
                                             placeholder="Entrez votre SIRET"
                                             onChange={event => this.setState({ identifiant: event.target.value })}
+                                            error={this.state.error ? 'Votre identifiant est incorrect.' : ''}
                                         />
-                                        {this.state.error &&
-                                        <span className="input-error-details">Votre identifiant est incorrect.</span>
-                                        }
 
                                         <label className="mt-3">Mot de passe</label>
                                         <InputText
                                             type="password"
-                                            className={this.state.error ? 'input-error' : ''}
                                             value={this.state.password}
                                             placeholder="Entrez votre mot de passe "
                                             onChange={event => this.setState({ password: event.target.value })}
+                                            error={this.state.error ? 'Votre mot de passe est erroné.' : ''}
                                         />
-                                        {this.state.error &&
-                                        <span className="input-error-details">Votre mot de passe est erroné.</span>
-                                        }
                                     </>
                                 }
                                 buttons={

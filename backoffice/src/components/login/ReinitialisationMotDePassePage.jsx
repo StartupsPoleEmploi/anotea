@@ -7,7 +7,7 @@ import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
 import { AuthForm } from './AuthForm';
 import { checkIfPasswordTokenExists, updatePassword } from './passwordService';
-import { checkConfirm, isPasswordStrongEnough } from '../../utils/validation';
+import { isSamePassword, isPasswordStrongEnough } from '../../utils/validation';
 
 export default class ReinitialisationMotDePassePage extends React.Component {
 
@@ -22,8 +22,8 @@ export default class ReinitialisationMotDePassePage extends React.Component {
             password: '',
             confirmation: '',
             errors: {
-                isNotSamePassword: false,
-                passwordNotStrongEnough: false,
+                isNotSamePassword: null,
+                passwordNotStrongEnough: null,
             },
         };
     }
@@ -46,8 +46,10 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         let { password, confirmation } = this.state;
         this.setState({
             errors: {
-                isNotSamePassword: !checkConfirm(password, confirmation),
-                passwordNotStrongEnough: !isPasswordStrongEnough(password),
+                isNotSamePassword: isSamePassword(password, confirmation) ?
+                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
+                passwordNotStrongEnough: isPasswordStrongEnough(password) ?
+                    null : 'Les mots de passes ne sont pas identiques.',
                 loading: false,
             }
         }, async () => {
@@ -60,6 +62,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
     };
 
     render() {
+        let { errors } = this.state;
 
         return (
             <Page
@@ -75,29 +78,20 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                         <label>Nouveau mot de passe</label>
                                         <InputText
                                             type="password"
-                                            className={this.state.errors.passwordNotStrongEnough ? 'input-error' : ''}
                                             value={this.state.password}
                                             placeholder="Mot de passe"
+                                            error={errors.passwordNotStrongEnough}
                                             onChange={event => this.setState({ password: event.target.value })}
                                         />
-                                        {this.state.errors.passwordNotStrongEnough &&
-                                        <span className="input-error-details">
-                                            Le mot de passe doit contenir au moins 6 caractères
-                                            dont une majuscule et un caractère spécial.
-                                        </span>
-                                        }
 
                                         <label className="mt-3">Confirmer le nouveau mot de passe</label>
                                         <InputText
                                             type="password"
-                                            className={this.state.errors.isNotSamePassword ? 'input-error' : ''}
                                             value={this.state.confirmation}
                                             placeholder="Mot de passe"
+                                            error={errors.isNotSamePassword}
                                             onChange={event => this.setState({ confirmation: event.target.value })}
                                         />
-                                        {this.state.errors.isNotSamePassword &&
-                                        <span className="input-error-details"> Les mots de passes ne sont pas identiques.</span>
-                                        }
                                     </>
                                 }
                                 buttons={
