@@ -146,6 +146,7 @@ export default class ListeWidget extends Component {
                             </div>
                             <Verified />
                         </div>
+                        {this.getListe()}
                         <div className="d-flex justify-content-center mt-3">
                             <div className="d-xs-block d-sm-none">
                                 <Propulsed />
