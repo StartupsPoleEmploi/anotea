@@ -13,6 +13,50 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
 
+    let getFormValidators = user => {
+        return {
+            departement: Joi.string(),
+            codeFinanceur: isPoleEmploi(user.codeFinanceur) ? Joi.string() : Joi.string().valid([user.codeFinanceur]),
+            siren: Joi.string(),
+            idFormation: Joi.string(),
+            startDate: Joi.number(),
+            scheduledEndDate: Joi.number(),
+        };
+    };
+
+    let getFiltersValidators = () => {
+        return {
+            status: Joi.string().allow(['all', 'reported', 'rejected']),
+            qualification: Joi.string().allow(['all', 'négatif', 'positif']),
+        };
+    };
+
+    let buildFormQuery = (codeRegion, parameters) => {
+        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate } = parameters;
+        let region = regions.findRegionByCodeRegion(codeRegion);
+
+        return {
+            codeRegion,
+            'training.startDate': { $gte: moment(startDate || region.since).toDate() },
+            ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
+            ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
+            ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
+            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
+            ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+        };
+    };
+
+    let buildFiltersQuery = parameters => {
+        let { status, qualification } = parameters;
+
+        return {
+            ...(qualification ? { comment: { $ne: null } } : {}),
+            ...(['positif', 'négatif'].includes(qualification) ? { qualification } : {}),
+            ...(status === 'reported' ? { reported: true } : {}),
+            ...(status === 'rejected' ? { rejected: true } : {}),
+        };
+    };
+
     router.get('/backoffice/financeur/departements', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         let region = regions.findRegionByCodeRegion(req.user.codeRegion);
@@ -90,57 +134,21 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         return sendArrayAsJsonStream(stream, res);
     }));
 
-    let getFormQueryValidators = user => {
-        return {
-            departement: Joi.string(),
-            codeFinanceur: isPoleEmploi(user.codeFinanceur) ? Joi.string() : Joi.string().valid([user.codeFinanceur]),
-            siren: Joi.string(),
-            idFormation: Joi.string(),
-            startDate: Joi.number(),
-            scheduledEndDate: Joi.number(),
-        };
-    };
-
-    let getFormQuery = (codeRegion, parameters) => {
-        let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate } = parameters;
-        let region = regions.findRegionByCodeRegion(codeRegion);
-
-        return {
-            codeRegion,
-            'training.startDate': { $gte: moment(startDate || region.since).toDate() },
-            ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
-            ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
-            ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
-            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
-            ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
-        };
-    };
-
-    let getListQuery = (codeRegion, parameters) => {
-        let { status, qualification } = parameters;
-
-        return {
-            ...getFormQuery(codeRegion, parameters),
-            ...(qualification ? { comment: { $ne: null } } : {}),
-            ...(['positif', 'négatif'].includes(qualification) ? { qualification } : {}),
-            ...(status === 'reported' ? { reported: true } : {}),
-            ...(status === 'rejected' ? { rejected: true } : {}),
-        };
-    };
-
     router.get('/backoffice/financeur/avis', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.query, {
-            ...getFormQueryValidators(req.user),
-            status: Joi.string().allow(['all', 'reported', 'rejected']),
-            qualification: Joi.string().allow(['all', 'négatif', 'positif']),
+            ...getFormValidators(req.user),
+            ...getFiltersValidators(),
             page: Joi.number().min(0).default(0),
             sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
         }, { abortEarly: false });
 
 
         let cursor = db.collection('comment')
-        .find(getListQuery(req.user.codeRegion, parameters))
+        .find({
+            ...buildFormQuery(req.user.codeRegion, parameters),
+            ...buildFiltersQuery(parameters)
+        })
         .sort({ [parameters.sortBy]: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
@@ -169,14 +177,16 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
     router.get('/backoffice/financeur/avis.csv', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.query, {
-            ...getFormQueryValidators(req.user),
-            status: Joi.string().allow(['all', 'reported', 'rejected']),
-            qualification: Joi.string().allow(['all', 'négatif', 'positif']),
+            ...getFormValidators(req.user),
+            ...getFiltersValidators(),
             token: Joi.string(),
         }, { abortEarly: false });
 
         let cursor = db.collection('comment')
-        .find(getListQuery(req.user.codeRegion, parameters))
+        .find({
+            ...buildFormQuery(req.user.codeRegion, parameters),
+            ...buildFiltersQuery(parameters)
+        })
         .sort({ [parameters.sortBy]: -1 });
 
         let sanitizeNote = note => `${note}`.replace(/\./g, ',');
@@ -243,13 +253,13 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
     router.get('/backoffice/financeur/stats', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.query, {
-            ...getFormQueryValidators(req.user),
+            ...getFormValidators(req.user),
         }, { abortEarly: false });
 
         let results = await db.collection('comment').aggregate([
             {
                 $match: {
-                    ...getFormQuery(req.user.codeRegion, parameters),
+                    ...buildFormQuery(req.user.codeRegion, parameters),
                     $or: [
                         { comment: { $exists: false } },
                         { published: true },

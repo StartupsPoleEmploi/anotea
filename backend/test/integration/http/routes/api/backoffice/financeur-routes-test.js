@@ -181,6 +181,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.statusCode, 200);
     });
 
+    it('should not return avis from other region', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
+            insertIntoDatabase('comment', newComment({ codeRegion: '6' })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/financeur/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.avis.length, 0);
+    });
+
     it('can compute stats', async () => {
 
         let app = await startServer();
