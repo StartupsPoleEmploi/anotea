@@ -7,7 +7,8 @@ import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
 import { AuthForm } from './AuthForm';
 import { checkIfPasswordTokenExists, updatePassword } from './passwordService';
-import { isSamePassword, isPasswordStrongEnough } from '../../utils/validation';
+import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
+import GlobalMessage from '../backoffice/common/message/GlobalMessage';
 
 export default class ReinitialisationMotDePassePage extends React.Component {
 
@@ -19,11 +20,12 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         super(props);
         this.state = {
             loading: false,
+            message: null,
             password: '',
             confirmation: '',
             errors: {
-                isNotSamePassword: null,
                 passwordNotStrongEnough: null,
+                isNotSamePassword: null,
             },
         };
     }
@@ -33,36 +35,38 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         let { token } = navigator.getQuery();
 
         checkIfPasswordTokenExists(token)
-        .catch(() => navigator.goToPage('/admin/login', { message: 'Une erreur est survenue' }));
+        .catch(this.showErrorMessage);
     }
 
-    hasFormErrors = () => {
-        return _.some(Object.values(this.state.errors), v => v === true);
+    showErrorMessage = () => {
+        this.setState({ loading: false, message: 'Une erreur est survenue' });
     };
 
     onSubmit = () => {
-        this.setState({ loading: true });
 
         let { password, confirmation } = this.state;
         this.setState({
             errors: {
-                isNotSamePassword: isSamePassword(password, confirmation) ?
-                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
+                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
+                isNotSamePassword: isSamePassword(password, confirmation) ?
                     null : 'Les mots de passes ne sont pas identiques.',
-                loading: false,
             }
         }, async () => {
-            if (!this.hasFormErrors()) {
+            let isFormValid = _.every(Object.values(this.state.errors), v => !v);
+            if (isFormValid) {
                 let { token } = this.props.navigator.getQuery();
-                await updatePassword(password, token);
-                this.props.navigator.goToPage('/admin');
+                this.setState({ loading: true });
+
+                updatePassword(password, token)
+                .then(() => this.props.navigator.goToPage('/admin'))
+                .catch(this.showErrorMessage);
             }
         });
     };
 
     render() {
-        let { errors } = this.state;
+        let { errors, message } = this.state;
 
         return (
             <Page
@@ -72,7 +76,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                         backgroundColor="blue"
                         results={
                             <AuthForm
-                                title=" Créer un nouveau mot de passe"
+                                title="Créer un nouveau mot de passe"
                                 elements={
                                     <>
                                         <label>Nouveau mot de passe</label>
@@ -95,15 +99,23 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                     </>
                                 }
                                 buttons={
-                                    <Button
-                                        type="submit"
-                                        size="large"
-                                        color="blue"
-                                        disabled={this.state.loading}
-                                        onClick={() => this.onSubmit()}
-                                    >
-                                        Confirmer
-                                    </Button>
+                                    <>
+                                        <Button
+                                            type="submit"
+                                            size="large"
+                                            color="blue"
+                                            disabled={this.state.loading}
+                                            onClick={() => this.onSubmit()}
+                                        >
+                                            Confirmer
+                                        </Button>
+                                        {message &&
+                                        <GlobalMessage
+                                            message={{ text: message, level: 'error' }}
+                                            timeout={5000}
+                                            onClose={() => this.setState({ message: null })} />
+                                        }
+                                    </>
                                 }
                             />
                         }

@@ -6,7 +6,7 @@ import MotDePasseOubliePage from './MotDePasseOubliePage';
 import LoginPage from './LoginPage';
 import ActivationComptePage from './ActivationComptePage';
 
-export default class LoginRoutes extends React.Component {
+export default class AuthRoutes extends React.Component {
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,

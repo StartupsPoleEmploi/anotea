@@ -8,8 +8,9 @@ import Page from '../backoffice/common/page/Page';
 import { AuthForm } from './AuthForm';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
 import { activateAccount, getOrganismeByToken } from '../backoffice/organisation/service/organismeService';
-import { login } from '../login/loginService';
+import { login } from './loginService';
 import { NavLink } from 'react-router-dom';
+import GlobalMessage from '../backoffice/common/message/GlobalMessage';
 
 export default class ActivationComptePage extends React.Component {
 
@@ -22,11 +23,12 @@ export default class ActivationComptePage extends React.Component {
         super(props);
         this.state = {
             loading: true,
+            message: null,
             password: '',
             confirmation: '',
             errors: {
-                isNotSamePassword: null,
                 passwordNotStrongEnough: null,
+                isNotSamePassword: null,
             },
             organisme: {
                 raisonSociale: '',
@@ -35,44 +37,47 @@ export default class ActivationComptePage extends React.Component {
             },
         };
     }
-
     componentDidMount() {
         let { navigator } = this.props;
         let query = navigator.getQuery();
 
         getOrganismeByToken(query.token)
         .then(organisme => this.setState({ organisme, loading: false }))
-        .catch(() => navigator.goToPage('/admin/login', { message: 'Une erreur est survenue' }));
+        .catch(this.showErrorMessage);
     }
 
-    formIsValid = () => {
-        return _.every(Object.values(this.state.errors), v => v === false);
-    };
+    showErrorMessage = () => {
+        this.setState({ loading: false, message: 'Une erreur est survenue' });
+    }
 
     onSubmit = () => {
-        this.setState({ loading: true });
-
         let { password, confirmation, organisme } = this.state;
         this.setState({
             errors: {
-                isNotSamePassword: isSamePassword(password, confirmation) ?
-                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
+                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
+                isNotSamePassword: isSamePassword(password, confirmation) ?
                     null : 'Les mots de passes ne sont pas identiques.',
             }
-        }, async () => {
-            if (this.formIsValid()) {
+        }, () => {
+            let isFormValid = _.every(Object.values(this.state.errors), v => !v);
+            if (isFormValid) {
                 let { token } = this.props.navigator.getQuery();
-                await activateAccount(password, token);
-                let data = await login(organisme.siret, password);
-                this.props.onLogin(data);
+
+                this.setState({ loading: true });
+                activateAccount(password, token)
+                .then(async () => {
+                    let data = await login(organisme.siret, password);
+                    this.props.onLogin(data);
+                })
+                .catch(this.showErrorMessage);
             }
         });
     };
 
     render() {
 
-        let { organisme, errors } = this.state;
+        let { organisme, errors, message } = this.state;
 
         return (
             <Page
@@ -136,15 +141,23 @@ export default class ActivationComptePage extends React.Component {
                                 }
                                 buttons={
                                     organisme.activated ? <div /> :
-                                        <Button
-                                            type="submit"
-                                            size="large"
-                                            color="blue"
-                                            disabled={this.state.loading}
-                                            onClick={() => this.onSubmit()}
-                                        >
-                                            Confirmer
-                                        </Button>
+                                        <>
+                                            <Button
+                                                type="submit"
+                                                size="large"
+                                                color="blue"
+                                                disabled={this.state.loading}
+                                                onClick={() => this.onSubmit()}
+                                            >
+                                                Confirmer
+                                            </Button>
+                                            {message &&
+                                            <GlobalMessage
+                                                message={{ text: message, level: 'error' }}
+                                                timeout={5000}
+                                                onClose={() => this.setState({ message: null })} />
+                                            }
+                                        </>
                                 }
                             />
                         }

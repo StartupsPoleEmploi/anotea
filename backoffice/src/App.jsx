@@ -20,7 +20,7 @@ import FinanceurHeaderItems from './components/backoffice/financeur/FinanceurHea
 import logoModerateur from './components/backoffice/common/header/logo-moderateur.svg';
 import logoFinanceur from './components/backoffice/common/header/logo-financeur.svg';
 import logoDefault from './components/backoffice/common/header/logo-default.svg';
-import LoginRoutes from './components/login/LoginRoutes';
+import AnonymousRoutes from './components/anonymous/AuthRoutes';
 import UserContext from './components/UserContext';
 import './App.scss';
 import './utils/moment-fr';
@@ -35,8 +35,7 @@ class App extends Component {
     };
 
     state = {
-        loggedIn: false,
-        profile: null,
+        profile: 'anonymous',
         action: null,
     };
 
@@ -50,7 +49,6 @@ class App extends Component {
 
         if (getToken()) {
             this.state = {
-                loggedIn: true,
                 ...getSession(),
             };
         }
@@ -58,7 +56,6 @@ class App extends Component {
         const qs = queryString.parse(window.location.search);
         if (qs.action === 'creation') {
             this.state = {
-                loggedIn: false,
                 profile: 'organisme',
                 action: 'creation',
                 token: qs.token
@@ -76,15 +73,10 @@ class App extends Component {
         setSession({ ...results, ...jwtDecode(results.access_token) });
 
         this.setState({
-            loggedIn: true,
             ...getSession(),
         });
 
         this.props.navigator.goToPage('/admin');
-    };
-
-    handleForgottenPassword = () => {
-        history.pushState(null, '', location.href.split('?')[0]);  // eslint-disable-line
     };
 
     showBackofficePages = () => {
@@ -104,18 +96,18 @@ class App extends Component {
                 routes: <FinanceurRoutes />,
                 logo: logoFinanceur,
             }),
-            default: () => ({
+            anonymous: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
-                routes: <LoginRoutes onLogin={this.onLogin} navigator={this.props.navigator} />,
+                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} />,
                 logo: logoDefault,
             })
         };
 
         //Use new design
-        if (!profile || ['moderateur', 'financeur'].includes(this.state.profile)) {
+        if (['anonymous', 'moderateur', 'financeur'].includes(this.state.profile)) {
 
-            let layout = backoffices[profile || 'default']();
+            let layout = backoffices[profile]();
 
             return (
                 <UserContext.Provider value={userContext}>
@@ -138,7 +130,7 @@ class App extends Component {
             <div className="anotea-deprecated App">
                 <DeprecatedHeader
                     handleLogout={this.onLogout}
-                    loggedIn={this.state.loggedIn}
+                    loggedIn={true}
                     profile={profile}
                     raisonSociale={this.state.raisonSociale}
                     codeFinanceur={codeFinanceur}

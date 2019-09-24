@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import UserContext from '../../../UserContext';
 import './Page.scss';
 
 const Page = props => {
 
     let user = useContext(UserContext);
-    let profile = _.get(user, 'profile', 'default');
+    let profile = user.profile;
 
     return (
         <div className={`Page mb-0 ${props.className || ''}`}>

@@ -8,7 +8,7 @@ import './Header.scss';
 const Header = ({ items, logo, onLogout }) => {
 
     let user = useContext(UserContext);
-    let profile = user ? user.profile : 'default';
+    let profile = user.profile;
 
     return (
         <div className={`Header ${profile}`}>
@@ -22,7 +22,7 @@ const Header = ({ items, logo, onLogout }) => {
 
                             {items}
 
-                            {user &&
+                            {profile !== 'anonymous' &&
                             <button
                                 onClick={onLogout}
                                 className="logout btn btn-outline-light">
