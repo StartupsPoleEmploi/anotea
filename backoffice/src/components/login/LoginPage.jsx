@@ -9,12 +9,13 @@ import { login, loginWithAccessToken } from './loginService';
 import './LoginPage.scss';
 import { NavLink } from 'react-router-dom';
 import Loader from '../backoffice/common/Loader';
+import GlobalMessage from '../backoffice/common/message/GlobalMessage';
 
 export default class LoginPage extends React.Component {
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
-        handleLoginSucceed: PropTypes.func.isRequired,
+        onLogin: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -25,6 +26,7 @@ export default class LoginPage extends React.Component {
             errors: false,
             identifiant: '',
             password: '',
+            message: null,
         };
     }
 
@@ -32,13 +34,13 @@ export default class LoginPage extends React.Component {
         this.setState({ loading: true });
 
         login(this.state.identifiant, this.state.password)
-        .then(data => this.props.handleLoginSucceed(data))
+        .then(data => this.props.onLogin(data))
         .catch(() => this.setState({ error: true, loading: false }));
     };
 
     handleAccessToken = data => {
         loginWithAccessToken(data.access_token, data.origin)
-        .then(result => this.props.handleLoginSucceed(result))
+        .then(result => this.props.onLogin(result))
         .catch(e => {
             console.log(e);
             return this.setState({ loginWithAccessToken: false });
@@ -52,9 +54,23 @@ export default class LoginPage extends React.Component {
                 this.handleAccessToken(query);
             });
         }
+        if (query.message) {
+            this.setState({ message: query.message });
+        }
+    }
+
+    componentDidUpdate(previous) {
+        let query = this.props.navigator.getQuery();
+        if (query.message !== previous.navigator.getQuery().message) {
+            console.log(query.message);
+            this.setState({ message: query.message });
+        }
     }
 
     render() {
+
+        let { message } = this.state;
+        let { navigator } = this.props;
 
         if (this.state.loginWithAccessToken) {
             return <Page
@@ -116,6 +132,12 @@ export default class LoginPage extends React.Component {
                                         >
                                             Confirmer
                                         </Button>
+                                        {message &&
+                                        <GlobalMessage
+                                            message={{ text: message, level: 'error' }}
+                                            timeout={5000}
+                                            onClose={() => navigator.refreshCurrentPage()} />
+                                        }
                                     </div>
                                 }
                             />

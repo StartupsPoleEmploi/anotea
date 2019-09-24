@@ -5,7 +5,7 @@ const { newOrganismeAccount, randomize } = require('../../../../../helpers/data/
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase, logAsFinanceur, logAsOrganisme }) => {
 
-    it('can get organisation by activation token', async () => {
+    it('can get organisme by token', async () => {
 
         let app = await startServer();
         let token = randomize('token');
@@ -20,24 +20,46 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .get(`/api/backoffice/organisme/getActivationAccountStatus?token=${token}`);
+        .get(`/api/backoffice/organisme/${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
             raisonSociale: 'Pole Emploi Formation',
-            siret: '11111111111111'
+            siret: '11111111111111',
+            activated: false,
         });
     });
 
-    it('can not get organisation with invalid token', async () => {
+    it('can get organisme aleady activated ', async () => {
+
+        let app = await startServer();
+        let token = randomize('token');
+        await insertIntoDatabase('accounts', newOrganismeAccount({
+            _id: 11111111111111,
+            SIRET: 11111111111111,
+            token,
+            passwordHash: 12345,
+            meta: {
+                siretAsString: '11111111111111'
+            },
+        }));
+
+        let response = await request(app)
+        .get(`/api/backoffice/organisme/${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.activated, true);
+    });
+
+    it('can not get organisme with invalid token', async () => {
 
         let app = await startServer();
 
         let response = await request(app)
-        .get(`/api/backoffice/organisme/getActivationAccountStatus?token=INVALID`);
+        .get(`/api/backoffice/organisme/INVALID`);
 
-        assert.equal(response.statusCode, 400);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
             statusCode: 400,
             error: 'Bad Request',
             message: 'Numéro de token invalide'
@@ -63,8 +85,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .post('/api/backoffice/organisme/activateAccount')
         .send({ token, password: 'Anotea2018!' });
 
-        assert.equal(response.statusCode, 201);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 201);
+        assert.deepStrictEqual(response.body, {
             message: 'Account successfully created',
             userInfo: {
                 username: '11111111111111',
@@ -93,8 +115,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .post('/api/backoffice/organisme/activateAccount')
         .send({ token, password: 'INVALID' });
 
-        assert.equal(response.statusCode, 400);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
             statusCode: 400,
             error: 'Bad Request',
             message: 'Le mot de passe est invalide (il doit contenir au moins 6 caractères, une majuscule et un caractère spécial)'
@@ -108,8 +130,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .post('/api/backoffice/organisme/activateAccount')
         .send({ token: 'INVALID' });
 
-        assert.equal(response.statusCode, 400);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
             statusCode: 400,
             error: 'Bad Request',
             message: 'Numéro de token invalide'
@@ -127,15 +149,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app).get(`/api/backoffice/organisme/${id}/allAdvices`)
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
             'advices': [],
             'page': 1,
             'pageCount': 0
         });
     });
 
-    it('can not retrieve avis when authenticated as financer', async () => {
+    it('can not retrieve avis when authenticated as financeur', async () => {
 
         let app = await startServer();
 
@@ -150,13 +172,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             },
         }));
 
-        let token = await logAsFinanceur(app, 'financer@pole-emploi.fr', '2');
+        let token = await logAsFinanceur(app, 'financeur@pole-emploi.fr', '2');
 
         let response = await request(app).get(`/api/backoffice/organisme/${id}/allAdvices`)
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 403);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 403);
+        assert.deepStrictEqual(response.body, {
             'error': 'Forbidden',
             'message': 'Action non autorisé',
             'statusCode': 403
@@ -184,8 +206,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app).get(`/api/backoffice/organisme/${id}/allAdvices`)
         .set('authorization', `Bearer ${token}`);
 
-        assert.equal(response.statusCode, 403);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 403);
+        assert.deepStrictEqual(response.body, {
             'error': 'Forbidden',
             'message': 'Action non autorisé',
             'statusCode': 403

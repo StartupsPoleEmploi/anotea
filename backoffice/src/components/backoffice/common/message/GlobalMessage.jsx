@@ -8,6 +8,7 @@ export default class GlobalMessage extends React.Component {
     static propTypes = {
         message: PropTypes.object.isRequired,
         onClose: PropTypes.func.isRequired,
+        timeout: PropTypes.number,
     };
 
     constructor(props) {
@@ -19,7 +20,7 @@ export default class GlobalMessage extends React.Component {
 
     componentDidMount() {
         this.triggerTransition();
-        setTimeout(() => this.props.onClose(), 2500);
+        setTimeout(() => this.props.onClose(), this.props.timeout || 2500);
     }
 
     triggerTransition() {

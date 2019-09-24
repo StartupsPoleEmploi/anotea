@@ -107,7 +107,7 @@ class App extends Component {
             default: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
-                routes: <LoginRoutes handleLoginSucceed={this.onLogin} />,
+                routes: <LoginRoutes onLogin={this.onLogin} navigator={this.props.navigator} />,
                 logo: logoDefault,
             })
         };

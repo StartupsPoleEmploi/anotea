@@ -20,11 +20,14 @@ export const createNavigator = ({ history, location }) => {
             let baseUrl = url.indexOf('?') === -1 ? url : url.split('?')[0];
             return location.pathname.indexOf(baseUrl) !== -1;
         },
-        refreshCurrentPage: query => {
+        refreshCurrentPage: (query = {}) => {
             return history.push(`${location.pathname}?${(stringifyQuery(query))}`);
         },
         goToPage: (url, query = {}) => {
             return history.push(`${url}?${(stringifyQuery(query))}`);
-        }
+        },
+        goBack: () => {
+            return history.goBack();
+        },
     };
 };

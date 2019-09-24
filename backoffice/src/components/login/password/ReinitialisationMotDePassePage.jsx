@@ -18,12 +18,13 @@ export default class ReinitialisationMotDePassePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
+            password: '',
+            confirmation: '',
             errors: {
                 isNotSamePassword: false,
                 passwordNotStrongEnough: false,
             },
-            password: '',
-            check: '',
         };
     }
 
@@ -34,11 +35,12 @@ export default class ReinitialisationMotDePassePage extends React.Component {
     onSubmit = () => {
         this.setState({ loading: true });
 
-        let { password, check } = this.state;
+        let { password, confirmation } = this.state;
         this.setState({
             errors: {
-                isNotSamePassword: !checkConfirm(password, check),
+                isNotSamePassword: !checkConfirm(password, confirmation),
                 passwordNotStrongEnough: !isPasswordStrongEnough(password),
+                loading: false,
             }
         }, async () => {
             if (!this.hasFormErrors()) {
@@ -81,9 +83,9 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                         <InputText
                                             type="password"
                                             className={this.state.errors.isNotSamePassword ? 'input-error' : ''}
-                                            value={this.state.check}
+                                            value={this.state.confirmation}
                                             placeholder="Mot de passe"
-                                            onChange={event => this.setState({ check: event.target.value })}
+                                            onChange={event => this.setState({ confirmation: event.target.value })}
                                         />
                                         {this.state.errors.isNotSamePassword &&
                                         <span className="input-error-details"> Les mots de passes ne sont pas identiques.</span>
@@ -95,6 +97,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                         type="submit"
                                         size="large"
                                         color="blue"
+                                        disabled={this.state.loading}
                                         onClick={() => this.onSubmit()}
                                     >
                                         Confirmer

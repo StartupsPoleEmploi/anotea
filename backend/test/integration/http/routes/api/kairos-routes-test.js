@@ -133,7 +133,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .send(createPayload(siret));
         assert.strictEqual(response.statusCode, 200);
 
-        let token = response.body.url.split('=')[3];
+        let token = response.body.url.split('=')[2];
         response = await request(app)
         .get(`/api/backoffice/login?access_token=${token}`);
 
@@ -167,7 +167,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .send(createPayload(siret));
         assert.strictEqual(response.statusCode, 200);
 
-        let token = response.body.url.split('=')[3];
+        let token = response.body.url.split('=')[2];
 
         response = await request(app)
         .get(`/api/backoffice/login?access_token=${token}`);

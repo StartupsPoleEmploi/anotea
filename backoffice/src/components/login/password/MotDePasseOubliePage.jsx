@@ -6,7 +6,6 @@ import InputText from '../../backoffice/common/page/form/InputText';
 import Button from '../../backoffice/common/Button';
 import { AuthForm } from '../AuthForm';
 import { askNewPassword } from './passwordService';
-import './MotDePasseOubliePage.scss';
 
 export default class MotDePasseOubliePage extends React.Component {
 
@@ -29,7 +28,7 @@ export default class MotDePasseOubliePage extends React.Component {
         askNewPassword(this.state.identifiant)
         .then(() => {
             this.setState({ error: null, identifiant: '', loading: false }, () => {
-                this.goToLoginPage();
+                this.props.navigator.goToPage('/admin/login');
             });
         })
         .catch(() => {
@@ -37,15 +36,10 @@ export default class MotDePasseOubliePage extends React.Component {
         });
     };
 
-    goToLoginPage = () => {
-        this.props.navigator.goToPage('/admin');
-    };
-
     render() {
 
         return (
             <Page
-                className="MotDePasseOubliePage"
                 title={'Votre espace Anotéa'}
                 panel={
                     <Panel
@@ -55,7 +49,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                 title="Mot de passe oublié"
                                 elements={
                                     <>
-                                        <label>Entrez votre identifiant et confirmer l'envoi</label>
+                                        <label>Entrez votre identifiant</label>
                                         <InputText
                                             className={this.state.error ? 'input-error' : ''}
                                             value={this.state.identifiant}
@@ -67,7 +61,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                             proposition de création de compte Anotéa,
                                             si vous ne la connaissez pas,
                                             <a
-                                                className="contactez-nous pl-1"
+                                                className="contactez-nous"
                                                 href="mailto:anotea@pole-emploi.fr">
                                                 contactez-nous
                                             </a>.
@@ -79,7 +73,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                         <Button
                                             size="small"
                                             type="submit"
-                                            onClick={this.goToLoginPage}
+                                            onClick={this.props.navigator.goBack}
                                         >
                                             Retour
                                         </Button>

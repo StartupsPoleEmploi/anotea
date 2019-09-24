@@ -43,7 +43,7 @@ module.exports = function(db, logger, configuration, regions) {
     };
 
     const getOrganisationPasswordLink = organisation => {
-        return `${configuration.app.public_hostname}/admin?action=creation&token=${organisation.token}`;
+        return `${configuration.app.public_hostname}/admin/organisme/activation-compte?token=${organisation.token}`;
     };
 
     const getRegionEmail = region => {

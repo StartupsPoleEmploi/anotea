@@ -6,7 +6,7 @@ import './Panel.scss';
 const Panel = props => {
 
     return (
-        <div className={`Panel ${props.className || ''} ${props.backgroundColor || ''}`}>
+        <div className={`Panel ${props.className || ''} ${props.backgroundColor || ''}`} style={props.style || {}}>
             {props.filters &&
             <div className="filters-holder">
                 <div className="container">
@@ -38,6 +38,7 @@ Panel.propTypes = {
     pagination: PropTypes.node,
     loading: PropTypes.bool,
     className: PropTypes.string,
+    style: PropTypes.object,
     backgroundColor: PropTypes.string,
 };
 
