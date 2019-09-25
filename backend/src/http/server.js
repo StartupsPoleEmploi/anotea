@@ -53,14 +53,14 @@ module.exports = components => {
     app.use('/api', require('./routes/api/regions-routes')(httpComponents));
     app.use('/api', require('./routes/api/stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/kairos-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/auth/login-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/auth/password-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/auth/account-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/login-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/password-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/account-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/moderateur/moderation-avis-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/organismes/consultation-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/organismes/organisme-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/moderateur/gestion-organismes-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/financeur/financeur-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/financeur-routes')(httpComponents));
     app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
 
     // catch 404

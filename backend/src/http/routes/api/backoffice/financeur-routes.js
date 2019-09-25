@@ -2,9 +2,9 @@ const Joi = require('joi');
 const _ = require('lodash');
 const express = require('express');
 const moment = require('moment');
-const { round } = require('../../../../../common/utils/number-utils');
-const { isPoleEmploi } = require('../../../../../common/utils/financeurs');
-const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../../routes-utils');
+const { round } = require('../../../../common/utils/number-utils');
+const { isPoleEmploi } = require('../../../../common/utils/financeurs');
+const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 
 module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 

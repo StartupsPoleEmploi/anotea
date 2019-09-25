@@ -1,8 +1,8 @@
 const express = require('express');
 const Joi = require('joi');
 const Boom = require('boom');
-const { tryAndCatch } = require('../../../routes-utils');
-const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
+const { tryAndCatch } = require('../../routes-utils');
+const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 
 module.exports = ({ db, mailing, password }) => {
 
