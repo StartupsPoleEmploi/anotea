@@ -2,13 +2,12 @@ const express = require('express');
 const Boom = require('boom');
 const { tryAndCatch } = require('../../../routes-utils');
 
-module.exports = ({ db, configuration, password, middlewares }) => {
+module.exports = ({ db, configuration, middlewares }) => {
 
     let pagination = configuration.api.pagination;
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let { hashPassword, isPasswordStrongEnough } = password;
     let allProfiles = checkProfile('moderateur', 'financeur', 'organisme');
 
     const checkOrganisme = req => {
@@ -16,49 +15,6 @@ module.exports = ({ db, configuration, password, middlewares }) => {
             throw Boom.forbidden('Action non autorisé');
         }
     };
-
-    router.get('/backoffice/organisme/:token', tryAndCatch(async (req, res) => {
-
-        let organisme = await db.collection('accounts').findOne({ token: req.params.token });
-        if (organisme) {
-            return res.json({
-                raisonSociale: organisme.raisonSociale,
-                siret: organisme.meta.siretAsString,
-                status: organisme.passwordHash ? 'active' : 'inactive',
-            });
-        }
-        throw Boom.badRequest('Numéro de token invalide');
-    }));
-
-    router.post('/backoffice/organisme/activateAccount', tryAndCatch(async (req, res) => {
-        const token = req.body.token;
-        const password = req.body.password;
-
-        let organisme = await db.collection('accounts').findOne({ token });
-        if (organisme) {
-            if (!organisme.passwordHash) {
-                if (isPasswordStrongEnough(password)) {
-                    await db.collection('accounts').updateOne({ token }, {
-                        $set: {
-                            'meta.rehashed': true,
-                            'passwordHash': await hashPassword(password)
-                        }
-                    });
-
-                    return res.status(201).json({
-                        message: 'Account successfully created',
-                        userInfo: {
-                            username: organisme.meta.siretAsString,
-                            profile: 'organisme',
-                            id: organisme._id
-                        }
-                    });
-                }
-                throw Boom.badRequest('Le mot de passe est invalide (il doit contenir au moins 6 caractères, une majuscule et un caractère spécial)');
-            }
-        }
-        throw Boom.badRequest('Numéro de token invalide');
-    }));
 
     router.get('/backoffice/organisme/:id/info', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 

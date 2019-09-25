@@ -7,8 +7,7 @@ import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
 import { AuthForm } from './AuthForm';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
-import { activateAccount, getOrganismeByToken } from '../backoffice/organisation/service/organismeService';
-import { login } from './authService';
+import { activateAccount, getAccount, login } from './authService';
 import { NavLink } from 'react-router-dom';
 import GlobalMessage from '../backoffice/common/message/GlobalMessage';
 
@@ -42,7 +41,7 @@ export default class ActivationComptePage extends React.Component {
         let { navigator } = this.props;
         let query = navigator.getQuery();
 
-        getOrganismeByToken(query.token)
+        getAccount(query.token)
         .then(organisme => this.setState({ organisme, loading: false }))
         .catch(this.showErrorMessage);
     }

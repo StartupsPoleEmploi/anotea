@@ -1,12 +1,4 @@
-import { _get, _post } from '../../../../utils/http-client';
-
-export const getOrganismeByToken = activationToken => {
-    return _get(`/backoffice/organisme/${activationToken}`);
-};
-
-export const activateAccount = (password, token,) => {
-    return _post(`/backoffice/organisme/activateAccount`, { token, password });
-};
+import { _get } from '../../../../utils/http-client';
 
 export const getOrganisationInfo = id => {
     return _get(`/backoffice/organisme/${id}/info`);

@@ -18,3 +18,11 @@ export const updatePassword = (password, token) => {
         token,
     });
 };
+
+export const getAccount = token => {
+    return _get(`/backoffice/account/${token}`);
+};
+
+export const activateAccount = (password, token,) => {
+    return _post(`/backoffice/account/activate`, { token, password });
+};
