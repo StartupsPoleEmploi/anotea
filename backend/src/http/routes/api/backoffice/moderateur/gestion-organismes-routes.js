@@ -1,10 +1,10 @@
 const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
+const _ = require('lodash');
 const { IdNotFoundError } = require('../../../../../common/errors');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../../routes-utils');
 const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
-const convertOrganismeToDTO = require('./utils/convertOrganismeToDTO');
 const { transformObject, encodeStream } = require('../../../../../common/utils/stream-utils');
 
 module.exports = ({ db, configuration, mailing, middlewares }) => {
@@ -14,6 +14,10 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
     let itemsPerPage = configuration.api.pagination;
+    let convertOrganismeToDTO = organisme => {
+        organisme.status = organisme.passwordHash ? 'active' : 'inactive';
+        return _.omit(organisme, ['passwordHash', 'token']);
+    };
 
     const saveEvent = (id, type, source) => {
         db.collection('events').insertOne({ organisationId: id, date: new Date(), type: type, source: source });
