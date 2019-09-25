@@ -14,7 +14,8 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
     let itemsPerPage = configuration.api.pagination;
-    let convertOrganismeToDTO = organisme => {
+
+    const convertOrganismeToDTO = organisme => {
         organisme.status = organisme.passwordHash ? 'active' : 'inactive';
         return _.omit(organisme, ['passwordHash', 'token']);
     };

@@ -33,10 +33,11 @@ export default class ActivationComptePage extends React.Component {
             organisme: {
                 raisonSociale: '',
                 siret: '',
-                activated: false,
+                activate: false,
             },
         };
     }
+
     componentDidMount() {
         let { navigator } = this.props;
         let query = navigator.getQuery();
@@ -48,7 +49,7 @@ export default class ActivationComptePage extends React.Component {
 
     showErrorMessage = () => {
         this.setState({ loading: false, message: 'Une erreur est survenue' });
-    }
+    };
 
     onSubmit = () => {
         let { password, confirmation, organisme } = this.state;
@@ -94,7 +95,7 @@ export default class ActivationComptePage extends React.Component {
                                         <div className="mb-3">
                                             {organisme.siret}
                                         </div>
-                                        {organisme.activated ?
+                                        {organisme.status === 'activate' ?
                                             <>
                                                 <div className="clarification">
                                                     <div>Un Espace Anotéa a déjà été créé pour cet Organisme de Formation.</div>
@@ -140,7 +141,7 @@ export default class ActivationComptePage extends React.Component {
                                     </>
                                 }
                                 buttons={
-                                    organisme.activated ? <div /> :
+                                    organisme.status === 'activate' ? <div /> :
                                         <>
                                             <Button
                                                 type="submit"

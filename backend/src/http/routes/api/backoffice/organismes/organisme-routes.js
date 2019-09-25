@@ -24,7 +24,7 @@ module.exports = ({ db, configuration, password, middlewares }) => {
             return res.json({
                 raisonSociale: organisme.raisonSociale,
                 siret: organisme.meta.siretAsString,
-                activated: !!organisme.passwordHash,
+                status: organisme.passwordHash ? 'active' : 'inactive',
             });
         }
         throw Boom.badRequest('Numéro de token invalide');
