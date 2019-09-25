@@ -3,7 +3,7 @@ const Boom = require('boom');
 const Joi = require('joi');
 const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
 
-module.exports = ({ db, auth, logger, configuration, password }) => {
+module.exports = ({ db, auth, configuration, password }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let { checkPassword, hashPassword } = password;
@@ -12,7 +12,7 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         return db.collection('events').insertOne({
             date: new Date(),
             type: 'log in',
-            source: { user: req.body.username, profile, ip: getRemoteAddress(req), id }
+            source: { user: req.body.identifiant, profile, ip: getRemoteAddress(req), id }
         });
     };
 
@@ -28,10 +28,10 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         });
     };
 
-    const handleAccount = async (req, res, user) => {
+    const handleModerateurOrFinanceur = async (req, user) => {
         logLoginEvent(req, user.profile, user._id);
         return await auth.buildJWT('backoffice', {
-            sub: req.body.username,
+            sub: req.body.identifiant,
             profile: user.profile,
             id: user._id,
             codeRegion: user.codeRegion,
@@ -40,7 +40,7 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
         });
     };
 
-    const handleOrganisme = async (req, res, organisme) => {
+    const handleOrganisme = async (req, organisme) => {
         logLoginEvent(req, 'organisme', organisme._id);
         return await auth.buildJWT('backoffice', {
             sub: organisme.meta.siretAsString,
@@ -85,37 +85,32 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
 
     router.post('/backoffice/login', tryAndCatch(async (req, res) => {
 
-        let identifier = req.body.username.toLowerCase();
-        let password = req.body.password;
+        let { identifiant, password } = await Joi.validate(req.body, {
+            identifiant: Joi.string().required(),
+            password: Joi.string().required(),
+        }, { abortEarly: false });
+
         let token;
-
-        try {
-            let account = await db.collection('accounts').findOne({ courriel: identifier });
-            if (account !== null && await checkPassword(password, account.passwordHash, configuration)) {
-                await rehashPassword(account, password);
-                token = await handleAccount(req, res, account);
-            }
-
-            account = await db.collection('accounts').findOne({
-                'meta.siretAsString': identifier,
-                'passwordHash': { $exists: true },
-            });
-            if (account !== null && await checkPassword(password, account.passwordHash, configuration)) {
-                await rehashPassword(account, password);
-                token = await handleOrganisme(req, res, account);
-            }
-
-            if (token) {
-                return res.status(200).send(token);
-            } else {
-                return res.status(400).send({ error: true });
-            }
-
-        } catch (e) {
-            logger.error(`Unable to log in user ${identifier}`, e);
-            return res.status(500).send({ error: true });
+        let account = await db.collection('accounts').findOne({ courriel: identifiant });
+        if (account && await checkPassword(password, account.passwordHash, configuration)) {
+            await rehashPassword(account, password);
+            token = await handleModerateurOrFinanceur(req, account);
         }
 
+        account = await db.collection('accounts').findOne({
+            'meta.siretAsString': identifiant,
+            'passwordHash': { $exists: true },
+        });
+        if (account && await checkPassword(password, account.passwordHash, configuration)) {
+            await rehashPassword(account, password);
+            token = await handleOrganisme(req, account);
+        }
+
+        if (token) {
+            return res.json(token);
+        } else {
+            throw Boom.badRequest('Identifiant ou mot de passe invalide');
+        }
     }));
 
     router.get('/backoffice/login', tryAndCatch(async (req, res) => {
@@ -140,13 +135,13 @@ module.exports = ({ db, auth, logger, configuration, password }) => {
             throw Boom.badRequest('Token déjà utilisé');
         }
 
-        if (organisme !== null) {
+        if (organisme) {
             let [token] = await Promise.all([
-                handleOrganisme(req, res, organisme),
+                handleOrganisme(req, organisme),
                 invalidateAuthToken(organisme._id, parameters.access_token),
                 logLoginWithAccessTokenEvent(req, organisme, organisme._id),
             ]);
-            return res.status(200).send(token);
+            return res.json(token);
         } else {
             throw Boom.badRequest('Token invalide');
         }

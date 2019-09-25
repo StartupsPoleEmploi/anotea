@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import './Header.scss';
 import { NavLink } from 'react-router-dom';
+import UserContext from '../../../UserContext';
 
-const Header = ({ profile, items, logo, onLogout }) => {
+import './Header.scss';
+
+const Header = ({ items, logo, onLogout }) => {
+
+    let user = useContext(UserContext);
+    let profile = user.profile;
 
     return (
-        <div className={`Header ${profile || ''}`}>
+        <div className={`Header ${profile}`}>
             <div className="container">
                 <div className="row">
                     <div className="col-sm-12">
@@ -17,11 +22,13 @@ const Header = ({ profile, items, logo, onLogout }) => {
 
                             {items}
 
+                            {profile !== 'anonymous' &&
                             <button
                                 onClick={onLogout}
                                 className="logout btn btn-outline-light">
                                 <span>SE DECONNECTER</span>
                             </button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -31,10 +38,10 @@ const Header = ({ profile, items, logo, onLogout }) => {
 };
 
 Header.propTypes = {
-    profile: PropTypes.string.isRequired,
     items: PropTypes.node.isRequired,
     logo: PropTypes.string.isRequired,
-    onLogout: PropTypes.func.isRequired,
+    onLogout: PropTypes.func,
+    profile: PropTypes.string,
 };
 
 export default Header;

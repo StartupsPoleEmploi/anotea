@@ -11,7 +11,7 @@ const Page = props => {
     return (
         <div className={`Page mb-0 ${props.className || ''}`}>
 
-            <div className={`holder ${profile}`}>
+            <div className={`search-holder ${profile}`}>
 
                 {props.title &&
                 <div className="title-holder">

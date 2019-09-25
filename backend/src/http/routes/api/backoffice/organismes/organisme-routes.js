@@ -17,17 +17,15 @@ module.exports = ({ db, configuration, password, middlewares }) => {
         }
     };
 
-    router.get('/backoffice/organisme/getActivationAccountStatus', tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organisme/:token', tryAndCatch(async (req, res) => {
 
-        let organisme = await db.collection('accounts').findOne({ token: req.query.token });
+        let organisme = await db.collection('accounts').findOne({ token: req.params.token });
         if (organisme) {
-            if (!organisme.passwordHash) {
-                delete organisme._id;
-                return res.json({
-                    raisonSociale: organisme.raisonSociale,
-                    siret: organisme.meta.siretAsString,
-                });
-            }
+            return res.json({
+                raisonSociale: organisme.raisonSociale,
+                siret: organisme.meta.siretAsString,
+                activated: !!organisme.passwordHash,
+            });
         }
         throw Boom.badRequest('Numéro de token invalide');
     }));

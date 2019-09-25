@@ -1,18 +1,14 @@
 import { _get, _put } from '../../utils/http-client';
 
-export const askNewPassword = username => {
-    return _put(`/backoffice/askNewPassword`, {
-        username: username
-    });
-};
+export const askNewPassword = identifiant => _put(`/backoffice/askNewPassword`, { identifiant });
 
 export const checkIfPasswordTokenExists = token => {
     return _get(`/backoffice/checkIfPasswordTokenExists?token=${token}`);
 };
 
-export const updatePassword = (token, password) => {
+export const updatePassword = (password, token) => {
     return _put(`/backoffice/updatePassword`, {
+        password,
         token,
-        password
     });
 };

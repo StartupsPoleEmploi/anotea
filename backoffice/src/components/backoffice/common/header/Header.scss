@@ -4,17 +4,15 @@
   padding-top: 0.8em;
   padding-bottom: 1.75em;
 
-  &.moderateur {
-    background-color: $color-blue;
+  @include profile-color();
 
+  &.moderateur {
     .dropdown-menu {
       background-color: $color-blue;
     }
   }
 
   &.financeur {
-    background-color: $color-green;
-
     .dropdown-menu {
       background-color: $color-green;
     }
