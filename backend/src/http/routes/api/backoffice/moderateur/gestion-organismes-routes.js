@@ -67,19 +67,6 @@ module.exports = ({ db, configuration, mailing, middlewares }) => {
                 }
             }
         });
-
-        res.send({
-            organismes: organismes.map(o => convertOrganismeToDTO(o)),
-            meta: {
-                pagination: {
-                    page: page,
-                    itemsPerPage,
-                    itemsOnThisPage: organismes.length,
-                    totalItems: total,
-                    totalPages: Math.ceil(total / itemsPerPage),
-                },
-            }
-        });
     }));
 
     router.get('/backoffice/moderateur/export/organismes.csv', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {

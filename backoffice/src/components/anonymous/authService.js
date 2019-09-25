@@ -1,4 +1,10 @@
-import { _get, _put } from '../../utils/http-client';
+import { _get, _post, _put } from '../../utils/http-client';
+
+export const login = (identifiant, password) => _post('/backoffice/login', { identifiant, password });
+
+export const loginWithAccessToken = (accessToken, origin) => {
+    return _get(`/backoffice/login?origin=${origin}&access_token=${accessToken}`);
+};
 
 export const askNewPassword = identifiant => _put(`/backoffice/askNewPassword`, { identifiant });
 
