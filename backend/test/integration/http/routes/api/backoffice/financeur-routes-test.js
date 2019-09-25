@@ -12,7 +12,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment({
                 moderated: false,
-                pseudo: 'joe'
+                pseudo: 'joe',
+                training: {
+                    codeFinanceur: '2',
+                }
             })),
         ]);
 
@@ -37,10 +40,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
     it('can search avis with status=all (return avis with and without commentaires)', async () => {
 
         let app = await startServer();
-        let avisWithoutComment = insertIntoDatabase('comment', newComment());
+        let avisWithoutComment = insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '2' } }));
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment()),
+            insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '2' } })),
             avisWithoutComment,
         ]);
 
@@ -60,9 +63,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token, avisWithoutComment] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment()),
+            insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '2' } })),
             insertIntoDatabase('comment', newComment({
                 rejected: true,
+                training: { codeFinanceur: '2' },
             })),
         ]);
 
@@ -82,9 +86,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment()),
+            insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '2' } })),
+            insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '2' } })),
+            insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '2' } })),
         ]);
 
         let response = await request(app)
@@ -120,8 +124,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment({ qualification: 'positif' })),
-            insertIntoDatabase('comment', newComment({ qualification: 'négatif' })),
+            insertIntoDatabase('comment', newComment({ qualification: 'positif', training: { codeFinanceur: '2' } })),
+            insertIntoDatabase('comment', newComment({ qualification: 'négatif', training: { codeFinanceur: '2' } })),
         ]);
 
         let response = await request(app)
@@ -139,8 +143,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment({ qualification: 'positif' })),
-            insertIntoDatabase('comment', newComment({ qualification: 'négatif' })),
+            insertIntoDatabase('comment', newComment({ qualification: 'positif', training: { codeFinanceur: '2' } })),
+            insertIntoDatabase('comment', newComment({ qualification: 'négatif', training: { codeFinanceur: '2' } })),
         ]);
 
         let response = await request(app)
@@ -153,6 +157,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
     });
 
     it('can not search without with another code financeur', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
+            insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '10' } })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/financeur/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
+    });
+
+    it('can not search without with another code financeur (params)', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -203,6 +223,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment({
+                training: { codeFinanceur: '2' },
                 rates: {
                     accueil: 3,
                     contenu_formation: 3,
@@ -213,6 +234,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
                 },
             })),
             insertIntoDatabase('comment', newComment({
+                training: { codeFinanceur: '2' },
                 rates: {
                     accueil: 3,
                     contenu_formation: 3,
@@ -223,6 +245,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
                 },
             })),
             insertIntoDatabase('comment', newComment({
+                training: { codeFinanceur: '2' },
                 rates: {
                     accueil: 2,
                     contenu_formation: 2,

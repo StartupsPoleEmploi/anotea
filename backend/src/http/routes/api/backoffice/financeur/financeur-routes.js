@@ -31,17 +31,16 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         };
     };
 
-    let buildFormQuery = (codeRegion, parameters) => {
+    let buildFormQuery = (user, parameters) => {
         let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate } = parameters;
-        let region = regions.findRegionByCodeRegion(codeRegion);
 
         return {
-            codeRegion,
-            'training.startDate': { $gte: moment(startDate || region.since).toDate() },
+            'codeRegion': user.codeRegion,
+            'training.codeFinanceur': codeFinanceur || user.codeFinanceur,
             ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
-            ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
             ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
-            ...(idFormation ? { 'training.idFormation': new RegExp(`^${idFormation}`) } : {}),
+            ...(idFormation ? { 'training.idFormation': idFormation } : {}),
+            ...(startDate ? { 'training.startDate': { $lte: moment(startDate).toDate() } } : {}),
             ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
         };
     };
@@ -140,13 +139,13 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
             ...getFormValidators(req.user),
             ...getFiltersValidators(),
             page: Joi.number().min(0).default(0),
-            sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
+            sortBy: Joi.string().allow(['date', 'lastStatusUpdate']).default('date'),
         }, { abortEarly: false });
 
 
         let cursor = db.collection('comment')
         .find({
-            ...buildFormQuery(req.user.codeRegion, parameters),
+            ...buildFormQuery(req.user, parameters),
             ...buildFiltersQuery(parameters)
         })
         .sort({ [parameters.sortBy]: -1 })
@@ -184,7 +183,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
         let cursor = db.collection('comment')
         .find({
-            ...buildFormQuery(req.user.codeRegion, parameters),
+            ...buildFormQuery(req.user, parameters),
             ...buildFiltersQuery(parameters)
         })
         .sort({ [parameters.sortBy]: -1 });
@@ -259,7 +258,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         let results = await db.collection('comment').aggregate([
             {
                 $match: {
-                    ...buildFormQuery(req.user.codeRegion, parameters),
+                    ...buildFormQuery(req.user, parameters),
                     $or: [
                         { comment: { $exists: false } },
                         { published: true },
