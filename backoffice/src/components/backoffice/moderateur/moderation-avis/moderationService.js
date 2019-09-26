@@ -1,13 +1,4 @@
-import { _delete, _get, _put } from '../../../../utils/http-client';
-import queryString from 'query-string';
-
-export const getStats = () => {
-    return _get(`/backoffice/moderateur/stats`);
-};
-
-export const searchAvis = (options = {}) => {
-    return _get(`/backoffice/moderateur/avis?${queryString.stringify(options)}`);
-};
+import { _delete, _put } from '../../../../utils/http-client';
 
 export const maskPseudo = (id, mask) => {
     return _put(`/backoffice/moderateur/avis/${id}/pseudo`, { mask });

@@ -1,96 +1,16 @@
 const express = require('express');
 const Joi = require('joi');
 const Boom = require('boom');
-const isEmail = require('isemail').validate;
 const ObjectID = require('mongodb').ObjectID;
-const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../../routes-utils');
-const computeModerationStats = require('./utils/computeModerationStats');
+const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
 const { objectId } = require('../../../../../common/validators');
 const { IdNotFoundError } = require('../../../../../common/errors');
 
-module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
+module.exports = ({ db, middlewares, moderation, mailing }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let itemsPerPage = configuration.api.pagination;
-
-    const getStagiaire = async email => {
-        return db.collection('trainee').findOne({ 'trainee.email': email });
-    };
-
-    router.get('/backoffice/moderateur/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-
-        let codeRegion = req.user.codeRegion;
-        let { status, reponseStatus, fulltext, page, sortBy } = await Joi.validate(req.query, {
-            status: Joi.string(),
-            reponseStatus: Joi.string(),
-            fulltext: Joi.string().allow('').default(''),
-            page: Joi.number().min(0).default(0),
-            sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
-        }, { abortEarly: false });
-
-        let isEmailSearch = isEmail(fulltext);
-        let stagiaire = null;
-        if (isEmailSearch) {
-            stagiaire = await getStagiaire(fulltext);
-        }
-
-        let cursor = db.collection('comment')
-        .find({
-            codeRegion: codeRegion,
-            archived: false,
-            ...(['none', 'published', 'rejected'].includes(status) ? { comment: { $ne: null } } : {}),
-            ...(status === 'rejected' ? { rejected: true } : {}),
-            ...(status === 'published' ? { published: true } : {}),
-            ...(status === 'reported' ? { reported: true } : {}),
-            ...(status === 'none' ? { moderated: { $ne: true } } : {}),
-            ...(reponseStatus ? { reponse: { $exists: true } } : {}),
-            ...(['none', 'published', 'rejected'].includes(reponseStatus) ? { 'reponse.status': reponseStatus } : {}),
-            ...(isEmailSearch ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
-            ...(fulltext && !isEmailSearch ? { $text: { $search: fulltext } } : {}),
-        })
-        .project(fulltext ? { score: { $meta: 'textScore' } } : {})
-        .sort(fulltext ? { score: { $meta: 'textScore' } } : { [sortBy]: -1 })
-        .skip((page || 0) * itemsPerPage)
-        .limit(itemsPerPage);
-
-        let [total, itemsOnThisPage, stats] = await Promise.all([
-            cursor.count(),
-            cursor.count(true),
-            computeModerationStats(db, codeRegion),
-        ]);
-
-        return sendArrayAsJsonStream(cursor.stream(), res, {
-            arrayPropertyName: 'avis',
-            arrayWrapper: {
-                meta: {
-                    stats: stats,
-                    pagination: {
-                        page,
-                        itemsPerPage,
-                        itemsOnThisPage,
-                        totalItems: total,
-                        totalPages: Math.ceil(total / itemsPerPage),
-                    },
-                    ...(!stagiaire ? {} : {
-                        stagiaire: {
-                            email: stagiaire.trainee.email,
-                            dnIndividuNational: stagiaire.trainee.dnIndividuNational,
-                        },
-                        fulltext,
-                    })
-                }
-            }
-        });
-    }));
-
-    router.get('/backoffice/moderateur/stats', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-
-        let codeRegion = req.user.codeRegion;
-
-        res.json(await computeModerationStats(db, codeRegion));
-    }));
 
     router.put('/backoffice/moderateur/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 

@@ -6,7 +6,7 @@ import Filter from '../../../common/page/panel/filters/Filter';
 import _ from 'lodash';
 import Summary from '../../../common/page/panel/summary/Summary';
 import Button from '../../../common/Button';
-import { getExportAvisUrl, searchAvis } from '../../financeurService';
+import { getExportAvisUrl, searchAvis } from '../../../avisService';
 import AvisResults from '../../../common/page/panel/results/AvisResults';
 import Avis from '../../../common/avis/Avis';
 import Pagination from '../../../common/page/panel/pagination/Pagination';
@@ -63,11 +63,7 @@ export default class AvisPanel extends React.Component {
     };
 
     onFilterClicked = parameters => {
-        return this.props.onNewQuery({
-            status: 'all',
-            sortBy: 'date',
-            ...parameters,
-        });
+        return this.props.onNewQuery(parameters);
     };
 
     render() {
@@ -81,13 +77,13 @@ export default class AvisPanel extends React.Component {
                     <Filters>
                         <Filter
                             label="Tous"
-                            isActive={() => query.status === 'all' && !query.qualification}
-                            onClick={() => this.onFilterClicked({ status: 'all', sortBy: 'date' })} />
+                            isActive={() => !query.status && !query.qualification}
+                            onClick={() => this.onFilterClicked({ sortBy: 'date' })} />
 
                         <Filter
                             label="Commentaires"
-                            isActive={() => query.qualification === 'all'}
-                            onClick={() => this.onFilterClicked({ qualification: 'all', sortBy: 'date' })} />
+                            isActive={() => query.commentaires === 'true'}
+                            onClick={() => this.onFilterClicked({ commentaires: true, sortBy: 'date' })} />
 
                         <Filter
                             label="Négatifs"
@@ -101,9 +97,9 @@ export default class AvisPanel extends React.Component {
 
                         <Filter
                             label="Signalés"
-                            isActive={() => query.status === 'reported'}
+                            isActive={() => query.reported}
                             getNbElements={() => _.get(results.meta.stats, 'status.reported')}
-                            onClick={() => this.onFilterClicked({ status: 'reported', sortBy: 'lastStatusUpdate' })} />
+                            onClick={() => this.onFilterClicked({ reported: true, sortBy: 'lastStatusUpdate' })} />
 
                         <Filter
                             label="Rejetés"
@@ -137,7 +133,7 @@ export default class AvisPanel extends React.Component {
                 pagination={
                     <Pagination
                         pagination={results.meta.pagination}
-                        onClick={page => this.onFilterClicked({ page })} />}
+                        onClick={page => this.onFilterClicked({ ...query, page })} />}
             />
         );
 

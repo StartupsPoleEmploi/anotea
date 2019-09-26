@@ -9,11 +9,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         let app = await startServer();
 
-        let id = 22222222222222;
+        let token = await logAsOrganisme(app, 'edited@pole-emploi.fr', '22222222222222');
 
-        let token = await logAsOrganisme(app, 'edited@pole-emploi.fr', id);
-
-        let response = await request(app).get(`/api/backoffice/organisme/${id}/allAdvices`)
+        let response = await request(app).get(`/api/backoffice/organisme/22222222222222/allAdvices`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -68,7 +66,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
             }
         }));
 
-        let token = await logAsOrganisme(app, courriel, 55555555555555);
+        let token = await logAsOrganisme(app, courriel, '55555555555555');
 
         let response = await request(app).get(`/api/backoffice/organisme/${id}/allAdvices`)
         .set('authorization', `Bearer ${token}`);

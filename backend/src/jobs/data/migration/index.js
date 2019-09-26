@@ -7,6 +7,6 @@ cli.parse(process.argv);
 
 execute(async ({ db }) => {
     let stats = {};
-    stats.dropInseeCodeCollection = await require('./tasks/dropInseeCodeCollection')(db);
+    stats.removeInvalidProperties = await require('./tasks/removeInvalidProperties')(db);
     return stats;
 });

@@ -11,7 +11,7 @@ import Button from '../../common/Button';
 import InputText from '../../common/page/form/InputText';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
-import { searchAvis } from './moderationService';
+import { searchAvis } from '../../avisService';
 
 export default class ModerationAvisPage extends React.Component {
 
@@ -118,14 +118,12 @@ export default class ModerationAvisPage extends React.Component {
                         loading={this.state.loading}
                         filters={
                             <Filters>
-
                                 <Filter
                                     label="Tous"
-                                    isActive={() => !query.status || query.status === 'all'}
+                                    isActive={() => !query.status}
                                     onClick={() => {
                                         return navigator.refreshCurrentPage({
                                             ...this.getFormAsQuery(),
-                                            status: 'all',
                                             sortBy: 'date'
                                         });
                                     }}
@@ -167,12 +165,11 @@ export default class ModerationAvisPage extends React.Component {
                                         });
                                     }}
                                 />
-
                             </Filters>
                         }
                         summary={
                             <Summary
-                                paginationLabel="organisme(s)"
+                                paginationLabel="avis(s)"
                                 pagination={results.meta.pagination}
                             />
                         }
