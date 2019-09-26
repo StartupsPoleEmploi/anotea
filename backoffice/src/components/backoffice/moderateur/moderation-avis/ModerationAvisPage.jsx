@@ -11,7 +11,7 @@ import Button from '../../common/Button';
 import InputText from '../../common/page/form/InputText';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
-import { searchAvis } from '../../avisService';
+import { getStats, searchAvis } from '../../avisService';
 
 export default class ModerationAvisPage extends React.Component {
 
@@ -25,6 +25,7 @@ export default class ModerationAvisPage extends React.Component {
             loading: false,
             message: null,
             fulltext: '',
+            stats: {},
             results: {
                 avis: [],
                 meta: {
@@ -45,6 +46,7 @@ export default class ModerationAvisPage extends React.Component {
         let query = this.props.navigator.getQuery();
 
         this.search();
+        this.fetchStats();
 
         if (query.fulltext) {
             this.setState({
@@ -55,8 +57,11 @@ export default class ModerationAvisPage extends React.Component {
 
     componentDidUpdate(previous) {
         let query = this.props.navigator.getQuery();
-        if (!_.isEqual(query, previous.navigator.getQuery())) {
+        let previousQuery = previous.navigator.getQuery();
+
+        if (!_.isEqual(query, previousQuery)) {
             this.search();
+            this.fetchStats();
         }
     }
 
@@ -70,6 +75,18 @@ export default class ModerationAvisPage extends React.Component {
         });
     };
 
+    fetchStats = async () => {
+        return new Promise(async resolve => {
+            let stats = await getStats(this.getQueryFormParameters());
+            this.setState({ stats }, () => resolve());
+        });
+    };
+
+    getQueryFormParameters = () => {
+        let query = this.props.navigator.getQuery();
+        return _.pick(query, ['fulltext']);
+    };
+
     onSubmit = () => {
         return this.props.navigator.refreshCurrentPage({
             fulltext: this.state.fulltext,
@@ -77,19 +94,15 @@ export default class ModerationAvisPage extends React.Component {
     };
 
     onFilterClicked = parameters => {
-        let { navigator } = this.props;
-        let query = navigator.getQuery();
-
-        return navigator.refreshCurrentPage({
-            fulltext: query.fulltext,
+        return this.props.navigator.refreshCurrentPage({
+            ...this.getQueryFormParameters(),
             ...parameters,
         });
     };
 
     render() {
-        let { navigator } = this.props;
-        let query = navigator.getQuery();
-        let results = this.state.results;
+        let query = this.props.navigator.getQuery();
+        let { results, stats } = this.state;
 
         return (
             <Page
@@ -121,7 +134,7 @@ export default class ModerationAvisPage extends React.Component {
                                 <Filter
                                     label="À modérer"
                                     isActive={() => query.status === 'none'}
-                                    getNbElements={() => _.get(results.meta.stats, 'status.none')}
+                                    getNbElements={() => _.get(stats, 'status.none')}
                                     onClick={() => this.onFilterClicked({ status: 'none', sortBy: 'lastStatusUpdate' })}
                                 />
 
@@ -165,7 +178,11 @@ export default class ModerationAvisPage extends React.Component {
                                                 if (message) {
                                                     this.setState({ message });
                                                 }
-                                                return this.search({ silent: true });
+
+                                                return Promise.all([
+                                                    this.search({ silent: true }),
+                                                    this.fetchStats(),
+                                                ]);
                                             }}>
                                         </Avis>
                                     );

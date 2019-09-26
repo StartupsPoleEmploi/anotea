@@ -14,7 +14,15 @@ module.exports = async (db, query) => {
                     },
                     sumStatusNone: {
                         $sum: {
-                            $cond: { if: { $ne: ['$moderated', true] }, then: 1, else: 0 }
+                            $cond: [
+                                {
+                                    $and: [
+                                        { $ne: ['$moderated', true] },
+                                        { $ifNull: ['$comment', false] },
+                                    ]
+                                },
+                                1, 0
+                            ],
                         }
                     },
                     sumReponseStatusNone: {
