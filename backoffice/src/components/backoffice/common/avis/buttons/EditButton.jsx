@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { deleteAvis, resendEmail } from '../../../moderateur/moderation-avis/moderationService';
+import { deleteAvis, resendEmail } from '../../../avisService';
 import Modal from '../../Modal';
 import Button from '../../Button';
 import { Dropdown, DropdownDivider, DropdownItem } from '../../Dropdown';

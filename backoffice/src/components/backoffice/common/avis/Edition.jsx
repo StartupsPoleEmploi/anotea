@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { editAvis, publishAvis } from '../../moderateur/moderation-avis/moderationService';
+import { editAvis, publishAvis } from '../../avisService';
 import Button from '../Button';
 import { Dropdown, DropdownDivider, DropdownItem } from '../Dropdown';
 
