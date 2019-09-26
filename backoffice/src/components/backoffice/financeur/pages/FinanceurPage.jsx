@@ -212,7 +212,7 @@ export default class FinanceurPage extends React.Component {
         return this.props.navigator.refreshCurrentPage(this.getFormAsQuery());
     };
 
-    onTabClicked = (tab, data) => {
+    onTabClicked = (tab, data = {}) => {
         return this.props.navigator.goToPage(`/admin/financeur/avis/${tab}`, {
             ...this.getFormAsQuery(),
             ...data
@@ -223,6 +223,7 @@ export default class FinanceurPage extends React.Component {
         let { navigator } = this.props;
         let { form } = this.state;
         let { departements, organismes, formations, financeurs, periode } = form;
+        let query = navigator.getQuery();
 
         return (
             <Page
@@ -326,13 +327,13 @@ export default class FinanceurPage extends React.Component {
                         <Tab
                             label="Liste des avis"
                             isActive={() => navigator.isActive('/admin/financeur/avis/liste')}
-                            onClick={() => this.onTabClicked('liste', { status: 'all' })} />
+                            onClick={() => this.onTabClicked('liste')} />
                     </Tabs>
                 }
                 panel={
                     navigator.isActive('/admin/financeur/avis/liste') ?
                         <AvisPanel
-                            query={navigator.getQuery()}
+                            query={query}
                             form={form}
                             onNewQuery={data => {
                                 return navigator.refreshCurrentPage({
@@ -345,7 +346,7 @@ export default class FinanceurPage extends React.Component {
                             render={() => {
                                 return (
                                     <StatsPanel
-                                        query={navigator.getQuery()}
+                                        query={query}
                                         form={form}
                                     />
                                 );

@@ -9,7 +9,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can reply to a comment', async () => {
 
         let app = await startServer();
-        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
         let comment = newComment();
         await insertIntoDatabase('comment', comment);
 
@@ -29,7 +29,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can delete an reponse', async () => {
 
         let app = await startServer();
-        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
         let comment = newComment({
             reponse: {
                 text: 'Voici notre réponse',
@@ -51,7 +51,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         const comment = newComment();
         let [token] = await Promise.all([
-            logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222),
+            logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
             insertIntoDatabase('comment', comment),
         ]);
 
@@ -67,7 +67,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('should reject invalid comment id', async () => {
 
         let app = await startServer();
-        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', 2222222222222);
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
 
         let response = await request(app)
         .put(`/api/backoffice/organisme/avis/INVALID/addReponse`)
