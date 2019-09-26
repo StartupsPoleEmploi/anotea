@@ -16,7 +16,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${comment._id}/publishReponse`)
+        .put(`/api/backoffice/avis/${comment._id}/publishReponse`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -36,7 +36,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${comment._id}/rejectReponse`)
+        .put(`/api/backoffice/avis/${comment._id}/rejectReponse`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -59,7 +59,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${id}/edit`)
+        .put(`/api/backoffice/avis/${id}/edit`)
         .send({ text: 'New message' })
         .set('authorization', `Bearer ${token}`);
 
@@ -79,7 +79,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${id}/publish`)
+        .put(`/api/backoffice/avis/${id}/publish`)
         .send({ qualification: 'positif' })
         .set('authorization', `Bearer ${token}`);
 
@@ -103,7 +103,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${id}/reject`)
+        .put(`/api/backoffice/avis/${id}/reject`)
         .send({ reason: 'injure' })
         .set('authorization', `Bearer ${token}`);
 
@@ -126,7 +126,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .delete(`/api/backoffice/moderateur/avis/${id}`)
+        .delete(`/api/backoffice/avis/${id}`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -145,7 +145,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${id}/pseudo`)
+        .put(`/api/backoffice/avis/${id}/pseudo`)
         .send({ mask: true })
         .set('authorization', `Bearer ${token}`);
 
@@ -163,7 +163,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${id}/pseudo`)
+        .put(`/api/backoffice/avis/${id}/pseudo`)
         .send({ mask: false })
         .set('authorization', `Bearer ${token}`);
 
@@ -181,7 +181,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${id}/title`)
+        .put(`/api/backoffice/avis/${id}/title`)
         .send({ mask: true })
         .set('authorization', `Bearer ${token}`);
 
@@ -199,7 +199,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${id}/title`)
+        .put(`/api/backoffice/avis/${id}/title`)
         .send({ mask: false })
         .set('authorization', `Bearer ${token}`);
 
@@ -215,7 +215,7 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/avis/${new ObjectID()}/reject`)
+        .put(`/api/backoffice/avis/${new ObjectID()}/reject`)
         .send({ reason: 'alerte' })
         .set('authorization', `Bearer ${token}`);
 
@@ -226,41 +226,8 @@ describe(__filename, withServer(({ startServer, logAsModerateur, logAsOrganisme,
 
         let app = await startServer();
 
-        let response = await request(app).get('/api/backoffice/moderateur/avis');
+        let response = await request(app).get('/api/backoffice/avis');
         assert.strictEqual(response.statusCode, 401);
         assert.deepStrictEqual(response.body, { error: true });
-    });
-
-    it('can not search avis when authenticated as organisme', async () => {
-
-        let app = await startServer();
-        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111');
-
-        let response = await request(app).get('/api/backoffice/moderateur/avis')
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 403);
-        assert.deepStrictEqual(response.body, {
-            'error': 'Forbidden',
-            'message': 'Action non autorisé',
-            'statusCode': 403
-        });
-    });
-
-    it('can not search advices when authenticated as financer', async () => {
-
-        let app = await startServer();
-
-        let token = await logAsFinanceur(app, 'organisme@pole-emploi.fr', '2');
-
-        let response = await request(app).get('/api/backoffice/moderateur/avis')
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 403);
-        assert.deepStrictEqual(response.body, {
-            'error': 'Forbidden',
-            'message': 'Action non autorisé',
-            'statusCode': 403
-        });
     });
 }));

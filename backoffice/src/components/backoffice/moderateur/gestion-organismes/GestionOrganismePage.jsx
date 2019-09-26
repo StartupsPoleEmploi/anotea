@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { getExportAvisUrl, searchOrganismes } from './gestionOrganismesService';
-import Organisme from './components/Organisme';
+import Organisme from '../../common/organisme/Organisme';
 import Summary from '../../common/page/panel/summary/Summary';
 import Pagination from '../../common/page/panel/pagination/Pagination';
 import ResultDivider from '../../common/page/panel/results/ResultDivider';
