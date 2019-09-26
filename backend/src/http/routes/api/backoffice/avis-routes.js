@@ -19,29 +19,25 @@ module.exports = ({ db, middlewares, configuration, regions, logger, moderation,
     let allProfiles = checkProfile('moderateur', 'financeur', 'organisme');
     let itemsPerPage = configuration.api.pagination;
 
-    const getStagiaire = async email => {
-        return db.collection('trainee').findOne({ 'trainee.email': email });
-    };
+    const getStagiaire = email => db.collection('trainee').findOne({ 'trainee.email': email });
 
     let getValidators = user => {
 
         let region = regions.findRegionByCodeRegion(user.codeRegion);
-
         return {
             idFormation: Joi.string(),
             startDate: Joi.number(),
             scheduledEndDate: Joi.number(),
             reported: Joi.bool(),
-            archived: Joi.bool(),
             commentaires: Joi.bool(),
             fulltext: Joi.string(),
             status: Joi.string().valid(['none', 'published', 'rejected']),
             reponseStatus: Joi.string().valid(['none', 'published', 'rejected']),
             qualification: Joi.string().valid(['all', 'négatif', 'positif']),
             departement: Joi.string().valid(region.departements.map(d => d.code)),
+            //Profile parameters
             siren: user.profile === 'organisme' ? Joi.any().forbidden() : Joi.string().min(9).max(9),
-            codeFinanceur: user.profile !== 'financeur' ? Joi.any().forbidden() :
-                Joi.string().valid(isPoleEmploi(user.codeFinanceur) ? getCodeFinanceurs() : [user.codeFinanceur]),
+            codeFinanceur: isPoleEmploi(user.codeFinanceur) ? Joi.string().valid(getCodeFinanceurs()) : Joi.any().forbidden(),
         };
     };
 
@@ -49,16 +45,18 @@ module.exports = ({ db, middlewares, configuration, regions, logger, moderation,
         let {
             departement, codeFinanceur, siren, qualification,
             idFormation, startDate, scheduledEndDate, fulltext,
-            status, reponseStatus, archived, reported, commentaires
+            status, reponseStatus, reported, commentaires
         } = parameters;
 
         let fulltextIsEmail = isEmail(fulltext || '');
         let stagiaire = fulltextIsEmail ? await getStagiaire(fulltext) : null;
-        let organisme = (user.profile !== 'organisme' && siren) ? new RegExp(`^${siren}`) : user.siret;
-        let financeur = codeFinanceur || user.codeFinanceur;
+        //Profile parameters
+        let organisme = siren ? new RegExp(`^${siren}`) : user.siret;
+        let financeur = codeFinanceur || (isPoleEmploi(user.codeFinanceur) ? null : user.codeFinanceur);
 
         return {
             codeRegion: user.codeRegion,
+            ...(user.profile !== 'financeur' ? { archived: false } : {}),
             ...(organisme ? { 'training.organisation.siret': organisme } : {}),
             ...(financeur ? { 'training.codeFinanceur': financeur } : {}),
             ...(qualification ? { qualification } : {}),
@@ -67,7 +65,6 @@ module.exports = ({ db, middlewares, configuration, regions, logger, moderation,
             ...(startDate ? { 'training.startDate': { $lte: moment(startDate).toDate() } } : {}),
             ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
             ...(_.isBoolean(reported) ? { reported } : {}),
-            ...(_.isBoolean(archived) ? { archived } : {}),
             ...(_.isBoolean(commentaires) ? { comment: { $ne: null } } : {}),
 
             ...(status === 'none' ? { moderated: { $ne: true }, comment: { $ne: null } } : {}),
@@ -198,11 +195,11 @@ module.exports = ({ db, middlewares, configuration, regions, logger, moderation,
     router.get('/backoffice/avis/stats', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 
         let user = req.user;
-        let parameters = await Joi.validate(req.query, {
-            ...getValidators(user),
-        }, { abortEarly: false });
-
-        let query = await buildQuery(user, parameters);
+        let query = await buildQuery(user, {
+            comment: { $ne: null },
+            archived: false,
+            codeRegion: user.codeRegion,
+        });
 
         res.json(await computeAvisStats(db, query));
     }));
