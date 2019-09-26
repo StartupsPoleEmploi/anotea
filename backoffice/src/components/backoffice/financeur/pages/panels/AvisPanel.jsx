@@ -19,7 +19,7 @@ export default class AvisPanel extends React.Component {
     static propTypes = {
         query: PropTypes.object.isRequired,
         form: PropTypes.object.isRequired,
-        onNewQuery: PropTypes.func.isRequired,
+        onFilterClicked: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -62,14 +62,10 @@ export default class AvisPanel extends React.Component {
         });
     };
 
-    onFilterClicked = parameters => {
-        return this.props.onNewQuery(parameters);
-    };
-
     render() {
 
         let { results, message } = this.state;
-        let { query, form } = this.props;
+        let { query, form, onFilterClicked } = this.props;
 
         return (
             <Panel
@@ -78,33 +74,33 @@ export default class AvisPanel extends React.Component {
                         <Filter
                             label="Tous"
                             isActive={() => !query.status && !query.qualification}
-                            onClick={() => this.onFilterClicked({ sortBy: 'date' })} />
+                            onClick={() => onFilterClicked({ sortBy: 'date' })} />
 
                         <Filter
                             label="Commentaires"
                             isActive={() => query.commentaires === 'true'}
-                            onClick={() => this.onFilterClicked({ commentaires: true, sortBy: 'date' })} />
+                            onClick={() => onFilterClicked({ commentaires: true, sortBy: 'date' })} />
 
                         <Filter
                             label="Négatifs"
                             isActive={() => query.qualification === 'négatif'}
-                            onClick={() => this.onFilterClicked({ qualification: 'négatif', sortBy: 'date' })} />
+                            onClick={() => onFilterClicked({ qualification: 'négatif', sortBy: 'date' })} />
 
                         <Filter
                             label="Positifs ou neutres"
                             isActive={() => query.qualification === 'positif'}
-                            onClick={() => this.onFilterClicked({ qualification: 'positif', sortBy: 'date' })} />
+                            onClick={() => onFilterClicked({ qualification: 'positif', sortBy: 'date' })} />
 
                         <Filter
                             label="Signalés"
                             isActive={() => query.reported}
                             getNbElements={() => _.get(results.meta.stats, 'status.reported')}
-                            onClick={() => this.onFilterClicked({ reported: true, sortBy: 'lastStatusUpdate' })} />
+                            onClick={() => onFilterClicked({ reported: true, sortBy: 'lastStatusUpdate' })} />
 
                         <Filter
                             label="Rejetés"
                             isActive={() => query.status === 'rejected'}
-                            onClick={() => this.onFilterClicked({ status: 'rejected', sortBy: 'lastStatusUpdate' })} />
+                            onClick={() => onFilterClicked({ status: 'rejected', sortBy: 'lastStatusUpdate' })} />
                     </Filters>
                 }
                 summary={
@@ -133,7 +129,7 @@ export default class AvisPanel extends React.Component {
                 pagination={
                     <Pagination
                         pagination={results.meta.pagination}
-                        onClick={page => this.onFilterClicked({ ...query, page })} />}
+                        onClick={page => onFilterClicked({ ...query, page })} />}
             />
         );
 

@@ -21,9 +21,6 @@ export default class ModerationReponsesPage extends React.Component {
         this.state = {
             loading: false,
             message: null,
-            form: {
-                fulltext: '',
-            },
             results: {
                 avis: [],
                 meta: {
@@ -41,15 +38,7 @@ export default class ModerationReponsesPage extends React.Component {
     }
 
     componentDidMount() {
-        let query = this.props.navigator.getQuery();
-
         this.search();
-
-        this.setState({
-            form: {
-                fulltext: query.fulltext,
-            }
-        });
     }
 
     componentDidUpdate(previous) {
@@ -73,7 +62,6 @@ export default class ModerationReponsesPage extends React.Component {
         let { navigator } = this.props;
         let query = navigator.getQuery();
         let results = this.state.results;
-        let stats = results.meta.stats;
 
         return (
             <Page

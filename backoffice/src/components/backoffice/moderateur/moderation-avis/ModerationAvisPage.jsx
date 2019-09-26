@@ -24,9 +24,7 @@ export default class ModerationAvisPage extends React.Component {
         this.state = {
             loading: false,
             message: null,
-            form: {
-                fulltext: '',
-            },
+            fulltext: '',
             results: {
                 avis: [],
                 meta: {
@@ -48,11 +46,11 @@ export default class ModerationAvisPage extends React.Component {
 
         this.search();
 
-        this.setState({
-            form: {
+        if (query.fulltext) {
+            this.setState({
                 fulltext: query.fulltext,
-            }
-        });
+            });
+        }
     }
 
     componentDidUpdate(previous) {
@@ -72,11 +70,21 @@ export default class ModerationAvisPage extends React.Component {
         });
     };
 
-    getFormAsQuery = () => {
-        let { form } = this.state;
-        return {
-            fulltext: form.fulltext,
-        };
+    onSubmit = () => {
+        return this.props.navigator.refreshCurrentPage({
+            fulltext: this.state.fulltext,
+        });
+    };
+
+    onFilterClicked = parameters => {
+        let { navigator } = this.props;
+        let query = navigator.getQuery();
+
+        return navigator.refreshCurrentPage({
+            archived: false,
+            fulltext: query.fulltext,
+            ...parameters,
+        });
     };
 
     render() {
@@ -94,21 +102,14 @@ export default class ModerationAvisPage extends React.Component {
                             <div className="d-flex justify-content-between">
                                 <div className="a-flex-grow-1 mr-2">
                                     <InputText
-                                        value={this.state.form.fulltext}
+                                        value={this.state.fulltext}
                                         placeholder="Recherche un avis"
                                         icon={<i className="fas fa-search" />}
-                                        reset={() => this.setState({ form: { fulltext: '' } })}
-                                        onChange={event => this.setState({ form: { fulltext: event.target.value } })}
+                                        reset={() => this.setState({ fulltext: '' })}
+                                        onChange={event => this.setState({ fulltext: event.target.value })}
                                     />
                                 </div>
-                                <Button
-                                    type="submit"
-                                    size="large"
-                                    color="blue"
-                                    onClick={() => navigator.refreshCurrentPage(this.getFormAsQuery())}
-                                >
-                                    Rechercher
-                                </Button>
+                                <Button type="submit" size="large" color="blue" onClick={this.onSubmit}>Rechercher</Button>
                             </div>
                         </Form>
                     </div>
@@ -121,49 +122,26 @@ export default class ModerationAvisPage extends React.Component {
                                 <Filter
                                     label="Tous"
                                     isActive={() => !query.status}
-                                    onClick={() => {
-                                        return navigator.refreshCurrentPage({
-                                            ...this.getFormAsQuery(),
-                                            sortBy: 'date'
-                                        });
-                                    }}
+                                    onClick={() => this.onFilterClicked({ sortBy: 'date' })}
                                 />
 
                                 <Filter
                                     label="À modérer"
                                     isActive={() => query.status === 'none'}
                                     getNbElements={() => _.get(results.meta.stats, 'status.none')}
-                                    onClick={() => {
-                                        return navigator.refreshCurrentPage({
-                                            ...this.getFormAsQuery(),
-                                            status: 'none',
-                                            sortBy: 'lastStatusUpdate'
-                                        });
-                                    }}
+                                    onClick={() => this.onFilterClicked({ status: 'none', sortBy: 'lastStatusUpdate' })}
                                 />
 
                                 <Filter
                                     label="Publiés"
                                     isActive={() => query.status === 'published'}
-                                    onClick={() => {
-                                        return navigator.refreshCurrentPage({
-                                            ...this.getFormAsQuery(),
-                                            status: 'published',
-                                            sortBy: 'lastStatusUpdate'
-                                        });
-                                    }}
+                                    onClick={() => this.onFilterClicked({ status: 'published', sortBy: 'lastStatusUpdate' })}
                                 />
 
                                 <Filter
                                     label="Rejetés"
                                     isActive={() => query.status === 'rejected'}
-                                    onClick={() => {
-                                        return navigator.refreshCurrentPage({
-                                            ...this.getFormAsQuery(),
-                                            status: 'rejected',
-                                            sortBy: 'lastStatusUpdate'
-                                        });
-                                    }}
+                                    onClick={() => this.onFilterClicked({ status: 'rejected', sortBy: 'lastStatusUpdate' })}
                                 />
                             </Filters>
                         }
@@ -198,7 +176,7 @@ export default class ModerationAvisPage extends React.Component {
                         pagination={
                             <Pagination
                                 pagination={results.meta.pagination}
-                                onClick={page => navigator.refreshCurrentPage(_.merge({}, query, { page }))}
+                                onClick={page => this.onFilterClicked({ ...query, page })}
                             />
                         }
                     />
