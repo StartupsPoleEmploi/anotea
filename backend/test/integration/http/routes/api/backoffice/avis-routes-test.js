@@ -21,15 +21,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.deepStrictEqual(response.body.meta, {
-            stats: {
-                reported: 0,
-                status: {
-                    none: 0
-                },
-                reponseStatus: {
-                    none: 0
-                }
-            },
             pagination: {
                 page: 0,
                 itemsPerPage: 2,

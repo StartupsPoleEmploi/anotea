@@ -185,18 +185,6 @@ export default class FinanceurPage extends React.Component {
         });
     };
 
-    getFormAsQuery = () => {
-        let { form } = this.state;
-        return {
-            codeFinanceur: _.get(form, 'financeurs.selected.code', null),
-            departement: _.get(form, 'departements.selected.code', null),
-            siren: _.get(form, 'organismes.selected.siren', null),
-            idFormation: _.get(form, 'formations.selected.idFormation', null),
-            startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
-            scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
-        };
-    };
-
     isFormPristine = () => {
 
         let { form } = this.state;
@@ -208,24 +196,33 @@ export default class FinanceurPage extends React.Component {
             form.periode.pristine;
     };
 
-    onSubmit = () => {
-        return this.props.navigator.refreshCurrentPage(this.getFormAsQuery());
+    getQueryFormParameters = () => {
+        let query = this.props.navigator.getQuery();
+        return _.pick(query, ['codeFinanceur', 'departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']);
     };
 
-    onTabClicked = (tab, data = {}) => {
-        let query = this.props.navigator.getQuery();
+    onSubmit = () => {
+        let { form } = this.state;
+        return this.props.navigator.refreshCurrentPage({
+            codeFinanceur: _.get(form, 'financeurs.selected.code', null),
+            departement: _.get(form, 'departements.selected.code', null),
+            siren: _.get(form, 'organismes.selected.siren', null),
+            idFormation: _.get(form, 'formations.selected.idFormation', null),
+            startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
+            scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
+        });
+    };
 
+    onTabClicked = (tab, parameters = {}) => {
         return this.props.navigator.goToPage(`/admin/financeur/avis/${tab}`, {
-            ..._.pick(query, ['codeFinanceur', 'departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']),
-            ...data
+            ...this.getQueryFormParameters(),
+            ...parameters
         });
     };
 
     onFilterClicked = parameters => {
-        let query = this.props.navigator.getQuery();
-
         return this.props.navigator.refreshCurrentPage({
-            ..._.pick(query, ['codeFinanceur', 'departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']),
+            ...this.getQueryFormParameters(),
             ...parameters,
         });
     };
