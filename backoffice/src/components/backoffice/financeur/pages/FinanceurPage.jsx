@@ -213,9 +213,20 @@ export default class FinanceurPage extends React.Component {
     };
 
     onTabClicked = (tab, data = {}) => {
+        let query = this.props.navigator.getQuery();
+
         return this.props.navigator.goToPage(`/admin/financeur/avis/${tab}`, {
-            ...this.getFormAsQuery(),
+            ..._.pick(query, ['codeFinanceur', 'departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']),
             ...data
+        });
+    };
+
+    onFilterClicked = parameters => {
+        let query = this.props.navigator.getQuery();
+
+        return this.props.navigator.refreshCurrentPage({
+            ..._.pick(query, ['codeFinanceur', 'departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']),
+            ...parameters,
         });
     };
 
@@ -335,12 +346,7 @@ export default class FinanceurPage extends React.Component {
                         <AvisPanel
                             query={query}
                             form={form}
-                            onNewQuery={data => {
-                                return navigator.refreshCurrentPage({
-                                    ...this.getFormAsQuery(),
-                                    ...data,
-                                });
-                            }} /> :
+                            onFilterClicked={this.onFilterClicked} /> :
                         <Route
                             path={'/admin/financeur/avis/stats'}
                             render={() => {
