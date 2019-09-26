@@ -81,7 +81,6 @@ export default class ModerationAvisPage extends React.Component {
         let query = navigator.getQuery();
 
         return navigator.refreshCurrentPage({
-            archived: false,
             fulltext: query.fulltext,
             ...parameters,
         });
@@ -120,16 +119,16 @@ export default class ModerationAvisPage extends React.Component {
                         filters={
                             <Filters>
                                 <Filter
-                                    label="Tous"
-                                    isActive={() => !query.status}
-                                    onClick={() => this.onFilterClicked({ sortBy: 'date' })}
-                                />
-
-                                <Filter
                                     label="À modérer"
                                     isActive={() => query.status === 'none'}
                                     getNbElements={() => _.get(results.meta.stats, 'status.none')}
                                     onClick={() => this.onFilterClicked({ status: 'none', sortBy: 'lastStatusUpdate' })}
+                                />
+
+                                <Filter
+                                    label="Tous"
+                                    isActive={() => !query.status}
+                                    onClick={() => this.onFilterClicked({ sortBy: 'date' })}
                                 />
 
                                 <Filter
