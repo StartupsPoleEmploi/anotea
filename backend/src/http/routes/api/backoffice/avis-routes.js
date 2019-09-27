@@ -1,6 +1,4 @@
 const Joi = require('joi');
-const _ = require('lodash');
-const moment = require('moment');
 const express = require('express');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
@@ -67,6 +65,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
             ...validators.form(user),
             ...validators.filters(),
             ...validators.sort(),
+            token: Joi.string(),
         }, { abortEarly: false });
 
         let stream = db.collection('comment')
