@@ -55,7 +55,7 @@ module.exports = ({ db, password, configuration }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.put('/backoffice/accounts/updatePassword', tryAndCatch(async (req, res, next) => {
+    router.put('/backoffice/accounts/me/updatePassword', tryAndCatch(async (req, res, next) => {
         let actualPassword = req.body.actualPassword;
         let password = req.body.password;
         let id = req.body.id;
