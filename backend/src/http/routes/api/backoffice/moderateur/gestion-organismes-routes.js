@@ -7,7 +7,7 @@ const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../
 const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
 const { transformObject, encodeStream } = require('../../../../../common/utils/stream-utils');
 
-module.exports = ({ db, configuration, mailing, middlewares }) => {
+module.exports = ({ db, configuration, mailing, middlewares, logger }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;

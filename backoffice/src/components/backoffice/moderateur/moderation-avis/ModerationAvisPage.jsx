@@ -11,7 +11,7 @@ import Button from '../../common/Button';
 import InputText from '../../common/page/form/InputText';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
-import { getStats, searchAvis } from '../../avisService';
+import { getModerationStats, searchAvis } from '../../avisService';
 
 export default class ModerationAvisPage extends React.Component {
 
@@ -77,7 +77,7 @@ export default class ModerationAvisPage extends React.Component {
 
     fetchStats = async () => {
         return new Promise(async resolve => {
-            let stats = await getStats(this.getQueryFormParameters());
+            let stats = await getModerationStats(this.getQueryFormParameters());
             this.setState({ stats }, () => resolve());
         });
     };
@@ -139,12 +139,6 @@ export default class ModerationAvisPage extends React.Component {
                                 />
 
                                 <Filter
-                                    label="Tous"
-                                    isActive={() => !query.status}
-                                    onClick={() => this.onFilterClicked({ sortBy: 'date' })}
-                                />
-
-                                <Filter
                                     label="Publiés"
                                     isActive={() => query.status === 'published'}
                                     onClick={() => this.onFilterClicked({ status: 'published', sortBy: 'lastStatusUpdate' })}
@@ -155,6 +149,13 @@ export default class ModerationAvisPage extends React.Component {
                                     isActive={() => query.status === 'rejected'}
                                     onClick={() => this.onFilterClicked({ status: 'rejected', sortBy: 'lastStatusUpdate' })}
                                 />
+
+                                <Filter
+                                    label="Tous"
+                                    isActive={() => !query.status}
+                                    onClick={() => this.onFilterClicked({ sortBy: 'date' })}
+                                />
+
                             </Filters>
                         }
                         summary={

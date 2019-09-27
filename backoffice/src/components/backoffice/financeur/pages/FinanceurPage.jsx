@@ -6,7 +6,7 @@ import { Route } from 'react-router-dom';
 import Page from '../../common/page/Page';
 import { Tab, Tabs } from '../../common/page/tabs/Tabs';
 import { Form, Periode, Select } from '../../common/page/form/Form';
-import { getFormations, getOrganismes } from '../financeurService';
+import { getFormations, getOrganismes } from '../../organismesService';
 import { getDepartements } from '../../departementsService';
 import FINANCEURS from '../../common/data/financeurs';
 import Button from '../../common/Button';
@@ -267,7 +267,7 @@ export default class FinanceurPage extends React.Component {
                                     options={organismes.results}
                                     loading={organismes.loading}
                                     optionKey="siren"
-                                    label={option => option.label}
+                                    label={option => option.name}
                                     placeholder={'Tous les organismes'}
                                     onChange={async option => {
                                         await this.updateSelectBox('organismes', option);
@@ -336,7 +336,7 @@ export default class FinanceurPage extends React.Component {
                         <Tab
                             label="Liste des avis"
                             isActive={() => navigator.isActive('/admin/financeur/avis/liste')}
-                            onClick={() => this.onTabClicked('liste')} />
+                            onClick={() => this.onTabClicked('liste', { sortBy: 'date' })} />
                     </Tabs>
                 }
                 panel={

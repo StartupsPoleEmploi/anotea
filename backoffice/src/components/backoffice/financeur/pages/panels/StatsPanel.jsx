@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../components/QueryBadges.scss';
 import _ from 'lodash';
-import { getStats } from '../../financeurService';
+import { getStats } from '../../../avisService';
 import Panel from '../../../common/page/panel/Panel';
 import QueryBadges from '../components/QueryBadges';
 import Loader from '../../../common/Loader';

@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from '../common/header/Link';
-import { getStats } from '../avisService';
+import { getModerationStats } from '../avisService';
 import { Route } from 'react-router-dom';
 
 export default class ModerateurHeaderItems extends React.Component {
@@ -21,7 +21,7 @@ export default class ModerateurHeaderItems extends React.Component {
     fetchStats = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let stats = await getStats();
+                let stats = await getModerationStats();
                 let avis = stats.status.none;
                 let reponses = stats.reponseStatus.none;
                 this.setState({ avis, reponses, loading: false }, () => resolve());
@@ -57,7 +57,7 @@ export default class ModerateurHeaderItems extends React.Component {
                                     <Link
                                         className="dropdown-item"
                                         label="Avis stagiaires"
-                                        url="/admin/moderateur/moderation/avis/stagiaires?status=none" />
+                                        url="/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&status=none" />
                                     {!loading &&
                                     <span className="badge badge-light pastille">{avis}</span>
                                     }
@@ -66,7 +66,7 @@ export default class ModerateurHeaderItems extends React.Component {
                                     <Link
                                         className="dropdown-item"
                                         label="Réponses des organismes"
-                                        url="/admin/moderateur/moderation/avis/reponses" />
+                                        url="/admin/moderateur/moderation/avis/reponses?reponseStatus=none&sortBy=reponse.lastStatusUpdate" />
                                     {!loading &&
                                     <span className="badge badge-light pastille">{reponses}</span>
                                     }

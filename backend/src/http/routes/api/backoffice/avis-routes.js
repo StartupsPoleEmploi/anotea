@@ -4,6 +4,7 @@ const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { objectId } = require('../../../../common/validators');
 const { IdNotFoundError } = require('../../../../common/errors');
+const computeModerationStats = require('./utils/computeModerationStats');
 const computeAvisStats = require('./utils/computeAvisStats');
 const avisCSVColumnsMapper = require('./utils/avisCSVColumnsMapper');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
@@ -91,7 +92,20 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
         }, { abortEarly: false });
 
         let query = await queries.form(user, parameters);
-        res.json(await computeAvisStats(db, query));
+        let results = await computeAvisStats(db, query);
+
+        return res.json(results);
+    }));
+
+    router.get('/backoffice/avis/moderationStats', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+
+        let user = req.user;
+        let parameters = await Joi.validate(req.query, {
+            ...validators.form(user),
+        }, { abortEarly: false });
+
+        let query = await queries.form(user, parameters);
+        res.json(await computeModerationStats(db, query));
     }));
 
     router.put('/backoffice/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {

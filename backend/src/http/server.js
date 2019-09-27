@@ -57,10 +57,10 @@ module.exports = components => {
     app.use('/api', require('./routes/api/backoffice/password-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/accounts-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/avis-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/organismes/consultation-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/organismes/organisation-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/organismes-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/organisation/consultation-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/organisation/organisation-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/moderateur/gestion-organismes-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/financeur-routes')(httpComponents));
     app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
 
     // catch 404

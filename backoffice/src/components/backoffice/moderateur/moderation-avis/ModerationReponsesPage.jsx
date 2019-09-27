@@ -75,7 +75,7 @@ export default class ModerationReponsesPage extends React.Component {
 
                                 <Filter
                                     label="À modérer"
-                                    isActive={() => (!query.status && !query.reponseStatus) || query.reponseStatus === 'none'}
+                                    isActive={() => query.reponseStatus === 'none'}
                                     getNbElements={() => _.get(results.meta.stats, 'reponseStatus.none')}
                                     onClick={() => navigator.refreshCurrentPage({
                                         reponseStatus: 'none',
@@ -136,9 +136,9 @@ export default class ModerationReponsesPage extends React.Component {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            readonly={query.status !== 'reported'}
+                                            readonly={!query.reported}
                                             showStatus={false}
-                                            showReponse={query.status !== 'reported'}
+                                            showReponse={!query.reported}
                                             onChange={(avis, options = {}) => {
                                                 let { message } = options;
                                                 if (message) {
