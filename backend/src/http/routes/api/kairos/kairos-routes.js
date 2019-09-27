@@ -4,9 +4,9 @@ const uuid = require('node-uuid');
 const Joi = require('joi');
 const _ = require('lodash');
 const configuration = require('config');
-const { tryAndCatch } = require('../routes-utils');
-const { createOrganismeFomateurDTO } = require('./v1/utils/dto');
-const getCodeRegionFromKairosRegionName = require('../../../jobs/organismes/tasks/kairos/getCodeRegionFromKairosRegionName');
+const { tryAndCatch } = require('../../routes-utils');
+const { createOrganismeFomateurDTO } = require('../v1/utils/dto');
+const getCodeRegionFromKairosRegionName = require('../../../../jobs/organismes/tasks/kairos/getCodeRegionFromKairosRegionName');
 
 module.exports = ({ db, auth, middlewares }) => {
 

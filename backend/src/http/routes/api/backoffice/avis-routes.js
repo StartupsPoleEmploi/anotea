@@ -13,12 +13,11 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let allProfiles = checkProfile('moderateur', 'financeur', 'organisme');
     let itemsPerPage = configuration.api.pagination;
     let validators = require('./utils/validators')(regions);
     let queries = require('./utils/searchQueries')(db);
 
-    router.get('/backoffice/avis', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
 
         let user = req.user;
         let parameters = await Joi.validate(req.query, {
@@ -58,7 +57,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
         });
     }));
 
-    router.get('/backoffice/avis.csv', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
 
         let user = req.user;
         let parameters = await Joi.validate(req.query, {
@@ -84,7 +83,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
         }
     }));
 
-    router.get('/backoffice/avis/stats', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/avis/stats', checkAuth, tryAndCatch(async (req, res) => {
 
         let user = req.user;
         let parameters = await Joi.validate(req.query, {

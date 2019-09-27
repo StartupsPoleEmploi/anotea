@@ -114,25 +114,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         });
     });
 
-    it('can get departements', async () => {
-
-        let app = await startServer();
-        let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-        ]);
-
-        let response = await request(app)
-        .get('/api/backoffice/financeur/departements')
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.length, 8);
-        assert.deepStrictEqual(response.body[1], {
-            code: '92',
-            label: 'Hauts-de-Seine',
-        });
-    });
-
     it('can get organismes', async () => {
 
         let app = await startServer();

@@ -1,10 +1,6 @@
 import queryString from 'query-string';
 import { _get } from '../../../utils/http-client';
 
-export const getDepartements = () => {
-    return _get(`/backoffice/financeur/departements`);
-};
-
 export const getOrganismes = () => {
     return _get(`/backoffice/financeur/organismes`);
 };

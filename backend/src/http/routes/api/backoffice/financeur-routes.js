@@ -1,12 +1,11 @@
 const Joi = require('joi');
-const _ = require('lodash');
 const express = require('express');
 const moment = require('moment');
 const { round } = require('../../../../common/utils/number-utils');
 const { isPoleEmploi } = require('../../../../common/utils/financeurs');
 const { tryAndCatch, sendArrayAsJsonStream } = require('../../routes-utils');
 
-module.exports = ({ db, middlewares, regions }) => {
+module.exports = ({ db, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -37,11 +36,7 @@ module.exports = ({ db, middlewares, regions }) => {
         };
     };
 
-    router.get('/backoffice/financeur/departements', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 
-        let region = regions.findRegionByCodeRegion(req.user.codeRegion);
-        return res.json(region.departements);
-    }));
 
     router.get('/backoffice/financeur/organismes', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
 

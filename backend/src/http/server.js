@@ -50,9 +50,9 @@ module.exports = components => {
     app.use('/api', require('./routes/api/v1/sessions-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
     app.use('/api', require('./routes/api/exports-routes')(httpComponents));
-    app.use('/api', require('./routes/api/regions-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/departements-routes')(httpComponents));
     app.use('/api', require('./routes/api/stats-routes')(httpComponents));
-    app.use('/api', require('./routes/api/kairos-routes')(httpComponents));
+    app.use('/api', require('./routes/api/kairos/kairos-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/login-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/password-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/account-routes')(httpComponents));
