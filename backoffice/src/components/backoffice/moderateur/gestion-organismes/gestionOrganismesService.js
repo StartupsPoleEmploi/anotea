@@ -1,6 +1,6 @@
 import { _get, _post, _put } from '../../../../utils/http-client';
 import queryString from 'query-string';
-import { getToken } from '../../../../utils/token';
+import { getToken } from '../../../../utils/session';
 
 export const searchOrganismes = (options = {}) => {
     return _get(`/backoffice/moderateur/organismes?${queryString.stringify(options)}`);

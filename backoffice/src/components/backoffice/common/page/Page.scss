@@ -2,7 +2,9 @@
 
 .Page {
 
-  .holder {
+  height: 100%;
+
+  .search-holder {
     @include profile-color();
     padding-bottom: 1rem;
 
@@ -22,5 +24,9 @@
     .tabs-holder {
       padding-top: 1rem;
     }
+  }
+
+  .panel-holder {
+    height: 100%;
   }
 }

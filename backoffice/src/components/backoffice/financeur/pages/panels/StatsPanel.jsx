@@ -61,7 +61,7 @@ export default class StatsPanel extends React.Component {
                 }
                 results={
                     this.state.loading ?
-                        <div className="d-flex justify-content-center"><Loader /></div> :
+                        <Loader centered={true} /> :
                         _.isEmpty(stats) ? <EmptyResults /> :
                             <>
                                 <div className="row">

@@ -20,7 +20,7 @@ module.exports = {
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
-                    .send({ username: courriel, password: 'password' });
+                    .send({ identifiant: courriel, password: 'password' });
                     assert.strictEqual(response.statusCode, 200);
 
                     return response.body.access_token;
@@ -40,7 +40,7 @@ module.exports = {
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
-                    .send({ username: organisme.meta.siretAsString, password: 'password' });
+                    .send({ identifiant: organisme.meta.siretAsString, password: 'password' });
                     assert.strictEqual(response.statusCode, 200);
 
                     return response.body.access_token;
@@ -54,7 +54,7 @@ module.exports = {
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
-                    .send({ username: courriel, password: 'password' });
+                    .send({ identifiant: courriel, password: 'password' });
                     assert.strictEqual(response.statusCode, 200);
 
                     return response.body.access_token;
