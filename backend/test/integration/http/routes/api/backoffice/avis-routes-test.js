@@ -1,9 +1,10 @@
 const request = require('supertest');
 const assert = require('assert');
+const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/test-server');
-const { newComment, newTrainee } = require('../../../../../helpers/data/dataset');
+const { newComment, newTrainee, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, logAsFinanceur, logAsOrganisme, createIndexes }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, logAsFinanceur, logAsOrganisme, createIndexes, getComponents, getTestDatabase }) => {
 
     it('can search all avis', async () => {
 
@@ -20,15 +21,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.deepStrictEqual(response.body.meta, {
-            stats: {
-                reported: 0,
-                status: {
-                    none: 0
-                },
-                reponseStatus: {
-                    none: 0
-                }
-            },
             pagination: {
                 page: 0,
                 itemsPerPage: 2,
@@ -71,22 +63,39 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis[0].moderated, false);
     });
 
-    it('can search avis with archived=true', async () => {
+    it('when moderateur should return only not archived avis', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment()),
+            insertIntoDatabase('comment', newComment({ archived: false })),
             insertIntoDatabase('comment', newComment({ archived: true })),
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis?archived=false')
+        .get('/api/backoffice/avis')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.strictEqual(response.body.avis[0].archived, false);
+    });
+
+    it('when financeur should return archived and not archived avis', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+            insertIntoDatabase('comment', newComment({ archived: false })),
+            insertIntoDatabase('comment', newComment({ archived: true })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 2);
     });
 
     it('can search avis by email', async () => {
@@ -300,6 +309,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis.length, 2);
     });
 
+    it('can not search avis with siren when logged as organisme', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
+            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111111111' } } })),
+            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111122222' } } })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?siren=111111111')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 400);
+        assert.strictEqual(response.body.details[0].context.key, 'siren');
+    });
+
     it('when logged as organisme should only returned avis with same siret', async () => {
 
         let app = await startServer();
@@ -317,7 +342,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis[0].training.organisation.siret, '11111111111111');
     });
 
-    it('can search avis by code financeur (extended for PE)', async () => {
+    it('can search avis by code financeur (PE)', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -333,7 +358,39 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis.length, 1);
     });
 
-    it('can search avis by code financeur (restricted for financeur)', async () => {
+    it('can search avis by code financeur (conseil regional)', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?codeFinanceur=10')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 400);
+        assert.strictEqual(response.body.details[0].context.key, 'codeFinanceur');
+    });
+
+    it('should not filter by codeFinanceur when PE', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+            insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '10' } })),
+            insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '2' } })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 2);
+    });
+
+    it('should automatically filter by codeFinanceur when conseil regional', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -347,21 +404,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 0);
-    });
-
-    it('can not search avis with other code financeur (restricted for financeur)', async () => {
-
-        let app = await startServer();
-        let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-        ]);
-
-        let response = await request(app)
-        .get('/api/backoffice/avis?codeFinanceur=10')
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 400);
-        assert.strictEqual(response.body.details[0].context.key, 'codeFinanceur');
     });
 
     it('should not return avis from other region', async () => {
@@ -380,5 +422,228 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis.length, 0);
     });
 
+    it('can publish reponse', async () => {
 
+        let app = await startServer();
+        let comment = newComment();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/publishReponse`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.reponse.lastStatusUpdate);
+        assert.deepStrictEqual(response.body.reponse.status, 'published');
+    });
+
+    it('can reject reponse', async () => {
+
+        let app = await startServer();
+        let comment = newComment();
+        let organisme = newOrganismeAccount({ SIRET: parseInt(comment.training.organisation.siret) });
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', comment),
+            insertIntoDatabase('accounts', organisme)
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/rejectReponse`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.reponse.lastStatusUpdate);
+        assert.deepStrictEqual(response.body.reponse.status, 'rejected');
+
+        let { mailer } = await getComponents();
+        let email = mailer.getCalls()[0];
+        assert.deepStrictEqual(email[0], { to: 'contact@poleemploi-formation.fr' });
+    });
+
+
+    it('can edit an avis', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/edit`)
+        .send({ text: 'New message' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.editedComment.text, 'New message');
+        assert.ok(response.body.lastStatusUpdate);
+    });
+
+    it('can publish an avis', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/publish`)
+        .send({ qualification: 'positif' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.moderated, true);
+        assert.deepStrictEqual(response.body.published, true);
+        assert.deepStrictEqual(response.body.reported, false);
+        assert.deepStrictEqual(response.body.rejectReason, null);
+        assert.deepStrictEqual(response.body.qualification, 'positif');
+        assert.ok(response.body.lastStatusUpdate);
+    });
+
+    it('can reject an avis', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/reject`)
+        .send({ reason: 'injure' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.moderated, true);
+        assert.deepStrictEqual(response.body.published, false);
+        assert.deepStrictEqual(response.body.rejected, true);
+        assert.deepStrictEqual(response.body.reported, false);
+        assert.deepStrictEqual(response.body.rejectReason, 'injure');
+        assert.ok(response.body.lastStatusUpdate);
+    });
+
+    it('can delete an avis', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .delete(`/api/backoffice/avis/${id}`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        let db = await getTestDatabase();
+        let count = await db.collection('comment').countDocuments({ _id: id });
+        assert.strictEqual(count, 0);
+    });
+
+    it('can mask pseudo', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/pseudo`)
+        .send({ mask: true })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.pseudoMasked, true);
+    });
+
+    it('can unmask pseudo', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/pseudo`)
+        .send({ mask: false })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.pseudoMasked, false);
+    });
+
+    it('can mask title', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/title`)
+        .send({ mask: true })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.titleMasked, true);
+    });
+
+    it('can unmask title', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/title`)
+        .send({ mask: false })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.titleMasked, false);
+    });
+
+    it('can not reject unknown avis', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${new ObjectID()}/reject`)
+        .send({ reason: 'alerte' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
+    });
+
+    it('can not search avis when not authenticated', async () => {
+
+        let app = await startServer();
+
+        let response = await request(app).get('/api/backoffice/avis');
+        assert.strictEqual(response.statusCode, 401);
+        assert.deepStrictEqual(response.body, { error: true });
+    });
 }));

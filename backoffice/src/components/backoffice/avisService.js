@@ -2,8 +2,8 @@ import { _delete, _get, _put } from '../../utils/http-client';
 import queryString from 'query-string';
 import { getToken } from '../../utils/session';
 
-export const searchAvis = (options = {}) => {
-    return _get(`/backoffice/avis?${queryString.stringify(options)}`);
+export const searchAvis = (params = {}) => {
+    return _get(`/backoffice/avis?${queryString.stringify(params)}`);
 };
 
 export const getExportAvisUrl = (options = {}) => {
@@ -13,8 +13,8 @@ export const getExportAvisUrl = (options = {}) => {
     return `${publicUrl}/api/backoffice/avis.csv?${queryString.stringify({ ...options, token })}`;
 };
 
-export const getStats = () => {
-    return _get(`/backoffice/avis/stats`);
+export const getStats = params => {
+    return _get(`/backoffice/avis/stats?${queryString.stringify(params)}`);
 };
 
 export const maskPseudo = (id, mask) => {

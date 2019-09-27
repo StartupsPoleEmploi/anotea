@@ -11,7 +11,7 @@ import Button from '../../common/Button';
 import InputText from '../../common/page/form/InputText';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
-import { searchAvis } from '../../avisService';
+import { getStats, searchAvis } from '../../avisService';
 
 export default class ModerationAvisPage extends React.Component {
 
@@ -24,9 +24,8 @@ export default class ModerationAvisPage extends React.Component {
         this.state = {
             loading: false,
             message: null,
-            form: {
-                fulltext: '',
-            },
+            fulltext: '',
+            stats: {},
             results: {
                 avis: [],
                 meta: {
@@ -47,18 +46,22 @@ export default class ModerationAvisPage extends React.Component {
         let query = this.props.navigator.getQuery();
 
         this.search();
+        this.fetchStats();
 
-        this.setState({
-            form: {
+        if (query.fulltext) {
+            this.setState({
                 fulltext: query.fulltext,
-            }
-        });
+            });
+        }
     }
 
     componentDidUpdate(previous) {
         let query = this.props.navigator.getQuery();
-        if (!_.isEqual(query, previous.navigator.getQuery())) {
+        let previousQuery = previous.navigator.getQuery();
+
+        if (!_.isEqual(query, previousQuery)) {
             this.search();
+            this.fetchStats();
         }
     }
 
@@ -72,17 +75,34 @@ export default class ModerationAvisPage extends React.Component {
         });
     };
 
-    getFormAsQuery = () => {
-        let { form } = this.state;
-        return {
-            fulltext: form.fulltext,
-        };
+    fetchStats = async () => {
+        return new Promise(async resolve => {
+            let stats = await getStats(this.getQueryFormParameters());
+            this.setState({ stats }, () => resolve());
+        });
+    };
+
+    getQueryFormParameters = () => {
+        let query = this.props.navigator.getQuery();
+        return _.pick(query, ['fulltext']);
+    };
+
+    onSubmit = () => {
+        return this.props.navigator.refreshCurrentPage({
+            fulltext: this.state.fulltext,
+        });
+    };
+
+    onFilterClicked = parameters => {
+        return this.props.navigator.refreshCurrentPage({
+            ...this.getQueryFormParameters(),
+            ...parameters,
+        });
     };
 
     render() {
-        let { navigator } = this.props;
-        let query = navigator.getQuery();
-        let results = this.state.results;
+        let query = this.props.navigator.getQuery();
+        let { results, stats } = this.state;
 
         return (
             <Page
@@ -94,21 +114,14 @@ export default class ModerationAvisPage extends React.Component {
                             <div className="d-flex justify-content-between">
                                 <div className="a-flex-grow-1 mr-2">
                                     <InputText
-                                        value={this.state.form.fulltext}
+                                        value={this.state.fulltext}
                                         placeholder="Recherche un avis"
                                         icon={<i className="fas fa-search" />}
-                                        reset={() => this.setState({ form: { fulltext: '' } })}
-                                        onChange={event => this.setState({ form: { fulltext: event.target.value } })}
+                                        reset={() => this.setState({ fulltext: '' })}
+                                        onChange={event => this.setState({ fulltext: event.target.value })}
                                     />
                                 </div>
-                                <Button
-                                    type="submit"
-                                    size="large"
-                                    color="blue"
-                                    onClick={() => navigator.refreshCurrentPage(this.getFormAsQuery())}
-                                >
-                                    Rechercher
-                                </Button>
+                                <Button type="submit" size="large" color="blue" onClick={this.onSubmit}>Rechercher</Button>
                             </div>
                         </Form>
                     </div>
@@ -119,51 +132,28 @@ export default class ModerationAvisPage extends React.Component {
                         filters={
                             <Filters>
                                 <Filter
-                                    label="Tous"
-                                    isActive={() => !query.status}
-                                    onClick={() => {
-                                        return navigator.refreshCurrentPage({
-                                            ...this.getFormAsQuery(),
-                                            sortBy: 'date'
-                                        });
-                                    }}
+                                    label="À modérer"
+                                    isActive={() => query.status === 'none'}
+                                    getNbElements={() => _.get(stats, 'status.none')}
+                                    onClick={() => this.onFilterClicked({ status: 'none', sortBy: 'lastStatusUpdate' })}
                                 />
 
                                 <Filter
-                                    label="À modérer"
-                                    isActive={() => query.status === 'none'}
-                                    getNbElements={() => _.get(results.meta.stats, 'status.none')}
-                                    onClick={() => {
-                                        return navigator.refreshCurrentPage({
-                                            ...this.getFormAsQuery(),
-                                            status: 'none',
-                                            sortBy: 'lastStatusUpdate'
-                                        });
-                                    }}
+                                    label="Tous"
+                                    isActive={() => !query.status}
+                                    onClick={() => this.onFilterClicked({ sortBy: 'date' })}
                                 />
 
                                 <Filter
                                     label="Publiés"
                                     isActive={() => query.status === 'published'}
-                                    onClick={() => {
-                                        return navigator.refreshCurrentPage({
-                                            ...this.getFormAsQuery(),
-                                            status: 'published',
-                                            sortBy: 'lastStatusUpdate'
-                                        });
-                                    }}
+                                    onClick={() => this.onFilterClicked({ status: 'published', sortBy: 'lastStatusUpdate' })}
                                 />
 
                                 <Filter
                                     label="Rejetés"
                                     isActive={() => query.status === 'rejected'}
-                                    onClick={() => {
-                                        return navigator.refreshCurrentPage({
-                                            ...this.getFormAsQuery(),
-                                            status: 'rejected',
-                                            sortBy: 'lastStatusUpdate'
-                                        });
-                                    }}
+                                    onClick={() => this.onFilterClicked({ status: 'rejected', sortBy: 'lastStatusUpdate' })}
                                 />
                             </Filters>
                         }
@@ -188,7 +178,11 @@ export default class ModerationAvisPage extends React.Component {
                                                 if (message) {
                                                     this.setState({ message });
                                                 }
-                                                return this.search({ silent: true });
+
+                                                return Promise.all([
+                                                    this.search({ silent: true }),
+                                                    this.fetchStats(),
+                                                ]);
                                             }}>
                                         </Avis>
                                     );
@@ -198,7 +192,7 @@ export default class ModerationAvisPage extends React.Component {
                         pagination={
                             <Pagination
                                 pagination={results.meta.pagination}
-                                onClick={page => navigator.refreshCurrentPage(_.merge({}, query, { page }))}
+                                onClick={page => this.onFilterClicked({ ...query, page })}
                             />
                         }
                     />

@@ -53,16 +53,16 @@ export default class ModerateurHeaderItems extends React.Component {
                                 Moderation
                             </a>
                             <div className="dropdown-menu">
-                               <span className="d-flex align-items-center">
+                                <div className="d-flex align-items-center">
                                     <Link
                                         className="dropdown-item"
                                         label="Avis stagiaires"
-                                        url="/admin/moderateur/moderation/avis/stagiaires" />
-                                   {!loading &&
-                                   <span className="badge badge-light pastille">{avis}</span>
-                                   }
-                                </span>
-                                <span className="d-flex align-items-center">
+                                        url="/admin/moderateur/moderation/avis/stagiaires?status=none" />
+                                    {!loading &&
+                                    <span className="badge badge-light pastille">{avis}</span>
+                                    }
+                                </div>
+                                <div className="d-flex align-items-center">
                                     <Link
                                         className="dropdown-item"
                                         label="Réponses des organismes"
@@ -70,7 +70,7 @@ export default class ModerateurHeaderItems extends React.Component {
                                     {!loading &&
                                     <span className="badge badge-light pastille">{reponses}</span>
                                     }
-                                </span>
+                                </div>
                             </div>
                         </li>
                         <li className="nav-item">
