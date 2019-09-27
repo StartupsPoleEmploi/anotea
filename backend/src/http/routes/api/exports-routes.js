@@ -146,16 +146,18 @@ module.exports = ({ db }) => {
                 {
                     $group: {
                         _id: '$source.user',
-                        loginCount: { $sum: { $cond: [{ if: { $eq: ['$type', 'login'], then: 1, else: 0 } }] } },
-                        loginWithTokenCount: { $sum: { $cond: [{ if: { $eq: ['$type', 'login-access-token'], then: 1, else: 0 } }] } },
-                        reponseCount: { $sum: { $cond: [{ if: { $eq: ['$type', 'reponse'], then: 1, else: 0 } }] } },
-                        reportCount: { $sum: { $cond: [{ if: { $eq: ['$type', 'report'], then: 1, else: 0 } }] } },
-                        readCount: { $sum: { $cond: [{ if: { $eq: ['$type', 'markAsRead'], then: 1, else: 0 } }] } }
+                        loginCount: { $sum: { $cond: { if: { $eq: ['$type', 'login'] }, then: 1, else: 0 } } },
+                        loginWithTokenCount: { $sum: { $cond: { if: { $eq: ['$type', 'login-access-token'] }, then: 1, else: 0 } } },
+                        reponseCount: { $sum: { $cond: { if: { $eq: ['$type', 'reponse'] }, then: 1, else: 0 } } },
+                        reportCount: { $sum: { $cond: { if: { $eq: ['$type', 'report'] }, then: 1, else: 0 } } },
+                        readCount: { $sum: { $cond: { if: { $eq: ['$type', 'markAsRead'] }, then: 1, else: 0 } } }
                     },
+                },
+                {
                     $lookup: {
                         from: 'comment',
                         let: {
-                            '$training.organisation.siret': '$source.user',
+                            training: { organisation: { siret: '$_id' } }
                         },
                         pipeline: [
                             {
@@ -176,12 +178,11 @@ module.exports = ({ db }) => {
         return sendCSVStream(stream, res, {
             'SIRET': stats => stats._id,
             'Nombre de connexions': stats => stats.loginCount + stats.loginWithTokenCount,
-            'Nombre d\'utilisateurs': 1, // TODO
-            'Nombre d\'avis ': stats => stats.avisStats.count,
+            'Nombre d\'avis ': stats => stats.avisStats[0].count,
             'Nombre d\'avis répondus': stats => stats.reponseCount,
             'Nombre d\'avis signalés': stats => stats.reportCount,
             'Nombre d\'avis Lus': stats => stats.readCount,
-        }, { filename: 'bo-organisme.csv' });
+        }, { filename: `bo-organisme-${moment().format('YYYY-MM-DD')}.csv` });
 
     }));
 
