@@ -20,9 +20,9 @@ export const updatePassword = (password, token) => {
 };
 
 export const getAccount = token => {
-    return _get(`/backoffice/account/${token}`);
+    return _get(`/backoffice/accounts/${token}`);
 };
 
-export const activateAccount = (password, token,) => {
-    return _post(`/backoffice/account/activate`, { token, password });
+export const activateAccount = (token, password) => {
+    return _post(`/backoffice/accounts/${token}/activate`, { password });
 };

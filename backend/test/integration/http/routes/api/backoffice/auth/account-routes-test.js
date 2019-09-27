@@ -20,7 +20,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .get(`/api/backoffice/account/${token}`);
+        .get(`/api/backoffice/accounts/${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -45,7 +45,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .get(`/api/backoffice/account/${token}`);
+        .get(`/api/backoffice/accounts/${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.status, 'active');
@@ -56,7 +56,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
 
         let response = await request(app)
-        .get(`/api/backoffice/account/INVALID`);
+        .get(`/api/backoffice/accounts/INVALID`);
 
         assert.strictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.body, {
@@ -82,8 +82,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .post('/api/backoffice/account/activate')
-        .send({ token, password: 'Anotea2018!' });
+        .post(`/api/backoffice/accounts/${token}/activate`)
+        .send({ password: 'Anotea2018!' });
 
         assert.strictEqual(response.statusCode, 201);
         assert.deepStrictEqual(response.body, {
@@ -112,8 +112,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .post('/api/backoffice/account/activate')
-        .send({ token, password: 'INVALID' });
+        .post(`/api/backoffice/accounts/${token}/activate`)
+        .send({ password: 'INVALID' });
 
         assert.strictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.body, {
@@ -127,8 +127,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let response = await request(app)
-        .post('/api/backoffice/account/activate')
-        .send({ token: 'INVALID' });
+        .post('/api/backoffice/accounts/INVALID/activate')
+        .send({});
 
         assert.strictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.body, {

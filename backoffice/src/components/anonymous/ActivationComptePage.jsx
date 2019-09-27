@@ -65,7 +65,7 @@ export default class ActivationComptePage extends React.Component {
                 let { token } = this.props.navigator.getQuery();
 
                 this.setState({ loading: true });
-                activateAccount(password, token)
+                activateAccount(token, password)
                 .then(async () => {
                     let data = await login(organisme.siret, password);
                     this.props.onLogin(data);

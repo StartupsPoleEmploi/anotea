@@ -1,5 +1,6 @@
 const express = require('express');
 const { ObjectID } = require('mongodb');
+const Joi = require('joi');
 const Boom = require('boom');
 const { tryAndCatch } = require('../../routes-utils');
 
@@ -8,7 +9,7 @@ module.exports = ({ db, password, configuration }) => {
     let router = express.Router(); // eslint-disable-line new-cap
     let { checkPassword, hashPassword, isPasswordStrongEnough } = password;
 
-    router.get('/backoffice/account/:token', tryAndCatch(async (req, res) => {
+    router.get('/backoffice/accounts/:token', tryAndCatch(async (req, res) => {
 
         let organisme = await db.collection('accounts').findOne({ token: req.params.token });
         if (organisme) {
@@ -21,9 +22,12 @@ module.exports = ({ db, password, configuration }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.post('/backoffice/account/activate', tryAndCatch(async (req, res) => {
-        const token = req.body.token;
-        const password = req.body.password;
+    router.post('/backoffice/accounts/:token/activate', tryAndCatch(async (req, res) => {
+        const token = req.params.token;
+
+        let { password } = await Joi.validate(req.body, {
+            password: Joi.string(),
+        }, { abortEarly: false });
 
         let organisme = await db.collection('accounts').findOne({ token });
         if (organisme) {
@@ -51,7 +55,7 @@ module.exports = ({ db, password, configuration }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.put('/backoffice/account/updatePassword', tryAndCatch(async (req, res, next) => {
+    router.put('/backoffice/accounts/updatePassword', tryAndCatch(async (req, res, next) => {
         let actualPassword = req.body.actualPassword;
         let password = req.body.password;
         let id = req.body.id;
