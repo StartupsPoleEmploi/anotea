@@ -6,7 +6,7 @@ import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
 import { AuthForm } from './AuthForm';
-import { checkIfPasswordTokenExists, updatePassword } from './authService';
+import { checkIfPasswordTokenExists, resetPassword } from './authService';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
 import GlobalMessage from '../backoffice/common/message/GlobalMessage';
 
@@ -32,9 +32,9 @@ export default class ReinitialisationMotDePassePage extends React.Component {
 
     componentDidMount() {
         let { navigator } = this.props;
-        let { token } = navigator.getQuery();
+        let { forgottenPasswordToken } = navigator.getQuery();
 
-        checkIfPasswordTokenExists(token)
+        checkIfPasswordTokenExists(forgottenPasswordToken)
         .catch(this.showErrorMessage);
     }
 
@@ -55,10 +55,10 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
             if (isFormValid) {
-                let { token } = this.props.navigator.getQuery();
+                let { forgottenPasswordToken } = this.props.navigator.getQuery();
                 this.setState({ loading: true });
 
-                updatePassword(password, token)
+                resetPassword(password, forgottenPasswordToken)
                 .then(() => this.props.navigator.goToPage('/admin'))
                 .catch(this.showErrorMessage);
             }

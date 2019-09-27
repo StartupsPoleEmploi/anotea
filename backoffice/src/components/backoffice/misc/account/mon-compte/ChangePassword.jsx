@@ -34,7 +34,7 @@ export class ChangePassword extends React.Component {
     };
 
     update = () => {
-        updatePassword(this.state.actualPassword, this.state.newPassword, sessionStorage.userId, sessionStorage.userProfile).then(result => {
+        updatePassword(this.state.actualPassword, this.state.newPassword).then(result => {
             this.setState({ success: true });
             setTimeout(() => {
                 this.setState({ success: false, serverSideError: null });

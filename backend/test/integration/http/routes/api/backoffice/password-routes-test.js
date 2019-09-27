@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
-const { withServer } = require('../../../../../../helpers/test-server');
-const { newOrganismeAccount, newForgottenPasswordToken, randomize } = require('../../../../../../helpers/data/dataset');
+const { withServer } = require('../../../../../helpers/test-server');
+const { newOrganismeAccount, newForgottenPasswordToken, randomize } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase, getComponents }) => {
 
@@ -64,7 +64,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         });
     });
 
-    it('can update password', async () => {
+    it('can reset password', async () => {
 
         let app = await startServer();
         let token = randomize('token');
@@ -83,14 +83,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .put(`/api/backoffice/updatePassword`)
+        .put(`/api/backoffice/resetPassword`)
         .send({
             token,
             password: 'A1234!',
         });
-
-        assert.strictEqual(response.statusCode, 201);
-        assert.deepStrictEqual(response.body.message, 'Account successfully updated');
+        assert.strictEqual(response.statusCode, 200);
 
         //Token should be remove
         response = await request(app)
@@ -112,7 +110,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
     });
 
 
-    it('cannot update password with weak password', async () => {
+    it('can not reset password with weak password', async () => {
 
         let app = await startServer();
         let id = randomize('id');
@@ -130,7 +128,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .put(`/api/backoffice/updatePassword`)
+        .put(`/api/backoffice/resetPassword`)
         .send({
             token,
             password: 'INVALID'

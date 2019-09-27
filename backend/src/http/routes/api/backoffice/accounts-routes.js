@@ -4,19 +4,20 @@ const Joi = require('joi');
 const Boom = require('boom');
 const { tryAndCatch } = require('../../routes-utils');
 
-module.exports = ({ db, password, configuration }) => {
+module.exports = ({ db, middlewares, password, configuration }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
+    let checkAuth = middlewares.createJWTAuthMiddleware('backoffice');
     let { checkPassword, hashPassword, isPasswordStrongEnough } = password;
 
     router.get('/backoffice/accounts/:token', tryAndCatch(async (req, res) => {
 
-        let organisme = await db.collection('accounts').findOne({ token: req.params.token });
-        if (organisme) {
+        let account = await db.collection('accounts').findOne({ token: req.params.token });
+        if (account) {
             return res.json({
-                raisonSociale: organisme.raisonSociale,
-                siret: organisme.meta.siretAsString,
-                status: organisme.passwordHash ? 'active' : 'inactive',
+                nom: account.raisonSociale,
+                identifiant: account.meta.siretAsString,
+                status: account.passwordHash ? 'active' : 'inactive',
             });
         }
         throw Boom.badRequest('Numéro de token invalide');
@@ -29,9 +30,9 @@ module.exports = ({ db, password, configuration }) => {
             password: Joi.string(),
         }, { abortEarly: false });
 
-        let organisme = await db.collection('accounts').findOne({ token });
-        if (organisme) {
-            if (!organisme.passwordHash) {
+        let account = await db.collection('accounts').findOne({ token });
+        if (account) {
+            if (!account.passwordHash) {
                 if (isPasswordStrongEnough(password)) {
                     await db.collection('accounts').updateOne({ token }, {
                         $set: {
@@ -40,14 +41,7 @@ module.exports = ({ db, password, configuration }) => {
                         }
                     });
 
-                    return res.status(201).json({
-                        message: 'Account successfully created',
-                        userInfo: {
-                            username: organisme.meta.siretAsString,
-                            profile: 'organisme',
-                            id: organisme._id
-                        }
-                    });
+                    return res.status(201).json({});
                 }
                 throw Boom.badRequest('Le mot de passe est invalide (il doit contenir au moins 6 caractères, une majuscule et un caractère spécial)');
             }
@@ -55,20 +49,17 @@ module.exports = ({ db, password, configuration }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.put('/backoffice/accounts/me/updatePassword', tryAndCatch(async (req, res, next) => {
-        let actualPassword = req.body.actualPassword;
-        let password = req.body.password;
-        let id = req.body.id;
-        let profile = req.body.profile;
+    router.put('/backoffice/accounts/me/updatePassword', checkAuth, tryAndCatch(async (req, res, next) => {
 
-        if (profile === 'financeur') {
-            id = new ObjectID(id);
-        } else if (profile === 'moderateur') {
-            id = new ObjectID(id);
-        }
+        let { id } = req.user;
+        let { actualPassword, password } = await Joi.validate(req.body, {
+            actualPassword: Joi.string(),
+            password: Joi.string(),
+        }, { abortEarly: false });
+
 
         try {
-            let account = await db.collection('accounts').findOne({ _id: id });
+            let account = await db.collection('accounts').findOne({ $or: [{ _id: id }, { _id: new ObjectID(id) }] });
             if (account && await checkPassword(actualPassword, account.passwordHash, configuration)) {
 
                 if (isPasswordStrongEnough(password)) {
@@ -76,13 +67,11 @@ module.exports = ({ db, password, configuration }) => {
                     await db.collection('accounts').updateOne({ _id: id }, {
                         $set: {
                             'meta.rehashed': true,
-                            'passwordHash': passwordHash,
+                            passwordHash,
                         }
                     });
 
-                    return res.status(201).json({
-                        message: 'Account successfully updated'
-                    });
+                    return res.status(200).json();
 
                 } else {
                     return res.status(422).send({

@@ -28,7 +28,7 @@ export default class MotDePasseOubliePage extends React.Component {
         askNewPassword(this.state.identifiant)
         .then(() => {
             this.setState({ error: null, identifiant: '', loading: false }, () => {
-                this.props.navigator.goToPage('/admin/login');
+                this.props.navigator.goToPage('/admin/login', { message: 'Une email vous a été envoyé.' });
             });
         })
         .catch(() => {

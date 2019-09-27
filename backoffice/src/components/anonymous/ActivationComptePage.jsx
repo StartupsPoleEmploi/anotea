@@ -29,10 +29,10 @@ export default class ActivationComptePage extends React.Component {
                 passwordNotStrongEnough: null,
                 isNotSamePassword: null,
             },
-            organisme: {
-                raisonSociale: '',
-                siret: '',
-                activate: false,
+            account: {
+                nom: '',
+                identifiant: '',
+                active: false,
             },
         };
     }
@@ -42,7 +42,7 @@ export default class ActivationComptePage extends React.Component {
         let query = navigator.getQuery();
 
         getAccount(query.token)
-        .then(organisme => this.setState({ organisme, loading: false }))
+        .then(account => this.setState({ account, loading: false }))
         .catch(this.showErrorMessage);
     }
 
@@ -51,7 +51,7 @@ export default class ActivationComptePage extends React.Component {
     };
 
     onSubmit = () => {
-        let { password, confirmation, organisme } = this.state;
+        let { password, confirmation, account } = this.state;
         this.setState({
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
@@ -67,7 +67,7 @@ export default class ActivationComptePage extends React.Component {
                 this.setState({ loading: true });
                 activateAccount(token, password)
                 .then(async () => {
-                    let data = await login(organisme.siret, password);
+                    let data = await login(account.identifiant, password);
                     this.props.onLogin(data);
                 })
                 .catch(this.showErrorMessage);
@@ -77,7 +77,7 @@ export default class ActivationComptePage extends React.Component {
 
     render() {
 
-        let { organisme, errors, message } = this.state;
+        let { account, errors, message } = this.state;
 
         return (
             <Page
@@ -87,14 +87,14 @@ export default class ActivationComptePage extends React.Component {
                         backgroundColor="blue"
                         results={
                             <AuthForm
-                                title={organisme.raisonSociale}
+                                title={account.nom}
                                 elements={
                                     <>
                                         <label>Votre identifiant pour la connexion</label>
                                         <div className="mb-3">
-                                            {organisme.siret}
+                                            {account.identifiant}
                                         </div>
-                                        {organisme.status === 'activate' ?
+                                        {account.status === 'active' ?
                                             <>
                                                 <div className="clarification">
                                                     <div>Un Espace Anotéa a déjà été créé pour cet Organisme de Formation.</div>
@@ -140,7 +140,7 @@ export default class ActivationComptePage extends React.Component {
                                     </>
                                 }
                                 buttons={
-                                    organisme.status === 'activate' ? <div /> :
+                                    account.status === 'active' ? <div /> :
                                         <>
                                             <Button
                                                 type="submit"

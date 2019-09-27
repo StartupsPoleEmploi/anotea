@@ -127,7 +127,7 @@ export default class LoginPage extends React.Component {
                                         </Button>
                                         {message &&
                                         <GlobalMessage
-                                            message={{ text: message, level: 'error' }}
+                                            message={{ text: message }}
                                             timeout={5000}
                                             onClose={() => navigator.refreshCurrentPage()} />
                                         }

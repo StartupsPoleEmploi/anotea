@@ -41,7 +41,7 @@ module.exports = ({ db, mailing, password }) => {
         }
     });
 
-    router.put('/backoffice/updatePassword', tryAndCatch(async (req, res) => {
+    router.put('/backoffice/resetPassword', tryAndCatch(async (req, res) => {
 
         let { password, token } = await Joi.validate(req.body, {
             password: Joi.string().required(),
@@ -67,14 +67,7 @@ module.exports = ({ db, mailing, password }) => {
                     }),
                 ]);
 
-                return res.status(201).json({
-                    message: 'Account successfully updated',
-                    userInfo: {
-                        username: account.courriel,
-                        profile: forgottenPasswordToken.profile,
-                        id: account._id
-                    }
-                });
+                return res.status(200).json({});
 
             } else {
                 throw Boom.badRequest(`Le mot de passe n'est pas valide.`);

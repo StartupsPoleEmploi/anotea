@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
-const { withServer } = require('../../../../../../helpers/test-server');
-const { newOrganismeAccount, randomize } = require('../../../../../../helpers/data/dataset');
+const { withServer } = require('../../../../../helpers/test-server');
+const { newOrganismeAccount, randomize } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
 
@@ -24,13 +24,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            raisonSociale: 'Pole Emploi Formation',
-            siret: '11111111111111',
+            nom: 'Pole Emploi Formation',
+            identifiant: '11111111111111',
             status: 'inactive',
         });
     });
 
-    it('can get account aleady activated ', async () => {
+    it('can get account already activated ', async () => {
 
         let app = await startServer();
         let token = randomize('token');
@@ -86,14 +86,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .send({ password: 'Anotea2018!' });
 
         assert.strictEqual(response.statusCode, 201);
-        assert.deepStrictEqual(response.body, {
-            message: 'Account successfully created',
-            userInfo: {
-                username: '11111111111111',
-                profile: 'organisme',
-                id: 11111111111111
-            }
-        });
 
         //should flag account as rehashed
         let db = await getTestDatabase();
@@ -102,7 +94,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.ok(res.meta.rehashed);
     });
 
-    it('cannot activate account with invalid password', async () => {
+    it('can not activate account with invalid password', async () => {
 
         let app = await startServer();
         let token = randomize('token');
@@ -123,7 +115,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         });
     });
 
-    it('cannot activate account with invalid token', async () => {
+    it('can not activate account with invalid token', async () => {
 
         let app = await startServer();
         let response = await request(app)
