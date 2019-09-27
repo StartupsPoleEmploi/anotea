@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Organisme.scss';
-import EditButton from './EditButton';
-import Edition from './Edition';
+import EditButton from './buttons/EditButton';
+import Edition from './buttons/Edition';
 
 export default class Organisme extends React.Component {
 

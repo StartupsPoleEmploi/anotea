@@ -8,7 +8,7 @@ import Panel from '../../common/page/panel/Panel';
 import { Filter, Filters } from '../../common/page/panel/filters/Filters';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
-import { searchAvis } from './moderationService';
+import { searchAvis } from '../../avisService';
 
 export default class ModerationReponsesPage extends React.Component {
 
@@ -21,9 +21,6 @@ export default class ModerationReponsesPage extends React.Component {
         this.state = {
             loading: false,
             message: null,
-            form: {
-                fulltext: '',
-            },
             results: {
                 avis: [],
                 meta: {
@@ -41,15 +38,7 @@ export default class ModerationReponsesPage extends React.Component {
     }
 
     componentDidMount() {
-        let query = this.props.navigator.getQuery();
-
         this.search();
-
-        this.setState({
-            form: {
-                fulltext: query.fulltext,
-            }
-        });
     }
 
     componentDidUpdate(previous) {
@@ -114,12 +103,12 @@ export default class ModerationReponsesPage extends React.Component {
 
                                 <Filter
                                     label="Signalés"
-                                    isActive={() => query.status === 'reported'}
+                                    isActive={() => query.reported}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        status: 'reported',
+                                        reported: true,
                                         sortBy: 'lastStatusUpdate'
                                     })}
-                                    getNbElements={() => _.get(results.meta.stats, 'status.reported')}
+                                    getNbElements={() => _.get(results.meta.stats, 'reported')}
                                 />
 
                                 <Filter

@@ -85,7 +85,7 @@ class App extends Component {
         let userContext = profile ? { codeRegion, codeFinanceur, profile } : null;
         let backoffices = {
             moderateur: () => ({
-                defaultPath: '/admin/moderateur/moderation/avis/stagiaires',
+                defaultPath: '/admin/moderateur/moderation/avis/stagiaires?status=none',
                 headerItems: <ModerateurHeaderItems />,
                 routes: <ModerateurRoutes />,
                 logo: logoModerateur,
@@ -120,6 +120,7 @@ class App extends Component {
                         <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
                         <MiscRoutes />
                         {layout.routes}
+                        <Route render={() => <Redirect to={layout.defaultPath} />} />
                     </div>
                 </UserContext.Provider>
             );

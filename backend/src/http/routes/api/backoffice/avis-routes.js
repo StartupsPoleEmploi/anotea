@@ -1,98 +1,102 @@
-const express = require('express');
 const Joi = require('joi');
+const _ = require('lodash');
+const moment = require('moment');
+const express = require('express');
 const Boom = require('boom');
-const isEmail = require('isemail').validate;
 const ObjectID = require('mongodb').ObjectID;
-const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../../routes-utils');
-const computeModerationStats = require('./utils/computeModerationStats');
-const { objectId } = require('../../../../../common/validators');
-const { IdNotFoundError } = require('../../../../../common/errors');
+const { objectId } = require('../../../../common/validators');
+const { IdNotFoundError } = require('../../../../common/errors');
+const computeAvisStats = require('./utils/computeAvisStats');
+const avisCSVColumnsMapper = require('./utils/avisCSVColumnsMapper');
+const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 
-module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
+module.exports = ({ db, middlewares, configuration, logger, moderation, mailing, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
+    let allProfiles = checkProfile('moderateur', 'financeur', 'organisme');
     let itemsPerPage = configuration.api.pagination;
+    let validators = require('./utils/validators')(regions);
+    let queries = require('./utils/searchQueries')(db);
 
-    const getStagiaire = async email => {
-        return db.collection('trainee').findOne({ 'trainee.email': email });
-    };
+    router.get('/backoffice/avis', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 
-    router.get('/backoffice/moderateur/avis', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-
-        let codeRegion = req.user.codeRegion;
-        let { status, reponseStatus, fulltext, page, sortBy } = await Joi.validate(req.query, {
-            status: Joi.string(),
-            reponseStatus: Joi.string(),
-            fulltext: Joi.string().allow('').default(''),
-            page: Joi.number().min(0).default(0),
-            sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
+        let user = req.user;
+        let parameters = await Joi.validate(req.query, {
+            ...validators.form(user),
+            ...validators.filters(),
+            ...validators.sort(),
+            ...validators.pagination(),
         }, { abortEarly: false });
-
-        let isEmailSearch = isEmail(fulltext);
-        let stagiaire = null;
-        if (isEmailSearch) {
-            stagiaire = await getStagiaire(fulltext);
-        }
 
         let cursor = db.collection('comment')
         .find({
-            codeRegion: codeRegion,
-            archived: false,
-            ...(['none', 'published', 'rejected'].includes(status) ? { comment: { $ne: null } } : {}),
-            ...(status === 'rejected' ? { rejected: true } : {}),
-            ...(status === 'published' ? { published: true } : {}),
-            ...(status === 'reported' ? { reported: true } : {}),
-            ...(status === 'none' ? { moderated: { $ne: true } } : {}),
-            ...(reponseStatus ? { reponse: { $exists: true } } : {}),
-            ...(['none', 'published', 'rejected'].includes(reponseStatus) ? { 'reponse.status': reponseStatus } : {}),
-            ...(isEmailSearch ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
-            ...(fulltext && !isEmailSearch ? { $text: { $search: fulltext } } : {}),
+            ...await queries.form(user, parameters),
+            ...queries.filters(parameters),
         })
-        .project(fulltext ? { score: { $meta: 'textScore' } } : {})
-        .sort(fulltext ? { score: { $meta: 'textScore' } } : { [sortBy]: -1 })
-        .skip((page || 0) * itemsPerPage)
+        .sort({ [parameters.sortBy]: -1 })
+        .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 
-        let [total, itemsOnThisPage, stats] = await Promise.all([
+        let [total, itemsOnThisPage] = await Promise.all([
             cursor.count(),
             cursor.count(true),
-            computeModerationStats(db, codeRegion),
         ]);
 
         return sendArrayAsJsonStream(cursor.stream(), res, {
             arrayPropertyName: 'avis',
             arrayWrapper: {
                 meta: {
-                    stats: stats,
                     pagination: {
-                        page,
+                        page: parameters.page,
                         itemsPerPage,
                         itemsOnThisPage,
                         totalItems: total,
                         totalPages: Math.ceil(total / itemsPerPage),
                     },
-                    ...(!stagiaire ? {} : {
-                        stagiaire: {
-                            email: stagiaire.trainee.email,
-                            dnIndividuNational: stagiaire.trainee.dnIndividuNational,
-                        },
-                        fulltext,
-                    })
                 }
             }
         });
     }));
 
-    router.get('/backoffice/moderateur/stats', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/avis.csv', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
 
-        let codeRegion = req.user.codeRegion;
+        let user = req.user;
+        let parameters = await Joi.validate(req.query, {
+            ...validators.form(user),
+            ...validators.filters(),
+            ...validators.sort(),
+        }, { abortEarly: false });
 
-        res.json(await computeModerationStats(db, codeRegion));
+        let stream = db.collection('comment')
+        .find({
+            ...await queries.form(user, parameters),
+            ...queries.filters(parameters),
+        })
+        .sort({ [parameters.sortBy]: -1 })
+        .stream();
+
+        try {
+            await sendCSVStream(stream, res, avisCSVColumnsMapper(), { filename: 'avis.csv' });
+        } catch (e) {
+            //FIXME we must handle errors
+            logger.error('Unable to send CSV file', e);
+        }
     }));
 
-    router.put('/backoffice/moderateur/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.get('/backoffice/avis/stats', checkAuth, allProfiles, tryAndCatch(async (req, res) => {
+
+        let user = req.user;
+        let parameters = await Joi.validate(req.query, {
+            ...validators.form(user),
+        }, { abortEarly: false });
+
+        let query = await queries.form(user, parameters);
+        res.json(await computeAvisStats(db, query));
+    }));
+
+    router.put('/backoffice/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
@@ -102,7 +106,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         return res.json(avis);
     }));
 
-    router.put('/backoffice/moderateur/avis/:id/title', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/title', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
@@ -112,7 +116,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         return res.json(avis);
     }));
 
-    router.put('/backoffice/moderateur/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { sendInjureMail, sendAlerteMail } = mailing;
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -147,7 +151,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         return res.json(avis);
     }));
 
-    router.delete('/backoffice/moderateur/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
@@ -156,7 +160,7 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         return res.json({ 'message': 'avis deleted' });
     }));
 
-    router.put('/backoffice/moderateur/avis/:id/publish', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.put('/backoffice/avis/:id/publish', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const { sendAvisPublieMail } = mailing;
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -178,9 +182,9 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
         sendAvisPublieMail(email, trainee, avis, 'avis publié');
 
         return res.json(avis);
-    });
+    }));
 
-    router.put('/backoffice/moderateur/avis/:id/edit', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.put('/backoffice/avis/:id/edit', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         const { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -189,9 +193,9 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
         return res.json(avis);
 
-    });
+    }));
 
-    router.put('/backoffice/moderateur/avis/:id/publishReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.put('/backoffice/avis/:id/publishReponse', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
@@ -199,9 +203,9 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
         return res.json(avis);
 
-    });
+    }));
 
-    router.put('/backoffice/moderateur/avis/:id/rejectReponse', checkAuth, checkProfile('moderateur'), async (req, res) => {
+    router.put('/backoffice/avis/:id/rejectReponse', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
         let avis = await moderation.rejectReponse(id, { event: { origin: getRemoteAddress(req) } });
@@ -210,9 +214,9 @@ module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
         return res.json(avis);
 
-    });
+    }));
 
-    router.put('/backoffice/moderateur/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { sendVotreAvisEmail } = mailing;
 
         const parameters = await Joi.validate(req.params, {

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { rejectReponse } from '../../../moderateur/moderation-avis/moderationService';
+import { rejectReponse } from '../../../avisService';
 import Button from '../../Button';
 
 export default class RejectReponseButton extends React.Component {

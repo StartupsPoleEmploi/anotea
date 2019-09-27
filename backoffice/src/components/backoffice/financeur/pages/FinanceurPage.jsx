@@ -185,18 +185,6 @@ export default class FinanceurPage extends React.Component {
         });
     };
 
-    getFormAsQuery = () => {
-        let { form } = this.state;
-        return {
-            codeFinanceur: _.get(form, 'financeurs.selected.code', null),
-            departement: _.get(form, 'departements.selected.code', null),
-            siren: _.get(form, 'organismes.selected.siren', null),
-            idFormation: _.get(form, 'formations.selected.idFormation', null),
-            startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
-            scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
-        };
-    };
-
     isFormPristine = () => {
 
         let { form } = this.state;
@@ -208,14 +196,34 @@ export default class FinanceurPage extends React.Component {
             form.periode.pristine;
     };
 
-    onSubmit = () => {
-        return this.props.navigator.refreshCurrentPage(this.getFormAsQuery());
+    getQueryFormParameters = () => {
+        let query = this.props.navigator.getQuery();
+        return _.pick(query, ['codeFinanceur', 'departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']);
     };
 
-    onTabClicked = (tab, data) => {
+    onSubmit = () => {
+        let { form } = this.state;
+        return this.props.navigator.refreshCurrentPage({
+            codeFinanceur: _.get(form, 'financeurs.selected.code', null),
+            departement: _.get(form, 'departements.selected.code', null),
+            siren: _.get(form, 'organismes.selected.siren', null),
+            idFormation: _.get(form, 'formations.selected.idFormation', null),
+            startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
+            scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
+        });
+    };
+
+    onTabClicked = (tab, parameters = {}) => {
         return this.props.navigator.goToPage(`/admin/financeur/avis/${tab}`, {
-            ...this.getFormAsQuery(),
-            ...data
+            ...this.getQueryFormParameters(),
+            ...parameters
+        });
+    };
+
+    onFilterClicked = parameters => {
+        return this.props.navigator.refreshCurrentPage({
+            ...this.getQueryFormParameters(),
+            ...parameters,
         });
     };
 
@@ -223,6 +231,7 @@ export default class FinanceurPage extends React.Component {
         let { navigator } = this.props;
         let { form } = this.state;
         let { departements, organismes, formations, financeurs, periode } = form;
+        let query = navigator.getQuery();
 
         return (
             <Page
@@ -326,26 +335,21 @@ export default class FinanceurPage extends React.Component {
                         <Tab
                             label="Liste des avis"
                             isActive={() => navigator.isActive('/admin/financeur/avis/liste')}
-                            onClick={() => this.onTabClicked('liste', { status: 'all' })} />
+                            onClick={() => this.onTabClicked('liste')} />
                     </Tabs>
                 }
                 panel={
                     navigator.isActive('/admin/financeur/avis/liste') ?
                         <AvisPanel
-                            query={navigator.getQuery()}
+                            query={query}
                             form={form}
-                            onNewQuery={data => {
-                                return navigator.refreshCurrentPage({
-                                    ...this.getFormAsQuery(),
-                                    ...data,
-                                });
-                            }} /> :
+                            onFilterClicked={this.onFilterClicked} /> :
                         <Route
                             path={'/admin/financeur/avis/stats'}
                             render={() => {
                                 return (
                                     <StatsPanel
-                                        query={navigator.getQuery()}
+                                        query={query}
                                         form={form}
                                     />
                                 );

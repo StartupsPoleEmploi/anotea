@@ -16,7 +16,7 @@ export default class InputText extends React.Component {
 
         return (
             <div className="InputText">
-                <div className="d-flex align-items-stretch h-100">
+                <div className="d-flex align-items-stretch">
 
                     {icon &&
                     <div className="icon d-flex align-items-center">
@@ -26,7 +26,7 @@ export default class InputText extends React.Component {
 
                     <input
                         type="text"
-                        className={`h-100 ${icon ? 'with-icon' : ''} ${reset ? 'with-reset' : ''} ${error ? 'with-error' : ''}`}
+                        className={`${icon ? 'with-icon' : ''} ${reset ? 'with-reset' : ''} ${error ? 'with-error' : ''}`}
                         {..._.omit(this.props, ['icon', 'reset', 'error'])}
                     />
 

@@ -4,14 +4,13 @@ const express = require('express');
 const moment = require('moment');
 const { round } = require('../../../../common/utils/number-utils');
 const { isPoleEmploi } = require('../../../../common/utils/financeurs');
-const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
+const { tryAndCatch, sendArrayAsJsonStream } = require('../../routes-utils');
 
-module.exports = ({ db, middlewares, configuration, regions, logger }) => {
+module.exports = ({ db, middlewares, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let itemsPerPage = configuration.api.pagination;
 
     let getFormValidators = user => {
         return {
@@ -21,13 +20,6 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
             idFormation: Joi.string(),
             startDate: Joi.number(),
             scheduledEndDate: Joi.number(),
-        };
-    };
-
-    let getFiltersValidators = () => {
-        return {
-            status: Joi.string().allow(['all', 'reported', 'rejected']),
-            qualification: Joi.string().allow(['all', 'négatif', 'positif']),
         };
     };
 
@@ -42,17 +34,6 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
             ...(idFormation ? { 'training.idFormation': idFormation } : {}),
             ...(startDate ? { 'training.startDate': { $lte: moment(startDate).toDate() } } : {}),
             ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
-        };
-    };
-
-    let buildFiltersQuery = parameters => {
-        let { status, qualification } = parameters;
-
-        return {
-            ...(qualification ? { comment: { $ne: null } } : {}),
-            ...(['positif', 'négatif'].includes(qualification) ? { qualification } : {}),
-            ...(status === 'reported' ? { reported: true } : {}),
-            ...(status === 'rejected' ? { rejected: true } : {}),
         };
     };
 
@@ -131,122 +112,6 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         .stream();
 
         return sendArrayAsJsonStream(stream, res);
-    }));
-
-    router.get('/backoffice/financeur/avis', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
-
-        let parameters = await Joi.validate(req.query, {
-            ...getFormValidators(req.user),
-            ...getFiltersValidators(),
-            page: Joi.number().min(0).default(0),
-            sortBy: Joi.string().allow(['date', 'lastStatusUpdate']).default('date'),
-        }, { abortEarly: false });
-
-
-        let cursor = db.collection('comment')
-        .find({
-            ...buildFormQuery(req.user, parameters),
-            ...buildFiltersQuery(parameters)
-        })
-        .sort({ [parameters.sortBy]: -1 })
-        .skip((parameters.page || 0) * itemsPerPage)
-        .limit(itemsPerPage);
-
-        let [total, itemsOnThisPage] = await Promise.all([
-            cursor.count(),
-            cursor.count(true),
-        ]);
-
-        return sendArrayAsJsonStream(cursor.stream(), res, {
-            arrayPropertyName: 'avis',
-            arrayWrapper: {
-                meta: {
-                    pagination: {
-                        page: parameters.page,
-                        itemsPerPage,
-                        itemsOnThisPage,
-                        totalItems: total,
-                        totalPages: Math.ceil(total / itemsPerPage),
-                    },
-                }
-            }
-        });
-    }));
-
-    router.get('/backoffice/financeur/avis.csv', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {
-
-        let parameters = await Joi.validate(req.query, {
-            ...getFormValidators(req.user),
-            ...getFiltersValidators(),
-            token: Joi.string(),
-        }, { abortEarly: false });
-
-        let cursor = db.collection('comment')
-        .find({
-            ...buildFormQuery(req.user, parameters),
-            ...buildFiltersQuery(parameters)
-        })
-        .sort({ [parameters.sortBy]: -1 });
-
-        let sanitizeNote = note => `${note}`.replace(/\./g, ',');
-        let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').replace(/\r/g, ' ').replace(/\n/g, ' ').trim();
-        let getStatus = comment => {
-            if (comment.archived === true) {
-                return 'Archivé';
-            } else if (comment.published === true || comment.comment === undefined || comment.comment === null) {
-                return 'Publié';
-            } else {
-                return 'En attente de modération';
-            }
-        };
-
-        let getReponseStatus = reponse => {
-            switch (reponse.status) {
-                case 'rejected':
-                    return 'Rejetée';
-                case 'published':
-                    return 'Validée';
-                default:
-                    return 'En attente de modération';
-            }
-        };
-
-        try {
-            await sendCSVStream(cursor.stream(), res, {
-                'id': comment => comment._id,
-                'note accueil': comment => sanitizeNote(comment.rates.accueil),
-                'note contenu formation': comment => sanitizeNote(comment.rates.contenu_formation),
-                'note equipe formateurs': comment => sanitizeNote(comment.rates.equipe_formateurs),
-                'note matériel': comment => sanitizeNote(comment.rates.moyen_materiel),
-                'note accompagnement': comment => sanitizeNote(comment.rates.accompagnement),
-                'note global': comment => sanitizeNote(comment.rates.global),
-                'pseudo': comment => sanitizeString(_.get(comment, 'comment.pseudo', '')),
-                'titre': comment => sanitizeString(_.get(comment, 'comment.title', '')),
-                'commentaire': comment => sanitizeString(_.get(comment, 'comment.text', '')),
-                'qualification': comment => `${comment.qualification} ${comment.rejectReason}`,
-                'statut': comment => getStatus(comment),
-                'réponse': comment => sanitizeString(_.get(comment, 'reponse.text', '')),
-                'réponse statut': comment => comment.reponse ? getReponseStatus(comment.reponse.status) : '',
-                'id formation': comment => comment.training.idFormation,
-                'titre formation': comment => comment.training.title,
-                'date début': comment => moment(comment.training.startDate).format('DD/MM/YYYY'),
-                'date de fin prévue': comment => moment(comment.training.scheduledEndDate).format('DD/MM/YYYY'),
-                'siret organisme': comment => comment.training.organisation.siret,
-                'libellé organisme': comment => comment.training.organisation.label,
-                'nom organisme': comment => comment.training.organisation.name,
-                'code postal': comment => comment.training.place.postalCode,
-                'ville': comment => comment.training.place.city,
-                'id certif info': comment => comment.training.certifInfo.id,
-                'libellé certifInfo': comment => comment.training.certifInfo.label,
-                'id session': comment => comment.training.idSession,
-                'formacode': comment => comment.training.formacode,
-                'AES reçu': comment => comment.training.aesRecu,
-                'code financeur': comment => comment.training.codeFinanceur,
-            }, { filename: 'avis.csv' });
-        } catch (e) {
-            //FIXME we must handle errors
-            logger.error('Unable to send CSV file', e);
-        }
     }));
 
     router.get('/backoffice/financeur/stats', checkAuth, checkProfile('financeur'), tryAndCatch(async (req, res) => {

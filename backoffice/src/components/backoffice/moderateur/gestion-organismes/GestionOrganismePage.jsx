@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { getExportAvisUrl, searchOrganismes } from './gestionOrganismesService';
-import Organisme from './components/Organisme';
+import Organisme from '../../common/organisme/Organisme';
 import Summary from '../../common/page/panel/summary/Summary';
 import Pagination from '../../common/page/panel/pagination/Pagination';
 import ResultDivider from '../../common/page/panel/results/ResultDivider';
@@ -14,6 +14,7 @@ import { Form } from '../../common/page/form/Form';
 import Button from '../../common/Button';
 import InputText from '../../common/page/form/InputText';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
+import GlobalMessage from '../../common/message/GlobalMessage';
 
 export default class GestionOrganismePage extends React.Component {
 
@@ -193,7 +194,7 @@ export default class GestionOrganismePage extends React.Component {
                                                         onChange={(avis, options = {}) => {
                                                             let { message } = options;
                                                             if (message) {
-                                                                this.setState({ message: message });
+                                                                this.setState({ message });
                                                             }
                                                             return this.search({ silent: true });
                                                         }} />
@@ -201,6 +202,13 @@ export default class GestionOrganismePage extends React.Component {
                                                 </div>
                                             );
                                         })
+                                    }
+                                    {this.state.message &&
+                                    <GlobalMessage
+                                        message={this.state.message}
+                                        onClose={() => {
+                                            return this.setState({ message: null });
+                                        }} />
                                     }
                                 </>
                         }
