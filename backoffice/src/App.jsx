@@ -120,7 +120,6 @@ class App extends Component {
                         <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
                         <MiscRoutes />
                         {layout.routes}
-                        <Route render={() => <Redirect to={layout.defaultPath} />} />
                     </div>
                 </UserContext.Provider>
             );

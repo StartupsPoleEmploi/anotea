@@ -10,6 +10,11 @@
     padding: 0.30rem;
   }
 
+  .Select__single-value {
+    font-size: 1rem;
+    color: $color-black;
+  }
+
   .Select__control--is-focused {
     background-color: $color-grey-5;
     box-shadow: 0 0 1px 3px #C3C9E5;
@@ -23,9 +28,6 @@
     padding: 0.5rem;
     font-size: 0.875rem;
     border-bottom: solid 1px $color-grey-5;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .Select__option--is-focused {
@@ -41,6 +43,21 @@
   }
 
   .Select__indicator-separator {
-    width: 0px;
+    width: 0;
+  }
+
+  .Select__meta {
+    color: $color-black-80;
+  }
+
+  .Select__label {
+    color: $color-black;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .Select__label--with-meta {
+    max-width: 85%;
   }
 }

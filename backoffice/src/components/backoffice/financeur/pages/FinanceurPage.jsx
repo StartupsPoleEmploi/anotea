@@ -254,7 +254,7 @@ export default class FinanceurPage extends React.Component {
                                     options={departements.results}
                                     loading={departements.loading}
                                     optionKey="code"
-                                    optionLabel="label"
+                                    label={option => option.label}
                                     placeholder={'Tous les départements'}
                                     onChange={option => this.updateSelectBox('departements', option)}
                                 />
@@ -266,7 +266,7 @@ export default class FinanceurPage extends React.Component {
                                     options={organismes.results}
                                     loading={organismes.loading}
                                     optionKey="siren"
-                                    optionLabel="name"
+                                    label={option => option.label}
                                     placeholder={'Tous les organismes'}
                                     onChange={async option => {
                                         await this.updateSelectBox('organismes', option);
@@ -284,7 +284,7 @@ export default class FinanceurPage extends React.Component {
                                     options={formations.results}
                                     loading={formations.loading}
                                     optionKey="idFormation"
-                                    optionLabel="title"
+                                    label={option => option.title}
                                     placeholder={'Toutes les formations'}
                                     onChange={option => this.updateSelectBox('formations', option)}
                                 />
@@ -299,7 +299,7 @@ export default class FinanceurPage extends React.Component {
                                         options={financeurs.results}
                                         loading={financeurs.loading}
                                         optionKey="code"
-                                        optionLabel="label"
+                                        label={option => option.label}
                                         placeholder={'Tous les financeurs'}
                                         onChange={option => this.updateSelectBox('financeurs', option)}
                                     />
