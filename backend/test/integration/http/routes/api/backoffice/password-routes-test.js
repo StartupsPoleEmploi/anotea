@@ -19,16 +19,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let response = await request(app)
         .put('/api/backoffice/askNewPassword')
-        .send({ username: '6080274100045' });
+        .send({ identifiant: '6080274100045' });
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
             message: 'mail sent',
         });
 
         let { mailer } = await getComponents();
         let email = mailer.getCalls()[0];
-        assert.deepEqual(email[0], { to: 'contactus@poleemploi-formation.fr' });
+        assert.deepStrictEqual(email[0], { to: 'contactus@poleemploi-formation.fr' });
     });
 
     it('can not ask for a new password with an invalid identifier', async () => {
@@ -37,10 +37,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let response = await request(app)
         .put('/api/backoffice/askNewPassword')
-        .send({ username: 'INVALID' });
+        .send({ identifiant: 'INVALID' });
 
-        assert.equal(response.statusCode, 400);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
             statusCode: 400,
             error: 'Bad Request',
             message: 'Identifiant invalide'
@@ -58,8 +58,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app)
         .get(`/api/backoffice/checkIfPasswordTokenExists?token=${token}`);
 
-        assert.equal(response.statusCode, 200);
-        assert.deepEqual(response.body, {
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
             message: 'token exists',
         });
     });
@@ -89,20 +89,20 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             password: 'A1234!',
         });
 
-        assert.equal(response.statusCode, 201);
-        assert.deepEqual(response.body.message, 'Account successfully updated');
+        assert.strictEqual(response.statusCode, 201);
+        assert.deepStrictEqual(response.body.message, 'Account successfully updated');
 
         //Token should be remove
         response = await request(app)
         .get(`/api/backoffice/checkIfPasswordTokenExists?token=${token}`);
-        assert.equal(response.statusCode, 404);
-        assert.deepEqual(response.body, { error: 'Not found' });
+        assert.strictEqual(response.statusCode, 404);
+        assert.deepStrictEqual(response.body, { error: 'Not found' });
 
         //can login with new password
         response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: '11111111111111', password: 'A1234!' });
-        assert.equal(response.statusCode, 200);
+        .send({ identifiant: '11111111111111', password: 'A1234!' });
+        assert.strictEqual(response.statusCode, 200);
 
         //should flag account as rehashed
         let db = await getTestDatabase();
@@ -136,6 +136,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             password: 'INVALID'
         });
 
-        assert.equal(response.statusCode, 422);
+        assert.strictEqual(response.statusCode, 400);
     });
 }));

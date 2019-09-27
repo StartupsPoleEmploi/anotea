@@ -16,5 +16,10 @@
     .close {
       padding: 0.5rem 1.25rem;
     }
+
+    &.error {
+      color: $color-red;
+      background-color: $color-red-10;
+    }
   }
 }

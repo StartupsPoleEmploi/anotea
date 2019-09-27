@@ -6,7 +6,7 @@ import './Panel.scss';
 const Panel = props => {
 
     return (
-        <div className={`Panel ${props.className || ''} ${props.backgroundColor || ''}`}>
+        <div className={`Panel ${props.className || ''} ${props.backgroundColor || ''}`} style={props.style || {}}>
             {props.filters &&
             <div className="filters-holder">
                 <div className="container">
@@ -16,7 +16,7 @@ const Panel = props => {
             }
 
             {props.loading ?
-                <div className="d-flex justify-content-center"><Loader /></div> :
+                <Loader centered={true} /> :
                 <div className="container">
                     <div className="summary-holder">
                         {props.summary}
@@ -38,6 +38,7 @@ Panel.propTypes = {
     pagination: PropTypes.node,
     loading: PropTypes.bool,
     className: PropTypes.string,
+    style: PropTypes.object,
     backgroundColor: PropTypes.string,
 };
 

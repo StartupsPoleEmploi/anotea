@@ -74,7 +74,7 @@ module.exports = ({ db, auth, middlewares }) => {
         let accessToken = await getAccessToken(organisme);
 
         return res.json({
-            url: `${configuration.app.public_hostname}/admin?action=loginWithAccessToken&origin=kairos&access_token=${accessToken}`,
+            url: `${configuration.app.public_hostname}/admin/login?origin=kairos&access_token=${accessToken}`,
             meta: {
                 created,
                 organisme: createOrganismeFomateurDTO(organisme, { notes_decimales: true }),

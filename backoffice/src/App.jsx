@@ -1,194 +1,88 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import fr from 'react-intl/locale-data/fr';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import jwtDecode from 'jwt-decode';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import { removeToken, setToken } from './utils/token';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { getSession, getToken, removeSession, setSession } from './utils/session';
 import { subscribeToHttpEvent } from './utils/http-client';
 import DeprecatedHeader from './components/backoffice/common/deprecated/header/DeprecatedHeader';
 import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel.jsx';
-import AccountActivation from './components/backoffice/organisation/AccountActivation';
-import ForgottenPassword from './components/login/ForgottenPassword';
-import LoginForm from './components/login/LoginForm';
-import LoginWithAccessToken from './components/login/LoginWithAccessToken';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
 import MonComptePanel from './components/backoffice/organisation/MonComptePanel';
 import GridDisplayer from './components/backoffice/common/GridDisplayer';
 import Header from './components/backoffice/common/header/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
 import FinanceurRoutes from './components/backoffice/financeur/FinanceurRoutes';
-import UserContext from './components/UserContext';
-import './utils/moment-fr';
-import './App.scss';
 import ModerateurHeaderItems from './components/backoffice/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/backoffice/financeur/FinanceurHeaderItems';
 import logoModerateur from './components/backoffice/common/header/logo-moderateur.svg';
 import logoFinanceur from './components/backoffice/common/header/logo-financeur.svg';
+import logoDefault from './components/backoffice/common/header/logo-default.svg';
+import AnonymousRoutes from './components/anonymous/AuthRoutes';
+import UserContext from './components/UserContext';
+import './App.scss';
+import './utils/moment-fr';
 
 
 addLocaleData([...fr]);
 
 class App extends Component {
 
+    static propTypes = {
+        navigator: PropTypes.object.isRequired,
+    };
+
     state = {
-        loggedIn: false,
-        profile: null,
+        profile: 'anonymous',
         action: null,
-        forgottenPassword: false,
-        page: 'moderation',
     };
 
     constructor(props) {
         super(props);
-        const userId = sessionStorage.getItem('userId');
         subscribeToHttpEvent('http:error', response => {
             if (response.status === 401) {
-                this.handleLogout();
+                this.onLogout();
             }
         });
 
-        if (userId !== undefined && userId !== null) {
+        if (getToken()) {
             this.state = {
-                errorLogin: false,
-                loggedIn: true,
-                id: sessionStorage.userId,
-                profile: sessionStorage.userProfile,
-                codeRegion: sessionStorage.userCodeRegion,
-                codeFinanceur: sessionStorage.userCodeFinanceur,
-                raisonSociale: sessionStorage.userRaisonSociale,
-                action: null,
-                features: sessionStorage.features,
-                page: 'moderation',
+                ...getSession(),
             };
         }
+
         const qs = queryString.parse(window.location.search);
         if (qs.action === 'creation') {
             this.state = {
-                loggedIn: false,
                 profile: 'organisme',
                 action: 'creation',
                 token: qs.token
             };
-        } else if (qs.action === 'passwordLost') {
-            this.state = {
-                forgottenPassword: true,
-                action: 'passwordLost',
-                token: qs.token
-            };
-        } else if (qs.action === 'loginWithAccessToken') {
-            this.state = {
-                action: 'loginWithAccessToken',
-                access_token: qs.access_token,
-                origin: qs.origin,
-            };
         }
     }
 
-    handleLogout = () => {
-        this.setState({
-            loggedIn: false,
-            action: null,
-            profile: null,
-            forgottenPassword: false
-        });
-        delete sessionStorage.userId;
-        delete sessionStorage.userProfile;
-        delete sessionStorage.userCodeRegion;
-        delete sessionStorage.userCodeFinanceur;
-        delete sessionStorage.userRaisonSociale;
-        delete sessionStorage.features;
-        removeToken();
-        //Reload page to flush all react states
-        window.location.href = '/admin';
+    onLogout = () => {
+        removeSession();
+        window.location.href = '/admin';//Reload page to flush all react states
     };
 
-    handleLoggedIn = result => {
+    onLogin = results => {
 
-        let { profile, id, codeRegion, codeFinanceur, raisonSociale, features } = jwtDecode(result.access_token);
-
-        sessionStorage.userId = id;
-        sessionStorage.userProfile = profile;
-        sessionStorage.userCodeRegion = codeRegion;
-        sessionStorage.userCodeFinanceur = codeFinanceur;
-        sessionStorage.userRaisonSociale = raisonSociale;
-        sessionStorage.features = features;
-        setToken(result.access_token);
+        setSession({ ...results, ...jwtDecode(results.access_token) });
 
         this.setState({
-            errorLogin: false,
-            loggedIn: true,
-            profile,
-            id,
-            codeRegion: codeRegion,
-            codeFinanceur: codeFinanceur,
-            raisonSociale: raisonSociale,
-            features: features
+            ...getSession(),
         });
-    };
 
-    handleError = () => {
-        this.setState({ action: null, forgottenPassword: false });
-        history.pushState(null, '', location.href.split('?')[0]);  // eslint-disable-line
-    };
-
-    handleForgottenPassword = () => {
-        this.setState({ forgottenPassword: true, action: null });
-        history.pushState(null, '', location.href.split('?')[0]);  // eslint-disable-line
-    };
-
-    showUnauthenticatedPages = () => {
-
-        //Use deprecated design
-
-        let showLoginForm = ((!this.state.loggedIn && this.state.action === null) && !this.state.forgottenPassword);
-        let showLoginWithAccessToken = !this.state.loggedIn && this.state.action === 'loginWithAccessToken';
-
-        return (
-            <Router>
-                <div className="anotea-deprecated App">
-                    <DeprecatedHeader
-                        handleLogout={this.handleLogout}
-                        loggedIn={this.state.loggedIn}
-                        profile={this.state.profile}
-                        raisonSociale={this.state.raisonSociale}
-                        codeFinanceur={this.state.codeFinanceur}
-                        codeRegion={this.state.codeRegion} />
-
-                    {this.state.action === 'creation' &&
-                    <AccountActivation
-                        handleForgottenPassword={this.handleForgottenPassword}
-                        token={this.state.token}
-                        onError={this.handleError} onSuccess={this.handleLogout} />}
-
-                    {this.state.forgottenPassword &&
-                    <ForgottenPassword
-                        passwordLost={this.state.action === 'passwordLost'}
-                        token={this.state.token}
-                        onError={this.handleError}
-                        onSuccess={this.handleLogout} />}
-
-                    {showLoginWithAccessToken &&
-                    <LoginWithAccessToken
-                        access_token={this.state.access_token}
-                        origin={this.state.origin}
-                        handleLoggedIn={this.handleLoggedIn}
-                        handleLogout={this.handleLogout} />}
-
-                    {showLoginForm &&
-                    <LoginForm
-                        handleForgottenPassword={this.handleForgottenPassword}
-                        handleLoggedIn={this.handleLoggedIn} />
-                    }
-                </div>
-            </Router>
-        );
+        this.props.navigator.goToPage('/admin');
     };
 
     showBackofficePages = () => {
 
         let { profile, codeRegion, codeFinanceur, features, id } = this.state;
-        let userContext = { codeRegion, codeFinanceur, profile };
+        let userContext = profile ? { codeRegion, codeFinanceur, profile } : null;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires',
@@ -201,86 +95,81 @@ class App extends Component {
                 headerItems: <FinanceurHeaderItems />,
                 routes: <FinanceurRoutes />,
                 logo: logoFinanceur,
+            }),
+            anonymous: () => ({
+                defaultPath: '/admin/login',
+                headerItems: <div />,
+                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} />,
+                logo: logoDefault,
             })
         };
 
         //Use new design
-        if (['moderateur', 'financeur'].includes(this.state.profile)) {
+        if (['anonymous', 'moderateur', 'financeur'].includes(this.state.profile)) {
 
             let layout = backoffices[profile]();
 
             return (
-                <Router>
-                    <UserContext.Provider value={userContext}>
-                        <div className="anotea">
-                            <Switch>
-                                <Redirect exact from="/" to={layout.defaultPath} />
-                                <Redirect exact from="/admin" to={layout.defaultPath} />
-                            </Switch>
+                <UserContext.Provider value={userContext}>
+                    <div className="anotea">
+                        <Switch>
+                            <Redirect exact from="/" to={layout.defaultPath} />
+                            <Redirect exact from="/admin" to={layout.defaultPath} />
+                        </Switch>
 
-                            <Header
-                                profile={profile}
-                                items={layout.headerItems}
-                                logo={layout.logo}
-                                onLogout={this.handleLogout}
-                            />
-
-                            <MiscRoutes />
-                            {layout.routes}
-                        </div>
-                    </UserContext.Provider>
-                </Router>
+                        <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
+                        <MiscRoutes />
+                        {layout.routes}
+                    </div>
+                </UserContext.Provider>
             );
         }
 
         //Use deprecated design
         return (
-            <Router>
-                <div>
-                    <div className="anotea-deprecated App">
-                        <DeprecatedHeader
-                            handleLogout={this.handleLogout}
-                            loggedIn={this.state.loggedIn}
-                            profile={profile}
-                            raisonSociale={this.state.raisonSociale}
-                            codeFinanceur={codeFinanceur}
-                            codeRegion={codeRegion}
-                            region={this.state.region} />
+            <div className="anotea-deprecated App">
+                <DeprecatedHeader
+                    handleLogout={this.onLogout}
+                    loggedIn={true}
+                    profile={profile}
+                    raisonSociale={this.state.raisonSociale}
+                    codeFinanceur={codeFinanceur}
+                    codeRegion={codeRegion}
+                    region={this.state.region} />
 
-                        <Switch>
-                            <Redirect exact from="/" to="/admin" />
-                        </Switch>
+                <Switch>
+                    <Redirect exact from="/" to="/admin" />
+                </Switch>
 
-                        <Route
-                            path="/mon-compte"
-                            render={props => (<MonComptePanel {...props} />)} />
+                <Route
+                    path="/mon-compte"
+                    render={props => (<MonComptePanel {...props} />)} />
 
-                        <Route
-                            path="/admin"
-                            render={() => (
-                                <div className="main">
-                                    {profile === 'organisme' &&
-                                    <OrganisationPanel
-                                        profile={profile}
-                                        id={id}
-                                        codeRegion={codeRegion}
-                                        features={features} />
-                                    }
-                                </div>)} />
-                    </div>
-                </div>
-            </Router>
+                <Route
+                    path="/admin"
+                    render={() => (
+                        <div className="main">
+                            {profile === 'organisme' &&
+                            <OrganisationPanel
+                                profile={profile}
+                                id={id}
+                                codeRegion={codeRegion}
+                                features={features} />
+                            }
+                        </div>)}
+                />
+            </div>
         );
     };
 
     render() {
         return (
-            <div>
-                {false && <GridDisplayer />}
+            <>
                 <IntlProvider locale="fr">
-                    {this.state.loggedIn ? this.showBackofficePages() : this.showUnauthenticatedPages()}
+                    {this.showBackofficePages()}
                 </IntlProvider>
-            </div>
+                {false && <GridDisplayer />}
+            </>
         );
     }
 }

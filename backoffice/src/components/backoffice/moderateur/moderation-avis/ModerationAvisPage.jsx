@@ -86,11 +86,11 @@ export default class ModerationAvisPage extends React.Component {
 
         return (
             <Page
-                title={<h1 className="title">Avis et données stagiaires</h1>}
+                title="Avis et données stagiaires"
                 className="ModerationAvisPage"
                 form={
                     <div className="d-flex justify-content-center">
-                        <Form className="w-50">
+                        <Form className="a-width-50">
                             <div className="d-flex justify-content-between">
                                 <div className="a-flex-grow-1 mr-2">
                                     <InputText

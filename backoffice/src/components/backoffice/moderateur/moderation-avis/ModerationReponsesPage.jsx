@@ -76,7 +76,7 @@ export default class ModerationReponsesPage extends React.Component {
 
         return (
             <Page
-                title={<h1 className="title">Réponses des organismes</h1>}
+                title="Réponses des organismes"
                 className="ModerationReponsesPage"
                 panel={
                     <Panel

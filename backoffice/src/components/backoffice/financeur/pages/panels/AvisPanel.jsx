@@ -126,7 +126,7 @@ export default class AvisPanel extends React.Component {
                     />}
                 results={
                     this.state.loading ?
-                        <div className="d-flex justify-content-center"><Loader /></div> :
+                        <Loader centered={true} /> :
                         <AvisResults
                             results={results}
                             message={message}
