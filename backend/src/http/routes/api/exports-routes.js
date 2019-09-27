@@ -138,7 +138,7 @@ module.exports = ({ db }) => {
         }, { filename: 'domainMailing.csv' });
     }));
 
-    router.get('/exports/bo-organisme.csv', tryAndCatch((req, res) => {
+    router.get('/exports/bo-organismes.csv', tryAndCatch((req, res) => {
 
         const computeBoStats = () => {
 
@@ -156,18 +156,9 @@ module.exports = ({ db }) => {
                 {
                     $lookup: {
                         from: 'comment',
-                        let: {
-                            training: { organisation: { siret: '$_id' } }
-                        },
-                        pipeline: [
-                            {
-                                $group: {
-                                    _id: null,
-                                    count: { $sum: 1 }
-                                }
-                            },
-                        ],
-                        as: 'avisStats'
+                        localField: '_id',
+                        foreignField: 'training.organisation.siret',
+                        as: 'avis'
                     }
                 }
             ]).stream();
@@ -178,11 +169,11 @@ module.exports = ({ db }) => {
         return sendCSVStream(stream, res, {
             'SIRET': stats => stats._id,
             'Nombre de connexions': stats => stats.loginCount + stats.loginWithTokenCount,
-            'Nombre d\'avis ': stats => stats.avisStats[0].count,
+            'Nombre d\'avis ': stats => stats.avis.length,
             'Nombre d\'avis répondus': stats => stats.reponseCount,
             'Nombre d\'avis signalés': stats => stats.reportCount,
             'Nombre d\'avis Lus': stats => stats.readCount,
-        }, { filename: `bo-organisme-${moment().format('YYYY-MM-DD')}.csv` });
+        }, { filename: `bo-organismes-${moment().format('YYYY-MM-DD')}.csv` });
 
     }));
 
