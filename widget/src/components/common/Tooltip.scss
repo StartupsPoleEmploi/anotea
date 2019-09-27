@@ -2,12 +2,14 @@
 
 .Tooltip {
   display: inline;
+  padding-left: 0.25rem;
 
   .icon {
     position: relative;
     font-size: 0.875rem;
 
     i {
+      font-size: 0.75rem;
       color: $color-black-80;
       top: -2px;
       cursor: pointer;

@@ -63,10 +63,6 @@ class App extends Component {
         this.setState({ score: await getScore(type, identifiant) });
     }
 
-    getOptions() {
-        return (this.props.options || '').split(',');
-    }
-
     render() {
 
         let { format } = this.props;
