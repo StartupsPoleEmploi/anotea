@@ -23,6 +23,9 @@
     padding: 0.5rem;
     font-size: 0.875rem;
     border-bottom: solid 1px $color-grey-5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .Select__option--is-focused {
