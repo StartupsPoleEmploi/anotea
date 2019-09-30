@@ -4,7 +4,7 @@ import Page from '../backoffice/common/page/Page';
 import Panel from '../backoffice/common/page/panel/Panel';
 import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
-import { AuthForm } from './AuthForm';
+import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
 import { askNewPassword } from './authService';
 
 export default class MotDePasseOubliePage extends React.Component {
@@ -45,8 +45,8 @@ export default class MotDePasseOubliePage extends React.Component {
                     <Panel
                         backgroundColor="blue"
                         results={
-                            <AuthForm
-                                title="Mot de passe oublié"
+                            <CenteredForm
+                                title={<div className="a-blue">Mot de passe oublié</div>}
                                 elements={
                                     <>
                                         <label>Entrez votre identifiant</label>

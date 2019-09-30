@@ -67,7 +67,7 @@ module.exports = ({ db, mailing, password }) => {
                     }),
                 ]);
 
-                return res.status(200).json({});
+                return res.json({});
 
             } else {
                 throw Boom.badRequest(`Le mot de passe n'est pas valide.`);

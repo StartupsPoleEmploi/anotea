@@ -27,7 +27,7 @@ module.exports = ({ db, middlewares, password, configuration }) => {
         const token = req.params.token;
 
         let { password } = await Joi.validate(req.body, {
-            password: Joi.string(),
+            password: Joi.string().required(),
         }, { abortEarly: false });
 
         let account = await db.collection('accounts').findOne({ token });
@@ -49,49 +49,36 @@ module.exports = ({ db, middlewares, password, configuration }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.put('/backoffice/accounts/me/updatePassword', checkAuth, tryAndCatch(async (req, res, next) => {
+    router.put('/backoffice/accounts/me/updatePassword', checkAuth, tryAndCatch(async (req, res) => {
 
         let { id } = req.user;
-        let { actualPassword, password } = await Joi.validate(req.body, {
-            actualPassword: Joi.string(),
-            password: Joi.string(),
+        let { current, password } = await Joi.validate(req.body, {
+            current: Joi.string().required(),
+            password: Joi.string().required(),
         }, { abortEarly: false });
 
+        let query = { $or: [{ _id: id }, { _id: new ObjectID(id) }] };
+        let account = await db.collection('accounts').findOne(query);
+        if (account && await checkPassword(current, account.passwordHash, configuration)) {
 
-        try {
-            let account = await db.collection('accounts').findOne({ $or: [{ _id: id }, { _id: new ObjectID(id) }] });
-            if (account && await checkPassword(actualPassword, account.passwordHash, configuration)) {
+            if (isPasswordStrongEnough(password)) {
+                let passwordHash = await hashPassword(password);
+                await db.collection('accounts').updateOne(query, {
+                    $set: {
+                        'meta.rehashed': true,
+                        passwordHash,
+                    }
+                });
 
-                if (isPasswordStrongEnough(password)) {
-                    let passwordHash = await hashPassword(password);
-                    await db.collection('accounts').updateOne({ _id: id }, {
-                        $set: {
-                            'meta.rehashed': true,
-                            passwordHash,
-                        }
-                    });
+                return res.json({});
 
-                    return res.status(200).json();
-
-                } else {
-                    return res.status(422).send({
-                        error: {
-                            message: 'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre et 6 caractères',
-                            type: 'PASSWORD_NOT_STRONG'
-                        }
-                    });
-                }
+            } else {
+                throw Boom.badRequest('Le mot de passe doit contenir au moins une minuscule, ' +
+                    'une majuscule et un chiffre et 6 caractères');
             }
-            return res.status(422).send({
-                error: {
-                    message: 'Le mot de passe n\'est pas correct',
-                    type: 'PASSWORD_INVALID'
-                }
-            });
-
-        } catch (e) {
-            return next(e);
         }
+        throw Boom.badRequest('Le mot de passe n\'est pas correct');
+
     }));
     return router;
 };

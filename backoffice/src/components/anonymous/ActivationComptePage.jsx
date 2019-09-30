@@ -5,7 +5,7 @@ import Panel from '../backoffice/common/page/panel/Panel';
 import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
-import { AuthForm } from './AuthForm';
+import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
 import { activateAccount, getAccount, login } from './authService';
 import { NavLink } from 'react-router-dom';
@@ -86,8 +86,8 @@ export default class ActivationComptePage extends React.Component {
                     <Panel
                         backgroundColor="blue"
                         results={
-                            <AuthForm
-                                title={account.nom}
+                            <CenteredForm
+                                title={<div className="a-blue">{account.nom}</div>}
                                 elements={
                                     <>
                                         <label>Votre identifiant pour la connexion</label>

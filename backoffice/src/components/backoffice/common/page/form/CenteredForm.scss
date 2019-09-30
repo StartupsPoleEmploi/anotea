@@ -1,6 +1,6 @@
-@import '../../styles/variables';
+@import '../../../../../styles/variables';
 
-.AuthForm {
+.CenteredForm {
 
   label {
     font-size: 1rem;
@@ -9,7 +9,6 @@
 
   .title {
     font-size: 1.5rem;
-    color: $color-blue;
     font-weight: $font-weight-900;
     text-align: center;
   }

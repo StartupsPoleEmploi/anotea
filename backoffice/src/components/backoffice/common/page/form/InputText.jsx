@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import FormError from './FormError';
 import './InputText.scss';
 
 export default class InputText extends React.Component {
@@ -37,9 +38,9 @@ export default class InputText extends React.Component {
                     }
                 </div>
                 {error &&
-                <div className="input-error-details">
+                <FormError>
                     {error}
-                </div>
+                </FormError>
                 }
             </div>
         );

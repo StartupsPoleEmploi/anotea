@@ -5,7 +5,7 @@
   height: 100%;
 
   .search-holder {
-    @include profile-color();
+    @include profile-background-color();
     padding-bottom: 1rem;
 
     .title-holder {

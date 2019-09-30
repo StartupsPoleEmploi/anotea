@@ -109,7 +109,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.ok(res.meta.rehashed);
     });
 
-
     it('can not reset password with weak password', async () => {
 
         let app = await startServer();

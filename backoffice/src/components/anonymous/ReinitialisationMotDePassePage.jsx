@@ -5,7 +5,7 @@ import Panel from '../backoffice/common/page/panel/Panel';
 import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
-import { AuthForm } from './AuthForm';
+import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
 import { checkIfPasswordTokenExists, resetPassword } from './authService';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
 import GlobalMessage from '../backoffice/common/message/GlobalMessage';
@@ -38,10 +38,6 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         .catch(this.showErrorMessage);
     }
 
-    showErrorMessage = () => {
-        this.setState({ loading: false, message: 'Une erreur est survenue' });
-    };
-
     onSubmit = () => {
 
         let { password, confirmation } = this.state;
@@ -60,7 +56,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
 
                 resetPassword(password, forgottenPasswordToken)
                 .then(() => this.props.navigator.goToPage('/admin'))
-                .catch(this.showErrorMessage);
+                .catch(() => this.setState({ loading: false, message: 'Une erreur est survenue' }));
             }
         });
     };
@@ -75,8 +71,8 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                     <Panel
                         backgroundColor="blue"
                         results={
-                            <AuthForm
-                                title="Créer un nouveau mot de passe"
+                            <CenteredForm
+                                title={<div className="a-blue">Créer un nouveau mot de passe</div>}
                                 elements={
                                     <>
                                         <label>Nouveau mot de passe</label>

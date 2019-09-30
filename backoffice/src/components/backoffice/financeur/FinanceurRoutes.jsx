@@ -8,7 +8,7 @@ export default class FinanceurRoutes extends React.Component {
 
     render() {
         return (
-            <div>
+            <>
                 <Route
                     path={'/admin/financeur/avis'}
                     render={props => {
@@ -20,7 +20,7 @@ export default class FinanceurRoutes extends React.Component {
                     path={'/admin/financeur/mon-compte'}
                     component={MonComptePage}
                 />
-            </div>
+            </>
         );
     }
 }

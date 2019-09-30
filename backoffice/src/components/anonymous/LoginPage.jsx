@@ -4,7 +4,7 @@ import Page from '../backoffice/common/page/Page';
 import Panel from '../backoffice/common/page/panel/Panel';
 import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
-import { AuthForm } from './AuthForm';
+import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
 import { login, loginWithAccessToken } from './authService';
 import './LoginPage.scss';
 import { NavLink } from 'react-router-dom';
@@ -87,8 +87,8 @@ export default class LoginPage extends React.Component {
                     <Panel
                         backgroundColor="blue"
                         results={
-                            <AuthForm
-                                title="Connexion"
+                            <CenteredForm
+                                title={<div className="a-blue">Connexion</div>}
                                 elements={
                                     <>
                                         <label>Identifiant</label>

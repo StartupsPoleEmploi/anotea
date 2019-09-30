@@ -50,6 +50,14 @@ html, body, #root {
   .a-width-50 {
     width: 50%;
   }
+
+  .a-green {
+    color: $color-green;
+  }
+
+  .a-blue {
+    color: $color-blue;
+  }
 }
 
 .datepicker {

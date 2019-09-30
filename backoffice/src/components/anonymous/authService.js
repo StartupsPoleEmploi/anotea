@@ -25,3 +25,7 @@ export const getAccount = token => {
 export const activateAccount = (token, password) => {
     return _post(`/backoffice/accounts/${token}/activate`, { password });
 };
+
+export const updatePassword = (current, password) => {
+    return _put(`/backoffice/accounts/me/updatePassword`, { current, password });
+};

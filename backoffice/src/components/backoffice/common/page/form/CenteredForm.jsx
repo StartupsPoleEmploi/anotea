@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form } from '../backoffice/common/page/form/Form';
-import './AuthForm.scss';
+import { Form } from './Form';
+import './CenteredForm.scss';
 
-export const AuthForm = props => {
+export const CenteredForm = props => {
     return (
-        <div className="AuthForm row">
+        <div className="CenteredForm row">
             <div className="offset-sm-2 col-sm-8 offset-lg-4 col-lg-4">
                 <Form>
                     <div className="d-flex flex-column">
@@ -23,8 +23,8 @@ export const AuthForm = props => {
     );
 };
 
-AuthForm.propTypes = {
-    title: PropTypes.string.isRequired,
+CenteredForm.propTypes = {
+    title: PropTypes.node.isRequired,
     elements: PropTypes.node.isRequired,
     buttons: PropTypes.node.isRequired,
 };

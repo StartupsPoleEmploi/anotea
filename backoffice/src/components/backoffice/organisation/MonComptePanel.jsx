@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChangePassword } from '../misc/account/mon-compte/ChangePassword';
+import { ChangePassword } from './ChangePassword';
 import DeprecatedPanel from './DeprecatedPanel';
 import './MonComptePanel.scss';
 

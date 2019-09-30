@@ -11,7 +11,7 @@ export default class ModerateurRoutes extends React.Component {
 
     render() {
         return (
-            <div>
+            <>
                 <Route path="/admin/moderateur/courriels/stagiaires" render={() => <CourrielsPage type="stagiaires" />} />
                 <Route path="/admin/moderateur/courriels/organismes" render={() => <CourrielsPage type="organismes" />} />
                 <Route
@@ -40,7 +40,7 @@ export default class ModerateurRoutes extends React.Component {
                     path={'/admin/moderateur/mon-compte'}
                     component={MonComptePage}
                 />
-            </div>
+            </>
         );
     }
 }
