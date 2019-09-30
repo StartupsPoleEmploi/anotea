@@ -19,7 +19,6 @@ module.exports = db => {
 
             return {
                 codeRegion: user.codeRegion,
-                ...(user.profile !== 'financeur' ? { archived: false } : {}),
                 ...(organisme ? { 'training.organisation.siret': organisme } : {}),
                 ...(financeur ? { 'training.codeFinanceur': financeur } : {}),
                 ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
@@ -46,5 +45,10 @@ module.exports = db => {
                 ...(['none', 'published', 'rejected'].includes(reponseStatus) ? { 'reponse.status': reponseStatus } : {}),
             };
         },
+        archived: user => {
+            return {
+                ...(user.profile !== 'financeur' ? { archived: false } : {}),
+            };
+        }
     };
 };

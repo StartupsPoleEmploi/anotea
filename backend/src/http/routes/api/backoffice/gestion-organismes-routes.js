@@ -2,10 +2,10 @@ const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
-const { IdNotFoundError } = require('../../../../../common/errors');
-const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../../routes-utils');
-const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
-const { transformObject, encodeStream } = require('../../../../../common/utils/stream-utils');
+const { IdNotFoundError } = require('../../../../common/errors');
+const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../routes-utils');
+const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
+const { transformObject, encodeStream } = require('../../../../common/utils/stream-utils');
 
 module.exports = ({ db, configuration, mailing, middlewares, logger }) => {
 

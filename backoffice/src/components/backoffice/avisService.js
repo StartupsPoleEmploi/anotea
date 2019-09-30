@@ -13,14 +13,6 @@ export const getExportAvisUrl = (options = {}) => {
     return `${publicUrl}/api/backoffice/avis.csv?${queryString.stringify({ ...options, token })}`;
 };
 
-export const getStats = (options = {}) => {
-    return _get(`/backoffice/avis/stats?${queryString.stringify(options)}`);
-};
-
-export const getModerationStats = params => {
-    return _get(`/backoffice/avis/moderationStats?${queryString.stringify(params)}`);
-};
-
 export const maskPseudo = (id, mask) => {
     return _put(`/backoffice/avis/${id}/pseudo`, { mask });
 };

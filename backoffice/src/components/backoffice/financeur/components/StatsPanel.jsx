@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { getStats } from '../../avisService';
+import { getAvisStats } from '../../statsService';
 import Panel from '../../common/page/panel/Panel';
 import QueryBadges from './QueryBadges';
 import Loader from '../../common/Loader';
@@ -37,7 +37,7 @@ export default class StatsPanel extends React.Component {
     fetchStats = () => {
         return new Promise(resolve => {
             this.setState({ loading: true }, async () => {
-                let results = await getStats(this.props.query);
+                let results = await getAvisStats(this.props.query);
                 this.setState({ results, loading: false }, () => resolve());
             });
         });

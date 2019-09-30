@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { getStats } from '../../avisService';
+import { getAvisStats, getStagiairesStats } from '../../statsService';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../common/Loader';
 import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
+import StagiairesStats from './StagiairesStats';
 
 export default class StatsPanel extends React.Component {
 
@@ -17,7 +18,8 @@ export default class StatsPanel extends React.Component {
         super(props);
         this.state = {
             loading: true,
-            results: {},
+            avis: {},
+            stagiaires: {},
         };
     }
 
@@ -32,29 +34,36 @@ export default class StatsPanel extends React.Component {
     }
 
     fetchStats = () => {
-        return new Promise(resolve => {
-            this.setState({ loading: true }, async () => {
-                let results = await getStats(this.props.query);
-                this.setState({ results, loading: false }, () => resolve());
-            });
+        this.setState({ loading: true }, async () => {
+            let [avis, stagiaires] = await Promise.all([
+                getAvisStats(this.props.query),
+                getStagiairesStats(this.props.query)
+            ]);
+            this.setState({ avis, stagiaires, loading: false });
         });
     };
 
     render() {
 
-        let stats = this.state.results;
+        let { avis, stagiaires } = this.state;
 
         return (
             <Panel
                 results={
                     this.state.loading ?
                         <Loader centered={true} /> :
-                        _.isEmpty(stats) ? <EmptyResults /> :
+                        _.isEmpty(avis) ? <EmptyResults /> :
                             <>
                                 <div className="row">
                                     <div className="col-sm-12">
                                         <div className="section-title">Les notes</div>
-                                        <NoteDetails notes={stats.notes} total={stats.total} />
+                                        <StagiairesStats avis={avis} stagiaires={stagiaires} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-12">
+                                        <div className="section-title">Les notes</div>
+                                        <NoteDetails notes={avis.notes} total={avis.total} />
                                     </div>
                                 </div>
                             </>
@@ -63,5 +72,4 @@ export default class StatsPanel extends React.Component {
         );
 
     }
-
 }

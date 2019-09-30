@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from '../common/header/Link';
-import { getModerationStats } from '../avisService';
+import { getModerationStats } from '../statsService';
 import { Route } from 'react-router-dom';
 
 export default class ModerateurHeaderItems extends React.Component {

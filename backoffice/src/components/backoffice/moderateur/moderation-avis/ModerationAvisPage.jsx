@@ -11,7 +11,8 @@ import Button from '../../common/Button';
 import InputText from '../../common/page/form/InputText';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
-import { getModerationStats, searchAvis } from '../../avisService';
+import { searchAvis } from '../../avisService';
+import { getModerationStats } from '../../statsService';
 
 export default class ModerationAvisPage extends React.Component {
 

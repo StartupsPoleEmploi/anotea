@@ -14,7 +14,7 @@ module.exports = async (db, query) => {
         },
         {
             $group: {
-                _id: 'null',
+                _id: null,
                 total: { $sum: 1 },
                 accueil__moyenne: { $avg: '$rates.accueil' },
                 accueil__1: { $sum: { $cond: [{ $eq: ['$rates.accueil', 1] }, 1, 0] } },
@@ -52,6 +52,7 @@ module.exports = async (db, query) => {
                 global__3: { $sum: { $cond: [{ $eq: ['$rates.global', 3] }, 1, 0] } },
                 global__4: { $sum: { $cond: [{ $eq: ['$rates.global', 4] }, 1, 0] } },
                 global__5: { $sum: { $cond: [{ $eq: ['$rates.global', 5] }, 1, 0] } },
+                nbReponses: { $sum: { $cond: { if: { $not: ['$reponse'] }, then: 0, else: 1 } } },
                 nbNotesSeules: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 1, else: 0 } } },
                 nbCommentaires: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 0, else: 1 } } },
                 nbPublished: { $sum: { $cond: { if: { $eq: ['$published', true] }, then: 1, else: 0 } } },
