@@ -6,7 +6,8 @@ import { Route } from 'react-router-dom';
 import Page from '../common/page/Page';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
 import { Form, Periode, Select } from '../common/page/form/Form';
-import { getFormationsBySiren, getSirens } from '../sirensService';
+import { getSirens } from '../sirensService';
+import { getFormations } from '../formationsService';
 import { getDepartements } from '../departementsService';
 import FINANCEURS from '../common/data/financeurs';
 import Button from '../common/Button';
@@ -80,7 +81,7 @@ export default class FinanceurPage extends React.Component {
         });
 
         if (query.siren) {
-            this.loadSelectBox('formations', () => getFormationsBySiren(query.siren))
+            this.loadSelectBox('formations', () => getFormations(query.siren))
             .then(results => {
                 return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation), options);
             });
@@ -269,7 +270,7 @@ export default class FinanceurPage extends React.Component {
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);
                                         if (option) {
-                                            this.loadSelectBox('formations', () => getFormationsBySiren(option.siren));
+                                            this.loadSelectBox('formations', () => getFormations(option.siren));
                                         }
                                     }}
                                 />

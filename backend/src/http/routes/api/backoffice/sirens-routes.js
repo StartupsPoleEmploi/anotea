@@ -40,43 +40,5 @@ module.exports = ({ db, middlewares }) => {
         return sendArrayAsJsonStream(stream, res);
     }));
 
-    router.get('/backoffice/sirens/:siren/formations', checkAuth, tryAndCatch(async (req, res) => {
-
-        let { siren } = await Joi.validate(req.params, {
-            siren: Joi.string().required(),
-        }, { abortEarly: false });
-
-        let stream = await db.collection('comment')
-        .aggregate([
-            {
-                $match: {
-                    'codeRegion': req.user.codeRegion,
-                    'training.organisation.siret': new RegExp(`^${siren}`),
-                }
-            },
-            {
-                $group: {
-                    _id: '$training.idFormation',
-                    idFormation: { $first: '$training.idFormation' },
-                    title: { $first: '$training.title' },
-                    nbAvis: { $sum: 1 }
-                }
-            },
-            {
-                $sort: {
-                    titre: 1
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                }
-            }
-        ])
-        .stream();
-
-        return sendArrayAsJsonStream(stream, res);
-    }));
-
     return router;
 };

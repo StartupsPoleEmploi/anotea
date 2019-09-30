@@ -68,6 +68,40 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.body[0].idFormation, 'F_XX_11');
     });
 
+    it('can get formations filtered by siren', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    idFormation: 'F_XX_XX',
+                    title: 'Développeur',
+                    organisation: {
+                        siret: `${33333333333333}`,
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    idFormation: 'F_XX_11',
+                    title: 'Développeur',
+                    organisation: {
+                        siret: `${33333333311111}`,
+                    },
+                }
+            })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/formations?siret=333333333')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.length, 2);
+    });
+
+
     it('can get formations from other region', async () => {
 
         let app = await startServer();

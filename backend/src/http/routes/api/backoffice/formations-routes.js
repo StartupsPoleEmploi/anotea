@@ -18,7 +18,7 @@ module.exports = ({ db, middlewares }) => {
             {
                 $match: {
                     'codeRegion': req.user.codeRegion,
-                    ...(siret ? { 'training.organisation.siret': siret } : {}),
+                    ...(siret ? { 'training.organisation.siret': new RegExp(`^${siret}`) } : {}),
                 }
             },
             {

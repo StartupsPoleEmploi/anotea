@@ -32,31 +32,4 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         });
     });
 
-    it('can get formations by siren', async () => {
-
-        let app = await startServer();
-        let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    organisation: {
-                        siret: `${33333333333333}`,
-                    },
-                }
-            })),
-        ]);
-
-        let response = await request(app)
-        .get('/api/backoffice/sirens/33333333333333/formations')
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.length, 1);
-        assert.deepStrictEqual(response.body[0], {
-            idFormation: 'F_XX_XX',
-            title: 'Développeur',
-            nbAvis: 1,
-        });
-    });
-
 }));
