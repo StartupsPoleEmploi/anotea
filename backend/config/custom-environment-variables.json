@@ -1,7 +1,8 @@
 {
   "env": "ANOTEA_ENV",
   "app": {
-    "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME"
+    "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME",
+    "session_secret": "ANOTEA_APP_SESSION_SECRET"
   },
   "mongodb": {
     "uri": "ANOTEA_MONGODB_URI"

@@ -6,6 +6,7 @@ const Boom = require('boom');
 const createMiddlewares = require('./middlewares/middlewares');
 const compression = require('compression');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 module.exports = components => {
 
@@ -38,10 +39,8 @@ module.exports = components => {
         }
     }));
     app.use(session({
-        secret: 'keyboard cat',
-        resave: false,
-        saveUninitialized: true,
-        cookie: { maxAge: 60000, secure: process.env.NODE_ENV === 'production' }
+        secret: configuration.app.session_secret,
+        store: new MongoStore()
     }));
 
     //Public routes with HTML server-side rendering

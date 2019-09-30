@@ -3,7 +3,8 @@
   "app": {
     "name": "Anotea",
     "public_hostname": "http://127.0.0.1:3000",
-    "port": 8080
+    "port": 8080,
+    "session_secret": "1234"
   },
   "log": {
     "level": "info",
