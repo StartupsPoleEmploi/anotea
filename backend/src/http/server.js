@@ -40,7 +40,9 @@ module.exports = components => {
     }));
     app.use(session({
         secret: configuration.app.session_secret,
-        store: new MongoStore()
+        resave: false,
+        saveUninitialized: true,
+        store: new MongoStore({ client: components.client })
     }));
 
     //Public routes with HTML server-side rendering
