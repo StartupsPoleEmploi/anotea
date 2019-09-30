@@ -31,7 +31,7 @@ export default class AuthRoutes extends React.Component {
                     render={() => <ReinitialisationMotDePassePage navigator={navigator} />}
                 />
                 <Route
-                    path="/admin/organisme/activation-compte"
+                    path="/admin/activation-compte"
                     render={() => <ActivationComptePage navigator={navigator} onLogin={this.props.onLogin} />}
                 />
             </>

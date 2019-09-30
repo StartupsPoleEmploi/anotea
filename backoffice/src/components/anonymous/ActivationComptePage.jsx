@@ -7,7 +7,7 @@ import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
 import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
-import { activateAccount, getAccount } from './accountService';
+import { activate, getActivationStatus } from './activationService';
 import { login } from './loginService';
 import { NavLink } from 'react-router-dom';
 import GlobalMessage from '../backoffice/common/message/GlobalMessage';
@@ -42,7 +42,7 @@ export default class ActivationComptePage extends React.Component {
         let { navigator } = this.props;
         let query = navigator.getQuery();
 
-        getAccount(query.token)
+        getActivationStatus(query.token)
         .then(account => this.setState({ account, loading: false }))
         .catch(this.showErrorMessage);
     }
@@ -66,7 +66,7 @@ export default class ActivationComptePage extends React.Component {
                 let { token } = this.props.navigator.getQuery();
 
                 this.setState({ loading: true });
-                activateAccount(token, password)
+                activate(token, password)
                 .then(async () => {
                     let data = await login(account.identifiant, password);
                     this.props.onLogin(data);

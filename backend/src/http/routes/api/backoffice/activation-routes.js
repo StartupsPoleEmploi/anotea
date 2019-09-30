@@ -8,7 +8,7 @@ module.exports = ({ db, password }) => {
     let router = express.Router(); // eslint-disable-line new-cap
     let { hashPassword, isPasswordStrongEnough } = password;
 
-    router.get('/backoffice/accounts/:token', tryAndCatch(async (req, res) => {
+    router.get('/backoffice/activation/:token', tryAndCatch(async (req, res) => {
 
         let account = await db.collection('accounts').findOne({ token: req.params.token });
         if (account) {
@@ -21,7 +21,7 @@ module.exports = ({ db, password }) => {
         throw Boom.badRequest('Numéro de token invalide');
     }));
 
-    router.post('/backoffice/accounts/:token/activate', tryAndCatch(async (req, res) => {
+    router.post('/backoffice/activation/:token', tryAndCatch(async (req, res) => {
         const token = req.params.token;
 
         let { password } = await Joi.validate(req.body, {

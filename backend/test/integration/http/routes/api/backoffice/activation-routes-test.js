@@ -20,7 +20,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .get(`/api/backoffice/accounts/${token}`);
+        .get(`/api/backoffice/activation/${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -45,7 +45,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .get(`/api/backoffice/accounts/${token}`);
+        .get(`/api/backoffice/activation/${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.status, 'active');
@@ -56,7 +56,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
 
         let response = await request(app)
-        .get(`/api/backoffice/accounts/INVALID`);
+        .get(`/api/backoffice/activation/INVALID`);
 
         assert.strictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.body, {
@@ -81,7 +81,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .post(`/api/backoffice/accounts/${token}/activate`)
+        .post(`/api/backoffice/activation/${token}`)
         .send({ password: 'Anotea2018!' });
 
         assert.strictEqual(response.statusCode, 201);
@@ -103,7 +103,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .post(`/api/backoffice/accounts/${token}/activate`)
+        .post(`/api/backoffice/activation/${token}`)
         .send({ password: 'INVALID' });
 
         assert.strictEqual(response.statusCode, 400);
@@ -118,7 +118,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         let app = await startServer();
         let response = await request(app)
-        .post('/api/backoffice/accounts/INVALID/activate')
+        .post('/api/backoffice/activation/INVALID')
         .send({ password: 'A1234!' });
 
         assert.strictEqual(response.statusCode, 400);
