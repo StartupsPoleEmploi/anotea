@@ -1,14 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Panel from '../backoffice/common/page/panel/Panel';
-import InputText from '../backoffice/common/page/form/InputText';
-import Button from '../backoffice/common/Button';
-import Page from '../backoffice/common/page/Page';
-import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
+import Panel from '../common/page/panel/Panel';
+import InputText from '../common/page/form/InputText';
+import Button from '../common/Button';
+import Page from '../common/page/Page';
+import { CenteredForm } from '../common/page/form/CenteredForm';
 import { checkIfPasswordTokenExists, resetPassword } from './passwordService';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
-import GlobalMessage from '../backoffice/common/message/GlobalMessage';
+import GlobalMessage from '../common/message/GlobalMessage';
 
 export default class ReinitialisationMotDePassePage extends React.Component {
 

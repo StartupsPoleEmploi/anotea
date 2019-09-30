@@ -6,24 +6,23 @@ import jwtDecode from 'jwt-decode';
 import { Redirect, Switch } from 'react-router-dom';
 import { getSession, getToken, removeSession, setSession } from './utils/session';
 import { subscribeToHttpEvent } from './utils/http-client';
-import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
-import GridDisplayer from './components/backoffice/common/GridDisplayer';
-import Header from './components/backoffice/common/header/Header';
-import MiscRoutes from './components/backoffice/misc/MiscRoutes';
-import FinanceurRoutes from './components/backoffice/financeur/FinanceurRoutes';
-import ModerateurHeaderItems from './components/backoffice/moderateur/ModerateurHeaderItems';
-import FinanceurHeaderItems from './components/backoffice/financeur/FinanceurHeaderItems';
-import logoModerateur from './components/backoffice/common/header/logo-moderateur.svg';
-import logoFinanceur from './components/backoffice/common/header/logo-financeur.svg';
-import logoOrganisme from './components/backoffice/common/header/logo-organisme.svg';
-import logoDefault from './components/backoffice/common/header/logo-default.svg';
+import ModerateurRoutes from './components/moderateur/ModerateurRoutes';
+import GridDisplayer from './components/common/GridDisplayer';
+import Header from './components/common/header/Header';
+import MiscRoutes from './components/misc/MiscRoutes';
+import FinanceurRoutes from './components/financeur/FinanceurRoutes';
+import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems';
+import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
+import logoModerateur from './components/common/header/logo-moderateur.svg';
+import logoFinanceur from './components/common/header/logo-financeur.svg';
+import logoOrganisme from './components/common/header/logo-organisme.svg';
+import logoDefault from './components/common/header/logo-default.svg';
 import AnonymousRoutes from './components/anonymous/AuthRoutes';
 import UserContext from './components/UserContext';
 import './utils/moment-fr';
-import OrganismeHeaderItems from './components/backoffice/organisme/OrganismeHeaderItems';
-import OrganismeRoutes from './components/backoffice/organisme/OrganismeRoutes';
-import './App.scss';
-
+import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
+import OrganismeRoutes from './components/organisme/OrganismeRoutes';
+import './styles/global.scss';
 
 addLocaleData([...fr]);
 

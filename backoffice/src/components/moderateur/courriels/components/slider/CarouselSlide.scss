@@ -1,0 +1,47 @@
+@import '../../../../../styles/variables';
+
+// SASS variable for media query breakpoint
+$breakpoint-desktop: 992px;
+
+// Carousel slides
+.carousel__slide {
+  margin-right: auto;
+  margin-left: auto;
+  display: none;
+  max-width: 900px;
+  list-style-type: none;
+  text-align: center;
+
+  @media (max-width: 991px) {
+    padding-right: 60px;
+    padding-left: 60px;
+  }
+
+  &--active {
+    display: block;
+  }
+}
+
+// Content of slides
+.carousel-slide__content {
+  margin-bottom: 19px;
+  opacity: 0.87;
+  color: $color-black;
+  font-size: 2rem;
+  font-weight: 500;
+
+  @media (max-width: $breakpoint-desktop - 1px) {
+    font-size: 18px;
+  }
+}
+
+.carousel-slide__img {
+  max-width: 900px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: $shadow;
+
+  @media (max-width: $breakpoint-desktop - 1px) {
+    max-width: 500px;
+  }
+}
