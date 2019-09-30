@@ -6,9 +6,10 @@ import Verified from './common/Verified';
 import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
-import ContactStagiaire from './common/ContactStagiaire';
-import Option from './common/options/Option';
 import './ListeWidget.scss';
+import Button from './common/library/Button';
+
+const ITEMS_PAR_PAGE = 2;
 
 export default class ListeWidget extends Component {
 
@@ -19,65 +20,16 @@ export default class ListeWidget extends Component {
     };
 
     componentDidMount() {
-        this.goTo(0);
+        this.props.fetchAvis({ page: 0, itemsParPage: ITEMS_PAR_PAGE });
     }
 
-    goTo = async page => {
-        this.props.fetchAvis({ page, itemsParPage: 3 });
+    previous = () => {
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page - 1, itemsParPage: ITEMS_PAR_PAGE });
     };
 
-    getTotalPages = () => {
-        return this.props.results.meta.pagination.total_pages;
+    next = () => {
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page + 1, itemsParPage: ITEMS_PAR_PAGE });
     };
-
-    getCurrentPage = () => {
-        return this.props.results.meta.pagination.page;
-    };
-
-    getPagesBefore = () => {
-        let array = [];
-        if (this.getCurrentPage() - 2 > 0) {
-            array.push(1);
-            if (this.getCurrentPage() - 2 > 1) {
-                array.push('...');
-            }
-        }
-
-        for (let i = Math.max(this.getCurrentPage() - 2, 0); i < this.getCurrentPage(); i++) {
-            array.push(i + 1);
-        }
-        return array.map(page => {
-            return (
-                <span
-                    className="nav"
-                    key={page}
-                    onClick={() => this.goTo(page - 1)}>{page}</span>
-            );
-        });
-    };
-
-    getPagesAfter = () => {
-        let array = [];
-        for (let i = Math.min(this.getCurrentPage() + 2, this.getTotalPages() - 1); i > this.getCurrentPage(); i--) {
-            array.push(i + 1);
-        }
-        array.reverse();
-        if (this.getCurrentPage() + 2 < this.getTotalPages() - 1) {
-            if (this.getCurrentPage() + 2 < this.getTotalPages() - 2) {
-                array.push('...');
-            }
-            array.push(this.getTotalPages());
-        }
-        return array.map(page => {
-            return (
-                <span
-                    className="nav"
-                    key={page}
-                    onClick={() => this.goTo(page - 1)}>{page}</span>
-            );
-        });
-    };
-
 
     getListe() {
         let { avis, meta } = this.props.results;
@@ -102,25 +54,14 @@ export default class ListeWidget extends Component {
                             );
                         })
                     }
-
-                    {this.getTotalPages() > 1 &&
-                    <div className="pagination d-flex justify-content-center py-3">
-                        {this.getPagesBefore()}
-                        <span
-                            className={`nav current`}>
-                            {this.getCurrentPage() + 1}
-                        </span>
-                        {this.getPagesAfter()}
-                    </div>
-                    }
                 </div>
             </div>
         );
     }
 
     render() {
-        let { score } = this.props;
-
+        let { score, results } = this.props;
+        let { pagination } = results.meta;
         if (score.nb_avis === 0) {
             return <div></div>;
         }
@@ -143,19 +84,31 @@ export default class ListeWidget extends Component {
                     </div>
                     <div className="col-sm-6">
                         <div className="line d-flex justify-content-between align-items-center py-2">
-                            <div className="summary">
-                                {this.props.results.meta.pagination.total_items} commentaires
+                            {pagination.total_items > 1 &&
+                            <div className="pagination d-flex justify-content-between align-items-center pt-2">
+                                <Button
+                                    size="medium"
+                                    disabled={pagination.page === 0}
+                                    onClick={() => this.previous()}>
+                                    <i className="fas fa-chevron-left"></i>
+                                </Button>
+
+                                <div className="summary">
+                                    {pagination.total_items} commentaires
+                                </div>
+
+                                <Button
+                                    size="medium"
+                                    disabled={pagination.page === pagination.total_pages - 1}
+                                    onClick={() => this.next()}>
+                                    <i className="fas fa-chevron-right"></i>
+                                </Button>
+
                             </div>
+                            }
                             <Verified />
                         </div>
                         {this.getListe()}
-                        <Option value="contact-stagiaire" render={() => {
-                            return (
-                                <div className="d-flex justify-content-center py-2">
-                                    <ContactStagiaire />
-                                </div>
-                            );
-                        }} />
                         <div className="d-flex justify-content-center mt-3">
                             <div className="d-xs-block d-sm-none">
                                 <Propulsed />

@@ -14,7 +14,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: 'admin@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
 
@@ -43,7 +43,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: '6080274100045', password: 'password' });
+        .send({ identifiant: '6080274100045', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
 
@@ -72,7 +72,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: 'contact@financer.fr', password: 'password' });
+        .send({ identifiant: 'contact@financer.fr', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
 
@@ -101,7 +101,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: 'admin@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
     });
@@ -120,7 +120,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: 'admin@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
         assert.strictEqual(response.statusCode, 200);
 
         let db = await getTestDatabase();
@@ -131,7 +131,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         // user can login
         response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: 'admin@pole-emploi.fr', password: 'password' });
+        .send({ identifiant: 'admin@pole-emploi.fr', password: 'password' });
         assert.strictEqual(response.statusCode, 200);
     });
 
@@ -143,13 +143,13 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: 'invalid@email.fr', password: 'password' });
+        .send({ identifiant: 'invalid@email.fr', password: 'password' });
 
         assert.strictEqual(response.statusCode, 400);
-
-        let body = response.body;
-        assert.deepStrictEqual(body, {
-            error: true
+        assert.deepStrictEqual(response.body, {
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Identifiant ou mot de passe invalide'
         });
     });
 
@@ -166,13 +166,15 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ username: '6080274100045', password: 'password' });
+        .send({ identifiant: '6080274100045', password: 'password' });
 
         assert.strictEqual(response.statusCode, 400);
 
         let body = response.body;
         assert.deepStrictEqual(body, {
-            error: true
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Identifiant ou mot de passe invalide'
         });
     });
 

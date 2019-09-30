@@ -3,7 +3,7 @@ const moment = require('moment');
 const titleize = require('underscore.string/titleize');
 const externalLinks = require('./utils/externalLinks');
 
-module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => {
+module.exports = ({ db, logger, configuration, communes, mailer, regions, peconnect }) => {
     
     const router = express.Router(); // eslint-disable-line new-cap
 
@@ -83,7 +83,7 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
             });
         }
 
-        res.redirect(await externalLinks(db).getLink(trainee, goto));
+        res.redirect(await externalLinks(db, communes).getLink(trainee, goto));
     });
 
     router.get('/mail/:token', async (req, res) => {
@@ -113,7 +113,8 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
 
     router.get('/mail/:token/publie', async (req, res) => {
         const trainee = await db.collection('trainee').findOne({ token: req.params.token });
-        if (trainee === null) {
+        const avis = await db.collection('comment').findOne({ token: req.params.token });
+        if (trainee === null || avis === null) {
             res.status(404).render('errors/404');
             return;
         }
@@ -121,7 +122,8 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
         const unsubscribeLink = mailer.getUnsubscribeLink(trainee);
 
         res.render('../../smtp/views/avis_publie.ejs', {
-            trainee: trainee,
+            trainee,
+            avis,
             consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/publie?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
             unsubscribeLink: unsubscribeLink,
             trackingLink: `${configuration.app.public_hostname}/mail/${trainee.token}/track`,
@@ -237,6 +239,7 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
             consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementRejete/${avis.token}`,
             hostname: configuration.app.public_hostname,
             avis: avis.comment.text,
+            organisme,
             webView: true
         });
     });
@@ -254,6 +257,7 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
             consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementAccepte/${avis.token}`,
             hostname: configuration.app.public_hostname,
             avis: avis.comment.text,
+            organisme,
             webView: true
         });
     });
@@ -356,7 +360,7 @@ module.exports = ({ db, logger, configuration, mailer, regions, peconnect }) => 
         } else {
             const organisme = await db.collection('accounts').findOne({ token: req.params.token });
             if (organisme !== null) {
-                trackRouteHandler('organismes', organisme, true, res);
+                trackRouteHandler('accounts', organisme, true, res);
             } else {
                 trackRouteHandler(null, null, false, res);
             }

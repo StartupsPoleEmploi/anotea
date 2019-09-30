@@ -6,6 +6,7 @@ const RateLimit = require('express-rate-limit');
 const { tryAndCatch } = require('../routes/routes-utils');
 const createDatalakeExporter = require('./utils/createDatalakeExporter');
 const createResponseRecorder = require('./utils/createResponseRecorder');
+const findApplication = require('./utils/findApplication');
 
 module.exports = (auth, logger, configuration) => {
     return {
@@ -124,19 +125,18 @@ module.exports = (auth, logger, configuration) => {
             return (req, res, next) => {
 
                 let relativeUrl = (req.baseUrl || '') + (req.url || '');
+                let startTime = new Date().getTime();
+                let mustRecordBody = relativeUrl.startsWith('/api/kairos/') ||
+                    relativeUrl.startsWith('/api/backoffice/generate-auth-url');
 
-                let recorder = null;
-                if (relativeUrl.startsWith('/api/kairos/') || relativeUrl.startsWith('/api/backoffice/generate-auth-url')) {
-                    recorder = createResponseRecorder();
-                    recorder.record(res);
-                }
+                let recorder = createResponseRecorder({ mustRecordBody });
+                recorder.record(res);
 
                 let log = () => {
 
                     try {
                         let error = req.err;
-                        let body = recorder ? recorder.getBody() : null;
-
+                        let body = recorder.getBody();
                         let data = {
                             type: 'http',
                             ...(!error ? {} : {
@@ -145,6 +145,8 @@ module.exports = (auth, logger, configuration) => {
                                     stack: error.stack,
                                 }
                             }),
+                            elapsedTime: (new Date().getTime()) - startTime,
+                            application: findApplication(req),
                             request: {
                                 requestId: req.requestId,
                                 url: {
@@ -161,7 +163,8 @@ module.exports = (auth, logger, configuration) => {
                                 statusCode: res.statusCode,
                                 statusCodeAsString: `${res.statusCode}`,
                                 headers: res._headers,
-                                body,
+                                body: body ? body : undefined,
+                                size: recorder.getSize(),
                             },
                         };
 

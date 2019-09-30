@@ -3,8 +3,6 @@ import moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import Stars from './Stars';
 import './Avis.scss';
-import Option from './options/Option';
-import Tooltip from './Tooltip';
 
 export default class Avis extends Component {
 
@@ -25,37 +23,26 @@ export default class Avis extends Component {
                     <span className="pseudo">{avis.pseudo ? avis.pseudo : 'un stagiaire'}</span>
                 </div>
                 {avis.commentaire &&
-                <div className={`titre ${avis.commentaire.titre ? 'visible' : 'invisible'}`}>
+                <div className={`titre ${avis.commentaire.titre ? 'd-block' : 'd-none'}`}>
                     {avis.commentaire.titre}
                 </div>
                 }
                 {avis.commentaire &&
-                <div className={`texte ${avis.commentaire.texte ? 'visible' : 'invisible'}`}>
+                <div className={`texte ${avis.commentaire.texte ? 'd-block' : 'd-none'}`}>
                     {avis.commentaire.texte}
                 </div>
                 }
                 {avis.reponse &&
                 <div className="reponse">
-                    <div className="titre">Réponse de l'organisme</div>
-                    <div className="texte">{avis.reponse.texte}</div>
+                    <div className="reponse-titre d-flex justify-content-start align-items-center mb-1">
+                        <i className="far fa-comment-alt mr-1"></i>
+                        <div className="text-uppercase">Réponse de l'organisme</div>
+                    </div>
+                    <div className="reponse-texte">{avis.reponse.texte}</div>
                 </div>
                 }
-                <div className="date with-tooltip d-inline-flex justify-content-between">
-                    <div>Session du {moment(debut).format('DD/MM/YYYY')}
-                        {debut !== fin &&
-                        <span> au {moment(fin).format('DD/MM/YYYY')}</span>
-                        }
-                    </div>
-                    <Option value="avis-details" render={() => {
-                        return (
-                            <Tooltip direction="right" message={
-                                <div>
-                                    <div>Formation : {avis.formation.intitule} </div>
-                                    <div>Lieu de formation :{avis.formation.action.lieu_de_formation.code_postal}</div>
-                                </div>
-                            } />
-                        );
-                    }} />
+                <div className="formation">
+                    {avis.formation.intitule} - {moment(fin).format('MM/YYYY')}
                 </div>
             </div>
         );

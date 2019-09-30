@@ -7,6 +7,7 @@
 
   .stagiaire {
     padding: 0.5rem 1rem;
+    background-color: $color-grey-5;
 
     .par {
       opacity: 0.6;
@@ -21,29 +22,39 @@
   .titre {
     padding: 0.25rem 1rem;
     font-weight: $font-weight-700;
+    background-color: $color-grey-5;
   }
 
   .texte {
     padding: 0.25rem 1rem 0.5rem 1rem;
-    color: $color-black-60;
+    background-color: $color-grey-5;
   }
 
   .reponse {
 
-    padding: 0.25rem 1rem 1rem 1rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
 
-    .titre, .texte {
-      padding-left: 0.5rem;
-      padding-right: 1rem;
-      border-left: 1px solid $color-black;
+    .reponse-titre {
+      color: $color-black;
+      font-size: 0.75rem;
+      letter-spacing: 0.38px;
+      line-height: 1rem;
+      font-weight: $font-weight-700;
     }
 
+    .reponse-texte {
+      border-left: 1px solid $color-black;
+      font-size: 0.875rem;
+      color: $color-black-60;
+      padding-left: 1rem;
+    }
   }
 
-  .date {
+  .formation {
     padding: 0.5rem 1rem;
     border-top: 1px solid $color-grey-25;
     font-size: 0.75rem;
+    font-style: italic;
     color: $color-grey-50;
   }
 

@@ -1,41 +1,10 @@
-<style>
-    .consultationLink {
-        text-align: center;
-    }
-
-    .header {
-        background-color: white;
-        border-radius: 0px 0px 5px 5px;
-        margin-bottom: 16px;
-        padding: 10px;
-        height: 48px;
-    }
-
-    .header p {
-        position: absolute;
-        top: 10px;
-        text-align: center;
-        width: 80%;
-    }
-
-    .header .logo-right {
-        float: right;
-        margin: -12px;
-        height: 70px;
-    }
-
-    .header .logo-left {
-        margin: 10px;
-    }
-</style>
-
 <% if (!webView) { %>
-    <p class="consultationLink"><a href="<%= consultationLink %>" target="_blank">Si vous ne parvenez pas à lire ce
-            mail,
-            cliquez-ici</a></p>
+    <p class="consultationLink">
+        <a href="<%= consultationLink %>" target="_blank">Si vous ne parvenez pas à lire ce mail, cliquez-ici</a>
+    </p>
 <% } %>
 
 <div class="header">
-    <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Horizontal_baseline2.png" alt="" /></td>
+    <img class="logo-left" src="<%= hostname %>/static/images/email/logo_Anotea_Horizontal_baseline2.png" alt="" />
     <img class="logo-right" src="<%= hostname %>/static/images/regions/logo-email/logo_<%= codeRegion %>.png" alt="" />
 </div>

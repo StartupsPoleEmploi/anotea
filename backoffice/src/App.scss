@@ -1,6 +1,10 @@
 @import 'styles/deprecated/anotea-deprecated.scss';
 @import 'styles/variables';
 
+html, body, #root {
+  height: 100vh;
+}
+
 .anotea {
 
   font-size: 1em;
@@ -37,6 +41,14 @@
 
   .a-text-medium {
     font-size: 0.875rem;
+  }
+
+  .a-flex-grow-1 {
+    flex-grow: 1;
+  }
+
+  .a-width-50 {
+    width: 50%;
   }
 }
 

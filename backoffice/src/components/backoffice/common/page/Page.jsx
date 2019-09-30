@@ -1,33 +1,44 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import UserContext from '../../../UserContext';
 import './Page.scss';
 
 const Page = props => {
 
-    let color = props.color || 'green';
+    let user = useContext(UserContext);
+    let profile = user.profile;
 
     return (
         <div className={`Page mb-0 ${props.className || ''}`}>
 
-            {props.form &&
-            <div className={`form ${color}`}>
-                <div className="container">
-                    <div className="form-holder">
+            <div className={`search-holder ${profile}`}>
+
+                {props.title &&
+                <div className="title-holder">
+                    <div className="container">
+                        {props.title}
+                    </div>
+                </div>
+                }
+
+                {props.form &&
+                <div className="form-holder">
+                    <div className="container">
                         {props.form}
                     </div>
                 </div>
-            </div>
-            }
+                }
 
-            {props.tabs &&
-            <div className={`tabs ${props.color}`}>
-                <div className="container">
-                    {props.tabs}
+                {props.tabs &&
+                <div className="tabs-holder">
+                    <div className="container">
+                        {props.tabs}
+                    </div>
                 </div>
+                }
             </div>
-            }
 
-            <div className={`panel`}>
+            <div className="panel-holder">
                 {props.panel}
             </div>
         </div>
@@ -35,11 +46,11 @@ const Page = props => {
 };
 
 Page.propTypes = {
+    title: PropTypes.node,
     form: PropTypes.node,
     tabs: PropTypes.node,
     panel: PropTypes.node,
     className: PropTypes.string,
-    color: PropTypes.string,
 };
 
 export default Page;

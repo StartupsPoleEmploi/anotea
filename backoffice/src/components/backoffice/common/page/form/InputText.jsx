@@ -1,0 +1,47 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+import './InputText.scss';
+
+export default class InputText extends React.Component {
+
+    static propTypes = {
+        icon: PropTypes.node,
+        reset: PropTypes.func,
+        error: PropTypes.string,
+    };
+
+    render() {
+        let { icon, reset, error } = this.props;
+
+        return (
+            <div className="InputText">
+                <div className="d-flex align-items-stretch h-100">
+
+                    {icon &&
+                    <div className="icon d-flex align-items-center">
+                        {icon}
+                    </div>
+                    }
+
+                    <input
+                        type="text"
+                        className={`h-100 ${icon ? 'with-icon' : ''} ${reset ? 'with-reset' : ''} ${error ? 'with-error' : ''}`}
+                        {..._.omit(this.props, ['icon', 'reset', 'error'])}
+                    />
+
+                    {reset &&
+                    <div className="reset d-flex align-items-center">
+                        <span onClick={reset}><i className="fas fa-times" /></span>
+                    </div>
+                    }
+                </div>
+                {error &&
+                <div className="input-error-details">
+                    {error}
+                </div>
+                }
+            </div>
+        );
+    }
+}

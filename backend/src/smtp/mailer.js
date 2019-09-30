@@ -43,11 +43,7 @@ module.exports = function(db, logger, configuration, regions) {
     };
 
     const getOrganisationPasswordLink = organisation => {
-        return `${configuration.app.public_hostname}/admin?action=creation&token=${organisation.token}`;
-    };
-
-    const getPasswordForgottenLink = token => {
-        return `${configuration.app.public_hostname}/admin?action=passwordLost&token=${token}`;
+        return `${configuration.app.public_hostname}/admin/organisme/activation-compte?token=${organisation.token}`;
     };
 
     const getRegionEmail = region => {
@@ -126,7 +122,6 @@ module.exports = function(db, logger, configuration, regions) {
         getConsultationLink: getConsultationLink,
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
-        getPasswordForgottenLink: getPasswordForgottenLink,
         sendNewCommentsNotification: async (mailOptions, data, successCallback, errorCallback) => {
 
             let { organisme, pickedComment } = data;
@@ -217,9 +212,9 @@ module.exports = function(db, logger, configuration, regions) {
         },
         sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, profile, successCallback, errorCallback) => {
 
-            let link = getPasswordForgottenLink(passwordToken);
+            let link = `${configuration.app.public_hostname}/admin/reinitialisation-mot-de-passe?token=${passwordToken}`;
             let consultationLink = `${configuration.app.public_hostname}/mail/${passwordToken}/passwordForgotten`;
-            let params = { link, hostname: configuration.app.public_hostname, codeRegion: codeRegion, profile, consultationLink };
+            let params = { link, hostname: configuration.app.public_hostname, codeRegion, profile, consultationLink };
             let region = regions.findRegionByCodeRegion(codeRegion);
 
             mailOptions.subject = 'Votre compte Anotéa : Demande de renouvellement de mot de passe';

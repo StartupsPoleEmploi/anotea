@@ -6,15 +6,6 @@ Il existe en trois formats (`score`, `carrousel`, `liste` ) et supporte tous les
 
 Vous pouvez consulter des exemples d'intégration du widget à l'url suivante [https://anotea.pole-emploi.fr/doc/widget](https://anotea.pole-emploi.fr/doc/widget)
 
-## Options
-
-En plus de l'affichage des avis, il est possible d'activer des options dans le widget
-
-### json-ld
-
-L'option `json-ld` ajoute automatiquement des balises dans votre page HTML afin que les moteurs de recherche puissent récuperer les informations affichées par
-le widget. Ces informations peuvent être utilisées par les moteurs de recherche pour, par exemple, afficher la note de votre organisme sur ses pages de résultats. 
-
 ## Configuration du widget
 
 Insérez la balise suivante de préférence dans la balise `<head>` de votre document HTML.
@@ -60,3 +51,12 @@ Affichage au format score pour un organisme
 ```html
 <div class="anotea-widget" data-type="action" data-format="carrousel" data-identifiant="14_AF_0000000000|14_SE_0000000000|SE_0000000000"></div>"
  ```
+
+## Options
+
+En plus de l'affichage des avis, il est possible d'activer des options dans le widget
+
+### json-ld
+
+L'option `json-ld` ajoute automatiquement des balises dans votre page HTML afin que les moteurs de recherche puissent récuperer les informations affichées par
+le widget. Ces informations peuvent être utilisées par les moteurs de recherche pour, par exemple, afficher la note de votre organisme sur ses pages de résultats. 

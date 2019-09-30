@@ -80,7 +80,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
                 }
             }
         });
-        assert.ok(response.body.url.startsWith('http://127.0.0.1:3000/admin?action=loginWithAccessToken&origin=kairos&access_token=ey'));
+        assert.ok(response.body.url.startsWith('http://127.0.0.1:3000/admin/login?origin=kairos&access_token=ey'));
     });
 
     it('when organisme is unknown, it is created during authentication url generation', async () => {
@@ -133,7 +133,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .send(createPayload(siret));
         assert.strictEqual(response.statusCode, 200);
 
-        let token = response.body.url.split('=')[3];
+        let token = response.body.url.split('=')[2];
         response = await request(app)
         .get(`/api/backoffice/login?access_token=${token}`);
 
@@ -167,7 +167,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         .send(createPayload(siret));
         assert.strictEqual(response.statusCode, 200);
 
-        let token = response.body.url.split('=')[3];
+        let token = response.body.url.split('=')[2];
 
         response = await request(app)
         .get(`/api/backoffice/login?access_token=${token}`);

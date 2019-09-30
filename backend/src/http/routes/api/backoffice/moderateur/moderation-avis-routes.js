@@ -3,12 +3,12 @@ const Joi = require('joi');
 const Boom = require('boom');
 const isEmail = require('isemail').validate;
 const ObjectID = require('mongodb').ObjectID;
-const { tryAndCatch, getRemoteAddress } = require('../../../routes-utils');
+const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../../routes-utils');
 const computeModerationStats = require('./utils/computeModerationStats');
 const { objectId } = require('../../../../../common/validators');
 const { IdNotFoundError } = require('../../../../../common/errors');
 
-module.exports = ({ db, logger, middlewares, configuration, moderation, mailing }) => {
+module.exports = ({ db, middlewares, configuration, moderation, mailing }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -55,30 +55,32 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
         .skip((page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 
-        let [total, avis, stats] = await Promise.all([
+        let [total, itemsOnThisPage, stats] = await Promise.all([
             cursor.count(),
-            cursor.toArray(),
+            cursor.count(true),
             computeModerationStats(db, codeRegion),
         ]);
 
-        res.send({
-            avis: avis,
-            meta: {
-                stats: stats,
-                pagination: {
-                    page: page,
-                    itemsPerPage,
-                    itemsOnThisPage: avis.length,
-                    totalItems: total,
-                    totalPages: Math.ceil(total / itemsPerPage),
-                },
-                ...(!stagiaire ? {} : {
-                    stagiaire: {
-                        email: stagiaire.trainee.email,
-                        dnIndividuNational: stagiaire.trainee.dnIndividuNational,
+        return sendArrayAsJsonStream(cursor.stream(), res, {
+            arrayPropertyName: 'avis',
+            arrayWrapper: {
+                meta: {
+                    stats: stats,
+                    pagination: {
+                        page,
+                        itemsPerPage,
+                        itemsOnThisPage,
+                        totalItems: total,
+                        totalPages: Math.ceil(total / itemsPerPage),
                     },
-                    fulltext,
-                })
+                    ...(!stagiaire ? {} : {
+                        stagiaire: {
+                            email: stagiaire.trainee.email,
+                            dnIndividuNational: stagiaire.trainee.dnIndividuNational,
+                        },
+                        fulltext,
+                    })
+                }
             }
         });
     }));
@@ -133,7 +135,7 @@ module.exports = ({ db, logger, middlewares, configuration, moderation, mailing 
 
             let email = trainee.trainee.email;
             let sendMail;
-            
+
             if (reason === 'injure') {
                 sendMail = sendInjureMail;
             } else if (reason === 'alerte') {

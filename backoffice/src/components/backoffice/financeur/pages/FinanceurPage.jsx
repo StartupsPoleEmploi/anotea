@@ -26,25 +26,30 @@ export default class FinanceurPage extends React.Component {
         this.state = {
             form: {
                 periode: {
+                    pristine: true,
                     startDate: null,
                     endDate: null,
                 },
                 departements: {
+                    pristine: true,
                     selected: null,
                     loading: true,
                     results: [],
                 },
                 organismes: {
+                    pristine: true,
                     selected: null,
                     loading: true,
                     results: [],
                 },
                 formations: {
+                    pristine: true,
                     selected: null,
                     loading: false,
                     results: [],
                 },
                 financeurs: {
+                    pristine: true,
                     selected: null,
                     loading: true,
                     results: [],
@@ -64,34 +69,36 @@ export default class FinanceurPage extends React.Component {
     async componentDidMount() {
 
         let query = this.props.navigator.getQuery();
+        let options = { pristine: true };
 
         this.loadSelectBox('departements', () => getDepartements())
         .then(results => {
-            return this.updateSelectBox('departements', results.find(f => f.code === query.departement));
+            return this.updateSelectBox('departements', results.find(f => f.code === query.departement), options);
         });
 
         this.loadSelectBox('organismes', () => getOrganismes())
         .then(results => {
-            return this.updateSelectBox('organismes', results.find(f => f.siren === query.siren));
+            return this.updateSelectBox('organismes', results.find(f => f.siren === query.siren), options);
         });
 
         if (query.siren) {
             this.loadSelectBox('formations', () => getFormations(query.siren))
             .then(results => {
-                return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation));
+                return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation), options);
             });
         }
 
         if (this.isPoleEmploi()) {
             this.loadSelectBox('financeurs', () => FINANCEURS)
             .then(results => {
-                return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur));
+                return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur), options);
             });
         }
 
         this.setStateDeep({
             form: {
                 periode: {
+                    pristine: true,
                     startDate: query.startDate ? moment(parseInt(query.startDate)).toDate() : null,
                     endDate: query.scheduledEndDate ? moment(parseInt(query.scheduledEndDate)).toDate() : null,
                 },
@@ -126,15 +133,25 @@ export default class FinanceurPage extends React.Component {
         });
     };
 
-    updateSelectBox = (type, option) => {
+    updateSelectBox = (type, data, options = {}) => {
         return new Promise(resolve => {
-
             this.setStateDeep({
                 form: {
                     [type]: {
+                        pristine: options.pristine || !data,
                         ...this.state[type],
-                        selected: option
+                        selected: data
                     },
+                }
+            }, resolve);
+        });
+    };
+
+    updatePeriode = periode => {
+        return new Promise(resolve => {
+            this.setStateDeep({
+                form: {
+                    periode: Object.assign({}, periode, { pristine: (!periode.startDate && !periode.endDate) }),
                 }
             }, resolve);
         });
@@ -144,19 +161,24 @@ export default class FinanceurPage extends React.Component {
         this.setStateDeep({
             form: {
                 periode: {
+                    pristine: true,
                     startDate: null,
                     endDate: null,
                 },
                 departements: {
+                    pristine: true,
                     selected: null,
                 },
                 organismes: {
+                    pristine: true,
                     selected: null,
                 },
                 formations: {
+                    pristine: true,
                     selected: null,
                 },
                 financeurs: {
+                    pristine: true,
                     selected: null,
                 },
             }
@@ -175,12 +197,23 @@ export default class FinanceurPage extends React.Component {
         };
     };
 
+    isFormPristine = () => {
+
+        let { form } = this.state;
+
+        return form.financeurs.pristine &&
+            form.departements.pristine &&
+            form.organismes.pristine &&
+            form.formations.pristine &&
+            form.periode.pristine;
+    };
+
     onSubmit = () => {
         return this.props.navigator.refreshCurrentPage(this.getFormAsQuery());
     };
 
     onTabClicked = (tab, data) => {
-        return this.props.navigator.goToPage(`/admin/financeur/${tab}`, {
+        return this.props.navigator.goToPage(`/admin/financeur/avis/${tab}`, {
             ...this.getFormAsQuery(),
             ...data
         });
@@ -193,7 +226,6 @@ export default class FinanceurPage extends React.Component {
 
         return (
             <Page
-                color="green"
                 loading={this.state.loading}
                 form={
                     <Form>
@@ -203,7 +235,7 @@ export default class FinanceurPage extends React.Component {
                                 <Periode
                                     periode={periode}
                                     min={moment('2016-01-01 Z').toDate()}
-                                    onChange={periode => this.setStateDeep({ form: { periode } })}
+                                    onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>
                             <div className="form-group col-lg-6 col-xl-3">
@@ -268,7 +300,12 @@ export default class FinanceurPage extends React.Component {
                         </div>
                         <div className="form-row justify-content-center">
                             <div className="form-group buttons">
-                                <Button size="small" onClick={this.resetForm} className="mr-3" style={{ opacity: 0.6 }}>
+                                <Button
+                                    size="small"
+                                    onClick={this.resetForm}
+                                    className="mr-3"
+                                    style={{ opacity: this.isFormPristine() ? 0.6 : 1 }}
+                                >
                                     <i className="fas fa-times mr-2"></i>
                                     Réinitialiser les filtres
                                 </Button>
@@ -283,17 +320,17 @@ export default class FinanceurPage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => navigator.isActive('/admin/financeur/stats')}
+                            isActive={() => navigator.isActive('/admin/financeur/avis/stats')}
                             onClick={() => this.onTabClicked('stats')} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => navigator.isActive('/admin/financeur/avis')}
-                            onClick={() => this.onTabClicked('avis', { status: 'all' })} />
+                            isActive={() => navigator.isActive('/admin/financeur/avis/liste')}
+                            onClick={() => this.onTabClicked('liste', { status: 'all' })} />
                     </Tabs>
                 }
                 panel={
-                    navigator.isActive('/admin/financeur/avis') ?
+                    navigator.isActive('/admin/financeur/avis/liste') ?
                         <AvisPanel
                             query={navigator.getQuery()}
                             form={form}
@@ -304,7 +341,7 @@ export default class FinanceurPage extends React.Component {
                                 });
                             }} /> :
                         <Route
-                            path={'/admin/financeur/stats'}
+                            path={'/admin/financeur/avis/stats'}
                             render={() => {
                                 return (
                                     <StatsPanel

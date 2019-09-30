@@ -42,37 +42,42 @@ export default class ModerateurHeaderItems extends React.Component {
                 return (
                     <ul className="nav">
                         <li className="nav-item dropdown">
-                            <a href="#"
-                               className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
-                               data-toggle="dropdown"
-                               role="button"
-                               aria-haspopup="true"
-                               aria-expanded="false"
+                            <a
+                                href="#"
+                                className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
+                                data-toggle="dropdown"
+                                role="button"
+                                aria-haspopup="true"
+                                aria-expanded="false"
                             >
                                 Moderation
                             </a>
                             <div className="dropdown-menu">
-                                <Link
-                                    className="dropdown-item"
-                                    label="Avis stagiaires"
-                                    url="/admin/moderateur/moderation/avis/stagiaires?page=0&status=none" />
-                                {!loading &&
-                                <span className="badge badge-light pastille">{avis}</span>
-                                }
-                                <Link
-                                    className="dropdown-item"
-                                    label="Réponses des organismes"
-                                    url="/admin/moderateur/moderation/avis/reponses?page=0&reponseStatus=none" />
-                                {!loading &&
-                                <span className="badge badge-light pastille">{reponses}</span>
-                                }
+                               <span className="d-flex align-items-center">
+                                    <Link
+                                        className="dropdown-item"
+                                        label="Avis stagiaires"
+                                        url="/admin/moderateur/moderation/avis/stagiaires" />
+                                   {!loading &&
+                                   <span className="badge badge-light pastille">{avis}</span>
+                                   }
+                                </span>
+                                <span className="d-flex align-items-center">
+                                    <Link
+                                        className="dropdown-item"
+                                        label="Réponses des organismes"
+                                        url="/admin/moderateur/moderation/avis/reponses" />
+                                    {!loading &&
+                                    <span className="badge badge-light pastille">{reponses}</span>
+                                    }
+                                </span>
                             </div>
                         </li>
                         <li className="nav-item">
                             <Link
                                 className="nav-link"
                                 label="Liste des organismes"
-                                url="/admin/moderateur/gestion/organismes?page=0&status=active" />
+                                url="/admin/moderateur/gestion/organismes" />
                         </li>
                         <li className="nav-item dropdown">
                             <a

@@ -1,10 +1,10 @@
 import { _get, _post } from '../../../../utils/http-client';
 
-export const getActivationAccountStatus = activationToken => {
-    return _get(`/backoffice/organisme/getActivationAccountStatus?token=${activationToken}`);
+export const getOrganismeByToken = activationToken => {
+    return _get(`/backoffice/organisme/${activationToken}`);
 };
 
-export const activateAccount = (token, password) => {
+export const activateAccount = (password, token,) => {
     return _post(`/backoffice/organisme/activateAccount`, { token, password });
 };
 
