@@ -29,6 +29,7 @@ module.exports = regions => {
                 reported: Joi.bool(),
                 qualification: Joi.string().valid(['all', 'négatif', 'positif']),
                 commentaires: Joi.bool(),
+                sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
             };
         },
         pagination: () => {
@@ -36,10 +37,5 @@ module.exports = regions => {
                 page: Joi.number().min(0).default(0),
             };
         },
-        sort: () => {
-            return {
-                sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
-            };
-        }
     };
 };

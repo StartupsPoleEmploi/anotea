@@ -5,7 +5,7 @@ const { newModerateurAccount } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur }) => {
 
-    it('can update password', async () => {
+    it('can update my password', async () => {
 
         let app = await startServer();
         await insertIntoDatabase('accounts', newModerateurAccount({ courriel: 'admin@pole-emploi.fr' }));
@@ -27,7 +27,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.statusCode, 200);
     });
 
-    it('can not update password with invalid current password', async () => {
+    it('can not update my password with invalid current password', async () => {
 
         let app = await startServer();
         await insertIntoDatabase('accounts', newModerateurAccount({ courriel: 'admin@pole-emploi.fr' }));
@@ -44,7 +44,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.message, 'Le mot de passe n\'est pas correct');
     });
 
-    it('can not update password with weak password', async () => {
+    it('can not update my password with weak password', async () => {
 
         let app = await startServer();
         await insertIntoDatabase('accounts', newModerateurAccount({ courriel: 'admin@pole-emploi.fr' }));

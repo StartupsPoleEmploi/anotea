@@ -1,0 +1,32 @@
+@import '../../../styles/variables';
+
+.Page {
+
+  height: 100%;
+
+  .search-holder {
+    @include profile-background-color();
+    padding-bottom: 1rem;
+
+    .title-holder {
+      padding-bottom: 0.5rem;
+      font-size: 2em;
+      font-weight: $font-weight-900;
+      line-height: 2.5rem;
+      text-align: center;
+      color: $color-white;
+    }
+
+    .form-holder {
+      padding-bottom: 1rem;
+    }
+
+    .tabs-holder {
+      padding-top: 1rem;
+    }
+  }
+
+  .panel-holder {
+    height: 100%;
+  }
+}

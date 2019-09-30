@@ -3,15 +3,13 @@ export const getToken = () => {
 };
 
 export const getSession = () => {
-    return {
-        id: sessionStorage.getItem('anotea:id'),
-        profile: sessionStorage.getItem('anotea:profile'),
-        codeRegion: sessionStorage.getItem('anotea:codeRegion'),
-        codeFinanceur: sessionStorage.getItem('anotea:codeFinanceur'),
-        raisonSociale: sessionStorage.getItem('anotea:raisonSociale'),
-        features: sessionStorage.getItem('anotea:features'),
-        access_token: sessionStorage.getItem('anotea:access_token'),
-    };
+    return Object.keys(sessionStorage).reduce((acc, key) => {
+        if (key.startsWith('anotea:')) {
+            let propertyName = key.replace(/anotea:/g, '');
+            acc[propertyName] = sessionStorage.getItem(key);
+        }
+        return acc;
+    }, { profile: 'anonymous' });
 };
 
 export const setSession = data => {
@@ -21,11 +19,9 @@ export const setSession = data => {
 };
 
 export const removeSession = () => {
-    sessionStorage.removeItem('anotea:id');
-    sessionStorage.removeItem('anotea:profile');
-    sessionStorage.removeItem('anotea:codeRegion');
-    sessionStorage.removeItem('anotea:codeFinanceur');
-    sessionStorage.removeItem('anotea:raisonSociale');
-    sessionStorage.removeItem('anotea:features');
-    sessionStorage.removeItem('anotea:access_token');
+    Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith('anotea:')) {
+            sessionStorage.removeItem(key);
+        }
+    });
 };
