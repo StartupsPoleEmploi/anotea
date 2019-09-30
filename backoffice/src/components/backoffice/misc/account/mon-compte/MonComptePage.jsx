@@ -7,7 +7,7 @@ import InputText from '../../../common/page/form/InputText';
 import Button from '../../../common/Button';
 import { isPasswordStrongEnough, isSamePassword } from '../../../../../utils/validation';
 import _ from 'lodash';
-import { updatePassword } from '../../../../anonymous/authService';
+import { updatePassword } from '../../../meService';
 import GlobalMessage from '../../../common/message/GlobalMessage';
 
 export default class MonComptePage extends React.Component {

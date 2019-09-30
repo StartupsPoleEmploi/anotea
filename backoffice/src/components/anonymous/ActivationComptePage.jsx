@@ -7,7 +7,8 @@ import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
 import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
-import { activateAccount, getAccount, login } from './authService';
+import { activateAccount, getAccount } from './accountService';
+import { login } from './loginService';
 import { NavLink } from 'react-router-dom';
 import GlobalMessage from '../backoffice/common/message/GlobalMessage';
 
