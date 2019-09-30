@@ -5,7 +5,7 @@ import Panel from '../backoffice/common/page/panel/Panel';
 import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
 import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
-import { login, loginWithAccessToken } from './authService';
+import { login, loginWithAccessToken } from './loginService';
 import './LoginPage.scss';
 import { NavLink } from 'react-router-dom';
 import Loader from '../backoffice/common/Loader';

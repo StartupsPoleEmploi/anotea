@@ -55,7 +55,8 @@ module.exports = components => {
     app.use('/api', require('./routes/api/kairos/kairos-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/login-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/password-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/accounts-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/activation-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/me-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/avis-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/organismes-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/organisation/consultation-routes')(httpComponents));

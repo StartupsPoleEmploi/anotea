@@ -6,7 +6,7 @@ import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
 import Page from '../backoffice/common/page/Page';
 import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
-import { checkIfPasswordTokenExists, resetPassword } from './authService';
+import { checkIfPasswordTokenExists, resetPassword } from './passwordService';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
 import GlobalMessage from '../backoffice/common/message/GlobalMessage';
 

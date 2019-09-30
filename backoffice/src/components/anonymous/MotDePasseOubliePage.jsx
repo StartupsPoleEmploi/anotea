@@ -5,7 +5,7 @@ import Panel from '../backoffice/common/page/panel/Panel';
 import InputText from '../backoffice/common/page/form/InputText';
 import Button from '../backoffice/common/Button';
 import { CenteredForm } from '../backoffice/common/page/form/CenteredForm';
-import { askNewPassword } from './authService';
+import { askNewPassword } from './passwordService';
 
 export default class MotDePasseOubliePage extends React.Component {
 
