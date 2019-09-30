@@ -24,7 +24,6 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
         let parameters = await Joi.validate(req.query, {
             ...validators.form(user),
             ...validators.filters(),
-            ...validators.sort(),
             ...validators.pagination(),
         }, { abortEarly: false });
 
@@ -64,7 +63,6 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
         let parameters = await Joi.validate(req.query, {
             ...validators.form(user),
             ...validators.filters(),
-            ...validators.sort(),
             token: Joi.string(),
         }, { abortEarly: false });
 
