@@ -5,7 +5,7 @@ import { getStats } from '../../avisService';
 import Panel from '../../common/page/panel/Panel';
 import QueryBadges from './QueryBadges';
 import Loader from '../../common/Loader';
-import CommentairesStats from '../../common/page/panel/results/stats/CommentairesStats';
+import CommentairesStats from './CommentairesStats';
 import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 

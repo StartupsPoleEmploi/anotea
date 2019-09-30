@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './CommentairesStats.scss';
-import Pie from './Pie';
+import Pie from '../../common/page/panel/results/stats/Pie';
 
 const CommentairesStats = ({ stats }) => {
 
