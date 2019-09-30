@@ -32,7 +32,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         });
     });
 
-    it('can get formations', async () => {
+    it('can get formations by siren', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -47,7 +47,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/organismes/33333333333333/formations')
+        .get('/api/backoffice/sirens/33333333333333/formations')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);

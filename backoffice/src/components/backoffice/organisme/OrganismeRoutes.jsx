@@ -1,26 +1,26 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import FinanceurPage from './FinanceurPage';
 import { createNavigator } from '../../../utils/route-utils';
 import MonComptePage from '../misc/account/mon-compte/MonComptePage';
+import OrganismePage from './OrganismePage';
 
-export default class FinanceurRoutes extends React.Component {
+export default class OrganismeRoutes extends React.Component {
 
     render() {
         return (
-            <>
+            <div>
                 <Route
-                    path={'/admin/financeur/avis'}
+                    path={'/admin/organisme/avis'}
                     render={props => {
                         let navigator = createNavigator(props);
-                        return <FinanceurPage navigator={navigator} />;
+                        return <OrganismePage navigator={navigator} />;
                     }}
                 />
                 <Route
-                    path={'/admin/financeur/mon-compte'}
+                    path={'/admin/organisme/mon-compte'}
                     component={MonComptePage}
                 />
-            </>
+            </div>
         );
     }
 }

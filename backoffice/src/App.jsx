@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import fr from 'react-intl/locale-data/fr';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import jwtDecode from 'jwt-decode';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Switch } from 'react-router-dom';
 import { getSession, getToken, removeSession, setSession } from './utils/session';
 import { subscribeToHttpEvent } from './utils/http-client';
-import DeprecatedHeader from './components/backoffice/common/deprecated/header/DeprecatedHeader';
-import OrganisationPanel from './components/backoffice/organisation/OrganisationPanel.jsx';
 import ModerateurRoutes from './components/backoffice/moderateur/ModerateurRoutes';
-import MonComptePanel from './components/backoffice/organisation/MonComptePanel';
 import GridDisplayer from './components/backoffice/common/GridDisplayer';
 import Header from './components/backoffice/common/header/Header';
 import MiscRoutes from './components/backoffice/misc/MiscRoutes';
@@ -19,11 +15,14 @@ import ModerateurHeaderItems from './components/backoffice/moderateur/Moderateur
 import FinanceurHeaderItems from './components/backoffice/financeur/FinanceurHeaderItems';
 import logoModerateur from './components/backoffice/common/header/logo-moderateur.svg';
 import logoFinanceur from './components/backoffice/common/header/logo-financeur.svg';
+import logoOrganisme from './components/backoffice/common/header/logo-organisme.svg';
 import logoDefault from './components/backoffice/common/header/logo-default.svg';
 import AnonymousRoutes from './components/anonymous/AuthRoutes';
 import UserContext from './components/UserContext';
-import './App.scss';
 import './utils/moment-fr';
+import OrganismeHeaderItems from './components/backoffice/organisme/OrganismeHeaderItems';
+import OrganismeRoutes from './components/backoffice/organisme/OrganismeRoutes';
+import './App.scss';
 
 
 addLocaleData([...fr]);
@@ -36,7 +35,6 @@ class App extends Component {
 
     state = {
         profile: 'anonymous',
-        action: null,
     };
 
     constructor(props) {
@@ -50,15 +48,6 @@ class App extends Component {
         if (getToken()) {
             this.state = {
                 ...getSession(),
-            };
-        }
-
-        const qs = queryString.parse(window.location.search);
-        if (qs.action === 'creation') {
-            this.state = {
-                profile: 'organisme',
-                action: 'creation',
-                token: qs.token
             };
         }
     }
@@ -81,8 +70,6 @@ class App extends Component {
 
     showBackofficePages = () => {
 
-        let { profile, codeRegion, codeFinanceur, features, id } = this.state;
-        let userContext = profile ? { codeRegion, codeFinanceur, profile } : null;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?status=none',
@@ -96,6 +83,12 @@ class App extends Component {
                 routes: <FinanceurRoutes />,
                 logo: logoFinanceur,
             }),
+            organisme: () => ({
+                defaultPath: '/admin/organisme/avis/stats',
+                headerItems: <OrganismeHeaderItems />,
+                routes: <OrganismeRoutes />,
+                logo: logoOrganisme,
+            }),
             anonymous: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
@@ -104,61 +97,22 @@ class App extends Component {
             })
         };
 
-        //Use new design
-        if (['anonymous', 'moderateur', 'financeur'].includes(this.state.profile)) {
+        console.log(this.state);
+        let layout = backoffices[this.state.profile]();
 
-            let layout = backoffices[profile]();
-
-            return (
-                <UserContext.Provider value={userContext}>
-                    <div className="anotea">
-                        <Switch>
-                            <Redirect exact from="/" to={layout.defaultPath} />
-                            <Redirect exact from="/admin" to={layout.defaultPath} />
-                        </Switch>
-
-                        <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
-                        <MiscRoutes />
-                        {layout.routes}
-                    </div>
-                </UserContext.Provider>
-            );
-        }
-
-        //Use deprecated design
         return (
-            <div className="anotea-deprecated App">
-                <DeprecatedHeader
-                    handleLogout={this.onLogout}
-                    loggedIn={true}
-                    profile={profile}
-                    raisonSociale={this.state.raisonSociale}
-                    codeFinanceur={codeFinanceur}
-                    codeRegion={codeRegion}
-                    region={this.state.region} />
+            <UserContext.Provider value={this.state}>
+                <div className="anotea">
+                    <Switch>
+                        <Redirect exact from="/" to={layout.defaultPath} />
+                        <Redirect exact from="/admin" to={layout.defaultPath} />
+                    </Switch>
 
-                <Switch>
-                    <Redirect exact from="/" to="/admin" />
-                </Switch>
-
-                <Route
-                    path="/mon-compte"
-                    render={props => (<MonComptePanel {...props} />)} />
-
-                <Route
-                    path="/admin"
-                    render={() => (
-                        <div className="main">
-                            {profile === 'organisme' &&
-                            <OrganisationPanel
-                                profile={profile}
-                                id={id}
-                                codeRegion={codeRegion}
-                                features={features} />
-                            }
-                        </div>)}
-                />
-            </div>
+                    <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
+                    <MiscRoutes />
+                    {layout.routes}
+                </div>
+            </UserContext.Provider>
         );
     };
 

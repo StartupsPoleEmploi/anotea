@@ -99,6 +99,10 @@
     &.a-btn-blue {
       @include small-button($color-blue, $color-blue-10);
     }
+
+    &.a-btn-orange {
+      @include small-button($color-orange, $color-orange-10);
+    }
   }
 
   &.a-btn-medium {
@@ -115,6 +119,10 @@
     &.a-btn-blue {
       @include medium-button($color-blue, $color-blue-30);
     }
+
+    &.a-btn-orange {
+      @include medium-button($color-orange, $color-orange-30);
+    }
   }
 
   &.a-btn-large {
@@ -130,6 +138,10 @@
 
     &.a-btn-blue {
       @include large-button($color-blue, $color-blue-10, $color-blue-30);
+    }
+
+    &.a-btn-orange {
+      @include large-button($color-black, $color-orange, $color-orange-60);
     }
   }
 }

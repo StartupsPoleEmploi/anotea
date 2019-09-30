@@ -6,9 +6,8 @@ module.exports = ({ db, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = middlewares.createJWTAuthMiddleware('backoffice');
-    let checkProfile = middlewares.checkProfile('moderateur', 'financeur');
 
-    router.get('/backoffice/organismes', checkAuth, checkProfile, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/organismes', checkAuth, tryAndCatch(async (req, res) => {
 
         const stream = await db.collection('comment')
         .aggregate([
@@ -41,7 +40,7 @@ module.exports = ({ db, middlewares }) => {
         return sendArrayAsJsonStream(stream, res);
     }));
 
-    router.get('/backoffice/organismes/:siren/formations', checkAuth, checkProfile, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/sirens/:siren/formations', checkAuth, tryAndCatch(async (req, res) => {
 
         let { siren } = await Joi.validate(req.params, {
             siren: Joi.string().required(),

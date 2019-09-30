@@ -1,20 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../components/QueryBadges.scss';
 import _ from 'lodash';
-import { getStats } from '../../../avisService';
-import Panel from '../../../common/page/panel/Panel';
-import QueryBadges from '../components/QueryBadges';
-import Loader from '../../../common/Loader';
-import CommentairesStats from '../../../common/page/panel/results/stats/CommentairesStats';
-import NoteDetails from '../../../common/page/panel/results/stats/NoteDetails';
-import EmptyResults from '../../../common/page/panel/results/EmptyResults';
+import { getStats } from '../../avisService';
+import Panel from '../../common/page/panel/Panel';
+import Loader from '../../common/Loader';
+import CommentairesStats from '../../common/page/panel/results/stats/CommentairesStats';
+import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
+import EmptyResults from '../../common/page/panel/results/EmptyResults';
 
 export default class StatsPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
-        form: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -46,30 +43,15 @@ export default class StatsPanel extends React.Component {
 
     render() {
 
-        let { query, form } = this.props;
         let stats = this.state.results;
 
         return (
             <Panel
-                backgroundColor="grey"
-                summary={
-                    <div className="row">
-                        <div className="col-sm-10">
-                            <QueryBadges form={form} query={query} ellipsis={30} />
-                        </div>
-                    </div>
-                }
                 results={
                     this.state.loading ?
                         <Loader centered={true} /> :
                         _.isEmpty(stats) ? <EmptyResults /> :
                             <>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="section-title">Les commentaires</div>
-                                        <CommentairesStats stats={stats} />
-                                    </div>
-                                </div>
                                 <div className="row">
                                     <div className="col-sm-12">
                                         <div className="section-title">Les notes</div>

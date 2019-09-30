@@ -1,18 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../components/QueryBadges.scss';
-import { Filters } from '../../../common/page/panel/filters/Filters';
-import Filter from '../../../common/page/panel/filters/Filter';
+import { Filters } from '../../common/page/panel/filters/Filters';
+import Filter from '../../common/page/panel/filters/Filter';
 import _ from 'lodash';
-import Summary from '../../../common/page/panel/summary/Summary';
-import Button from '../../../common/Button';
-import { getExportAvisUrl, searchAvis } from '../../../avisService';
-import AvisResults from '../../../common/page/panel/results/AvisResults';
-import Avis from '../../../common/avis/Avis';
-import Pagination from '../../../common/page/panel/pagination/Pagination';
-import QueryBadges from '../components/QueryBadges';
-import Panel from '../../../common/page/panel/Panel';
-import Loader from '../../../common/Loader';
+import Summary from '../../common/page/panel/summary/Summary';
+import Button from '../../common/Button';
+import { getExportAvisUrl, searchAvis } from '../../avisService';
+import AvisResults from '../../common/page/panel/results/AvisResults';
+import Avis from '../../common/avis/Avis';
+import Pagination from '../../common/page/panel/pagination/Pagination';
+import QueryBadges from './QueryBadges';
+import Panel from '../../common/page/panel/Panel';
+import Loader from '../../common/Loader';
 
 export default class AvisPanel extends React.Component {
 

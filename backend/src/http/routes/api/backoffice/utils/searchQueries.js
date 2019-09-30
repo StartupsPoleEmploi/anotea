@@ -24,7 +24,7 @@ module.exports = db => {
                 ...(financeur ? { 'training.codeFinanceur': financeur } : {}),
                 ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
                 ...(idFormation ? { 'training.idFormation': idFormation } : {}),
-                ...(startDate ? { 'training.startDate': { $lte: moment(startDate).toDate() } } : {}),
+                ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
                 ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
                 ...(fulltextIsEmail ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
                 ...(fulltext && !fulltextIsEmail ? { $text: { $search: fulltext } } : {}),
