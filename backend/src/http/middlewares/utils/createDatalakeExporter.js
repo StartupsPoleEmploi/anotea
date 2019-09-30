@@ -1,5 +1,6 @@
 const rfs = require('rotating-file-stream');
 const moment = require('moment');
+const findApplication = require('./findApplication');
 
 module.exports = (logger, configuration) => {
 
@@ -20,26 +21,6 @@ module.exports = (logger, configuration) => {
 
     stream.on('error', err => logger.error(err, 'Unable to export log to datalake file. Stream closed'));
 
-    const findApplication = request => {
-
-        let headers = request.headers;
-
-        if (headers['x-anotea-widget']) {
-            try {
-                let url = new URL(headers['x-anotea-widget']);
-                return url.host;
-            } catch (e) {
-                return 'public';
-            }
-        }
-
-        let authorization = headers['authorization'];
-        if (authorization && authorization.startsWith('ANOTEA-HMAC-SHA256 ')) {
-            return authorization.replace(/ANOTEA-HMAC-SHA256 /, '').split(':')[0];
-        }
-
-        return 'public';
-    };
     return {
         export: data => {
             try {

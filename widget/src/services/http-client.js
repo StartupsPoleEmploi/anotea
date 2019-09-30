@@ -1,4 +1,3 @@
-/* global fetch */
 import EventEmitter from 'events';
 import { getReferrerUrl } from '../utils';
 
@@ -26,21 +25,8 @@ export const _get = path => {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'X-Anotea-Widget': getReferrerUrl().origin,
+            'X-Anotea-Widget-Referrer': getReferrerUrl(),
         }
     })
     .then(res => handleResponse(path, res));
 };
-
-export const _post = (path, body) => {
-    return fetch(path, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'X-Anotea-Widget': getReferrerUrl().origin,
-        },
-        body: JSON.stringify(body)
-    })
-    .then(res => handleResponse(path, res));
-};
-

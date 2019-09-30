@@ -2,19 +2,17 @@
 
 .Header {
   padding-top: 0.8em;
-  padding-bottom: 2em;
+  padding-bottom: 1.75em;
+
+  @include profile-color();
 
   &.moderateur {
-    background-color: $color-blue;
-
     .dropdown-menu {
       background-color: $color-blue;
     }
   }
 
   &.financeur {
-    background-color: $color-green;
-
     .dropdown-menu {
       background-color: $color-green;
     }
@@ -25,7 +23,6 @@
 
     .dropdown-menu {
       border: none;
-      border-left: 2px solid $color-white;
       border-radius: unset;
       padding: 0;
 
@@ -60,7 +57,7 @@
       display: inline-block;
       opacity: 0.6;
       white-space: nowrap;
-      padding-right: 0.5em;
+      padding: 0.5rem 0.5rem 0.5rem 1rem;
 
       &.active {
         color: $color-white;

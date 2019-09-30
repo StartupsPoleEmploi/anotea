@@ -6,26 +6,32 @@ const { hashPassword } = require('../../../common/components/password');
 const { execute } = require('../../job-utils');
 
 cli.description('Create new account')
-.option('--username [username]')
+.option('--identifiant [identifiant]')
 .option('--region [region]')
 .option('--profile [profile]')
+.option('--codeFinanceur [codeFinanceur]')
 .option('--password [password]')
 .parse(process.argv);
 
 execute(async ({ db, exit }) => {
 
-    let { username, password, region, profile } = cli;
+    let { identifiant, password, region, profile, codeFinanceur } = cli;
 
-    if (!username || !password || !region || !profile) {
+    if (!identifiant || !password || !region || !profile) {
+        return exit('Invalid arguments');
+    }
+
+    if (profile === 'financeur' && !codeFinanceur) {
         return exit('Invalid arguments');
     }
 
     return db.collection('accounts').insertOne({
-        courriel: username,
+        courriel: identifiant,
         codeRegion: region,
         profile: profile,
         passwordHash: await hashPassword(password),
         ...(profile === 'moderateur' ? { features: ['EDIT_ORGANISATIONS'] } : {}),
+        ...(profile === 'financeur' ? { codeFinanceur } : {}),
         meta: {
             rehashed: true
         },

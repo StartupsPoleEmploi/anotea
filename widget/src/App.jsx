@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ListeWidget from './components/ListeWidget';
 import { getAvis, getScore } from './services/widgetService';
 import GridDisplayer from './components/common/library/GridDisplayer';
-import OptionsContext from './components/common/options/OptionsContext';
+import WidgetContext from './components/common/options/WidgetContext';
 import ScoreWidget from './components/ScoreWidget';
 import CarrouselWidget from './components/CarrouselWidget';
 import './App.scss';
@@ -63,10 +63,6 @@ class App extends Component {
         this.setState({ score: await getScore(type, identifiant) });
     }
 
-    getOptions() {
-        return (this.props.options || '').split(',');
-    }
-
     render() {
 
         let { format } = this.props;
@@ -89,9 +85,9 @@ class App extends Component {
             <div className="anotea">
                 {false && <GridDisplayer />}
                 <div className="container-fluid">
-                    <OptionsContext.Provider value={this.getOptions()}>
+                    <WidgetContext.Provider value={this.props}>
                         {widget}
-                    </OptionsContext.Provider>
+                    </WidgetContext.Provider>
                 </div>
             </div>
         );
@@ -102,7 +98,7 @@ App.defaultProps = {
     format: 'carrousel',
     type: 'action',
     identifiant: '26_100646|26_145859_7591',
-    options: 'json-ld,contact-stagiaire,avis-details',
+    options: 'json-ld',
 };
 
 export default App;

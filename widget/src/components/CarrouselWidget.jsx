@@ -7,9 +7,9 @@ import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
 import Button from './common/library/Button';
-import Option from './common/options/Option';
-import ContactStagiaire from './common/ContactStagiaire';
 import './CarrouselWidget.scss';
+
+const ITEMS_PAR_PAGE = 1;
 
 export default class CarrouselWidget extends Component {
 
@@ -20,24 +20,24 @@ export default class CarrouselWidget extends Component {
     };
 
     componentDidMount() {
-        this.props.fetchAvis({ page: 0, itemsParPage: 1 });
+        this.props.fetchAvis({ page: 0, itemsParPage: ITEMS_PAR_PAGE });
     }
 
     previous = () => {
-        this.props.fetchAvis({ page: this.props.results.meta.pagination.page - 1, itemsParPage: 1 });
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page - 1, itemsParPage: ITEMS_PAR_PAGE });
     };
 
-    next = async () => {
-        this.props.fetchAvis({ page: this.props.results.meta.pagination.page + 1, itemsParPage: 1 });
+    next = () => {
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page + 1, itemsParPage: ITEMS_PAR_PAGE });
     };
 
     getCarrousel = () => {
 
         let current = this.props.results.avis[0];
-        let totalItems = this.props.results.meta.pagination.total_items;
-        let pagination = this.props.results.meta.pagination;
+        let { results } = this.props;
+        let { pagination } = results.meta;
 
-        if (totalItems === 0) {
+        if (pagination.total_items === 0) {
             return (
                 <div className="carrousel empty d-flex justify-content-center">
                     Il n'y a pas de commentaire sur cette formation pour le moment.
@@ -50,11 +50,11 @@ export default class CarrouselWidget extends Component {
                 <div className="d-flex flex-column">
 
                     <div className="summary">
-                        <span>{totalItems} commentaires</span>
+                        <span>{pagination.total_items} commentaires</span>
                     </div>
 
-                    {totalItems > 1 &&
-                    <div className="pagination d-flex justify-content-between py-2">
+                    {pagination.total_items > 1 &&
+                    <div className="pagination d-flex justify-content-between pt-3 pb-1">
                         <Button
                             size="medium"
                             className={`nav ${pagination.page === 0 ? 'invisible' : 'visible'}`}
@@ -62,11 +62,9 @@ export default class CarrouselWidget extends Component {
                             Précédent
                         </Button>
 
-                        <div className="align-self-center">{pagination.page + 1} sur {totalItems}</div>
-
                         <Button
                             size="medium"
-                            className={`nav ${pagination.page >= totalItems - 1 ? 'invisible' : 'visible'}`}
+                            className={`nav ${pagination.page === pagination.total_pages - 1 ? 'invisible' : 'visible'}`}
                             onClick={() => this.next()}>
                             Suivant
                         </Button>
@@ -113,18 +111,6 @@ export default class CarrouselWidget extends Component {
                 <div className="row my-3">
                     <div className="col-12">
                         {this.getCarrousel()}
-                    </div>
-                </div>
-
-                <div className="row my-3">
-                    <div className="col-12 text-center">
-                        <Option value="contact-stagiaire" render={() => {
-                            return (
-                                <div className="d-flex justify-content-center py-2">
-                                    <ContactStagiaire />
-                                </div>
-                            );
-                        }} />
                     </div>
                 </div>
 

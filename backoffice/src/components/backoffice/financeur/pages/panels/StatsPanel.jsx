@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import '../components/QueryBadges.scss';
 import _ from 'lodash';
 import { getStats } from '../../financeurService';
-import NewPanel from '../../../common/page/panel/NewPanel';
+import Panel from '../../../common/page/panel/Panel';
 import QueryBadges from '../components/QueryBadges';
 import Loader from '../../../common/Loader';
 import CommentairesStats from '../../../common/page/panel/results/stats/CommentairesStats';
@@ -50,7 +50,7 @@ export default class StatsPanel extends React.Component {
         let stats = this.state.results;
 
         return (
-            <NewPanel
+            <Panel
                 backgroundColor="grey"
                 summary={
                     <div className="row">
@@ -61,7 +61,7 @@ export default class StatsPanel extends React.Component {
                 }
                 results={
                     this.state.loading ?
-                        <div className="d-flex justify-content-center"><Loader /></div> :
+                        <Loader centered={true} /> :
                         _.isEmpty(stats) ? <EmptyResults /> :
                             <>
                                 <div className="row">

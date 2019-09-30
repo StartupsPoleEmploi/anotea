@@ -11,7 +11,7 @@ import AvisResults from '../../../common/page/panel/results/AvisResults';
 import Avis from '../../../common/avis/Avis';
 import Pagination from '../../../common/page/panel/pagination/Pagination';
 import QueryBadges from '../components/QueryBadges';
-import NewPanel from '../../../common/page/panel/NewPanel';
+import Panel from '../../../common/page/panel/Panel';
 import Loader from '../../../common/Loader';
 
 export default class AvisPanel extends React.Component {
@@ -76,7 +76,7 @@ export default class AvisPanel extends React.Component {
         let { query, form } = this.props;
 
         return (
-            <NewPanel
+            <Panel
                 filters={
                     <Filters>
                         <Filter
@@ -126,7 +126,7 @@ export default class AvisPanel extends React.Component {
                     />}
                 results={
                     this.state.loading ?
-                        <div className="d-flex justify-content-center"><Loader /></div> :
+                        <Loader centered={true} /> :
                         <AvisResults
                             results={results}
                             message={message}
