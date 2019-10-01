@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const express = require('express');
 const { tryAndCatch, sendArrayAsJsonStream } = require('../../routes-utils');
 
@@ -7,7 +6,7 @@ module.exports = ({ db, middlewares }) => {
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = middlewares.createJWTAuthMiddleware('backoffice');
 
-    router.get('/backoffice/organismes', checkAuth, tryAndCatch(async (req, res) => {
+    router.get('/backoffice/sirens', checkAuth, tryAndCatch(async (req, res) => {
 
         const stream = await db.collection('comment')
         .aggregate([

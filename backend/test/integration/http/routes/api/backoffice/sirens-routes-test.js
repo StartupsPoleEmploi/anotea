@@ -20,7 +20,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/organismes')
+        .get('/api/backoffice/sirens')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
