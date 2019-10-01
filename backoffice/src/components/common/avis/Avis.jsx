@@ -45,14 +45,18 @@ export default class Avis extends React.Component {
     handleChange = (newAvis, options = {}) => {
         let { message } = options;
         if (message) {
-            this.setState({
-                message,
-                propagateChanges: () => {
-                    this.setState({ message: null });
-                    return this.props.onChange(newAvis);
-                }
+            return new Promise(resolve => {
+                this.setState({
+                    message,
+                    propagateChanges: async () => {
+                        this.setState({ message: null });
+                        await this.props.onChange(newAvis);
+                        resolve();
+                    }
+                });
             });
         }
+        this.props.onChange(newAvis);
     };
 
     render() {
