@@ -21,7 +21,7 @@ cli.description('Inject dataset')
 .option('--generate', 'Generate a avis.json and exit')
 .parse(process.argv);
 
-execute(async ({ db, logger, moderation, exit, regions }) => {
+execute(async ({ db, logger, moderation, consultation, exit, regions }) => {
 
     if (cli.generate) {
         if (!cli.dump) {
@@ -46,7 +46,7 @@ execute(async ({ db, logger, moderation, exit, regions }) => {
 
     logger.info(`Generating avis and reconcile them....`);
     await reconcile(db, logger);
-    await createAvis(db, moderation, cli.dump ? require(cli.dump) : {});
+    await createAvis(db, moderation, consultation, cli.dump ? require(cli.dump) : {});
     await reconcile(db, logger);
 
     logger.info(`Creating organismes....`);

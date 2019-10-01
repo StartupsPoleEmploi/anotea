@@ -103,36 +103,6 @@ module.exports = db => {
 
             return result.value;
         },
-        report: async (id, text, options = {}) => {
-
-            let oid = new ObjectID(id);
-
-            let result = await db.collection('comment').findOneAndUpdate(
-                { _id: oid },
-                {
-                    $set: {
-                        reported: true,
-                        rejected: false,
-                        published: false,
-                        lastStatusUpdate: new Date(),
-                    }
-                },
-                { returnOriginal: false },
-            );
-
-            if (!result.value) {
-                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-            }
-
-            saveEvent(id, 'report', {
-                app: 'organisation',
-                user: 'admin',
-                profile: 'organisme',
-                ...(options.events || {}),
-            });
-
-            return result.value;
-        },
         delete: async (id, options = {}) => {
 
             let oid = new ObjectID(id);

@@ -114,7 +114,7 @@ const buildReponse = () => {
     };
 };
 
-module.exports = async (db, moderation, options = {}) => {
+module.exports = async (db, moderation, consultation, options = {}) => {
 
     let promises = [];
     let generateRandom = () => {
@@ -159,7 +159,7 @@ module.exports = async (db, moderation, options = {}) => {
                 db.collection('trainee').insertOne(createStagiaire(avis)),
                 db.collection('comment').insertOne(avis),
             ])
-            .then(() => moderation.report(avis._id));
+            .then(() => consultation.report(avis._id));
         })
     );
 

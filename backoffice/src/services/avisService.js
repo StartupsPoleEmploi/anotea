@@ -50,26 +50,22 @@ export const deleteAvis = id => {
 };
 
 export const addReponse = (id, text) => {
-    return _put(`/backoffice/organisme/avis/${id}/addReponse`, { text });
+    return _put(`/backoffice/avis/${id}/addReponse`, { text });
 };
 
 export const removeReponse = id => {
-    return _put(`/backoffice/organisme/avis/${id}/removeReponse`);
+    return _put(`/backoffice/avis/${id}/removeReponse`);
 };
 
-export const markAvisAsRead = (id, userId) => {
-    return _put(`/backoffice/organisme/avis/${id}/markAsRead?userID=${userId}`);
+export const markAvisAsRead = (id, read) => {
+    return _put(`/backoffice/avis/${id}/read`, { read });
 };
 
-export const markAvisAsNotRead = (id, userId) => {
-    return _put(`/backoffice/organisme/avis/${id}/markAsNotRead?userID=${userId}`);
+export const reportAvis = id => {
+    return _put(`/backoffice/avis/${id}/report`);
 };
 
-export const reportAvis = (id, userId) => {
-    return _put(`/backoffice/organisme/avis/${id}/report?userID=${userId}`);
-};
-
-export const unreportAvis = (id, userId) => {
-    return _put(`/backoffice/organisme/avis/${id}/unreport?userID=${userId}`);
+export const unreportAvis = id => {
+    return _put(`/backoffice/avis/${id}/unreport`);
 };
 

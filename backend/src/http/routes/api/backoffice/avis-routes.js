@@ -7,7 +7,7 @@ const { IdNotFoundError } = require('../../../../common/errors');
 const avisCSVColumnsMapper = require('./utils/avisCSVColumnsMapper');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 
-module.exports = ({ db, middlewares, configuration, logger, moderation, mailing, regions }) => {
+module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -15,9 +15,6 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
     let itemsPerPage = configuration.api.pagination;
     let validators = require('./utils/validators')(regions);
     let queries = require('./utils/searchQueries')(db);
-    const saveEvent = (id, type, source) => {
-        db.collection('events').save({ adviceId: id, date: new Date(), type, source });
-    };
 
     router.get('/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
 
@@ -240,135 +237,47 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
 
-        let result = await db.collection('comment').findOneAndUpdate(
-            { _id: new ObjectID(id) },
-            {
-                $set: {
-                    reponse: {
-                        text: text,
-                        date: new Date(),
-                        status: 'none',
-                    },
-                    read: true,
-                }
-            },
-            { returnOriginal: false }
-        );
+        let avis = await consultation.addReponse(id, text, { event: { origin: getRemoteAddress(req) } });
 
-        if (!result.value) {
-            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-        }
-
-        saveEvent(id, 'reponse', {
-            app: 'organisation',
-            user: req.query.userId,
-            ip: getRemoteAddress(req),
-            reponse: text
-        });
-        return res.json(result.value);
+        return res.json(avis);
     }));
 
     router.put('/backoffice/avis/:id/removeReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-        const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+        let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
-        let result = await db.collection('comment').findOneAndUpdate(
-            { _id: new ObjectID(id) },
-            { $unset: { reponse: '' } },
-            { returnOriginal: false }
-        );
+        let avis = await consultation.removeReponse(id, { event: { origin: getRemoteAddress(req) } });
 
-        if (!result.value) {
-            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-        }
-
-        saveEvent(id, 'reponse removed', {
-            app: 'organisation',
-            user: req.query.userId,
-            ip: getRemoteAddress(req)
-        });
-
-        res.json(result);
-
+        return res.json(avis);
     }));
 
+    router.put('/backoffice/avis/:id/read', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
-    router.put('/backoffice/avis/:id/markAsRead', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
-        const id = ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { read: true } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'markAsRead', {
-                        app: 'organisation',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
-    }));
+        let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+        const { read } = await Joi.validate(req.body, { read: Joi.boolean().required() }, { abortEarly: false });
 
-    router.put('/backoffice/avis/:id/markAsNotRead', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
-        const id = ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { read: false } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'markAsNotRead', {
-                        app: 'organisation',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
+        let avis = await consultation.markAsRead(id, read, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
     }));
 
     router.put('/backoffice/avis/:id/report', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
 
-        let avis = await moderation.report(id, { event: { origin: getRemoteAddress(req) } });
+        let avis = await consultation.report(id, { event: { origin: getRemoteAddress(req) } });
 
         return res.json(avis);
+
     }));
 
-    router.put('/backoffice/avis/:id/unreport', checkAuth, checkProfile('organisme'), tryAndCatch((req, res) => {
-        const id = ObjectID(req.params.id); // eslint-disable-line new-cap
-        db.collection('comment').findOneAndUpdate(
-            { _id: id },
-            { $set: { reported: false, read: true } },
-            { returnOriginal: false },
-            (err, result) => {
-                if (err) {
-                    logger.error(err);
-                    res.status(500).send({ 'error': 'An error occurs' });
-                } else if (result.value) {
-                    saveEvent(id, 'report', {
-                        app: 'organisation',
-                        user: req.query.userId,
-                        ip: getRemoteAddress(req)
-                    });
-                    res.json(result.value);
-                } else {
-                    res.status(404).send({ 'error': 'Not found' });
-                }
-            });
+    router.put('/backoffice/avis/:id/unreport', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+
+        let avis = await consultation.unreport(id, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
     }));
 
     return router;
