@@ -699,7 +699,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         let response = await request(app)
         .put(`/api/backoffice/avis/${comment._id}/report`)
-        .send({})
+        .send({ report: true })
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -707,7 +707,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.read, true);
     });
 
-    it('can unreport avis', async () => {
+    it('can cancel report avis', async () => {
 
         let app = await startServer();
         const comment = newComment({ read: false });
@@ -717,8 +717,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/unreport`)
-        .send({})
+        .put(`/api/backoffice/avis/${comment._id}/report`)
+        .send({ report: false })
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);

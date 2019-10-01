@@ -20,7 +20,7 @@ export default class GlobalMessage extends React.Component {
 
     componentDidMount() {
         this.triggerTransition();
-        setTimeout(() => this.props.onClose(), this.props.timeout || 2500);
+        setTimeout(() => this.props.onClose(), this.props.message.timeout || 2500);
     }
 
     triggerTransition() {

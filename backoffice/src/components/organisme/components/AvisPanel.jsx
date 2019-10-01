@@ -129,7 +129,7 @@ export default class AvisPanel extends React.Component {
                                     showStatus={true}
                                     showReponse={true}
                                     showReponseButtons={true}
-                                    onChange={() => this.search()}
+                                    onChange={() => this.search({ silent: true })}
                                 />;
                             }} />
                 }

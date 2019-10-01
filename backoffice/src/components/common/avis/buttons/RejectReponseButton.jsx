@@ -17,8 +17,9 @@ export default class RejectReponseButton extends React.Component {
         this.props.onChange(updated, {
             message: {
                 type: 'local',
-                color: 'red',
                 text: 'La réponse a été rejetée.',
+                color: 'red',
+                timeout: 2500,
             },
         });
     };

@@ -17,6 +17,7 @@ import LocalMessage from '../message/LocalMessage';
 import './Avis.scss';
 import GlobalMessage from '../message/GlobalMessage';
 import MarkAsReadButton from './buttons/MarkAsReadButton';
+import ReportButton from './buttons/ReportButton';
 
 export default class Avis extends React.Component {
 
@@ -133,6 +134,7 @@ export default class Avis extends React.Component {
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
                                 <MarkAsReadButton avis={avis} onChange={this.handleChange} />
+                                <ReportButton avis={avis} onChange={this.handleChange} />
                             </div>
                         </div>
                     }

@@ -19,7 +19,7 @@ export default class LocalMessage extends React.Component {
 
     componentDidMount() {
         this.triggerTransition();
-        setTimeout(() => this.props.onClose(), 500);
+        setTimeout(() => this.props.onClose(), this.props.message.timeout || 500);
     }
 
     triggerTransition() {

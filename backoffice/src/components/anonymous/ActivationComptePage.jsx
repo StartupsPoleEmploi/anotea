@@ -154,8 +154,7 @@ export default class ActivationComptePage extends React.Component {
                                             </Button>
                                             {message &&
                                             <GlobalMessage
-                                                message={{ text: message, level: 'error' }}
-                                                timeout={5000}
+                                                message={{ text: message, level: 'error', timeout: 5000 }}
                                                 onClose={() => this.setState({ message: null })} />
                                             }
                                         </>

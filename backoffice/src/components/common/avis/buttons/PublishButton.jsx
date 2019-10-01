@@ -17,8 +17,8 @@ export default class PublishButton extends React.Component {
         let updated = await publishAvis(avis._id, qualification);
         this.props.onChange(updated, {
             message: {
+                type: 'local',
                 text: <span>L&apos;avis a été <b>publié</b> et taggué comme <b>{updated.qualification}</b>.</span>,
-                type: avis.published ? 'global' : 'local',
             },
         });
     };

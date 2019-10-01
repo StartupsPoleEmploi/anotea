@@ -7,13 +7,14 @@ import { Dropdown, DropdownDivider, DropdownItem } from '../../Dropdown';
 
 export default class RejectButton extends React.Component {
 
-    state = {
-        showModal: false,
-    };
-
     static propTypes = {
         avis: PropTypes.object.isRequired,
         onChange: PropTypes.func.isRequired,
+    };
+
+
+    state = {
+        showModal: false,
     };
 
     reject = async (avis, reason) => {
@@ -55,7 +56,6 @@ export default class RejectButton extends React.Component {
     render() {
         let { avis } = this.props;
 
-        let isRejected = !!this.props.avis.rejected;
         return (
             <div className="RejectButton">
                 {this.state.showModal && this.getModal()}

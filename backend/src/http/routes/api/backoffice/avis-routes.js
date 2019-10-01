@@ -264,20 +264,12 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
     router.put('/backoffice/avis/:id/report', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
         const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+        const { report } = await Joi.validate(req.body, { report: Joi.boolean().required() }, { abortEarly: false });
 
-        let avis = await consultation.report(id, { event: { origin: getRemoteAddress(req) } });
-
-        return res.json(avis);
-
-    }));
-
-    router.put('/backoffice/avis/:id/unreport', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
-
-        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
-
-        let avis = await consultation.unreport(id, { event: { origin: getRemoteAddress(req) } });
+        let avis = await consultation.report(id, report, { event: { origin: getRemoteAddress(req) } });
 
         return res.json(avis);
+
     }));
 
     return router;

@@ -40,8 +40,8 @@ export default class EditButton extends React.Component {
                     await deleteAvis(this.props.avis._id);
                     await this.props.onChange(this.props.avis, {
                         message: {
-                            text: 'L\'avis a été supprimé.',
                             type: 'local',
+                            text: 'L\'avis a été supprimé.',
                         },
                     });
                     this.setState({ showModal: 'none' });

@@ -16,8 +16,8 @@ export default class PublishReponseButton extends React.Component {
         let updated = await publishReponse(avis._id);
         this.props.onChange(updated, {
             message: {
-                text: 'La réponse a été publiée.',
                 type: 'local',
+                text: 'La réponse a été publiée.',
             },
         });
     };

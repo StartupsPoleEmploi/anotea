@@ -44,12 +44,12 @@ module.exports = db => {
 
             return result.value;
         },
-        markAsRead: async (id, read) => {
+        markAsRead: async (id, status) => {
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: new ObjectID(id) },
                 {
                     $set: {
-                        read
+                        read: status
                     }
                 },
                 { returnOriginal: false }
@@ -61,12 +61,12 @@ module.exports = db => {
 
             return result.value;
         },
-        report: async id => {
+        report: async (id, status) => {
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: new ObjectID(id) },
                 {
                     $set: {
-                        reported: true,
+                        reported: status,
                         rejected: false,
                         published: false,
                         read: true,
@@ -74,24 +74,6 @@ module.exports = db => {
                     }
                 },
                 { returnOriginal: false },
-            );
-
-            if (!result.value) {
-                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-            }
-
-            return result.value;
-        },
-        unreport: async id => {
-            let result = await db.collection('comment').findOneAndUpdate(
-                { _id: new ObjectID(id) },
-                {
-                    $set: {
-                        reported: false,
-                        read: true,
-                    }
-                },
-                { returnOriginal: false }
             );
 
             if (!result.value) {

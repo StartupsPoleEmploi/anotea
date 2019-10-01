@@ -16,8 +16,8 @@ export default class MarkAsReadButton extends React.Component {
         let updated = await markAvisAsRead(avis._id, !avis.read);
         this.props.onChange(updated, {
             message: {
-                text: `L'avis a été marquée comme lue.`,
                 type: 'local',
+                text: `L'avis a été marquée comme lue.`,
             },
         });
     };
