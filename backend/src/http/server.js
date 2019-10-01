@@ -61,7 +61,6 @@ module.exports = components => {
     app.use('/api', require('./routes/api/backoffice/formations-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/sirens-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/stats/stats-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/consultation-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/gestion-organismes-routes')(httpComponents));
     app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
 
