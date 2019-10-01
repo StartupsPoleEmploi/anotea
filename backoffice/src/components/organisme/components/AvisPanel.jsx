@@ -69,19 +69,16 @@ export default class AvisPanel extends React.Component {
                 filters={
                     <Filters>
                         <Filter
-                            label="Tous"
-                            isActive={() => !query.status && !query.reponseStatus && !query.read}
-                            onClick={() => onFilterClicked({ sortBy: 'date' })} />
-
-                        <Filter
                             label="Nouveaux"
-                            isActive={() => query.read === 'true'}
-                            onClick={() => onFilterClicked({ commentaires: true, read: true, sortBy: 'date' })} />
+                            isActive={() => query.read === 'false'}
+                            onClick={() => onFilterClicked({ read: false, sortBy: 'date' })} />
 
                         <Filter
-                            label="Lus"
-                            isActive={() => query.read === 'false'}
-                            onClick={() => onFilterClicked({ commentaires: true, read: false, sortBy: 'date' })} />
+                            label="Signalés"
+                            isActive={() => query.reported}
+                            onClick={() => onFilterClicked({ reported: true, sortBy: 'lastStatusUpdate' })}
+                            getNbElements={() => _.get(results.meta.stats, 'reported')}
+                        />
 
                         <Filter
                             label="Répondus"
@@ -93,7 +90,7 @@ export default class AvisPanel extends React.Component {
                         />
 
                         <Filter
-                            label="Rejetés"
+                            label="Réponses rejetées"
                             isActive={() => query.reponseStatus === 'rejected'}
                             onClick={() => onFilterClicked({
                                 reponseStatus: 'rejected',
@@ -102,11 +99,9 @@ export default class AvisPanel extends React.Component {
                         />
 
                         <Filter
-                            label="Signalés"
-                            isActive={() => query.status === 'reported'}
-                            onClick={() => onFilterClicked({ reported: true, sortBy: 'lastStatusUpdate' })}
-                            getNbElements={() => _.get(results.meta.stats, 'reported')}
-                        />
+                            label="Tous"
+                            isActive={() => !query.read && !query.reponseStatus && !query.reported}
+                            onClick={() => onFilterClicked({ sortBy: 'date' })} />
 
                     </Filters>
                 }

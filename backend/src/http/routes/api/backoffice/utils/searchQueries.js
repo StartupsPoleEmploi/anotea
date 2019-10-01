@@ -42,7 +42,7 @@ module.exports = db => {
                 ...(status === 'published' ? { published: true } : {}),
                 ...(status === 'rejected' ? { rejected: true } : {}),
 
-                ...(reponseStatus ? { reponse: { $exists: true } } : {}),
+                ...(reponseStatus === 'all' ? { reponse: { $exists: true } } : {}),
                 ...(['none', 'published', 'rejected'].includes(reponseStatus) ? { 'reponse.status': reponseStatus } : {}),
             };
         },
