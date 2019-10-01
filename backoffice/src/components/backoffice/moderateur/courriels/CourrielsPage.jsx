@@ -11,17 +11,21 @@ import Panel from '../../common/page/panel/Panel';
 const carousels = {
     stagiaires: [
         {
-            image: require('./images/Stag_6mois.png'),
-            content:
-                'Six mois après la fin de la formation'
-        }, {
-            image: require('./images/Stag_AvisRejeté.png'),
-            content:
-                'Rejet pour injure'
-        }, {
             image: require('./images/Stag_DonnerVotreAvis.png'),
             content:
                 'Donnez votre avis'
+        }, {
+            image: require('./images/Stag_AvisPublié.png'),
+            content:
+                'Avis publié'
+        }, {
+            image: require('./images/Stag_AvisRejeté.png'),
+            content:
+                'Avis rejeté pour injure'
+        }, {
+            image: require('./images/Stag_6mois.png'),
+            content:
+                'Six mois après la fin de la formation'
         }
     ],
     organismes: [
@@ -41,6 +45,14 @@ const carousels = {
             image: require('./images/OF_JoinAnotéa.png'),
             content:
                 'Création de compte'
+        }, {
+            image: require('./images/OF_SignaléPublié.png'),
+            content:
+                'Avis signalé publié'
+        }, {
+            image: require('./images/OF_SignaléRejeté.png'),
+            content:
+                'Avis signalé rejeté'
         }
     ]
 };
