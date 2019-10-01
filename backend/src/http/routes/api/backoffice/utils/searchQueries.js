@@ -30,9 +30,10 @@ module.exports = db => {
             };
         },
         filters: parameters => {
-            let { status, reponseStatus, reported, commentaires, qualification } = parameters;
+            let { status, reponseStatus, reported, commentaires, qualification, read } = parameters;
 
             return {
+                ...(_.isBoolean(read) ? { read } : {}),
                 ...(_.isBoolean(reported) ? { reported } : {}),
                 ...(_.isBoolean(commentaires) ? { comment: { $ne: null } } : {}),
                 ...(qualification ? { qualification } : {}),

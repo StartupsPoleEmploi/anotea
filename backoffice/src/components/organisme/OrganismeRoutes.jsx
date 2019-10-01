@@ -8,7 +8,7 @@ export default class OrganismeRoutes extends React.Component {
 
     render() {
         return (
-            <div>
+            <>
                 <Route
                     path={'/admin/organisme/avis'}
                     render={props => {
@@ -20,7 +20,7 @@ export default class OrganismeRoutes extends React.Component {
                     path={'/admin/organisme/mon-compte'}
                     component={MonComptePage}
                 />
-            </div>
+            </>
         );
     }
 }

@@ -96,7 +96,6 @@ class App extends Component {
             })
         };
 
-        console.log(this.state);
         let layout = backoffices[this.state.profile]();
 
         return (

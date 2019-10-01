@@ -1,8 +1,8 @@
 import { _put } from '../utils/http-client';
 
-export const updatePassword = (actualPassword, password) => {
+export const updatePassword = (current, password) => {
     return _put(`/backoffice/me/updatePassword`, {
-        actualPassword,
+        current,
         password,
     });
 };

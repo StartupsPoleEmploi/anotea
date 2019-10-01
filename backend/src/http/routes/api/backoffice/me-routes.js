@@ -18,9 +18,9 @@ module.exports = ({ db, middlewares, password, configuration }) => {
             password: Joi.string().required(),
         }, { abortEarly: false });
 
-        let query = { $or: [{ _id: id }, { _id: new ObjectID(id) }] };
+        let query = ObjectID.isValid(id) ? { _id: new ObjectID(id) } : { _id: parseInt(id) };
         let account = await db.collection('accounts').findOne(query);
-        if (account && await checkPassword(current, account.passwordHash, configuration)) {
+        if (await checkPassword(current, account.passwordHash, configuration)) {
 
             if (isPasswordStrongEnough(password)) {
                 let passwordHash = await hashPassword(password);

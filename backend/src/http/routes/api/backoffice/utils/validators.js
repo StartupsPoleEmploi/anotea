@@ -27,6 +27,7 @@ module.exports = regions => {
                 status: Joi.string().valid(['none', 'published', 'rejected']),
                 reponseStatus: Joi.string().valid(['none', 'published', 'rejected']),
                 reported: Joi.bool(),
+                read: Joi.bool(),
                 qualification: Joi.string().valid(['all', 'négatif', 'positif']),
                 commentaires: Joi.bool(),
                 sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),

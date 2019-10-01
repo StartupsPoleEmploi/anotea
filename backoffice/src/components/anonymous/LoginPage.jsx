@@ -8,8 +8,8 @@ import { CenteredForm } from '../common/page/form/CenteredForm';
 import { login, loginWithAccessToken } from './loginService';
 import './LoginPage.scss';
 import { NavLink } from 'react-router-dom';
-import Loader from '../backoffice/common/Loader';
-import GlobalMessage from '../backoffice/common/message/GlobalMessage';
+import Loader from '../common/Loader';
+import GlobalMessage from '../common/message/GlobalMessage';
 
 export default class LoginPage extends React.Component {
 

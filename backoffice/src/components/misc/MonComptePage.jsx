@@ -12,10 +12,6 @@ import GlobalMessage from '../common/message/GlobalMessage';
 
 export default class MonComptePage extends React.Component {
 
-    static propTypes = {
-        navigator: PropTypes.object.isRequired,
-    };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -50,17 +46,21 @@ export default class MonComptePage extends React.Component {
                 .then(() => {
                     return this.setState({
                         loading: false,
+                        current: '',
+                        password: '',
+                        confirmation: '',
                         message: {
                             text: 'Votre mot de passe a été modifié',
                             level: 'success',
                         },
                     });
                 })
-                .catch(() => {
+                .catch(async error => {
+                    let json = await error.json;
                     return this.setState({
                         loading: false,
                         message: {
-                            text: 'Une erreur est survenue',
+                            text: json.message,
                             level: 'error',
                         },
                     });

@@ -270,7 +270,7 @@ export default class FinanceurPage extends React.Component {
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);
                                         if (option) {
-                                            this.loadSelectBox('formations', () => getFormations(option.siren));
+                                            this.loadSelectBox('formations', () => getFormations({ siret: option.siren }));
                                         }
                                     }}
                                 />
