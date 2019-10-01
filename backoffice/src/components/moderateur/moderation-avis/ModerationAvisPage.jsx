@@ -24,7 +24,6 @@ export default class ModerationAvisPage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            message: null,
             fulltext: '',
             stats: {},
             results: {
@@ -168,20 +167,14 @@ export default class ModerationAvisPage extends React.Component {
                         results={
                             <AvisResults
                                 results={results}
-                                message={this.state.message}
                                 renderAvis={avis => {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            showModerationActions={true}
                                             showStatus={['all', 'rejected'].includes(query.status)}
                                             showReponse={false}
-                                            onChange={(avis, options) => {
-                                                let { message } = options;
-                                                if (message) {
-                                                    this.setState({ message });
-                                                }
-
+                                            showModerationActions={true}
+                                            onChange={() => {
                                                 return Promise.all([
                                                     this.search({ silent: true }),
                                                     this.fetchStats(),

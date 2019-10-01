@@ -15,6 +15,7 @@ import RejectButton from './buttons/RejectButton';
 import EditButton from './buttons/EditButton';
 import LocalMessage from '../message/LocalMessage';
 import './Avis.scss';
+import GlobalMessage from '../message/GlobalMessage';
 
 export default class Avis extends React.Component {
 
@@ -43,26 +44,31 @@ export default class Avis extends React.Component {
 
     handleChange = (newAvis, options = {}) => {
         let { message } = options;
-        if (message && message.type === 'local') {
+        if (message) {
             this.setState({
                 message,
-                propagateChanges: () => this.props.onChange(newAvis, _.omit(options, ['message']))
+                propagateChanges: () => {
+                    this.setState({ message: null });
+                    return this.props.onChange(newAvis);
+                }
             });
-        } else {
-            this.props.onChange(newAvis, options);
         }
     };
 
     render() {
         let { avis, showReponse, showStatus, showModerationActions } = this.props;
-        let disabledClass = this.state.message ? 'a-disabled' : '';
+        let { message } = this.state;
+        let isLocalMessage = _.get(message, 'type') === 'local';
+        let isGlobalMessage = _.get(message, 'type') === 'global';
+        let disabledClass = isLocalMessage ? 'a-disabled' : '';
 
         return (
             <div className="Avis">
-                {this.state.message &&
-                <LocalMessage
-                    message={this.state.message}
-                    onClose={async () => await this.state.propagateChanges()} />
+                {isLocalMessage &&
+                <LocalMessage message={message} onClose={async () => await this.state.propagateChanges()} />
+                }
+                {isGlobalMessage &&
+                <GlobalMessage message={message} onClose={async () => await this.state.propagateChanges()} />
                 }
 
                 <div className="row">

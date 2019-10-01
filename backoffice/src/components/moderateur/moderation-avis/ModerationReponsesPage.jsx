@@ -20,7 +20,6 @@ export default class ModerationReponsesPage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            message: null,
             results: {
                 avis: [],
                 meta: {
@@ -131,22 +130,15 @@ export default class ModerationReponsesPage extends React.Component {
                         results={
                             <AvisResults
                                 results={results}
-                                message={this.state.message}
                                 renderAvis={avis => {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            showModerationActions={!query.reported}
                                             showStatus={false}
                                             showReponse={!query.reported}
-                                            onChange={(avis, options = {}) => {
-                                                let { message } = options;
-                                                if (message) {
-                                                    this.setState({ message });
-                                                }
-                                                this.search({ silent: true });
-                                            }}>
-                                        </Avis>
+                                            showModerationActions={!query.reported}
+                                            onChange={() => this.search({ silent: true })}
+                                        />
                                     );
                                 }}
                             />
