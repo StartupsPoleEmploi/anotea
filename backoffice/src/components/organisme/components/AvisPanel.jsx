@@ -50,9 +50,9 @@ export default class AvisPanel extends React.Component {
         }
     }
 
-    search = () => {
+    search = (options = {}) => {
         return new Promise(resolve => {
-            this.setState({ loading: true }, async () => {
+            this.setState({ loading: !options.silent }, async () => {
                 let results = await searchAvis(this.props.query);
                 this.setState({ results, loading: false }, () => resolve());
             });
@@ -126,10 +126,10 @@ export default class AvisPanel extends React.Component {
                             renderAvis={avis => {
                                 return <Avis
                                     avis={avis}
-                                    showModerationActions={!query.reported}
                                     showStatus={true}
-                                    showReponse={!query.reported}
-                                    onChange={() => ({})}
+                                    showReponse={true}
+                                    showReponseButtons={true}
+                                    onChange={() => this.search()}
                                 />;
                             }} />
                 }

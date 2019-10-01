@@ -121,14 +121,8 @@ export default class AvisPanel extends React.Component {
                         <AvisResults
                             results={results}
                             message={message}
-                            renderAvis={avis => {
-                                return <Avis
-                                    avis={avis}
-                                    showModerationActions={true}
-                                    showStatus={true}
-                                    onChange={() => ({})}
-                                />;
-                            }} />
+                            renderAvis={avis => <Avis avis={avis} showStatus={true} />}
+                        />
                 }
                 pagination={
                     <Pagination

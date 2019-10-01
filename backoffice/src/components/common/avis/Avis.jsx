@@ -16,15 +16,22 @@ import EditButton from './buttons/EditButton';
 import LocalMessage from '../message/LocalMessage';
 import './Avis.scss';
 import GlobalMessage from '../message/GlobalMessage';
+import MarkAsReadButton from './buttons/MarkAsReadButton';
 
 export default class Avis extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        onChange: PropTypes.func.isRequired,
         showStatus: PropTypes.bool,
         showReponse: PropTypes.bool,
-        showModerationActions: PropTypes.bool,
+        showReponseButtons: PropTypes.bool,
+        showModerationButtons: PropTypes.bool,
+        showModerationReponseButtons: PropTypes.bool,
+        onChange: PropTypes.func.isRequired,
+    };
+
+    static defaultProps = {
+        onChange: () => ({}),
     };
 
     constructor(props) {
@@ -60,7 +67,9 @@ export default class Avis extends React.Component {
     };
 
     render() {
-        let { avis, showReponse, showStatus, showModerationActions } = this.props;
+        let {
+            avis, showStatus, showReponse, showReponseButtons, showModerationButtons, showModerationReponseButtons
+        } = this.props;
         let { message } = this.state;
         let isLocalMessage = _.get(message, 'type') === 'local';
         let isGlobalMessage = _.get(message, 'type') === 'global';
@@ -81,17 +90,17 @@ export default class Avis extends React.Component {
                     </div>
 
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
-                        <div className={`${showReponse ? 'with-opacity' : ''}`}>
+                        <div className={`${showModerationReponseButtons ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
                                 <Stagiaire
                                     avis={avis}
                                     showStatus={showStatus}
-                                    showModerationActions={showModerationActions}
+                                    showModerationButtons={showModerationButtons}
                                     onChange={this.handleChange} />
                             </div>
 
                             <div className="mb-1">
-                                <Titre avis={avis} showModerationActions={showModerationActions} onChange={this.handleChange} />
+                                <Titre avis={avis} showModerationButtons={showModerationButtons} onChange={this.handleChange} />
                             </div>
 
                             <div className="mb-1">
@@ -110,7 +119,7 @@ export default class Avis extends React.Component {
                         </div>
                     </div>
                     {
-                        !showModerationActions && avis.comment &&
+                        avis.comment && showModerationButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
                                 <EditButton avis={avis} onChange={this.handleChange} onEdit={this.toggleEdition} />
@@ -119,19 +128,29 @@ export default class Avis extends React.Component {
                             </div>
                         </div>
                     }
+                    {
+                        showReponseButtons &&
+                        <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
+                            <div className="btn-group-vertical">
+                                <MarkAsReadButton avis={avis} onChange={this.handleChange} />
+                            </div>
+                        </div>
+                    }
                 </div>
                 {
-                    showReponse && avis.reponse &&
+                    avis.reponse && showReponse &&
                     <div className="row mt-3">
                         <div className={`offset-sm-3 offset-md-4 col-sm-7 col-md-6 ${disabledClass}`}>
                             <Reponse avis={avis} />
                         </div>
+                        {showModerationReponseButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
                                 <PublishReponseButton avis={avis} onChange={this.handleChange} />
                                 <RejectReponseButton avis={avis} onChange={this.handleChange} />
                             </div>
                         </div>
+                        }
                     </div>
                 }
             </div>

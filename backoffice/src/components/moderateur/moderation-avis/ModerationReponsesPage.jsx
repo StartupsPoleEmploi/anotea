@@ -134,9 +134,9 @@ export default class ModerationReponsesPage extends React.Component {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            showStatus={false}
                                             showReponse={!query.reported}
-                                            showModerationActions={!query.reported}
+                                            showModerationButtons={!!query.reported}
+                                            showModerationReponseButtons={!query.reported}
                                             onChange={() => this.search({ silent: true })}
                                         />
                                     );

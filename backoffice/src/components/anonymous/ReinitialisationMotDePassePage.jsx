@@ -107,7 +107,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                         </Button>
                                         {message &&
                                         <GlobalMessage
-                                            message={{ text: message, level: 'error' }}
+                                            message={{ text: message, color: 'red' }}
                                             timeout={5000}
                                             onClose={() => this.setState({ message: null })} />
                                         }
