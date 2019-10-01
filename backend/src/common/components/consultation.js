@@ -30,7 +30,11 @@ module.exports = db => {
         removeReponse: async id => {
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: new ObjectID(id) },
-                { $unset: { reponse: '' } },
+                {
+                    $unset: {
+                        reponse: 1
+                    }
+                },
                 { returnOriginal: false }
             );
 
@@ -43,7 +47,11 @@ module.exports = db => {
         markAsRead: async (id, read) => {
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: new ObjectID(id) },
-                { $set: { read } },
+                {
+                    $set: {
+                        read
+                    }
+                },
                 { returnOriginal: false }
             );
 
@@ -61,6 +69,7 @@ module.exports = db => {
                         reported: true,
                         rejected: false,
                         published: false,
+                        read: true,
                         lastStatusUpdate: new Date(),
                     }
                 },
@@ -76,7 +85,12 @@ module.exports = db => {
         unreport: async id => {
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: new ObjectID(id) },
-                { $set: { reported: false, read: true } },
+                {
+                    $set: {
+                        reported: false,
+                        read: true,
+                    }
+                },
                 { returnOriginal: false }
             );
 

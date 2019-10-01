@@ -691,7 +691,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can report avis', async () => {
 
         let app = await startServer();
-        const comment = newComment();
+        const comment = newComment({ read: false });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
             insertIntoDatabase('comment', comment),
@@ -704,12 +704,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.reported, true);
+        assert.deepStrictEqual(response.body.read, true);
     });
 
     it('can unreport avis', async () => {
 
         let app = await startServer();
-        const comment = newComment();
+        const comment = newComment({ read: false });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
             insertIntoDatabase('comment', comment),
@@ -722,12 +723,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.reported, false);
+        assert.deepStrictEqual(response.body.read, true);
     });
 
     it('can mark avis as read', async () => {
 
         let app = await startServer();
-        const comment = newComment();
+        const comment = newComment({ read: false });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
             insertIntoDatabase('comment', comment),
@@ -745,7 +747,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can mark avis as not read', async () => {
 
         let app = await startServer();
-        const comment = newComment();
+        const comment = newComment({ read: true });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
             insertIntoDatabase('comment', comment),
