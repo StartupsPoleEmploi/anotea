@@ -23,7 +23,7 @@ export default class Avis extends React.Component {
         onChange: PropTypes.func.isRequired,
         showStatus: PropTypes.bool,
         showReponse: PropTypes.bool,
-        readonly: PropTypes.bool,
+        showModerationActions: PropTypes.bool,
     };
 
     constructor(props) {
@@ -54,7 +54,7 @@ export default class Avis extends React.Component {
     };
 
     render() {
-        let { avis, showReponse, showStatus, readonly } = this.props;
+        let { avis, showReponse, showStatus, showModerationActions } = this.props;
         let disabledClass = this.state.message ? 'a-disabled' : '';
 
         return (
@@ -76,12 +76,12 @@ export default class Avis extends React.Component {
                                 <Stagiaire
                                     avis={avis}
                                     showStatus={showStatus}
-                                    readonly={readonly}
+                                    showModerationActions={showModerationActions}
                                     onChange={this.handleChange} />
                             </div>
 
                             <div className="mb-1">
-                                <Titre avis={avis} readonly={readonly} onChange={this.handleChange} />
+                                <Titre avis={avis} showModerationActions={showModerationActions} onChange={this.handleChange} />
                             </div>
 
                             <div className="mb-1">
@@ -100,7 +100,7 @@ export default class Avis extends React.Component {
                         </div>
                     </div>
                     {
-                        !readonly && avis.comment &&
+                        !showModerationActions && avis.comment &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
                                 <EditButton avis={avis} onChange={this.handleChange} onEdit={this.toggleEdition} />

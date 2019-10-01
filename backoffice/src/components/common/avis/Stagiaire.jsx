@@ -60,7 +60,7 @@ export default class Stagiaire extends React.Component {
     static propTypes = {
         avis: PropTypes.object.isRequired,
         showStatus: PropTypes.bool,
-        readonly: PropTypes.bool,
+        showModerationActions: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
     };
 
@@ -71,7 +71,7 @@ export default class Stagiaire extends React.Component {
     };
 
     render() {
-        let { avis, readonly, showStatus } = this.props;
+        let { avis, showModerationActions, showStatus } = this.props;
 
         return (
             <div className="Stagiaire">
@@ -82,7 +82,7 @@ export default class Stagiaire extends React.Component {
                         {avis.pseudo ? avis.pseudo : 'anonyme'}
                     </span>
 
-                    {!readonly && avis.pseudo &&
+                    {!showModerationActions && avis.pseudo &&
                     <i className={`far ${avis.pseudoMasked ? 'fa-eye' : 'fa-eye-slash'} togglable mr-2`}
                        onClick={this.toggle} />
                     }

@@ -173,6 +173,7 @@ export default class ModerationAvisPage extends React.Component {
                                     return (
                                         <Avis
                                             avis={avis}
+                                            showModerationActions={true}
                                             showStatus={['all', 'rejected'].includes(query.status)}
                                             showReponse={false}
                                             onChange={(avis, options) => {

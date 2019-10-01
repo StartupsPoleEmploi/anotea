@@ -136,7 +136,7 @@ export default class ModerationReponsesPage extends React.Component {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            readonly={!query.reported}
+                                            showModerationActions={!query.reported}
                                             showStatus={false}
                                             showReponse={!query.reported}
                                             onChange={(avis, options = {}) => {
