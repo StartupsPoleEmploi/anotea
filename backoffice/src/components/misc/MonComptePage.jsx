@@ -51,7 +51,7 @@ export default class MonComptePage extends React.Component {
                         confirmation: '',
                         message: {
                             text: 'Votre mot de passe a été modifié',
-                            level: 'success',
+                            color: 'green',
                         },
                     });
                 })
@@ -61,7 +61,7 @@ export default class MonComptePage extends React.Component {
                         loading: false,
                         message: {
                             text: json.message,
-                            level: 'error',
+                            color: 'red',
                         },
                     });
                 });

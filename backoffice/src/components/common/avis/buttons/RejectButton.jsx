@@ -21,12 +21,13 @@ export default class RejectButton extends React.Component {
         let updated = await rejectAvis(avis._id, reason);
         this.props.onChange(updated, {
             message: {
+                type: 'local',
+                color: 'red',
                 text: (
                     <span>
                         L&apos;avis a été <b>rejeté</b> pour le motif <b>{updated.rejectReason}</b>.
                         {reason === 'injure' ? ' Un mail a été adressé au stagiaire.' : ''}
                     </span>),
-                type: 'local',
             }
         });
     };
