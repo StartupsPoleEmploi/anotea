@@ -1,5 +1,6 @@
 const express = require('express');
 const moment = require('moment');
+const _ = require('lodash');
 const { getDeviceType } = require('./utils/analytics');
 const Joi = require('joi');
 const externalLinks = require('../../front/utils/externalLinks');
@@ -73,19 +74,8 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         return Number(Math.round((sum / 5) + 'e1') + 'e-1');
     };
 
-    const sanitizeBody = body => {
-
-        let sanitizedBody = Object.assign({}, body);
-
-        sanitizedBody.pseudo = sanitize(body.pseudo);
-        sanitizedBody.texte = sanitize(body.commentaire.texte);
-        sanitizedBody.titre = sanitize(body.commentaire.titre);
-
-        return sanitizedBody;
-    };
 
     const buildAvis = (notes, token, body, trainee) => {
-        let data = sanitizeBody(body);
         let avis = {
             date: new Date(),
             token: token,
@@ -95,18 +85,24 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             training: trainee.training,
             codeRegion: trainee.codeRegion,
             rates: notes,
-            pseudo: data.pseudo.replace(/ /g, '').replace(/\./g, ''),
-            accord: data.accord,
-            accordEntreprise: data.accordEntreprise,
-            archived: false
+            pseudo: sanitize(body.pseudo.replace(/ /g, '').replace(/\./g, '')),
+            accord: body.accord,
+            accordEntreprise: body.accordEntreprise,
+            archived: false,
         };
 
-        let text = data.commentaire.texte;
-        let title = data.commentaire.titre;
-        if (title !== '' || text !== '') {
+        let text = _.get(body, 'commentaire.texte', null);
+        let title = _.get(body, 'commentaire.titre', null);
+        if (title || text) {
+            //TODO rework moderation status
+            avis.read = false;
+            avis.published = false;
+            avis.rejected = false;
+            avis.reported = false;
+            avis.moderated = false;
             avis.comment = {
-                title: title,
-                text: text
+                title: sanitize(title),
+                text: sanitize(text)
             };
         }
 
