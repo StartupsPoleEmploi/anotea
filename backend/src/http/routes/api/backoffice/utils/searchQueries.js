@@ -38,7 +38,7 @@ module.exports = db => {
                 ...(_.isBoolean(commentaires) ? { comment: { $ne: null } } : {}),
                 ...(qualification ? { qualification } : {}),
 
-                ...(status === 'none' ? { moderated: { $ne: true }, comment: { $ne: null } } : {}),
+                ...(status === 'none' ? { moderated: false } : {}),
                 ...(status === 'published' ? { published: true } : {}),
                 ...(status === 'rejected' ? { rejected: true } : {}),
 

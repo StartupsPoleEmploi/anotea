@@ -89,13 +89,13 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             accord: body.accord,
             accordEntreprise: body.accordEntreprise,
             archived: false,
+            read: false,
         };
 
         let text = _.get(body, 'commentaire.texte', null);
         let title = _.get(body, 'commentaire.titre', null);
         if (title || text) {
             //TODO rework moderation status
-            avis.read = false;
             avis.published = false;
             avis.rejected = false;
             avis.reported = false;

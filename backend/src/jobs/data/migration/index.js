@@ -7,6 +7,10 @@ cli.parse(process.argv);
 
 execute(async ({ db }) => {
     let stats = {};
-    stats.removeInvalidProperties = await require('./tasks/removeInvalidProperties')(db);
+    stats.addModerationStatusProperties = await require('./tasks/addModerationStatusProperties')(db);
+    stats.addReadProperty = await require('./tasks/addReadProperty')(db);
+    stats.removeAnsweredProperty = await require('./tasks/removeAnsweredProperty')(db);
+    stats.removeEmptyCommentaires = await require('./tasks/removeEmptyCommentaires')(db);
+    stats.removeModerationStatusForNotes = await require('./tasks/removeModerationStatusForNotes')(db);
     return stats;
 });
