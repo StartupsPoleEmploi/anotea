@@ -33,10 +33,11 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
 
     let buildFormQuery = (user, parameters) => {
         let { departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate } = parameters;
+        let financeur = codeFinanceur || (isPoleEmploi(user.codeFinanceur) ? null : user.codeFinanceur);
 
         return {
             'codeRegion': user.codeRegion,
-            'training.codeFinanceur': codeFinanceur || user.codeFinanceur,
+            ...(financeur ? { 'training.codeFinanceur': financeur } : {}),
             ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
             ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
             ...(idFormation ? { 'training.idFormation': idFormation } : {}),
