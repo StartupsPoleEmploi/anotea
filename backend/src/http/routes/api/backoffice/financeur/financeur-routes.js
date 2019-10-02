@@ -179,6 +179,7 @@ module.exports = ({ db, middlewares, configuration, regions, logger }) => {
         let parameters = await Joi.validate(req.query, {
             ...getFormValidators(req.user),
             ...getFiltersValidators(),
+            sortBy: Joi.string().allow(['date', 'lastStatusUpdate']).default('date'),
             token: Joi.string(),
         }, { abortEarly: false });
 
