@@ -20,9 +20,11 @@ class Commentaire extends Component {
     constructor(props) {
         super(props);
         let createBadwordsDebouncer = name => {
-            return _.debounce(async value => {
-                let sentence = await checkBadwords(value);
-                this.props.onChange(name, value, sentence.isGood);
+            return _.debounce(value => {
+                checkBadwords(value)
+                .then(() => this.props.onChange(name, value, true))
+                .catch(() => this.props.onChange(name, value, false));
+
             }, 1000);
         };
 

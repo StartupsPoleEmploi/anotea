@@ -317,4 +317,55 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let result = await db.collection('comment').findOne({ token: trainee.token });
         assert.deepStrictEqual(result.comment.text, 'texte');
     });
+
+    it('can not submit a questionnaire with invalid words', async () => {
+
+        let app = await startServer();
+        let date = new Date();
+        let trainee = newTrainee({}, date);
+        await insertIntoDatabase('trainee', trainee);
+
+        let response = await request(app)
+        .post(`/api/questionnaire/${trainee.token}`)
+        .send({
+            avis_accueil: 2,
+            avis_contenu_formation: 2,
+            avis_equipe_formateurs: 1,
+            avis_moyen_materiel: 2,
+            avis_accompagnement: 2,
+            pseudo: '',
+            commentaire: {
+                texte: 'Super connard',
+                titre: 'titre'
+            },
+            accord: true,
+            accordEntreprise: true,
+        });
+
+        assert.strictEqual(response.statusCode, 400);
+    });
+
+    it('can check badwords (invalid)', async () => {
+
+        let app = await startServer();
+
+        let response = await request(app)
+        .get(`/api/questionnaire/checkBadwords?sentence=C'est de la merde.`);
+
+        assert.strictEqual(response.statusCode, 400);
+    });
+
+    it('can check badwords (valid)', async () => {
+
+        let app = await startServer();
+
+        let response = await request(app)
+        .get(`/api/questionnaire/checkBadwords?sentence=super formation`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            isGood: true
+        });
+    });
+
 }));

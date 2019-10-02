@@ -1,40 +1,26 @@
-const s = require('string');
+const _ = require('lodash');
 const path = require('path');
+const { promisify } = require('util');
 const fs = require('fs');
+const readFile = promisify(fs.readFile);
 
-module.exports = function(logger) {
+module.exports = () => {
 
-    // todo : async read + catch errors
-    let raw = fs.readFileSync(path.join(__dirname, 'badwords.txt')).toString();
-
-    let dictionnary = raw.split('\n');
-
-    logger.info('Badword list loaded (' + dictionnary.length + ' words)');
+    let dictionnary = readFile(path.join(__dirname, 'badwords.txt'))
+    .then(content => {
+        let raw = content.toString();
+        return raw.split('\n').filter(value => !_.isEmpty(value));
+    });
 
     return {
-        isGood: function(str) {
-            if (str === null || str === undefined) {
-                throw new Error('Data must be a string');
-            }
-            let string = s(str).toLowerCase();
+        isGood: async value => {
 
-            for (let i = 0; i < dictionnary.length; i++) {
-                if (string.contains(' ') && string.contains(' ' + dictionnary[i] + ' ')) {
-                    return false;
-                } else if (string.contains('.') && string.contains(' ' + dictionnary[i] + '.')) {
-                    return false;
-                } else if (string.contains(',') && string.contains(' ' + dictionnary[i] + ',')) {
-                    return false;
-                } else if (string.endsWith(' ' + dictionnary[i])) {
-                    return false;
-                } else if (string.s === dictionnary[i]) {
-                    // one word
-                    return false;
-                } else if (string.s.startsWith(dictionnary[i] + ' ') || string.s.startsWith(dictionnary[i] + '.') || string.s.startsWith(dictionnary[i] + ',')) {
-                    return false;
-                }
+            if (value === null || value === undefined) {
+                return false;
             }
-            return true;
+
+            let dico = await dictionnary;
+            return value === '' || !_.some(dico, word => value.match(new RegExp(`\\b${word}\\b`, 'gi')));
         }
     };
 };
