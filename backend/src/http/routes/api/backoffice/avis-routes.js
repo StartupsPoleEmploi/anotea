@@ -3,33 +3,31 @@ const express = require('express');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { IdNotFoundError } = require('../../../../common/errors');
-const avisCSVColumnsMapper = require('./utils/avisCSVColumnsMapper');
+const avisCSVColumnsMapper = require('./avis/avisCSVColumnsMapper');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
+const { objectId } = require('../../validators');
+const avisQueryFactory = require('./avis/avisQueryFactory');
 
-module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing, regions }) => {
+module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
-    let queries = require('./utils/avisQueries')(db);
-    let validators = require('./utils/validators')(regions);
-    let { objectId } = validators;
 
     router.get('/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
 
-        let user = req.user;
+        let { validators, queries } = avisQueryFactory(db, req.user);
         let parameters = await Joi.validate(req.query, {
-            ...validators.form(user),
+            ...validators.form(),
             ...validators.filters(),
             ...validators.pagination(),
         }, { abortEarly: false });
 
         let cursor = db.collection('comment')
         .find({
-            ...await queries.form(user, parameters),
+            ...await queries.form(parameters),
             ...queries.filters(parameters),
-            ...queries.profiled(user),
         })
         .sort({ [parameters.sortBy]: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
@@ -58,18 +56,17 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.get('/backoffice/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
 
-        let user = req.user;
+        let { validators, queries } = avisQueryFactory(db, req.user);
         let parameters = await Joi.validate(req.query, {
-            ...validators.form(user),
+            ...validators.form(),
             ...validators.filters(),
             token: Joi.string(),
         }, { abortEarly: false });
 
         let stream = db.collection('comment')
         .find({
-            ...await queries.form(user, parameters),
+            ...await queries.form(parameters),
             ...queries.filters(parameters),
-            ...queries.profiled(user),
         })
         .sort({ [parameters.sortBy]: -1 })
         .stream();
