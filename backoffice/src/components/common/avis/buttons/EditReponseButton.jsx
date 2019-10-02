@@ -31,7 +31,7 @@ export default class EditReponseButton extends React.Component {
     getDeleteModal = () => {
         return (
             <Modal
-                title="Supprimer définitivement cette réponse"
+                title="Supprimer cette réponse"
                 body={
                     <span>Cette action entrainera la <b>suppression </b> de la réponse, <b>confirmez-vous votre demande ?</b></span>
                 }
@@ -42,6 +42,7 @@ export default class EditReponseButton extends React.Component {
                         message: {
                             type: 'local',
                             text: 'La réponse a été supprimée.',
+                            timeout: 2500,
                         },
                     });
                     this.setState({ showModal: 'none' });

@@ -142,7 +142,7 @@ export default class Avis extends React.Component {
                         showReponseButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
-                                <EditReponseButton avis={avis} onEdit={this.toggleReponseEditor} />
+                                <EditReponseButton avis={avis} onEdit={this.toggleReponseEditor} onChange={this.handleChange} />
                                 <MarkAsReadButton avis={avis} onChange={this.handleChange} />
                                 <ReportButton avis={avis} onChange={this.handleChange} />
                             </div>
