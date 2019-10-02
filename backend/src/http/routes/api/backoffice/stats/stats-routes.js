@@ -11,7 +11,7 @@ module.exports = ({ db, middlewares, regions }) => {
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let validators = require('../utils/validators')(regions);
-    let queries = require('../utils/searchQueries')(db);
+    let queries = require('../utils/avisQueries')(db);
 
     router.get('/backoffice/stats/stagiaires', checkAuth, tryAndCatch(async (req, res) => {
 
@@ -35,7 +35,7 @@ module.exports = ({ db, middlewares, regions }) => {
 
         let results = await computeAvisStats(db, {
             ...await queries.form(user, parameters),
-            ...queries.archived(user),
+            ...queries.profiled(user),
         });
 
         return res.json(results);
@@ -50,7 +50,7 @@ module.exports = ({ db, middlewares, regions }) => {
 
         res.json(await computeModerationStats(db, {
             ...await queries.form(user, parameters),
-            ...queries.archived(user),
+            ...queries.profiled(user),
         }));
     }));
 

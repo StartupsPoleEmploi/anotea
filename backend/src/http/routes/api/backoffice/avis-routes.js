@@ -12,7 +12,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
-    let queries = require('./utils/searchQueries')(db);
+    let queries = require('./utils/avisQueries')(db);
     let validators = require('./utils/validators')(regions);
     let { objectId } = validators;
 
@@ -29,7 +29,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
         .find({
             ...await queries.form(user, parameters),
             ...queries.filters(parameters),
-            ...queries.archived(user),
+            ...queries.profiled(user),
         })
         .sort({ [parameters.sortBy]: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
@@ -69,7 +69,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
         .find({
             ...await queries.form(user, parameters),
             ...queries.filters(parameters),
-            ...queries.archived(user),
+            ...queries.profiled(user),
         })
         .sort({ [parameters.sortBy]: -1 })
         .stream();

@@ -18,7 +18,6 @@ module.exports = db => {
             let financeur = codeFinanceur || (isPoleEmploi(user.codeFinanceur) ? null : user.codeFinanceur);
 
             return {
-                codeRegion: user.codeRegion,
                 ...(organisme ? { 'training.organisation.siret': organisme } : {}),
                 ...(financeur ? { 'training.codeFinanceur': financeur } : {}),
                 ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
@@ -45,9 +44,11 @@ module.exports = db => {
                 ...(reponseStatuses.length > 0 ? { 'reponse.status': { $in: reponseStatuses } } : {}),
             };
         },
-        archived: user => {
+        profiled: user => {
             return {
-                ...(user.profile !== 'financeur' ? { archived: false } : {}),
+                codeRegion: user.codeRegion,
+                ...(user.profile === 'financeur' ? {} : { archived: false }),
+                ...(user.profile === 'moderateur' ? {} : { moderated: true })
             };
         }
     };

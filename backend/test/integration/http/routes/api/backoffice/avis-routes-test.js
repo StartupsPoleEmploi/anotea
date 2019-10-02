@@ -64,6 +64,41 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis[0].moderated, false);
     });
 
+    it('when financeur should not return avis à moderer', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+            insertIntoDatabase('comment', newComment({ published: true })),
+            insertIntoDatabase('comment', newComment({ published: false, rejected: true })),
+            insertIntoDatabase('comment', newComment({ pseudo: 'john', moderated: false, published: false, rejected: false })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 2);
+        assert.ok(response.body.avis.filter(a => a.pseudo === 'john').length === 0);
+    });
+
+    it('should not return avis from other region', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
+            insertIntoDatabase('comment', newComment({ codeRegion: '6' })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
+    });
+
     it('when moderateur should return only not archived avis', async () => {
 
         let app = await startServer();
@@ -397,22 +432,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
             insertIntoDatabase('comment', newComment({ training: { codeFinanceur: '10' } })),
-        ]);
-
-        let response = await request(app)
-        .get('/api/backoffice/avis')
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.length, 0);
-    });
-
-    it('should not return avis from other region', async () => {
-
-        let app = await startServer();
-        let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
-            insertIntoDatabase('comment', newComment({ codeRegion: '6' })),
         ]);
 
         let response = await request(app)
