@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withServer } = require('../../../../../helpers/test-server');
 const { newComment } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinanceur }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinanceur, logAsModerateur }) => {
 
     it('can compute avis stats', async () => {
 
@@ -112,6 +112,30 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
             nbInjures: 0,
             nbNonConcernes: 0,
             nbReponses: 0,
+        });
+    });
+
+    it('can compute moderation stats', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ reported: true })),
+            insertIntoDatabase('comment', newComment({ reponse: { status: 'none' } })),
+            insertIntoDatabase('comment', newComment({ reported: true, archived: true })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/stats/moderation')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body, {
+            none: 0,
+            reported: 1,
+            reponse: {
+                none: 1
+            }
         });
     });
 }));

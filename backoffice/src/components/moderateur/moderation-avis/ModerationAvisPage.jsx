@@ -134,7 +134,7 @@ export default class ModerationAvisPage extends React.Component {
                                 <Filter
                                     label="À modérer"
                                     isActive={() => query.status === 'none'}
-                                    getNbElements={() => _.get(stats, 'status.none')}
+                                    getNbElements={() => stats.none}
                                     onClick={() => this.onFilterClicked({ status: 'none', sortBy: 'lastStatusUpdate' })}
                                 />
 

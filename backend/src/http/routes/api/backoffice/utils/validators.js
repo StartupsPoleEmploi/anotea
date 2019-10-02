@@ -7,26 +7,21 @@ module.exports = regions => {
 
             let region = regions.findRegionByCodeRegion(user.codeRegion);
             return {
-                idFormation: Joi.string(),
                 startDate: Joi.number(),
                 scheduledEndDate: Joi.number(),
-                reported: Joi.bool(),
-                status: Joi.string().valid(['none', 'published', 'rejected']),
-                reponseStatus: Joi.string().valid(['none', 'published', 'rejected']),
-                qualification: Joi.string().valid(['all', 'négatif', 'positif']),
-                commentaires: Joi.bool(),
+                idFormation: Joi.string(),
                 fulltext: Joi.string(),
                 departement: Joi.string().valid(region.departements.map(d => d.code)),
                 //Profile parameters
                 siren: user.profile === 'organisme' ? Joi.any().forbidden() : Joi.string().min(9).max(9),
-                codeFinanceur: isPoleEmploi(user.codeFinanceur) ? Joi.string().valid(getCodeFinanceurs()) : Joi.any().forbidden(),
+                codeFinanceur: isPoleEmploi(user.codeFinanceur) ?
+                    Joi.string().valid(getCodeFinanceurs()) : Joi.any().forbidden(),
             };
         },
         filters: () => {
             return {
-                status: Joi.string().valid(['none', 'published', 'rejected']),
+                status: Joi.string().valid(['none', 'published', 'rejected', 'reported']),
                 reponseStatus: Joi.string().valid(['none', 'published', 'rejected']),
-                reported: Joi.bool(),
                 read: Joi.bool(),
                 qualification: Joi.string().valid(['all', 'négatif', 'positif']),
                 commentaires: Joi.bool(),

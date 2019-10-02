@@ -1,7 +1,9 @@
 module.exports = async (db, query) => {
     let results = await db.collection('comment').aggregate([
         {
-            $match: query
+            $match: {
+                ...query,
+            }
         },
         {
             $group:
@@ -27,11 +29,9 @@ module.exports = async (db, query) => {
         {
             $project: {
                 _id: 0,
+                none: '$sumStatusNone',
                 reported: '$sumReported',
-                status: {
-                    none: '$sumStatusNone',
-                },
-                reponseStatus: {
+                reponse: {
                     none: '$sumReponseStatusNone',
                 }
             }

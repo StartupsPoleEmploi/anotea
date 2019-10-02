@@ -22,8 +22,8 @@ export default class ModerateurHeaderItems extends React.Component {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
                 let stats = await getModerationStats();
-                let avis = stats.status.none;
-                let reponses = stats.reponseStatus.none;
+                let avis = stats.none;
+                let reponses = stats.reponse.none;
                 this.setState({ avis, reponses, loading: false }, () => resolve());
             });
         });

@@ -30,17 +30,17 @@ module.exports = db => {
             };
         },
         filters: parameters => {
-            let { status, reponseStatus, reported, commentaires, qualification, read } = parameters;
+            let { status, reponseStatus, commentaires, qualification, read } = parameters;
 
             return {
                 ...(_.isBoolean(read) ? { read } : {}),
-                ...(_.isBoolean(reported) ? { reported } : {}),
                 ...(_.isBoolean(commentaires) ? { comment: { $ne: null } } : {}),
                 ...(qualification ? { qualification } : {}),
 
                 ...(status === 'none' ? { moderated: false } : {}),
                 ...(status === 'published' ? { published: true } : {}),
                 ...(status === 'rejected' ? { rejected: true } : {}),
+                ...(status === 'reported' ? { reported: true } : {}),
 
                 ...(reponseStatus === 'all' ? { reponse: { $exists: true } } : {}),
                 ...(['none', 'published', 'rejected'].includes(reponseStatus) ? { 'reponse.status': reponseStatus } : {}),
