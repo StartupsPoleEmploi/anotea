@@ -331,26 +331,6 @@ module.exports = function(db, logger, configuration, regions) {
             });
             mailOptions.replyTo = getReplyToEmail(region);
             sendMail('avis_alerte', params, mailOptions, successCallback, errorCallback);
-        },
-        sendAvisPublieMail: async (mailOptions, trainee, avis, successCallback, errorCallback) => {
-            let unsubscribeLink = getUnsubscribeLink(trainee);
-            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
-            let params = {
-                trainee,
-                avis,
-                consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/publie?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
-                unsubscribeLink: unsubscribeLink,
-                hostname: configuration.app.public_hostname
-            };
-
-            mailOptions.subject = 'Nous avons bien pris en compte votre commentaire';
-            mailOptions.list = Object.assign({}, list, {
-                unsubscribe: {
-                    url: unsubscribeLink,
-                }
-            });
-            mailOptions.replyTo = getReplyToEmail(region);
-            sendMail('avis_publie', params, mailOptions, successCallback, errorCallback);
         }
     };
 };
