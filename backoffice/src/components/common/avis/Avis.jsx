@@ -18,6 +18,8 @@ import './Avis.scss';
 import GlobalMessage from '../message/GlobalMessage';
 import MarkAsReadButton from './buttons/MarkAsReadButton';
 import ReportButton from './buttons/ReportButton';
+import EditReponseButton from './buttons/EditReponseButton';
+import ReponseEditor from './ReponseEditor';
 
 export default class Avis extends React.Component {
 
@@ -41,12 +43,19 @@ export default class Avis extends React.Component {
             message: null,
             propagateChanges: () => ({}),
             showCommentaireEditor: false,
+            showReponseEditor: false,
         };
     }
 
-    toggleEdition = async () => {
+    toggleCommentairesEditor = async () => {
         this.setState({
             showCommentaireEditor: !this.state.showCommentaireEditor,
+        });
+    };
+
+    toggleReponseEditor = async () => {
+        this.setState({
+            showReponseEditor: !this.state.showReponseEditor,
         });
     };
 
@@ -71,7 +80,7 @@ export default class Avis extends React.Component {
         let {
             avis, showStatus, showReponse, showReponseButtons, showModerationButtons, showModerationReponseButtons
         } = this.props;
-        let { message } = this.state;
+        let { message, showReponseEditor } = this.state;
         let isLocalMessage = _.get(message, 'type') === 'local';
         let isGlobalMessage = _.get(message, 'type') === 'global';
         let disabledClass = isLocalMessage ? 'a-disabled' : '';
@@ -91,7 +100,7 @@ export default class Avis extends React.Component {
                     </div>
 
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
-                        <div className={`${showModerationReponseButtons ? 'with-opacity' : ''}`}>
+                        <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
                                 <Stagiaire
                                     avis={avis}
@@ -109,7 +118,7 @@ export default class Avis extends React.Component {
                                     <CommentaireEditor
                                         avis={avis}
                                         onChange={this.handleChange}
-                                        onClose={this.toggleEdition} /> :
+                                        onClose={this.toggleCommentairesEditor} /> :
                                     <Commentaire avis={avis} onChange={this.handleChange} />
                                 }
                             </div>
@@ -123,7 +132,7 @@ export default class Avis extends React.Component {
                         avis.comment && showModerationButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
-                                <EditButton avis={avis} onChange={this.handleChange} onEdit={this.toggleEdition} />
+                                <EditButton avis={avis} onChange={this.handleChange} onEdit={this.toggleCommentairesEditor} />
                                 <PublishButton avis={avis} onChange={this.handleChange} />
                                 <RejectButton avis={avis} onChange={this.handleChange} />
                             </div>
@@ -133,14 +142,25 @@ export default class Avis extends React.Component {
                         showReponseButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
+                                <EditReponseButton avis={avis} onEdit={this.toggleReponseEditor} />
                                 <MarkAsReadButton avis={avis} onChange={this.handleChange} />
                                 <ReportButton avis={avis} onChange={this.handleChange} />
                             </div>
                         </div>
                     }
                 </div>
+                {this.state.showReponseEditor &&
+                <div className="row mt-3">
+                    <div className={`offset-sm-3 offset-md-4 col-sm-7 col-md-6 ${disabledClass}`}>
+                        <ReponseEditor
+                            avis={avis}
+                            onChange={this.handleChange}
+                            onClose={this.toggleReponseEditor} />
+                    </div>
+                </div>
+                }
                 {
-                    avis.reponse && showReponse &&
+                    avis.reponse && showReponse && !this.state.showReponseEditor &&
                     <div className="row mt-3">
                         <div className={`offset-sm-3 offset-md-4 col-sm-7 col-md-6 ${disabledClass}`}>
                             <Reponse avis={avis} />

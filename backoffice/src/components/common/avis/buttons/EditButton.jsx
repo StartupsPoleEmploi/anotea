@@ -77,7 +77,7 @@ export default class EditButton extends React.Component {
                 {this.state.showModal === 'resend' && this.getResendModal()}
                 {this.state.showModal === 'delete' && this.getDeleteModal()}
                 <Dropdown
-                    header="Modifier ou supprimer"
+                    header="Edition"
                     button={
                         <Button size="large" color="blue" toggable={true}>
                             <i className="fa fa-pencil-alt" />
