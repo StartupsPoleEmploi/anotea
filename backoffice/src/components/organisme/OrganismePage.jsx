@@ -254,7 +254,7 @@ export default class OrganismePage extends React.Component {
                         <Tab
                             label="Liste des avis"
                             isActive={() => navigator.isActive('/admin/organisme/avis/liste')}
-                            onClick={() => this.onTabClicked('liste', { read: true, sortBy: 'date' })} />
+                            onClick={() => this.onTabClicked('liste', { read: false, sortBy: 'date' })} />
                     </Tabs>
                 }
                 panel={
