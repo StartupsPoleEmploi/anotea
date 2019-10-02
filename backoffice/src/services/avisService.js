@@ -49,3 +49,19 @@ export const deleteAvis = id => {
     return _delete(`/backoffice/avis/${id}`);
 };
 
+export const addReponse = (id, text) => {
+    return _put(`/backoffice/avis/${id}/addReponse`, { text });
+};
+
+export const removeReponse = id => {
+    return _put(`/backoffice/avis/${id}/removeReponse`);
+};
+
+export const markAvisAsRead = (id, read) => {
+    return _put(`/backoffice/avis/${id}/read`, { read });
+};
+
+export const reportAvis = (id, report) => {
+    return _put(`/backoffice/avis/${id}/report`, { report });
+};
+

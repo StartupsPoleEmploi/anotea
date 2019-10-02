@@ -16,8 +16,10 @@ export default class RejectReponseButton extends React.Component {
         let updated = await rejectReponse(avis._id);
         this.props.onChange(updated, {
             message: {
-                text: 'La réponse a été rejetée.',
                 type: 'local',
+                text: 'La réponse a été rejetée.',
+                color: 'red',
+                timeout: 2500,
             },
         });
     };

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Page from '../common/page/Page';
 import Panel from '../common/page/panel/Panel';
 import { CenteredForm } from '../common/page/form/CenteredForm';
@@ -51,7 +50,8 @@ export default class MonComptePage extends React.Component {
                         confirmation: '',
                         message: {
                             text: 'Votre mot de passe a été modifié',
-                            level: 'success',
+                            color: 'green',
+                            timeout: 5000,
                         },
                     });
                 })
@@ -61,7 +61,7 @@ export default class MonComptePage extends React.Component {
                         loading: false,
                         message: {
                             text: json.message,
-                            level: 'error',
+                            color: 'red',
                         },
                     });
                 });
@@ -121,7 +121,6 @@ export default class MonComptePage extends React.Component {
                                     {message &&
                                     <GlobalMessage
                                         message={message}
-                                        timeout={5000}
                                         onClose={() => this.setState({ message: null })} />
                                     }
                                 </>

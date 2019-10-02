@@ -15,7 +15,7 @@ export class Alert extends React.Component {
         let transitionClass = showTransition ? 'show' : '';
 
         return (
-            <div className={`Alert alert alert-dismissible fade ${transitionClass} ${message.level || ''}`} role="alert">
+            <div className={`Alert alert alert-dismissible fade ${transitionClass} ${message.color || ''}`} role="alert">
                 {message.title &&
                 <h4 className="alert-heading title">{message.title}</h4>
                 }

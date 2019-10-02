@@ -1,4 +1,5 @@
 const request = require('supertest');
+const _ = require('lodash');
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/test-server');
@@ -248,21 +249,21 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis?reponseStatus=published')
+        .get('/api/backoffice/avis?reponseStatuses=published')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.strictEqual(response.body.avis[0].reponse.status, 'published');
 
         response = await request(app)
-        .get('/api/backoffice/avis?reponseStatus=rejected')
+        .get('/api/backoffice/avis?reponseStatuses=rejected')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.strictEqual(response.body.avis[0].reponse.status, 'rejected');
 
         response = await request(app)
-        .get('/api/backoffice/avis?reponseStatus=none')
+        .get('/api/backoffice/avis?reponseStatuses=none')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
@@ -645,5 +646,153 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app).get('/api/backoffice/avis');
         assert.strictEqual(response.statusCode, 401);
         assert.deepStrictEqual(response.body, { error: true });
+    });
+
+    it('can create a reponse', async () => {
+
+        let app = await startServer();
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
+        let comment = newComment();
+        await insertIntoDatabase('comment', comment);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/addReponse`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ text: 'Voici notre réponse' });
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.ok(response.body.reponse.date);
+        assert.deepStrictEqual(_.omit(response.body.reponse, ['date']), {
+            text: 'Voici notre réponse',
+            status: 'none',
+        });
+    });
+
+    it('can remove a reponse', async () => {
+
+        let app = await startServer();
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
+        let comment = newComment({
+            reponse: {
+                text: 'Voici notre réponse',
+                status: 'published',
+            }
+        });
+        await insertIntoDatabase('comment', comment);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/removeReponse`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.reponse, undefined);
+    });
+
+    it('can report avis', async () => {
+
+        let app = await startServer();
+        const comment = newComment({ read: false });
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/report`)
+        .send({ report: true })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.reported, true);
+        assert.deepStrictEqual(response.body.read, true);
+    });
+
+    it('can cancel report avis', async () => {
+
+        let app = await startServer();
+        const comment = newComment({ read: false });
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/report`)
+        .send({ report: false })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.reported, false);
+        assert.deepStrictEqual(response.body.read, true);
+    });
+
+    it('can mark avis as read', async () => {
+
+        let app = await startServer();
+        const comment = newComment({ read: false });
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/read`)
+        .send({ read: true })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.read, true);
+    });
+
+    it('can mark avis as not read', async () => {
+
+        let app = await startServer();
+        const comment = newComment({ read: true });
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/read`)
+        .send({ read: false })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.read, false);
+    });
+
+    it('should reject invalid comment id', async () => {
+
+        let app = await startServer();
+        let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/INVALID/addReponse`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ reponse: 'Voici notre réponse' });
+
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Erreur de validation',
+            details: [
+                {
+                    message: '"id" with value "INVALID" fails to match the Identifiant invalide pattern',
+                    path: [
+                        'id'
+                    ],
+                    type: 'string.regex.name',
+                    context: {
+                        name: 'Identifiant invalide',
+                        pattern: {},
+                        value: 'INVALID',
+                        key: 'id',
+                        label: 'id'
+                    }
+                }
+            ]
+        });
     });
 }));

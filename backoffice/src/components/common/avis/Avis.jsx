@@ -5,7 +5,7 @@ import Stagiaire from './Stagiaire';
 import Titre from './Titre';
 import Commentaire from './Commentaire';
 import Formation from './Formation';
-import Edition from './Edition';
+import CommentaireEditor from './CommentaireEditor';
 import Notes from './Notes';
 import Reponse from './Reponse';
 import PublishReponseButton from './buttons/PublishReponseButton';
@@ -15,15 +15,26 @@ import RejectButton from './buttons/RejectButton';
 import EditButton from './buttons/EditButton';
 import LocalMessage from '../message/LocalMessage';
 import './Avis.scss';
+import GlobalMessage from '../message/GlobalMessage';
+import MarkAsReadButton from './buttons/MarkAsReadButton';
+import ReportButton from './buttons/ReportButton';
+import EditReponseButton from './buttons/EditReponseButton';
+import ReponseEditor from './ReponseEditor';
 
 export default class Avis extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        onChange: PropTypes.func.isRequired,
         showStatus: PropTypes.bool,
         showReponse: PropTypes.bool,
-        readonly: PropTypes.bool,
+        showReponseButtons: PropTypes.bool,
+        showModerationButtons: PropTypes.bool,
+        showModerationReponseButtons: PropTypes.bool,
+        onChange: PropTypes.func.isRequired,
+    };
+
+    static defaultProps = {
+        onChange: () => ({}),
     };
 
     constructor(props) {
@@ -31,38 +42,56 @@ export default class Avis extends React.Component {
         this.state = {
             message: null,
             propagateChanges: () => ({}),
-            showEdition: false,
+            showCommentaireEditor: false,
+            showReponseEditor: false,
         };
     }
 
-    toggleEdition = async () => {
+    toggleCommentairesEditor = async () => {
         this.setState({
-            showEdition: !this.state.showEdition,
+            showCommentaireEditor: !this.state.showCommentaireEditor,
+        });
+    };
+
+    toggleReponseEditor = async () => {
+        this.setState({
+            showReponseEditor: !this.state.showReponseEditor,
         });
     };
 
     handleChange = (newAvis, options = {}) => {
         let { message } = options;
-        if (message && message.type === 'local') {
-            this.setState({
-                message,
-                propagateChanges: () => this.props.onChange(newAvis, _.omit(options, ['message']))
+        if (message) {
+            return new Promise(resolve => {
+                this.setState({
+                    message,
+                    propagateChanges: async () => {
+                        this.setState({ message: null });
+                        await this.props.onChange(newAvis);
+                        resolve();
+                    }
+                });
             });
-        } else {
-            this.props.onChange(newAvis, options);
         }
+        this.props.onChange(newAvis);
     };
 
     render() {
-        let { avis, showReponse, showStatus, readonly } = this.props;
-        let disabledClass = this.state.message ? 'a-disabled' : '';
+        let {
+            avis, showStatus, showReponse, showReponseButtons, showModerationButtons, showModerationReponseButtons
+        } = this.props;
+        let { message, showReponseEditor } = this.state;
+        let isLocalMessage = _.get(message, 'type') === 'local';
+        let isGlobalMessage = _.get(message, 'type') === 'global';
+        let disabledClass = isLocalMessage ? 'a-disabled' : '';
 
         return (
             <div className="Avis">
-                {this.state.message &&
-                <LocalMessage
-                    message={this.state.message}
-                    onClose={async () => await this.state.propagateChanges()} />
+                {isLocalMessage &&
+                <LocalMessage message={message} onClose={async () => await this.state.propagateChanges()} />
+                }
+                {isGlobalMessage &&
+                <GlobalMessage message={message} onClose={async () => await this.state.propagateChanges()} />
                 }
 
                 <div className="row">
@@ -71,25 +100,25 @@ export default class Avis extends React.Component {
                     </div>
 
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
-                        <div className={`${showReponse ? 'with-opacity' : ''}`}>
+                        <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
                                 <Stagiaire
                                     avis={avis}
                                     showStatus={showStatus}
-                                    readonly={readonly}
+                                    showModerationButtons={showModerationButtons}
                                     onChange={this.handleChange} />
                             </div>
 
                             <div className="mb-1">
-                                <Titre avis={avis} readonly={readonly} onChange={this.handleChange} />
+                                <Titre avis={avis} showModerationButtons={showModerationButtons} onChange={this.handleChange} />
                             </div>
 
                             <div className="mb-1">
-                                {this.state.showEdition ?
-                                    <Edition
+                                {this.state.showCommentaireEditor ?
+                                    <CommentaireEditor
                                         avis={avis}
                                         onChange={this.handleChange}
-                                        onClose={this.toggleEdition} /> :
+                                        onClose={this.toggleCommentairesEditor} /> :
                                     <Commentaire avis={avis} onChange={this.handleChange} />
                                 }
                             </div>
@@ -100,28 +129,50 @@ export default class Avis extends React.Component {
                         </div>
                     </div>
                     {
-                        !readonly && avis.comment &&
+                        avis.comment && showModerationButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
-                                <EditButton avis={avis} onChange={this.handleChange} onEdit={this.toggleEdition} />
+                                <EditButton avis={avis} onChange={this.handleChange} onEdit={this.toggleCommentairesEditor} />
                                 <PublishButton avis={avis} onChange={this.handleChange} />
                                 <RejectButton avis={avis} onChange={this.handleChange} />
                             </div>
                         </div>
                     }
+                    {
+                        showReponseButtons &&
+                        <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
+                            <div className="btn-group-vertical">
+                                <EditReponseButton avis={avis} onEdit={this.toggleReponseEditor} onChange={this.handleChange} />
+                                <MarkAsReadButton avis={avis} onChange={this.handleChange} />
+                                <ReportButton avis={avis} onChange={this.handleChange} />
+                            </div>
+                        </div>
+                    }
                 </div>
+                {this.state.showReponseEditor &&
+                <div className="row mt-3">
+                    <div className={`offset-sm-3 offset-md-4 col-sm-7 col-md-6 ${disabledClass}`}>
+                        <ReponseEditor
+                            avis={avis}
+                            onChange={this.handleChange}
+                            onClose={this.toggleReponseEditor} />
+                    </div>
+                </div>
+                }
                 {
-                    showReponse && avis.reponse &&
+                    avis.reponse && showReponse && !this.state.showReponseEditor &&
                     <div className="row mt-3">
                         <div className={`offset-sm-3 offset-md-4 col-sm-7 col-md-6 ${disabledClass}`}>
                             <Reponse avis={avis} />
                         </div>
+                        {showModerationReponseButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
                                 <PublishReponseButton avis={avis} onChange={this.handleChange} />
                                 <RejectReponseButton avis={avis} onChange={this.handleChange} />
                             </div>
                         </div>
+                        }
                     </div>
                 }
             </div>

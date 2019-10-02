@@ -46,11 +46,12 @@ module.exports = ({ db, middlewares, regions }) => {
         let user = req.user;
         let parameters = await Joi.validate(req.query, {
             ...validators.form(user),
-            ...(user.profile !== 'financeur' ? { archived: false } : {}),
         }, { abortEarly: false });
 
-        let query = await queries.form(user, parameters);
-        res.json(await computeModerationStats(db, query));
+        res.json(await computeModerationStats(db, {
+            ...await queries.form(user, parameters),
+            ...queries.archived(user),
+        }));
     }));
 
     return router;

@@ -4,7 +4,7 @@ import { editAvis, publishAvis } from '../../../services/avisService';
 import Button from '../Button';
 import { Dropdown, DropdownDivider, DropdownItem } from '../Dropdown';
 
-export default class Edition extends React.Component {
+export default class CommentaireEditor extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
@@ -14,10 +14,15 @@ export default class Edition extends React.Component {
 
     constructor(props) {
         super(props);
+        this.reference = React.createRef();
         let avis = this.props.avis;
         this.state = {
             text: avis.editedComment ? avis.editedComment.text : avis.comment.text,
         };
+    }
+
+    componentDidMount() {
+        this.reference.current.focus();
     }
 
     publish = async qualification => {
@@ -34,10 +39,11 @@ export default class Edition extends React.Component {
 
     render() {
         return (
-            <div className="Edition">
+            <div className="CommentaireEditor">
                 <textarea
+                    ref={this.reference}
                     className="form-control"
-                    rows="3"
+                    rows="4"
                     onChange={e => this.setState({ text: e.target.value })}
                     value={this.state.text} />
 

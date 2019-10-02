@@ -9,6 +9,6 @@ export const getAvisStats = (options = {}) => {
     return _get(`/backoffice/stats/avis?${queryString.stringify(options)}`);
 };
 
-export const getModerationStats = params => {
-    return _get(`/backoffice/stats/moderation?${queryString.stringify(params)}`);
+export const getModerationStats = (options = {}) => {
+    return _get(`/backoffice/stats/moderation?${queryString.stringify(options)}`);
 };

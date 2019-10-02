@@ -6,6 +6,12 @@ import PrettyDate from '../PrettyDate';
 const Status = ({ avis }) => {
 
     switch (avis.reponse.status) {
+        case 'none':
+            return (
+                <span className="status none">
+                    (En cours de modération)
+                </span>
+            );
         case 'published':
             return (
                 <span className="status published">
@@ -38,9 +44,7 @@ export default class Reponse extends React.Component {
             <div className="Reponse">
                 <div className="title">
                     <span>Réponse de l&apos;organisme </span>
-                    {avis.reponse.lastStatusUpdate &&
                     <Status avis={avis} />
-                    }
                     {avis.reponse.date &&
                     <span className="date float-right">le <PrettyDate date={new Date(avis.reponse.date)} /></span>
                     }

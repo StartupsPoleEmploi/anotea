@@ -1,6 +1,6 @@
 @import '../../../styles/variables';
 
-.Avis .Reponse {
+.ReponseEditor {
 
   font-size: 1rem;
   border: 1px solid $color-grey-5;
@@ -19,23 +19,6 @@
       font-weight: $font-weight-400;
       font-size: 0.875rem;
       color: $color-grey-50;
-    }
-  }
-
-  .status {
-
-    font-size: 0.75rem;
-
-    &.published {
-      color: $color-green;
-    }
-
-    &.rejected {
-      color: $color-red;
-    }
-
-    &.none {
-      color: $color-blue;
     }
   }
 }

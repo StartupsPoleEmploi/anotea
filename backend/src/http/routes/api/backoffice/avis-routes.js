@@ -2,19 +2,19 @@ const Joi = require('joi');
 const express = require('express');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
-const { objectId } = require('../../../../common/validators');
 const { IdNotFoundError } = require('../../../../common/errors');
 const avisCSVColumnsMapper = require('./utils/avisCSVColumnsMapper');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 
-module.exports = ({ db, middlewares, configuration, logger, moderation, mailing, regions }) => {
+module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
-    let validators = require('./utils/validators')(regions);
     let queries = require('./utils/searchQueries')(db);
+    let validators = require('./utils/validators')(regions);
+    let { objectId } = validators;
 
     router.get('/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
 
@@ -230,6 +230,46 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, mailing,
 
 
         res.json({ 'message': 'trainee email resent' });
+    }));
+
+    router.put('/backoffice/avis/:id/addReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+        const { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
+
+        let avis = await consultation.addReponse(id, text, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
+    }));
+
+    router.put('/backoffice/avis/:id/removeReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+
+        let avis = await consultation.removeReponse(id, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
+    }));
+
+    router.put('/backoffice/avis/:id/read', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+        const { read } = await Joi.validate(req.body, { read: Joi.boolean().required() }, { abortEarly: false });
+
+        let avis = await consultation.markAsRead(id, read, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
+    }));
+
+    router.put('/backoffice/avis/:id/report', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+
+        const { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
+        const { report } = await Joi.validate(req.body, { report: Joi.boolean().required() }, { abortEarly: false });
+
+        let avis = await consultation.report(id, report, { event: { origin: getRemoteAddress(req) } });
+
+        return res.json(avis);
+
     }));
 
     return router;

@@ -24,7 +24,6 @@ export default class ModerationAvisPage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            message: null,
             fulltext: '',
             stats: {},
             results: {
@@ -135,7 +134,7 @@ export default class ModerationAvisPage extends React.Component {
                                 <Filter
                                     label="À modérer"
                                     isActive={() => query.status === 'none'}
-                                    getNbElements={() => _.get(stats, 'status.none')}
+                                    getNbElements={() => stats.none}
                                     onClick={() => this.onFilterClicked({ status: 'none', sortBy: 'lastStatusUpdate' })}
                                 />
 
@@ -168,25 +167,19 @@ export default class ModerationAvisPage extends React.Component {
                         results={
                             <AvisResults
                                 results={results}
-                                message={this.state.message}
                                 renderAvis={avis => {
                                     return (
                                         <Avis
                                             avis={avis}
                                             showStatus={['all', 'rejected'].includes(query.status)}
-                                            showReponse={false}
-                                            onChange={(avis, options) => {
-                                                let { message } = options;
-                                                if (message) {
-                                                    this.setState({ message });
-                                                }
-
+                                            showModerationButtons={true}
+                                            onChange={() => {
                                                 return Promise.all([
                                                     this.search({ silent: true }),
                                                     this.fetchStats(),
                                                 ]);
-                                            }}>
-                                        </Avis>
+                                            }}
+                                        />
                                     );
                                 }}
                             />

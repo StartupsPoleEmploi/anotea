@@ -9,6 +9,7 @@ import { Filter, Filters } from '../../common/page/panel/filters/Filters';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import { searchAvis } from '../../../services/avisService';
+import { getModerationStats } from '../../../services/statsService';
 
 export default class ModerationReponsesPage extends React.Component {
 
@@ -20,7 +21,7 @@ export default class ModerationReponsesPage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            message: null,
+            stats: {},
             results: {
                 avis: [],
                 meta: {
@@ -39,12 +40,14 @@ export default class ModerationReponsesPage extends React.Component {
 
     componentDidMount() {
         this.search();
+        this.fetchStats();
     }
 
     componentDidUpdate(previous) {
         let query = this.props.navigator.getQuery();
         if (!_.isEqual(query, previous.navigator.getQuery())) {
             this.search();
+            this.fetchStats();
         }
     }
 
@@ -58,10 +61,17 @@ export default class ModerationReponsesPage extends React.Component {
         });
     };
 
+    fetchStats = async () => {
+        return new Promise(async resolve => {
+            let stats = await getModerationStats();
+            this.setState({ stats }, () => resolve());
+        });
+    };
+
     render() {
         let { navigator } = this.props;
         let query = navigator.getQuery();
-        let results = this.state.results;
+        let { results, stats } = this.state;
 
         return (
             <Page
@@ -75,47 +85,47 @@ export default class ModerationReponsesPage extends React.Component {
 
                                 <Filter
                                     label="À modérer"
-                                    isActive={() => query.reponseStatus === 'none'}
-                                    getNbElements={() => _.get(results.meta.stats, 'reponseStatus.none')}
+                                    isActive={() => query.reponseStatuses === 'none'}
+                                    getNbElements={() => _.get(stats, 'reponse.none')}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        reponseStatus: 'none',
+                                        reponseStatuses: 'none',
                                         sortBy: 'reponse.lastStatusUpdate'
                                     })}
                                 />
 
                                 <Filter
                                     label="Publiés"
-                                    isActive={() => query.reponseStatus === 'published'}
+                                    isActive={() => query.reponseStatuses === 'published'}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        reponseStatus: 'published',
+                                        reponseStatuses: 'published',
                                         sortBy: 'reponse.lastStatusUpdate'
                                     })}
                                 />
 
                                 <Filter
                                     label="Rejetés"
-                                    isActive={() => query.reponseStatus === 'rejected'}
+                                    isActive={() => query.reponseStatuses === 'rejected'}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        reponseStatus: 'rejected',
+                                        reponseStatuses: 'rejected',
                                         sortBy: 'reponse.lastStatusUpdate'
                                     })}
                                 />
 
                                 <Filter
                                     label="Signalés"
-                                    isActive={() => query.reported}
+                                    isActive={() => query.status === 'reported'}
+                                    getNbElements={() => stats.reported}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        reported: true,
+                                        status: 'reported',
                                         sortBy: 'lastStatusUpdate'
                                     })}
-                                    getNbElements={() => _.get(results.meta.stats, 'reported')}
                                 />
 
                                 <Filter
                                     label="Tous"
-                                    isActive={() => query.reponseStatus === 'all'}
+                                    isActive={() => query.reponseStatuses === 'none,published,rejected'}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        reponseStatus: 'all',
+                                        reponseStatuses: 'none,published,rejected',
                                         sortBy: 'date'
                                     })}
                                 />
@@ -131,22 +141,20 @@ export default class ModerationReponsesPage extends React.Component {
                         results={
                             <AvisResults
                                 results={results}
-                                message={this.state.message}
                                 renderAvis={avis => {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            readonly={!query.reported}
-                                            showStatus={false}
-                                            showReponse={!query.reported}
-                                            onChange={(avis, options = {}) => {
-                                                let { message } = options;
-                                                if (message) {
-                                                    this.setState({ message });
-                                                }
-                                                this.search({ silent: true });
-                                            }}>
-                                        </Avis>
+                                            showReponse={query.status !== 'reported'}
+                                            showModerationButtons={query.status === 'reported'}
+                                            showModerationReponseButtons={query.status !== 'reported'}
+                                            onChange={() => {
+                                                return Promise.all([
+                                                    this.search({ silent: true }),
+                                                    this.fetchStats(),
+                                                ]);
+                                            }}
+                                        />
                                     );
                                 }}
                             />
