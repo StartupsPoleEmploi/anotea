@@ -4,7 +4,7 @@ import { editAvis, publishAvis } from '../../../services/avisService';
 import Button from '../Button';
 import { Dropdown, DropdownDivider, DropdownItem } from '../Dropdown';
 
-export default class Edition extends React.Component {
+export default class CommentaireEditor extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,

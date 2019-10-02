@@ -5,7 +5,7 @@ import Stagiaire from './Stagiaire';
 import Titre from './Titre';
 import Commentaire from './Commentaire';
 import Formation from './Formation';
-import Edition from './Edition';
+import CommentaireEditor from './CommentaireEditor';
 import Notes from './Notes';
 import Reponse from './Reponse';
 import PublishReponseButton from './buttons/PublishReponseButton';
@@ -40,13 +40,13 @@ export default class Avis extends React.Component {
         this.state = {
             message: null,
             propagateChanges: () => ({}),
-            showEdition: false,
+            showCommentaireEditor: false,
         };
     }
 
     toggleEdition = async () => {
         this.setState({
-            showEdition: !this.state.showEdition,
+            showCommentaireEditor: !this.state.showCommentaireEditor,
         });
     };
 
@@ -105,8 +105,8 @@ export default class Avis extends React.Component {
                             </div>
 
                             <div className="mb-1">
-                                {this.state.showEdition ?
-                                    <Edition
+                                {this.state.showCommentaireEditor ?
+                                    <CommentaireEditor
                                         avis={avis}
                                         onChange={this.handleChange}
                                         onClose={this.toggleEdition} /> :
