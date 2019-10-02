@@ -20,7 +20,7 @@ module.exports = {
                 _componentsHolder = components({
                     configuration: Object.assign({}, configuration, {
                         mongodb: {
-                            uri: uri
+                            uri
                         },
                         api: {
                             pagination: 2,

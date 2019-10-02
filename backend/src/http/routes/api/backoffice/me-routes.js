@@ -4,11 +4,11 @@ const Joi = require('joi');
 const Boom = require('boom');
 const { tryAndCatch } = require('../../routes-utils');
 
-module.exports = ({ db, middlewares, password, configuration }) => {
+module.exports = ({ db, middlewares, passwords }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let checkAuth = middlewares.createJWTAuthMiddleware('backoffice');
-    let { checkPassword, hashPassword, isPasswordStrongEnough } = password;
+    let { checkPassword, hashPassword, isPasswordStrongEnough } = passwords;
 
     router.put('/backoffice/me/updatePassword', checkAuth, tryAndCatch(async (req, res) => {
 
@@ -20,7 +20,7 @@ module.exports = ({ db, middlewares, password, configuration }) => {
 
         let query = ObjectID.isValid(id) ? { _id: new ObjectID(id) } : { _id: parseInt(id) };
         let account = await db.collection('accounts').findOne(query);
-        if (await checkPassword(current, account.passwordHash, configuration)) {
+        if (await checkPassword(current, account.passwordHash)) {
 
             if (isPasswordStrongEnough(password)) {
                 let passwordHash = await hashPassword(password);

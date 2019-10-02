@@ -3,10 +3,9 @@
 
 const path = require('path');
 const crypto = require('crypto');
-const { hashPassword } = require('../../../common/components/password');
 const { execute } = require('../../job-utils');
 
-execute(async ({ logger, configuration }) => {
+execute(async ({ logger, configuration, passwords }) => {
 
     let password = process.argv[2];
     if (!password) {
@@ -19,7 +18,7 @@ execute(async ({ logger, configuration }) => {
     .digest('hex');
 
     return {
-        bcrypt: await hashPassword(password),
-        bcrypt_legacy_sha256: await hashPassword(sha256),
+        bcrypt: await passwords.hashPassword(password),
+        bcrypt_legacy_sha256: await passwords.hashPassword(sha256),
     };
 });

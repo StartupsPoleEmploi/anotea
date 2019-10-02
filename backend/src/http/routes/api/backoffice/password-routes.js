@@ -4,10 +4,10 @@ const Boom = require('boom');
 const { tryAndCatch } = require('../../routes-utils');
 const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 
-module.exports = ({ db, mailing, password }) => {
+module.exports = ({ db, mailing, passwords }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let { hashPassword, isPasswordStrongEnough } = password;
+    let { hashPassword, isPasswordStrongEnough } = passwords;
 
     router.put('/backoffice/askNewPassword', tryAndCatch(async (req, res) => {
 

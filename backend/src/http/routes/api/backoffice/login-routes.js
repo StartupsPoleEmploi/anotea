@@ -3,10 +3,10 @@ const Boom = require('boom');
 const Joi = require('joi');
 const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
 
-module.exports = ({ db, auth, configuration, password }) => {
+module.exports = ({ db, auth, passwords }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    let { checkPassword, hashPassword } = password;
+    let { checkPassword, hashPassword } = passwords;
 
     const logLoginEvent = (req, profile, id) => {
         return db.collection('events').insertOne({
@@ -92,7 +92,7 @@ module.exports = ({ db, auth, configuration, password }) => {
 
         let token;
         let account = await db.collection('accounts').findOne({ courriel: identifiant });
-        if (account && await checkPassword(password, account.passwordHash, configuration)) {
+        if (account && await checkPassword(password, account.passwordHash)) {
             await rehashPassword(account, password);
             token = await handleModerateurOrFinanceur(req, account);
         }
@@ -101,7 +101,7 @@ module.exports = ({ db, auth, configuration, password }) => {
             'meta.siretAsString': identifiant,
             'passwordHash': { $exists: true },
         });
-        if (account && await checkPassword(password, account.passwordHash, configuration)) {
+        if (account && await checkPassword(password, account.passwordHash)) {
             await rehashPassword(account, password);
             token = await handleOrganisme(req, account);
         }

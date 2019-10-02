@@ -2,7 +2,6 @@
 'use strict';
 
 const cli = require('commander');
-const { hashPassword } = require('../../../common/components/password');
 const { execute } = require('../../job-utils');
 
 cli.description('Create new account')
@@ -12,7 +11,7 @@ cli.description('Create new account')
 .option('--password [password]')
 .parse(process.argv);
 
-execute(async ({ db, exit }) => {
+execute(async ({ db, exit, passwords }) => {
 
     let { username, password, region, profile } = cli;
 
@@ -24,7 +23,7 @@ execute(async ({ db, exit }) => {
         courriel: username,
         codeRegion: region,
         profile: profile,
-        passwordHash: await hashPassword(password),
+        passwordHash: await passwords.hashPassword(cli.password),
         ...(profile === 'moderateur' ? { features: ['EDIT_ORGANISATIONS'] } : {}),
         meta: {
             rehashed: true
