@@ -14,7 +14,7 @@ export default class DeprecatedToolbar extends React.PureComponent {
         let filters = this.props.exportFilters !== undefined ? this.props.exportFilters : '';
         let params = filters ? `${filters}&token=${getToken()}` : `?token=${getToken()}`;
 
-        return `${publicUrl}/api/backoffice/export/avis.csv${params}`;
+        return `${publicUrl}/api/backoffice/organismes/avis.csv${params}`;
     };
 
     render() {
