@@ -56,6 +56,10 @@
       color: $color-red;
     }
 
+    &.reported {
+      color: $color-red;
+    }
+
     &.toModerate {
       color: $color-blue;
     }

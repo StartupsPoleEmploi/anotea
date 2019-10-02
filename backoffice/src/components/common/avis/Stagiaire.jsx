@@ -30,8 +30,13 @@ const Status = ({ avis }) => {
 
     if (avis.archived) {
         return (<span className="status">(Archivé)</span>);
-    } else if (!avis.comment) {
-        return (<span />);
+    } else if (avis.reported) {
+        return (
+            <span className="status reported">
+                (<span>Signalé le </span>
+                <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
+            </span>
+        );
     } else if (avis.published) {
         return (
             <span className="status published">
