@@ -14,11 +14,13 @@ module.exports = db => {
         db.collection('accounts').updateMany(
             {
                 profile: 'organisme',
-                passwordHash: { $ne: null }
+
             },
             {
                 $set: {
-                    newCommentsNotificationEmailSentDate: null
+                    newCommentsNotificationEmailSentDate: null,
+                    mailSentDate: null,
+                    passwordHash: null
                 }
             }
         )

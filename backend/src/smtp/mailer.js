@@ -43,7 +43,7 @@ module.exports = function(db, logger, configuration, regions) {
     };
 
     const getOrganisationPasswordLink = organisation => {
-        return `${configuration.app.public_hostname}/admin/organisme/activation-compte?token=${organisation.token}`;
+        return `${configuration.app.public_hostname}/admin/activation-compte?token=${organisation.token}`;
     };
 
     const getRegionEmail = region => {
@@ -212,7 +212,7 @@ module.exports = function(db, logger, configuration, regions) {
         },
         sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, profile, successCallback, errorCallback) => {
 
-            let link = `${configuration.app.public_hostname}/admin/reinitialisation-mot-de-passe?token=${passwordToken}`;
+            let link = `${configuration.app.public_hostname}/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`;
             let consultationLink = `${configuration.app.public_hostname}/mail/${passwordToken}/passwordForgotten`;
             let params = { link, hostname: configuration.app.public_hostname, codeRegion, profile, consultationLink };
             let region = regions.findRegionByCodeRegion(codeRegion);

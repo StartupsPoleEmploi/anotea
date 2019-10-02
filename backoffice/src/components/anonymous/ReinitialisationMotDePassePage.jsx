@@ -1,14 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Panel from '../backoffice/common/page/panel/Panel';
-import InputText from '../backoffice/common/page/form/InputText';
-import Button from '../backoffice/common/Button';
-import Page from '../backoffice/common/page/Page';
-import { AuthForm } from './AuthForm';
-import { checkIfPasswordTokenExists, updatePassword } from './passwordService';
+import Panel from '../common/page/panel/Panel';
+import InputText from '../common/page/form/InputText';
+import Button from '../common/Button';
+import Page from '../common/page/Page';
+import { CenteredForm } from '../common/page/form/CenteredForm';
+import { checkIfPasswordTokenExists, resetPassword } from './passwordService';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
-import GlobalMessage from '../backoffice/common/message/GlobalMessage';
+import GlobalMessage from '../common/message/GlobalMessage';
 
 export default class ReinitialisationMotDePassePage extends React.Component {
 
@@ -32,15 +32,11 @@ export default class ReinitialisationMotDePassePage extends React.Component {
 
     componentDidMount() {
         let { navigator } = this.props;
-        let { token } = navigator.getQuery();
+        let { forgottenPasswordToken } = navigator.getQuery();
 
-        checkIfPasswordTokenExists(token)
+        checkIfPasswordTokenExists(forgottenPasswordToken)
         .catch(this.showErrorMessage);
     }
-
-    showErrorMessage = () => {
-        this.setState({ loading: false, message: 'Une erreur est survenue' });
-    };
 
     onSubmit = () => {
 
@@ -55,12 +51,12 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
             if (isFormValid) {
-                let { token } = this.props.navigator.getQuery();
+                let { forgottenPasswordToken } = this.props.navigator.getQuery();
                 this.setState({ loading: true });
 
-                updatePassword(password, token)
+                resetPassword(password, forgottenPasswordToken)
                 .then(() => this.props.navigator.goToPage('/admin'))
-                .catch(this.showErrorMessage);
+                .catch(() => this.setState({ loading: false, message: 'Une erreur est survenue' }));
             }
         });
     };
@@ -75,8 +71,8 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                     <Panel
                         backgroundColor="blue"
                         results={
-                            <AuthForm
-                                title="Créer un nouveau mot de passe"
+                            <CenteredForm
+                                title={<div className="a-blue">Créer un nouveau mot de passe</div>}
                                 elements={
                                     <>
                                         <label>Nouveau mot de passe</label>
@@ -111,8 +107,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                         </Button>
                                         {message &&
                                         <GlobalMessage
-                                            message={{ text: message, level: 'error' }}
-                                            timeout={5000}
+                                            message={{ text: message, color: 'red', timeout: 5000 }}
                                             onClose={() => this.setState({ message: null })} />
                                         }
                                     </>

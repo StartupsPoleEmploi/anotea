@@ -21,6 +21,15 @@ module.exports = {
             db.collection('trainee').createIndex({ 'avisCreated': 1 }),
             db.collection('trainee').createIndex({ 'tracking.firstRead': 1 }),
             db.collection('trainee').createIndex({ 'tracking.click': 1 }),
+            db.collection('trainee').createIndex({
+                'codeRegion': 1,
+                'training.place.postalCode': 1,
+                'training.codeFinanceur': 1,
+                'training.organisation.siret': 1,
+                'training.idFormation': 1,
+                'training.startDate': 1,
+                'training.scheduledEndDate': 1,
+            }, { name: 'bo-stagiaires-stats' }),
         ]);
     },
     comment: db => {
@@ -64,7 +73,7 @@ module.exports = {
                 'comment.text': 'text',
                 'training.title': 'text',
                 'training.organisation.label': 'text',
-            }, { name: 'bo-moderation-search-fulltext' }),
+            }, { name: 'bo-search-fulltext' }),
             db.collection('trainee').createIndex({
                 'codeRegion': 1,
                 'training.place.postalCode': 1,
@@ -73,7 +82,7 @@ module.exports = {
                 'training.idFormation': 1,
                 'training.startDate': 1,
                 'training.scheduledEndDate': 1,
-            }, { name: 'bo-financeur-stats' }),
+            }, { name: 'bo-avis-stats' }),
         ]);
     },
     accounts: db => {

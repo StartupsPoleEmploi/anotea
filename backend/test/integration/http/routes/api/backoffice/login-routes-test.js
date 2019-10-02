@@ -213,7 +213,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let app = await startServer();
 
         let response = await request(app)
-        .get('/api/backoffice/organisme/111111111111/info')
+        .get('/api/v1/ping/authenticated')
         .set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjoiZmluYW.INVALID');
 
         assert.strictEqual(response.statusCode, 401);

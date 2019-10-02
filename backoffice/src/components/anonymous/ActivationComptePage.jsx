@@ -1,16 +1,16 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Panel from '../backoffice/common/page/panel/Panel';
-import InputText from '../backoffice/common/page/form/InputText';
-import Button from '../backoffice/common/Button';
-import Page from '../backoffice/common/page/Page';
-import { AuthForm } from './AuthForm';
+import Panel from '../common/page/panel/Panel';
+import InputText from '../common/page/form/InputText';
+import Button from '../common/Button';
+import Page from '../common/page/Page';
+import { CenteredForm } from '../common/page/form/CenteredForm';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
-import { activateAccount, getOrganismeByToken } from '../backoffice/organisation/service/organismeService';
+import { activate, getActivationStatus } from './activationService';
 import { login } from './loginService';
 import { NavLink } from 'react-router-dom';
-import GlobalMessage from '../backoffice/common/message/GlobalMessage';
+import GlobalMessage from '../common/message/GlobalMessage';
 
 export default class ActivationComptePage extends React.Component {
 
@@ -30,28 +30,29 @@ export default class ActivationComptePage extends React.Component {
                 passwordNotStrongEnough: null,
                 isNotSamePassword: null,
             },
-            organisme: {
-                raisonSociale: '',
-                siret: '',
-                activated: false,
+            account: {
+                nom: '',
+                identifiant: '',
+                active: false,
             },
         };
     }
+
     componentDidMount() {
         let { navigator } = this.props;
         let query = navigator.getQuery();
 
-        getOrganismeByToken(query.token)
-        .then(organisme => this.setState({ organisme, loading: false }))
+        getActivationStatus(query.token)
+        .then(account => this.setState({ account, loading: false }))
         .catch(this.showErrorMessage);
     }
 
     showErrorMessage = () => {
         this.setState({ loading: false, message: 'Une erreur est survenue' });
-    }
+    };
 
     onSubmit = () => {
-        let { password, confirmation, organisme } = this.state;
+        let { password, confirmation, account } = this.state;
         this.setState({
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
@@ -65,9 +66,9 @@ export default class ActivationComptePage extends React.Component {
                 let { token } = this.props.navigator.getQuery();
 
                 this.setState({ loading: true });
-                activateAccount(password, token)
+                activate(token, password)
                 .then(async () => {
-                    let data = await login(organisme.siret, password);
+                    let data = await login(account.identifiant, password);
                     this.props.onLogin(data);
                 })
                 .catch(this.showErrorMessage);
@@ -77,7 +78,7 @@ export default class ActivationComptePage extends React.Component {
 
     render() {
 
-        let { organisme, errors, message } = this.state;
+        let { account, errors, message } = this.state;
 
         return (
             <Page
@@ -86,15 +87,15 @@ export default class ActivationComptePage extends React.Component {
                     <Panel
                         backgroundColor="blue"
                         results={
-                            <AuthForm
-                                title={organisme.raisonSociale}
+                            <CenteredForm
+                                title={<div className="a-blue">{account.nom}</div>}
                                 elements={
                                     <>
                                         <label>Votre identifiant pour la connexion</label>
                                         <div className="mb-3">
-                                            {organisme.siret}
+                                            {account.identifiant}
                                         </div>
-                                        {organisme.activated ?
+                                        {account.status === 'active' ?
                                             <>
                                                 <div className="clarification">
                                                     <div>Un Espace Anotéa a déjà été créé pour cet Organisme de Formation.</div>
@@ -140,7 +141,7 @@ export default class ActivationComptePage extends React.Component {
                                     </>
                                 }
                                 buttons={
-                                    organisme.activated ? <div /> :
+                                    account.status === 'active' ? <div /> :
                                         <>
                                             <Button
                                                 type="submit"
@@ -153,8 +154,7 @@ export default class ActivationComptePage extends React.Component {
                                             </Button>
                                             {message &&
                                             <GlobalMessage
-                                                message={{ text: message, level: 'error' }}
-                                                timeout={5000}
+                                                message={{ text: message, level: 'error', timeout: 5000 }}
                                                 onClose={() => this.setState({ message: null })} />
                                             }
                                         </>

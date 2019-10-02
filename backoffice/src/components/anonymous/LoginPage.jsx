@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Page from '../backoffice/common/page/Page';
-import Panel from '../backoffice/common/page/panel/Panel';
-import InputText from '../backoffice/common/page/form/InputText';
-import Button from '../backoffice/common/Button';
-import { AuthForm } from './AuthForm';
+import Page from '../common/page/Page';
+import Panel from '../common/page/panel/Panel';
+import InputText from '../common/page/form/InputText';
+import Button from '../common/Button';
+import { CenteredForm } from '../common/page/form/CenteredForm';
 import { login, loginWithAccessToken } from './loginService';
 import './LoginPage.scss';
 import { NavLink } from 'react-router-dom';
-import Loader from '../backoffice/common/Loader';
-import GlobalMessage from '../backoffice/common/message/GlobalMessage';
+import Loader from '../common/Loader';
+import GlobalMessage from '../common/message/GlobalMessage';
 
 export default class LoginPage extends React.Component {
 
@@ -87,8 +87,8 @@ export default class LoginPage extends React.Component {
                     <Panel
                         backgroundColor="blue"
                         results={
-                            <AuthForm
-                                title="Connexion"
+                            <CenteredForm
+                                title={<div className="a-blue">Connexion</div>}
                                 elements={
                                     <>
                                         <label>Identifiant</label>
@@ -127,8 +127,7 @@ export default class LoginPage extends React.Component {
                                         </Button>
                                         {message &&
                                         <GlobalMessage
-                                            message={{ text: message, level: 'error' }}
-                                            timeout={5000}
+                                            message={{ text: message, timeout: 5000 }}
                                             onClose={() => navigator.refreshCurrentPage()} />
                                         }
                                     </div>
