@@ -2,7 +2,6 @@ const Joi = require('joi');
 const express = require('express');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
-const { objectId } = require('../../../../common/validators');
 const { IdNotFoundError } = require('../../../../common/errors');
 const avisCSVColumnsMapper = require('./utils/avisCSVColumnsMapper');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
@@ -13,8 +12,9 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
-    let validators = require('./utils/validators')(regions);
     let queries = require('./utils/searchQueries')(db);
+    let validators = require('./utils/validators')(regions);
+    let { objectId } = validators;
 
     router.get('/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
 

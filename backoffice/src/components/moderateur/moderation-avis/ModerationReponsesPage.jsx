@@ -85,28 +85,28 @@ export default class ModerationReponsesPage extends React.Component {
 
                                 <Filter
                                     label="À modérer"
-                                    isActive={() => query.reponseStatus === 'none'}
+                                    isActive={() => query.reponseStatuses === 'none'}
                                     getNbElements={() => _.get(stats, 'reponse.none')}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        reponseStatus: 'none',
+                                        reponseStatuses: 'none',
                                         sortBy: 'reponse.lastStatusUpdate'
                                     })}
                                 />
 
                                 <Filter
                                     label="Publiés"
-                                    isActive={() => query.reponseStatus === 'published'}
+                                    isActive={() => query.reponseStatuses === 'published'}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        reponseStatus: 'published',
+                                        reponseStatuses: 'published',
                                         sortBy: 'reponse.lastStatusUpdate'
                                     })}
                                 />
 
                                 <Filter
                                     label="Rejetés"
-                                    isActive={() => query.reponseStatus === 'rejected'}
+                                    isActive={() => query.reponseStatuses === 'rejected'}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        reponseStatus: 'rejected',
+                                        reponseStatuses: 'rejected',
                                         sortBy: 'reponse.lastStatusUpdate'
                                     })}
                                 />
@@ -123,9 +123,9 @@ export default class ModerationReponsesPage extends React.Component {
 
                                 <Filter
                                     label="Tous"
-                                    isActive={() => query.reponseStatus === 'all'}
+                                    isActive={() => query.reponseStatuses === 'none,published,rejected'}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        reponseStatus: 'all',
+                                        reponseStatuses: 'none,published,rejected',
                                         sortBy: 'date'
                                     })}
                                 />
@@ -146,7 +146,7 @@ export default class ModerationReponsesPage extends React.Component {
                                         <Avis
                                             avis={avis}
                                             showReponse={query.status !== 'reported'}
-                                            showModerationButtons={query.status !== 'reported'}
+                                            showModerationButtons={query.status === 'reported'}
                                             showModerationReponseButtons={query.status !== 'reported'}
                                             onChange={() => {
                                                 return Promise.all([

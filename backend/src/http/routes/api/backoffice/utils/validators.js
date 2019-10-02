@@ -1,8 +1,23 @@
 const Joi = require('joi');
 const { isPoleEmploi, getCodeFinanceurs } = require('../../../../../common/utils/financeurs');
 
+const arrayAsString = () => {
+    return Joi.extend(joi => ({
+        base: joi.array(),
+        name: 'arrayAsString',
+        coerce: (value, state, options) => {
+            return ((value && value.split) ? value.split(',') : value);
+        },
+    })).arrayAsString();
+};
+
+const arrayOf = (...items) => {
+    return arrayAsString().items(items).single();
+};
+
 module.exports = regions => {
     return {
+        objectId: () => Joi.string().regex(/^[0-9a-fA-F]{24}$/, 'Identifiant invalide'),
         form: user => {
 
             let region = regions.findRegionByCodeRegion(user.codeRegion);
@@ -21,7 +36,7 @@ module.exports = regions => {
         filters: () => {
             return {
                 status: Joi.string().valid(['none', 'published', 'rejected', 'reported']),
-                reponseStatus: Joi.string().valid(['none', 'published', 'rejected']),
+                reponseStatuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected'])).default([]),
                 read: Joi.bool(),
                 qualification: Joi.string().valid(['all', 'négatif', 'positif']),
                 commentaires: Joi.bool(),

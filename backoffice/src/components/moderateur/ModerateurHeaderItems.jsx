@@ -66,7 +66,7 @@ export default class ModerateurHeaderItems extends React.Component {
                                     <Link
                                         className="dropdown-item"
                                         label="Réponses des organismes"
-                                        url="/admin/moderateur/moderation/avis/reponses?reponseStatus=none&sortBy=reponse.lastStatusUpdate" />
+                                        url="/admin/moderateur/moderation/avis/reponses?reponseStatuses=none&sortBy=reponse.lastStatusUpdate" />
                                     {!loading &&
                                     <span className="badge badge-light pastille">{reponses}</span>
                                     }

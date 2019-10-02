@@ -249,21 +249,21 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis?reponseStatus=published')
+        .get('/api/backoffice/avis?reponseStatuses=published')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.strictEqual(response.body.avis[0].reponse.status, 'published');
 
         response = await request(app)
-        .get('/api/backoffice/avis?reponseStatus=rejected')
+        .get('/api/backoffice/avis?reponseStatuses=rejected')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.strictEqual(response.body.avis[0].reponse.status, 'rejected');
 
         response = await request(app)
-        .get('/api/backoffice/avis?reponseStatus=none')
+        .get('/api/backoffice/avis?reponseStatuses=none')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);

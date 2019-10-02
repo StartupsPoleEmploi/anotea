@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { addReponse } from '../../../services/avisService';
 import Button from '../Button';
 import './ReponseEditor.scss';
@@ -16,12 +17,14 @@ export default class ReponseEditor extends React.Component {
         super(props);
         this.reference = React.createRef();
         this.state = {
-            text: '',
+            text: _.get(this.props.avis, 'reponse.text', ''),
         };
     }
 
     componentDidMount() {
-        this.reference.current.focus();
+        let textarea = this.reference.current;
+        textarea.focus();
+        textarea.selectionEnd = this.state.text.length;
     }
 
     publish = async () => {
