@@ -20,7 +20,6 @@ const createStagiaire = avis => {
             email: email,
             phoneNumbers: [faker.phone.phoneNumber('06########')],
             emailValid: true,
-            dnIndividuNational: faker.phone.phoneNumber('##########')
         },
         training: avis.training,
         unsubscribe: false,
@@ -70,8 +69,6 @@ const buildAvis = (session, custom = {}) => {
             },
             idSession: session.numero,
             formacode: formation.domaine_formation.formacodes[0],
-            aesRecu: 'AES',
-            referencement: 'XXXXXXXXXXXX',
             idSessionAudeFormation: '2422722',
             infoCarif: {
                 numeroAction: formation.action.numero,

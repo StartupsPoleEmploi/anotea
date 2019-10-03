@@ -25,7 +25,6 @@ module.exports = {
                     'NULL'
                 ],
                 emailValid: true,
-                dnIndividuNational: '1111111111'
             },
             training: {
                 idFormation: 'F_XX_XX',
@@ -48,8 +47,6 @@ module.exports = {
                 },
                 idSession: '2422722',
                 formacode: '46242',
-                aesRecu: 'AES',
-                referencement: '41C561691111',
                 idSessionAudeFormation: '2422722',
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
@@ -163,8 +160,6 @@ module.exports = {
                 },
                 idSession: '2422722',
                 formacode: '46242',
-                aesRecu: 'AES',
-                referencement: '41C561691111',
                 idSessionAudeFormation: '2422722',
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',

@@ -61,12 +61,10 @@ module.exports = (db, regions) => {
                         email: email,
                         phoneNumbers: [record['Tel Portable']],
                         emailValid: true,
-                        dnIndividuNational: null,
                         idLocal: null,
                     },
                     training: {
                         idFormation: null,
-                        origineSession: null,
                         title: record['Libellé Action'],
                         startDate: parseDate(record['Date Entree']),
                         scheduledEndDate: parseDate(record['Date Sortie']),
@@ -86,19 +84,11 @@ module.exports = (db, regions) => {
                         },
                         idSession: null,
                         formacode: null,
-                        referencement: null,
                         infoCarif: {
                             numeroAction: null,
                             numeroSession: record['Id Session DOKELIO'] === '' ? null : record['Id Session DOKELIO']
                         },
                         codeFinanceur: ['2'],
-                        niveauEntree: null,
-                        niveauSortie: null,
-                        dureeHebdo: null,
-                        dureeMaxi: null,
-                        dureeEntreprise: null,
-                        dureeIndicative: null,
-                        nombreHeuresCentre: null,
                         infoRegion: {
                             idTrainee: record['Identifiant Stagiaire'],
                             idActionFormation: record['Numéro Action'],
