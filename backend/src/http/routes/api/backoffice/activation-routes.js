@@ -3,10 +3,10 @@ const Joi = require('joi');
 const Boom = require('boom');
 const { tryAndCatch } = require('../../routes-utils');
 
-module.exports = ({ db, password }) => {
+module.exports = ({ db, passwords }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let { hashPassword, isPasswordStrongEnough } = password;
+    let { hashPassword, isPasswordStrongEnough } = passwords;
 
     router.get('/backoffice/activation/:token', tryAndCatch(async (req, res) => {
 

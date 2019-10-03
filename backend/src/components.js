@@ -1,6 +1,6 @@
 const config = require('config');
 const auth = require('./common/components/auth');
-const password = require('./common/components/password');
+const passwords = require('./common/components/passwords');
 const getRegions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
 const sentry = require('./common/components/sentry');
@@ -34,7 +34,7 @@ module.exports = async (options = {}) => {
         mailer,
         sentry: sentry(logger, configuration),
         auth: auth(configuration),
-        password,
+        passwords: passwords(configuration),
         regions: regions,
         moderation: moderation(db),
         consultation: consultation(db),
