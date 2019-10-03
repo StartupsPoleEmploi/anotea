@@ -139,12 +139,28 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
 
         res.render('../../smtp/views/questionnaire_6mois.ejs', {
             trainee: trainee,
-            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/6mois?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/6mois?utm_source=PE&utm_medium=mail`,
             unsubscribeLink: unsubscribeLink,
             trackingLink: `${configuration.app.public_hostname}/mail/${trainee.token}/track`,
             formLink: 'https://avril_la_vae_facile.typeform.com/to/gIFh4q',
             moment: moment,
             region: regions.findRegionByCodeRegion(trainee.codeRegion),
+            hostname: configuration.app.public_hostname,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:token/organisme_questionnaire', async (req, res) => {
+        const organisme = await db.collection('accounts').findOne({ token: req.params.token });
+        if (!organisme) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        res.render('../../smtp/views/organisme_questionnaire.ejs', {
+            organisme,
+            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/organisme_questionnaire?utm_source=PE&utm_medium=mail`,
+            formLink: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
             hostname: configuration.app.public_hostname,
             webView: true
         });
