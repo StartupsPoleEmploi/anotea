@@ -2,6 +2,7 @@ import React from 'react';
 import Link from '../common/header/Link';
 import { getAvisStats } from '../../services/statsService';
 import { Route } from 'react-router-dom';
+import Pastille from '../common/Pastille';
 
 export default class ModerateurHeaderItems extends React.Component {
 
@@ -28,53 +29,37 @@ export default class ModerateurHeaderItems extends React.Component {
 
     render() {
 
-        let { stats, loading } = this.state;
+        let { stats } = this.state;
 
         return (
             <Route render={({ location }) => {
 
-                let isModeration = location.pathname.indexOf('/admin/moderateur/moderation/avis') !== -1;
                 let isCourriels = location.pathname.indexOf('/admin/moderateur/courriels') !== -1;
 
                 return (
                     <ul className="nav">
-                        <li className="nav-item dropdown">
-                            <a
-                                href="#"
-                                className={`nav-link dropdown-toggle ${isModeration ? 'active' : ''}`}
-                                data-toggle="dropdown"
-                                role="button"
-                                aria-haspopup="true"
-                                aria-expanded="false"
+                        <li className="nav-item">
+                            <Link
+                                className="nav-link"
+                                url="/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&status=none"
                             >
-                                Moderation
-                            </a>
-                            <div className="dropdown-menu">
-                                <div className="d-flex align-items-center">
-                                    <Link
-                                        className="dropdown-item"
-                                        label="Avis stagiaires"
-                                        url="/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&status=none" />
-                                    {!loading && stats.nbAModerer &&
-                                    <span className="badge badge-light pastille">{stats.nbAModerer}</span>
-                                    }
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <Link
-                                        className="dropdown-item"
-                                        label="Réponses des organismes"
-                                        url="/admin/moderateur/moderation/avis/reponses?reponseStatuses=none&sortBy=reponse.lastStatusUpdate" />
-                                    {!loading && stats.nbReponseAModerer &&
-                                    <span className="badge badge-light pastille">{stats.nbReponseAModerer}</span>
-                                    }
-                                </div>
-                            </div>
+                                Avis
+                                {stats.nbAModerer > 0 && <Pastille value={stats.nbAModerer} />}
+                            </Link>
                         </li>
                         <li className="nav-item">
                             <Link
                                 className="nav-link"
-                                label="Liste des organismes"
-                                url="/admin/moderateur/gestion/organismes" />
+                                url="/admin/moderateur/moderation/avis/reponses?reponseStatuses=none&sortBy=reponse.lastStatusUpdate"
+                            >
+                                Réponses
+                                {stats.nbReponseAModerer > 0 && <Pastille value={stats.nbReponseAModerer} />}
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" url="/admin/moderateur/gestion/organismes">
+                                Organismes
+                            </Link>
                         </li>
                         <li className="nav-item dropdown">
                             <a
@@ -88,21 +73,18 @@ export default class ModerateurHeaderItems extends React.Component {
                                 Courriels
                             </a>
                             <div className="dropdown-menu">
-                                <Link
-                                    className="nav-link"
-                                    url="/admin/moderateur/courriels/stagiaires"
-                                    label="Stagiaires" />
-                                <Link
-                                    className="nav-link"
-                                    url="/admin/moderateur/courriels/organismes"
-                                    label="Organismes" />
+                                <Link className="nav-link" url="/admin/moderateur/courriels/stagiaires">
+                                    Stagiaires
+                                </Link>
+                                <Link className="nav-link" url="/admin/moderateur/courriels/organismes">
+                                    Organismes
+                                </Link>
                             </div>
                         </li>
                         <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                url="/admin/moderateur/mon-compte"
-                                label="Mon compte" />
+                            <Link className="nav-link" url="/admin/moderateur/mon-compte">
+                                Mon compte
+                            </Link>
                         </li>
                     </ul>
                 );

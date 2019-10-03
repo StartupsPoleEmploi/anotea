@@ -1,0 +1,13 @@
+@import '../../styles/variables';
+
+.Pastille {
+  position: absolute;
+  top: 5px;
+  right: -3px;
+  padding: 0 0.4rem;
+  border-radius: 0.25rem;
+  background-color: $color-red;
+  color: $color-white;
+  font-weight: $font-weight-700;
+  font-size: 0.6rem;
+}
