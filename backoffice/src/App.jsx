@@ -8,8 +8,6 @@ import { getSession, getToken, removeSession, setSession } from './utils/session
 import { subscribeToHttpEvent } from './utils/http-client';
 import ModerateurRoutes from './components/moderateur/ModerateurRoutes';
 import GridDisplayer from './components/common/GridDisplayer';
-import Header from './components/common/header/Header';
-import MiscRoutes from './components/misc/MiscRoutes';
 import FinanceurRoutes from './components/financeur/FinanceurRoutes';
 import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
@@ -18,11 +16,13 @@ import logoFinanceur from './components/common/header/logo-financeur.svg';
 import logoOrganisme from './components/common/header/logo-organisme.svg';
 import logoDefault from './components/common/header/logo-default.svg';
 import AnonymousRoutes from './components/anonymous/AuthRoutes';
-import UserContext from './components/UserContext';
 import './utils/moment-fr';
 import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
 import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './styles/global.scss';
+import Header from './components/common/header/Header';
+import MiscRoutes from './components/misc/MiscRoutes';
+import UserContext from './components/UserContext';
 
 addLocaleData([...fr]);
 
@@ -67,7 +67,7 @@ class App extends Component {
         this.props.navigator.goToPage('/admin');
     };
 
-    showBackofficePages = () => {
+    render() {
 
         let backoffices = {
             moderateur: () => ({
@@ -99,26 +99,20 @@ class App extends Component {
         let layout = backoffices[this.state.profile]();
 
         return (
-            <UserContext.Provider value={this.state}>
-                <div className="anotea">
-                    <Switch>
-                        <Redirect exact from="/" to={layout.defaultPath} />
-                        <Redirect exact from="/admin" to={layout.defaultPath} />
-                    </Switch>
-
-                    <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
-                    <MiscRoutes />
-                    {layout.routes}
-                </div>
-            </UserContext.Provider>
-        );
-    };
-
-    render() {
-        return (
             <>
                 <IntlProvider locale="fr">
-                    {this.showBackofficePages()}
+                    <UserContext.Provider value={this.state}>
+                        <div className="anotea">
+                            <Switch>
+                                <Redirect exact from="/" to={layout.defaultPath} />
+                                <Redirect exact from="/admin" to={layout.defaultPath} />
+                            </Switch>
+
+                            <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
+                            <MiscRoutes />
+                            {layout.routes}
+                        </div>
+                    </UserContext.Provider>
                 </IntlProvider>
                 {false && <GridDisplayer />}
             </>
