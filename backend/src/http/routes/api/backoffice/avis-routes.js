@@ -6,9 +6,9 @@ const { IdNotFoundError } = require('../../../../common/errors');
 const avisCSVColumnsMapper = require('./avis/avisCSVColumnsMapper');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 const { objectId } = require('../../validators');
-const avisQueryFactory = require('./avis/avisQueryFactory');
+const searchQueryFactory = require('./avis/searchQueryFactory');
 
-module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing }) => {
+module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -17,18 +17,16 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.get('/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { validators, queries } = avisQueryFactory(db, req.user);
+        let { validators, buildAvisQuery } = searchQueryFactory(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
             ...validators.filters(),
             ...validators.pagination(),
         }, { abortEarly: false });
 
+        let query = await buildAvisQuery(parameters);
         let cursor = db.collection('comment')
-        .find({
-            ...await queries.form(parameters),
-            ...queries.filters(parameters),
-        })
+        .find(query)
         .sort({ [parameters.sortBy]: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
@@ -56,7 +54,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.get('/backoffice/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { validators, queries } = avisQueryFactory(db, req.user);
+        let { validators, buildAvisQuery } = searchQueryFactory(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
             ...validators.filters(),
@@ -65,8 +63,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
         let stream = db.collection('comment')
         .find({
-            ...await queries.form(parameters),
-            ...queries.filters(parameters),
+            ...await buildAvisQuery(parameters),
         })
         .sort({ [parameters.sortBy]: -1 })
         .stream();

@@ -71,6 +71,7 @@ export default class AvisPanel extends React.Component {
                         <Filter
                             label="Nouveaux"
                             isActive={() => query.read === 'false'}
+                            getNbElements={() => _.get(results.meta.stats, 'status.reported')}
                             onClick={() => onFilterClicked({ read: false, sortBy: 'date' })} />
 
                         <Filter

@@ -6,13 +6,13 @@ import './StagiairesStats.scss';
 const StagiairesStats = ({ stagiaires, avis }) => {
 
     let rate = stagiaires.nbEmailsEnvoyes ?
-        `${Math.round((stagiaires.nbAvisDeposes / stagiaires.nbEmailsEnvoyes) * 100)}%` : '0%';
+        `${Math.round((avis.total / stagiaires.nbEmailsEnvoyes) * 100)}%` : '0%';
 
     return (
         <div className="StagiairesStats d-flex flex-wrap flex-row">
             <div className="d-flex justify-content-around align-items-stretch stats mr-3">
                 <div className="data">
-                    <div className="value">{stagiaires.nbAvisDeposes} <i className="icon far fa-comment"></i></div>
+                    <div className="value">{avis.total || 0} <i className="icon far fa-comment"></i></div>
                     <div className="label">Avis déposés</div>
                 </div>
                 <div className="data last">

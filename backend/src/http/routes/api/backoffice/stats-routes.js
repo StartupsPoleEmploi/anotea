@@ -4,7 +4,7 @@ const computeStagiairesStats = require('./stats/computeStagiairesStats');
 const computeModerationStats = require('./stats/computeModerationStats');
 const computeAvisStats = require('./stats/computeAvisStats');
 const { tryAndCatch } = require('../../routes-utils');
-const avisQueryFactory = require('./avis/avisQueryFactory');
+const searchQueryFactory = require('./avis/searchQueryFactory');
 
 module.exports = ({ db, middlewares, regions }) => {
 
@@ -12,43 +12,41 @@ module.exports = ({ db, middlewares, regions }) => {
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
 
-    router.get('/backoffice/stats/stagiaires', checkAuth, tryAndCatch(async (req, res) => {
-
-        let { validators, queries } = avisQueryFactory(db, req.user);
-        let parameters = await Joi.validate(req.query, {
-            ...validators.form(),
-        }, { abortEarly: false });
-
-        let query = await queries.form(parameters);
-        let results = await computeStagiairesStats(db, query);
-
-        return res.json(results);
-    }));
-
     router.get('/backoffice/stats/avis', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { validators, queries } = avisQueryFactory(db, req.user);
+        let { validators, buildAvisQuery } = searchQueryFactory(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
         }, { abortEarly: false });
 
-        let results = await computeAvisStats(db, {
-            ...await queries.form(parameters),
-        });
+        let query = await buildAvisQuery(parameters);
+        let results = await computeAvisStats(db, query);
 
         return res.json(results);
     }));
 
     router.get('/backoffice/stats/moderation', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
-        let { validators, queries } = avisQueryFactory(db, req.user);
+        let { validators, buildAvisQuery } = searchQueryFactory(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
         }, { abortEarly: false });
 
-        res.json(await computeModerationStats(db, {
-            ...await queries.form(parameters),
-        }));
+        let query = await buildAvisQuery(parameters);
+        res.json(await computeModerationStats(db, query));
+    }));
+
+    router.get('/backoffice/stats/stagiaires', checkAuth, tryAndCatch(async (req, res) => {
+
+        let { validators, buildStagiaireQuery } = searchQueryFactory(db, regions, req.user);
+        let parameters = await Joi.validate(req.query, {
+            ...validators.form(),
+        }, { abortEarly: false });
+
+        let query = await buildStagiaireQuery(parameters);
+        let results = await computeStagiairesStats(db, query);
+
+        return res.json(results);
     }));
 
     return router;

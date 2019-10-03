@@ -3,14 +3,7 @@ const { round } = require('../../../../../common/utils/number-utils');
 module.exports = async (db, query) => {
     let results = await db.collection('comment').aggregate([
         {
-            $match: {
-                ...query,
-                $or: [
-                    { comment: { $exists: false } },
-                    { published: true },
-                    { rejected: true },
-                ],
-            }
+            $match: query
         },
         {
             $group: {

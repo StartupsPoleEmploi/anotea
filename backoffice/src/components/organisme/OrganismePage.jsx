@@ -9,13 +9,10 @@ import { Form, Periode, Select } from '../common/page/form/Form';
 import { getFormations } from '../../services/formationsService';
 import { getDepartements } from '../../services/departementsService';
 import Button from '../common/Button';
-import UserContext from '../UserContext';
 import AvisPanel from './components/AvisPanel';
 import StatsPanel from './components/StatsPanel';
 
 export default class OrganismePage extends React.Component {
-
-    static contextType = UserContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -148,11 +145,6 @@ export default class OrganismePage extends React.Component {
         });
     };
 
-    getQueryFormParameters = () => {
-        let query = this.props.navigator.getQuery();
-        return _.pick(query, ['departement', 'idFormation', 'startDate', 'scheduledEndDate']);
-    };
-
     isFormPristine = () => {
         let { form } = this.state;
         return form.departements.pristine && form.formations.pristine && form.periode.pristine;
@@ -166,6 +158,11 @@ export default class OrganismePage extends React.Component {
             startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
             scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
         });
+    };
+
+    getQueryFormParameters = () => {
+        let query = this.props.navigator.getQuery();
+        return _.pick(query, ['departement', 'idFormation', 'startDate', 'scheduledEndDate']);
     };
 
     onTabClicked = (tab, parameters) => {

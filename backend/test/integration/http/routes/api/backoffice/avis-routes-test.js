@@ -357,9 +357,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .get('/api/backoffice/avis?siren=111111111')
         .set('authorization', `Bearer ${token}`);
-        assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.length, 1);
-        assert.strictEqual(response.body.avis[0].training.organisation.siret, '11111111111111');
+
+        assert.strictEqual(response.statusCode, 400);
+        assert.strictEqual(response.body.details[0].context.key, 'siren');
     });
 
     it('when logged as organisme should only returned avis with same siret', async () => {
@@ -407,8 +407,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .get('/api/backoffice/avis?codeFinanceur=10')
         .set('authorization', `Bearer ${token}`);
 
-        assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.length, 0);
+        assert.strictEqual(response.statusCode, 400);
+        assert.strictEqual(response.body.details[0].context.key, 'codeFinanceur');
     });
 
     it('should not filter by codeFinanceur when PE', async () => {

@@ -9,7 +9,6 @@ module.exports = async (db, query) => {
                 _id: null,
                 total: { $sum: 1 },
                 nbEmailsEnvoyes: { $sum: { $cond: [{ $eq: ['$mailSent', true] }, 1, 0] } },
-                nbAvisDeposes: { $sum: { $cond: [{ $eq: ['$avisCreated', true] }, 1, 0] } },
             }
         },
         {
