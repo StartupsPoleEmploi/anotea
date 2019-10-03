@@ -1,16 +1,29 @@
 const { round } = require('../../../../../common/utils/number-utils');
 
+let getStatsWithProjectedNotes = stats => {
+    return Object.keys(stats).reduce((acc, key) => {
+
+        //Wrap all notes under a parent property (can be done painfully with $project)
+        if (key.indexOf('_') !== -1) {
+            //Mongo can not round with 2 digits yet
+            let roundedValue = round(stats[key]);
+            let parentPropertyName = key.split('__')[0];
+            let propertyName = key.split('__')[1];
+            acc.notes[parentPropertyName] = Object.assign(
+                {},
+                acc.notes[parentPropertyName] || {},
+                { [propertyName]: roundedValue });
+        } else {
+            acc[key] = stats[key];
+        }
+        return acc;
+    }, { notes: {} });
+};
+
 module.exports = async (db, query) => {
     let results = await db.collection('comment').aggregate([
         {
-            $match: {
-                ...query,
-                $or: [
-                    { comment: { $exists: false } },
-                    { published: true },
-                    { rejected: true },
-                ],
-            }
+            $match: query
         },
         {
             $group: {
@@ -52,11 +65,15 @@ module.exports = async (db, query) => {
                 global__3: { $sum: { $cond: [{ $eq: ['$rates.global', 3] }, 1, 0] } },
                 global__4: { $sum: { $cond: [{ $eq: ['$rates.global', 4] }, 1, 0] } },
                 global__5: { $sum: { $cond: [{ $eq: ['$rates.global', 5] }, 1, 0] } },
+                nbRead: { $sum: { $cond: { if: { $eq: ['$read', true] }, then: 1, else: 0 } } },
                 nbReponses: { $sum: { $cond: { if: { $not: ['$reponse'] }, then: 0, else: 1 } } },
+                nbReponseAModerer: { $sum: { $cond: { if: { $eq: ['$reponse.status', 'none'] }, then: 1, else: 0 } } },
                 nbNotesSeules: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 1, else: 0 } } },
                 nbCommentaires: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 0, else: 1 } } },
+                nbAModerer: { $sum: { $cond: { if: { $eq: ['$moderated', false] }, then: 1, else: 0 } } },
                 nbPublished: { $sum: { $cond: { if: { $eq: ['$published', true] }, then: 1, else: 0 } } },
                 nbRejected: { $sum: { $cond: { if: { $eq: ['$rejected', true] }, then: 1, else: 0 } } },
+                nbSignales: { $sum: { $cond: { if: { $eq: ['$reported', true] }, then: 1, else: 0 } } },
                 nbPositifs: { $sum: { $cond: [{ $and: [{ $eq: ['$published', true] }, { $eq: ['$qualification', 'positif'] }] }, 1, 0] } },
                 nbNegatifs: { $sum: { $cond: [{ $and: [{ $eq: ['$published', true] }, { $eq: ['$qualification', 'négatif'] }] }, 1, 0] } },
                 nbAlertes: { $sum: { $cond: [{ $and: [{ $eq: ['$rejected', true] }, { $eq: ['$rejectReason', 'alerte'] }] }, 1, 0] } },
@@ -77,22 +94,5 @@ module.exports = async (db, query) => {
         return {};
     }
 
-    return Object.keys(stats).reduce((acc, key) => {
-
-        //Mongo can not round with 2 digits yet
-        let roundedValue = round(stats[key]);
-
-        //Wrap all notes under a parent property (can be done painfully with $project)
-        if (key.indexOf('_') !== -1) {
-            let parentPropertyName = key.split('__')[0];
-            let propertyName = key.split('__')[1];
-            acc.notes[parentPropertyName] = Object.assign(
-                {},
-                acc.notes[parentPropertyName] || {},
-                { [propertyName]: roundedValue });
-        } else {
-            acc[key] = roundedValue;
-        }
-        return acc;
-    }, { notes: {} });
+    return getStatsWithProjectedNotes(stats);
 };

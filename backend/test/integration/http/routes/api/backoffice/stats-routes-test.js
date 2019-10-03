@@ -1,9 +1,9 @@
 const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/test-server');
-const { newComment } = require('../../../../../helpers/data/dataset');
+const { newComment, newTrainee } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinanceur, logAsModerateur }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinanceur }) => {
 
     it('can compute avis stats', async () => {
 
@@ -112,30 +112,38 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
             nbInjures: 0,
             nbNonConcernes: 0,
             nbReponses: 0,
+            nbAModerer: 0,
+            nbRead: 3,
+            nbReponseAModerer: 0,
+            nbSignales: 0,
         });
     });
 
-    it('can compute moderation stats', async () => {
+    it('can compute stagiaires stats', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment({ reported: true })),
-            insertIntoDatabase('comment', newComment({ reponse: { status: 'none' } })),
-            insertIntoDatabase('comment', newComment({ reported: true, archived: true })),
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '2'),
+            insertIntoDatabase('trainee', newTrainee({
+                codeRegion: '11',
+                training: { codeFinanceur: '2' },
+                mailSent: true,
+            })),
+            insertIntoDatabase('trainee', newTrainee({
+                codeRegion: '11',
+                training: { codeFinanceur: '2' },
+                mailSent: false,
+            })),
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/stats/moderation')
+        .get('/api/backoffice/stats/stagiaires')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
-            none: 0,
-            reported: 1,
-            reponse: {
-                none: 1
-            }
+            total: 2,
+            nbEmailsEnvoyes: 1,
         });
     });
 }));

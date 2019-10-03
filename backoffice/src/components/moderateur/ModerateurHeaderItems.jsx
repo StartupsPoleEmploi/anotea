@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from '../common/header/Link';
-import { getModerationStats } from '../../services/statsService';
+import { getAvisStats } from '../../services/statsService';
 import { Route } from 'react-router-dom';
 
 export default class ModerateurHeaderItems extends React.Component {
@@ -9,8 +9,7 @@ export default class ModerateurHeaderItems extends React.Component {
         super(props);
         this.state = {
             loading: true,
-            avis: 0,
-            reponses: 0,
+            stats: {},
         };
     }
 
@@ -21,17 +20,15 @@ export default class ModerateurHeaderItems extends React.Component {
     fetchStats = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let stats = await getModerationStats();
-                let avis = stats.none;
-                let reponses = stats.reponse.none;
-                this.setState({ avis, reponses, loading: false }, () => resolve());
+                let stats = await getAvisStats();
+                this.setState({ stats, loading: false }, () => resolve());
             });
         });
     };
 
     render() {
 
-        let { avis, reponses, loading } = this.state;
+        let { stats, loading } = this.state;
 
         return (
             <Route render={({ location }) => {
@@ -58,8 +55,8 @@ export default class ModerateurHeaderItems extends React.Component {
                                         className="dropdown-item"
                                         label="Avis stagiaires"
                                         url="/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&status=none" />
-                                    {!loading &&
-                                    <span className="badge badge-light pastille">{avis}</span>
+                                    {!loading && stats.nbAModerer &&
+                                    <span className="badge badge-light pastille">{stats.nbAModerer}</span>
                                     }
                                 </div>
                                 <div className="d-flex align-items-center">
@@ -67,8 +64,8 @@ export default class ModerateurHeaderItems extends React.Component {
                                         className="dropdown-item"
                                         label="Réponses des organismes"
                                         url="/admin/moderateur/moderation/avis/reponses?reponseStatuses=none&sortBy=reponse.lastStatusUpdate" />
-                                    {!loading &&
-                                    <span className="badge badge-light pastille">{reponses}</span>
+                                    {!loading && stats.nbReponseAModerer &&
+                                    <span className="badge badge-light pastille">{stats.nbReponseAModerer}</span>
                                     }
                                 </div>
                             </div>
