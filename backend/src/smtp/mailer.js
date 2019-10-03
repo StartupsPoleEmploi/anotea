@@ -210,6 +210,22 @@ module.exports = function(db, logger, configuration, regions) {
 
             sendMail('organisation_password', params, mailOptions, successCallback, errorCallback);
         },
+        sendQuestionnaireOrganisme: async (mailOptions, organisme, successCallback, errorCallback) => {
+
+            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
+            let params = {
+                formLink: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
+                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/organisme_questionnaire?utm_source=PE&utm_medium=mail`,
+                hostname: configuration.app.public_hostname,
+                organisme,
+            };
+
+            mailOptions.subject = 'Aidez-nous à améliorer Anotéa';
+            mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
+
+            sendMail('organisme_questionnaire', params, mailOptions, successCallback, errorCallback);
+        },
         sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, profile, successCallback, errorCallback) => {
 
             let link = `${configuration.app.public_hostname}/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`;
