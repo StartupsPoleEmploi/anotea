@@ -11,6 +11,7 @@ import Avis from '../../common/avis/Avis';
 import Pagination from '../../common/page/panel/pagination/Pagination';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../common/Loader';
+import { getAvisStats } from '../../../services/statsService';
 
 export default class AvisPanel extends React.Component {
 
@@ -24,6 +25,7 @@ export default class AvisPanel extends React.Component {
         this.state = {
             message: null,
             loading: false,
+            stats: {},
             results: {
                 avis: [],
                 meta: {
@@ -42,11 +44,13 @@ export default class AvisPanel extends React.Component {
 
     componentDidMount() {
         this.search();
+        this.fetchStats();
     }
 
     componentDidUpdate(previous) {
         if (!_.isEqual(this.props.query, previous.query)) {
             this.search();
+            this.fetchStats();
         }
     }
 
@@ -59,9 +63,17 @@ export default class AvisPanel extends React.Component {
         });
     };
 
+    fetchStats = async () => {
+        return new Promise(async resolve => {
+            let query = _.pick(this.props.query, ['departement', 'idFormation', 'startDate', 'scheduledEndDate']);
+            let stats = await getAvisStats(query);
+            this.setState({ stats }, () => resolve());
+        });
+    };
+
     render() {
 
-        let { results, message } = this.state;
+        let { stats, results, message } = this.state;
         let { query, onFilterClicked } = this.props;
 
         return (
@@ -71,13 +83,12 @@ export default class AvisPanel extends React.Component {
                         <Filter
                             label="Nouveaux"
                             isActive={() => query.read === 'false'}
-                            getNbElements={() => _.get(results.meta.stats, 'status.reported')}
+                            getNbElements={() => stats.total - stats.nbRead}
                             onClick={() => onFilterClicked({ read: false, sortBy: 'date' })} />
 
                         <Filter
                             label="Signalés"
                             isActive={() => query.status === 'reported'}
-                            getNbElements={() => _.get(results.meta.stats, 'status.reported')}
                             onClick={() => onFilterClicked({ status: 'reported', sortBy: 'lastStatusUpdate' })}
                         />
 
@@ -130,7 +141,12 @@ export default class AvisPanel extends React.Component {
                                     showStatus={true}
                                     showReponse={true}
                                     showReponseButtons={true}
-                                    onChange={() => this.search({ silent: true })}
+                                    onChange={() => {
+                                        return Promise.all([
+                                            this.search({ silent: true }),
+                                            this.fetchStats(),
+                                        ]);
+                                    }}
                                 />;
                             }} />
                 }

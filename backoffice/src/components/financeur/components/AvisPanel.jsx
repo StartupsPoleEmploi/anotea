@@ -29,7 +29,6 @@ export default class AvisPanel extends React.Component {
             results: {
                 avis: [],
                 meta: {
-                    stats: {},
                     pagination: {
                         itemsOnThisPage: 0,
                         itemsPerPage: 0,
@@ -97,7 +96,6 @@ export default class AvisPanel extends React.Component {
                         <Filter
                             label="Signalés"
                             isActive={() => query.status === 'reported'}
-                            getNbElements={() => _.get(results.meta.stats, 'status.reported')}
                             onClick={() => onFilterClicked({ status: 'reported', sortBy: 'lastStatusUpdate' })}
                         />
 

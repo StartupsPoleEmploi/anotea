@@ -9,7 +9,7 @@ import { Filter, Filters } from '../../common/page/panel/filters/Filters';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import { searchAvis } from '../../../services/avisService';
-import { getModerationStats } from '../../../services/statsService';
+import { getAvisStats } from '../../../services/statsService';
 
 export default class ModerationReponsesPage extends React.Component {
 
@@ -63,7 +63,7 @@ export default class ModerationReponsesPage extends React.Component {
 
     fetchStats = async () => {
         return new Promise(async resolve => {
-            let stats = await getModerationStats();
+            let stats = await getAvisStats();
             this.setState({ stats }, () => resolve());
         });
     };
@@ -86,7 +86,7 @@ export default class ModerationReponsesPage extends React.Component {
                                 <Filter
                                     label="À modérer"
                                     isActive={() => query.reponseStatuses === 'none'}
-                                    getNbElements={() => _.get(stats, 'reponse.none')}
+                                    getNbElements={() => stats.nbReponseAModerer}
                                     onClick={() => navigator.refreshCurrentPage({
                                         reponseStatuses: 'none',
                                         sortBy: 'reponse.lastStatusUpdate'
@@ -114,7 +114,7 @@ export default class ModerationReponsesPage extends React.Component {
                                 <Filter
                                     label="Signalés"
                                     isActive={() => query.status === 'reported'}
-                                    getNbElements={() => stats.reported}
+                                    getNbElements={() => stats.nbSignales}
                                     onClick={() => navigator.refreshCurrentPage({
                                         status: 'reported',
                                         sortBy: 'lastStatusUpdate'

@@ -12,7 +12,7 @@ import InputText from '../../common/page/form/InputText';
 import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import { searchAvis } from '../../../services/avisService';
-import { getModerationStats } from '../../../services/statsService';
+import { getAvisStats } from '../../../services/statsService';
 
 export default class ModerationAvisPage extends React.Component {
 
@@ -77,7 +77,7 @@ export default class ModerationAvisPage extends React.Component {
 
     fetchStats = async () => {
         return new Promise(async resolve => {
-            let stats = await getModerationStats(this.getQueryFormParameters());
+            let stats = await getAvisStats(this.getQueryFormParameters());
             this.setState({ stats }, () => resolve());
         });
     };
@@ -134,7 +134,7 @@ export default class ModerationAvisPage extends React.Component {
                                 <Filter
                                     label="À modérer"
                                     isActive={() => query.status === 'none'}
-                                    getNbElements={() => stats.none}
+                                    getNbElements={() => stats.nbAModerer}
                                     onClick={() => this.onFilterClicked({ status: 'none', sortBy: 'lastStatusUpdate' })}
                                 />
 
