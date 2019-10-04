@@ -16,5 +16,7 @@ execute(async ({ db, logger }) => {
     stats.removeDuplicatedStagiaires = await require('./tasks/removeDuplicatedStagiaires')(db, logger);
     stats.removeStagiairesUnusedProperties = await require('./tasks/removeStagiairesUnusedProperties')(db);
     stats.addLastStatusUpdatePropertyIntoReponse = await require('./tasks/addLastStatusUpdatePropertyIntoReponse')(db);
+    stats.fixCodeFinanceurs = await require('./tasks/fixCodeFinanceurs')(db);
+    stats.removeUselessMetaReconciliations = await require('./tasks/removeUselessMetaReconciliations')(db);
     return stats;
 });
