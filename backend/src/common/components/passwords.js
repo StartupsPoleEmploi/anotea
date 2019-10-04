@@ -32,8 +32,8 @@ module.exports = configuration => {
             let salt = await bcrypt.genSalt(ROUNDS);
             return bcrypt.hash(password, salt);
         },
-        checkPassword: async (password, hash, configuration) => {
-            let legacyHash = getSHA256PasswordHashSync(password, configuration);
+        checkPassword: async (password, hash) => {
+            let legacyHash = getSHA256PasswordHashSync(password);
             return await bcrypt.compare(password, hash) || await bcrypt.compare(legacyHash, hash);
         }
     };
