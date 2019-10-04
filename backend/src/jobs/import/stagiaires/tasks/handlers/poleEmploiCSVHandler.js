@@ -7,16 +7,13 @@ const parseDate = value => new Date(value + 'Z');
 
 module.exports = (db, regions) => {
 
-    const buildCodeFinanceur = value => {
-        if (_.isEmpty(value)) {
+    const buildCodeFinanceur = data => {
+        let code = data.replace(/ /g, '');
+        if (_.isEmpty(code)) {
             return [];
         }
 
-        if (value.indexOf(';') !== -1) {
-            return value.split(';');
-        } else if (!isNaN(parseInt(value, 10))) {
-            return [value];
-        }
+        return code.indexOf(';') !== -1 ? code.split(';') : [code];
     };
 
     const buildFormationTitle = data => {
