@@ -55,7 +55,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                 this.setState({ loading: true });
 
                 resetPassword(password, forgottenPasswordToken)
-                .then(() => this.props.navigator.goToPage('/admin'))
+                .then(() => this.props.navigator.goToPage('/admin/login', { message: 'Votre mot de passe a été modifié avec succès' }))
                 .catch(() => this.setState({ loading: false, message: 'Une erreur est survenue' }));
             }
         });

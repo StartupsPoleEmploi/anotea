@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Filter.scss';
+import Pastille from '../../../Pastille';
 
 const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false }) => {
 
@@ -11,10 +12,7 @@ const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled
                 onClick={onClick}>
                 <span>
                     {label}
-                    {getNbElements() > 0 ?
-                        <span className="badge badge-light pastille">{getNbElements()}</span> :
-                        <span />
-                    }
+                    {getNbElements() > 0 ? <Pastille value={getNbElements()} /> : <span />}
                 </span>
             </a>
         </li>

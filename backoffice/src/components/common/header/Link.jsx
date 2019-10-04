@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
-export default function Link({ label, url, className }) {
+export default function Link({ children, url, className }) {
     return (
         <NavLink
             to={url}
@@ -13,13 +13,13 @@ export default function Link({ label, url, className }) {
             }}
             className={className}
             activeClassName="active">
-            {label}
+            {children}
         </NavLink>
     );
 }
 
 Link.propTypes = {
-    label: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
     url: PropTypes.string.isRequired,
     className: PropTypes.string.isRequired,
 };
