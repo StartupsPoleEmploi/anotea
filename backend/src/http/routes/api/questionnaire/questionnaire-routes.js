@@ -176,14 +176,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     router.post('/questionnaire/:token', getTraineeFromToken, tryAndCatch(async (req, res) => {
 
         let stagiaire = req.trainee;
-        let [comment, infosRegion] = await Promise.all([
-            db.collection('comment').findOne({
-                token: req.params.token,
-                formacode: stagiaire.training.formacode,
-                idSession: stagiaire.training.idSession
-            }),
-            getInfosRegion(stagiaire)
-        ]);
+        let comment = await db.collection('comment').findOne({
+            token: req.params.token,
+            formacode: stagiaire.training.formacode,
+            idSession: stagiaire.training.idSession
+        });
 
         if (comment) {
             throw new AlreadySentError();
@@ -207,7 +204,8 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         } else {
             throw new BadDataError();
         }
-        return res.send({ stagiaire, infosRegion });
+
+        return res.send({ stagiaire, infosRegion: await getInfosRegion(stagiaire) });
     }));
 
     return router;

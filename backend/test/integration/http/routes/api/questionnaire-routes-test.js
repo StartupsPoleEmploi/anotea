@@ -36,6 +36,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.deepStrictEqual(_.omit(response.body.stagiaire, ['_id', 'token']), {
             campaign: 'test-campaign',
             importDate: date.toJSON(),
+            avisCreated: false,
             trainee: {
                 name: 'Dupont',
                 firstName: 'Henri',

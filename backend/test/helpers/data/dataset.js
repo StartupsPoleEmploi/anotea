@@ -15,6 +15,7 @@ module.exports = {
             _id: `${randomize('test-campaign')}`,
             campaign: 'test-campaign',
             importDate: date,
+            avisCreated: false,
             trainee: {
                 name: 'Dupont',
                 firstName: 'Henri',

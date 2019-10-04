@@ -29,7 +29,20 @@ module.exports = (db, regions) => {
                 'Id Session DOKELIO',
             ]
         },
-        shouldBeImported: async trainee => {
+        getKey: trainee => {
+            return {
+                sourceIDF: true,
+                trainee: {
+                    email: trainee.trainee.email,
+                },
+                training: {
+                    infoRegion: {
+                        idActionFormation: trainee.training.infoRegion.idActionFormation,
+                    }
+                }
+            };
+        },
+        shouldBeImported: trainee => {
             let idf = regions.findRegionByCodeRegion('11');
             let isAfter = moment(trainee.training.scheduledEndDate).isAfter(moment(`${idf.since}-0000`, 'YYYYMMDD Z'));
             return isAfter && trainee.trainee.emailValid && trainee.training.infoCarif.numeroSession === null;

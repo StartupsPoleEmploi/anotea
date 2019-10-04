@@ -18,5 +18,6 @@ const financeurs = [
 
 module.exports = {
     isPoleEmploi: code => code === '4',
+    isConseilRegional: code => code === '2',
     getCodeFinanceurs: () => financeurs.map(f => f.code),
 };
