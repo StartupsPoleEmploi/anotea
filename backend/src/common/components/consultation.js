@@ -17,6 +17,7 @@ module.exports = db => {
                         reponse: {
                             text: text,
                             date: new Date(),
+                            lastStatusUpdate: new Date(),
                             status: 'none',
                         },
                         read: true,

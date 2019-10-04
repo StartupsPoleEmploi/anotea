@@ -682,8 +682,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .send({ text: 'Voici notre réponse' });
 
         assert.strictEqual(response.statusCode, 200);
-        assert.ok(response.body.reponse.date);
-        assert.deepStrictEqual(_.omit(response.body.reponse, ['date']), {
+        let reponse = response.body.reponse;
+        assert.ok(reponse.date);
+        assert.ok(reponse.lastStatusUpdate);
+        assert.strictEqual(reponse.date, reponse.lastStatusUpdate);
+        assert.deepStrictEqual(_.omit(reponse, ['date', 'lastStatusUpdate']), {
             text: 'Voici notre réponse',
             status: 'none',
         });

@@ -153,7 +153,7 @@ export default class AvisPanel extends React.Component {
                 pagination={
                     <Pagination
                         pagination={results.meta.pagination}
-                        onClick={page => onFilterClicked({ page })} />}
+                        onClick={page => onFilterClicked({ ...query, page })} />}
             />
         );
 
