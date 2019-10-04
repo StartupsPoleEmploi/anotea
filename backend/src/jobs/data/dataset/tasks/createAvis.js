@@ -45,8 +45,6 @@ const buildAvis = (session, custom = {}) => {
         token: randomize('token'),
         campaign: 'dataset',
         archived: false,
-        formacode: formation.domaine_formation.formacodes[0],
-        idSession: session.numero,
         codeRegion: session.code_region,
         training: {
             idFormation: formation.numero,
@@ -69,7 +67,6 @@ const buildAvis = (session, custom = {}) => {
             },
             idSession: session.numero,
             formacode: formation.domaine_formation.formacodes[0],
-            idSessionAudeFormation: '2422722',
             infoCarif: {
                 numeroAction: formation.action.numero,
                 numeroSession: session.numero

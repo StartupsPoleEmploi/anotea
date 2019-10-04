@@ -34,7 +34,7 @@ module.exports = data => {
             numero: training.idFormation,
             intitule: training.title,
             domaine_formation: {
-                formacodes: [data.formacode],
+                formacodes: [training.formacode],
             },
             certifications: [
                 { certif_info: training.certifInfo.id }

@@ -27,7 +27,7 @@ const buildAvisQuery = filters => {
 
         if (filter.formacode) {
             let code = filter.formacode;
-            query['formacode'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
+            query['training.formacode'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
         }
 
         return query;

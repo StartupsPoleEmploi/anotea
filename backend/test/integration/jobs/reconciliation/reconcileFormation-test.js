@@ -19,7 +19,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 _id: commentId,
                 pseudo,
-                formacode: '22403',
                 training: {
                     formacode: '22403',
                     certifInfo: {
@@ -146,7 +145,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
                 _id: '1234',
-                formacode: '22403',
                 training: {
                     formacode: '22403',
                     certifInfo: {
@@ -177,7 +175,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 _id: '1234',
                 archived: true,
-                formacode: '22403',
                 training: {
                     formacode: '22403',
                     certifInfo: {
@@ -205,7 +202,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
-                formacode: 'XXXXX',
                 training: {
                     formacode: 'XXXXX',
                     certifInfo: {
@@ -242,7 +238,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([
             insertIntoDatabase('intercarif', intercarif),
             insertIntoDatabase('comment', newComment({
-                formacode: '22403',
                 training: {
                     formacode: '22403',
                     certifInfo: {
@@ -270,7 +265,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
-                formacode: '22403',
                 training: {
                     formacode: '22403',
                     certifInfo: {
@@ -293,7 +287,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
             })),
             insertIntoDatabase('comment', newComment({
-                formacode: '22403',
                 training: {
                     formacode: '22403',
                     certifInfo: {
@@ -316,7 +309,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
             })),
             insertIntoDatabase('comment', newComment({
-                formacode: '22403',
                 training: {
                     formacode: '22403',
                     certifInfo: {
@@ -383,7 +375,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
                 pseudo,
-                formacode: '22403',
                 training: {
                     formacode: '22403',
                     certifInfo: {
@@ -413,7 +404,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
                 pseudo,
-                formacode: null,
                 training: {
                     formacode: null,
                     certifInfo: { id: '80735' },
@@ -438,7 +428,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         let comment = newComment({
             training: {
-                formacode: '22403',
                 certifInfo: {
                     id: '80735',
                 },

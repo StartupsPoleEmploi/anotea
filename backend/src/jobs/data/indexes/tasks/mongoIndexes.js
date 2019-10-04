@@ -34,8 +34,6 @@ module.exports = {
     },
     comment: db => {
         return Promise.all([
-            db.collection('comment').createIndex({ 'formacode': 1 }),
-            db.collection('comment').createIndex({ 'idSession': 1 }),
             db.collection('comment').createIndex({ 'lastModerationAction': 1 }),
             db.collection('comment').createIndex({ 'token': 1 }, { unique: true }),
             db.collection('comment').createIndex({ 'codeRegion': 1 }),
@@ -47,6 +45,8 @@ module.exports = {
             db.collection('comment').createIndex({ 'reported': 1 }),
             db.collection('comment').createIndex({ 'date': 1 }),
             db.collection('comment').createIndex({ 'comment': 1 }),
+            db.collection('comment').createIndex({ 'training.formacode': 1 }),
+            db.collection('comment').createIndex({ 'training.idSession': 1 }),
             db.collection('comment').createIndex({ 'training.codeFinanceur': 1 }),
             db.collection('comment').createIndex({ 'training.idFormation': 1 }),
             db.collection('comment').createIndex({ 'training.place.postalCode': 1 }),
@@ -62,7 +62,7 @@ module.exports = {
             db.collection('comment').createIndex({
                 'training.place.city': 1,
                 'training.place.postalCode': 1,
-                'formacode': 1,
+                'training.formacode': 1,
                 'training.certifInfo.id': 1,
                 'rejected': 1,
                 'published': 1,
