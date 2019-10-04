@@ -13,5 +13,6 @@ execute(async ({ db }) => {
     stats.removeAnsweredProperty = await require('./tasks/removeAnsweredProperty')(db);
     stats.removeEmptyCommentaires = await require('./tasks/removeEmptyCommentaires')(db);
     stats.removeModerationStatusForNotes = await require('./tasks/removeModerationStatusForNotes')(db);
+    stats.removeStagiairesUnusedProperties = await require('./tasks/removeStagiairesUnusedProperties')(db);
     return stats;
 });

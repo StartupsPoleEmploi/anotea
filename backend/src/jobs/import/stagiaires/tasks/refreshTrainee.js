@@ -58,7 +58,6 @@ module.exports = async (db, logger, file, handler) => {
 
             let trainee = await db.collection('trainee').findOne({
                 'trainee.email': record['c_adresseemail'].toLowerCase(),
-                'trainee.dnIndividuNational': record['dn_individu_national'],
                 'training.idSession': record['dn_session_id'],
                 'training.scheduledEndDate': new Date(record['dd_datefinmodule'] + 'Z'),
             });

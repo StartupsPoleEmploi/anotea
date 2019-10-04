@@ -20,12 +20,10 @@ module.exports = trainee => {
             email: Joi.string().email().required(),
             phoneNumbers: Joi.array().items(Joi.string().allow('')),
             emailValid: Joi.boolean().required(),
-            dnIndividuNational: Joi.string().allow(null).required(),
             idLocal: Joi.string().allow(null).required(),
         },
         training: {
             idFormation: Joi.string().allow(null).required(),
-            origineSession: Joi.string().allow(null).required(),
             title: Joi.string().required(),
             startDate: Joi.date().required(),
             scheduledEndDate: Joi.date().required(),
@@ -47,20 +45,11 @@ module.exports = trainee => {
             },
             idSession: Joi.string().allow(null).required(),
             formacode: Joi.string().allow(null).required(),
-            aesRecu: Joi.string().allow(null),
-            referencement: Joi.string().allow(null).required(),
             infoCarif: {
                 numeroSession: Joi.string().allow(null).required(),
                 numeroAction: Joi.string().allow(null).required()
             },
             codeFinanceur: Joi.array().items(Joi.string()).required(),
-            niveauEntree: Joi.any().allow(null).required(),
-            niveauSortie: Joi.any().allow(null).required(),
-            dureeHebdo: Joi.any().allow(null).required(),
-            dureeMaxi: Joi.any().allow(null).required(),
-            dureeEntreprise: Joi.any().allow(null).required(),
-            dureeIndicative: Joi.string().allow(null).allow('').required(),
-            nombreHeuresCentre: Joi.any().allow(null).required(),
             infoRegion: Joi.object().optional(),
         }
     }, { abortEarly: false });

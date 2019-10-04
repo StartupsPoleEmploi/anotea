@@ -140,12 +140,10 @@ module.exports = (db, regions) => {
                     email: email,
                     phoneNumbers: [record['c_telephone1'], record['c_telephone2']],
                     emailValid: record['c_validitemail_id'] === 'V',
-                    dnIndividuNational: record['dn_individu_national'],
                     idLocal: record['c_individulocal']
                 },
                 training: {
                     idFormation: record['dc_formation_id'],
-                    origineSession: record['dc_origine_session_id'],
                     title: buildFormationTitle(record['dc_lblformation']),
                     startDate: parseDate(record['dd_datedebutmodule']),
                     scheduledEndDate: parseDate(record['dd_datefinmodule']),
@@ -167,20 +165,11 @@ module.exports = (db, regions) => {
                     },
                     idSession: record['dn_session_id'],
                     formacode: record['dc_formacode_ppal_id'],
-                    aesRecu: record['dc_aes_recue'],
-                    referencement: record['dc_referencement'],
                     infoCarif: {
                         numeroSession: record['dc_numeroicsession'],
                         numeroAction: record['dc_numeroicaction']
                     },
                     codeFinanceur: buildCodeFinanceur(record['liste_financeur']),
-                    niveauEntree: parseInt(record['dc_niveauformation_entree_id'], 10) || null,
-                    niveauSortie: parseInt(record['dc_niveauformation_sortie_id'], 10) || null,
-                    dureeHebdo: parseInt(record['dn_dureehebdo'], 10) || null,
-                    dureeMaxi: parseInt(record['dn_dureemaxi'], 10) || null,
-                    dureeEntreprise: parseInt(record['dn_dureeentreprise'], 10) || null,
-                    dureeIndicative: record['dc_dureeindicative'],
-                    nombreHeuresCentre: parseInt(record['dn_nombreheurescentre'], 10) || null,
                 }
             };
         },

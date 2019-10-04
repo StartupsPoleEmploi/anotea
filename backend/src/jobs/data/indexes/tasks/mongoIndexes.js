@@ -11,7 +11,6 @@ module.exports = {
             db.collection('trainee').createIndex({ 'unsubscribe': 1 }),
             db.collection('trainee').createIndex({ 'trainee.email': 1 }),
             db.collection('comment').createIndex({ 'training.place.postalCode': 1 }),
-            db.collection('trainee').createIndex({ 'trainee.dnIndividuNational': 1 }),
             db.collection('trainee').createIndex({ 'training.codeFinanceur': 1 }),
             db.collection('trainee').createIndex({ 'training.organisation.siret': 1 }),
             db.collection('trainee').createIndex({ 'training.scheduledEndDate': 1 }),
