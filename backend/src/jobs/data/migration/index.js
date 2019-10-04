@@ -14,5 +14,6 @@ execute(async ({ db }) => {
     stats.removeEmptyCommentaires = await require('./tasks/removeEmptyCommentaires')(db);
     stats.removeModerationStatusForNotes = await require('./tasks/removeModerationStatusForNotes')(db);
     stats.removeStagiairesUnusedProperties = await require('./tasks/removeStagiairesUnusedProperties')(db);
+    stats.addLastStatusUpdatePropertyIntoReponse = await require('./tasks/addLastStatusUpdatePropertyIntoReponse')(db);
     return stats;
 });
