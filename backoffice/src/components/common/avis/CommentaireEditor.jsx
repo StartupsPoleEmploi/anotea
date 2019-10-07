@@ -17,7 +17,7 @@ export default class CommentaireEditor extends React.Component {
         this.reference = React.createRef();
         let avis = this.props.avis;
         this.state = {
-            text: avis.editedComment ? avis.editedComment.text : avis.comment.text,
+            text: avis.comment.text,
         };
     }
 

@@ -493,7 +493,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         const id = new ObjectID();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment({ _id: id })),
+            insertIntoDatabase('comment', newComment({
+                _id: id,
+                comment: {
+                    text: 'Génial'
+                },
+            })),
         ]);
 
         let response = await request(app)
@@ -502,7 +507,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.editedComment.text, 'New message');
+        assert.deepStrictEqual(response.body.comment.text, 'New message');
+        assert.deepStrictEqual(response.body.comment.origin.text, 'Génial');
         assert.ok(response.body.lastStatusUpdate);
     });
 

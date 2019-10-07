@@ -60,7 +60,6 @@ module.exports = async (db, intercarif, action) => {
         pseudo: 1,
         pseudoMasked: 1,
         rejected: 1,
-        editedComment: 1,
         reponse: 1,
         codeRegion: 1,
     })

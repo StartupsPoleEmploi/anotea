@@ -99,9 +99,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await insertIntoDatabase('comment', newComment({
             _id: oid,
             pseudo: pseudo,
-            editedComment: {
+            comment: {
                 text: 'Formation super géniale.',
-                date: new Date(),
+                origin: {
+                    text: 'Cool',
+                }
             }
         }, date));
 

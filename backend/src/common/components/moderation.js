@@ -78,13 +78,15 @@ module.exports = db => {
         edit: async (id, text, options = {}) => {
 
             let oid = new ObjectID(id);
+            let previous = await db.collection('comment').findOne({ _id: oid });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: oid },
                 {
                     $set: {
-                        editedComment: { text: text, date: new Date() },
-                        lastStatusUpdate: new Date()
+                        'comment.text': text,
+                        'comment.origin.text': previous.comment.text,
+                        'lastStatusUpdate': new Date(),
                     }
                 },
                 { returnOriginal: false }
