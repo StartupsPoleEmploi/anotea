@@ -22,10 +22,6 @@ const carousels = {
             image: require('./images/Stag_AvisRejeté.png'),
             content:
                 'Avis rejeté pour injure'
-        }, {
-            image: require('./images/Stag_6mois.png'),
-            content:
-                'Six mois après la fin de la formation'
         }
     ],
     organismes: [
@@ -40,7 +36,7 @@ const carousels = {
         }, {
             image: require('./images/OF_ReponseRejeté.png'),
             content:
-                'Mail avis rejeté'
+                'Réponse non prise en compte'
         }, {
             image: require('./images/OF_JoinAnotéa.png'),
             content:
