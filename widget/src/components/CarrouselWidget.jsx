@@ -54,7 +54,7 @@ export default class CarrouselWidget extends Component {
                     </div>
 
                     {pagination.total_items > 1 &&
-                    <div className="pagination d-flex justify-content-between pt-3 pb-1">
+                    <div className="pagination d-flex justify-content-between">
                         <Button
                             size="medium"
                             className={`nav ${pagination.page === 0 ? 'invisible' : 'visible'}`}
