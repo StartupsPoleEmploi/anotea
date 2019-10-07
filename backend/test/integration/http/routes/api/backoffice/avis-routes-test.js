@@ -624,7 +624,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.titleMasked, true);
+        assert.deepStrictEqual(response.body.comment.titleMasked, true);
     });
 
     it('can unmask title', async () => {
@@ -642,7 +642,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.titleMasked, false);
+        assert.deepStrictEqual(response.body.comment.titleMasked, false);
     });
 
     it('can not reject unknown avis', async () => {

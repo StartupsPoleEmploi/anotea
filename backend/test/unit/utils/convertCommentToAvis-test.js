@@ -163,8 +163,8 @@ describe(__filename, () => {
     it('should ignore title when titleMasked is true', async () => {
 
         let comment = newComment({
-            titleMasked: true,
             comment: {
+                titleMasked: true,
                 title: 'Génial',
                 text: 'Super formation.'
             },
