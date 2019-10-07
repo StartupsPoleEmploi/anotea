@@ -37,7 +37,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     _id: commentId,
                     pseudo: pseudo,
                     codeRegion: '11',
-                    formacode: '22252',
                     training: {
                         formacode: '22252',
                         organisation: {
@@ -167,7 +166,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newComment({
                     codeRegion: '11',
-                    formacode: '22252',
                     training: {
                         formacode: '22252',
                         organisation: {
@@ -335,7 +333,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newComment({
                     codeRegion: '11',
-                    formacode: '22252',
                     training: {
                         formacode: '22252',
                         organisation: {
@@ -428,7 +425,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             [
                 newComment({
                     codeRegion: '11',
-                    formacode: '22252',
                     training: {
                         formacode: '22252',
                         organisation: {
@@ -492,7 +488,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     _id: commentId,
                     pseudo,
                     codeRegion: '11',
-                    formacode: '22252',
                     training: {
                         formacode: '22252',
                         organisation: {
@@ -580,7 +575,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let sansCommentaire = newComment({
             pseudo: 'pseudo',
             codeRegion: '11',
-            formacode: '22252',
             training: {
                 formacode: '22252',
                 organisation: {
@@ -607,7 +601,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 sansCommentaire,
                 newComment({
                     codeRegion: '11',
-                    formacode: '22252',
                     training: {
                         formacode: '22252',
                         organisation: {
@@ -635,7 +628,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let avisAvecReponse = newComment({
             pseudo: 'pseudo',
             codeRegion: '11',
-            formacode: '22252',
             training: {
                 formacode: '22252',
                 organisation: {
@@ -667,7 +659,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 avisAvecReponse,
                 newComment({
                     codeRegion: '11',
-                    formacode: '22252',
                     training: {
                         formacode: '22252',
                         organisation: {

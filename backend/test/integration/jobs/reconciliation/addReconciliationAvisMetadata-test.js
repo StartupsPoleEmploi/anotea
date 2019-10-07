@@ -12,7 +12,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let db = await getTestDatabase();
         let avisReconciliable = newComment({
-            formacode: '22403',
             training: {
                 formacode: '22403',
                 certifInfo: {

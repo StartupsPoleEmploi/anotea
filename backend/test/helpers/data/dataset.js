@@ -48,7 +48,6 @@ module.exports = {
                 },
                 idSession: '2422722',
                 formacode: '46242',
-                idSessionAudeFormation: '2422722',
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -138,8 +137,6 @@ module.exports = {
             _id: new ObjectID(),
             token: randomize('token'),
             campaign: 'test',
-            formacode: '46242',
-            idSession: '2422722',
             training: {
                 idFormation: 'F_XX_XX',
                 title: 'Développeur',
@@ -161,7 +158,6 @@ module.exports = {
                 },
                 idSession: '2422722',
                 formacode: '46242',
-                idSessionAudeFormation: '2422722',
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'

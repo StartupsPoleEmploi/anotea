@@ -81,8 +81,6 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             date: new Date(),
             token: token,
             campaign: trainee.campaign,
-            formacode: trainee.training.formacode,
-            idSession: trainee.training.idSession,
             training: trainee.training,
             codeRegion: trainee.codeRegion,
             rates: notes,
@@ -159,9 +157,9 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         let stagiaire = req.trainee;
         let [comment, infosRegion] = await Promise.all([
             db.collection('comment').findOne({
-                token: req.params.token,
-                formacode: stagiaire.training.formacode,
-                idSession: stagiaire.training.idSession
+                'token': req.params.token,
+                'training.formacode': stagiaire.training.formacode,
+                'training.idSession': stagiaire.training.idSession
             }),
             getInfosRegion(stagiaire)
         ]);
@@ -177,9 +175,9 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
         let stagiaire = req.trainee;
         let comment = await db.collection('comment').findOne({
-            token: req.params.token,
-            formacode: stagiaire.training.formacode,
-            idSession: stagiaire.training.idSession
+            'token': req.params.token,
+            'training.formacode': stagiaire.training.formacode,
+            'training.idSession': stagiaire.training.idSession
         });
 
         if (comment) {

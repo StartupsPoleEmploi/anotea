@@ -69,7 +69,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 },
                 idSession: '2422722',
                 formacode: '46242',
-                idSessionAudeFormation: '2422722',
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -153,8 +152,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date']), {
             campaign: 'test-campaign',
-            formacode: '46242',
-            idSession: '2422722',
             training: {
                 idFormation: 'F_XX_XX',
                 title: 'Développeur',
@@ -176,7 +173,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 },
                 idSession: '2422722',
                 formacode: '46242',
-                idSessionAudeFormation: '2422722',
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -234,8 +230,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let result = await db.collection('comment').findOne({ token: trainee.token });
         assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date']), {
             campaign: 'test-campaign',
-            formacode: '46242',
-            idSession: '2422722',
             training: {
                 idFormation: 'F_XX_XX',
                 title: 'Développeur',
@@ -257,7 +251,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 },
                 idSession: '2422722',
                 formacode: '46242',
-                idSessionAudeFormation: '2422722',
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -337,6 +330,42 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         });
 
         assert.strictEqual(response.statusCode, 400);
+    });
+
+    it('can not submit a questionnaire twice', async () => {
+
+        let app = await startServer();
+        let date = new Date();
+        let trainee = newTrainee({}, date);
+        await insertIntoDatabase('trainee', trainee);
+
+        let response = await request(app)
+        .post(`/api/questionnaire/${trainee.token}`)
+        .send({
+            avis_accueil: 2,
+            avis_contenu_formation: 2,
+            avis_equipe_formateurs: 1,
+            avis_moyen_materiel: 2,
+            avis_accompagnement: 2,
+            pseudo: 'John D.',
+            accord: true,
+            accordEntreprise: true,
+        });
+        assert.strictEqual(response.statusCode, 200);
+
+        response = await request(app)
+        .post(`/api/questionnaire/${trainee.token}`)
+        .send({
+            avis_accueil: 2,
+            avis_contenu_formation: 2,
+            avis_equipe_formateurs: 1,
+            avis_moyen_materiel: 2,
+            avis_accompagnement: 2,
+            pseudo: 'John D.',
+            accord: true,
+            accordEntreprise: true,
+        });
+        assert.strictEqual(response.statusCode, 423);
     });
 
     it('can check badwords (invalid)', async () => {

@@ -52,7 +52,6 @@ execute(async ({ logger, db, regions }) => {
                 'libellé certifInfo': avis => avis.training.certifInfo.label,
                 'id session': avis => avis.training.idSession,
                 'formacode': avis => avis.training.formacode,
-                'id session aude formation': avis => avis.training.idSessionAudeFormation,
                 'numéro d\'action': avis => avis.infoCarif ? avis.infoCarif.numeroAction : '',
                 'numéro de session': avis => avis.infoCarif ? avis.infoCarif.numeroSession : '',
                 'code financeur': avis => avis.training.codeFinanceur,
