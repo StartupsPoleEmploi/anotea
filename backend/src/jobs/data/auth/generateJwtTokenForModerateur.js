@@ -21,7 +21,6 @@ execute(async ({ db, auth, exit }) => {
         profile: 'moderateur',
         id: moderateur._id,
         codeRegion: moderateur.codeRegion,
-        features: moderateur.features
     };
 
     let jwt = await auth.buildJWT('backoffice', data, { expiresIn: '1h' });

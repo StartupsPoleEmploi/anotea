@@ -29,7 +29,6 @@ execute(async ({ db, exit, passwords }) => {
         codeRegion: region,
         profile: profile,
         passwordHash: await passwords.hashPassword(cli.password),
-        ...(profile === 'moderateur' ? { features: ['EDIT_ORGANISATIONS'] } : {}),
         ...(profile === 'financeur' ? { codeFinanceur } : {}),
         meta: {
             rehashed: true
