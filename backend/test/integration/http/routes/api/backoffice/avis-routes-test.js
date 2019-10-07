@@ -508,7 +508,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.comment.text, 'New message');
-        assert.deepStrictEqual(response.body.meta.original.comment.text, 'Génial');
+        assert.deepStrictEqual(response.body.meta.history[0].comment.text, 'Génial');
         assert.ok(response.body.lastStatusUpdate);
     });
 

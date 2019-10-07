@@ -195,9 +195,13 @@ describe(__filename, () => {
                 text: 'Formation super géniale.',
             },
             meta: {
-                original: {
-                    text: 'Formation géniale.'
-                }
+                history: [
+                    {
+                        comment: {
+                            text: 'Formation géniale.'
+                        }
+                    }
+                ]
             }
         });
 

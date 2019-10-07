@@ -20,5 +20,6 @@ execute(async ({ db, logger }) => {
     stats.removeUselessMetaReconciliations = await require('./tasks/removeUselessMetaReconciliations')(db);
     stats.removeFeaturesPropertyInAccounts = await require('./tasks/removeFeaturesPropertyInAccounts')(db);
     stats.moveTitleMaskedProperty = await require('./tasks/moveTitleMaskedProperty')(db);
+    stats.moveEditedCommentProperty = await require('./tasks/moveEditedCommentProperty')(db);
     return stats;
 });

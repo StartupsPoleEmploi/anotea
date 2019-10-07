@@ -85,8 +85,17 @@ module.exports = db => {
                 {
                     $set: {
                         'comment.text': text,
-                        'meta.original.comment.text': previous.comment.text,
                         'lastStatusUpdate': new Date(),
+                    },
+                    $push: {
+                        'meta.history': {
+                            $each: [{
+                                date: new Date(),
+                                comment: { text: previous.comment.text }
+                            }],
+                            $slice: 10,
+                            $position: 0,
+                        },
                     }
                 },
                 { returnOriginal: false }
