@@ -17,35 +17,13 @@ const NoteRepartition = props => {
             <div className="d-flex flex-column">
                 <div className="repartition">
                     <div className="definition">
-                        1 <i className="star fas fa-star" />
+                        5 <i className="star fas fa-star" />
                     </div>
                     <div className="gauge">
-                        <div className="filler" style={{ width: percentage(props.note['1']) }}></div>
+                        <div className="filler" style={{ width: percentage(props.note['5']) }}></div>
                     </div>
                     <div className="percentage">
-                        {percentage(props.note['1'])}
-                    </div>
-                </div>
-                <div className="repartition">
-                    <div className="definition">
-                        2 <i className="star fas fa-star" />
-                    </div>
-                    <div className="gauge">
-                        <div className="filler" style={{ width: percentage(props.note['2']) }}></div>
-                    </div>
-                    <div className="percentage">
-                        {percentage(props.note['2'])}
-                    </div>
-                </div>
-                <div className="repartition">
-                    <div className="definition">
-                        3 <i className="star fas fa-star" />
-                    </div>
-                    <div className="gauge">
-                        <div className="filler" style={{ width: percentage(props.note['3']) }}></div>
-                    </div>
-                    <div className="percentage">
-                        {percentage(props.note['3'])}
+                        {percentage(props.note['5'])}
                     </div>
                 </div>
                 <div className="repartition">
@@ -61,13 +39,35 @@ const NoteRepartition = props => {
                 </div>
                 <div className="repartition">
                     <div className="definition">
-                        5 <i className="star fas fa-star" />
+                        3 <i className="star fas fa-star" />
                     </div>
                     <div className="gauge">
-                        <div className="filler" style={{ width: percentage(props.note['5']) }}></div>
+                        <div className="filler" style={{ width: percentage(props.note['3']) }}></div>
                     </div>
                     <div className="percentage">
-                        {percentage(props.note['5'])}
+                        {percentage(props.note['3'])}
+                    </div>
+                </div>
+                <div className="repartition">
+                    <div className="definition">
+                        2 <i className="star fas fa-star" />
+                    </div>
+                    <div className="gauge">
+                        <div className="filler" style={{ width: percentage(props.note['2']) }}></div>
+                    </div>
+                    <div className="percentage">
+                        {percentage(props.note['2'])}
+                    </div>
+                </div>
+                <div className="repartition">
+                    <div className="definition">
+                        1 <i className="star fas fa-star" />
+                    </div>
+                    <div className="gauge">
+                        <div className="filler" style={{ width: percentage(props.note['1']) }}></div>
+                    </div>
+                    <div className="percentage">
+                        {percentage(props.note['1'])}
                     </div>
                 </div>
             </div>
