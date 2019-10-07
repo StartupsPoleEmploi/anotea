@@ -18,10 +18,13 @@ module.exports = async (db, logger, file, handler) => {
 
         let newTrainee = mergeDeep({}, trainee, newValues);
         if (!isDeepEquals(trainee, newTrainee)) {
-            newTrainee = mergeDeep(newTrainee, {
-                meta: {
-                    refreshed: [getDifferences(trainee, newTrainee)]
-                }
+            let differences = getDifferences(trainee, newTrainee);
+
+            newTrainee.meta = newTrainee.meta || {};
+            newTrainee.meta.history = newTrainee.meta.history || [];
+            newTrainee.meta.history.unshift({
+                date: new Date(),
+                ...differences
             });
 
             let res = await db.collection('trainee').replaceOne({ token: trainee.token }, newTrainee);
@@ -38,10 +41,13 @@ module.exports = async (db, logger, file, handler) => {
 
         let newComment = mergeDeep({}, comment, newValues);
         if (!isDeepEquals(comment, newComment)) {
-            newComment = mergeDeep(newComment, {
-                meta: {
-                    refreshed: [getDifferences(comment, newComment)]
-                }
+            let differences = getDifferences(comment, newComment);
+
+            newComment.meta = newComment.meta || {};
+            newComment.meta.history = newComment.meta.history || [];
+            newComment.meta.history.unshift({
+                date: new Date(),
+                ...differences
             });
 
             let res = await db.collection('comment').replaceOne({ token }, newComment);

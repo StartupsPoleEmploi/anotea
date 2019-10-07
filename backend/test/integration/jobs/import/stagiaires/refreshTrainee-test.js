@@ -52,20 +52,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
-        assert.deepStrictEqual(next.meta.refreshed.length, 1);
-        let refreshed = next.meta.refreshed[0];
-        assert.ok(refreshed.date);
-        assert.deepStrictEqual(_.omit(refreshed, ['date']), {
-            diff: {
-                training: {
-                    organisation: {
-                        siret: '82436343601230',
-                        label: 'ANOTEA FORMATION',
-                        name: 'ANOTEA ACCES FORMATION'
-                    },
-                    place: {
-                        inseeCode: '91521'
-                    }
+        assert.deepStrictEqual(next.meta.history.length, 1);
+        let history = next.meta.history[0];
+        assert.ok(history.date);
+        assert.deepStrictEqual(_.omit(history, ['date']), {
+            training: {
+                organisation: {
+                    siret: '82436343601230',
+                    label: 'ANOTEA FORMATION',
+                    name: 'ANOTEA ACCES FORMATION'
+                },
+                place: {
+                    inseeCode: '91521'
                 }
             }
         });
@@ -106,21 +104,19 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             siret: '82436343601239',
         });
         assert.deepStrictEqual(next.training.place.inseeCode, '99999');
-        assert.deepStrictEqual(next.meta.refreshed.length, 1);
-        let refreshed = next.meta.refreshed[0];
-        assert.ok(refreshed.date);
-        assert.deepStrictEqual(_.omit(refreshed, ['date']), {
-            diff: {
-                training: {
-                    organisation: {
-                        id: '14_OF_XXXXXXXXXX',
-                        siret: '11111111111111',
-                        label: 'Pole Emploi Formation',
-                        name: 'INSTITUT DE FORMATION'
-                    },
-                    place: {
-                        inseeCode: null
-                    }
+        assert.deepStrictEqual(next.meta.history.length, 1);
+        let history = next.meta.history[0];
+        assert.ok(history.date);
+        assert.deepStrictEqual(_.omit(history, ['date']), {
+            training: {
+                organisation: {
+                    id: '14_OF_XXXXXXXXXX',
+                    siret: '11111111111111',
+                    label: 'Pole Emploi Formation',
+                    name: 'INSTITUT DE FORMATION'
+                },
+                place: {
+                    inseeCode: null
                 }
             }
         });
