@@ -32,7 +32,7 @@ export default class CommentaireEditor extends React.Component {
         this.props.onChange(updated, {
             message: {
                 text: <span>L&apos;avis a été <b>publié</b> et taggué comme <b>{updated.qualification}</b>.</span>,
-                type: this.props.avis.published ? 'global' : 'local',
+                type: 'local',
             },
         });
     };
