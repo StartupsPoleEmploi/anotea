@@ -193,10 +193,12 @@ describe(__filename, () => {
             comment: {
                 title: 'Génial',
                 text: 'Formation super géniale.',
-                origin: {
+            },
+            meta: {
+                original: {
                     text: 'Formation géniale.'
                 }
-            },
+            }
         });
 
         let data = convertCommentToAvis(comment);

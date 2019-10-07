@@ -101,8 +101,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             pseudo: pseudo,
             comment: {
                 text: 'Formation super géniale.',
-                origin: {
-                    text: 'Cool',
+            },
+            meta: {
+                original: {
+                    comment: {
+                        text: 'Cool',
+                    }
                 }
             }
         }, date));

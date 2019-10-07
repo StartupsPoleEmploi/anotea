@@ -85,7 +85,7 @@ module.exports = db => {
                 {
                     $set: {
                         'comment.text': text,
-                        'comment.origin.text': previous.comment.text,
+                        'meta.original.comment.text': previous.comment.text,
                         'lastStatusUpdate': new Date(),
                     }
                 },
