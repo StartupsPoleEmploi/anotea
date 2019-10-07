@@ -29,28 +29,26 @@ module.exports = ({ db, auth, passwords }) => {
         });
     };
 
-    const handleModerateurOrFinanceur = async (req, user) => {
-        logLoginEvent(req, user.profile, user._id);
+    const handleModerateurOrFinanceur = async (req, account) => {
+        logLoginEvent(req, account.profile, account._id);
         return await auth.buildJWT('backoffice', {
             sub: req.body.identifiant,
-            profile: user.profile,
-            id: user._id,
-            codeRegion: user.codeRegion,
-            codeFinanceur: user.codeFinanceur,
-            features: user.features
+            profile: account.profile,
+            id: account._id,
+            codeRegion: account.codeRegion,
+            codeFinanceur: account.codeFinanceur,
         });
     };
 
-    const handleOrganisme = async (req, organisme) => {
-        logLoginEvent(req, 'organisme', organisme._id);
+    const handleOrganisme = async (req, account) => {
+        logLoginEvent(req, 'organisme', account._id);
         return await auth.buildJWT('backoffice', {
-            sub: organisme.meta.siretAsString,
+            sub: account.meta.siretAsString,
             profile: 'organisme',
-            id: organisme.meta.siretAsString,
-            codeRegion: organisme.codeRegion,
-            raisonSociale: organisme.raisonSociale,
-            siret: organisme.meta.siretAsString,
-            features: organisme.features
+            id: account.meta.siretAsString,
+            codeRegion: account.codeRegion,
+            raisonSociale: account.raisonSociale,
+            siret: account.meta.siretAsString,
         });
     };
 

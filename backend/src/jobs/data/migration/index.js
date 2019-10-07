@@ -18,5 +18,6 @@ execute(async ({ db, logger }) => {
     stats.addLastStatusUpdatePropertyIntoReponse = await require('./tasks/addLastStatusUpdatePropertyIntoReponse')(db);
     stats.fixCodeFinanceurs = await require('./tasks/fixCodeFinanceurs')(db);
     stats.removeUselessMetaReconciliations = await require('./tasks/removeUselessMetaReconciliations')(db);
+    stats.removeFeaturesPropertyInAccounts = await require('./tasks/removeFeaturesPropertyInAccounts')(db);
     return stats;
 });
