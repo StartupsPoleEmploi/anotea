@@ -191,7 +191,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             pseudo: 'JohnD',
             comment: {
                 title: 'titre',
-                text: 'texte'
+                text: 'texte',
+                titleMasked: false,
             },
             accord: true,
             accordEntreprise: true,

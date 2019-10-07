@@ -101,7 +101,8 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             avis.moderated = false;
             avis.comment = {
                 title: sanitize(title),
-                text: sanitize(text)
+                text: sanitize(text),
+                titleMasked: false,
             };
         }
 

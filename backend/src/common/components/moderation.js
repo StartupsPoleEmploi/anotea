@@ -149,7 +149,11 @@ module.exports = db => {
 
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: oid },
-                { $set: { titleMasked: mask } },
+                {
+                    $set: {
+                        'comment.titleMasked': mask
+                    }
+                },
                 { returnOriginal: false },
             );
 
