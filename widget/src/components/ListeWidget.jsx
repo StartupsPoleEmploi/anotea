@@ -71,7 +71,7 @@ export default class ListeWidget extends Component {
 
                 <div className="row my-3">
                     <div className="col-sm-6">
-                        <div className="line py-2">
+                        <div className="line d-flex justify-content-center align-items-center">
                             <Header />
                         </div>
                         <Score score={score} className="mb-3" />
@@ -83,29 +83,30 @@ export default class ListeWidget extends Component {
                         </div>
                     </div>
                     <div className="col-sm-6">
-                        <div className="line d-flex justify-content-between align-items-center py-2">
-                            {pagination.total_items > 1 &&
-                            <div className="pagination d-flex justify-content-between align-items-center pt-2">
+                        <div className="line d-flex justify-content-between align-items-center">
+                            <div className="pagination d-flex justify-content-between align-items-center">
+                                {pagination.total_items > 1 &&
                                 <Button
                                     size="medium"
                                     disabled={pagination.page === 0}
                                     onClick={() => this.previous()}>
                                     <i className="fas fa-chevron-left"></i>
                                 </Button>
+                                }
 
                                 <div className="summary">
                                     {pagination.total_items} commentaires
                                 </div>
 
+                                {pagination.total_items > 1 &&
                                 <Button
                                     size="medium"
                                     disabled={pagination.page === pagination.total_pages - 1}
                                     onClick={() => this.next()}>
                                     <i className="fas fa-chevron-right"></i>
                                 </Button>
-
+                                }
                             </div>
-                            }
                             <Verified />
                         </div>
                         {this.getListe()}
