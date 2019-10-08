@@ -1,5 +1,5 @@
-module.exports = db => {
-    return Promise.all([
+module.exports = async db => {
+    let [moderated, published, rejected, reported] = await Promise.all([
         db.collection('comment').updateMany(
             { 'comment': { $exists: true }, 'moderated': { $ne: true } },
             {
@@ -33,4 +33,6 @@ module.exports = db => {
             }
         ),
     ]);
+
+    return { moderated, published, rejected, reported };
 };

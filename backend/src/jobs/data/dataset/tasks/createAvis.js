@@ -81,13 +81,7 @@ const buildAvis = (session, custom = {}) => {
             accompagnement: 1,
             global: 2.1,
         },
-        pseudo: faker.name.firstName(),
         date: getDateInThePast(),
-        importDate: getDateInThePast(),
-        unsubscribe: false,
-        tracking: {
-            firstRead: getDateInThePast(),
-        },
     }, custom);
 };
 

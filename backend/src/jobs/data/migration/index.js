@@ -14,7 +14,6 @@ execute(async ({ db, logger }) => {
     stats.removeEmptyCommentaires = await require('./tasks/removeEmptyCommentaires')(db);
     stats.removeModerationStatusForNotes = await require('./tasks/removeModerationStatusForNotes')(db);
     stats.removeDuplicatedStagiaires = await require('./tasks/removeDuplicatedStagiaires')(db, logger);
-    stats.removeStagiairesUnusedProperties = await require('./tasks/removeStagiairesUnusedProperties')(db);
     stats.addLastStatusUpdatePropertyIntoReponse = await require('./tasks/addLastStatusUpdatePropertyIntoReponse')(db);
     stats.fixCodeFinanceurs = await require('./tasks/fixCodeFinanceurs')(db);
     stats.removeUselessMetaReconciliations = await require('./tasks/removeUselessMetaReconciliations')(db);
@@ -22,5 +21,7 @@ execute(async ({ db, logger }) => {
     stats.moveTitleMaskedProperty = await require('./tasks/moveTitleMaskedProperty')(db);
     stats.moveEditedCommentProperty = await require('./tasks/moveEditedCommentProperty')(db);
     stats.pushResfreshedPropertyIntoHistory = await require('./tasks/pushResfreshedPropertyIntoHistory')(db);
+    stats.moveTrackingIntoStagiaires = await require('./tasks/moveTrackingIntoStagiaires')(db);
+    stats.removeUnusedProperties = await require('./tasks/removeUnusedProperties')(db);
     return stats;
 });
