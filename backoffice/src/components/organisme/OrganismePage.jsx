@@ -58,7 +58,7 @@ export default class OrganismePage extends React.Component {
             return this.updateSelectBox('departements', results.find(f => f.code === query.departement), options);
         });
 
-        this.loadSelectBox('formations', () => getFormations({ siret: user.siret }))
+        this.loadSelectBox('formations', () => getFormations({ organisme: user.siret }))
         .then(results => {
             return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation), options);
         });
