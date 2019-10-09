@@ -11,10 +11,6 @@ import GridDisplayer from './components/common/GridDisplayer';
 import FinanceurRoutes from './components/financeur/FinanceurRoutes';
 import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
-import logoModerateur from './components/common/header/logo-moderateur.svg';
-import logoFinanceur from './components/common/header/logo-financeur.svg';
-import logoOrganisme from './components/common/header/logo-organisme.svg';
-import logoDefault from './components/common/header/logo-default.svg';
 import AnonymousRoutes from './components/anonymous/AuthRoutes';
 import './utils/moment-fr';
 import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
@@ -74,25 +70,21 @@ class App extends Component {
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&status=none',
                 headerItems: <ModerateurHeaderItems />,
                 routes: <ModerateurRoutes />,
-                logo: logoModerateur,
             }),
             financeur: () => ({
                 defaultPath: '/admin/financeur/avis/stats',
                 headerItems: <FinanceurHeaderItems />,
                 routes: <FinanceurRoutes />,
-                logo: logoFinanceur,
             }),
             organisme: () => ({
                 defaultPath: '/admin/organisme/avis/stats',
                 headerItems: <OrganismeHeaderItems />,
                 routes: <OrganismeRoutes />,
-                logo: logoOrganisme,
             }),
             anonymous: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
                 routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} />,
-                logo: logoDefault,
             })
         };
 
