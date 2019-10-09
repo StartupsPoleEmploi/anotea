@@ -43,8 +43,10 @@ export default class ModerateurHeaderItems extends React.Component {
                                 className="nav-link"
                                 url="/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&status=none"
                             >
-                                Avis
-                                {stats.nbAModerer > 0 && <Pastille value={stats.nbAModerer} />}
+                                <div className="Pastille--holder">
+                                    Avis
+                                    {stats.nbAModerer > 0 && <Pastille />}
+                                </div>
                             </Link>
                         </li>
                         <li className="nav-item">
@@ -52,8 +54,10 @@ export default class ModerateurHeaderItems extends React.Component {
                                 className="nav-link"
                                 url="/admin/moderateur/moderation/avis/reponses?reponseStatuses=none&sortBy=reponse.lastStatusUpdate"
                             >
-                                Réponses
-                                {stats.nbReponseAModerer > 0 && <Pastille value={stats.nbReponseAModerer} />}
+                                <div className="Pastille--holder">
+                                    Réponses
+                                    {(stats.nbReponseAModerer > 0 || stats.nbRejected > 0) && <Pastille />}
+                                </div>
                             </Link>
                         </li>
                         <li className="nav-item">
