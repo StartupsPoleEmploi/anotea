@@ -187,17 +187,22 @@ describe(__filename, () => {
         assert.deepStrictEqual(data.pseudo, undefined);
     });
 
-    it('should return editedComment when comment has been edited', async () => {
+    it('should return edited comment when comment has been edited', async () => {
 
         let comment = newComment({
-            editedComment: {
-                text: 'Formation super géniale.',
-                date: new Date(),
-            },
             comment: {
                 title: 'Génial',
-                text: 'Formation géniale.'
+                text: 'Formation super géniale.',
             },
+            meta: {
+                history: [
+                    {
+                        comment: {
+                            text: 'Formation géniale.'
+                        }
+                    }
+                ]
+            }
         });
 
         let data = convertCommentToAvis(comment);

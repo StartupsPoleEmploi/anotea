@@ -47,6 +47,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     'NULL'
                 ],
                 emailValid: true,
+                dnIndividuNational: '1111111111'
             },
             training: {
                 idFormation: 'F_XX_XX',

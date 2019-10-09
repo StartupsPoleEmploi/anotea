@@ -78,13 +78,24 @@ module.exports = db => {
         edit: async (id, text, options = {}) => {
 
             let oid = new ObjectID(id);
+            let previous = await db.collection('comment').findOne({ _id: oid });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: oid },
                 {
                     $set: {
-                        editedComment: { text: text, date: new Date() },
-                        lastStatusUpdate: new Date()
+                        'comment.text': text,
+                        'lastStatusUpdate': new Date(),
+                    },
+                    $push: {
+                        'meta.history': {
+                            $each: [{
+                                date: new Date(),
+                                comment: { text: previous.comment.text }
+                            }],
+                            $slice: 10,
+                            $position: 0,
+                        },
                     }
                 },
                 { returnOriginal: false }

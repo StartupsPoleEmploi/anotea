@@ -4,7 +4,7 @@ const convertCommentaire = data => {
 
     let commentaire = {};
     if (!_.isEmpty(data.comment.text)) {
-        commentaire.texte = data.editedComment ? data.editedComment.text : data.comment.text;
+        commentaire.texte = data.comment.text;
     }
 
     if (!_.isEmpty(data.comment.title) && !data.comment.titleMasked) {

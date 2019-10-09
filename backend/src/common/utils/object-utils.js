@@ -16,6 +16,6 @@ module.exports = {
         }
         ]);
     },
-    getDifferences: (previous, next) => ({ diff: diff(next, previous), date: new Date() }),
+    getDifferences: (previous, next) => diff(next, previous),
     flattenKeys
 };

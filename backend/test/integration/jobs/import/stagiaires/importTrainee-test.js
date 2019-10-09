@@ -38,6 +38,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     ''
                 ],
                 emailValid: true,
+                dnIndividuNational: '1111111111',
                 idLocal: '0167942369Z'
             },
             training: {
@@ -163,6 +164,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 email: 'email1@pe.fr',
                 phoneNumbers: ['06 12 34 56 78'],
                 emailValid: true,
+                dnIndividuNational: null,
                 idLocal: null,
             },
             training: {

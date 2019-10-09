@@ -20,6 +20,7 @@ module.exports = trainee => {
             email: Joi.string().email().required(),
             phoneNumbers: Joi.array().items(Joi.string().allow('')),
             emailValid: Joi.boolean().required(),
+            dnIndividuNational: Joi.string().allow(null).required(),
             idLocal: Joi.string().allow(null).required(),
         },
         training: {

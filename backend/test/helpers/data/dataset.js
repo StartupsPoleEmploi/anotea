@@ -26,6 +26,7 @@ module.exports = {
                     'NULL'
                 ],
                 emailValid: true,
+                dnIndividuNational: '1111111111'
             },
             training: {
                 idFormation: 'F_XX_XX',
@@ -187,20 +188,6 @@ module.exports = {
             qualification: 'positif',
             lastStatusUpdate: date,
             read: true,
-            importDate: date,
-            unsubscribe: false,
-            mailSent: true,
-            mailSentDate: date,
-            mailRetry: 2,
-            tracking: {
-                firstRead: date,
-                lastRead: date
-            },
-            deviceTypes: {
-                phone: 0,
-                tablet: 0,
-                desktop: 1
-            },
             codeRegion: '11',
             archived: false
         }, custom, { test: true });
