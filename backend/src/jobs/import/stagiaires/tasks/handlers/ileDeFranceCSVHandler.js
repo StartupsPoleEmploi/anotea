@@ -74,6 +74,7 @@ module.exports = (db, regions) => {
                         email: email,
                         phoneNumbers: [record['Tel Portable']],
                         emailValid: true,
+                        dnIndividuNational: null,
                         idLocal: null,
                     },
                     training: {
