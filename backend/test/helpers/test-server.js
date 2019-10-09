@@ -25,20 +25,21 @@ module.exports = {
 
                     return response.body.access_token;
                 },
-                logAsOrganisme: async (app, courriel, identifiant) => {
+                logAsOrganisme: async (app, courriel, siret, custom) => {
 
                     await context.insertIntoDatabase('accounts', newOrganismeAccount({
-                        _id: parseInt(identifiant),
-                        SIRET: parseInt(identifiant),
+                        _id: parseInt(siret),
+                        SIRET: parseInt(siret),
                         courriel,
                         meta: {
-                            siretAsString: identifiant
+                            siretAsString: siret
                         },
+                        ...custom,
                     }));
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
-                    .send({ identifiant, password: 'password' });
+                    .send({ identifiant: siret, password: 'password' });
                     assert.strictEqual(response.statusCode, 200);
 
                     return response.body.access_token;

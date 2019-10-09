@@ -83,7 +83,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.ok(response.body.avis.filter(a => a.pseudo === 'john').length === 0);
     });
 
-    it('should not return avis from other region', async () => {
+    it('should not return avis from other region (financeur)', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -97,6 +97,41 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 0);
+    });
+
+    it('should not return avis from other region (financeur)', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ codeRegion: '6' })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 0);
+    });
+
+    it('can search avis from other region (organisme)', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
+            insertIntoDatabase('comment', newComment({
+                codeRegion: '6',
+                training: { organisation: { siret: '11111111111111' } },
+            })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
     });
 
     it('when moderateur should return only not archived avis', async () => {
@@ -217,6 +252,20 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 0);
+    });
+
+    it('can search avis fulltext if not moderateur', async () => {
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?fulltext=test')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 400);
+        assert.strictEqual(response.body.details[0].context.key, 'fulltext');
     });
 
     it('can search avis with pagination', async () => {
@@ -345,17 +394,35 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis.length, 2);
     });
 
-    it('can not search avis with siren when logged as organisme', async () => {
+    it('can search avis with siren when logged as organisme', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111111111' } } })),
             insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111122222' } } })),
+            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '22222222222222' } } })),
         ]);
 
         let response = await request(app)
         .get('/api/backoffice/avis?siren=111111111')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].training.organisation.siret, '11111111122222');
+    });
+
+    it('can not search avis with another siren when logged as organisme', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
+            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111122222' } } })),
+            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '22222222222222' } } })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?siren=22222222222222')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 400);
