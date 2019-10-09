@@ -139,7 +139,7 @@ export default class ModerationAvisPage extends React.Component {
                                 />
 
                                 <Filter
-                                    label="Publiés"
+                                    label="Validés"
                                     isActive={() => query.status === 'published'}
                                     onClick={() => this.onFilterClicked({ status: 'published', sortBy: 'lastStatusUpdate' })}
                                 />

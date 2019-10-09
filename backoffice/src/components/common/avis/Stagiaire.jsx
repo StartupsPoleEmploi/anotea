@@ -40,7 +40,7 @@ const Status = ({ avis }) => {
     } else if (avis.published) {
         return (
             <span className="status published">
-                (<span>Publié le </span>
+                (<span>Validé le </span>
                 <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
             </span>
         );
