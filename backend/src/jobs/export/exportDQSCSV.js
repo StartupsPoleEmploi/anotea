@@ -32,6 +32,7 @@ execute(async ({ logger, db, regions }) => {
         ignoreEmpty(),
         transformObjectIntoCSV({
             'Identifiant Anotea': data => data.token,
+            'Identifiant PE national': data => data.trainee.dnIndividuNational,
             'Identifiant PE local': data => data.trainee.idLocal,
             'Titre formation': data => data.training.title,
             'Siret organisme': data => `="${data.training.organisation.siret}"`,
