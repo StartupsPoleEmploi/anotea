@@ -130,6 +130,7 @@ module.exports = (db, regions) => {
                     email: email,
                     phoneNumbers: [record['c_telephone1'], record['c_telephone2']],
                     emailValid: record['c_validitemail_id'] === 'V',
+                    dnIndividuNational: record['dn_individu_national'],
                     idLocal: record['c_individulocal']
                 },
                 training: {

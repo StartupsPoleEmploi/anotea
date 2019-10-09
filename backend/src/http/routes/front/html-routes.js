@@ -65,11 +65,12 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
             return;
         }
 
-        const advice = await db.collection('comment').findOne({ token: req.params.token });
-        if (!(advice.tracking && advice.tracking.clickLink && advice.tracking.clickLink.filter(item => item.goto === goto).length > 0)) {
-            db.collection('comment').updateOne({ token: req.params.token }, {
+        if (!(trainee.tracking &&
+            trainee.tracking.clickLinks &&
+            trainee.tracking.clickLinks.filter(item => item.goto === goto).length > 0)) {
+            db.collection('trainee').updateOne({ token: req.params.token }, {
                 $push: {
-                    'tracking.clickLink': {
+                    'tracking.clickLinks': {
                         date: new Date(),
                         goto: goto
                     }

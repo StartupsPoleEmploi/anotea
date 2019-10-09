@@ -20,6 +20,7 @@ const createStagiaire = avis => {
             email: email,
             phoneNumbers: [faker.phone.phoneNumber('06########')],
             emailValid: true,
+            dnIndividuNational: faker.phone.phoneNumber('##########')
         },
         training: avis.training,
         unsubscribe: false,
@@ -81,13 +82,7 @@ const buildAvis = (session, custom = {}) => {
             accompagnement: 1,
             global: 2.1,
         },
-        pseudo: faker.name.firstName(),
         date: getDateInThePast(),
-        importDate: getDateInThePast(),
-        unsubscribe: false,
-        tracking: {
-            firstRead: getDateInThePast(),
-        },
     }, custom);
 };
 

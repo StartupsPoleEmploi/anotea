@@ -32,6 +32,13 @@ module.exports = async db => {
                 'training.dureeIndicative': 1,
                 'training.nombreHeuresCentre': 1,
                 'training.idSessionAudeFormation': 1,
+                'importDate': 1,
+                'unsubscribe': 1,
+                'mailSent': 1,
+                'mailSentDate': 1,
+                'mailRetry': 2,
+                'tracking': 1,
+                'deviceTypes': 1,
             }
         })
     ]);
