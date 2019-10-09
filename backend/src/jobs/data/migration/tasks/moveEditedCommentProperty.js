@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const { batchCursor } = require('../../../job-utils');
 
 module.exports = async db => {
@@ -10,15 +9,14 @@ module.exports = async db => {
         let before = avis.comment.text;
 
         avis.comment.text = avis.editedComment.text;
-        avis.meta = _.merge({}, avis.meta || {}, {
-            history: [{
-                date: avis.editedComment.date,
-                comment: {
-                    text: before,
-                }
-            }]
+        avis.meta = avis.meta || {};
+        avis.meta.history = avis.meta.history || [];
+        avis.meta.history.unshift({
+            date: avis.editedComment.date,
+            comment: {
+                text: before,
+            }
         });
-
         delete avis.editedComment;
 
         let results = await db.collection('comment').replaceOne({ token: avis.token }, avis);

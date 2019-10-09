@@ -8,17 +8,21 @@ module.exports = async db => {
         await batchCursor(cursor, async next => {
             let doc = await next();
 
-            doc.meta = doc.meta || {};
-            doc.meta.history = [...(doc.meta.history || []), ...doc.meta.refreshed.map(d => {
+            let history = [...(doc.meta.history || []), ...doc.meta.refreshed.map(d => {
                 return {
                     date: d.date,
                     ...d.diff,
                 };
-            })];
+            })].sort((v1, v2) => new Date(v2.date) - new Date(v1.date));
 
-            delete doc.meta.refreshed;
-
-            let results = await db.collection(collectionName).replaceOne({ token: doc.token }, doc);
+            let results = await db.collection(collectionName).updateOne({ token: doc.token }, {
+                $set: {
+                    'meta.history': history,
+                },
+                $unset: {
+                    'meta.refreshed': 1,
+                }
+            });
 
             if (results.result.nModified === 1) {
                 updated++;

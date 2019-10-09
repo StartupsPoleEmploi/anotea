@@ -7,21 +7,21 @@ cli.parse(process.argv);
 
 execute(async ({ db, logger }) => {
     let stats = {};
-    stats.removeEvents = await require('./tasks/removeEvents')(db);
-    stats.addModerationStatusProperties = await require('./tasks/addModerationStatusProperties')(db);
+    stats.addMissingModerationStatus = await require('./tasks/addMissingModerationStatus')(db);
     stats.addReadProperty = await require('./tasks/addReadProperty')(db);
     stats.removeAnsweredProperty = await require('./tasks/removeAnsweredProperty')(db);
     stats.removeEmptyCommentaires = await require('./tasks/removeEmptyCommentaires')(db);
     stats.removeModerationStatusForNotes = await require('./tasks/removeModerationStatusForNotes')(db);
     stats.removeDuplicatedStagiaires = await require('./tasks/removeDuplicatedStagiaires')(db, logger);
-    stats.addLastStatusUpdatePropertyIntoReponse = await require('./tasks/addLastStatusUpdatePropertyIntoReponse')(db);
+    stats.addLastStatusUpdateIntoReponse = await require('./tasks/addLastStatusUpdateIntoReponse')(db);
     stats.fixCodeFinanceurs = await require('./tasks/fixCodeFinanceurs')(db);
     stats.removeUselessMetaReconciliations = await require('./tasks/removeUselessMetaReconciliations')(db);
     stats.removeFeaturesPropertyInAccounts = await require('./tasks/removeFeaturesPropertyInAccounts')(db);
-    stats.moveTitleMaskedProperty = await require('./tasks/moveTitleMaskedProperty')(db);
+    stats.moveTitleMaskedProperty = await require('./tasks/moveTitleMasked')(db);
     stats.moveEditedCommentProperty = await require('./tasks/moveEditedCommentProperty')(db);
-    stats.pushResfreshedPropertyIntoHistory = await require('./tasks/pushResfreshedPropertyIntoHistory')(db);
+    stats.pushResfreshedPropertyIntoHistory = await require('./tasks/pushMetaResfreshedIntoHistory')(db);
     stats.moveTrackingIntoStagiaires = await require('./tasks/moveTrackingIntoStagiaires')(db);
+    stats.removeEvents = await require('./tasks/removeEvents')(db);
     stats.removeUnusedProperties = await require('./tasks/removeUnusedProperties')(db);
     return stats;
 });
