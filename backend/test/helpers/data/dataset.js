@@ -26,6 +26,7 @@ module.exports = {
                     'NULL'
                 ],
                 emailValid: true,
+                dnIndividuNational: '1111111111'
             },
             training: {
                 idFormation: 'F_XX_XX',

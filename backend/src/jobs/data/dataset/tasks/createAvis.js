@@ -20,6 +20,7 @@ const createStagiaire = avis => {
             email: email,
             phoneNumbers: [faker.phone.phoneNumber('06########')],
             emailValid: true,
+            dnIndividuNational: faker.phone.phoneNumber('##########')
         },
         training: avis.training,
         unsubscribe: false,
