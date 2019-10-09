@@ -56,7 +56,7 @@ export default class StatsPanel extends React.Component {
                             <>
                                 <div className="row">
                                     <div className="col-sm-12">
-                                        <div className="section-title">Les notes</div>
+                                        <div className="section-title">Les avis et les commentaires</div>
                                         <StagiairesStats avis={avis} stagiaires={stagiaires} />
                                     </div>
                                 </div>
