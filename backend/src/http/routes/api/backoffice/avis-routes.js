@@ -3,10 +3,10 @@ const express = require('express');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { IdNotFoundError } = require('../../../../common/errors');
-const avisCSVColumnsMapper = require('./avis/avisCSVColumnsMapper');
+const avisCSVColumnsMapper = require('./queries/avisCSVColumnsMapper');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 const { objectId } = require('../../validators');
-const searchQueryFactory = require('./avis/searchQueryFactory');
+const searchQueryFactory = require('./queries/searchQueryFactory');
 
 module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing, regions }) => {
 

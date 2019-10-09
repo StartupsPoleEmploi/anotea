@@ -3,7 +3,7 @@ const express = require('express');
 const computeStagiairesStats = require('./stats/computeStagiairesStats');
 const computeAvisStats = require('./stats/computeAvisStats');
 const { tryAndCatch } = require('../../routes-utils');
-const searchQueryFactory = require('./avis/searchQueryFactory');
+const searchQueryFactory = require('./queries/searchQueryFactory');
 
 module.exports = ({ db, middlewares, regions }) => {
 
