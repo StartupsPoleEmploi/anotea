@@ -30,7 +30,7 @@ export default class LocalMessage extends React.Component {
         let { message, onClose } = this.props;
 
         return (
-            <div className="Message a-centered">
+            <div className="Message centered">
                 <Alert message={message} onClose={onClose} showTransition={this.state.showTransition} />
             </div>
         );
