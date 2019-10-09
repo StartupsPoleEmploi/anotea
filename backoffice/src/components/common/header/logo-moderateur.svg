@@ -2,7 +2,7 @@
     <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Header" transform="translate(0.000000, -12.000000)">
             <g id="Logo_Mod" transform="translate(0.000000, 12.000000)">
-                <text id="Modérateur" font-family="Lato-Black, Lato" font-size="16" font-weight="700" fill="#EBEDF6">
+                <text id="Modérateur" font-family="Lato-Black, Lato" font-size="14" font-weight="700" fill="#EBEDF6">
                     <tspan x="124" y="28">Modérateur</tspan>
                 </text>
                 <g id="logo" fill="#FFFFFF">
