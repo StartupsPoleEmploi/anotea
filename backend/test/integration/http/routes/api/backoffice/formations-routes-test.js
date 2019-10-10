@@ -34,7 +34,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         });
     });
 
-    it('can get formations filtered by siret', async () => {
+    it('can get formations filtered by organisme (siret)', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -60,7 +60,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/formations?siret=33333333311111')
+        .get('/api/backoffice/formations?organisme=33333333311111')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -68,7 +68,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.body[0].idFormation, 'F_XX_11');
     });
 
-    it('can get formations filtered by siren', async () => {
+    it('can get formations filtered by organisme (siren)', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -94,7 +94,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/formations?siret=333333333')
+        .get('/api/backoffice/formations?organisme=333333333')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -128,7 +128,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/formations?siret=33333333311111')
+        .get('/api/backoffice/formations?organisme=33333333311111')
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);

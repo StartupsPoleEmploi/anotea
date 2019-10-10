@@ -36,7 +36,8 @@ export default class Edition extends React.Component {
             <div className="Edition">
                 <input
                     type="text"
-                    className="form-control a-text-medium"
+                    className="form-control"
+                    style={{ fontSize: '0.875rem' }}
                     onChange={e => this.setState({ inputValue: e.target.value })}
                     value={this.state.inputValue} />
 

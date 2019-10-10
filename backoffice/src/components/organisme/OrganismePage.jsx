@@ -23,20 +23,17 @@ export default class OrganismePage extends React.Component {
         this.state = {
             form: {
                 periode: {
-                    pristine: true,
                     startDate: null,
                     endDate: null,
                 },
                 departements: {
-                    pristine: true,
                     selected: null,
                     loading: true,
                     results: [],
                 },
                 formations: {
-                    pristine: true,
                     selected: null,
-                    loading: false,
+                    loading: true,
                     results: [],
                 },
             },
@@ -58,7 +55,7 @@ export default class OrganismePage extends React.Component {
             return this.updateSelectBox('departements', results.find(f => f.code === query.departement), options);
         });
 
-        this.loadSelectBox('formations', () => getFormations({ siret: user.siret }))
+        this.loadSelectBox('formations', () => getFormations({ organisme: user.siret }))
         .then(results => {
             return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation), options);
         });
@@ -66,7 +63,6 @@ export default class OrganismePage extends React.Component {
         this.setStateDeep({
             form: {
                 periode: {
-                    pristine: true,
                     startDate: query.startDate ? moment(parseInt(query.startDate)).toDate() : null,
                     endDate: query.scheduledEndDate ? moment(parseInt(query.scheduledEndDate)).toDate() : null,
                 },
@@ -119,7 +115,7 @@ export default class OrganismePage extends React.Component {
         return new Promise(resolve => {
             this.setStateDeep({
                 form: {
-                    periode: Object.assign({}, periode, { pristine: (!periode.startDate && !periode.endDate) }),
+                    periode: Object.assign({}, periode),
                 }
             }, resolve);
         });
@@ -129,52 +125,59 @@ export default class OrganismePage extends React.Component {
         this.setStateDeep({
             form: {
                 periode: {
-                    pristine: true,
                     startDate: null,
                     endDate: null,
                 },
                 departements: {
-                    pristine: true,
                     selected: null,
                 },
                 formations: {
-                    pristine: true,
                     selected: null,
                 },
             }
         });
     };
 
-    isFormPristine = () => {
-        let { form } = this.state;
-        return form.departements.pristine && form.formations.pristine && form.periode.pristine;
-    };
-
-    onSubmit = () => {
-        let { form } = this.state;
-        return this.props.navigator.refreshCurrentPage({
-            departement: _.get(form, 'departements.selected.code', null),
-            idFormation: _.get(form, 'formations.selected.idFormation', null),
-            startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
-            scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
-        });
-    };
-
-    getQueryFormParameters = () => {
+    getFormParametersFromQuery = () => {
         let query = this.props.navigator.getQuery();
         return _.pick(query, ['departement', 'idFormation', 'startDate', 'scheduledEndDate']);
     };
 
+    getFormParameters = () => {
+        let { form } = this.state;
+        return {
+            departement: _.get(form, 'departements.selected.code', null),
+            idFormation: _.get(form, 'formations.selected.idFormation', null),
+            startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
+            scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
+        };
+    };
+
+    isFormLoading = () => {
+        let { form } = this.state;
+        return form.departements.loading || form.formations.loading;
+    };
+
+    isFormSynchronizedWithQuery = () => {
+        let query = this.props.navigator.getQuery();
+        let data = _({ ...this.getFormParametersFromQuery(), ...this.getFormParameters() }).omitBy(_.isNil).value();
+        return this.isFormLoading() || _.isEqual(data, query);
+    };
+
+    onSubmit = () => {
+        return this.props.navigator.refreshCurrentPage(this.getFormParameters());
+    };
+
     onTabClicked = (tab, parameters) => {
         return this.props.navigator.goToPage(`/admin/organisme/avis/${tab}`, {
-            ...this.getQueryFormParameters(),
+            ...this.getFormParametersFromQuery(),
             ...parameters
         });
     };
 
     onFilterClicked = parameters => {
         return this.props.navigator.refreshCurrentPage({
-            ...this.getQueryFormParameters(),
+            ...this.getFormParametersFromQuery(),
             ...parameters,
         });
     };
@@ -183,6 +186,7 @@ export default class OrganismePage extends React.Component {
         let { navigator } = this.props;
         let { form } = this.state;
         let { departements, formations, periode } = form;
+        let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
 
         return (
             <Page
@@ -225,16 +229,17 @@ export default class OrganismePage extends React.Component {
                         </div>
                         <div className="form-row justify-content-center">
                             <div className="form-group buttons">
-                                <Button
-                                    size="small"
-                                    onClick={this.resetForm}
-                                    className="mr-3"
-                                    style={{ opacity: this.isFormPristine() ? 0.6 : 1 }}
-                                >
+                                <Button size="small" onClick={this.resetForm} className="mr-3">
                                     <i className="fas fa-times mr-2"></i>
                                     Réinitialiser les filtres
                                 </Button>
-                                <Button size="large" color="orange" onClick={() => this.onSubmit()}>
+                                <Button
+                                    size="large"
+                                    color="orange"
+                                    onClick={() => this.onSubmit()}
+                                    style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
+                                >
+                                    {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
                                     Rechercher
                                 </Button>
                             </div>

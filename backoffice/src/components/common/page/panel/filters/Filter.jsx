@@ -10,10 +10,10 @@ const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled
             <a
                 className={`nav-link`}
                 onClick={onClick}>
-                <span>
+                <div className="Pastille--holder">
                     {label}
                     {getNbElements() > 0 ? <Pastille value={getNbElements()} /> : <span />}
-                </span>
+                </div>
             </a>
         </li>
     );
