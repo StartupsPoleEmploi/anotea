@@ -1,9 +1,9 @@
 const Joi = require('joi');
 const express = require('express');
-const computeStagiairesStats = require('./stats/computeStagiairesStats');
-const computeAvisStats = require('./stats/computeAvisStats');
+const computeStagiairesStats = require('./utils/computeStagiairesStats');
+const computeAvisStats = require('./utils/computeAvisStats');
 const { tryAndCatch } = require('../../routes-utils');
-const searchQueryFactory = require('./queries/searchQueryFactory');
+const getProfile = require('./profiles/getProfile');
 
 module.exports = ({ db, middlewares, regions }) => {
 
@@ -13,12 +13,12 @@ module.exports = ({ db, middlewares, regions }) => {
 
     router.get('/backoffice/stats/avis', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { validators, buildAvisQuery } = searchQueryFactory(db, regions, req.user);
+        let { validators, queries } = getProfile(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
         }, { abortEarly: false });
 
-        let query = await buildAvisQuery(parameters);
+        let query = await queries.buildAvisQuery(parameters);
         let results = await computeAvisStats(db, query);
 
         return res.json(results);
@@ -26,12 +26,12 @@ module.exports = ({ db, middlewares, regions }) => {
 
     router.get('/backoffice/stats/stagiaires', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { validators, buildStagiaireQuery } = searchQueryFactory(db, regions, req.user);
+        let { validators, queries } = getProfile(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
         }, { abortEarly: false });
 
-        let query = await buildStagiaireQuery(parameters);
+        let query = await queries.buildStagiaireQuery(parameters);
         let results = await computeStagiairesStats(db, query);
 
         return res.json(results);

@@ -3,10 +3,10 @@ const express = require('express');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
 const { IdNotFoundError } = require('../../../../common/errors');
-const avisCSVColumnsMapper = require('./queries/avisCSVColumnsMapper');
+const getAvisCSV = require('./utils/getAvisCSV');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
-const { objectId } = require('../../validators');
-const searchQueryFactory = require('./queries/searchQueryFactory');
+const { objectId } = require('../../validators-utils');
+const getProfile = require('./profiles/getProfile');
 
 module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing, regions }) => {
 
@@ -17,14 +17,15 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.get('/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { validators, buildAvisQuery } = searchQueryFactory(db, regions, req.user);
+        let user = req.user;
+        let { validators, queries } = getProfile(db, regions, user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
             ...validators.filters(),
             ...validators.pagination(),
         }, { abortEarly: false });
 
-        let query = await buildAvisQuery(parameters);
+        let query = await queries.buildAvisQuery(parameters);
         let cursor = db.collection('comment')
         .find(query)
         .sort({ [parameters.sortBy]: -1 })
@@ -54,7 +55,8 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.get('/backoffice/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { validators, buildAvisQuery } = searchQueryFactory(db, regions, req.user);
+        let user = req.user;
+        let { validators, queries } = getProfile(db, regions, user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
             ...validators.filters(),
@@ -63,13 +65,13 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
         let stream = db.collection('comment')
         .find({
-            ...await buildAvisQuery(parameters),
+            ...await queries.buildAvisQuery(parameters),
         })
         .sort({ [parameters.sortBy]: -1 })
         .stream();
 
         try {
-            await sendCSVStream(stream, res, avisCSVColumnsMapper(), { encoding: 'UTF-16BE', filename: 'avis.csv' });
+            await sendCSVStream(stream, res, getAvisCSV(), { encoding: 'UTF-16BE', filename: 'avis.csv' });
         } catch (e) {
             //FIXME we must handle errors
             logger.error('Unable to send CSV file', e);
