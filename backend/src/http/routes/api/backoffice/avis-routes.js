@@ -99,7 +99,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
     }));
 
     router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let { sendInjureMail, sendAlerteMail } = mailing;
+        let { sendInjureMail, sendAlerteMail, sendSignalementAccepteNotification } = mailing;
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         const { reason } = await Joi.validate(req.body, { reason: Joi.string().required() }, { abortEarly: false });
@@ -107,7 +107,8 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
         let avis = await db.collection('comment').findOne({ _id: new ObjectID(id) });
         if (avis) {
             if (avis.reported) {
-                await mailing.sendSignalementAccepteNotification(avis._id);
+                sendSignalementAccepteNotification(avis._id)
+                .catch(e => logger.error(e, 'Unable to send email'));
             }
         } else {
             throw new IdNotFoundError(`Avis with identifier ${id} not found`);
@@ -127,7 +128,9 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
             } else if (reason === 'alerte') {
                 sendMail = sendAlerteMail;
             }
-            sendMail(email, trainee, comment, reason);
+
+            sendMail(email, trainee, comment, reason)
+            .catch(e => logger.error(e, 'Unable to send email'));
         }
 
         return res.json(avis);
@@ -150,7 +153,8 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
         let avis = await db.collection('comment').findOne({ _id: new ObjectID(id) });
         if (avis) {
             if (avis.reported) {
-                await mailing.sendSignalementRejeteNotification(avis._id);
+                mailing.sendSignalementRejeteNotification(avis._id)
+                .catch(e => logger.error(e, 'Unable to send email'));
             }
         } else {
             throw new IdNotFoundError(`Avis with identifier ${id} not found`);
@@ -187,7 +191,8 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
         let avis = await moderation.rejectReponse(id, { event: { origin: getRemoteAddress(req) } });
 
-        await mailing.sendReponseRejeteeNotification(avis._id);
+        mailing.sendReponseRejeteeNotification(avis._id)
+        .catch(e => logger.error(e, 'Unable to send email'));
 
         return res.json(avis);
 
@@ -218,7 +223,6 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
         await sendVotreAvisEmail(trainee);
         await db.collection('comment').removeOne({ _id: new ObjectID(parameters.id) });
-
 
         res.json({ 'message': 'trainee email resent' });
     }));
