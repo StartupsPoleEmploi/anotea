@@ -1,6 +1,6 @@
 const assert = require('assert');
 const moment = require('moment');
-const { withMongoDB } = require('../../../../helpers/test-database');
+const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const { newComment } = require('../../../../helpers/data/dataset');
 const removeUselessMetaReconciliations = require('../../../../../src/jobs/data/migration/tasks/removeUselessMetaReconciliations');
 

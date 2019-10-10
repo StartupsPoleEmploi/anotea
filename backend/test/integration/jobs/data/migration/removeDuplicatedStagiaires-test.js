@@ -1,7 +1,7 @@
 const moment = require('moment');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-database');
-const logger = require('../../../../helpers/test-logger');
+const { withMongoDB } = require('../../../../helpers/with-mongodb');
+const logger = require('../../../../helpers/fake-logger');
 const { newTrainee, newComment } = require('../../../../helpers/data/dataset');
 const removeDuplicatedStagiaires = require('../../../../../src/jobs/data/migration/tasks/removeDuplicatedStagiaires');
 
