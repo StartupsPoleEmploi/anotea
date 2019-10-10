@@ -1,8 +1,8 @@
 const assert = require('assert');
-const logger = require('../../../helpers/test-logger');
+const logger = require('../../../helpers/fake-logger');
 const _ = require('lodash');
 const ObjectID = require('mongodb').ObjectID;
-const { withMongoDB } = require('../../../helpers/test-database');
+const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newComment, randomize } = require('../../../helpers/data/dataset');
 const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
 

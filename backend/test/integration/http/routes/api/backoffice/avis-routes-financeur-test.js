@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const request = require('supertest');
 const assert = require('assert');
-const { withServer } = require('../../../../../helpers/test-server');
+const { withServer } = require('../../../../../helpers/with-server');
 const { newComment } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinanceur }) => {

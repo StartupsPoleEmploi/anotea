@@ -1,9 +1,9 @@
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../../helpers/test-database');
+const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newTrainee } = require('../../../helpers/data/dataset');
 const patchCertifInfos = require('../../../../src/jobs/patch/certifInfos/tasks/refreshCertifInfos');
-const logger = require('../../../helpers/test-logger');
+const logger = require('../../../helpers/fake-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 

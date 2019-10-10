@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
-const { withServer } = require('../../../../../helpers/test-server');
+const { withServer } = require('../../../../../helpers/with-server');
 const { newOrganismeAccount, newComment, randomize } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {

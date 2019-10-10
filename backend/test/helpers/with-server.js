@@ -1,20 +1,23 @@
 const request = require('supertest');
 const assert = require('assert');
 const server = require('../../src/http/server');
-const { withMongoDB } = require('./test-database');
+const { withMongoDB } = require('./with-mongodb');
 const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('./data/dataset');
 
 module.exports = {
     withServer: callback => {
-
-        return withMongoDB(context => {
-            return callback(Object.assign({}, context, {
-                startServer: async () => {
-                    return server(await context.getComponents());
+        return withMongoDB(testContext => {
+            return callback(Object.assign({}, testContext, {
+                startServer: async (custom = {}) => {
+                    let components = await testContext.getComponents();
+                    return server({
+                        ...components,
+                        ...custom,
+                    });
                 },
                 logAsModerateur: async (app, courriel, custom) => {
 
-                    await context.insertIntoDatabase('accounts', newModerateurAccount({
+                    await testContext.insertIntoDatabase('accounts', newModerateurAccount({
                         courriel,
                     }, custom));
 
@@ -27,7 +30,7 @@ module.exports = {
                 },
                 logAsOrganisme: async (app, courriel, siret, custom) => {
 
-                    await context.insertIntoDatabase('accounts', newOrganismeAccount({
+                    await testContext.insertIntoDatabase('accounts', newOrganismeAccount({
                         _id: parseInt(siret),
                         SIRET: parseInt(siret),
                         courriel,
@@ -45,7 +48,7 @@ module.exports = {
                 },
                 logAsFinanceur: async (app, courriel, codeFinanceur, custom) => {
 
-                    await context.insertIntoDatabase('accounts', newFinancerAccount({
+                    await testContext.insertIntoDatabase('accounts', newFinancerAccount({
                         courriel,
                         codeFinanceur: `${codeFinanceur}`,
                         ...custom,
@@ -59,7 +62,7 @@ module.exports = {
                     return response.body.access_token;
                 },
                 generateKairosToken: async app => {
-                    let { auth } = await context.getComponents();
+                    let { auth } = await testContext.getComponents();
                     let jwt = await auth.buildJWT('kairos', {
                         sub: 'kairos',
                         iat: Math.floor(Date.now() / 1000)

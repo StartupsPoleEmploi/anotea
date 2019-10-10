@@ -3,7 +3,7 @@ const assert = require('assert');
 const moment = require('moment/moment');
 const crypto = require('crypto');
 const buildHMACSignature = require('../../../../../../src/jobs/data/auth/utils/buildHMACSignature');
-const { withServer } = require('../../../../../helpers/test-server');
+const { withServer } = require('../../../../../helpers/with-server');
 
 describe('/api/ping', withServer(({ startServer }) => {
 

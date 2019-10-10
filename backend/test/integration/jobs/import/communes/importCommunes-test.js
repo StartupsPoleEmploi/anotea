@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-database');
-const logger = require('../../../../helpers/test-logger');
+const { withMongoDB } = require('../../../../helpers/with-mongodb');
+const logger = require('../../../../helpers/fake-logger');
 const importCommunes = require('../../../../../src/jobs/import/communes/tasks/importCommunes');
 
 describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, createIndexes }) => {

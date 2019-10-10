@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const _ = require('lodash');
-const { withServer } = require('../../../../helpers/test-server');
+const { withServer } = require('../../../../helpers/with-server');
 const { newTrainee } = require('../../../../helpers/data/dataset');
 
 
