@@ -10,7 +10,7 @@ let round = value => Number(Math.round(value + 'e1') + 'e-1');
 const Pie = ({ data }) => {
 
     let total = _.sumBy(data, d => d.value);
-    let prettyLabel = data => `${data.id} (${round((data.value / total) * 100)}%)`;
+    let prettyLabel = element => `${element.id} (${round((element.value / total) * 100)}%)`;
 
     return (
         <div className="Pie">
@@ -36,11 +36,12 @@ const Pie = ({ data }) => {
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
                                 radialLabelsLinkHorizontalLength={5}
-                                radialLabel={e => prettyLabel(e)}
-                                tooltip={data => {
+                                radialLabelsSkipAngle={20}
+                                radialLabel={element => prettyLabel(element)}
+                                tooltip={element => {
                                     return (
                                         <div style={{ fontSize: '10px' }}>
-                                            {data.value} {data.label}
+                                            {prettyLabel(element)}
                                         </div>
                                     );
                                 }}
