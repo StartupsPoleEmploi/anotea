@@ -90,11 +90,9 @@ module.exports = db => {
                 { _id: new ObjectID(id) },
                 {
                     $set: {
-                        reported: status,
-                        rejected: false,
-                        published: false,
-                        read: true,
-                        lastStatusUpdate: new Date(),
+                        'status': status ? 'reported' : 'published',
+                        'read': true,
+                        'lastStatusUpdate': new Date(),
                     }
                 },
                 { returnOriginal: false },

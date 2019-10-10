@@ -51,10 +51,7 @@ module.exports = async (db, options) => {
         generateAvis(options.commentaires || 100, () => {
             return {
                 //Must be reused from questionnaire-routes
-                published: false,
-                rejected: false,
-                reported: false,
-                moderated: false,
+                status: 'none',
                 comment: {
                     title: faker.lorem.sentence(),
                     text: faker.lorem.paragraph(),

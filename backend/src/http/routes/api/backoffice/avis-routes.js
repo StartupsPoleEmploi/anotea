@@ -106,7 +106,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
         let avis = await db.collection('comment').findOne({ _id: new ObjectID(id) });
         if (avis) {
-            if (avis.reported) {
+            if (avis.status === 'reported') {
                 sendSignalementAccepteNotification(avis._id)
                 .catch(e => logger.error(e, 'Unable to send email'));
             }
@@ -152,7 +152,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
         let avis = await db.collection('comment').findOne({ _id: new ObjectID(id) });
         if (avis) {
-            if (avis.reported) {
+            if (avis.status === 'reported') {
                 mailing.sendSignalementRejeteNotification(avis._id)
                 .catch(e => logger.error(e, 'Unable to send email'));
             }

@@ -135,7 +135,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 },
             })), ['score']),
             insertIntoDatabase('comment', newComment({
-                rejected: true,
+                status: 'rejected',
                 rates: {
                     accueil: 0,
                     contenu_formation: 0,

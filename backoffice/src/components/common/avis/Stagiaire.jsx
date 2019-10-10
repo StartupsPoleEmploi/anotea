@@ -30,28 +30,28 @@ const Status = ({ avis }) => {
 
     if (avis.archived) {
         return (<span className="status">(Archivé)</span>);
-    } else if (avis.reported) {
+    } else if (avis.status === 'reported') {
         return (
             <span className="status reported">
                 (<span>Signalé le </span>
                 <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
             </span>
         );
-    } else if (avis.published) {
+    } else if (avis.status === 'published') {
         return (
             <span className="status published">
                 (<span>Validé le </span>
                 <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
             </span>
         );
-    } else if (avis.rejected) {
+    } else if (avis.status === 'rejected') {
         return (
             <span className="status rejected">
                 (<span>Rejeté le </span>
                 <PrettyDate date={new Date(avis.lastStatusUpdate)} /> pour « <b>{avis.rejectReason}</b> »)
             </span>
         );
-    } else if (!avis.moderated) {
+    } else if (avis.status === 'none') {
         return (<span className="status toModerate">(&Agrave; modérer)</span>);
     }
 

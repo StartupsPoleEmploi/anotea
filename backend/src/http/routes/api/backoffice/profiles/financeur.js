@@ -63,7 +63,6 @@ module.exports = (db, regions, user) => {
                 return {
                     'codeRegion': user.codeRegion,
                     'training.codeFinanceur': financeur,
-                    'moderated': true,
                     ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
                     ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
                     ...(idFormation ? { 'training.idFormation': idFormation } : {}),
@@ -71,11 +70,7 @@ module.exports = (db, regions, user) => {
                     ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
                     ...(qualification ? { qualification } : {}),
                     ...(_.isBoolean(commentaires) ? { comment: { $ne: null } } : {}),
-
-                    ...(status === 'none' ? { moderated: false } : {}),
-                    ...(status === 'published' ? { published: true } : {}),
-                    ...(status === 'rejected' ? { rejected: true } : {}),
-                    ...(status === 'reported' ? { reported: true } : {}),
+                    ...(status ? { status } : {}),
                 };
 
             },

@@ -43,12 +43,7 @@ module.exports = (db, user) => {
                     archived: false,
                     ...(fulltextIsEmail ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
                     ...(fulltext && !fulltextIsEmail ? { $text: { $search: fulltext } } : {}),
-
-                    ...(status === 'none' ? { moderated: false } : {}),
-                    ...(status === 'published' ? { published: true } : {}),
-                    ...(status === 'rejected' ? { rejected: true } : {}),
-                    ...(status === 'reported' ? { reported: true } : {}),
-
+                    ...(status ? { status } : {}),
                     ...(reponseStatuses && reponseStatuses.length > 0 ? { 'reponse.status': { $in: reponseStatuses } } : {}),
                 };
 

@@ -76,9 +76,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ published: true })),
-                insertIntoDatabase('comment', buildComment({ published: false, rejected: true })),
-                insertIntoDatabase('comment', buildComment({ moderated: false, published: false, rejected: false })),
+                insertIntoDatabase('comment', buildComment({ status: 'published' })),
+                insertIntoDatabase('comment', buildComment({ status: 'rejected' })),
+                insertIntoDatabase('comment', buildComment({ status: 'reported' })),
+                insertIntoDatabase('comment', buildComment({ status: 'none' })),
             ]);
 
             let response = await request(app)
@@ -86,21 +87,28 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             .set('authorization', `Bearer ${token}`);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].published, true);
+            assert.strictEqual(response.body.avis[0].status, 'published');
 
             response = await request(app)
             .get('/api/backoffice/avis?status=rejected')
             .set('authorization', `Bearer ${token}`);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].rejected, true);
+            assert.strictEqual(response.body.avis[0].status, 'rejected');
+
+            response = await request(app)
+            .get('/api/backoffice/avis?status=reported')
+            .set('authorization', `Bearer ${token}`);
+            assert.strictEqual(response.statusCode, 200);
+            assert.strictEqual(response.body.avis.length, 1);
+            assert.strictEqual(response.body.avis[0].status, 'reported');
 
             response = await request(app)
             .get('/api/backoffice/avis?status=none')
             .set('authorization', `Bearer ${token}`);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].moderated, false);
+            assert.strictEqual(response.body.avis[0].status, 'none');
         });
 
         it(`[${profileName}] can search avis with pagination`, async () => {
@@ -165,8 +173,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ moderated: true })),
-                insertIntoDatabase('comment', buildComment({ moderated: false })),
+                insertIntoDatabase('comment', buildComment({ status: 'published' })),
+                insertIntoDatabase('comment', buildComment({ status: 'none' })),
             ]);
 
             let response = await request(app)
@@ -175,7 +183,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.ok(response.body.avis[0].moderated);
+            assert.ok(response.body.avis[0].status, 'published');
         });
     });
 
@@ -202,9 +210,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logAsModerateur(app, 'admin@pole-emploi.fr'),
-                insertIntoDatabase('comment', buildComment({
-                    reported: true,
-                })),
                 insertIntoDatabase('comment', buildComment({
                     reponse: {
                         text: 'Voici notre réponse',

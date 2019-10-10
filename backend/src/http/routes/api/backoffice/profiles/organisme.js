@@ -46,12 +46,11 @@ module.exports = (db, regions, user) => {
             },
             buildAvisQuery: async parameters => {
                 let {
+                    departement, siren, idFormation, startDate, scheduledEndDate,
                     status, reponseStatuses, read,
-                    departement, siren, idFormation, startDate, scheduledEndDate
                 } = parameters;
 
                 return {
-                    'moderated': true,
                     'archived': false,
                     'training.organisation.siret': new RegExp(`^${siren}`),
                     ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
@@ -59,12 +58,7 @@ module.exports = (db, regions, user) => {
                     ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
                     ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
                     ...(_.isBoolean(read) ? { read } : {}),
-
-                    ...(status === 'none' ? { moderated: false } : {}),
-                    ...(status === 'published' ? { published: true } : {}),
-                    ...(status === 'rejected' ? { rejected: true } : {}),
-                    ...(status === 'reported' ? { reported: true } : {}),
-
+                    ...(status ? { status } : {}),
                     ...(reponseStatuses && reponseStatuses.length > 0 ? { 'reponse.status': { $in: reponseStatuses } } : {}),
                 };
 

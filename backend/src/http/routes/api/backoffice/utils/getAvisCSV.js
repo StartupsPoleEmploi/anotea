@@ -7,7 +7,7 @@ let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').repla
 let getStatus = comment => {
     if (comment.archived === true) {
         return 'Archivé';
-    } else if (comment.published === true || comment.comment === undefined || comment.comment === null) {
+    } else if (comment.status === 'published') {
         return 'Publié';
     } else {
         return 'En attente de modération';

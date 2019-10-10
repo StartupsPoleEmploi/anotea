@@ -107,16 +107,17 @@ module.exports = ({ db, middlewares }) => {
         .find({
             'archived': false,
             'training.organisation.siret': parameters.id,
-            '$and': [
-                parameters.commentaires !== null ? {
-                    $or: [
-                        { comment: { $exists: parameters.commentaires } },
-                        { 'reponse.status': 'published' },
-                    ]
+            ...(
+                parameters.commentaires === null ?
+                    { status: { $in: ['published', 'rejected'] } } :
+                    {
+                        $or: [
+                            { comment: { $exists: parameters.commentaires }, status: 'published' },
+                            { 'reponse.status': 'published', 'status': 'published' },
+                        ]
 
-                } : {},
-                { rejected: false },
-            ],
+                    }
+            )
         })
         .sort({ date: -1 })
         .limit(limit)

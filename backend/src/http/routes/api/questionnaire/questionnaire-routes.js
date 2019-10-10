@@ -77,6 +77,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
 
     const buildAvis = (notes, token, body, trainee) => {
+
+        let text = _.get(body, 'commentaire.texte', null);
+        let title = _.get(body, 'commentaire.titre', null);
+        let hasCommentaires = title || text;
+
         let avis = {
             date: new Date(),
             token: token,
@@ -89,16 +94,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             accordEntreprise: body.accordEntreprise,
             archived: false,
             read: false,
+            status: hasCommentaires ? 'none' : 'published',
+            lastStatusUpdate: new Date(),
         };
 
-        let text = _.get(body, 'commentaire.texte', null);
-        let title = _.get(body, 'commentaire.titre', null);
-        if (title || text) {
-            //TODO rework moderation status
-            avis.published = false;
-            avis.rejected = false;
-            avis.reported = false;
-            avis.moderated = false;
+        if (hasCommentaires) {
             avis.comment = {
                 title: sanitize(title),
                 text: sanitize(text),

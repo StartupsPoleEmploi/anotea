@@ -28,7 +28,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
                         read: false,
-                        published: true,
+                        status: 'published',
                         training: {
                             organisation: {
                                 siret: `${31705038300064}`,
@@ -75,7 +75,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
                         read: false,
-                        published: true,
+                        status: 'published',
                         training: {
                             organisation: {
                                 siret: `${31705038300064}`,
@@ -150,7 +150,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _.range(2).map(() => {
                     return insertIntoDatabase('comment', newComment({
                         read: false,
-                        published: true,
+                        status: 'published',
                         training: {
                             organisation: {
                                 siret: `${31705038300064}`,
@@ -191,7 +191,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
                         read: false,
-                        published: true,
+                        status: 'published',
                         training: {
                             organisation: {
                                 siret: `${31705038300064}`,

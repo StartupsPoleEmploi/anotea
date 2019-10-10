@@ -174,10 +174,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.moderated, true);
-        assert.deepStrictEqual(response.body.published, true);
-        assert.deepStrictEqual(response.body.reported, false);
-        assert.deepStrictEqual(response.body.rejectReason, null);
+        assert.deepStrictEqual(response.body.status, 'published');
         assert.deepStrictEqual(response.body.qualification, 'positif');
         assert.ok(response.body.lastStatusUpdate);
     });
@@ -198,11 +195,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.moderated, true);
-        assert.deepStrictEqual(response.body.published, false);
-        assert.deepStrictEqual(response.body.rejected, true);
-        assert.deepStrictEqual(response.body.reported, false);
-        assert.deepStrictEqual(response.body.rejectReason, 'injure');
+        assert.deepStrictEqual(response.body.status, 'rejected');
+        assert.deepStrictEqual(response.body.qualification, 'injure');
         assert.ok(response.body.lastStatusUpdate);
     });
 

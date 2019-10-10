@@ -67,12 +67,12 @@ export default class ReportButton extends React.Component {
             <div className="ReportButton">
                 {this.state.showModal && this.getModal()}
                 <Button size="large" color="red" tooltip="Rejeter" onClick={() => {
-                    if (avis.reported) {
+                    if (avis.status === 'reported') {
                         return this.unreport();
                     }
                     return this.setState({ showModal: true });
                 }}>
-                    <i className={`far ${avis.reported ? 'fa-bell-slash' : 'fa-bell'} a-icon`} />
+                    <i className={`far ${avis.status === 'reported' ? 'fa-bell-slash' : 'fa-bell'} a-icon`} />
                 </Button>
             </div>
         );

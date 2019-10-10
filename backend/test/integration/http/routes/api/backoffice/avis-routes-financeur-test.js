@@ -23,11 +23,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
             insertIntoDatabase('comment', buildComment({
                 qualification: 'positif',
-                moderated: true,
             })),
             insertIntoDatabase('comment', buildComment({
                 qualification: 'négatif',
-                moderated: true,
             })),
         ]);
 

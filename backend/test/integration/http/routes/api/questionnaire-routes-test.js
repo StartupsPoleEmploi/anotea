@@ -150,8 +150,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         });
 
         let result = await db.collection('comment').findOne({ token: trainee.token });
-
-        assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date']), {
+        assert.ok(result.lastStatusUpdate);
+        assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
             training: {
                 idFormation: 'F_XX_XX',
@@ -199,10 +199,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             accordEntreprise: true,
             archived: false,
             read: false,
-            published: false,
-            rejected: false,
-            reported: false,
-            moderated: false,
+            status: 'none',
         });
     });
 
@@ -230,7 +227,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.strictEqual(response.statusCode, 200);
 
         let result = await db.collection('comment').findOne({ token: trainee.token });
-        assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date']), {
+        assert.ok(result.lastStatusUpdate);
+        assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
             training: {
                 idFormation: 'F_XX_XX',
@@ -273,6 +271,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             accordEntreprise: true,
             archived: false,
             read: false,
+            status: 'published',
         });
     });
 

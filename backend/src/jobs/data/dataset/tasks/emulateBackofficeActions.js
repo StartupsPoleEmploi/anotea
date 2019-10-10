@@ -10,10 +10,10 @@ module.exports = async (db, moderation, consultation) => {
         }
     };
 
-    await makeAction(50, { comment: { $exists: true }, published: false }, avis => moderation.publish(avis._id, 'positif'));
-    await makeAction(10, { comment: { $exists: true }, published: false }, avis => moderation.reject(avis._id, 'alerte'));
-    await makeAction(10, { comment: { $exists: true }, published: true }, avis => consultation.report(avis._id, true));
-    await makeAction(10, { comment: { $exists: true }, published: true }, avis => {
+    await makeAction(50, { comment: { $exists: true }, status: 'none' }, avis => moderation.publish(avis._id, 'positif'));
+    await makeAction(10, { comment: { $exists: true }, status: 'none' }, avis => moderation.reject(avis._id, 'alerte'));
+    await makeAction(10, { comment: { $exists: true }, status: 'published' }, avis => consultation.report(avis._id, true));
+    await makeAction(10, { comment: { $exists: true }, status: 'published' }, avis => {
         return consultation.addReponse(avis._id, faker.lorem.paragraph());
     });
 };

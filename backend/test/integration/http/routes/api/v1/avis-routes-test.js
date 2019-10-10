@@ -410,13 +410,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('should return avis without commentaire', async () => {
+    it('should return avis (notes)', async () => {
 
         let app = await startServer();
         let pseudo = randomize('pseudo');
         let comment = newComment({
             pseudo: pseudo,
-            moderated: false,
         });
         delete comment.comment;
         await insertIntoDatabase('comment', comment);
@@ -449,7 +448,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await insertIntoDatabase('comment', newComment({
             pseudo: pseudo,
-            published: false,
+            status: 'none',
         }));
 
         let response = await request(app).get(`/api/v1/avis`);
@@ -466,8 +465,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await insertIntoDatabase('comment', newComment({
             _id: '12345',
             pseudo: pseudo,
-            published: false,
-            rejected: true,
+            status: 'rejected',
         }));
 
         let response = await request(app).get(`/api/v1/avis`);

@@ -423,7 +423,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.strictEqual(count, 1);
     });
 
-    it('should reconcile comment without commentaire', async () => {
+    it('should reconcile comment (notes)', async () => {
 
         let db = await getTestDatabase();
         let comment = newComment({
@@ -438,10 +438,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     postalCode: '75019',
                 },
             },
+            status: 'published',
         });
         delete comment.comment;
-        delete comment.published;
-        delete comment.rejected;
 
         await Promise.all([
             importIntercarif(),
@@ -461,7 +460,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
-                published: false,
+                status: 'none',
                 training: {
                     formacode: '22403',
                     certifInfo: {
@@ -489,8 +488,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
-                published: false,
-                rejected: true,
+                status: 'rejected',
                 comment: {
                     title: 'WTF',
                     text: 'WTF',

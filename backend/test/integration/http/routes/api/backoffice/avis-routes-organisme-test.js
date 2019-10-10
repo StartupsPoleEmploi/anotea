@@ -189,7 +189,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.reported, true);
+        assert.deepStrictEqual(response.body.status, 'reported');
         assert.deepStrictEqual(response.body.read, true);
     });
 
@@ -208,7 +208,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.reported, false);
+        assert.deepStrictEqual(response.body.status, 'published');
         assert.deepStrictEqual(response.body.read, true);
     });
 
