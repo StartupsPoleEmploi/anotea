@@ -11,8 +11,11 @@ import { getDepartements } from '../../services/departementsService';
 import Button from '../common/Button';
 import AvisPanel from './components/AvisPanel';
 import StatsPanel from './components/StatsPanel';
+import UserContext from '../UserContext';
 
 export default class OrganismePage extends React.Component {
+
+    static contextType = UserContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,

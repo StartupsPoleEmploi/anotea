@@ -10,11 +10,14 @@ import { getSirens } from '../../services/sirensService';
 import { getFormations } from '../../services/formationsService';
 import { getDepartements } from '../../services/departementsService';
 import FINANCEURS from '../common/data/financeurs';
+import UserContext from '../UserContext';
 import Button from '../common/Button';
 import AvisPanel from './components/AvisPanel';
 import StatsPanel from './components/StatsPanel';
 
 export default class FinanceurPage extends React.Component {
+
+    static contextType = UserContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -57,7 +60,8 @@ export default class FinanceurPage extends React.Component {
     }
 
     isPoleEmploi() {
-        return this.context.codeFinanceur === '4';
+        let user = this.context;
+        return user.codeFinanceur === '4';
     }
 
     async componentDidMount() {
@@ -190,7 +194,7 @@ export default class FinanceurPage extends React.Component {
 
     isFormLoading = () => {
         let { form } = this.state;
-        return form.financeurs.loading || form.financeurs.loading || form.sirens.loading || form.formations.loading;
+        return form.departements.loading || form.sirens.loading || form.formations.loading;
     };
 
     isFormSynchronizedWithQuery = () => {
