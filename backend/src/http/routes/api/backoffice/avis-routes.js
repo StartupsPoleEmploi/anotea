@@ -6,8 +6,7 @@ const { IdNotFoundError } = require('../../../../common/errors');
 const getAvisCSV = require('./utils/getAvisCSV');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 const { objectId } = require('../../validators-utils');
-const getQueries = require('./utils/getQueries');
-const validators = require('./utils/validators');
+const getProfile = require('./profiles/getProfile');
 
 module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing, regions }) => {
 
@@ -15,19 +14,18 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
     let itemsPerPage = configuration.api.pagination;
-    let { buildAvisQuery } = getQueries(db);
 
     router.get('/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
 
         let user = req.user;
-        let region = regions.findRegionByCodeRegion(user.codeRegion);
+        let { validators, queries } = getProfile(db, regions, user);
         let parameters = await Joi.validate(req.query, {
-            ...validators.form(user, region),
+            ...validators.form(),
             ...validators.filters(),
             ...validators.pagination(),
         }, { abortEarly: false });
 
-        let query = await buildAvisQuery(user, parameters);
+        let query = await queries.buildAvisQuery(parameters);
         let cursor = db.collection('comment')
         .find(query)
         .sort({ [parameters.sortBy]: -1 })
@@ -58,16 +56,16 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
     router.get('/backoffice/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
 
         let user = req.user;
-        let region = regions.findRegionByCodeRegion(user.codeRegion);
+        let { validators, queries } = getProfile(db, regions, user);
         let parameters = await Joi.validate(req.query, {
-            ...validators.form(user, region),
+            ...validators.form(),
             ...validators.filters(),
             token: Joi.string(),
         }, { abortEarly: false });
 
         let stream = db.collection('comment')
         .find({
-            ...await buildAvisQuery(user, parameters),
+            ...await queries.buildAvisQuery(parameters),
         })
         .sort({ [parameters.sortBy]: -1 })
         .stream();

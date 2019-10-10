@@ -12,11 +12,11 @@ module.exports = {
                 startServer: async () => {
                     return server(await context.getComponents());
                 },
-                logAsModerateur: async (app, courriel) => {
+                logAsModerateur: async (app, courriel, custom) => {
 
                     await context.insertIntoDatabase('accounts', newModerateurAccount({
                         courriel,
-                    }));
+                    }, custom));
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
@@ -34,8 +34,7 @@ module.exports = {
                         meta: {
                             siretAsString: siret
                         },
-                        ...custom,
-                    }));
+                    }, custom));
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
@@ -44,12 +43,13 @@ module.exports = {
 
                     return response.body.access_token;
                 },
-                logAsFinanceur: async (app, courriel, codeFinanceur) => {
+                logAsFinanceur: async (app, courriel, codeFinanceur, custom) => {
 
                     await context.insertIntoDatabase('accounts', newFinancerAccount({
                         courriel,
-                        codeFinanceur: `${codeFinanceur}`
-                    }));
+                        codeFinanceur: `${codeFinanceur}`,
+                        ...custom,
+                    }, custom));
 
                     let response = await request(app)
                     .post('/api/backoffice/login')
