@@ -162,9 +162,8 @@ export default class OrganismePage extends React.Component {
     };
 
     isFormSynchronizedWithQuery = () => {
-        let query = this.props.navigator.getQuery();
-        let data = _({ ...this.getFormParametersFromQuery(), ...this.getFormParameters() }).omitBy(_.isNil).value();
-        return this.isFormLoading() || _.isEqual(data, query);
+        let data = _(this.getFormParameters()).omitBy(_.isNil).value();
+        return this.isFormLoading() || _.isEqual(data, this.getFormParametersFromQuery());
     };
 
     onSubmit = () => {
