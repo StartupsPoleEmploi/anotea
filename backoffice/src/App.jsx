@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import fr from 'react-intl/locale-data/fr';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import jwtDecode from 'jwt-decode';
-import { Redirect, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { getSession, getToken, removeSession, setSession } from './utils/session';
 import { subscribeToHttpEvent } from './utils/http-client';
 import ModerateurRoutes from './components/moderateur/ModerateurRoutes';
@@ -17,8 +17,8 @@ import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
 import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './styles/global.scss';
 import Header from './components/common/header/Header';
-import MiscRoutes from './components/misc/MiscRoutes';
 import UserContext from './components/UserContext';
+import LibraryPage from './components/misc/LibraryPage';
 
 addLocaleData([...fr]);
 
@@ -67,28 +67,26 @@ class App extends Component {
 
         let backoffices = {
             moderateur: () => ({
-                defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&status=none',
                 headerItems: <ModerateurHeaderItems />,
                 routes: <ModerateurRoutes />,
             }),
             financeur: () => ({
-                defaultPath: '/admin/financeur/avis/stats',
                 headerItems: <FinanceurHeaderItems />,
                 routes: <FinanceurRoutes />,
             }),
             organisme: () => ({
-                defaultPath: '/admin/organisme/avis/stats',
                 headerItems: <OrganismeHeaderItems />,
                 routes: <OrganismeRoutes />,
             }),
             anonymous: () => ({
-                defaultPath: '/admin/login',
                 headerItems: <div />,
                 routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} />,
             })
         };
 
-        let layout = backoffices[this.state.profile]();
+        let profile = this.state.profile;
+        let layout = backoffices[profile]();
+        let defaultPath = profile === 'anonymous' ? '/admin/login' : `/admin/${profile}`;
 
         return (
             <>
@@ -96,13 +94,13 @@ class App extends Component {
                     <UserContext.Provider value={this.state}>
                         <div className="anotea">
                             <Switch>
-                                <Redirect exact from="/" to={layout.defaultPath} />
-                                <Redirect exact from="/admin" to={layout.defaultPath} />
+                                <Redirect exact from="/" to={defaultPath} />
+                                <Redirect exact from="/admin" to={defaultPath} />
                             </Switch>
-
-                            <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
-                            <MiscRoutes />
+                            <Header items={layout.headerItems} onLogout={this.onLogout} />
                             {layout.routes}
+                            <Route exact path="/admin/library" render={() => <LibraryPage />} />
+                            <Route render={() => <Redirect to={defaultPath} />} />
                         </div>
                     </UserContext.Provider>
                 </IntlProvider>

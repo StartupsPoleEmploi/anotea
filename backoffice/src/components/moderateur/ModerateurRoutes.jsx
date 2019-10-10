@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import GestionOrganismePage from './gestion-organismes/GestionOrganismePage';
 import CourrielsPage from './courriels/CourrielsPage';
 import { createNavigator } from '../../utils/navigator';
@@ -10,17 +10,13 @@ import MonComptePage from '../misc/MonComptePage';
 export default class ModerateurRoutes extends React.Component {
 
     render() {
+        let redirectToDefaultRoute = () => {
+            return <Redirect to="/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&status=none" />;
+        };
+
         return (
-            <>
-                <Route path="/admin/moderateur/courriels/stagiaires" render={() => <CourrielsPage type="stagiaires" />} />
-                <Route path="/admin/moderateur/courriels/organismes" render={() => <CourrielsPage type="organismes" />} />
-                <Route
-                    path="/admin/moderateur/gestion/organismes"
-                    render={props => {
-                        let navigator = createNavigator(props);
-                        return <GestionOrganismePage navigator={navigator} />;
-                    }}
-                />
+            <Switch>
+                <Route exact from="/admin/moderateur" render={redirectToDefaultRoute} />
                 <Route
                     path="/admin/moderateur/moderation/avis/stagiaires"
                     render={props => {
@@ -35,12 +31,20 @@ export default class ModerateurRoutes extends React.Component {
                         return <ModerationReponsesPage navigator={navigator} />;
                     }}
                 />
-
+                <Route
+                    path="/admin/moderateur/gestion/organismes"
+                    render={props => {
+                        let navigator = createNavigator(props);
+                        return <GestionOrganismePage navigator={navigator} />;
+                    }}
+                />
+                <Route path="/admin/moderateur/courriels/stagiaires" render={() => <CourrielsPage type="stagiaires" />} />
+                <Route path="/admin/moderateur/courriels/organismes" render={() => <CourrielsPage type="organismes" />} />
                 <Route
                     path={'/admin/moderateur/mon-compte'}
                     component={MonComptePage}
                 />
-            </>
+            </Switch>
         );
     }
 }
