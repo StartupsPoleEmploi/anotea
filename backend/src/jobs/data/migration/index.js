@@ -18,10 +18,12 @@ execute(async ({ db, logger }) => {
     stats.removeUselessMetaReconciliations = await require('./tasks/removeUselessMetaReconciliations')(db);
     stats.removeFeaturesPropertyInAccounts = await require('./tasks/removeFeaturesPropertyInAccounts')(db);
     stats.moveTitleMaskedProperty = await require('./tasks/moveTitleMasked')(db);
-    stats.moveEditedCommentProperty = await require('./tasks/moveEditedCommentProperty')(db);
+    stats.moveEditedCommentProperty = await require('./tasks/moveEditedComment')(db);
     stats.pushResfreshedPropertyIntoHistory = await require('./tasks/pushMetaResfreshedIntoHistory')(db);
     stats.moveTrackingIntoStagiaires = await require('./tasks/moveTrackingIntoStagiaires')(db);
     stats.removeEvents = await require('./tasks/removeEvents')(db);
     stats.removeUnusedProperties = await require('./tasks/removeUnusedProperties')(db);
+    stats.renameRejectReason = await require('./tasks/renameRejectReason')(db);
+    stats.convertModerationStatus = await require('./tasks/convertModerationStatus')(db);
     return stats;
 });

@@ -13,6 +13,7 @@ const createStagiaire = session => {
 
     let email = faker.internet.email();
     return {
+        token: randomize('token'),
         campaign: 'dataset',
         importDate: getDateInThePast(),
         codeRegion: session.code_region,
@@ -54,7 +55,6 @@ const createStagiaire = session => {
         },
         unsubscribe: false,
         mailSent: true,
-        token: randomize('token'),
         mailSentDate: getDateInThePast(),
         tracking: {
             firstRead: getDateInThePast(),
@@ -71,7 +71,8 @@ module.exports = async (db, options) => {
 
 
     promises.push(_.range(options.nbStagiaires || 1000).map(() => {
-        return db.collection('trainee').insertOne(createStagiaire(session));
+        let stagiaire = createStagiaire(session);
+        return db.collection('trainee').insertOne(stagiaire);
     }));
 
     return Promise.all(promises);

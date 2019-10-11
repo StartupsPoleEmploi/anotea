@@ -254,7 +254,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         let response = await request(app)
         .put(`/api/backoffice/avis/${id}/reject`)
-        .send({ reason: 'injure' })
+        .send({ qualification: 'injure' })
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -363,7 +363,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         let response = await request(app)
         .put(`/api/backoffice/avis/${new ObjectID()}/reject`)
-        .send({ reason: 'alerte' })
+        .send({ qualification: 'alerte' })
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 404);

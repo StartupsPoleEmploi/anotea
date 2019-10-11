@@ -17,17 +17,17 @@ export default class RejectButton extends React.Component {
         showModal: false,
     };
 
-    reject = async (avis, reason) => {
+    reject = async (avis, qualification) => {
         this.setState({ showModal: false });
-        let updated = await rejectAvis(avis._id, reason);
+        let updated = await rejectAvis(avis._id, qualification);
         this.props.onChange(updated, {
             message: {
                 type: 'local',
                 color: 'red',
                 text: (
                     <span>
-                        L&apos;avis a été <b>rejeté</b> pour le motif <b>{updated.rejectReason}</b>.
-                        {reason === 'injure' ? ' Un mail a été adressé au stagiaire.' : ''}
+                        L&apos;avis a été <b>rejeté</b> pour le motif <b>{updated.qualification}</b>.
+                        {qualification === 'injure' ? ' Un mail a été adressé au stagiaire.' : ''}
                     </span>),
             }
         });
@@ -40,16 +40,16 @@ export default class RejectButton extends React.Component {
     getModal = () => {
         return (
             <Modal
-                title={`Rejeter cet avis pour ${this.state.reason}`}
+                title={`Rejeter cet avis pour ${this.state.qualification}`}
                 body={
                     <span>
-                        Le <b>rejet pour {this.state.reason}</b> entraîne <b>l&apos;envoi d&apos;un mail </b> automatique au
+                        Le <b>rejet pour {this.state.qualification}</b> entraîne <b>l&apos;envoi d&apos;un mail </b> automatique au
                         stagiaire pour l&apos;informer que le <b>commentaire ne sera pas publié</b>. Confirmez-vous
                         cette demande ?
                     </span>
                 }
                 onClose={this.handleCancel}
-                onConfirmed={() => this.reject(this.props.avis, this.state.reason)} />
+                onConfirmed={() => this.reject(this.props.avis, this.state.qualification)} />
         );
     };
 
@@ -68,11 +68,11 @@ export default class RejectButton extends React.Component {
                     }
                     items={
                         <div>
-                            <DropdownItem onClick={() => this.setState({ showModal: true, reason: 'injure' })}>
+                            <DropdownItem onClick={() => this.setState({ showModal: true, qualification: 'injure' })}>
                                 Injure
                             </DropdownItem>
                             <DropdownDivider />
-                            <DropdownItem onClick={() => this.setState({ showModal: true, reason: 'alerte' })}>
+                            <DropdownItem onClick={() => this.setState({ showModal: true, qualification: 'alerte' })}>
                                 Alerte
                             </DropdownItem>
                             <DropdownDivider />

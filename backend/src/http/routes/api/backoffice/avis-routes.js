@@ -102,7 +102,9 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
         let { sendInjureMail, sendAlerteMail, sendSignalementAccepteNotification } = mailing;
 
         const { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
-        const { reason } = await Joi.validate(req.body, { reason: Joi.string().required() }, { abortEarly: false });
+        const { qualification } = await Joi.validate(req.body, {
+            qualification: Joi.string().required()
+        }, { abortEarly: false });
 
         let avis = await db.collection('comment').findOne({ _id: new ObjectID(id) });
         if (avis) {
@@ -114,22 +116,22 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
             throw new IdNotFoundError(`Avis with identifier ${id} not found`);
         }
 
-        avis = await moderation.reject(id, reason, { event: { origin: getRemoteAddress(req) } });
+        avis = await moderation.reject(id, qualification, { event: { origin: getRemoteAddress(req) } });
 
-        if (reason === 'injure' || reason === 'alerte') {
+        if (qualification === 'injure' || qualification === 'alerte') {
             let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
             let trainee = await db.collection('trainee').findOne({ token: comment.token });
 
             let email = trainee.trainee.email;
             let sendMail;
 
-            if (reason === 'injure') {
+            if (qualification === 'injure') {
                 sendMail = sendInjureMail;
-            } else if (reason === 'alerte') {
+            } else if (qualification === 'alerte') {
                 sendMail = sendAlerteMail;
             }
 
-            sendMail(email, trainee, comment, reason)
+            sendMail(email, trainee, comment, qualification)
             .catch(e => logger.error(e, 'Unable to send email'));
         }
 

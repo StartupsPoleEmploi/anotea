@@ -1,6 +1,6 @@
 const faker = require('faker');
 
-module.exports = async (db, moderation, consultation) => {
+module.exports = async (db, moderation, consultation, options = {}) => {
 
     let makeAction = async (nbElements, selector, action) => {
         let cursor = await db.collection('comment').find(selector).limit(nbElements);
@@ -10,10 +10,27 @@ module.exports = async (db, moderation, consultation) => {
         }
     };
 
-    await makeAction(50, { comment: { $exists: true }, status: 'none' }, avis => moderation.publish(avis._id, 'positif'));
-    await makeAction(10, { comment: { $exists: true }, status: 'none' }, avis => moderation.reject(avis._id, 'alerte'));
-    await makeAction(10, { comment: { $exists: true }, status: 'published' }, avis => consultation.report(avis._id, true));
-    await makeAction(10, { comment: { $exists: true }, status: 'published' }, avis => {
+    let nbModerationsActions = (options.commentaires || 100) / 5;
+    await makeAction(nbModerationsActions, { status: 'none' }, avis => {
+        return moderation.publish(avis._id, 'positif');
+    });
+    await makeAction(nbModerationsActions, { status: 'none' }, avis => {
+        return moderation.reject(avis._id, 'alerte');
+    });
+
+    let nbCommentairesActions = nbModerationsActions / 5;
+    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'published' }, avis => {
+        return consultation.report(avis._id, true);
+    });
+    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'published' }, avis => {
         return consultation.addReponse(avis._id, faker.lorem.paragraph());
+    });
+
+    let nbReponsesActions = nbCommentairesActions / 5;
+    await makeAction(nbReponsesActions, { 'reponse.status': 'none' }, avis => {
+        return moderation.publishReponse(avis._id, true);
+    });
+    await makeAction(nbReponsesActions, { 'reponse.status': 'none' }, avis => {
+        return moderation.rejectReponse(avis._id, faker.lorem.paragraph());
     });
 };

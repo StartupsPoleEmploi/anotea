@@ -48,7 +48,7 @@ const Status = ({ avis }) => {
         return (
             <span className="status rejected">
                 (<span>Rejeté le </span>
-                <PrettyDate date={new Date(avis.lastStatusUpdate)} /> pour « <b>{avis.rejectReason}</b> »)
+                <PrettyDate date={new Date(avis.lastStatusUpdate)} /> pour « <b>{avis.qualification}</b> »)
             </span>
         );
     } else if (avis.status === 'none') {
