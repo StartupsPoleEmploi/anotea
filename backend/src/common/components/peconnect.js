@@ -32,7 +32,9 @@ module.exports = configuration => {
                     redirect_uri: configuration.peconnect.callback_url
                 };
                 request.post({ url: `${configuration.peconnect.auth_base_url}/connexion/oauth2/access_token?realm=%2Findividu`, form: data }, (error, response, body) => {
+                    //TODO : manage timeout
                     let json = JSON.parse(body);
+
                     if (json.error) {
                         reject({ error: json.error });
                     } else if (json.nonce !== nonce) {

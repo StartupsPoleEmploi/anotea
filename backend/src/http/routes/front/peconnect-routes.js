@@ -9,8 +9,7 @@ module.exports = ({ db, logger, configuration, peconnect }) => {
             if (req.query.scope !== undefined) {
                 if (peconnect.checkState(req.session.pe_connect.state, req.query.state)) {
                     logger.info('User successfully logged in throw PE Connect');
-
-                    peconnect.buildAccessToken(req.query.code, req.session.pe_connect.nonce).then(async data => {
+                    peconnect.buildAccessToken(configuration, req.query.code, req.session.pe_connect.nonce).then(async data => {
                         const accessToken = data.access_token;
                         peconnect.getUserInfo(accessToken).then(async data => {
                             const email = data.email.toLowerCase();
@@ -18,8 +17,7 @@ module.exports = ({ db, logger, configuration, peconnect }) => {
                             const firstName = data.given_name;
 
                             const filter = { 'trainee.email': email, 'trainee.name': name, 'trainee.firstName': firstName };
-
-                            const trainee = await db.collection('trainee').find(filter).sort({ importDate: -1 }).limit(1);
+                            const trainee = await db.collection('trainee').find(filter).sort({ importDate: -1 }).limit(1).toArray();
                             if (trainee.length === 1) {
                                 await db.collection('trainee').updateOne(filter, { $set: { 'tracking.peConnectSucceed': new Date() } });
                                 logger.info('User successfully logged in throw PE connect');
