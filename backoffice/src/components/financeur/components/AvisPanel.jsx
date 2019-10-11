@@ -71,7 +71,7 @@ export default class AvisPanel extends React.Component {
                     <Filters>
                         <Filter
                             label="Tous"
-                            isActive={() => !query.status && !query.qualification}
+                            isActive={() => !query.statuses && !query.qualification}
                             onClick={() => onFilterClicked({ sortBy: 'date' })}
                         />
 
@@ -95,14 +95,14 @@ export default class AvisPanel extends React.Component {
 
                         <Filter
                             label="Signalés"
-                            isActive={() => query.status === 'reported'}
-                            onClick={() => onFilterClicked({ status: 'reported', sortBy: 'lastStatusUpdate' })}
+                            isActive={() => query.statuses === 'reported'}
+                            onClick={() => onFilterClicked({ statuses: 'reported', sortBy: 'lastStatusUpdate' })}
                         />
 
                         <Filter
                             label="Rejetés"
-                            isActive={() => query.status === 'rejected'}
-                            onClick={() => onFilterClicked({ status: 'rejected', sortBy: 'lastStatusUpdate' })}
+                            isActive={() => query.statuses === 'rejected'}
+                            onClick={() => onFilterClicked({ statuses: 'rejected', sortBy: 'lastStatusUpdate' })}
                         />
                     </Filters>
                 }

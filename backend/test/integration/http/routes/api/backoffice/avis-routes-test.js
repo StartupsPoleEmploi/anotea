@@ -46,7 +46,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
     profiles(['moderateur', 'financeur', 'organisme'], ({ profileName, logUser }) => {
 
-        it(`[${profileName}] can search all avis`, async () => {
+        it(`[${profileName}] can search avis`, async () => {
 
             let app = await startServer();
             let [token] = await Promise.all([
@@ -69,46 +69,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                     totalPages: 1
                 }
             });
-        });
-
-        it(`[${profileName}] can search avis with status`, async () => {
-
-            let app = await startServer();
-            let [token] = await Promise.all([
-                logUser(app),
-                insertIntoDatabase('comment', buildComment({ status: 'published' })),
-                insertIntoDatabase('comment', buildComment({ status: 'rejected' })),
-                insertIntoDatabase('comment', buildComment({ status: 'reported' })),
-                insertIntoDatabase('comment', buildComment({ status: 'none' })),
-            ]);
-
-            let response = await request(app)
-            .get('/api/backoffice/avis?status=published')
-            .set('authorization', `Bearer ${token}`);
-            assert.strictEqual(response.statusCode, 200);
-            assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].status, 'published');
-
-            response = await request(app)
-            .get('/api/backoffice/avis?status=rejected')
-            .set('authorization', `Bearer ${token}`);
-            assert.strictEqual(response.statusCode, 200);
-            assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].status, 'rejected');
-
-            response = await request(app)
-            .get('/api/backoffice/avis?status=reported')
-            .set('authorization', `Bearer ${token}`);
-            assert.strictEqual(response.statusCode, 200);
-            assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].status, 'reported');
-
-            response = await request(app)
-            .get('/api/backoffice/avis?status=none')
-            .set('authorization', `Bearer ${token}`);
-            assert.strictEqual(response.statusCode, 200);
-            assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].status, 'none');
         });
 
         it(`[${profileName}] can search avis with pagination`, async () => {
@@ -150,6 +110,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     });
 
     profiles(['moderateur', 'financeur'], ({ profileName, logUser }) => {
+
         it(`[${profileName}] should not return avis from other region`, async () => {
 
             let app = await startServer();

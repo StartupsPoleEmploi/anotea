@@ -47,7 +47,7 @@ module.exports = async (db, options) => {
     };
 
     return Promise.all([
-        generateAvis(options.notes || 100),
+        generateAvis(options.notes || 100, () => ({ status: 'published' })),
         generateAvis(options.commentaires || 100, () => {
             return {
                 //Must be reused from questionnaire-routes

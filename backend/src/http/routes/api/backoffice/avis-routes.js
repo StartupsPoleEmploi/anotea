@@ -28,7 +28,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
         let query = await queries.buildAvisQuery(parameters);
         let cursor = db.collection('comment')
         .find(query)
-        .sort({ [parameters.sortBy]: -1 })
+        .sort({ [parameters.sortBy || 'date']: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 
@@ -67,7 +67,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
         .find({
             ...await queries.buildAvisQuery(parameters),
         })
-        .sort({ [parameters.sortBy]: -1 })
+        .sort({ [parameters.sortBy || 'date']: -1 })
         .stream();
 
         try {

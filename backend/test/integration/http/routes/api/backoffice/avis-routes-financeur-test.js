@@ -16,6 +16,50 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         }, custom));
     };
 
+    it(`can search avis with status (+default)`, async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
+            insertIntoDatabase('comment', buildComment({ status: 'published' })),
+            insertIntoDatabase('comment', buildComment({ status: 'rejected' })),
+            insertIntoDatabase('comment', buildComment({ status: 'reported' })),
+            insertIntoDatabase('comment', buildComment({ status: 'none' })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.filter(a => ['published', 'rejected', 'reported'].includes(a.status)).length, 2);
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=published')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].status, 'published');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=rejected')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].status, 'rejected');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=reported')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].status, 'reported');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=none')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 400);
+    });
+
     it('can search avis with qualification', async () => {
 
         let app = await startServer();
@@ -42,6 +86,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.strictEqual(response.body.avis[0].qualification, 'négatif');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?qualification=INVALID')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 400);
     });
 
     it('can search avis with siren', async () => {
@@ -58,23 +107,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 2);
-    });
 
-    it('can search archived and not archived avis', async () => {
-
-        let app = await startServer();
-        let [token] = await Promise.all([
-            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
-            insertIntoDatabase('comment', buildComment({ archived: false })),
-            insertIntoDatabase('comment', buildComment({ archived: true })),
-        ]);
-
-        let response = await request(app)
-        .get('/api/backoffice/avis')
+        response = await request(app)
+        .get('/api/backoffice/avis?siren=000000000')
         .set('authorization', `Bearer ${token}`);
-
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.length, 2);
+        assert.strictEqual(response.body.avis.length, 0);
     });
 
     it('can search avis by code financeur (PE only)', async () => {
@@ -93,7 +131,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.body.avis.length, 1);
     });
 
-    it('can search avis with all code financeurs (PE)', async () => {
+    it('should automatically filter by all code financeurs (PE)', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
@@ -140,6 +178,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
 
         assert.strictEqual(response.statusCode, 400);
         assert.strictEqual(response.body.details[0].context.key, 'codeFinanceur');
+    });
+
+    it('should ignore archived flag', async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
+            insertIntoDatabase('comment', buildComment({ archived: false })),
+            insertIntoDatabase('comment', buildComment({ archived: true })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 2);
     });
 
 }));

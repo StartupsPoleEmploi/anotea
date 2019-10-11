@@ -41,7 +41,7 @@ export default class ModerateurHeaderItems extends React.Component {
                         <li className="nav-item">
                             <Link
                                 className="nav-link"
-                                url="/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&status=none"
+                                url="/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none"
                             >
                                 <div className="Pastille--holder">
                                     Avis

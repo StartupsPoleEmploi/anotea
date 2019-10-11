@@ -1,3 +1,5 @@
+const _ = require('lodash');
+const waitUntil = require('wait-until');
 const request = require('supertest');
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
@@ -5,6 +7,55 @@ const { withServer } = require('../../../../../helpers/with-server');
 const { newComment, newTrainee, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, createIndexes, getComponents, getTestDatabase }) => {
+
+    let buildComment = (custom = {}) => {
+        return newComment(_.merge({
+            codeRegion: '11',
+            training: {
+                organisation: { siret: '11111111111111' },
+                codeFinanceur: ['10'],
+            },
+        }, custom));
+    };
+
+    it(`can search avis with status`, async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', buildComment({ status: 'published' })),
+            insertIntoDatabase('comment', buildComment({ status: 'rejected' })),
+            insertIntoDatabase('comment', buildComment({ status: 'reported' })),
+            insertIntoDatabase('comment', buildComment({ status: 'none' })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis?statuses=published')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].status, 'published');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=rejected')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].status, 'rejected');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=reported')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].status, 'reported');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=none')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].status, 'none');
+    });
 
     it('can search avis by email (fulltext)', async () => {
         let app = await startServer();
@@ -129,8 +180,20 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.reponse.status, 'rejected');
 
         let { mailer } = await getComponents();
-        let email = mailer.getCalls()[0];
-        assert.deepStrictEqual(email[0], { to: 'contact@poleemploi-formation.fr' });
+        return new Promise((resolve, reject) => {
+            waitUntil()
+            .interval(100)
+            .times(10)
+            .condition(() => mailer.getCalls().length > 0)
+            .done(result => {
+                if (!result) {
+                    reject(new Error('The condition was never met.'));
+                }
+                let params = mailer.getCalls()[0];
+                assert.deepStrictEqual(params[0], { to: 'contact@poleemploi-formation.fr' });
+                resolve();
+            });
+        });
     });
 
     it('can edit an avis', async () => {

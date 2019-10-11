@@ -37,7 +37,7 @@ const Status = ({ avis }) => {
                 <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
             </span>
         );
-    } else if (avis.status === 'published') {
+    } else if (avis.status === 'published' && avis.comment) {
         return (
             <span className="status published">
                 (<span>Validé le </span>
