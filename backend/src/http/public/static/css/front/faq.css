@@ -1,0 +1,181 @@
+body {
+    font-family: Lato;
+    margin: 0;
+}
+
+.main {
+    width: 60%;
+    margin: auto;
+}
+
+a {
+    color: #373B46;
+}
+
+.button {
+    display: inline-block;
+    position: relative;
+    margin: 0px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    background-color: #29333C;
+    box-shadow: none;
+    border: none;
+    font-size: 0.9em;
+    padding: 12px 20px 0px 20px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.intro {
+    margin-bottom: 80px;
+}
+
+.intro div {
+    width: 20%;
+    display: inline-block;
+    margin-right: 20%;
+}
+
+.intro img {
+    vertical-align: middle;
+}
+
+.description {
+    background-color: #24303A;
+    color: white;
+    padding: 40px;
+}
+
+.description h2, .description div {
+    width: 40%;
+}
+
+.description div {
+    display: inline-block;
+}
+
+.description h2 {
+    color: #FF9533;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 5%;
+}
+
+.description .button {
+    color: #FF9533;
+    background-color: white;
+}
+
+.vous ul {
+    padding: 0;
+    width: 30%;
+}
+
+.vous li {
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px 0 rgba(0,0,0,0.1);
+    margin: 15px;
+    list-style: none;
+    padding: 15px;
+}
+
+.affichez h2 {
+    font-size: 32px;
+}
+
+.affichez {
+    background-color: #24303A;
+    color: white;
+    padding: 40px;
+}
+
+.affichez img, .affichez div {
+    display: inline-block;
+}
+
+.affichez img {
+    vertical-align: middle;
+}
+
+.affichez h3 {
+    color: #FF9533;
+}
+
+.affichez .button {
+    background-color: #FF9533;
+    color: #24303A;
+}
+
+.faq h2 {
+    text-align: center;
+    font-size: 32px;
+}
+.faq .nav {
+    list-style: none;
+    padding: 0px;
+}
+
+.faq .nav li {
+    display: inline;
+    margin: 20px;
+}
+
+.faq .nav li a {
+    text-decoration: none;
+}
+
+.faq .nav li a.current {
+    font-weight: bold;
+}
+
+.vous .bo, .vous ul {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.question {
+    outline: none;
+    margin-bottom: 15px;
+}
+
+.question.open .icon-open {
+    display: none;
+}
+
+.question.closed .icon-closed {
+    display: none;
+}
+
+.question a {
+    color: #24303A;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    height: 50px;
+    background-color: #F4F4F5;
+    border-radius: 5px;
+    line-height: 22px;
+    padding: 5px;
+    outline: none;
+}
+
+.question img {
+    vertical-align: middle;
+}
+
+.reponse {
+    opacity: 0.8;
+    color: #24303A;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 15px;
+}
+
+.reponse {
+    display: none;
+}

@@ -7,41 +7,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
         <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
-        <link rel="stylesheet" type="text/css" href="/static/css/front/pages.css" media="all">
+        <link rel="stylesheet" type="text/css" href="/static/css/front/cgu.css" media="all">
         <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
     </head>
 
-    <body>
-        <div class="header">
-            <a href="/">
-                <img class="logo" src="/static/images/logo_Anotea_Horizontal_baseline2.png" />
-            </a>
-        </div>
+    <body class="cgu">
+        <%- include('../../views/front/header.ejs'); %>
+
+        <h1>Conditions Générales d’Utilisation</h1>
 
         <div class="main cgu">
-            <h1>Conditions Générales d’Utilisation</h1>
             <h2>Mentions légales</h2>
 
+            <h3>&Eacute;diteur</h3>
+                
+            <p>15 avenue du Docteur Gley<br />
+            75987 Paris cedex 20<br />
+            Tél. 01 40 30 60 00</p>
+
+            <h3>Directeur de la publication :</h3>
             <p>
-                <strong>Editeur Pôle emploi</strong>
-            <p>15 avenue du Docteur Gley</p>
-            <p>75987 Paris cedex 20</p>
-            <p>Tél. 01 40 30 60 00</p>
+                Monsieur Jean Bassères, Directeur général.
             </p>
 
-            <p>
-                <strong>Directeur de la publication :</strong> Monsieur Jean Bassères, Directeur général.
-            </p>
+            <h3>Hébergeur</h3>
+                
+            <p>OVH<br />
+            2 rue Kellermann<br />
+            59100 Roubaix<br />
+            Tél. 09 72 10 10 07</p>
 
-            <p>
-                <strong>Hébergeur</strong>
-            <p>OVH</p>
-            <p>2 rue Kellermann</p>
-            <p>59100 Roubaix</p>
-            <p>Tél. 09 72 10 10 07</p>
-            </p>
-
-            <h2>1. Objet et fonctionnement du service </h2>
+            <h3>1. Objet et fonctionnement du service </h3>
 
             <p>Les utilisateurs, après y avoir été invités par courrier électronique, peuvent participer à une enquête
                 et donner
@@ -61,7 +57,7 @@
                 formation
                 concerné pour recueillir des éléments d’analyse complémentaires.</p>
 
-            <h2>2. Données personnelles </h2>
+            <h3>2. Données personnelles </h3>
 
             <p>Aucune donnée personnelle n’est collectée sur le site internet Anotéa.</p>
             <p>Les utilisateurs qui ont consenti à être contactés par de futurs stagiaires le sont via un formulaire de
@@ -71,7 +67,7 @@
                 pendant
                 de 10 ans.</p>
 
-            <h2>3. Cookies</h2>
+            <h3>3. Cookies</h3>
             <p>
                 <a href="https://anotea.pole-emploi.fr">anotea.pole-emploi.fr</a> utilise des cookies. Ces cookies
                 enregistrent uniquement des informations relatives
@@ -88,9 +84,9 @@
             <div>
                 <strong>Pour Microsoft Internet Explorer 6.0 et + :</strong>
                 <ol>
-                    <li>Choisir le menu "Outils" (ou "Tools"), puis "Options Internet" (ou "Internet Options")</li>
-                    <li>Cliquer sur l'onglet "Confidentialité" (ou "Confidentiality")</li>
-                    <li>Sélectionner le niveau souhaité à l'aide du curseur ou cliquer sur le bouton "Avancé" pour
+                    <li>1 - Choisir le menu "Outils" (ou "Tools"), puis "Options Internet" (ou "Internet Options")</li>
+                    <li>2 - Cliquer sur l'onglet "Confidentialité" (ou "Confidentiality")</li>
+                    <li>3 - Sélectionner le niveau souhaité à l'aide du curseur ou cliquer sur le bouton "Avancé" pour
                         personnaliser
                         la gestion des cookies.
                     </li>
@@ -100,9 +96,9 @@
             <div>
                 <strong>Pour Firefox 3.5 et + :</strong>
                 <ol>
-                    <li>Choisir le menu "Outils" (ou "Tools"), puis "Options "</li>
-                    <li>Cliquer sur l'onglet "Vie privée"</li>
-                    <li>Dans « Règles de conservation », sélectionner « Utiliser les paramètres personnalisés pour
+                    <li>1 - Choisir le menu "Outils" (ou "Tools"), puis "Options "</li>
+                    <li>2 - Cliquer sur l'onglet "Vie privée"</li>
+                    <li>3 - Dans « Règles de conservation », sélectionner « Utiliser les paramètres personnalisés pour
                         l’historique »
                         et décocher le bouton "Accepter les cookies".
                     </li>
@@ -112,9 +108,9 @@
             <div>
                 <strong>Pour Chrome :</strong>
                 <ol>
-                    <li>Choisir le menu "Outils" (ou "Tools"), puis "Options "</li>
-                    <li>Cliquer sur l'onglet "Options avancées"</li>
-                    <li>Dans « Paramètres de contenu », cocher le bouton « Interdire à tous les sites de stocker les
+                    <li>1 - Choisir le menu "Outils" (ou "Tools"), puis "Options "</li>
+                    <li>2 - Cliquer sur l'onglet "Options avancées"</li>
+                    <li>3 - Dans « Paramètres de contenu », cocher le bouton « Interdire à tous les sites de stocker les
                         données ».
                     </li>
                 </ol>
@@ -123,23 +119,23 @@
             <div>
                 <strong>Pour Netscape 6.X et 7.X :</strong>
                 <ol>
-                    <li>Choisir le menu "Edition" > "Préférences"</li>
-                    <li>Confidentialité et Sécurité</li>
-                    <li>Cookies</li>
+                    <li>1 - Choisir le menu "Edition" > "Préférences"</li>
+                    <li>2 - Confidentialité et Sécurité</li>
+                    <li>3 - Cookies</li>
                 </ol>
             </div>
 
             <div>
                 <strong>Pour Opéra 6.0 et au-delà :</strong>
                 <ol>
-                    <li>Choisir le menu "Fichier" > "Préférences"</li>
-                    <li>Vie Privée</li>
+                    <li>1 - Choisir le menu "Fichier" > "Préférences"</li>
+                    <li>2 - Vie Privée</li>
                 </ol>
             </div>
 
             <p>A défaut, l’utilisateur accepte les cookies en poursuivant sa navigation.</p>
 
-            <h2>4. Publication et modération des avis. </h2>
+            <h3>4. Publication et modération des avis. </h3>
             <p>Les avis déposés doivent être en rapport direct avec la formation suivie par l’utilisateur. Afin d’être
                 le plus exhaustif
                 possible, l‘utilisateur est invité à expliquer les points positifs et négatifs qu’il exprime dans son
@@ -178,7 +174,7 @@
             </ul>
             <p>Tout avis contraire aux présentes conditions d’utilisation est supprimé par Pôle emploi. </p>
 
-            <p></p>Après leur publication, les avis peuvent être signalés, en cliquant sur le bouton ‘signaler’, par
+            <p>Après leur publication, les avis peuvent être signalés, en cliquant sur le bouton ‘signaler’, par
             tout utilisateur
             qui considère que l’avis est contraire à la loi ou aux conditions d’utilisation du site Anotéa.</p>
 
@@ -191,19 +187,19 @@
 
             <h2>6. Obligations de l’utilisateur</h2>
 
-            <p></p>L’utilisateur reconnaît avoir pris connaissance et accepter les présentes conditions d’utilisation
+            <p>L’utilisateur reconnaît avoir pris connaissance et accepter les présentes conditions d’utilisation
             avant toute
             utilisation du site.</p>
-            <p></p>L’utilisation du site internet Anotéa.pole-emploi.fr est soumise au respect par l’utilisateur de la
+            <p>L’utilisation du site internet Anotéa.pole-emploi.fr est soumise au respect par l’utilisateur de la
             législation
             française et des présentes conditions d’utilisation,</p>
-            <p></p>Les présentes conditions d’utilisation peuvent être modifiées à tout moment ; la date de mise à jour
+            <p>Les présentes conditions d’utilisation peuvent être modifiées à tout moment ; la date de mise à jour
             est mentionnée.
             Ces modifications sont opposables à l’utilisateur dès leur mise en ligne sur le site
             internet Anotéa.pole-emploi.fr.
             L’utilisateur est donc invité à consulter régulièrement la dernière version mise à jour.</p>
 
-            <h2>7. Propriété intellectuelle</h2>
+            <h3>7. Propriété intellectuelle</h3>
 
             <p>Le site web Anotéa.pole-emploi.fr  est protégé au titre des dispositions relatives au droit d’auteur
                 défini aux articles

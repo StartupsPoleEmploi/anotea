@@ -1,0 +1,25 @@
+
+.footer {
+    width: 80%;
+    margin: auto;
+    height: 150px;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer a {
+    line-height: 70px;
+    padding: 0px 20px;
+    color: #373B46;
+    font-weight: bold;
+}
+
+.footer a:hover {
+    text-decoration: none;
+}
+
+.footer .logo {
+    display: inline;
+    margin-right: 0px;
+    vertical-align: middle;
+}

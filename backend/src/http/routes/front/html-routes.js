@@ -36,8 +36,16 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
         res.render('front/cgu');
     });
 
-    router.get('/faq', (req, res) => {
-        res.render('front/faq');
+    router.get('/faq/organismes', (req, res) => {
+        res.render('front/faq_organismes');
+    });
+
+    router.get('/faq/stagiaires', (req, res) => {
+        res.render('front/faq_stagiaires');
+    });
+
+    router.get('/faq/financeurs', (req, res) => {
+        res.render('front/faq_financeurs');
     });
 
     router.get('/doc/:name', (req, res) => {
