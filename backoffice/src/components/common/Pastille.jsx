@@ -7,7 +7,7 @@ const Pastille = props => {
 };
 
 Pastille.propTypes = {
-    value: PropTypes.string,
+    value: PropTypes.number,
 };
 
 export default Pastille;
