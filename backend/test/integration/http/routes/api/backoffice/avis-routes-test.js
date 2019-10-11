@@ -111,6 +111,35 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
     profiles(['moderateur', 'financeur'], ({ profileName, logUser }) => {
 
+        it(`[${profileName}] can search avis with commentaires`, async () => {
+
+            let app = await startServer();
+            let notes = buildComment({ token: 'sans-commentaire' });
+            delete notes.comment;
+
+            let [token] = await Promise.all([
+                logAsModerateur(app, 'admin@pole-emploi.fr'),
+                insertIntoDatabase('comment', buildComment({ token: 'avec-commentaire' })),
+                insertIntoDatabase('comment', notes),
+            ]);
+
+            let response = await request(app)
+            .get('/api/backoffice/avis?commentaires=true')
+            .set('authorization', `Bearer ${token}`);
+
+            assert.strictEqual(response.statusCode, 200);
+            assert.strictEqual(response.body.avis.length, 1);
+            assert.strictEqual(response.body.avis[0].token, 'avec-commentaire');
+
+            response = await request(app)
+            .get('/api/backoffice/avis?commentaires=false')
+            .set('authorization', `Bearer ${token}`);
+
+            assert.strictEqual(response.statusCode, 200);
+            assert.strictEqual(response.body.avis.length, 1);
+            assert.strictEqual(response.body.avis[0].token, 'sans-commentaire');
+        });
+
         it(`[${profileName}] should not return avis from other region`, async () => {
 
             let app = await startServer();

@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const Joi = require('joi');
 const { arrayOf } = require('../../../validators-utils');
 const isEmail = require('isemail').validate;
@@ -15,6 +16,7 @@ module.exports = (db, user) => {
             },
             filters: () => {
                 return {
+                    commentaires: Joi.bool(),
                     statuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected', 'reported'])),
                     reponseStatuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected'])),
                     sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']),
@@ -33,7 +35,7 @@ module.exports = (db, user) => {
                 };
             },
             buildAvisQuery: async parameters => {
-                let { statuses, fulltext, reponseStatuses } = parameters;
+                let { statuses, fulltext, reponseStatuses, commentaires } = parameters;
 
                 let fulltextIsEmail = isEmail(fulltext || '');
                 let stagiaire = fulltextIsEmail ? await getStagiaire(fulltext) : null;
@@ -43,6 +45,7 @@ module.exports = (db, user) => {
                     archived: false,
                     ...(fulltextIsEmail ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
                     ...(fulltext && !fulltextIsEmail ? { $text: { $search: fulltext } } : {}),
+                    ...(_.isBoolean(commentaires) ? { comment: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
                     ...(reponseStatuses && reponseStatuses.length > 0 ? { 'reponse.status': { $in: reponseStatuses } } : {}),
                 };
