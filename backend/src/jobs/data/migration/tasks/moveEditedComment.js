@@ -1,9 +1,8 @@
 const { batchCursor } = require('../../../job-utils');
 
 module.exports = async db => {
-    let cursor = db.collection('comment').find({ 'editedComment': { $exists: true } });
     let updated = 0;
-
+    let cursor = db.collection('comment').find({ 'editedComment': { $exists: true } });
     await batchCursor(cursor, async next => {
         let avis = await next();
         let before = avis.comment.text;

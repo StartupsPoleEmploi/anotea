@@ -2,7 +2,7 @@ const moment = require('moment');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const { newComment } = require('../../../../helpers/data/dataset');
-const moveEditedCommentProperty = require('../../../../../src/jobs/data/migration/tasks/moveEditedCommentProperty');
+const moveEditedCommentProperty = require('../../../../../src/jobs/data/migration/tasks/moveEditedComment');
 
 describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
 

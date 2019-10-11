@@ -15,15 +15,15 @@ module.exports = (db, regions, user) => {
                     scheduledEndDate: Joi.number(),
                     idFormation: Joi.string(),
                     departement: Joi.string().valid(region.departements.map(d => d.code)),
-                    siren: Joi.string().regex(new RegExp(`^${user.siret.substring(0, 9)}`), 'siren').default(user.siret),
+                    siren: Joi.string().regex(new RegExp(`^${user.siret.substring(0, 9)}`), 'siren'),
                 };
             },
             filters: () => {
                 return {
-                    status: Joi.string().valid(['none', 'published', 'rejected', 'reported']),
+                    statuses: arrayOf(Joi.string().valid(['published', 'reported'])),
                     reponseStatuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected'])),
                     read: Joi.bool(),
-                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
+                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']),
                 };
             },
             pagination: () => {
@@ -34,7 +34,7 @@ module.exports = (db, regions, user) => {
         },
         queries: {
             buildStagiaireQuery: async parameters => {
-                let { departement, siren, idFormation, startDate, scheduledEndDate } = parameters;
+                let { departement, idFormation, startDate, scheduledEndDate, siren = user.siret } = parameters;
 
                 return {
                     'training.organisation.siret': new RegExp(`^${siren}`),
@@ -46,12 +46,12 @@ module.exports = (db, regions, user) => {
             },
             buildAvisQuery: async parameters => {
                 let {
-                    status, reponseStatuses, read,
-                    departement, siren, idFormation, startDate, scheduledEndDate
+                    departement, idFormation, startDate, scheduledEndDate, siren = user.siret,
+                    reponseStatuses, read, statuses = ['published', 'reported']
                 } = parameters;
 
+
                 return {
-                    'moderated': true,
                     'archived': false,
                     'training.organisation.siret': new RegExp(`^${siren}`),
                     ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
@@ -59,12 +59,7 @@ module.exports = (db, regions, user) => {
                     ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
                     ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
                     ...(_.isBoolean(read) ? { read } : {}),
-
-                    ...(status === 'none' ? { moderated: false } : {}),
-                    ...(status === 'published' ? { published: true } : {}),
-                    ...(status === 'rejected' ? { rejected: true } : {}),
-                    ...(status === 'reported' ? { reported: true } : {}),
-
+                    ...(statuses ? { status: { $in: statuses } } : {}),
                     ...(reponseStatuses && reponseStatuses.length > 0 ? { 'reponse.status': { $in: reponseStatuses } } : {}),
                 };
 

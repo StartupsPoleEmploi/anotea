@@ -6,12 +6,64 @@ const { newComment } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganisme }) => {
 
+    let buildComment = (custom = {}) => {
+        return newComment(_.merge({
+            codeRegion: '11',
+            training: {
+                organisation: { siret: '11111111111111' },
+                codeFinanceur: ['10'],
+            },
+        }, custom));
+    };
+
+    it(`can search avis with status (+default)`, async () => {
+
+        let app = await startServer();
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
+            insertIntoDatabase('comment', buildComment({ status: 'published' })),
+            insertIntoDatabase('comment', buildComment({ status: 'rejected' })),
+            insertIntoDatabase('comment', buildComment({ status: 'reported' })),
+            insertIntoDatabase('comment', buildComment({ status: 'none' })),
+        ]);
+
+        let response = await request(app)
+        .get('/api/backoffice/avis')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.filter(a => ['published', 'reported'].includes(a.status)).length, 2);
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=published')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].status, 'published');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=reported')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis.length, 1);
+        assert.strictEqual(response.body.avis[0].status, 'reported');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=none')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 400);
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=rejected')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 400);
+    });
+
     it('can search avis from other region', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase('comment', buildComment({
                 codeRegion: '6',
                 training: { organisation: { siret: '11111111111111' } },
             })),
@@ -30,8 +82,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111122222' } } })),
-            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111111111' } } })),
+            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111122222' } } })),
+            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111111111' } } })),
         ]);
 
         let response = await request(app)
@@ -48,8 +100,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111122222' } } })),
-            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '22222222222222' } } })),
+            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111122222' } } })),
+            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '22222222222222' } } })),
         ]);
 
         let response = await request(app)
@@ -66,8 +118,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111122222' } } })),
-            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '22222222222222' } } })),
+            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111122222' } } })),
+            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '22222222222222' } } })),
         ]);
 
         let response = await request(app)
@@ -83,8 +135,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         let app = await startServer();
         let [token] = await Promise.all([
             logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111'),
-            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '11111111111111' } } })),
-            insertIntoDatabase('comment', newComment({ training: { organisation: { siret: '22222222222222' } } })),
+            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '11111111111111' } } })),
+            insertIntoDatabase('comment', buildComment({ training: { organisation: { siret: '22222222222222' } } })),
         ]);
 
         let response = await request(app)
@@ -96,12 +148,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         assert.strictEqual(response.body.avis[0].training.organisation.siret, '11111111111111');
     });
 
-
     it('can create a reponse', async () => {
 
         let app = await startServer();
         let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
-        let comment = newComment();
+        let comment = buildComment();
         await insertIntoDatabase('comment', comment);
 
         let response = await request(app)
@@ -158,7 +209,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
 
         let app = await startServer();
         let token = await logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222');
-        let comment = newComment({
+        let comment = buildComment({
             reponse: {
                 text: 'Voici notre réponse',
                 status: 'published',
@@ -177,7 +228,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can report avis', async () => {
 
         let app = await startServer();
-        const comment = newComment({ read: false });
+        const comment = buildComment({ read: false });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
             insertIntoDatabase('comment', comment),
@@ -189,14 +240,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.reported, true);
+        assert.deepStrictEqual(response.body.status, 'reported');
         assert.deepStrictEqual(response.body.read, true);
     });
 
     it('can cancel report avis', async () => {
 
         let app = await startServer();
-        const comment = newComment({ read: false });
+        const comment = buildComment({ read: false });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
             insertIntoDatabase('comment', comment),
@@ -208,14 +259,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.reported, false);
+        assert.deepStrictEqual(response.body.status, 'published');
         assert.deepStrictEqual(response.body.read, true);
     });
 
     it('can mark avis as read', async () => {
 
         let app = await startServer();
-        const comment = newComment({ read: false });
+        const comment = buildComment({ read: false });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
             insertIntoDatabase('comment', comment),
@@ -233,7 +284,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can mark avis as not read', async () => {
 
         let app = await startServer();
-        const comment = newComment({ read: true });
+        const comment = buildComment({ read: true });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '2222222222222'),
             insertIntoDatabase('comment', comment),

@@ -23,11 +23,11 @@ module.exports = (db, regions, user) => {
             },
             filters: () => {
                 return {
-                    status: Joi.string().valid(['none', 'published', 'rejected', 'reported']),
+                    statuses: arrayOf(Joi.string().valid(['published', 'rejected', 'reported'])),
                     reponseStatuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected'])),
                     qualification: Joi.string().valid(['all', 'négatif', 'positif']),
                     commentaires: Joi.bool(),
-                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate']).default('date'),
+                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate']),
                 };
             },
             pagination: () => {
@@ -54,8 +54,8 @@ module.exports = (db, regions, user) => {
             },
             buildAvisQuery: async parameters => {
                 let {
-                    status, commentaires, qualification, departement, codeFinanceur,
-                    siren, idFormation, startDate, scheduledEndDate,
+                    departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate,
+                    commentaires, qualification, statuses = ['published', 'rejected', 'reported']
                 } = parameters;
 
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
@@ -63,7 +63,6 @@ module.exports = (db, regions, user) => {
                 return {
                     'codeRegion': user.codeRegion,
                     'training.codeFinanceur': financeur,
-                    'moderated': true,
                     ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
                     ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
                     ...(idFormation ? { 'training.idFormation': idFormation } : {}),
@@ -71,11 +70,7 @@ module.exports = (db, regions, user) => {
                     ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
                     ...(qualification ? { qualification } : {}),
                     ...(_.isBoolean(commentaires) ? { comment: { $ne: null } } : {}),
-
-                    ...(status === 'none' ? { moderated: false } : {}),
-                    ...(status === 'published' ? { published: true } : {}),
-                    ...(status === 'rejected' ? { rejected: true } : {}),
-                    ...(status === 'reported' ? { reported: true } : {}),
+                    ...(statuses ? { status: { $in: statuses } } : {}),
                 };
 
             },

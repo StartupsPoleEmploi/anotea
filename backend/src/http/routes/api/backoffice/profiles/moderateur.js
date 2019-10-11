@@ -15,9 +15,9 @@ module.exports = (db, user) => {
             },
             filters: () => {
                 return {
-                    status: Joi.string().valid(['none', 'published', 'rejected', 'reported']),
+                    statuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected', 'reported'])),
                     reponseStatuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected'])),
-                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']).default('date'),
+                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']),
                 };
             },
             pagination: () => {
@@ -33,7 +33,7 @@ module.exports = (db, user) => {
                 };
             },
             buildAvisQuery: async parameters => {
-                let { status, fulltext, reponseStatuses } = parameters;
+                let { statuses, fulltext, reponseStatuses } = parameters;
 
                 let fulltextIsEmail = isEmail(fulltext || '');
                 let stagiaire = fulltextIsEmail ? await getStagiaire(fulltext) : null;
@@ -43,12 +43,7 @@ module.exports = (db, user) => {
                     archived: false,
                     ...(fulltextIsEmail ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
                     ...(fulltext && !fulltextIsEmail ? { $text: { $search: fulltext } } : {}),
-
-                    ...(status === 'none' ? { moderated: false } : {}),
-                    ...(status === 'published' ? { published: true } : {}),
-                    ...(status === 'rejected' ? { rejected: true } : {}),
-                    ...(status === 'reported' ? { reported: true } : {}),
-
+                    ...(statuses ? { status: { $in: statuses } } : {}),
                     ...(reponseStatuses && reponseStatuses.length > 0 ? { 'reponse.status': { $in: reponseStatuses } } : {}),
                 };
 

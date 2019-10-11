@@ -2,17 +2,15 @@ const { batchCursor } = require('../../../job-utils');
 const moment = require('moment');
 const _ = require('lodash');
 const faker = require('faker');
-const uuid = require('uuid');
 
 faker.locale = 'fr';
 
 const buildAvis = (stagiaire, custom = {}) => {
 
-    let randomize = value => `${value}-${uuid.v4()}`;
     let getDateInThePast = () => moment().subtract('100', 'days').toDate();
 
     return _.merge({
-        token: randomize('token'),
+        token: stagiaire.token,
         campaign: 'dataset',
         archived: false,
         read: false,
@@ -40,27 +38,21 @@ module.exports = async (db, options) => {
 
             let avis = buildAvis(stagiaire, getCustom());
             await Promise.all([
-                db.collection('trainee').updateOne({ _id: stagiaire._id }, { $set: { avisCreated: true } }),
+                db.collection('trainee').updateOne({ token: stagiaire.token }, { $set: { avisCreated: true } }),
                 db.collection('comment').insertOne(avis),
             ]);
         });
     };
 
-    return Promise.all([
-        generateAvis(options.notes || 100),
-        generateAvis(options.commentaires || 100, () => {
-            return {
-                //Must be reused from questionnaire-routes
-                published: false,
-                rejected: false,
-                reported: false,
-                moderated: false,
-                comment: {
-                    title: faker.lorem.sentence(),
-                    text: faker.lorem.paragraph(),
-                }
-            };
-        }),
-    ]);
-
+    await generateAvis(options.notes || 100, () => ({ status: 'published' }));
+    await generateAvis(options.commentaires || 100, () => {
+        return {
+            //Must be reused from questionnaire-routes
+            status: 'none',
+            comment: {
+                title: faker.lorem.sentence(),
+                text: faker.lorem.paragraph(),
+            }
+        };
+    });
 };

@@ -28,6 +28,8 @@ execute(async ({ db, logger, moderation, consultation, regions, passwords }) => 
         await db.dropDatabase();
     }
 
+    let options = { nbStagiaires: 1000, notes: 10, commentaires: 500 };
+
     await createIndexes(db);
 
     let file = path.join(__dirname, '../../../../test/helpers/data/intercarif-data-test.xml');
@@ -36,8 +38,8 @@ execute(async ({ db, logger, moderation, consultation, regions, passwords }) => 
 
     logger.info(`Generating stagiaires and avis....`);
     await reconcile(db, logger);//Just to get a valid session
-    await createStagiaires(db, { nbStagiaires: 1000 });
-    await createAvis(db, { notes: 100, commentaires: 100 });
+    await createStagiaires(db, options);
+    await createAvis(db, options);
 
     logger.info(`Reconcile avis and sessions....`);
     await reconcile(db, logger);
@@ -49,7 +51,7 @@ execute(async ({ db, logger, moderation, consultation, regions, passwords }) => 
     logger.info(`Creating accounts....`);
     await createAccounts(db, logger);
     await resetPasswords(db, passwords, cli.password || 'password', { force: true });
-    await emulateBackofficeActions(db, moderation, consultation);
+    await emulateBackofficeActions(db, moderation, consultation, options);
 
     let communes = path.join(__dirname, '../../../../test/helpers/data/communes.csv');
     let cedex = path.join(__dirname, '../../../../test/helpers/data/cedex.csv');

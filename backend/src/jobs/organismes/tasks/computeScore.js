@@ -16,11 +16,7 @@ module.exports = async (db, logger) => {
         try {
             let avis = await db.collection('comment').find({
                 'training.organisation.siret': organisme.meta.siretAsString,
-                '$or': [
-                    { 'comment': { $exists: false } },
-                    { 'published': true },
-                    { 'rejected': true },
-                ]
+                'status': { $in: ['published', 'rejected'] },
             }).toArray();
 
             await db.collection('accounts').updateOne({ _id: organisme._id }, {

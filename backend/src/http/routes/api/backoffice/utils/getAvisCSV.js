@@ -7,7 +7,7 @@ let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').repla
 let getStatus = comment => {
     if (comment.archived === true) {
         return 'Archivé';
-    } else if (comment.published === true || comment.comment === undefined || comment.comment === null) {
+    } else if (comment.status === 'published') {
         return 'Publié';
     } else {
         return 'En attente de modération';
@@ -37,7 +37,7 @@ module.exports = () => {
         'pseudo': comment => sanitizeString(_.get(comment, 'comment.pseudo', '')),
         'titre': comment => sanitizeString(_.get(comment, 'comment.title', '')),
         'commentaire': comment => sanitizeString(_.get(comment, 'comment.text', '')),
-        'qualification': comment => `${comment.qualification} ${comment.rejectReason}`,
+        'qualification': comment => `${comment.qualification}`,
         'statut': comment => getStatus(comment),
         'réponse': comment => sanitizeString(_.get(comment, 'reponse.text', '')),
         'réponse statut': comment => comment.reponse ? getReponseStatus(comment.reponse.status) : '',

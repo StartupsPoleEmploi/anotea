@@ -227,7 +227,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                    rejected: true,
+                    status: 'rejected',
                     comment: {
                         title: 'WTF',
                         text: 'WTF',

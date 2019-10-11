@@ -113,10 +113,10 @@ export default class ModerationReponsesPage extends React.Component {
 
                                 <Filter
                                     label="Signalés"
-                                    isActive={() => query.status === 'reported'}
+                                    isActive={() => query.statuses === 'reported'}
                                     getNbElements={() => stats.nbSignales}
                                     onClick={() => navigator.refreshCurrentPage({
-                                        status: 'reported',
+                                        statuses: 'reported',
                                         sortBy: 'lastStatusUpdate'
                                     })}
                                 />
@@ -135,7 +135,7 @@ export default class ModerationReponsesPage extends React.Component {
                         summary={
                             <Summary
                                 pagination={results.meta.pagination}
-                                paginationLabel={query.status === 'reported' ? 'avis' : 'réponse(s)'}
+                                paginationLabel={query.statuses === 'reported' ? 'avis' : 'réponse(s)'}
                             />
                         }
                         results={
@@ -145,9 +145,9 @@ export default class ModerationReponsesPage extends React.Component {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            showReponse={query.status !== 'reported'}
-                                            showModerationButtons={query.status === 'reported'}
-                                            showModerationReponseButtons={query.status !== 'reported'}
+                                            showReponse={query.statuses !== 'reported'}
+                                            showModerationButtons={query.statuses === 'reported'}
+                                            showModerationReponseButtons={query.statuses !== 'reported'}
                                             onChange={() => {
                                                 return Promise.all([
                                                     this.search({ silent: true }),

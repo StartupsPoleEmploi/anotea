@@ -46,7 +46,7 @@ module.exports = db => {
                                 nbCommentairesRejected: {
                                     $sum: {
                                         $cond: {
-                                            if: { $eq: ['$rejected', true] },
+                                            if: { $eq: ['$status', 'rejected'] },
                                             then: 1,
                                             else: 0,
                                         }

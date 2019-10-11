@@ -21,6 +21,20 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
         });
     });
 
+    it('ignore la property "titleMasked" pour les notes ', async () => {
+
+        let db = await getTestDatabase();
+        let comment = newComment({ token: '123' });
+        delete comment.titleMasked;
+        delete comment.comment;
+        await insertIntoDatabase('comment', comment);
+
+        await moveTitleMasked(db);
+
+        let doc = await db.collection('comment').findOne({ token: '123' });
+        assert.ok(!doc.comment);
+    });
+
     it('déplace la property "titleMasked" quand elle existe ', async () => {
 
         let db = await getTestDatabase();
