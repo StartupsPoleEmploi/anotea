@@ -8,7 +8,7 @@ let getStatus = comment => {
     if (comment.archived === true) {
         return 'Archivé';
     } else if (comment.status === 'published') {
-        return 'Publié';
+        return 'Validé';
     } else {
         return 'En attente de modération';
     }
