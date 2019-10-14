@@ -1,4 +1,4 @@
-module.exports = db => {
+module.exports = (db, communes) => {
 
     const staticLinks = [{ goto: 'clara', url: 'https://clara.pole-emploi.fr' }];
 
@@ -14,13 +14,13 @@ module.exports = db => {
         const distance = 30; // km
         const postalCode = trainee.training.place.postalCode;
 
-        let [romeMapping, inseeMapping] = await Promise.all([
+        let [romeMapping, commune] = await Promise.all([
             db.collection('formacodeRomeMapping').aggregate([{
                 $match: { formacodes: { $elemMatch: { formacode: trainee.training.formacode } } }
             }, {
                 $group: { _id: '$codeROME' }
             }]).toArray(),
-            db.collection('inseeCode').findOne({ postalCode: { $elemMatch: { $eq: postalCode } } })
+            communes.findCommuneByPostalCode(postalCode)
         ]);
 
         const romeList = romeMapping.map(mapping => {
@@ -28,13 +28,13 @@ module.exports = db => {
         });
 
         let rome = romeList[0];
-        let insee = inseeMapping ? inseeMapping.insee : postalCode;
+        let inseeCode = commune ? commune.inseeCode : postalCode;
 
         if (romeList.length > 0) {
             if (goto === 'lbb') {
-                return `https://labonneboite.pole-emploi.fr/entreprises/commune/${insee}/rome/${rome}?d=${distance}`;
+                return `https://labonneboite.pole-emploi.fr/entreprises/commune/${inseeCode}/rome/${rome}?d=${distance}`;
             } else {
-                return `https://candidat.pole-emploi.fr/offres/recherche?lieux=${insee}&motsCles=${romeList.join(',')}&offresPartenaires=true&rayon=${distance}&tri=0`;
+                return `https://candidat.pole-emploi.fr/offres/recherche?lieux=${inseeCode}&motsCles=${romeList.join(',')}&offresPartenaires=true&rayon=${distance}&tri=0`;
             }
         } else {
             return null;

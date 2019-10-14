@@ -51,7 +51,7 @@ describe(__filename, () => {
             carif: {
                 nom: 'Orientation Pays de la Loire',
                 url: 'http://www.orientation-paysdelaloire.fr/',
-                active: false
+                active: true
             }
         });
     });
@@ -114,7 +114,7 @@ describe(__filename, () => {
             carif: {
                 nom: 'Orientation Pays de la Loire',
                 url: 'http://www.orientation-paysdelaloire.fr/',
-                active: false
+                active: true
             }
         });
     });

@@ -31,7 +31,7 @@ $color-green-30: #B2D8CB;
 $color-green-10: #E5F2ED;
 
 $color-orange-dark: #751314;
-$color-orange: #F0801A;
+$color-orange: #F28017;
 $color-orange-60: #F7A583;
 $color-orange-30: #FBD2C0;
 $color-orange-10: #FDF0EA;
@@ -44,12 +44,20 @@ $color-yellow-10: #FDF7EA;
 
 $shadow: 0 0.115rem 0.625rem -2px rgba(0, 0, 0, 0.15) !important;
 
-@mixin backoffice-color() {
-  &.green {
+@mixin profile-background-color() {
+  &.financeur {
     background-color: $color-green;
   }
 
-  &.blue {
+  &.moderateur {
+    background-color: $color-blue;
+  }
+
+  &.organisme {
+    background-color: $color-black;
+  }
+
+  &.anonymous {
     background-color: $color-blue;
   }
 }

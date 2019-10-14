@@ -1,0 +1,29 @@
+@import '../../../styles/variables';
+
+.Alert {
+
+  &.alert {
+    padding: 0.5rem 1.25rem;
+    color: $color-green;
+    background-color: $color-green-10;
+    border-color: $color-green-10;
+
+    .title {
+      font-size: 1.1rem;
+      font-weight: $font-weight-700;
+    }
+
+    .close {
+      padding: 0.5rem 1.25rem;
+    }
+
+    &.red {
+      color: $color-red;
+      background-color: $color-red-10;
+    }
+
+    &.green {
+      color: $color-green;
+    }
+  }
+}

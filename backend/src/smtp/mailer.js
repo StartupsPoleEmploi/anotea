@@ -43,11 +43,7 @@ module.exports = function(db, logger, configuration, regions) {
     };
 
     const getOrganisationPasswordLink = organisation => {
-        return `${configuration.app.public_hostname}/admin?action=creation&token=${organisation.token}`;
-    };
-
-    const getPasswordForgottenLink = token => {
-        return `${configuration.app.public_hostname}/admin?action=passwordLost&token=${token}`;
+        return `${configuration.app.public_hostname}/admin/activation-compte?token=${organisation.token}`;
     };
 
     const getRegionEmail = region => {
@@ -126,7 +122,6 @@ module.exports = function(db, logger, configuration, regions) {
         getConsultationLink: getConsultationLink,
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
-        getPasswordForgottenLink: getPasswordForgottenLink,
         sendNewCommentsNotification: async (mailOptions, data, successCallback, errorCallback) => {
 
             let { organisme, pickedComment } = data;
@@ -215,11 +210,27 @@ module.exports = function(db, logger, configuration, regions) {
 
             sendMail('organisation_password', params, mailOptions, successCallback, errorCallback);
         },
+        sendQuestionnaireOrganisme: async (mailOptions, organisme, successCallback, errorCallback) => {
+
+            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
+            let params = {
+                formLink: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
+                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/organisme_questionnaire?utm_source=PE&utm_medium=mail`,
+                hostname: configuration.app.public_hostname,
+                organisme,
+            };
+
+            mailOptions.subject = 'Aidez-nous à améliorer Anotéa';
+            mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
+
+            sendMail('organisme_questionnaire', params, mailOptions, successCallback, errorCallback);
+        },
         sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, profile, successCallback, errorCallback) => {
 
-            let link = getPasswordForgottenLink(passwordToken);
+            let link = `${configuration.app.public_hostname}/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`;
             let consultationLink = `${configuration.app.public_hostname}/mail/${passwordToken}/passwordForgotten`;
-            let params = { link, hostname: configuration.app.public_hostname, codeRegion: codeRegion, profile, consultationLink };
+            let params = { link, hostname: configuration.app.public_hostname, codeRegion, profile, consultationLink };
             let region = regions.findRegionByCodeRegion(codeRegion);
 
             mailOptions.subject = 'Votre compte Anotéa : Demande de renouvellement de mot de passe';

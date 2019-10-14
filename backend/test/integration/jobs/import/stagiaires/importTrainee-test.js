@@ -3,8 +3,8 @@ const moment = require('moment');
 const _ = require('lodash');
 const assert = require('assert');
 const md5File = require('md5-file/promise');
-const { withMongoDB } = require('../../../../helpers/test-database');
-const logger = require('../../../../helpers/test-logger');
+const { withMongoDB } = require('../../../../helpers/with-mongodb');
+const logger = require('../../../../helpers/fake-logger');
 const importTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
 const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/ileDeFranceCSVHandler');
@@ -43,7 +43,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             },
             training: {
                 idFormation: '14_AF_0000044465',
-                origineSession: 'C',
                 title: 'Titre professionnel',
                 startDate: new Date('2018-05-22T00:00:00.000Z'),
                 scheduledEndDate: new Date('2018-08-24T00:00:00.000Z'),
@@ -65,8 +64,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 },
                 idSession: '3565575',
                 formacode: '31734',
-                aesRecu: 'AES',
-                referencement: '41N162945089',
                 infoCarif: {
                     numeroSession: 'SE_0000160070',
                     numeroAction: '14_SE_0000160070'
@@ -75,13 +72,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     '4',
                     '7'
                 ],
-                niveauEntree: 6,
-                niveauSortie: 4,
-                dureeHebdo: 35,
-                dureeMaxi: 483,
-                dureeEntreprise: 210,
-                dureeIndicative: '94 jours',
-                nombreHeuresCentre: 273
             },
             unsubscribe: false,
             mailSent: false,
@@ -179,7 +169,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             },
             training: {
                 idFormation: null,
-                origineSession: null,
                 title: 'ANOTEA FORMATION',
                 startDate: new Date('2017-03-15T00:00:00.000Z'),
                 scheduledEndDate: new Date('2018-08-31T00:00:00.000Z'),
@@ -199,7 +188,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 },
                 idSession: null,
                 formacode: null,
-                referencement: null,
                 infoCarif: {
                     numeroAction: null,
                     numeroSession: null
@@ -207,13 +195,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 codeFinanceur: [
                     '2'
                 ],
-                niveauEntree: null,
-                niveauSortie: null,
-                dureeHebdo: null,
-                dureeMaxi: null,
-                dureeEntreprise: null,
-                dureeIndicative: null,
-                nombreHeuresCentre: null,
                 infoRegion: {
                     idTrainee: '111111',
                     idActionFormation: 'S17AVJE93001NR',

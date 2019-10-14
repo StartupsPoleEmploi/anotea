@@ -1,22 +1,19 @@
 const _ = require('lodash');
-const md5 = require('md5');
 const moment = require('moment');
 const { buildToken, buildEmail } = require('../utils/utils');
+const { isConseilRegional } = require('../../../../../common/utils/financeurs');
 
 const parseDate = value => new Date(value + 'Z');
 
 module.exports = (db, regions) => {
 
-    const buildCodeFinanceur = value => {
-        if (_.isEmpty(value)) {
+    const buildCodeFinanceur = data => {
+        let code = data.replace(/ /g, '');
+        if (_.isEmpty(code)) {
             return [];
         }
 
-        if (value.indexOf(';') !== -1) {
-            return value.split(';');
-        } else if (!isNaN(parseInt(value, 10))) {
-            return [value];
-        }
+        return code.indexOf(';') !== -1 ? code.split(';') : [code];
     };
 
     const buildFormationTitle = data => {
@@ -71,7 +68,17 @@ module.exports = (db, regions) => {
                 'liste_financeur',
             ]
         },
-        shouldBeImported: async trainee => {
+        getKey: trainee => {
+            return {
+                trainee: {
+                    email: trainee.trainee.email,
+                },
+                training: {
+                    idSession: trainee.training.idSession,
+                }
+            };
+        },
+        shouldBeImported: trainee => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
 
             let isValid = () => region && trainee.trainee.emailValid;
@@ -80,13 +87,12 @@ module.exports = (db, regions) => {
 
             let isNotExcluded = () => {
 
-                let isConseilRegional = trainee.training.codeFinanceur.includes('2');
-
-                if (isConseilRegional && !region.conseil_regional.active) {
+                let conseilRegional = trainee.training.codeFinanceur.filter(c => isConseilRegional(c)).length > 0;
+                if (conseilRegional && !region.conseil_regional.active) {
                     return false;
                 }
 
-                if (isConseilRegional &&
+                if (conseilRegional &&
                     region.conseil_regional.active &&
                     region.conseil_regional.import === 'certifications_only') {
                     return !_.isEmpty(trainee.training.certifInfo.id);
@@ -94,23 +100,7 @@ module.exports = (db, regions) => {
                 return true;
             };
 
-            let hasNotBeenAlreadyImportedOrRemoved = async () => {
-                let email = trainee.trainee.email;
-                let numeroSession = trainee.training.infoCarif.numeroSession;
-                let [countTrainee, countOptOut] = await Promise.all([
-                    db.collection('trainee').countDocuments({
-                        'trainee.email': email,
-                        'training.infoCarif.numeroSession': numeroSession
-                    }),
-                    db.collection('optOut').countDocuments({
-                        'md5': md5(email),
-                    })
-                ]);
-
-                return countTrainee === 0 && countOptOut === 0;
-            };
-
-            return isValid() && isAfter() && isNotExcluded() && (await hasNotBeenAlreadyImportedOrRemoved());
+            return isValid() && isAfter() && isNotExcluded();
         },
         buildTrainee: async (record, campaign) => {
 
@@ -145,7 +135,6 @@ module.exports = (db, regions) => {
                 },
                 training: {
                     idFormation: record['dc_formation_id'],
-                    origineSession: record['dc_origine_session_id'],
                     title: buildFormationTitle(record['dc_lblformation']),
                     startDate: parseDate(record['dd_datedebutmodule']),
                     scheduledEndDate: parseDate(record['dd_datefinmodule']),
@@ -167,20 +156,11 @@ module.exports = (db, regions) => {
                     },
                     idSession: record['dn_session_id'],
                     formacode: record['dc_formacode_ppal_id'],
-                    aesRecu: record['dc_aes_recue'],
-                    referencement: record['dc_referencement'],
                     infoCarif: {
                         numeroSession: record['dc_numeroicsession'],
                         numeroAction: record['dc_numeroicaction']
                     },
                     codeFinanceur: buildCodeFinanceur(record['liste_financeur']),
-                    niveauEntree: parseInt(record['dc_niveauformation_entree_id'], 10) || null,
-                    niveauSortie: parseInt(record['dc_niveauformation_sortie_id'], 10) || null,
-                    dureeHebdo: parseInt(record['dn_dureehebdo'], 10) || null,
-                    dureeMaxi: parseInt(record['dn_dureemaxi'], 10) || null,
-                    dureeEntreprise: parseInt(record['dn_dureeentreprise'], 10) || null,
-                    dureeIndicative: record['dc_dureeindicative'],
-                    nombreHeuresCentre: parseInt(record['dn_nombreheurescentre'], 10) || null,
                 }
             };
         },

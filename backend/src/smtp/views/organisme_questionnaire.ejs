@@ -1,0 +1,134 @@
+<html>
+    <head>
+        <title>Pôle Emploi vous donne accès aux avis de vos stagiaires</title>
+        <meta name="viewport" content="width=device-width">
+        <style>
+            body {
+                font-size: 1em;
+                padding: 0px;
+                margin: 0px;
+                background-color: #f4f3f5;
+                font-size: 1.3em;
+                font-family: lato, sans-serif;
+            }
+
+            .content {
+                background-color: white;
+            }
+
+            .content, .footer {
+                width: 80%;
+                margin: auto;
+            }
+
+            .footer {
+                color: #24303A;
+            }
+
+            .footer p {
+                text-align: center;
+            }
+
+            .content {
+                border-radius: 5px;
+                padding: 10px;
+
+            }
+
+            body td {
+                padding: 0.5em;
+                width: 33%;
+            }
+
+            h1 {
+                text-align: center;
+                font-weight: 900;
+                font-size: 1.2em;
+                line-height: 29px;
+            }
+
+            p, ul {
+                color: rgba(35, 47, 56, 0.7);
+                font-size: 0.7em;
+            }
+
+            .button {
+                font-size: 16px;
+                font-weight: bold;
+                text-transform: uppercase;
+                border-radius: 5px;
+                padding: 15px;
+                text-decoration: none;
+                display: block;
+                width: fit-content;
+                margin: auto;
+            }
+
+            .identifiant h2 {
+                margin-bottom: 0;
+            }
+
+            .button {
+                font-size: 18px;
+                font-weight: bold;
+                text-transform: uppercase;
+                border-radius: 5px;
+                padding: 20px 27px;
+                text-decoration: none;
+                display: block;
+                width: fit-content;
+                margin: auto;
+            }
+
+            .button {
+                background-color: #F28017;
+                color: #24303A;
+                font-size: 16px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            @media only screen and (max-width: 596px) {
+                body {
+                    width: 100%;
+                    font-size: 1em;
+                }
+
+                body td {
+                    padding: .5em;
+                    width: 33%;
+                }
+            }
+
+            <%- include('common/header.css'); %>
+        </style>
+    </head>
+    <body>
+        <%- include('common/header', { hostname, codeRegion: organisme.codeRegion }); %>
+
+        <div class="content">
+            <h1>Aidez-nous à améliorer Anotéa</h1>
+
+            <p>Bonjour,</p>
+            <p>
+                Vous avez créé votre compte Anotéa qui vous permet de consulter les avis de vos stagiaires et d’y
+                répondre.
+
+                Afin d’améliorer l’utilisation de votre Espace, merci de prendre quelques minutes pour répondre à ce
+                questionnaire
+            </p>
+
+            <p>
+                <a href="<%= formLink %>" target="_blank" class="button">
+                    Cliquez ici
+                </a>
+            </p>
+        </div>
+
+        <div class="footer">
+            <%- include('common/legal/organismes/mentions.ejs'); %>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+Aidez-nous à améliorer Anotéa
+
+Bonjour,
+
+Vous avez créé votre compte Anotéa qui vous permet de consulter les avis de vos stagiaires et d’y
+répondre.
+
+Afin d’améliorer l’utilisation de votre Espace, merci de prendre quelques minutes pour répondre à ce
+questionnaire
+
+Cliquez ici
+<%= formLink %>
+
+<%- include('common/legal/stagiaires/mentions.txt'); %>

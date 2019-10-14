@@ -804,7 +804,7 @@
       "import": "all"
     },
     "carif": {
-      "active": false,
+      "active": true,
       "nom": "Orientation Pays de la Loire",
       "url": "http://www.orientation-paysdelaloire.fr/"
     }

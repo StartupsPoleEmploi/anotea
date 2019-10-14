@@ -1,0 +1,44 @@
+@import '../../styles/variables';
+
+.Modal {
+  display: inline-block;
+
+  .modal-backdrop {
+    &.show {
+      opacity: 0.2;
+    }
+  }
+
+  .modal {
+    top: 5rem;
+    display: block;
+
+    .modal-dialog {
+      max-width: 550px;
+
+      .modal-content {
+        border: none;
+        box-shadow: $shadow;
+
+        .modal-header {
+          padding-bottom: 0;
+          border-bottom: none;
+
+          .modal-title {
+            font-size: 1.1rem;
+            font-weight: $font-weight-700;
+          }
+        }
+
+        .modal-footer {
+          padding-top: 0;
+          border-top: none;
+
+          button {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}

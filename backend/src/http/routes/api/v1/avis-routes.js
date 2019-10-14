@@ -27,23 +27,16 @@ const buildAvisQuery = filters => {
 
         if (filter.formacode) {
             let code = filter.formacode;
-            query['formacode'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
+            query['training.formacode'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
         }
 
         return query;
     });
 
     return {
-        'archived': false,
         '$and': [
             queries.length === 0 ? {} : { '$or': queries },
-            {
-                '$or': [
-                    { 'comment': { $exists: false } },
-                    { 'published': true },
-                    { 'rejected': true },
-                ]
-            }
+            { 'status': { $in: ['published', 'rejected'] } }
         ],
     };
 };

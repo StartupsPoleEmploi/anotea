@@ -2,9 +2,9 @@ const configuration = require('config');
 const _ = require('lodash');
 const moment = require('moment');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../../helpers/test-database');
+const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newComment, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
-const logger = require('../../../../../helpers/test-logger');
+const logger = require('../../../../../helpers/fake-logger');
 const NotificationMailer = require('../../../../../../src/jobs/mailing/organismes/notifications/NotificationMailer');
 
 let fakeMailer = spy => {
@@ -28,7 +28,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
                         read: false,
-                        published: true,
+                        status: 'published',
                         training: {
                             organisation: {
                                 siret: `${31705038300064}`,
@@ -75,7 +75,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
                         read: false,
-                        published: true,
+                        status: 'published',
                         training: {
                             organisation: {
                                 siret: `${31705038300064}`,
@@ -150,7 +150,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _.range(2).map(() => {
                     return insertIntoDatabase('comment', newComment({
                         read: false,
-                        published: true,
+                        status: 'published',
                         training: {
                             organisation: {
                                 siret: `${31705038300064}`,
@@ -191,7 +191,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 _.range(5).map(() => {
                     return insertIntoDatabase('comment', newComment({
                         read: false,
-                        published: true,
+                        status: 'published',
                         training: {
                             organisation: {
                                 siret: `${31705038300064}`,

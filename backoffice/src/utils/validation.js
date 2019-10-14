@@ -15,10 +15,10 @@ export const isPasswordStrongEnough = password => {
     return false;
 };
 
-export const checkConfirm = (password, passwordConfirm) => {
+export const isSamePassword = (password, passwordConfirm) => {
     return password === passwordConfirm;
 };
 
 export const passwordIsOK = (password, passwordConfirm) => {
-    return isPasswordStrongEnough(password) && checkConfirm(password, passwordConfirm);
+    return isPasswordStrongEnough(password) && isSamePassword(password, passwordConfirm);
 };

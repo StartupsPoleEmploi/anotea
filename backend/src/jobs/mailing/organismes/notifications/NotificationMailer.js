@@ -46,7 +46,7 @@ class NotificationMailer {
                             $match: {
                                 comment: { $ne: null },
                                 read: false,
-                                published: true,
+                                status: 'published',
                                 $expr: {
                                     $eq: ['$training.organisation.siret', '$$siret'],
                                 },

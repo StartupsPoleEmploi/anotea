@@ -5,7 +5,7 @@ const path = require('path');
 const readline = require('readline');
 const assert = require('assert');
 const buildHMACSignature = require('../../../../../../src/jobs/data/auth/utils/buildHMACSignature');
-const { withServer } = require('../../../../../helpers/test-server');
+const { withServer } = require('../../../../../helpers/with-server');
 
 describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
 

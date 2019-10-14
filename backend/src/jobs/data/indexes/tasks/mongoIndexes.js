@@ -2,6 +2,7 @@ module.exports = {
     trainee: db => {
         return Promise.all([
             db.collection('trainee').createIndex({ 'token': 1 }, { unique: true }),
+            db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.idSession': 1 }),
             db.collection('trainee').createIndex({ 'codeRegion': 1 }),
             db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
             db.collection('trainee').createIndex({ 'mailSent': 1 }),
@@ -21,23 +22,29 @@ module.exports = {
             db.collection('trainee').createIndex({ 'avisCreated': 1 }),
             db.collection('trainee').createIndex({ 'tracking.firstRead': 1 }),
             db.collection('trainee').createIndex({ 'tracking.click': 1 }),
+            db.collection('trainee').createIndex({
+                'codeRegion': 1,
+                'training.place.postalCode': 1,
+                'training.codeFinanceur': 1,
+                'training.organisation.siret': 1,
+                'training.idFormation': 1,
+                'training.startDate': 1,
+                'training.scheduledEndDate': 1,
+            }, { name: 'bo-stagiaires-stats' }),
         ]);
     },
     comment: db => {
         return Promise.all([
-            db.collection('comment').createIndex({ 'formacode': 1 }),
-            db.collection('comment').createIndex({ 'idSession': 1 }),
             db.collection('comment').createIndex({ 'lastModerationAction': 1 }),
             db.collection('comment').createIndex({ 'token': 1 }, { unique: true }),
             db.collection('comment').createIndex({ 'codeRegion': 1 }),
             db.collection('comment').createIndex({ 'campaign': 1 }),
-            db.collection('comment').createIndex({ 'published': 1 }),
-            db.collection('comment').createIndex({ 'rejected': 1 }),
-            db.collection('comment').createIndex({ 'moderated': 1 }),
+            db.collection('comment').createIndex({ 'status': 1 }),
             db.collection('comment').createIndex({ 'qualification': 1 }),
-            db.collection('comment').createIndex({ 'reported': 1 }),
             db.collection('comment').createIndex({ 'date': 1 }),
             db.collection('comment').createIndex({ 'comment': 1 }),
+            db.collection('comment').createIndex({ 'training.formacode': 1 }),
+            db.collection('comment').createIndex({ 'training.idSession': 1 }),
             db.collection('comment').createIndex({ 'training.codeFinanceur': 1 }),
             db.collection('comment').createIndex({ 'training.idFormation': 1 }),
             db.collection('comment').createIndex({ 'training.place.postalCode': 1 }),
@@ -53,9 +60,9 @@ module.exports = {
             db.collection('comment').createIndex({
                 'training.place.city': 1,
                 'training.place.postalCode': 1,
-                'formacode': 1,
+                'training.formacode': 1,
                 'training.certifInfo.id': 1,
-                'rejected': 1,
+                'status': 1,
                 'published': 1,
                 'training.organisation.siret': 1,
             }, { name: 'reconciliation' }),
@@ -64,7 +71,7 @@ module.exports = {
                 'comment.text': 'text',
                 'training.title': 'text',
                 'training.organisation.label': 'text',
-            }, { name: 'bo-moderation-search-fulltext' }),
+            }, { name: 'bo-search-fulltext' }),
             db.collection('trainee').createIndex({
                 'codeRegion': 1,
                 'training.place.postalCode': 1,
@@ -73,7 +80,7 @@ module.exports = {
                 'training.idFormation': 1,
                 'training.startDate': 1,
                 'training.scheduledEndDate': 1,
-            }, { name: 'bo-financeur-stats' }),
+            }, { name: 'bo-avis-stats' }),
         ]);
     },
     accounts: db => {
@@ -129,12 +136,11 @@ module.exports = {
             db.collection('events').createIndex({ 'date': 1 }),
         ]);
     },
-    inseeCode: db => {
+    communes: db => {
         return Promise.all([
-            db.collection('inseeCode').createIndex({ 'cedex': 1 }),
-            db.collection('inseeCode').createIndex({ 'postalCode': 1 }),
-            db.collection('inseeCode').createIndex({ 'insee': 1 }),
-            db.collection('inseeCode').createIndex({ 'commune': 1 }),
+            db.collection('communes').createIndex({ 'inseeCode': 1 }, { unique: true }),
+            db.collection('communes').createIndex({ 'cedex': 1 }),
+            db.collection('communes').createIndex({ 'postalCode': 1 }),
         ]);
     },
     misc: db => {

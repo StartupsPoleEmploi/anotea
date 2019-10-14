@@ -16,13 +16,9 @@ module.exports = db => {
                 { _id: oid },
                 {
                     $set: {
-                        reported: false,
-                        moderated: true,
-                        published: true,
-                        rejected: false,
-                        rejectReason: null,
+                        status: 'published',
                         qualification: qualification,
-                        lastStatusUpdate: new Date()
+                        lastStatusUpdate: new Date(),
                     }
                 },
                 { returnOriginal: false }
@@ -43,7 +39,7 @@ module.exports = db => {
 
 
         },
-        reject: async (id, reason, options = {}) => {
+        reject: async (id, qualification, options = {}) => {
 
             let oid = new ObjectID(id);
 
@@ -51,12 +47,9 @@ module.exports = db => {
                 { _id: oid },
                 {
                     $set: {
-                        reported: false,
-                        moderated: true,
-                        rejected: true,
-                        published: false,
-                        rejectReason: reason,
-                        lastStatusUpdate: new Date()
+                        status: 'rejected',
+                        qualification: qualification,
+                        lastStatusUpdate: new Date(),
                     }
                 },
                 { returnOriginal: false }
@@ -78,13 +71,24 @@ module.exports = db => {
         edit: async (id, text, options = {}) => {
 
             let oid = new ObjectID(id);
+            let previous = await db.collection('comment').findOne({ _id: oid });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: oid },
                 {
                     $set: {
-                        editedComment: { text: text, date: new Date() },
-                        lastStatusUpdate: new Date()
+                        'comment.text': text,
+                        'lastStatusUpdate': new Date(),
+                    },
+                    $push: {
+                        'meta.history': {
+                            $each: [{
+                                date: new Date(),
+                                comment: { text: previous.comment.text }
+                            }],
+                            $slice: 10,
+                            $position: 0,
+                        },
                     }
                 },
                 { returnOriginal: false }
@@ -98,36 +102,6 @@ module.exports = db => {
                 app: 'moderation',
                 user: 'admin',
                 profile: 'moderateur',
-                ...(options.events || {}),
-            });
-
-            return result.value;
-        },
-        report: async (id, text, options = {}) => {
-
-            let oid = new ObjectID(id);
-
-            let result = await db.collection('comment').findOneAndUpdate(
-                { _id: oid },
-                {
-                    $set: {
-                        reported: true,
-                        rejected: false,
-                        published: false,
-                        lastStatusUpdate: new Date(),
-                    }
-                },
-                { returnOriginal: false },
-            );
-
-            if (!result.value) {
-                throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-            }
-
-            saveEvent(id, 'report', {
-                app: 'organisation',
-                user: 'admin',
-                profile: 'organisme',
                 ...(options.events || {}),
             });
 
@@ -179,7 +153,11 @@ module.exports = db => {
 
             let result = await db.collection('comment').findOneAndUpdate(
                 { _id: oid },
-                { $set: { titleMasked: mask } },
+                {
+                    $set: {
+                        'comment.titleMasked': mask
+                    }
+                },
                 { returnOriginal: false },
             );
 

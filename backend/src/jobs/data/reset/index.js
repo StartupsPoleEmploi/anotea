@@ -10,13 +10,13 @@ cli.description('Reset data')
 .option('--emails', 'Reset all emails statuses')
 .parse(process.argv);
 
-execute(async ({ db, logger }) => {
+execute(async ({ db, logger, passwords }) => {
 
     let stats = {};
 
     if (cli.password) {
         logger.info('Resetting all passwords...');
-        stats.passwords = await resetPasswords(db, cli.password);
+        stats.passwords = await resetPasswords(db, passwords, cli.password);
     }
 
     if (cli.emails) {

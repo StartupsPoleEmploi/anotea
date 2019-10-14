@@ -1,12 +1,13 @@
 const config = require('config');
 const auth = require('./common/components/auth');
-const password = require('./common/components/password');
+const passwords = require('./common/components/passwords');
 const getRegions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
 const sentry = require('./common/components/sentry');
 const moderation = require('./common/components/moderation');
+const consultation = require('./common/components/consultation');
 const database = require('./common/components/database');
-const postalCodes = require('./common/components/postalCodes');
+const communes = require('./common/components/communes');
 const createMailer = require('./smtp/mailer');
 const sendForgottenPasswordEmail = require('./common/components/mailing/sendForgottenPasswordEmail');
 const sendOrganisationAccountEmail = require('./common/components/mailing/sendOrganisationAccountEmail');
@@ -33,10 +34,11 @@ module.exports = async (options = {}) => {
         mailer,
         sentry: sentry(logger, configuration),
         auth: auth(configuration),
-        password,
+        passwords: passwords(configuration),
         regions: regions,
-        moderation: moderation(db, logger, mailer),
-        postalCodes: postalCodes(db),
+        moderation: moderation(db),
+        consultation: consultation(db),
+        communes: communes(db),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
             sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
