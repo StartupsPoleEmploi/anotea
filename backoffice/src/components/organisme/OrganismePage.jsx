@@ -7,11 +7,11 @@ import Page from '../common/page/Page';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
 import { Form, Periode, Select } from '../common/page/form/Form';
 import { getFormations } from '../../services/formationsService';
-import { getDepartements } from '../../services/departementsService';
 import Button from '../common/Button';
 import AvisPanel from './components/AvisPanel';
 import StatsPanel from './components/StatsPanel';
 import UserContext from '../UserContext';
+import { getDepartements } from '../../services/departementsService';
 
 export default class OrganismePage extends React.Component {
 
@@ -34,6 +34,11 @@ export default class OrganismePage extends React.Component {
                     loading: true,
                     results: [],
                 },
+                sirens: {
+                    selected: null,
+                    loading: true,
+                    results: [],
+                },
                 formations: {
                     selected: null,
                     loading: true,
@@ -51,16 +56,24 @@ export default class OrganismePage extends React.Component {
 
         let user = this.context;
         let query = this.props.navigator.getQuery();
-        let options = { pristine: true };
 
         this.loadSelectBox('departements', () => getDepartements())
         .then(results => {
-            return this.updateSelectBox('departements', results.find(f => f.code === query.departement), options);
+            return this.updateSelectBox('departements', results.find(f => f.code === query.departement));
         });
 
-        this.loadSelectBox('formations', () => getFormations({ organisme: user.siret }))
+        this.loadSelectBox('sirens', () => {
+            return [
+                { siren: user.siret.substring(0, 9), name: 'Tous les centres' }
+            ];
+        })
         .then(results => {
-            return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation), options);
+            return this.updateSelectBox('sirens', results.find(o => o.siren === query.siren));
+        });
+
+        this.loadSelectBox('formations', () => getFormations({ organisme: query.organisme || user.siret }))
+        .then(results => {
+            return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation));
         });
 
         this.setStateDeep({
@@ -100,12 +113,11 @@ export default class OrganismePage extends React.Component {
         });
     };
 
-    updateSelectBox = (type, data, options = {}) => {
+    updateSelectBox = (type, data) => {
         return new Promise(resolve => {
             this.setStateDeep({
                 form: {
                     [type]: {
-                        pristine: options.pristine || !data,
                         ...this.state[type],
                         selected: data
                     },
@@ -134,6 +146,9 @@ export default class OrganismePage extends React.Component {
                 departements: {
                     selected: null,
                 },
+                sirens: {
+                    selected: null,
+                },
                 formations: {
                     selected: null,
                 },
@@ -143,13 +158,14 @@ export default class OrganismePage extends React.Component {
 
     getFormParametersFromQuery = () => {
         let query = this.props.navigator.getQuery();
-        return _.pick(query, ['departement', 'idFormation', 'startDate', 'scheduledEndDate']);
+        return _.pick(query, ['departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']);
     };
 
     getFormParameters = () => {
         let { form } = this.state;
         return {
             departement: _.get(form, 'departements.selected.code', null),
+            siren: _.get(form, 'sirens.selected.siren', null),
             idFormation: _.get(form, 'formations.selected.idFormation', null),
             startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
             scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
@@ -158,7 +174,7 @@ export default class OrganismePage extends React.Component {
 
     isFormLoading = () => {
         let { form } = this.state;
-        return form.departements.loading || form.formations.loading;
+        return form.departements.loading || form.sirens.loading || form.formations.loading;
     };
 
     isFormSynchronizedWithQuery = () => {
@@ -187,7 +203,8 @@ export default class OrganismePage extends React.Component {
     render() {
         let { navigator } = this.props;
         let { form } = this.state;
-        let { departements, formations, periode } = form;
+        let { departements, sirens, formations, periode } = form;
+        let user = this.context;
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
 
         return (
@@ -196,7 +213,15 @@ export default class OrganismePage extends React.Component {
                 form={
                     <Form>
                         <div className="form-row">
-                            <div className="form-group col-lg-4">
+                            <div className="form-group col-lg-6 col-xl-3">
+                                <label>Période</label>
+                                <Periode
+                                    periode={periode}
+                                    min={moment('2016-01-01 Z').toDate()}
+                                    onChange={periode => this.updatePeriode(periode)}
+                                />
+                            </div>
+                            <div className="form-group col-lg-6 col-xl-3">
                                 <label>Départements</label>
                                 <Select
                                     value={departements.selected}
@@ -208,7 +233,27 @@ export default class OrganismePage extends React.Component {
                                     onChange={option => this.updateSelectBox('departements', option)}
                                 />
                             </div>
-                            <div className="form-group col-lg-4">
+                            <div className="form-group col-lg-6">
+                                <label>Centres</label>
+                                <Select
+                                    value={sirens.selected}
+                                    options={sirens.results}
+                                    loading={sirens.loading}
+                                    optionKey="organisme"
+                                    label={option => option.name}
+                                    placeholder={user.raisonSociale}
+                                    onChange={async option => {
+                                        await this.updateSelectBox('sirens', option);
+                                        this.loadSelectBox('formations', () => {
+                                            let organisme = option ? option.siren : user.siret;
+                                            if (organisme !== navigator.getQuery().siren) {
+                                                return getFormations({ organisme });
+                                            }
+                                        });
+                                    }}
+                                />
+                            </div>
+                            <div className="form-group offset-lg-6 col-lg-6">
                                 <label>Formation</label>
                                 <Select
                                     value={formations.selected}
@@ -218,14 +263,6 @@ export default class OrganismePage extends React.Component {
                                     label={option => option.title}
                                     placeholder={'Toutes les formations'}
                                     onChange={option => this.updateSelectBox('formations', option)}
-                                />
-                            </div>
-                            <div className="form-group col-lg-4">
-                                <label>Période</label>
-                                <Periode
-                                    periode={periode}
-                                    min={moment('2016-01-01 Z').toDate()}
-                                    onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>
                         </div>

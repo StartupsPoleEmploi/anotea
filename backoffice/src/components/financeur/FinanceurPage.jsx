@@ -75,7 +75,7 @@ export default class FinanceurPage extends React.Component {
 
         this.loadSelectBox('sirens', () => getSirens())
         .then(results => {
-            return this.updateSelectBox('sirens', results.find(f => f.siren === query.siren));
+            return this.updateSelectBox('sirens', results.find(o => o.siren === query.siren));
         });
 
         if (query.siren) {
