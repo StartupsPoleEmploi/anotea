@@ -34,7 +34,6 @@ const buildAvisQuery = filters => {
     });
 
     return {
-        'archived': false,
         '$and': [
             queries.length === 0 ? {} : { '$or': queries },
             { 'status': { $in: ['published', 'rejected'] } }

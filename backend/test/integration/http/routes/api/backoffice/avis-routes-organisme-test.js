@@ -56,6 +56,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .get('/api/backoffice/avis?statuses=rejected')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 400);
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=archived')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 400);
     });
 
     it('can search avis from other region', async () => {

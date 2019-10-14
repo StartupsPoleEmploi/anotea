@@ -180,13 +180,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         assert.strictEqual(response.body.details[0].context.key, 'codeFinanceur');
     });
 
-    it('should ignore archived flag', async () => {
+    it('should return archived', async () => {
 
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
-            insertIntoDatabase('comment', buildComment({ archived: false })),
-            insertIntoDatabase('comment', buildComment({ archived: true })),
+            insertIntoDatabase('comment', buildComment({ status: 'published' })),
+            insertIntoDatabase('comment', buildComment({ status: 'archived' })),
         ]);
 
         let response = await request(app)

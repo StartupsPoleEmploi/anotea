@@ -23,7 +23,7 @@ module.exports = (db, regions, user) => {
             },
             filters: () => {
                 return {
-                    statuses: arrayOf(Joi.string().valid(['published', 'rejected', 'reported'])),
+                    statuses: arrayOf(Joi.string().valid(['published', 'rejected', 'reported', 'archived'])),
                     reponseStatuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected'])),
                     qualification: Joi.string().valid(['all', 'négatif', 'positif']),
                     commentaires: Joi.bool(),
@@ -55,7 +55,7 @@ module.exports = (db, regions, user) => {
             buildAvisQuery: async parameters => {
                 let {
                     departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate,
-                    commentaires, qualification, statuses = ['published', 'rejected', 'reported']
+                    commentaires, qualification, statuses = ['published', 'rejected', 'reported', 'archived']
                 } = parameters;
 
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;

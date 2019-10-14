@@ -197,7 +197,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             },
             accord: true,
             accordEntreprise: true,
-            archived: false,
             read: false,
             status: 'none',
         });
@@ -269,7 +268,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             pseudo: 'JohnD',
             accord: true,
             accordEntreprise: true,
-            archived: false,
             read: false,
             status: 'published',
         });

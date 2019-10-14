@@ -89,5 +89,4 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
         assert.ok(!doc.reported);
         assert.strictEqual(doc.status, 'reported');
     });
-
 }));

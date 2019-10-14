@@ -183,8 +183,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ archived: false })),
-                insertIntoDatabase('comment', buildComment({ archived: true })),
+                insertIntoDatabase('comment', buildComment({ status: 'published' })),
+                insertIntoDatabase('comment', buildComment({ status: 'archived' })),
             ]);
 
             let response = await request(app)
@@ -193,7 +193,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].archived, false);
+            assert.strictEqual(response.body.avis[0].status, 'published');
         });
 
         it(`[${profileName}] can search avis with reponse`, async () => {

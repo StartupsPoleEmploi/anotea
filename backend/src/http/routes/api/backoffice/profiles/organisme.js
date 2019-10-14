@@ -52,7 +52,6 @@ module.exports = (db, regions, user) => {
 
 
                 return {
-                    'archived': false,
                     'training.organisation.siret': new RegExp(`^${siren}`),
                     ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
                     ...(idFormation ? { 'training.idFormation': idFormation } : {}),
