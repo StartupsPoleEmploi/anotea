@@ -15,7 +15,7 @@ const Status = ({ avis }) => {
         case 'published':
             return (
                 <span className="status published">
-                    (<span>Publié le </span> <PrettyDate date={new Date(avis.reponse.lastStatusUpdate)} />)
+                    (<span>Validé le </span> <PrettyDate date={new Date(avis.reponse.lastStatusUpdate)} />)
                 </span>
             );
         case 'rejected':

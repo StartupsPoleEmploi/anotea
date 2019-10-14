@@ -69,7 +69,7 @@ module.exports = (db, regions, user) => {
                     ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
                     ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
                     ...(qualification ? { qualification } : {}),
-                    ...(_.isBoolean(commentaires) ? { comment: { $ne: null } } : {}),
+                    ...(_.isBoolean(commentaires) ? { comment: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
                 };
 

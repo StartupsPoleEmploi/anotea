@@ -41,9 +41,6 @@ execute(async ({ db, logger, moderation, consultation, regions, passwords }) => 
     await createStagiaires(db, options);
     await createAvis(db, options);
 
-    logger.info(`Reconcile avis and sessions....`);
-    await reconcile(db, logger);
-
     logger.info(`Creating organismes....`);
     await synchronizeOrganismesWithAccounts(db, logger, regions);
     await computeOrganismesScore(db, logger);
@@ -52,10 +49,14 @@ execute(async ({ db, logger, moderation, consultation, regions, passwords }) => 
     await createAccounts(db, logger);
     await resetPasswords(db, passwords, cli.password || 'password', { force: true });
     await emulateBackofficeActions(db, moderation, consultation, options);
+    logger.info(`Reconcile avis and sessions....`);
+
 
     let communes = path.join(__dirname, '../../../../test/helpers/data/communes.csv');
     let cedex = path.join(__dirname, '../../../../test/helpers/data/cedex.csv');
     await importCommunes(db, logger, communes, cedex);
+
+    await reconcile(db, logger);
 
     return { dataset: 'ready' };
 });

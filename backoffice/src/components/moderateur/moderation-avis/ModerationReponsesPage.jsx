@@ -94,7 +94,7 @@ export default class ModerationReponsesPage extends React.Component {
                                 />
 
                                 <Filter
-                                    label="Publiés"
+                                    label="Validés"
                                     isActive={() => query.reponseStatuses === 'published'}
                                     onClick={() => navigator.refreshCurrentPage({
                                         reponseStatuses: 'published',

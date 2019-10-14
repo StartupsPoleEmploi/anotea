@@ -52,6 +52,7 @@ module.exports = async (db, options) => {
             comment: {
                 title: faker.lorem.sentence(),
                 text: faker.lorem.paragraph(),
+                titleMasked: false,
             }
         };
     });

@@ -8,7 +8,7 @@ let getStatus = comment => {
     if (comment.archived === true) {
         return 'Archivé';
     } else if (comment.status === 'published') {
-        return 'Publié';
+        return 'Validé';
     } else {
         return 'En attente de modération';
     }
@@ -34,10 +34,9 @@ module.exports = () => {
         'note matériel': comment => sanitizeNote(comment.rates.moyen_materiel),
         'note accompagnement': comment => sanitizeNote(comment.rates.accompagnement),
         'note global': comment => sanitizeNote(comment.rates.global),
-        'pseudo': comment => sanitizeString(_.get(comment, 'comment.pseudo', '')),
         'titre': comment => sanitizeString(_.get(comment, 'comment.title', '')),
         'commentaire': comment => sanitizeString(_.get(comment, 'comment.text', '')),
-        'qualification': comment => `${comment.qualification}`,
+        'qualification': comment => _.isEmpty(comment.qualification) ? '' : comment.qualification,
         'statut': comment => getStatus(comment),
         'réponse': comment => sanitizeString(_.get(comment, 'reponse.text', '')),
         'réponse statut': comment => comment.reponse ? getReponseStatus(comment.reponse.status) : '',
