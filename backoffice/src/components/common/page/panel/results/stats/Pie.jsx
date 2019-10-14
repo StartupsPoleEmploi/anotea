@@ -36,7 +36,7 @@ const Pie = ({ data }) => {
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
                                 radialLabelsLinkHorizontalLength={5}
-                                radialLabelsSkipAngle={20}
+                                radialLabelsSkipAngle={25}
                                 radialLabel={element => prettyLabel(element)}
                                 tooltip={element => {
                                     return (
