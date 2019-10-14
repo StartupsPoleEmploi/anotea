@@ -243,7 +243,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             importIntercarif(),
             insertIntoDatabase('comment', newComment({
                 _id: '1234',
-                archived: true,
+                status: 'archived',
                 training: {
                     formacode: '22403',
                     certifInfo: {

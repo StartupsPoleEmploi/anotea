@@ -12,7 +12,6 @@ const buildAvis = (stagiaire, custom = {}) => {
     return _.merge({
         token: stagiaire.token,
         campaign: 'dataset',
-        archived: false,
         read: false,
         codeRegion: stagiaire.codeRegion,
         training: stagiaire.training,

@@ -92,7 +92,6 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             pseudo: sanitize(body.pseudo.replace(/ /g, '').replace(/\./g, '')),
             accord: body.accord,
             accordEntreprise: body.accordEntreprise,
-            archived: false,
             read: false,
             status: hasCommentaires ? 'none' : 'published',
             lastStatusUpdate: new Date(),

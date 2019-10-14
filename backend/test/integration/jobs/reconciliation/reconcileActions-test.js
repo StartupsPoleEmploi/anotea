@@ -247,7 +247,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         postalCode: '75019',
                     },
                 },
-                archived: true
+                status: 'archived',
             })),
         ]);
 

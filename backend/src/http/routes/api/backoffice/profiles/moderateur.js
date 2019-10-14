@@ -35,14 +35,16 @@ module.exports = (db, user) => {
                 };
             },
             buildAvisQuery: async parameters => {
-                let { statuses, fulltext, reponseStatuses, commentaires } = parameters;
+                let {
+                    fulltext, reponseStatuses, commentaires,
+                    statuses = ['none', 'published', 'reported', 'rejected']
+                } = parameters;
 
                 let fulltextIsEmail = isEmail(fulltext || '');
                 let stagiaire = fulltextIsEmail ? await getStagiaire(fulltext) : null;
 
                 return {
                     codeRegion: user.codeRegion,
-                    archived: false,
                     ...(fulltextIsEmail ? { token: stagiaire ? stagiaire.token : 'unknown' } : {}),
                     ...(fulltext && !fulltextIsEmail ? { $text: { $search: fulltext } } : {}),
                     ...(_.isBoolean(commentaires) ? { comment: { $exists: commentaires } } : {}),

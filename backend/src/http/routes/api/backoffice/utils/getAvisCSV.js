@@ -5,7 +5,7 @@ let sanitizeNote = note => `${note}`.replace(/\./g, ',');
 let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').replace(/\r/g, ' ').replace(/\n/g, ' ').trim();
 
 let getStatus = comment => {
-    if (comment.archived === true) {
+    if (comment.status === 'archived') {
         return 'Archivé';
     } else if (comment.status === 'published') {
         return 'Validé';

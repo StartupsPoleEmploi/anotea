@@ -55,6 +55,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.body.avis.length, 1);
         assert.strictEqual(response.body.avis[0].status, 'none');
+
+        response = await request(app)
+        .get('/api/backoffice/avis?statuses=archived')
+        .set('authorization', `Bearer ${token}`);
+        assert.strictEqual(response.statusCode, 400);
     });
 
     it('can search avis by email (fulltext)', async () => {

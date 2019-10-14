@@ -555,7 +555,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
 
-    it('can search avis and ignoring those with archived true', async () => {
+    it('can search avis and ignoring those archived', async () => {
 
         let app = await startServer();
         await Promise.all([
@@ -568,7 +568,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                         siret: '22222222222222',
                     },
                 },
-                archived: false,
             })),
             insertIntoDatabase('comment', newComment({
                 training: {
@@ -576,7 +575,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                         siret: '22222222222222',
                     },
                 },
-                archived: true,
+                status: 'archived',
             })),
         ]);
 

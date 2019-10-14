@@ -548,13 +548,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(avis[0].formation.action.organisme_formateur.siret, siret);
     });
 
-    it('can search avis and ignoring those with archived true', async () => {
+    it('can search avis and ignoring those archived', async () => {
 
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({ archived: true }))
+            insertIntoDatabase('comment', newComment({ _id: '123', status: 'published' })),
+            insertIntoDatabase('comment', newComment({ status: 'archived' }))
         ]);
 
         let response = await request(app)
@@ -563,5 +563,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
         assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis[0].id, '123');
     });
 }));

@@ -185,7 +185,6 @@ module.exports = {
             lastStatusUpdate: date,
             read: true,
             codeRegion: '11',
-            archived: false
         }, custom, { test: true });
     },
     newIntercarif: (options = {}) => {

@@ -105,7 +105,6 @@ module.exports = ({ db, middlewares }) => {
 
         let comments = await db.collection('comment')
         .find({
-            'archived': false,
             'training.organisation.siret': parameters.id,
             ...(
                 parameters.commentaires === null ?

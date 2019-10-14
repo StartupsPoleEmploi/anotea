@@ -25,5 +25,6 @@ execute(async ({ db, logger }) => {
     stats.removeUnusedProperties = await require('./tasks/removeUnusedProperties')(db);
     stats.renameRejectReason = await require('./tasks/renameRejectReason')(db);
     stats.convertModerationStatus = await require('./tasks/convertModerationStatus')(db);
+    stats.convertArchivedIntoStatus = await require('./tasks/convertArchivedIntoStatus')(db);
     return stats;
 });
