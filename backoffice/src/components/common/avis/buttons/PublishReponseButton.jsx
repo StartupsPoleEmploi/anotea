@@ -17,7 +17,7 @@ export default class PublishReponseButton extends React.Component {
         this.props.onChange(updated, {
             message: {
                 type: 'local',
-                text: 'La réponse a été publiée.',
+                text: 'La réponse a été validée.',
             },
         });
     };

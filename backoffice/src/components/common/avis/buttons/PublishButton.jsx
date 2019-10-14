@@ -18,7 +18,7 @@ export default class PublishButton extends React.Component {
         this.props.onChange(updated, {
             message: {
                 type: 'local',
-                text: <span>L&apos;avis a été <b>publié</b> et taggué comme <b>{updated.qualification}</b>.</span>,
+                text: <span>L&apos;avis a été <b>validé</b> et taggué comme <b>{updated.qualification}</b>.</span>,
             },
         });
     };
