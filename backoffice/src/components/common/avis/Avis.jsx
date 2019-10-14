@@ -26,6 +26,7 @@ export default class Avis extends React.Component {
     static propTypes = {
         avis: PropTypes.object.isRequired,
         showStatus: PropTypes.bool,
+        showReconcilitation: PropTypes.bool,
         showReponse: PropTypes.bool,
         showReponseButtons: PropTypes.bool,
         showModerationButtons: PropTypes.bool,
@@ -78,7 +79,8 @@ export default class Avis extends React.Component {
 
     render() {
         let {
-            avis, showStatus, showReponse, showReponseButtons, showModerationButtons, showModerationReponseButtons
+            avis, showStatus, showReponse, showReponseButtons,
+            showModerationButtons, showModerationReponseButtons, showReconcilitation,
         } = this.props;
         let { message, showReponseEditor } = this.state;
         let isLocalMessage = _.get(message, 'type') === 'local';
@@ -102,11 +104,7 @@ export default class Avis extends React.Component {
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
                         <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
-                                <Stagiaire
-                                    avis={avis}
-                                    showStatus={showStatus}
-                                    showModerationButtons={showModerationButtons}
-                                    onChange={this.handleChange} />
+                                <Stagiaire avis={avis} showStatus={showStatus} showReconcilitation={showReconcilitation} />
                             </div>
 
                             <div className="mb-1">

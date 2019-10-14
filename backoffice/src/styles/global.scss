@@ -16,6 +16,14 @@ html, body, #root {
 
   .a-icon {
     margin-right: 0.25rem;
+
+    &.right {
+      margin-right: 0.25rem;
+    }
+
+    &.left {
+      margin-left: 0.25rem;
+    }
   }
 
   .a-text-important {

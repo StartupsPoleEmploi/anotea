@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import PrettyDate from '../PrettyDate';
-import { maskPseudo } from '../../../services/avisService';
 import './Stagiaire.scss';
+import Tooltip from '../Tooltip';
 
 const Stars = props => {
 
@@ -29,7 +30,7 @@ Stars.propTypes = { note: PropTypes.number.isRequired };
 const Status = ({ avis }) => {
 
     if (!avis.comment) {
-        return <div />;
+        return <div className="status" />;
     }
 
     switch (avis.status) {
@@ -62,43 +63,51 @@ const Status = ({ avis }) => {
 };
 Status.propTypes = { avis: PropTypes.object.isRequired };
 
+const Reconciliation = ({ avis }) => {
+
+    let reconciliations = _.get(avis, 'meta.reconciliations', []);
+
+    if (avis.status !== 'published' || reconciliations.length === 0 || !reconciliations[0].reconciliable) {
+        return <div className="reconciliation" />;
+    }
+
+    return (
+        <div className="Tooltip--holder reconciliation">
+            <i className={`fas fa-check`}></i>
+            <Tooltip
+                overflow={'left'}
+                value={<span>Publié depuis le <PrettyDate date={new Date(reconciliations[0].date)} /></span>}
+            />
+        </div>
+    );
+};
+Reconciliation.propTypes = { avis: PropTypes.object.isRequired };
+
 export default class Stagiaire extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
         showStatus: PropTypes.bool,
-        showModerationButtons: PropTypes.bool,
-        onChange: PropTypes.func.isRequired,
-    };
-
-    toggle = async () => {
-        let avis = this.props.avis;
-        let updated = await maskPseudo(avis._id, !avis.pseudoMasked);
-        this.props.onChange(updated);
+        showReconcilitation: PropTypes.bool,
     };
 
     render() {
-        let { avis, showModerationButtons, showStatus } = this.props;
+        let { avis, showStatus, showReconcilitation } = this.props;
 
         return (
             <div className="Stagiaire">
-                <div>
+                <div className="d-flex justify-content-between align-items-center">
                     <Stars note={avis.rates.global} />
-                    <span className="by">par&nbsp;</span>
-                    <span className={`pseudo mr-1 ${avis.pseudoMasked ? 'masked' : ''}`}>
-                        {avis.pseudo ? avis.pseudo : 'anonyme'}
-                    </span>
 
-                    {showModerationButtons && avis.pseudo &&
-                    <i className={`far ${avis.pseudoMasked ? 'fa-eye' : 'fa-eye-slash'} togglable mr-2`}
-                       onClick={this.toggle} />
-                    }
                 </div>
 
                 <div className="date">
                     le <PrettyDate date={new Date(avis.date)} /> &nbsp;
                     {showStatus &&
                     <Status avis={avis} />
+                    }
+                    {showReconcilitation &&
+                    <Reconciliation avis={avis} />
                     }
                 </div>
             </div>

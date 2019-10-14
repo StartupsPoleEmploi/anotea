@@ -139,6 +139,7 @@ export default class OrganismeAvisPanel extends React.Component {
                                 return <Avis
                                     avis={avis}
                                     showStatus={true}
+                                    showReconcilitation={true}
                                     showReponse={true}
                                     showReponseButtons={true}
                                     onChange={() => {
