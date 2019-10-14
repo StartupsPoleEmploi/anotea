@@ -8,6 +8,7 @@ cli.parse(process.argv);
 execute(async ({ db, logger }) => {
     let stats = {};
     stats.addMissingModerationStatus = await require('./tasks/addMissingModerationStatus')(db);
+    stats.addLastStatusUpdateToNotes = await require('./tasks/addLastStatusUpdateToNotes')(db);
     stats.addReadProperty = await require('./tasks/addReadProperty')(db);
     stats.removeAnsweredProperty = await require('./tasks/removeAnsweredProperty')(db);
     stats.removeEmptyCommentaires = await require('./tasks/removeEmptyCommentaires')(db);

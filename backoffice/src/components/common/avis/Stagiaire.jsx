@@ -28,6 +28,10 @@ Stars.propTypes = { note: PropTypes.number.isRequired };
 
 const Status = ({ avis }) => {
 
+    if (!avis.comment) {
+        return <div />;
+    }
+
     switch (avis.status) {
         case 'archived':
             return <div className="status">(Archivé)</div>;
