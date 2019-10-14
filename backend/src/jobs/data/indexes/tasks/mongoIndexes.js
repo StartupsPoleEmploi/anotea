@@ -35,7 +35,7 @@ module.exports = {
     },
     comment: db => {
         return Promise.all([
-            db.collection('comment').createIndex({ 'lastModerationAction': 1 }),
+            db.collection('comment').createIndex({ 'lastStatusUpdate': 1 }),
             db.collection('comment').createIndex({ 'token': 1 }, { unique: true }),
             db.collection('comment').createIndex({ 'codeRegion': 1 }),
             db.collection('comment').createIndex({ 'campaign': 1 }),
@@ -51,7 +51,7 @@ module.exports = {
             db.collection('comment').createIndex({ 'training.organisation.siret': 1 }),
             db.collection('comment').createIndex({ 'training.organisation.label': 1 }),
             db.collection('comment').createIndex({ 'training.certifInfo.id': 1 }),
-            db.collection('comment').createIndex({ 'reponse.lastModerationAction': 1 }),
+            db.collection('comment').createIndex({ 'reponse.lastStatusUpdate': 1 }),
             db.collection('comment').createIndex({ 'reponse.status': 1 }),
             db.collection('comment').createIndex({ 'reponse.date': 1 }),
             db.collection('comment').createIndex({ 'meta.reconciliations': 1 }),
