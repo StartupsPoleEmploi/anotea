@@ -21,7 +21,7 @@ module.exports = async db => {
         }
     });
 
-    await db.collection('comment').updateOne({ $or: [{ rejectReason: null }, { rejectReason: false }] }, {
+    await db.collection('comment').updateMany({ $or: [{ rejectReason: null }, { rejectReason: false }] }, {
         $unset: {
             rejectReason: 1
         }
