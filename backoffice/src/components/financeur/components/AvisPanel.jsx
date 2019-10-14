@@ -78,19 +78,19 @@ export default class AvisPanel extends React.Component {
                         <Filter
                             label="Commentaires"
                             isActive={() => query.commentaires === 'true'}
-                            onClick={() => onFilterClicked({ commentaires: true, sortBy: 'date' })}
+                            onClick={() => onFilterClicked({ commentaires: true, sortBy: 'lastStatusUpdate' })}
                         />
 
                         <Filter
                             label="Négatifs"
                             isActive={() => query.qualification === 'négatif'}
-                            onClick={() => onFilterClicked({ qualification: 'négatif', sortBy: 'date' })}
+                            onClick={() => onFilterClicked({ qualification: 'négatif', sortBy: 'lastStatusUpdate' })}
                         />
 
                         <Filter
                             label="Positifs ou neutres"
                             isActive={() => query.qualification === 'positif'}
-                            onClick={() => onFilterClicked({ qualification: 'positif', sortBy: 'date' })}
+                            onClick={() => onFilterClicked({ qualification: 'positif', sortBy: 'lastStatusUpdate' })}
                         />
 
                         <Filter
