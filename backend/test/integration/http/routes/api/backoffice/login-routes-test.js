@@ -63,6 +63,38 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         });
     });
 
+    it('can login as organisme (email)', async () => {
+
+        let app = await startServer();
+        await insertIntoDatabase('accounts', newOrganismeAccount({
+            courriel: 'contact@poleemploi-formation.fr',
+            meta: {
+                siretAsString: '6080274100045'
+            }
+        }));
+
+        let response = await request(app)
+        .post('/api/backoffice/login')
+        .send({ identifiant: 'contact@poleemploi-formation.fr', password: 'password' });
+
+        assert.strictEqual(response.statusCode, 200);
+
+        let body = response.body;
+        assert.strictEqual(body.token_type, 'bearer');
+        assert.ok(body.access_token);
+
+        let decodedToken = JWT.decode(body.access_token);
+        assert.ok(decodedToken.iat);
+        assert.ok(decodedToken.exp);
+        assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
+            profile: 'organisme',
+            raisonSociale: 'Pole Emploi Formation',
+            siret: '6080274100045',
+            sub: 'contact@poleemploi-formation.fr',
+            codeRegion: '11',
+        });
+    });
+
     it('can login as financeur', async () => {
 
         let app = await startServer();
@@ -192,7 +224,6 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.ok(response.body.access_token);
         let event = await db.collection('events').findOne({ type: 'login-access-token' });
         assert.ok(event.date);
-        assert.ok(event.source.ip);
         assert.deepStrictEqual(event.source.siret, '22222222222222');
     });
 
