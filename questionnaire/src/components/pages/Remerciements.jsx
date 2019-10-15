@@ -8,17 +8,18 @@ class Remerciements extends Component {
 
     static propTypes = {
         stagiaire: PropTypes.object.isRequired,
-        infosRegion: PropTypes.object.isRequired
+        infosRegion: PropTypes.object.isRequired,
+        avisDejaDepose: PropTypes.bool.isRequired
     };
 
     render() {
 
-        let { stagiaire, infosRegion } = this.props;
+        let { stagiaire, infosRegion, avisDejaDepose } = this.props;
 
         return (
             <div className="anotea remerciements">
                 <div className="container">
-                    <Formation stagiaire={stagiaire} />
+                    <Formation stagiaire={stagiaire} avisDejaDepose={avisDejaDepose} />
                     <div className="row">
                         <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
 

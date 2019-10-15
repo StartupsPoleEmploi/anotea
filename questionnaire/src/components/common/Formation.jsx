@@ -6,7 +6,8 @@ import './formation.scss';
 class Formation extends Component {
 
     static propTypes = {
-        stagiaire: PropTypes.object
+        stagiaire: PropTypes.object,
+        avisDejaDepose: PropTypes.bool
     };
 
     render() {
@@ -18,7 +19,7 @@ class Formation extends Component {
                     <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         {this.props.stagiaire &&
                         <div>
-                            <h1>Évaluez votre formation</h1>
+                            <h1>{this.props.avisDejaDepose ? 'Vous avez déjà déposé un avis' : 'Évaluez votre formation' }</h1>
                             <div>
                                 <div className="title">{this.props.stagiaire.training.title} | {startDate} au {scheduledEndDate}.&nbsp;
                                     <span className="organisme">{this.props.stagiaire.training.organisation.name}</span>
