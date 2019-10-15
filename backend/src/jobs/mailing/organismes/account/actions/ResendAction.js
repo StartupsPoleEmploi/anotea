@@ -11,6 +11,7 @@ class ResendAction {
         let delay = this.configuration.smtp.organisme.accountsRelaunchDelay;
 
         return {
+            'profile': 'organisme',
             'score.nb_avis': { $gte: 1 },
             '$and': [
                 { mailSentDate: { $ne: null } },
