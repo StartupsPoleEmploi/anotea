@@ -88,7 +88,7 @@ module.exports = components => {
         }
 
         if (error.output.statusCode > 404) {
-            sentry.sendError(rawError, { requestId: req.requestId });
+            sentry.sendError(rawError, { req: req });
         }
         return res.status(error.output.statusCode).send(error.output.payload);
     });

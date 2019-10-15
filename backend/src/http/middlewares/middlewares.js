@@ -214,7 +214,7 @@ module.exports = (auth, logger, configuration) => {
                     res.setHeader('Retry-After', Math.ceil(this.windowMs / 1000));
                 }
 
-                sentry.sendError(Boom.tooManyRequests(this.message), { requestId: req.requestId });
+                sentry.sendError(Boom.tooManyRequests(this.message), { req: req });
 
                 res.format({
                     html: () => {
