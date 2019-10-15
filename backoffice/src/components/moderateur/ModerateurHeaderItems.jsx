@@ -56,7 +56,7 @@ export default class ModerateurHeaderItems extends React.Component {
                             >
                                 <div className="Pastille--holder">
                                     Réponses
-                                    {(stats.nbReponseAModerer > 0 || stats.nbRejected > 0) && <Pastille />}
+                                    {(stats.nbReponseAModerer > 0 || stats.nbSignales > 0) && <Pastille />}
                                 </div>
                             </Link>
                         </li>

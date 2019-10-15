@@ -17,8 +17,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.get('/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
 
-        let user = req.user;
-        let { validators, queries } = getProfile(db, regions, user);
+        let { validators, queries } = getProfile(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
             ...validators.filters(),
@@ -55,8 +54,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.get('/backoffice/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
 
-        let user = req.user;
-        let { validators, queries } = getProfile(db, regions, user);
+        let { validators, queries } = getProfile(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
             ...validators.form(),
             ...validators.filters(),
