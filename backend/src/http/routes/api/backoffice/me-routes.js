@@ -12,13 +12,13 @@ module.exports = ({ db, middlewares, passwords }) => {
 
     router.put('/backoffice/me/updatePassword', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { id } = req.user;
+        let user = req.user;
         let { current, password } = await Joi.validate(req.body, {
             current: Joi.string().required(),
             password: Joi.string().required(),
         }, { abortEarly: false });
 
-        let query = ObjectID.isValid(id) ? { _id: new ObjectID(id) } : { _id: parseInt(id) };
+        let query = user.profile === 'organisme' ? { _id: parseInt(user.id) } : { _id: new ObjectID(user.id) };
         let account = await db.collection('accounts').findOne(query);
         if (await checkPassword(current, account.passwordHash)) {
 
