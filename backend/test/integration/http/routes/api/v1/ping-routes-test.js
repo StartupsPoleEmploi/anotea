@@ -136,7 +136,7 @@ describe('/api/ping', withServer(({ startServer }) => {
         let app = await startServer();
         let httpCode = 500;
 
-        let response = await request(app).get(`/api/v1/ping/error?http_code=${httpCode}`);
+        let response = await request(app).get(`/api/v1/ping/error?statusCode=${httpCode}`);
 
         assert.strictEqual(response.statusCode, httpCode);
         assert.deepStrictEqual(response.body, {
