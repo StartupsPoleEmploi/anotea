@@ -15,13 +15,13 @@ const carousels = {
             content:
                 'Donnez votre avis'
         }, {
-            image: require('./images/Stag_AvisPublié.png'),
+            image: require('./images/Stag_AvisRejetéAlerte.png'),
             content:
-                'Avis publié'
+                'Avis rejeté pour Alerte'
         }, {
-            image: require('./images/Stag_AvisRejeté.png'),
+            image: require('./images/Stag_AvisRejetéInjure.png'),
             content:
-                'Avis rejeté pour injure'
+                'Avis rejeté pour Injure'
         }
     ],
     organismes: [
