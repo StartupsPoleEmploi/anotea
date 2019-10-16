@@ -31,7 +31,7 @@ module.exports = configuration => {
                     client_secret: configuration.peconnect.client_secret,
                     redirect_uri: configuration.peconnect.callback_url
                 };
-                request.post({ url: `${configuration.peconnect.auth_base_url}/connexion/oauth2/access_token?realm=%2Findividu`, form: data }, (error, response, body) => {
+                request.post({ url: `${configuration.peconnect.auth_base_url}/connexion/oauth2/access_token?realm=%2Findividu`, form: data, timeout: configuration.peconnect.timeout }, (error, response, body) => {
                     //TODO : manage timeout
                     let json = JSON.parse(body);
 
@@ -48,7 +48,7 @@ module.exports = configuration => {
         getUserInfo: accessToken => {
             return new Promise((resolve, reject) => {
                 const auth = `Bearer ${accessToken}`;
-                request.get({ url: `${configuration.peconnect.api_base_url}/peconnect-individu/v1/userinfo`, headers: { Authorization: auth } }, (error, response, body) => {
+                request.get({ url: `${configuration.peconnect.api_base_url}/peconnect-individu/v1/userinfo`, headers: { Authorization: auth }, timeout: configuration.peconnect.timeout }, (error, response, body) => {
                     let json = JSON.parse(body);
                     if (json.error) {
                         reject({ error: json.error });

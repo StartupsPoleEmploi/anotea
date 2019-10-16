@@ -43,7 +43,8 @@
     "client_secret": "ANOTEA_PECONNECT_CLIENT_SECRET",
     "callback_url": "ANOTEA_PECONNECT_CLIENT_CALLBACK_URL",
     "auth_base_url": "ANOTEA_PECONNECT_AUTH_BASE_URL",
-    "api_base_url": "ANOTEA_PECONNECT_API_BASE_URL"
+    "api_base_url": "ANOTEA_PECONNECT_API_BASE_URL",
+    "timeout": "ANOTEA_PECONNECT_TIMEOUT"
   },
   "sentry": {
     "enabled": {
