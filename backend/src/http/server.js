@@ -61,17 +61,18 @@ module.exports = components => {
     app.use('/api', require('./routes/api/v1/sessions-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
     app.use('/api', require('./routes/api/exports-routes')(httpComponents));
-    app.use('/api', require('./routes/api/regions-routes')(httpComponents));
-    app.use('/api', require('./routes/api/stats-routes')(httpComponents));
-    app.use('/api', require('./routes/api/kairos-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/auth/login-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/auth/password-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/moderateur/moderation-avis-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/organismes/consultation-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/organismes/organisme-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/moderateur/gestion-organismes-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/financeur/financeur-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/auth/account-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/departements-routes')(httpComponents));
+    app.use('/api', require('./routes/api/public-stats-routes')(httpComponents));
+    app.use('/api', require('./routes/api/kairos/kairos-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/login-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/password-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/activation-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/me-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/avis-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/formations-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/sirens-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/stats-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/gestion-organismes-routes')(httpComponents));
     app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
 
     // catch 404
@@ -97,7 +98,7 @@ module.exports = components => {
         }
 
         if (error.output.statusCode > 404) {
-            sentry.sendError(rawError, { requestId: req.requestId });
+            sentry.sendError(rawError, { req: req });
         }
         return res.status(error.output.statusCode).send(error.output.payload);
     });

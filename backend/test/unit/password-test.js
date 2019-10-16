@@ -1,7 +1,10 @@
 const assert = require('assert');
-const { isPasswordStrongEnough, hashPassword, verifyPassword, getAlgorithm } = require('../../src/common/components/password.js');
+const config = require('config');
+const passwords = require('../../src/common/components/passwords.js');
 
 describe('Password', function() {
+
+    let { isPasswordStrongEnough, hashPassword, checkPassword } = passwords(config);
 
     it('should get true with a valid password', () => {
         assert.ok(isPasswordStrongEnough('azertY!'));
@@ -14,15 +17,10 @@ describe('Password', function() {
         assert.ok(isPasswordStrongEnough('#Azerty'));
     });
 
-    it('can hash password with bcrypt (10 rounds)', async () => {
-        let hash = await hashPassword('azertY!');
-        assert.equal(hash.substring(0, 7), getAlgorithm());
-    });
-
-    it('can verify hash', async () => {
+    it('can compare password and hash', async () => {
         let password = 'azertY!';
         let hash = await hashPassword(password);
 
-        assert.ok(await verifyPassword(password, hash));
+        assert.ok(await checkPassword(password, hash));
     });
 });

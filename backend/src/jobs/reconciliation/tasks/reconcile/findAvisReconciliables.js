@@ -9,18 +9,13 @@ module.exports = async (db, intercarif, action) => {
     let siret = action.organisme_formateur.siret_formateur.siret;
 
     let comments = await db.collection('comment').find({
-        'archived': false,
         'training.organisation.siret': new RegExp(`^${asSiren(siret)}`),
-        '$or': [
-            { 'comment': { $exists: false } },
-            { 'published': true },
-            { 'rejected': true },
-        ],
+        'status': { $in: ['published', 'rejected'] },
         '$and': [
             {
                 '$or': [
                     { 'training.certifInfo.id': { $in: intercarif._meta.certifinfos } },
-                    { 'formacode': { $in: intercarif._meta.formacodes } },
+                    { 'training.formacode': { $in: intercarif._meta.formacodes } },
                 ]
 
             },
@@ -55,13 +50,11 @@ module.exports = async (db, intercarif, action) => {
         training: 1,
         rates: 1,
         date: 1,
-        formacode: 1,
         codeFinanceur: 1,
         comment: 1,
         pseudo: 1,
         pseudoMasked: 1,
-        rejected: 1,
-        editedComment: 1,
+        status: 1,
         reponse: 1,
         codeRegion: 1,
     })

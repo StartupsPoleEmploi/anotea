@@ -1,8 +1,8 @@
 const _ = require('lodash');
 const assert = require('assert');
-const { withMongoDB } = require('../../../helpers/test-database');
+const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newOrganismeAccount, newModerateurAccount, newComment } = require('../../../helpers/data/dataset');
-const logger = require('../../../helpers/test-logger');
+const logger = require('../../../helpers/fake-logger');
 const computeOrganismesScore = require('../../../../src/jobs/organismes/tasks/computeScore');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
@@ -135,7 +135,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 },
             })), ['score']),
             insertIntoDatabase('comment', newComment({
-                rejected: true,
+                status: 'rejected',
                 rates: {
                     accueil: 0,
                     contenu_formation: 0,

@@ -1,9 +1,9 @@
 const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
-const { withMongoDB } = require('../../../../helpers/test-database');
+const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const importIntercarif = require('../../../../../src/jobs/import/intercarif/importIntercarif');
-const logger = require('../../../../helpers/test-logger');
+const logger = require('../../../../helpers/fake-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
 

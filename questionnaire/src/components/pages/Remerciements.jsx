@@ -80,7 +80,7 @@ class Remerciements extends Component {
                                             rel="noopener noreferrer">
                                             <img
                                                 src={process.env.PUBLIC_URL + `/images/regions/carif-${stagiaire.codeRegion}.png`}
-                                                alt="logo carif " />
+                                                alt="logo carif" />
                                         </a>
                                         }
                                         <a

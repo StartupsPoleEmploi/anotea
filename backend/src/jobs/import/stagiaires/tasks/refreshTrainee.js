@@ -1,7 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 const parse = require('csv-parse');
-const { mergeDeep, isDeepEquals, getDifferences } = require('../../../../common/utils/object-utils');
+const { mergeDeep, isDeepEquals, getDifferences, flattenKeys } = require('../../../../common/utils/object-utils');
 const { writeObject, pipeline, ignoreFirstLine, transformObject } = require('../../../../common/utils/stream-utils');
 const { sanitizeCsvLine } = require('./utils/utils');
 
@@ -18,10 +18,13 @@ module.exports = async (db, logger, file, handler) => {
 
         let newTrainee = mergeDeep({}, trainee, newValues);
         if (!isDeepEquals(trainee, newTrainee)) {
-            newTrainee = mergeDeep(newTrainee, {
-                meta: {
-                    refreshed: [getDifferences(trainee, newTrainee)]
-                }
+            let differences = getDifferences(trainee, newTrainee);
+
+            newTrainee.meta = newTrainee.meta || {};
+            newTrainee.meta.history = newTrainee.meta.history || [];
+            newTrainee.meta.history.unshift({
+                date: new Date(),
+                ...differences
             });
 
             let res = await db.collection('trainee').replaceOne({ token: trainee.token }, newTrainee);
@@ -38,10 +41,13 @@ module.exports = async (db, logger, file, handler) => {
 
         let newComment = mergeDeep({}, comment, newValues);
         if (!isDeepEquals(comment, newComment)) {
-            newComment = mergeDeep(newComment, {
-                meta: {
-                    refreshed: [getDifferences(comment, newComment)]
-                }
+            let differences = getDifferences(comment, newComment);
+
+            newComment.meta = newComment.meta || {};
+            newComment.meta.history = newComment.meta.history || [];
+            newComment.meta.history.unshift({
+                date: new Date(),
+                ...differences
             });
 
             let res = await db.collection('comment').replaceOne({ token }, newComment);
@@ -56,13 +62,13 @@ module.exports = async (db, logger, file, handler) => {
         transformObject(sanitizeCsvLine),
         writeObject(async record => {
 
-            let trainee = await db.collection('trainee').findOne({
-                'trainee.email': record['c_adresseemail'].toLowerCase(),
-                'trainee.dnIndividuNational': record['dn_individu_national'],
-                'training.idSession': record['dn_session_id'],
-                'training.scheduledEndDate': new Date(record['dd_datefinmodule'] + 'Z'),
-            });
+            let build = await handler.buildTrainee(record, { name: 'refresh', date: new Date() });
+            let key = flattenKeys(handler.getKey(build));
+            if (!handler.shouldBeImported(build)) {
+                return Promise.resolve();
+            }
 
+            let trainee = await db.collection('trainee').findOne(key);
             if (!trainee) {
                 return Promise.resolve();
             }
@@ -86,7 +92,7 @@ module.exports = async (db, logger, file, handler) => {
             ])
             .catch(e => {
                 stats.invalid++;
-                logger.error(e);
+                logger.error(e, trainee);
             });
         }, { parallel: 100 }),
     ]);

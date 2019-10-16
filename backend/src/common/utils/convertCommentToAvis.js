@@ -4,10 +4,10 @@ const convertCommentaire = data => {
 
     let commentaire = {};
     if (!_.isEmpty(data.comment.text)) {
-        commentaire.texte = data.editedComment ? data.editedComment.text : data.comment.text;
+        commentaire.texte = data.comment.text;
     }
 
-    if (!_.isEmpty(data.comment.title) && !data.titleMasked) {
+    if (!_.isEmpty(data.comment.title) && !data.comment.titleMasked) {
         commentaire.titre = data.comment.title;
     }
 
@@ -34,7 +34,7 @@ module.exports = data => {
             numero: training.idFormation,
             intitule: training.title,
             domaine_formation: {
-                formacodes: [data.formacode],
+                formacodes: [training.formacode],
             },
             certifications: [
                 { certif_info: training.certifInfo.id }
@@ -67,11 +67,11 @@ module.exports = data => {
         avis.formation.action.numero = training.infoCarif.numeroAction;
     }
 
-    if (!data.pseudoMasked && !data.rejected && !_.isEmpty(data.pseudo)) {
+    if (!data.pseudoMasked && data.status !== 'rejected' && !_.isEmpty(data.pseudo)) {
         avis.pseudo = data.pseudo;
     }
 
-    if (data.comment && !data.rejected) {
+    if (data.comment && data.status !== 'rejected') {
         avis.commentaire = convertCommentaire(data);
     }
 

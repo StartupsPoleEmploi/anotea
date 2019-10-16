@@ -3,7 +3,7 @@ const assert = require('assert');
 const moment = require('moment/moment');
 const crypto = require('crypto');
 const buildHMACSignature = require('../../../../../../src/jobs/data/auth/utils/buildHMACSignature');
-const { withServer } = require('../../../../../helpers/test-server');
+const { withServer } = require('../../../../../helpers/with-server');
 
 describe('/api/ping', withServer(({ startServer }) => {
 
@@ -136,7 +136,7 @@ describe('/api/ping', withServer(({ startServer }) => {
         let app = await startServer();
         let httpCode = 500;
 
-        let response = await request(app).get(`/api/v1/ping/error?http_code=${httpCode}`);
+        let response = await request(app).get(`/api/v1/ping/error?statusCode=${httpCode}`);
 
         assert.strictEqual(response.statusCode, httpCode);
         assert.deepStrictEqual(response.body, {

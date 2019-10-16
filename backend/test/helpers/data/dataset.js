@@ -15,6 +15,7 @@ module.exports = {
             _id: `${randomize('test-campaign')}`,
             campaign: 'test-campaign',
             importDate: date,
+            avisCreated: false,
             trainee: {
                 name: 'Dupont',
                 firstName: 'Henri',
@@ -48,9 +49,6 @@ module.exports = {
                 },
                 idSession: '2422722',
                 formacode: '46242',
-                aesRecu: 'AES',
-                referencement: '41C561691111',
-                idSessionAudeFormation: '2422722',
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -141,8 +139,6 @@ module.exports = {
             _id: new ObjectID(),
             token: randomize('token'),
             campaign: 'test',
-            formacode: '46242',
-            idSession: '2422722',
             training: {
                 idFormation: 'F_XX_XX',
                 title: 'Développeur',
@@ -164,9 +160,6 @@ module.exports = {
                 },
                 idSession: '2422722',
                 formacode: '46242',
-                aesRecu: 'AES',
-                referencement: '41C561691111',
-                idSessionAudeFormation: '2422722',
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -188,30 +181,11 @@ module.exports = {
             },
             date: date,
             accord: false,
-            reported: false,
-            moderated: true,
-            published: true,
-            rejected: false,
-            rejectReason: null,
+            status: 'published',
             qualification: 'positif',
             lastStatusUpdate: date,
             read: true,
-            importDate: date,
-            unsubscribe: false,
-            mailSent: true,
-            mailSentDate: date,
-            mailRetry: 2,
-            tracking: {
-                firstRead: date,
-                lastRead: date
-            },
-            deviceTypes: {
-                phone: 0,
-                tablet: 0,
-                desktop: 1
-            },
             codeRegion: '11',
-            archived: false
         }, custom, { test: true });
     },
     newIntercarif: (options = {}) => {

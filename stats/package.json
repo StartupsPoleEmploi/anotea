@@ -16,6 +16,7 @@
     "webfontloader": "1.6.28"
   },
   "devDependencies": {
+    "eslint-plugin-react": "7.14.3",
     "node-sass-chokidar": "1.3.5"
   },
   "scripts": {

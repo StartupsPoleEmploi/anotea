@@ -6,10 +6,11 @@ const removeEmoji = string => {
 };
 
 module.exports = {
-
-    removeEmoji: removeEmoji,
-
     sanitize: text => {
+
+        if (!text) {
+            return text;
+        }
 
         // unescape HTML (if user copy/paste HTML entities) and remove HTML tags
         let sanitized = s(text).unescapeHTML().stripTags().s;
@@ -17,6 +18,6 @@ module.exports = {
         // remove emoj
         sanitized = removeEmoji(sanitized);
 
-        return sanitized;
+        return sanitized.trim();
     }
 };

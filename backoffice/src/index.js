@@ -8,7 +8,7 @@ import './utils/datepicker.js';
 import App from './App';
 import WithRouter from './components/WithRouter';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { createNavigator } from './utils/route-utils';
+import { createNavigator } from './utils/navigator';
 
 let app = (
     <Router>

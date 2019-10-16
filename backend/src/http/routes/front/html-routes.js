@@ -71,11 +71,12 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
             return;
         }
 
-        const advice = await db.collection('comment').findOne({ token: req.params.token });
-        if (!(advice.tracking && advice.tracking.clickLink && advice.tracking.clickLink.filter(item => item.goto === goto).length > 0)) {
-            db.collection('comment').updateOne({ token: req.params.token }, {
+        if (!(trainee.tracking &&
+            trainee.tracking.clickLinks &&
+            trainee.tracking.clickLinks.filter(item => item.goto === goto).length > 0)) {
+            db.collection('trainee').updateOne({ token: req.params.token }, {
                 $push: {
-                    'tracking.clickLink': {
+                    'tracking.clickLinks': {
                         date: new Date(),
                         goto: goto
                     }
@@ -145,12 +146,28 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
 
         res.render('../../smtp/views/questionnaire_6mois.ejs', {
             trainee: trainee,
-            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/6mois?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
+            consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/6mois?utm_source=PE&utm_medium=mail`,
             unsubscribeLink: unsubscribeLink,
             trackingLink: `${configuration.app.public_hostname}/mail/${trainee.token}/track`,
             formLink: 'https://avril_la_vae_facile.typeform.com/to/gIFh4q',
             moment: moment,
             region: regions.findRegionByCodeRegion(trainee.codeRegion),
+            hostname: configuration.app.public_hostname,
+            webView: true
+        });
+    });
+
+    router.get('/mail/:token/organisme_questionnaire', async (req, res) => {
+        const organisme = await db.collection('accounts').findOne({ token: req.params.token });
+        if (!organisme) {
+            res.status(404).render('errors/404');
+            return;
+        }
+
+        res.render('../../smtp/views/organisme_questionnaire.ejs', {
+            organisme,
+            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/organisme_questionnaire?utm_source=PE&utm_medium=mail`,
+            formLink: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
             hostname: configuration.app.public_hostname,
             webView: true
         });
@@ -186,7 +203,7 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
         const avis = await db.collection('comment').find({
             'comment': { $ne: null },
             'read': false,
-            'published': true,
+            'status': 'published',
             'training.organisation.siret': organisme.SIRET
         });
 

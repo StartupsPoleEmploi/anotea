@@ -1,7 +1,7 @@
 const assert = require('assert');
-const { withMongoDB } = require('../../../../../helpers/test-database');
+const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newTrainee, randomize } = require('../../../../../helpers/data/dataset');
-const logger = require('../../../../../helpers/test-logger');
+const logger = require('../../../../../helpers/fake-logger');
 const Questionnaire6MoisMailer = require('../../../../../../src/jobs/mailing/stagiaires/questionnaire6mois/tasks/Questionnaire6MoisMailer');
 const { successMailer, errorMailer } = require('../../fake-mailers');
 
@@ -14,7 +14,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let email = `${randomize('name')}@email.fr`;
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
-                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-03-29',
+                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
                 trainee: {
                     email,
                 },
@@ -46,7 +46,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let email = `${randomize('name')}@email.fr`;
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
-                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-03-29',
+                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
                 mailSent: false,
                 mailSentDate: null,
                 trainee: {
@@ -72,7 +72,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let email = `${randomize('name')}@email.fr`;
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
-                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-03-29',
+                campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
                 trainee: {
                     email,
                 },

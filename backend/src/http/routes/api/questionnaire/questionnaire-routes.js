@@ -1,6 +1,8 @@
 const express = require('express');
 const moment = require('moment');
+const _ = require('lodash');
 const { getDeviceType } = require('./utils/analytics');
+const Boom = require('boom');
 const Joi = require('joi');
 const externalLinks = require('../../front/utils/externalLinks');
 const { sanitize } = require('./utils/userInput');
@@ -73,56 +75,49 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         return Number(Math.round((sum / 5) + 'e1') + 'e-1');
     };
 
-    const sanitizeBody = body => {
-
-        let sanitizedBody = Object.assign({}, body);
-
-        sanitizedBody.pseudo = sanitize(body.pseudo);
-        sanitizedBody.texte = sanitize(body.commentaire.texte);
-        sanitizedBody.titre = sanitize(body.commentaire.titre);
-
-        return sanitizedBody;
-    };
 
     const buildAvis = (notes, token, body, trainee) => {
-        let data = sanitizeBody(body);
+
+        let text = _.get(body, 'commentaire.texte', null);
+        let title = _.get(body, 'commentaire.titre', null);
+        let hasCommentaires = title || text;
+
         let avis = {
             date: new Date(),
             token: token,
             campaign: trainee.campaign,
-            formacode: trainee.training.formacode,
-            idSession: trainee.training.idSession,
             training: trainee.training,
             codeRegion: trainee.codeRegion,
             rates: notes,
-            pseudo: data.pseudo.replace(/ /g, '').replace(/\./g, ''),
-            accord: data.accord,
-            accordEntreprise: data.accordEntreprise,
-            archived: false
+            pseudo: sanitize(body.pseudo.replace(/ /g, '').replace(/\./g, '')),
+            accord: body.accord,
+            accordEntreprise: body.accordEntreprise,
+            read: false,
+            status: hasCommentaires ? 'none' : 'published',
+            lastStatusUpdate: new Date(),
         };
 
-        let text = data.commentaire.texte;
-        let title = data.commentaire.titre;
-        if (title !== '' || text !== '') {
+        if (hasCommentaires) {
             avis.comment = {
-                title: title,
-                text: text
+                title: sanitize(title),
+                text: sanitize(text),
+                titleMasked: false,
             };
         }
 
         return avis;
     };
 
-    const validateAvis = avis => {
+    const validateAvis = async avis => {
 
         if (avis.pseudo.length > 50 ||
             (avis.comment !== undefined && (avis.comment.title.length > 50 || avis.comment.text.length > 200))) {
             return { error: 'too long' };
         }
 
-        let pseudoOK = avis.pseudo ? badwords.isGood(avis.pseudo) : true;
-        let commentOK = avis.comment ? badwords.isGood(avis.comment.text) : true;
-        let commentTitleOK = avis.comment ? badwords.isGood(avis.comment.title) : true;
+        let pseudoOK = avis.pseudo ? await badwords.isGood(avis.pseudo) : true;
+        let commentOK = avis.comment ? await badwords.isGood(avis.comment.text) : true;
+        let commentTitleOK = avis.comment ? await badwords.isGood(avis.comment.title) : true;
 
         if (pseudoOK && commentOK && commentTitleOK) {
             return { error: null, avis };
@@ -150,7 +145,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     };
 
     router.get('/questionnaire/checkBadwords', tryAndCatch(async (req, res) => {
-        res.send({ isGood: badwords.isGood(req.query.sentence) });
+        if (await badwords.isGood(req.query.sentence)) {
+            return res.json({ isGood: true });
+        }
+        throw Boom.badRequest('Mot invalide');
+
     }));
 
     router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
@@ -175,14 +174,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     router.post('/questionnaire/:token', getTraineeFromToken, tryAndCatch(async (req, res) => {
 
         let stagiaire = req.trainee;
-        let [comment, infosRegion] = await Promise.all([
-            db.collection('comment').findOne({
-                token: req.params.token,
-                formacode: stagiaire.training.formacode,
-                idSession: stagiaire.training.idSession
-            }),
-            getInfosRegion(stagiaire)
-        ]);
+        let comment = await db.collection('comment').findOne({
+            'token': req.params.token,
+            'training.formacode': stagiaire.training.formacode,
+            'training.idSession': stagiaire.training.idSession
+        });
 
         if (comment) {
             throw new AlreadySentError();
@@ -193,7 +189,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
             const avis = buildAvis(resultNotes.value, req.params.token, req.body, req.trainee);
 
-            let validation = validateAvis(avis);
+            let validation = await validateAvis(avis);
             if (validation.error === null) {
                 avis.rates.global = calculateAverageRate(avis);
                 await Promise.all([
@@ -206,7 +202,8 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         } else {
             throw new BadDataError();
         }
-        return res.send({ stagiaire, infosRegion });
+
+        return res.send({ stagiaire, infosRegion: await getInfosRegion(stagiaire) });
     }));
 
     return router;

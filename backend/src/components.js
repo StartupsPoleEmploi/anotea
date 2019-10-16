@@ -1,10 +1,11 @@
 const config = require('config');
 const auth = require('./common/components/auth');
-const password = require('./common/components/password');
+const passwords = require('./common/components/passwords');
 const getRegions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
 const sentry = require('./common/components/sentry');
 const moderation = require('./common/components/moderation');
+const consultation = require('./common/components/consultation');
 const database = require('./common/components/database');
 const communes = require('./common/components/communes');
 const createMailer = require('./smtp/mailer');
@@ -17,7 +18,6 @@ const sendSignalementAccepteNotification = require('./common/components/mailing/
 const sendInjureMail = require('./common/components/mailing/sendInjureMail');
 const sendAlerteMail = require('./common/components/mailing/sendAlerteMail');
 const createPeconnect = require('./common/components/peconnect');
-const sendAvisPublieMail = require('./common/components/mailing/sendAvisPublieMail');
 
 module.exports = async (options = {}) => {
 
@@ -35,9 +35,10 @@ module.exports = async (options = {}) => {
         mailer,
         sentry: sentry(logger, configuration),
         auth: auth(configuration),
-        password,
+        passwords: passwords(configuration),
         regions: regions,
-        moderation: moderation(db, logger, mailer),
+        moderation: moderation(db),
+        consultation: consultation(db),
         communes: communes(db),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),
@@ -47,8 +48,7 @@ module.exports = async (options = {}) => {
             sendSignalementRejeteNotification: sendSignalementRejeteNotification(db, mailer, logger),
             sendSignalementAccepteNotification: sendSignalementAccepteNotification(db, mailer, logger),
             sendInjureMail: sendInjureMail(db, mailer, logger),
-            sendAlerteMail: sendAlerteMail(db, mailer, logger),
-            sendAvisPublieMail: sendAvisPublieMail(db, mailer, logger)
+            sendAlerteMail: sendAlerteMail(db, mailer, logger)
         },
         peconnect: createPeconnect(configuration)
     }, options || {});

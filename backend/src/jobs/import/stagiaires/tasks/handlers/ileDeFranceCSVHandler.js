@@ -29,7 +29,20 @@ module.exports = (db, regions) => {
                 'Id Session DOKELIO',
             ]
         },
-        shouldBeImported: async trainee => {
+        getKey: trainee => {
+            return {
+                sourceIDF: true,
+                trainee: {
+                    email: trainee.trainee.email,
+                },
+                training: {
+                    infoRegion: {
+                        idActionFormation: trainee.training.infoRegion.idActionFormation,
+                    }
+                }
+            };
+        },
+        shouldBeImported: trainee => {
             let idf = regions.findRegionByCodeRegion('11');
             let isAfter = moment(trainee.training.scheduledEndDate).isAfter(moment(`${idf.since}-0000`, 'YYYYMMDD Z'));
             return isAfter && trainee.trainee.emailValid && trainee.training.infoCarif.numeroSession === null;
@@ -66,7 +79,6 @@ module.exports = (db, regions) => {
                     },
                     training: {
                         idFormation: null,
-                        origineSession: null,
                         title: record['Libellé Action'],
                         startDate: parseDate(record['Date Entree']),
                         scheduledEndDate: parseDate(record['Date Sortie']),
@@ -86,19 +98,11 @@ module.exports = (db, regions) => {
                         },
                         idSession: null,
                         formacode: null,
-                        referencement: null,
                         infoCarif: {
                             numeroAction: null,
                             numeroSession: record['Id Session DOKELIO'] === '' ? null : record['Id Session DOKELIO']
                         },
                         codeFinanceur: ['2'],
-                        niveauEntree: null,
-                        niveauSortie: null,
-                        dureeHebdo: null,
-                        dureeMaxi: null,
-                        dureeEntreprise: null,
-                        dureeIndicative: null,
-                        nombreHeuresCentre: null,
                         infoRegion: {
                             idTrainee: record['Identifiant Stagiaire'],
                             idActionFormation: record['Numéro Action'],

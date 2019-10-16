@@ -11,9 +11,6 @@ module.exports = db => {
             profile: 'moderateur',
             courriel: 'moderateur@pole-emploi.fr',
             codeRegion: '11',
-            features: [
-                'EDIT_ORGANISATIONS'
-            ],
         }),
     ]);
 };

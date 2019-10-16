@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Page from '../backoffice/common/page/Page';
-import Panel from '../backoffice/common/page/panel/Panel';
-import InputText from '../backoffice/common/page/form/InputText';
-import Button from '../backoffice/common/Button';
-import { AuthForm } from './AuthForm';
+import Page from '../common/page/Page';
+import Panel from '../common/page/panel/Panel';
+import InputText from '../common/page/form/InputText';
+import Button from '../common/Button';
+import { CenteredForm } from '../common/page/form/CenteredForm';
 import { askNewPassword } from './passwordService';
 
 export default class MotDePasseOubliePage extends React.Component {
@@ -28,7 +28,7 @@ export default class MotDePasseOubliePage extends React.Component {
         askNewPassword(this.state.identifiant)
         .then(() => {
             this.setState({ error: null, identifiant: '', loading: false }, () => {
-                this.props.navigator.goToPage('/admin/login');
+                this.props.navigator.goToPage('/admin/login', { message: 'Une email vous a été envoyé.' });
             });
         })
         .catch(() => {
@@ -45,8 +45,8 @@ export default class MotDePasseOubliePage extends React.Component {
                     <Panel
                         backgroundColor="blue"
                         results={
-                            <AuthForm
-                                title="Mot de passe oublié"
+                            <CenteredForm
+                                title={<div className="a-blue">Mot de passe oublié</div>}
                                 elements={
                                     <>
                                         <label>Entrez votre identifiant</label>

@@ -43,7 +43,7 @@ module.exports = function(db, logger, configuration, regions) {
     };
 
     const getOrganisationPasswordLink = organisation => {
-        return `${configuration.app.public_hostname}/admin/organisme/activation-compte?token=${organisation.token}`;
+        return `${configuration.app.public_hostname}/admin/activation-compte?token=${organisation.token}`;
     };
 
     const getRegionEmail = region => {
@@ -210,9 +210,25 @@ module.exports = function(db, logger, configuration, regions) {
 
             sendMail('organisation_password', params, mailOptions, successCallback, errorCallback);
         },
+        sendQuestionnaireOrganisme: async (mailOptions, organisme, successCallback, errorCallback) => {
+
+            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
+            let params = {
+                formLink: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
+                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/organisme_questionnaire?utm_source=PE&utm_medium=mail`,
+                hostname: configuration.app.public_hostname,
+                organisme,
+            };
+
+            mailOptions.subject = 'Aidez-nous à améliorer Anotéa';
+            mailOptions.list = list;
+            mailOptions.replyTo = getReplyToEmail(region);
+
+            sendMail('organisme_questionnaire', params, mailOptions, successCallback, errorCallback);
+        },
         sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, profile, successCallback, errorCallback) => {
 
-            let link = `${configuration.app.public_hostname}/admin/reinitialisation-mot-de-passe?token=${passwordToken}`;
+            let link = `${configuration.app.public_hostname}/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`;
             let consultationLink = `${configuration.app.public_hostname}/mail/${passwordToken}/passwordForgotten`;
             let params = { link, hostname: configuration.app.public_hostname, codeRegion, profile, consultationLink };
             let region = regions.findRegionByCodeRegion(codeRegion);
@@ -331,26 +347,6 @@ module.exports = function(db, logger, configuration, regions) {
             });
             mailOptions.replyTo = getReplyToEmail(region);
             sendMail('avis_alerte', params, mailOptions, successCallback, errorCallback);
-        },
-        sendAvisPublieMail: async (mailOptions, trainee, avis, successCallback, errorCallback) => {
-            let unsubscribeLink = getUnsubscribeLink(trainee);
-            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
-            let params = {
-                trainee,
-                avis,
-                consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/publie?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
-                unsubscribeLink: unsubscribeLink,
-                hostname: configuration.app.public_hostname
-            };
-
-            mailOptions.subject = 'Nous avons bien pris en compte votre commentaire';
-            mailOptions.list = Object.assign({}, list, {
-                unsubscribe: {
-                    url: unsubscribeLink,
-                }
-            });
-            mailOptions.replyTo = getReplyToEmail(region);
-            sendMail('avis_publie', params, mailOptions, successCallback, errorCallback);
         }
     };
 };

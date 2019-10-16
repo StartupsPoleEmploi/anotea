@@ -1,7 +1,7 @@
 const assert = require('assert');
 const _ = require('lodash');
-const logger = require('../../../helpers/test-logger');
-const { withMongoDB } = require('../../../helpers/test-database');
+const logger = require('../../../helpers/fake-logger');
+const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newComment } = require('../../../helpers/data/dataset');
 const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
 const addReconciliationAvisMetadata = require('../../../../src/jobs/reconciliation/tasks/addReconciliationAvisMetadata');
@@ -12,7 +12,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         let db = await getTestDatabase();
         let avisReconciliable = newComment({
-            formacode: '22403',
             training: {
                 formacode: '22403',
                 certifInfo: {
