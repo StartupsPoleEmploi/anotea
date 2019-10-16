@@ -69,16 +69,110 @@ module.exports = async (db, query) => {
                 nbReponses: { $sum: { $cond: { if: { $not: ['$reponse'] }, then: 0, else: 1 } } },
                 nbReponseAModerer: { $sum: { $cond: { if: { $eq: ['$reponse.status', 'none'] }, then: 1, else: 0 } } },
                 nbNotesSeules: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 1, else: 0 } } },
-                nbCommentaires: { $sum: { $cond: { if: { $not: ['$comment'] }, then: 0, else: 1 } } },
-                nbAModerer: { $sum: { $cond: { if: { $eq: ['$status', 'none'] }, then: 1, else: 0 } } },
-                nbPublished: { $sum: { $cond: { if: { $eq: ['$status', 'published'] }, then: 1, else: 0 } } },
-                nbRejected: { $sum: { $cond: { if: { $eq: ['$status', 'rejected'] }, then: 1, else: 0 } } },
-                nbSignales: { $sum: { $cond: { if: { $eq: ['$status', 'reported'] }, then: 1, else: 0 } } },
-                nbPositifs: { $sum: { $cond: [{ $and: [{ $eq: ['$status', 'published'] }, { $eq: ['$qualification', 'positif'] }] }, 1, 0] } },
-                nbNegatifs: { $sum: { $cond: [{ $and: [{ $eq: ['$status', 'published'] }, { $eq: ['$qualification', 'négatif'] }] }, 1, 0] } },
-                nbAlertes: { $sum: { $cond: [{ $and: [{ $eq: ['$status', 'rejected'] }, { $eq: ['$qualification', 'alerte'] }] }, 1, 0] } },
-                nbInjures: { $sum: { $cond: [{ $and: [{ $eq: ['$status', 'rejected'] }, { $eq: ['$qualification', 'injure'] }] }, 1, 0] } },
-                nbNonConcernes: { $sum: { $cond: [{ $and: [{ $eq: ['$status', 'rejected'] }, { $eq: ['$qualification', 'non concerné'] }] }, 1, 0] } },
+                nbCommentaires: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                            ]
+                        }, 1, 0]
+                    }
+                },
+                nbCommentairesAModerer: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                                { $eq: ['$status', 'none'] }
+                            ]
+                        }, 1, 0]
+                    }
+                },
+                nbCommentairesPublished: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                                { $eq: ['$status', 'published'] }
+                            ]
+                        }, 1, 0]
+                    }
+                },
+                nbCommentairesRejected: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                                { $eq: ['$status', 'rejected'] }
+                            ]
+                        }, 1, 0]
+                    }
+                },
+                nbCommentairesReported: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                                { $eq: ['$status', 'reported'] }
+                            ]
+                        }, 1, 0]
+                    }
+                },
+                nbCommentairesPositifs: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                                { $eq: ['$status', 'published'] },
+                                { $eq: ['$qualification', 'positif'] }
+                            ]
+                        }, 1, 0]
+                    }
+                },
+                nbCommentairesNegatifs: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                                { $eq: ['$status', 'published'] },
+                                { $eq: ['$qualification', 'négatif'] }
+                            ]
+                        }, 1, 0]
+                    }
+                },
+                nbCommentairesAlertes: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                                { $eq: ['$status', 'rejected'] },
+                                { $eq: ['$qualification', 'alerte'] }
+                            ]
+                        }, 1, 0]
+                    }
+                },
+                nbCommentairesInjures: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                                { $eq: ['$status', 'rejected'] },
+                                { $eq: ['$qualification', 'injure'] }
+                            ]
+                        }, 1, 0]
+                    }
+                },
+                nbCommentairesNonConcernes: {
+                    $sum: {
+                        $cond: [{
+                            $and: [
+                                { $not: { $not: ['$comment'] } }, //exists
+                                { $eq: ['$status', 'rejected'] },
+                                { $eq: ['$qualification', 'non concerné'] }
+                            ]
+                        }, 1, 0]
+                    }
+                },
             }
         },
         {

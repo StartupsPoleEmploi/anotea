@@ -114,7 +114,7 @@ export default class ModerationReponsesPage extends React.Component {
                                 <Filter
                                     label="Signalés"
                                     isActive={() => query.statuses === 'reported'}
-                                    getNbElements={() => stats.nbSignales}
+                                    getNbElements={() => stats.nbCommentairesReported}
                                     onClick={() => navigator.refreshCurrentPage({
                                         statuses: 'reported',
                                         sortBy: 'lastStatusUpdate'
