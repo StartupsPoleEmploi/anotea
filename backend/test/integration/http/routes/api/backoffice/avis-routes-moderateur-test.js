@@ -23,18 +23,18 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let app = await startServer();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', buildComment({ status: 'published' })),
+            insertIntoDatabase('comment', buildComment({ status: 'validated' })),
             insertIntoDatabase('comment', buildComment({ status: 'rejected' })),
             insertIntoDatabase('comment', buildComment({ status: 'reported' })),
             insertIntoDatabase('comment', buildComment({ status: 'none' })),
         ]);
 
         let response = await request(app)
-        .get('/api/backoffice/avis?statuses=published')
+        .get('/api/backoffice/avis?statuses=validated')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
-        assert.strictEqual(response.body.avis[0].status, 'published');
+        assert.strictEqual(response.body.avis[0].status, 'validated');
 
         response = await request(app)
         .get('/api/backoffice/avis?statuses=rejected')
@@ -162,7 +162,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.reponse.lastStatusUpdate);
-        assert.deepStrictEqual(response.body.reponse.status, 'published');
+        assert.deepStrictEqual(response.body.reponse.status, 'validated');
     });
 
     it('can not publish reponse of another region', async () => {
@@ -297,7 +297,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.status, 'published');
+        assert.deepStrictEqual(response.body.status, 'validated');
         assert.deepStrictEqual(response.body.qualification, 'positif');
         assert.ok(response.body.lastStatusUpdate);
     });

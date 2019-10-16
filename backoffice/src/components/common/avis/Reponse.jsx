@@ -12,9 +12,9 @@ const Status = ({ avis }) => {
                     (En cours de modération)
                 </span>
             );
-        case 'published':
+        case 'validated':
             return (
-                <span className="status published">
+                <span className="status validated">
                     (<span>Validé le </span> <PrettyDate date={new Date(avis.reponse.lastStatusUpdate)} />)
                 </span>
             );

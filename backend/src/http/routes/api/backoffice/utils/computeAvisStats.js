@@ -88,12 +88,12 @@ module.exports = async (db, query) => {
                         }, 1, 0]
                     }
                 },
-                nbCommentairesPublished: {
+                nbCommentairesValidated: {
                     $sum: {
                         $cond: [{
                             $and: [
                                 { $not: { $not: ['$comment'] } }, //exists
-                                { $eq: ['$status', 'published'] }
+                                { $eq: ['$status', 'validated'] }
                             ]
                         }, 1, 0]
                     }
@@ -123,7 +123,7 @@ module.exports = async (db, query) => {
                         $cond: [{
                             $and: [
                                 { $not: { $not: ['$comment'] } }, //exists
-                                { $eq: ['$status', 'published'] },
+                                { $eq: ['$status', 'validated'] },
                                 { $eq: ['$qualification', 'positif'] }
                             ]
                         }, 1, 0]
@@ -134,7 +134,7 @@ module.exports = async (db, query) => {
                         $cond: [{
                             $and: [
                                 { $not: { $not: ['$comment'] } }, //exists
-                                { $eq: ['$status', 'published'] },
+                                { $eq: ['$status', 'validated'] },
                                 { $eq: ['$qualification', 'négatif'] }
                             ]
                         }, 1, 0]

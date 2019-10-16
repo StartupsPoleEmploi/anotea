@@ -269,7 +269,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             accord: true,
             accordEntreprise: true,
             read: false,
-            status: 'published',
+            status: 'validated',
         });
     });
 

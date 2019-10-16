@@ -78,5 +78,6 @@ module.exports = {
         }
 
         return Promise.all(promises);
-    }
+    },
+    getNbModifiedDocuments: results => results.result.nModified,
 };

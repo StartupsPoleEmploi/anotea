@@ -140,10 +140,10 @@ export default class ModerationAvisPage extends React.Component {
 
                                 <Filter
                                     label="Validés"
-                                    isActive={() => query.statuses === 'published'}
+                                    isActive={() => query.statuses === 'validated'}
                                     onClick={() => {
                                         return this.onFilterClicked({
-                                            statuses: 'published',
+                                            statuses: 'validated',
                                             commentaires: true,
                                             sortBy: 'lastStatusUpdate'
                                         });

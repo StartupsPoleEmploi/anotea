@@ -19,10 +19,10 @@ module.exports = async (db, moderation, consultation, options = {}) => {
     });
 
     let nbCommentairesActions = nbModerationsActions / 5;
-    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'published' }, avis => {
+    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'validated' }, avis => {
         return consultation.report(avis._id, true);
     });
-    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'published' }, avis => {
+    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'validated' }, avis => {
         return consultation.addReponse(avis._id, faker.lorem.paragraph());
     });
 

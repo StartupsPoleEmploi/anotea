@@ -21,7 +21,7 @@ module.exports = db => {
                 },
                 {
                     $set: {
-                        status: 'published',
+                        status: 'validated',
                         qualification: qualification,
                         lastStatusUpdate: new Date(),
                     }
@@ -202,7 +202,7 @@ module.exports = db => {
                 },
                 {
                     $set: {
-                        'reponse.status': 'published',
+                        'reponse.status': 'validated',
                         'reponse.lastStatusUpdate': new Date(),
                     }
                 },

@@ -42,9 +42,9 @@ const Status = ({ avis }) => {
                     (<span>Signalé le </span> <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
                 </div>
             );
-        case 'published':
+        case 'validated':
             return (
-                <div className="status published">
+                <div className="status validated">
                     (<span>Validé le </span> <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
                 </div>
             );
@@ -67,7 +67,7 @@ const Reconciliation = ({ avis }) => {
 
     let reconciliations = _.get(avis, 'meta.reconciliations', []);
 
-    if (avis.status !== 'published' || reconciliations.length === 0 || !reconciliations[0].reconciliable) {
+    if (avis.status !== 'validated' || reconciliations.length === 0 || !reconciliations[0].reconciliable) {
         return <div className="reconciliation" />;
     }
 

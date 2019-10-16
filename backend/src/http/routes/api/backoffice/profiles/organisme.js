@@ -20,8 +20,8 @@ module.exports = (db, regions, user) => {
             },
             filters: () => {
                 return {
-                    statuses: arrayOf(Joi.string().valid(['published', 'reported'])),
-                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected'])),
+                    statuses: arrayOf(Joi.string().valid(['validated', 'reported'])),
+                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'validated', 'rejected'])),
                     read: Joi.bool(),
                     sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']),
                 };
@@ -47,7 +47,7 @@ module.exports = (db, regions, user) => {
             buildAvisQuery: async parameters => {
                 let {
                     departement, idFormation, startDate, scheduledEndDate, siren = user.siret,
-                    reponseStatuses, read, statuses = ['published', 'reported']
+                    reponseStatuses, read, statuses = ['validated', 'reported']
                 } = parameters;
 
 
