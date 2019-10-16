@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { randomize } = require('./data/dataset');
 const configuration = require('config');
-const logger = require('./fake-logger');
-const fakeMailer = require('./fake-mailer');
+const logger = require('./components/fake-logger');
+const fakeMailer = require('./components/fake-mailer');
 const components = require('../../src/components');
 
 let _componentsHolder = null;

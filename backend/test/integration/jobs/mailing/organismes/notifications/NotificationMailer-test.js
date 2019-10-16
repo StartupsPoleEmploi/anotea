@@ -4,7 +4,7 @@ const moment = require('moment');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newComment, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
-const logger = require('../../../../../helpers/fake-logger');
+const logger = require('../../../../../helpers/components/fake-logger');
 const NotificationMailer = require('../../../../../../src/jobs/mailing/organismes/notifications/NotificationMailer');
 
 let fakeMailer = spy => {
