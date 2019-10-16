@@ -158,9 +158,9 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         let stagiaire = req.trainee;
         let [comment, infosRegion] = await Promise.all([
             db.collection('comment').findOne({
-                token: req.params.token,
-                formacode: stagiaire.training.formacode,
-                idSession: stagiaire.training.idSession
+                'token': req.params.token,
+                'training.formacode': stagiaire.training.formacode,
+                'training.idSession': stagiaire.training.idSession
             }),
             getInfosRegion(stagiaire)
         ]);
@@ -169,7 +169,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             db.collection('trainee').updateOne({ token: req.params.token }, { $set: { 'tracking.click': new Date() } });
         }
 
-        return res.send({ stagiaire, infosRegion, submitted: stagiaire.avisCreated });
+        return res.send({ stagiaire, infosRegion, submitted: !!comment });
     }));
 
     router.post('/questionnaire/:token', getTraineeFromToken, tryAndCatch(async (req, res) => {
