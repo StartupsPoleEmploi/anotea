@@ -9,7 +9,7 @@ import CommentairesStats from './CommentairesStats';
 import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 
-export default class StatsPanel extends React.Component {
+export default class FinanceurStatsPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,

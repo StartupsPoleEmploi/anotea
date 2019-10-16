@@ -13,7 +13,7 @@ import QueryBadges from './QueryBadges';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../common/Loader';
 
-export default class AvisPanel extends React.Component {
+export default class FinanceurAvisPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,

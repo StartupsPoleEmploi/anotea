@@ -9,19 +9,9 @@
     font-size: 12px;
   }
 
-  .pseudo {
-    font-size: 0.875rem;
-    font-weight: $font-weight-700;
-    color: $color-black;
-  }
-
   .masked {
     opacity: 0.5;
     color: $color-grey-50;
-
-    &.pseudo {
-      text-decoration: line-through;
-    }
   }
 
   .stars {
@@ -34,10 +24,14 @@
     }
   }
 
-  .by {
-    padding-left: 0.3rem;
-    padding-right: 0.3rem;
-    color: $color-grey-50;
+  .reconciliation {
+    display: inline;
+
+    i {
+      font-size: 0.75rem;
+      color: $color-green;
+      margin-left: 0.25rem;
+    }
   }
 
   .date {

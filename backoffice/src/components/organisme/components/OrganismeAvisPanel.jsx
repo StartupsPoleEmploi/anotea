@@ -13,7 +13,7 @@ import Panel from '../../common/page/panel/Panel';
 import Loader from '../../common/Loader';
 import { getAvisStats } from '../../../services/statsService';
 
-export default class AvisPanel extends React.Component {
+export default class OrganismeAvisPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -139,6 +139,7 @@ export default class AvisPanel extends React.Component {
                                 return <Avis
                                     avis={avis}
                                     showStatus={true}
+                                    showReconcilitation={true}
                                     showReponse={true}
                                     showReponseButtons={true}
                                     onChange={() => {

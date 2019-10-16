@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './Button.scss';
+import Tooltip from './Tooltip';
 
 const Button = props => {
 
@@ -9,13 +10,15 @@ const Button = props => {
     let colorClass = props.color ? `a-btn-${props.color}` : '';
     let disabledClass = props.disabled ? 'a-btn-disabled' : '';
     let toggableClass = props.toggable ? 'dropdown-toggle' : '';
+    let tooltipClass = props.tooltip ? 'Tooltip--holder' : '';
+    let classes = `${sizeClass} ${colorClass} ${disabledClass} ${toggableClass} ${tooltipClass} ${props.className || ''}`;
     let noop = () => ({});
 
     return (
         <button
             type={props.type || 'button'}
             style={props.style || {}}
-            className={`Button ${sizeClass} ${colorClass} ${disabledClass} ${toggableClass} ${props.className || ''}`}
+            className={`Button ${classes}`}
             {...(props.toggable ? { 'data-toggle': 'dropdown' } : {})}
             {..._.omit(props, ['size', 'color', 'toggable', 'className', 'onClick'])}
             onClick={!props.onClick ? noop : e => {
@@ -26,10 +29,7 @@ const Button = props => {
             }}
         >
             {props.tooltip &&
-            <div className="tooltip-box">
-                <div className="triangle"></div>
-                <div className="message">{props.tooltip}</div>
-            </div>
+            <Tooltip value={props.tooltip} />
             }
             {props.children}
         </button>
