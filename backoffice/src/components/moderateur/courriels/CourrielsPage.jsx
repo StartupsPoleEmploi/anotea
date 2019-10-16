@@ -17,11 +17,11 @@ const carousels = {
         }, {
             image: require('./images/Stag_AvisPublié.png'),
             content:
-                'Avis publié'
+                'Avis rejeté pour Alerte'
         }, {
             image: require('./images/Stag_AvisRejeté.png'),
             content:
-                'Avis rejeté pour injure'
+                'Avis rejeté pour Injure'
         }
     ],
     organismes: [
