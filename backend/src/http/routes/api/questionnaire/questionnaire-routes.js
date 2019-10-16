@@ -169,7 +169,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             db.collection('trainee').updateOne({ token: req.params.token }, { $set: { 'tracking.click': new Date() } });
         }
 
-        return res.send({ stagiaire, infosRegion, submitted: !!comment });
+        return res.send({ stagiaire, infosRegion, submitted: stagiaire.avisCreated });
     }));
 
     router.post('/questionnaire/:token', getTraineeFromToken, tryAndCatch(async (req, res) => {
