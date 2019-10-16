@@ -24,7 +24,7 @@ module.exports = components => {
 
     app.use(middlewares.rewriteDeprecatedUrl());
     app.use(middlewares.addRequestId());
-    //app.use(middlewares.logHttpRequests());
+    app.use(middlewares.logHttpRequests());
     app.use(middlewares.allowCORS());
     app.use(compression());
     app.use(cookieParser(configuration.security.secret));
@@ -82,7 +82,6 @@ module.exports = components => {
 
     //Error middleware
     app.use((rawError, req, res, next) => { // eslint-disable-line no-unused-vars
-        console.log(rawError)
         let error = req.err = rawError;
         if (!rawError.isBoom) {
             if (rawError.name === 'ValidationError') {
