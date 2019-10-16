@@ -144,7 +144,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 nbNotesSeules: 0,
                 nbCommentaires: 3,
                 nbCommentairesAModerer: 0,
-                nbCommentairesPublished: 3,
+                nbCommentairesValidated: 3,
                 nbCommentairesRejected: 0,
                 nbCommentairesReported: 0,
                 nbCommentairesPositifs: 3,
@@ -163,7 +163,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ status: 'published' })),
+                insertIntoDatabase('comment', buildComment({ status: 'validated' })),
                 insertIntoDatabase('comment', buildComment({ status: 'reported' })),
             ]);
 
@@ -174,7 +174,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.total, 2);
             assert.strictEqual(response.body.nbCommentaires, 2);
-            assert.strictEqual(response.body.nbCommentairesPublished, 1);
+            assert.strictEqual(response.body.nbCommentairesValidated, 1);
             assert.strictEqual(response.body.nbCommentairesRejected, 0);
             assert.strictEqual(response.body.nbCommentairesReported, 1);
         });
@@ -182,7 +182,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         it(`[${profileName}] can compute avis stats (notes)`, async () => {
 
             let app = await startServer();
-            let notes = buildComment({ status: 'published' });
+            let notes = buildComment({ status: 'validated' });
             delete notes.comment;
             let [token] = await Promise.all([
                 logUser(app),
@@ -196,7 +196,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.total, 1);
             assert.strictEqual(response.body.nbCommentaires, 0);
-            assert.strictEqual(response.body.nbCommentairesPublished, 0);
+            assert.strictEqual(response.body.nbCommentairesValidated, 0);
             assert.strictEqual(response.body.nbCommentairesRejected, 0);
             assert.strictEqual(response.body.nbCommentairesReported, 0);
         });

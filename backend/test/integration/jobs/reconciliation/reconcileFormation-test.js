@@ -438,7 +438,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     postalCode: '75019',
                 },
             },
-            status: 'published',
+            status: 'validated',
         });
         delete comment.comment;
 
@@ -454,7 +454,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.strictEqual(formation.avis[0].commentaire, undefined);
     });
 
-    it('should ignore not yet published comment', async () => {
+    it('should ignore not yet validated comment', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([

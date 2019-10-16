@@ -180,7 +180,7 @@ module.exports = {
             },
             date: date,
             accord: false,
-            status: 'published',
+            status: 'validated',
             qualification: 'positif',
             lastStatusUpdate: date,
             read: true,

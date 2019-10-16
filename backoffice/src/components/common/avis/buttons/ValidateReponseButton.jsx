@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { publishReponse } from '../../../../services/avisService';
 import Button from '../../Button';
 
-export default class PublishReponseButton extends React.Component {
+export default class ValidateReponseButton extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
@@ -23,10 +23,10 @@ export default class PublishReponseButton extends React.Component {
     };
 
     render() {
-        let isPublished = this.props.avis.reponse.status === 'published';
+        let isValidated = this.props.avis.reponse.status === 'validated';
         return (
             <div className="PublishReponseButton">
-                <Button size="large" color="green" disabled={isPublished} onClick={this.onClick}>
+                <Button size="large" color="green" disabled={isValidated} onClick={this.onClick}>
                     <i className="far fa-check-circle a-icon" />
                 </Button>
             </div>

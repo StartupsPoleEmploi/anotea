@@ -441,7 +441,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
-    it('should not return avis not published yet', async () => {
+    it('should not return avis not validated yet', async () => {
 
         let app = await startServer();
         let pseudo = randomize('pseudo');
@@ -553,7 +553,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ _id: '123', status: 'published' })),
+            insertIntoDatabase('comment', newComment({ _id: '123', status: 'validated' })),
             insertIntoDatabase('comment', newComment({ status: 'archived' }))
         ]);
 

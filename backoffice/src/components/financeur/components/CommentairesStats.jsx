@@ -13,7 +13,7 @@ const CommentairesStats = ({ stats }) => {
                 <Pie data={[
                     {
                         id: 'Validés',
-                        value: stats.nbCommentairesPublished,
+                        value: stats.nbCommentairesValidated,
                         label: 'commentaires',
                     },
                     {
@@ -25,7 +25,7 @@ const CommentairesStats = ({ stats }) => {
             </div>
             <div className="chart second">
                 <div className="title">Commentaires validés</div>
-                <div className="description">{stats.nbCommentairesPublished} commentaires au total</div>
+                <div className="description">{stats.nbCommentairesValidated} commentaires au total</div>
                 <Pie data={[
                     {
                         id: 'Positifs',

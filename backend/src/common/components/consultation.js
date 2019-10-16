@@ -114,7 +114,7 @@ module.exports = db => {
                 },
                 {
                     $set: {
-                        'status': status ? 'reported' : 'published',
+                        'status': status ? 'reported' : 'validated',
                         'read': true,
                         'lastStatusUpdate': new Date(),
                     }

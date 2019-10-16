@@ -94,9 +94,9 @@ export default class OrganismeAvisPanel extends React.Component {
 
                         <Filter
                             label="Répondus"
-                            isActive={() => query.reponseStatuses === 'none,published'}
+                            isActive={() => query.reponseStatuses === 'none,validated'}
                             onClick={() => onFilterClicked({
-                                reponseStatuses: 'none,published',
+                                reponseStatuses: 'none,validated',
                                 sortBy: 'reponse.lastStatusUpdate'
                             })}
                         />

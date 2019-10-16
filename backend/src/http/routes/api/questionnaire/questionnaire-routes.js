@@ -93,7 +93,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             accord: body.accord,
             accordEntreprise: body.accordEntreprise,
             read: false,
-            status: hasCommentaires ? 'none' : 'published',
+            status: hasCommentaires ? 'none' : 'validated',
             lastStatusUpdate: new Date(),
         };
 

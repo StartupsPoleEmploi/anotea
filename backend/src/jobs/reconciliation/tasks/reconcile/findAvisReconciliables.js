@@ -10,7 +10,7 @@ module.exports = async (db, intercarif, action) => {
 
     let comments = await db.collection('comment').find({
         'training.organisation.siret': new RegExp(`^${asSiren(siret)}`),
-        'status': { $in: ['published', 'rejected'] },
+        'status': { $in: ['validated', 'rejected'] },
         '$and': [
             {
                 '$or': [
