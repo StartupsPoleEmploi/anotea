@@ -1,5 +1,4 @@
 const md5 = require('md5');
-const moment = require('moment');
 const _ = require('lodash');
 const assert = require('assert');
 const md5File = require('md5-file/promise');
