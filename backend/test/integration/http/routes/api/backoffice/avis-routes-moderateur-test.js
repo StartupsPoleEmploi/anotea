@@ -165,6 +165,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.reponse.status, 'published');
     });
 
+    it('can not publish reponse of another region', async () => {
+
+        let app = await startServer();
+        let comment = newComment({ codeRegion: '6' });
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/publishReponse`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
+    });
+
     it('can reject reponse', async () => {
 
         let app = await startServer();
@@ -201,6 +217,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         });
     });
 
+    it('can not reject reponse of another region', async () => {
+
+        let app = await startServer();
+        let comment = newComment({ codeRegion: '6' });
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', comment),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/rejectReponse`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
+    });
+
     it('can edit an avis', async () => {
 
         let app = await startServer();
@@ -226,6 +258,29 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.ok(response.body.lastStatusUpdate);
     });
 
+    it('can not edit an avis of another region', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({
+                _id: id,
+                codeRegion: '7',
+                comment: {
+                    text: 'Génial'
+                },
+            })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/edit`)
+        .send({ text: 'New message' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
+    });
+
     it('can publish an avis', async () => {
 
         let app = await startServer();
@@ -245,6 +300,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.status, 'published');
         assert.deepStrictEqual(response.body.qualification, 'positif');
         assert.ok(response.body.lastStatusUpdate);
+    });
+
+    it('can not publish an avis of another region', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345', codeRegion: '7' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/publish`)
+        .send({ qualification: 'positif' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
     });
 
     it('can reject an avis', async () => {
@@ -268,6 +341,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.ok(response.body.lastStatusUpdate);
     });
 
+    it('can not reject an avis of another region', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345', codeRegion: '7' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/reject`)
+        .send({ qualification: 'injure' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
+    });
+
     it('can delete an avis', async () => {
 
         let app = await startServer();
@@ -287,7 +378,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(count, 0);
     });
 
-    it('can mask pseudo', async () => {
+    it('can not delete an avis of another region', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, codeRegion: '7' })),
+        ]);
+
+        let response = await request(app)
+        .delete(`/api/backoffice/avis/${id}`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
+    });
+
+
+    it('can un/mask pseudo', async () => {
 
         let app = await startServer();
         const id = new ObjectID();
@@ -303,18 +411,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.pseudoMasked, true);
-    });
 
-    it('can unmask pseudo', async () => {
-
-        let app = await startServer();
-        const id = new ObjectID();
-        let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment({ _id: id })),
-        ]);
-
-        let response = await request(app)
+        response = await request(app)
         .put(`/api/backoffice/avis/${id}/pseudo`)
         .send({ mask: false })
         .set('authorization', `Bearer ${token}`);
@@ -323,7 +421,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.pseudoMasked, false);
     });
 
-    it('can mask title', async () => {
+    it('can not un/mask pseudo of another region', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, codeRegion: '7' })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/pseudo`)
+        .send({ mask: true })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
+    });
+
+    it('can un/mask title', async () => {
 
         let app = await startServer();
         const id = new ObjectID();
@@ -339,24 +454,31 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.comment.titleMasked, true);
-    });
 
-    it('can unmask title', async () => {
-
-        let app = await startServer();
-        const id = new ObjectID();
-        let [token] = await Promise.all([
-            logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment({ _id: id })),
-        ]);
-
-        let response = await request(app)
+        response = await request(app)
         .put(`/api/backoffice/avis/${id}/title`)
         .send({ mask: false })
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.comment.titleMasked, false);
+    });
+
+    it('can not un/mask title of another region', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, codeRegion: '7' })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/title`)
+        .send({ mask: true })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 404);
     });
 
     it('can not reject unknown avis', async () => {

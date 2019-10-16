@@ -3,17 +3,22 @@ const { IdNotFoundError } = require('./../errors');
 
 module.exports = db => {
 
-    const saveEvent = function(id, type, source) {
-        db.collection('events').insertOne({ adviceId: id, date: new Date(), type: type, source: source });
+    const saveEvent = (id, type, data) => {
+        db.collection('events').insertOne({ adviceId: id, date: new Date(), type: type, source: data });
     };
+
+    const getShield = user => user ? { codeRegion: user.codeRegion } : {};
 
     return {
         publish: async (id, qualification, options = {}) => {
 
-            let oid = new ObjectID(id);
+            let { user } = options;
 
             let result = await db.collection('comment').findOneAndUpdate(
-                { _id: oid },
+                {
+                    _id: new ObjectID(id),
+                    ...getShield(user),
+                },
                 {
                     $set: {
                         status: 'published',
@@ -30,9 +35,8 @@ module.exports = db => {
 
             saveEvent(id, 'publish', {
                 app: 'moderation',
-                user: 'admin',
+                user: user ? user.id : 'admin',
                 profile: 'moderateur',
-                ...(options.events || {}),
             });
 
             return result.value;
@@ -41,10 +45,13 @@ module.exports = db => {
         },
         reject: async (id, qualification, options = {}) => {
 
-            let oid = new ObjectID(id);
+            let { user } = options;
 
             let result = await db.collection('comment').findOneAndUpdate(
-                { _id: oid },
+                {
+                    _id: new ObjectID(id),
+                    ...getShield(user),
+                },
                 {
                     $set: {
                         status: 'rejected',
@@ -61,9 +68,8 @@ module.exports = db => {
 
             saveEvent(id, 'reject', {
                 app: 'moderation',
-                user: 'admin',
+                user: user ? user.id : 'admin',
                 profile: 'moderateur',
-                ...(options.events || {}),
             });
 
             return result.value;
@@ -72,9 +78,13 @@ module.exports = db => {
 
             let oid = new ObjectID(id);
             let previous = await db.collection('comment').findOne({ _id: oid });
+            let { user } = options;
 
             let result = await db.collection('comment').findOneAndUpdate(
-                { _id: oid },
+                {
+                    _id: oid,
+                    ...getShield(user),
+                },
                 {
                     $set: {
                         'comment.text': text,
@@ -100,37 +110,43 @@ module.exports = db => {
 
             saveEvent(id, 'edit', {
                 app: 'moderation',
-                user: 'admin',
+                user: user ? user.id : 'admin',
                 profile: 'moderateur',
-                ...(options.events || {}),
             });
 
             return result.value;
         },
         delete: async (id, options = {}) => {
 
-            let oid = new ObjectID(id);
+            let { user } = options;
 
-            let result = await db.collection('comment').removeOne({ _id: oid });
+            let results = await db.collection('comment').removeOne({
+                _id: new ObjectID(id),
+                ...getShield(user),
+            });
 
-            if (!result.result.n === 1) {
+            if (results.result.n !== 1) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
             saveEvent(id, 'delete', {
                 app: 'moderation',
-                user: 'admin',
+                user: user ? user.id : 'admin',
                 profile: 'moderateur',
-                ...(options.events || {}),
             });
         },
-        maskPseudo: async (id, mask, options) => {
+        maskPseudo: async (id, mask, options = {}) => {
 
-            let oid = new ObjectID(id);
+            let { user } = options;
 
             let result = await db.collection('comment').findOneAndUpdate(
-                { _id: oid },
-                { $set: { pseudoMasked: mask } },
+                {
+                    _id: new ObjectID(id),
+                    ...getShield(user),
+                },
+                {
+                    $set: { pseudoMasked: mask }
+                },
                 { returnOriginal: false },
             );
 
@@ -140,19 +156,21 @@ module.exports = db => {
 
             saveEvent(id, 'maskPseudo', {
                 app: 'moderation',
-                user: 'admin',
+                user: user ? user.id : 'admin',
                 profile: 'moderateur',
-                ...(options.events || {}),
             });
 
             return result.value;
         },
-        maskTitle: async (id, mask, options) => {
+        maskTitle: async (id, mask, options = {}) => {
 
-            let oid = new ObjectID(id);
+            let { user } = options;
 
             let result = await db.collection('comment').findOneAndUpdate(
-                { _id: oid },
+                {
+                    _id: new ObjectID(id),
+                    ...getShield(user),
+                },
                 {
                     $set: {
                         'comment.titleMasked': mask
@@ -167,18 +185,21 @@ module.exports = db => {
 
             saveEvent(id, 'maskTitle', {
                 app: 'moderation',
-                user: 'admin',
+                user: user ? user.id : 'admin',
                 profile: 'moderateur',
-                ...(options.events || {}),
             });
 
             return result.value;
         },
-        publishReponse: async (id, options) => {
-            let oid = new ObjectID(id);
+        publishReponse: async (id, options = {}) => {
+
+            let { user } = options;
 
             let result = await db.collection('comment').findOneAndUpdate(
-                { _id: oid },
+                {
+                    _id: new ObjectID(id),
+                    ...getShield(user),
+                },
                 {
                     $set: {
                         'reponse.status': 'published',
@@ -194,18 +215,21 @@ module.exports = db => {
 
             saveEvent(id, 'publishReponse', {
                 app: 'moderation',
-                user: 'admin',
+                user: user ? user.id : 'admin',
                 profile: 'moderateur',
-                ...(options.events || {}),
             });
 
             return result.value;
         },
-        rejectReponse: async (id, options) => {
-            let oid = new ObjectID(id);
+        rejectReponse: async (id, options = {}) => {
+
+            let { user } = options;
 
             let result = await db.collection('comment').findOneAndUpdate(
-                { _id: oid },
+                {
+                    _id: new ObjectID(id),
+                    ...getShield(user),
+                },
                 {
                     $set: {
                         'reponse.status': 'rejected',
@@ -221,9 +245,8 @@ module.exports = db => {
 
             saveEvent(id, 'rejectReponse', {
                 app: 'moderation',
-                user: 'admin',
+                user: user ? user.id : 'admin',
                 profile: 'moderateur',
-                ...(options.events || {}),
             });
 
             return result.value;
