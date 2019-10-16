@@ -17,7 +17,7 @@ module.exports = ({ db, logger, configuration, peconnect }) => {
                             const firstName = data.given_name;
 
                             const filter = { 'trainee.email': email, 'trainee.name': name, 'trainee.firstName': firstName, 'avisCreated': false };
-                            const trainee = await db.collection('trainee').find(filter).sort({ importDate: -1 }).limit(1).toArray();
+                            const trainee = await db.collection('trainee').find(filter).sort({ 'training.scheduledEndDate': -1 }).limit(1).toArray();
                             if (trainee.length === 1) {
                                 await db.collection('trainee').updateOne(filter, { $set: { 'tracking.peConnectSucceed': new Date() } });
                                 logger.info('User successfully logged in throw PE connect');
