@@ -15,11 +15,11 @@ const carousels = {
             content:
                 'Donnez votre avis'
         }, {
-            image: require('./images/Stag_AvisPublié.png'),
+            image: require('./images/Stag_AvisRejetéAlerte.png'),
             content:
                 'Avis rejeté pour Alerte'
         }, {
-            image: require('./images/Stag_AvisRejeté.png'),
+            image: require('./images/Stag_AvisRejetéInjure.png'),
             content:
                 'Avis rejeté pour Injure'
         }
