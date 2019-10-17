@@ -116,7 +116,7 @@ export default class Questionnaire extends Component {
                 this.props.onSubmit(data);
                 this.scrollToTop();
             } catch (ex) {
-                console.error('An error occured', ex);
+                console.log(ex)
                 this.setState({ showErrorMessage: true });
             }
 

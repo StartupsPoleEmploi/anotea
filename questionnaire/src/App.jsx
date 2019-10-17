@@ -35,6 +35,11 @@ class App extends Component {
         this.fetchStagiaire(this.state.token);
     }
 
+    onSubmit = (data) => {
+        // TODO merge PE-connect first
+        this.setState({ showRemerciements: true });
+    }
+
     render() {
         let { stagiaire, infosRegion } = this.state;
 
@@ -53,7 +58,7 @@ class App extends Component {
                     <Remerciements stagiaire={stagiaire} infosRegion={infosRegion} /> :
                     <Questionnaire
                         stagiaire={stagiaire}
-                        onSubmit={() => this.setState({ showRemerciements: true })} />
+                        onSubmit={this.onSubmit} />
                 }
                 <Footer stagiaire={stagiaire} infosRegion={infosRegion} />
             </div>
