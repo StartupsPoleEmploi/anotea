@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import Stagiaire from './Stagiaire';
 import Titre from './Titre';
 import Commentaire from './Commentaire';
 import Formation from './Formation';
@@ -20,22 +19,24 @@ import MarkAsReadButton from './buttons/MarkAsReadButton';
 import ReportButton from './buttons/ReportButton';
 import EditReponseButton from './buttons/EditReponseButton';
 import ReponseEditor from './ReponseEditor';
+import Status from './Status';
+import Stars from './Stars';
 
 export default class Avis extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        showStatus: PropTypes.bool,
-        showReconcilitation: PropTypes.bool,
         showReponse: PropTypes.bool,
         showReponseButtons: PropTypes.bool,
         showModerationButtons: PropTypes.bool,
         showModerationReponseButtons: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
+        renderStatus: PropTypes.func,
     };
 
     static defaultProps = {
         onChange: () => ({}),
+        renderStatus: avis => <Status avis={avis} />,
     };
 
     constructor(props) {
@@ -79,8 +80,8 @@ export default class Avis extends React.Component {
 
     render() {
         let {
-            avis, showStatus, showReponse, showReponseButtons,
-            showModerationButtons, showModerationReponseButtons, showReconcilitation,
+            avis, renderStatus, showReponse, showReponseButtons,
+            showModerationButtons, showModerationReponseButtons,
         } = this.props;
         let { message, showReponseEditor } = this.state;
         let isLocalMessage = _.get(message, 'type') === 'local';
@@ -104,7 +105,8 @@ export default class Avis extends React.Component {
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
                         <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
-                                <Stagiaire avis={avis} showStatus={showStatus} showReconcilitation={showReconcilitation} />
+                                <Stars note={avis.rates.global} />
+                                {renderStatus(avis)}
                             </div>
 
                             <div className="mb-1">

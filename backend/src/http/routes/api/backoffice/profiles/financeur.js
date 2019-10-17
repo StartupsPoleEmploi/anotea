@@ -72,7 +72,6 @@ module.exports = (db, regions, user) => {
                     ...(_.isBoolean(commentaires) ? { comment: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
                 };
-
             },
         }
     };

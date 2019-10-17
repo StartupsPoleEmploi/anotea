@@ -7,7 +7,6 @@ const { execute } = require('../../job-utils');
 const createIndexes = require('../indexes/tasks/createIndexes');
 const createAccounts = require('./tasks/createAccounts');
 const importIntercarif = require('../../import/intercarif/importIntercarif');
-const reconcile = require('../../reconciliation/tasks/reconcile');
 const synchronizeOrganismesWithAccounts = require('../../organismes/tasks/synchronizeAccountsWithIntercarif');
 const computeOrganismesScore = require('../../organismes/tasks/computeScore');
 const resetPasswords = require('../reset/tasks/resetPasswords');
@@ -15,6 +14,9 @@ const createStagiaires = require('./tasks/createStagiaires');
 const createAvis = require('./tasks/createAvis');
 const emulateBackofficeActions = require('./tasks/emulateBackofficeActions');
 const importCommunes = require('../../import/communes/tasks/importCommunes');
+const reconcile = require('../../reconciliation/tasks/reconcile');
+const addReconciliationAvisMetadata = require('../../reconciliation/tasks/addReconciliationAvisMetadata');
+const removePreviousImports = require('../../reconciliation/tasks/removePreviousImports');
 
 cli.description('Inject dataset')
 .option('-d, --drop', 'Drop database')
@@ -57,6 +59,8 @@ execute(async ({ db, logger, moderation, consultation, regions, passwords }) => 
     await importCommunes(db, logger, communes, cedex);
 
     await reconcile(db, logger);
+    await addReconciliationAvisMetadata(db);
+    await removePreviousImports(db);
 
     return { dataset: 'ready' };
 });

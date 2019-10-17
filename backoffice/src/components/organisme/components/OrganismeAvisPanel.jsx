@@ -12,6 +12,7 @@ import Pagination from '../../common/page/panel/pagination/Pagination';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../common/Loader';
 import { getAvisStats } from '../../../services/statsService';
+import Status from '../../common/avis/Status';
 
 export default class OrganismeAvisPanel extends React.Component {
 
@@ -138,10 +139,9 @@ export default class OrganismeAvisPanel extends React.Component {
                             renderAvis={avis => {
                                 return <Avis
                                     avis={avis}
-                                    showStatus={true}
-                                    showReconcilitation={true}
                                     showReponse={true}
                                     showReponseButtons={true}
+                                    renderStatus={avis => <Status avis={avis} showReconciliation={true} />}
                                     onChange={() => {
                                         return Promise.all([
                                             this.search({ silent: true }),

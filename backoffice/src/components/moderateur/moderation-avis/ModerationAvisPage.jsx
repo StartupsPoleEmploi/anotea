@@ -13,6 +13,7 @@ import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import { searchAvis } from '../../../services/avisService';
 import { getAvisStats } from '../../../services/statsService';
+import Status from '../../common/avis/Status';
 
 export default class ModerationAvisPage extends React.Component {
 
@@ -183,8 +184,8 @@ export default class ModerationAvisPage extends React.Component {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            showStatus={query.statuses !== 'none'}
                                             showModerationButtons={true}
+                                            renderStatus={avis => query.statuses !== 'none' ? <Status avis={avis} /> : <div />}
                                             onChange={() => {
                                                 return Promise.all([
                                                     this.search({ silent: true }),
