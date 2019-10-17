@@ -9,21 +9,16 @@
   padding: 1rem 1.5rem;
 
   .title {
-    margin-bottom: 0.5rem;
+    font-weight: $font-weight-700;
+  }
 
-    &:first-child {
-      font-weight: $font-weight-700;
-    }
-
-    .date {
-      font-weight: $font-weight-400;
-      font-size: 0.875rem;
-      color: $color-grey-50;
-    }
+  .date {
+    font-weight: $font-weight-400;
+    font-size: 0.75rem;
+    color: $color-grey-50;
   }
 
   .status {
-
     font-size: 0.75rem;
 
     &.validated {
