@@ -19,7 +19,7 @@ import MarkAsReadButton from './buttons/MarkAsReadButton';
 import ReportButton from './buttons/ReportButton';
 import EditReponseButton from './buttons/EditReponseButton';
 import ReponseEditor from './ReponseEditor';
-import Status from './Status';
+import { Status } from './Status';
 import Stars from './Stars';
 
 export default class Avis extends React.Component {

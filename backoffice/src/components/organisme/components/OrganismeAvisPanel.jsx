@@ -12,7 +12,7 @@ import Pagination from '../../common/page/panel/pagination/Pagination';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../common/Loader';
 import { getAvisStats } from '../../../services/statsService';
-import Status from '../../common/avis/Status';
+import { ReconciliationStatus, Status } from '../../common/avis/Status';
 
 export default class OrganismeAvisPanel extends React.Component {
 
@@ -141,7 +141,12 @@ export default class OrganismeAvisPanel extends React.Component {
                                     avis={avis}
                                     showReponse={true}
                                     showReponseButtons={true}
-                                    renderStatus={avis => <Status avis={avis} showReconciliation={true} />}
+                                    renderStatus={avis => {
+                                        return query.statuses === 'reported' ?
+                                            <Status avis={avis} /> :
+                                            <ReconciliationStatus avis={avis} />;
+
+                                    }}
                                     onChange={() => {
                                         return Promise.all([
                                             this.search({ silent: true }),

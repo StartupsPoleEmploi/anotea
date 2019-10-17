@@ -10,7 +10,7 @@ import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import { searchAvis } from '../../../services/avisService';
 import { getAvisStats } from '../../../services/statsService';
-import Status from '../../common/avis/Status';
+import { Status } from '../../common/avis/Status';
 
 export default class ModerationReponsesPage extends React.Component {
 
