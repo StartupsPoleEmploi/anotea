@@ -4,7 +4,7 @@ import _ from 'lodash';
 import PrettyDate from '../PrettyDate';
 import './Status.scss';
 
-export const Status = ({ avis }) => {
+export const Workflow = ({ avis, showStatus }) => {
 
     const getStatus = avis => {
 
@@ -46,15 +46,21 @@ export const Status = ({ avis }) => {
             <div className="date">
                 le <PrettyDate date={new Date(avis.date)} /> &nbsp;
             </div>
-            {getStatus(avis)}
+            {showStatus &&
+            getStatus(avis)
+            }
         </div>
     );
 };
-Status.propTypes = {
+Workflow.propTypes = {
     avis: PropTypes.object.isRequired,
+    showStatus: PropTypes.bool,
+};
+Workflow.defaultProps = {
+    showStatus: true,
 };
 
-export const ReconciliationStatus = ({ avis }) => {
+export const ReconciliationWorkflow = ({ avis }) => {
 
     const getStatus = avis => {
         let reconciliations = _.get(avis, 'meta.reconciliations', []);
@@ -81,7 +87,7 @@ export const ReconciliationStatus = ({ avis }) => {
         </div>
     );
 };
-ReconciliationStatus.propTypes = {
+ReconciliationWorkflow.propTypes = {
     avis: PropTypes.object.isRequired,
 };
 

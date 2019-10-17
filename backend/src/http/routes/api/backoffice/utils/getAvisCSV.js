@@ -10,7 +10,7 @@ let getStatus = comment => {
     } else if (comment.status === 'validated') {
         return 'Validé';
     } else {
-        return 'En attente de modération';
+        return 'En cours de modération';
     }
 };
 
@@ -21,7 +21,7 @@ let getReponseStatus = reponse => {
         case 'validated':
             return 'Validée';
         default:
-            return 'En attente de modération';
+            return 'En cours de modération';
     }
 };
 

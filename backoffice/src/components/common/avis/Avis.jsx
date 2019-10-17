@@ -19,7 +19,7 @@ import MarkAsReadButton from './buttons/MarkAsReadButton';
 import ReportButton from './buttons/ReportButton';
 import EditReponseButton from './buttons/EditReponseButton';
 import ReponseEditor from './ReponseEditor';
-import { Status } from './Status';
+import { Workflow } from './Workflow';
 import Stars from './Stars';
 
 export default class Avis extends React.Component {
@@ -31,12 +31,12 @@ export default class Avis extends React.Component {
         showModerationButtons: PropTypes.bool,
         showModerationReponseButtons: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
-        renderStatus: PropTypes.func,
+        renderWorkflow: PropTypes.func,
     };
 
     static defaultProps = {
         onChange: () => ({}),
-        renderStatus: avis => <Status avis={avis} />,
+        renderWorkflow: avis => <Workflow avis={avis} />,
     };
 
     constructor(props) {
@@ -80,7 +80,7 @@ export default class Avis extends React.Component {
 
     render() {
         let {
-            avis, renderStatus, showReponse, showReponseButtons,
+            avis, renderWorkflow, showReponse, showReponseButtons,
             showModerationButtons, showModerationReponseButtons,
         } = this.props;
         let { message, showReponseEditor } = this.state;
@@ -106,7 +106,7 @@ export default class Avis extends React.Component {
                         <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
                                 <Stars note={avis.rates.global} />
-                                {renderStatus(avis)}
+                                {renderWorkflow(avis)}
                             </div>
 
                             <div className="mb-1">

@@ -10,7 +10,7 @@ import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import { searchAvis } from '../../../services/avisService';
 import { getAvisStats } from '../../../services/statsService';
-import { Status } from '../../common/avis/Status';
+import { Workflow } from '../../common/avis/Workflow';
 
 export default class ModerationReponsesPage extends React.Component {
 
@@ -146,7 +146,9 @@ export default class ModerationReponsesPage extends React.Component {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            renderStatus={() => query.statuses !== 'reported' ? <div /> : <Status avis={avis} />}
+                                            renderWorkflow={() => {
+                                                return <Workflow avis={avis} showStatus={query.statuses !== 'reported'} />;
+                                            }}
                                             showReponse={query.statuses !== 'reported'}
                                             showModerationButtons={query.statuses === 'reported'}
                                             showModerationReponseButtons={query.statuses !== 'reported'}

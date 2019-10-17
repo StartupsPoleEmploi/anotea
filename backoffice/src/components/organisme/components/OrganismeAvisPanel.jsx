@@ -12,7 +12,7 @@ import Pagination from '../../common/page/panel/pagination/Pagination';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../common/Loader';
 import { getAvisStats } from '../../../services/statsService';
-import { ReconciliationStatus, Status } from '../../common/avis/Status';
+import { ReconciliationWorkflow, Workflow } from '../../common/avis/Workflow';
 
 export default class OrganismeAvisPanel extends React.Component {
 
@@ -141,10 +141,10 @@ export default class OrganismeAvisPanel extends React.Component {
                                     avis={avis}
                                     showReponse={true}
                                     showReponseButtons={true}
-                                    renderStatus={avis => {
+                                    renderWorkflow={avis => {
                                         return query.statuses === 'reported' ?
-                                            <Status avis={avis} /> :
-                                            <ReconciliationStatus avis={avis} />;
+                                            <Workflow avis={avis} /> :
+                                            <ReconciliationWorkflow avis={avis} />;
 
                                     }}
                                     onChange={() => {
