@@ -32,7 +32,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             accordEntreprise: true,
         });
 
-        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 201);
         assert.deepStrictEqual(_.omit(response.body.stagiaire, ['_id', 'token']), {
             campaign: 'test-campaign',
             importDate: date.toJSON(),
@@ -223,7 +223,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             accordEntreprise: true,
         });
 
-        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 201);
 
         let result = await db.collection('comment').findOne({ token: trainee.token });
         assert.ok(result.lastStatusUpdate);
@@ -298,7 +298,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             },
         });
 
-        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 201);
 
         let result = await db.collection('comment').findOne({ token: trainee.token });
         assert.deepStrictEqual(result.comment.text, 'texte');
@@ -350,7 +350,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             accord: true,
             accordEntreprise: true,
         });
-        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.statusCode, 201);
 
         response = await request(app)
         .post(`/api/questionnaire/${trainee.token}`)
@@ -364,7 +364,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             accord: true,
             accordEntreprise: true,
         });
-        assert.strictEqual(response.statusCode, 423);
+        assert.strictEqual(response.body.alreadySent, true);
     });
 
     it('can check badwords (invalid)', async () => {

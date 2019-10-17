@@ -169,8 +169,9 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         let stagiaire = req.trainee;
 
         if (stagiaire.avisCreated) {
-            res.send({ stagiaire, infosRegion: await getInfosRegion(stagiaire), alreadySent: true });
+            res.status(200).send({ stagiaire, infosRegion: await getInfosRegion(stagiaire), alreadySent: true });
             logger.error('Already sent');
+            return;
         }
 
         let resultNotes = validateNotes(req.body);
@@ -192,7 +193,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             throw new BadDataError();
         }
 
-        return res.send({ stagiaire, infosRegion: await getInfosRegion(stagiaire), alreadySent: false });
+        return res.status(201).send({ stagiaire, infosRegion: await getInfosRegion(stagiaire), alreadySent: false });
     }));
 
     return router;
