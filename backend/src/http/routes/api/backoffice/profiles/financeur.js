@@ -9,6 +9,7 @@ module.exports = (db, regions, user) => {
     let region = regions.findRegionByCodeRegion(user.codeRegion);
 
     return {
+        type: 'financeur',
         getUser: () => user,
         getShield: () => ({}),
         validators: {

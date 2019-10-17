@@ -8,6 +8,7 @@ module.exports = (db, regions, user) => {
     let region = regions.findRegionByCodeRegion(user.codeRegion);
 
     return {
+        type: 'organisme',
         getUser: () => user,
         getShield: () => ({ 'training.organisation.siret': new RegExp(`^${user.siret}`) }),
         validators: {

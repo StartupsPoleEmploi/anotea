@@ -1,5 +1,5 @@
 const ObjectID = require('mongodb').ObjectID;
-const { IdNotFoundError } = require('./../errors');
+const { IdNotFoundError, ForbiddenError } = require('./../errors');
 
 module.exports = db => {
 
@@ -7,13 +7,22 @@ module.exports = db => {
         db.collection('events').insertOne({ adviceId: id, date: new Date(), type: type, source: data });
     };
 
+    const ensureProfile = (profile, expected) => {
+        if (profile && profile.type !== expected) {
+            throw new ForbiddenError(`User can not perform this action`);
+        }
+        return profile;
+    };
+
     return {
         publish: async (id, qualification, options = {}) => {
+
+            let profile = ensureProfile(options.profile, 'moderateur');
 
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
@@ -31,7 +40,7 @@ module.exports = db => {
 
             saveEvent(id, 'publish', {
                 app: 'moderation',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
 
@@ -41,10 +50,12 @@ module.exports = db => {
         },
         reject: async (id, qualification, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'moderateur');
+
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
@@ -62,7 +73,7 @@ module.exports = db => {
 
             saveEvent(id, 'reject', {
                 app: 'moderation',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
 
@@ -70,13 +81,14 @@ module.exports = db => {
         },
         edit: async (id, text, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'moderateur');
             let oid = new ObjectID(id);
             let previous = await db.collection('comment').findOne({ _id: oid });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: oid,
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
@@ -103,7 +115,7 @@ module.exports = db => {
 
             saveEvent(id, 'edit', {
                 app: 'moderation',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
 
@@ -111,9 +123,11 @@ module.exports = db => {
         },
         delete: async (id, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'moderateur');
+
             let results = await db.collection('comment').removeOne({
                 _id: new ObjectID(id),
-                ...(options.profile ? options.profile.getShield() : {}),
+                ...(profile ? profile.getShield() : {}),
             });
 
             if (results.result.n !== 1) {
@@ -122,16 +136,18 @@ module.exports = db => {
 
             saveEvent(id, 'delete', {
                 app: 'moderation',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
         },
         maskPseudo: async (id, mask, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'moderateur');
+
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: { pseudoMasked: mask }
@@ -145,7 +161,7 @@ module.exports = db => {
 
             saveEvent(id, 'maskPseudo', {
                 app: 'moderation',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
 
@@ -153,10 +169,12 @@ module.exports = db => {
         },
         maskTitle: async (id, mask, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'moderateur');
+
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
@@ -172,7 +190,7 @@ module.exports = db => {
 
             saveEvent(id, 'maskTitle', {
                 app: 'moderation',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
 
@@ -180,10 +198,12 @@ module.exports = db => {
         },
         publishReponse: async (id, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'moderateur');
+
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
@@ -200,7 +220,7 @@ module.exports = db => {
 
             saveEvent(id, 'publishReponse', {
                 app: 'moderation',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
 
@@ -208,10 +228,12 @@ module.exports = db => {
         },
         rejectReponse: async (id, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'moderateur');
+
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
@@ -228,7 +250,7 @@ module.exports = db => {
 
             saveEvent(id, 'rejectReponse', {
                 app: 'moderation',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
 
@@ -236,10 +258,12 @@ module.exports = db => {
         },
         addReponse: async (id, text, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'organisme');
+
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
@@ -263,17 +287,19 @@ module.exports = db => {
                 app: 'organisation',
                 profile: 'organisme',
                 reponse: text,
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
             });
 
             return result.value;
         },
         removeReponse: async (id, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'organisme');
+
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $unset: {
@@ -290,17 +316,19 @@ module.exports = db => {
             saveEvent(id, 'reponse-removed', {
                 app: 'organisation',
                 profile: 'organisme',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
             });
 
             return result.value;
         },
         markAsRead: async (id, status, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'organisme');
+
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
@@ -317,17 +345,19 @@ module.exports = db => {
             saveEvent(id, 'mark-as-read', {
                 app: 'organisation',
                 profile: 'organisme',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
             });
 
             return result.value;
         },
         report: async (id, status, options = {}) => {
 
+            let profile = ensureProfile(options.profile, 'organisme');
+
             let result = await db.collection('comment').findOneAndUpdate(
                 {
                     _id: new ObjectID(id),
-                    ...(options.profile ? options.profile.getShield() : {}),
+                    ...(profile ? profile.getShield() : {}),
                 },
                 {
                     $set: {
@@ -349,7 +379,7 @@ module.exports = db => {
             saveEvent(id, 'unreport', {
                 app: 'organisation',
                 profile: 'organisme',
-                user: options.profile ? options.profile.getUser().id : 'admin',
+                user: profile ? profile.getUser().id : 'admin',
             });
 
             return result.value;
