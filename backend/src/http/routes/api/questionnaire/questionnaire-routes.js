@@ -155,6 +155,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
 
         let stagiaire = req.trainee;
+
+        if (stagiaire.training.scheduledEndDate < moment(`${moment().year() - 1}-01-01 00Z`).toDate()) {
+            throw Boom.notFound('Questionnaire plus disponible');
+        }
+
         let [comment, infosRegion] = await Promise.all([
             db.collection('comment').findOne({
                 'token': req.params.token,
