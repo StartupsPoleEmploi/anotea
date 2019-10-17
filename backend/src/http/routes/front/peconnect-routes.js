@@ -1,4 +1,5 @@
 const express = require('express');
+const moment = require('moment');
 
 module.exports = ({ db, logger, configuration, peconnect }) => {
     
@@ -16,7 +17,7 @@ module.exports = ({ db, logger, configuration, peconnect }) => {
                             const name = data.family_name;
                             const firstName = data.given_name;
 
-                            const filter = { 'trainee.email': email, 'trainee.name': name, 'trainee.firstName': firstName, 'avisCreated': false };
+                            const filter = { 'trainee.email': email, 'trainee.name': name, 'trainee.firstName': firstName, 'avisCreated': false, 'training.scheduledEndDate': { $gte: moment(`${moment().year() - 1}-01-01 00Z`).toDate() } };
                             const trainee = await db.collection('trainee').find(filter).sort({ 'training.scheduledEndDate': -1 }).limit(1).toArray();
                             if (trainee.length === 1) {
                                 await db.collection('trainee').updateOne(filter, { $set: { 'tracking.peConnectSucceed': new Date() } });
