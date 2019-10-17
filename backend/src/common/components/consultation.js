@@ -117,6 +117,9 @@ module.exports = db => {
                         'status': status ? 'reported' : 'validated',
                         'read': true,
                         'lastStatusUpdate': new Date(),
+                    },
+                    $unset: {
+                        'qualification': 1,
                     }
                 },
                 { returnOriginal: false },

@@ -276,7 +276,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
     it('can un/report avis', async () => {
 
         let app = await startServer();
-        const comment = buildComment({ read: false });
+        const comment = buildComment({ read: false, qualification: 'positif' });
         let [token] = await Promise.all([
             logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111111111'),
             insertIntoDatabase('comment', comment),
@@ -288,8 +288,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.status, 'reported');
-        assert.deepStrictEqual(response.body.read, true);
+        assert.strictEqual(response.body.status, 'reported');
+        assert.strictEqual(response.body.read, true);
 
         response = await request(app)
         .put(`/api/backoffice/avis/${comment._id}/report`)
@@ -297,8 +297,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.status, 'validated');
-        assert.deepStrictEqual(response.body.read, true);
+        assert.strictEqual(response.body.status, 'validated');
+        assert.strictEqual(response.body.read, true);
+        assert.strictEqual(response.body.qualification, undefined);
     });
 
     it('can not un/report avis of another organisme', async () => {
@@ -333,7 +334,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.read, true);
+        assert.strictEqual(response.body.read, true);
 
         response = await request(app)
         .put(`/api/backoffice/avis/${comment._id}/read`)
@@ -341,7 +342,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body.read, false);
+        assert.strictEqual(response.body.read, false);
     });
 
     it('can mark avis as read/unread of another organisme', async () => {
