@@ -8,6 +8,8 @@ module.exports = (db, user) => {
     const getStagiaire = email => db.collection('trainee').findOne({ 'trainee.email': email });
 
     return {
+        getUser: () => user,
+        getShield: () => ({ codeRegion: user.codeRegion }),
         validators: {
             form: () => {
                 return {
@@ -53,6 +55,6 @@ module.exports = (db, user) => {
                 };
 
             },
-        }
+        },
     };
 };

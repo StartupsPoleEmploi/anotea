@@ -9,6 +9,8 @@ module.exports = (db, regions, user) => {
     let region = regions.findRegionByCodeRegion(user.codeRegion);
 
     return {
+        getUser: () => user,
+        getShield: () => ({}),
         validators: {
             form: () => {
                 return {
@@ -73,6 +75,6 @@ module.exports = (db, regions, user) => {
                     ...(statuses ? { status: { $in: statuses } } : {}),
                 };
             },
-        }
+        },
     };
 };
