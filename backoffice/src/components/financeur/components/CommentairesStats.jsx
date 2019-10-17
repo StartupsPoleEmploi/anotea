@@ -21,6 +21,16 @@ const CommentairesStats = ({ stats }) => {
                         value: stats.nbCommentairesRejected,
                         label: 'commentaires',
                     },
+                    {
+                        id: 'Signalés',
+                        value: stats.nbCommentairesReported,
+                        label: 'commentaires',
+                    },
+                    {
+                        id: 'Archived',
+                        value: stats.nbCommentairesArchived,
+                        label: 'commentaires',
+                    },
                 ]} />
             </div>
             <div className="chart second">

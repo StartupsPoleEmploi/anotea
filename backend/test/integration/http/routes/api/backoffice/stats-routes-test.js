@@ -147,6 +147,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 nbCommentairesValidated: 3,
                 nbCommentairesRejected: 0,
                 nbCommentairesReported: 0,
+                nbCommentairesArchived: 0,
                 nbCommentairesPositifs: 3,
                 nbCommentairesNegatifs: 0,
                 nbCommentairesAlertes: 0,
@@ -177,6 +178,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             assert.strictEqual(response.body.nbCommentairesValidated, 1);
             assert.strictEqual(response.body.nbCommentairesRejected, 0);
             assert.strictEqual(response.body.nbCommentairesReported, 1);
+            assert.strictEqual(response.body.nbCommentairesArchived, 0);
         });
 
         it(`[${profileName}] can compute avis stats (notes)`, async () => {
@@ -199,6 +201,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             assert.strictEqual(response.body.nbCommentairesValidated, 0);
             assert.strictEqual(response.body.nbCommentairesRejected, 0);
             assert.strictEqual(response.body.nbCommentairesReported, 0);
+            assert.strictEqual(response.body.nbCommentairesArchived, 0);
         });
 
         it(`[${profileName}] can compute stagiaires stats`, async () => {
