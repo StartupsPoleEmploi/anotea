@@ -41,7 +41,7 @@ const Pie = ({ data }) => {
                                 tooltip={element => {
                                     return (
                                         <div style={{ fontSize: '10px' }}>
-                                            {prettyLabel(element)}
+                                            {element.value} {prettyLabel(element)}
                                         </div>
                                     );
                                 }}
