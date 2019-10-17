@@ -2,7 +2,7 @@ const configuration = require('config');
 const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
-const logger = require('../../../../../helpers/fake-logger');
+const logger = require('../../../../../helpers/components/fake-logger');
 const AccountMailer = require('../../../../../../src/jobs/mailing/organismes/account/AccountMailer');
 const { successMailer, errorMailer } = require('../../fake-mailers');
 

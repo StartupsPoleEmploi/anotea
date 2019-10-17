@@ -1,6 +1,6 @@
 const assert = require('assert');
 const _ = require('lodash');
-const logger = require('../../../helpers/fake-logger');
+const logger = require('../../../helpers/components/fake-logger');
 const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newComment } = require('../../../helpers/data/dataset');
 const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const _ = require('lodash');
-const logger = require('../../../helpers/fake-logger');
+const logger = require('../../../helpers/components/fake-logger');
 const ObjectID = require('mongodb').ObjectID;
 const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newComment, randomize, newIntercarif } = require('../../../helpers/data/dataset');

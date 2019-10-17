@@ -4,13 +4,21 @@ const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
 const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('../../../../../helpers/data/dataset');
+let passwords = require('../../../../../../src/common/components/passwords');
 
-describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoDatabase, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoDatabase, getTestDatabase, getComponents }) => {
+
+    let startServerWithRealAuth = async () => {
+        let { configuration } = await getComponents();
+        return startServer({ passwords: passwords(configuration) });
+    };
 
     it('can login as moderator', async () => {
 
-        let app = await startServer();
-        await insertIntoDatabase('accounts', newModerateurAccount());
+        let app = await startServerWithRealAuth();
+        await insertIntoDatabase('accounts', newModerateurAccount({
+            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C'
+        }));
 
         let response = await request(app)
         .post('/api/backoffice/login')
@@ -34,8 +42,9 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
     it('can login as organisme', async () => {
 
-        let app = await startServer();
+        let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newOrganismeAccount({
+            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             meta: {
                 siretAsString: '6080274100045'
             }
@@ -65,8 +74,9 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
     it('can login as organisme (email)', async () => {
 
-        let app = await startServer();
+        let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newOrganismeAccount({
+            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             courriel: 'contact@poleemploi-formation.fr',
             meta: {
                 siretAsString: '6080274100045'
@@ -97,8 +107,9 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
     it('can login as financeur', async () => {
 
-        let app = await startServer();
+        let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newFinancerAccount({
+            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             courriel: 'contact@financer.fr',
         }));
 
@@ -125,7 +136,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
     it('can login with a legacy password', async () => {
 
-        let app = await startServer();
+        let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newModerateurAccount({
             //old sha256 password hash + bcrypt
             passwordHash: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG'
@@ -140,7 +151,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
     it('should rehash password', async () => {
 
-        let app = await startServer();
+        let app = await startServerWithRealAuth();
         let account = newModerateurAccount({
             //old sha256 password hash + bcrypt
             passwordHash: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG',
@@ -170,8 +181,10 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
     it('should reject login when credentials are invalid', async () => {
 
-        let app = await startServer();
-        await insertIntoDatabase('accounts', newModerateurAccount());
+        let app = await startServerWithRealAuth();
+        await insertIntoDatabase('accounts', newModerateurAccount({
+            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C'
+        }));
 
         let response = await request(app)
         .post('/api/backoffice/login')
@@ -187,8 +200,9 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
     it('should reject login when organisme account has not been created', async () => {
 
-        let app = await startServer();
+        let app = await startServerWithRealAuth();
         let account = newOrganismeAccount({
+            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
             meta: {
                 siretAsString: '6080274100045'
             },
@@ -213,7 +227,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
     it('can login with access_token', async () => {
 
         let db = await getTestDatabase();
-        let app = await startServer();
+        let app = await startServerWithRealAuth();
 
         let authUrl = await generateKairosToken(app);
 
@@ -230,7 +244,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
     it('can not login with invalid auth url', async () => {
 
-        let app = await startServer();
+        let app = await startServerWithRealAuth();
 
         let response = await request(app)
         .get('/api/backoffice/login?access_token=INVALID');
@@ -241,7 +255,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
     it('can not access a ressource with invalid token', async () => {
 
-        let app = await startServer();
+        let app = await startServerWithRealAuth();
 
         let response = await request(app)
         .get('/api/v1/ping/authenticated')

@@ -1,5 +1,5 @@
 const assert = require('assert');
-const logger = require('../../../helpers/fake-logger');
+const logger = require('../../../helpers/components/fake-logger');
 const _ = require('lodash');
 const ObjectID = require('mongodb').ObjectID;
 const { withMongoDB } = require('../../../helpers/with-mongodb');
