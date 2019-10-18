@@ -7,21 +7,23 @@ const { execute } = require('../../job-utils');
 const createIndexes = require('../indexes/tasks/createIndexes');
 const createAccounts = require('./tasks/createAccounts');
 const importIntercarif = require('../../import/intercarif/importIntercarif');
-const reconcile = require('../../reconciliation/tasks/reconcile');
 const synchronizeOrganismesWithAccounts = require('../../organismes/tasks/synchronizeAccountsWithIntercarif');
 const computeOrganismesScore = require('../../organismes/tasks/computeScore');
 const resetPasswords = require('../reset/tasks/resetPasswords');
 const createStagiaires = require('./tasks/createStagiaires');
 const createAvis = require('./tasks/createAvis');
-const emulateBackofficeActions = require('./tasks/emulateBackofficeActions');
+const emulateBackofficeActions = require('./tasks/emulateWorkflowActions');
 const importCommunes = require('../../import/communes/tasks/importCommunes');
+const reconcile = require('../../reconciliation/tasks/reconcile');
+const addReconciliationAvisMetadata = require('../../reconciliation/tasks/addReconciliationAvisMetadata');
+const removePreviousImports = require('../../reconciliation/tasks/removePreviousImports');
 
 cli.description('Inject dataset')
 .option('-d, --drop', 'Drop database')
 .option('-p, --password [password]', 'Password for accounts')
 .parse(process.argv);
 
-execute(async ({ db, logger, moderation, consultation, regions, passwords }) => {
+execute(async ({ db, logger, workflow, regions, passwords }) => {
 
     if (cli.drop) {
         logger.info('Dropping database....');
@@ -48,7 +50,7 @@ execute(async ({ db, logger, moderation, consultation, regions, passwords }) => 
     logger.info(`Creating accounts....`);
     await createAccounts(db, logger);
     await resetPasswords(db, passwords, cli.password || 'password', { force: true });
-    await emulateBackofficeActions(db, moderation, consultation, options);
+    await emulateBackofficeActions(db, workflow, options);
     logger.info(`Reconcile avis and sessions....`);
 
 
@@ -57,6 +59,8 @@ execute(async ({ db, logger, moderation, consultation, regions, passwords }) => 
     await importCommunes(db, logger, communes, cedex);
 
     await reconcile(db, logger);
+    await addReconciliationAvisMetadata(db);
+    await removePreviousImports(db);
 
     return { dataset: 'ready' };
 });

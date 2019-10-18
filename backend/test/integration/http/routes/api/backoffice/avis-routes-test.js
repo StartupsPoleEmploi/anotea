@@ -163,7 +163,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ status: 'published' })),
+                insertIntoDatabase('comment', buildComment({ status: 'validated' })),
                 insertIntoDatabase('comment', buildComment({ status: 'none' })),
             ]);
 
@@ -173,7 +173,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.ok(response.body.avis[0].status, 'published');
+            assert.ok(response.body.avis[0].status, 'validated');
         });
     });
 
@@ -183,7 +183,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ status: 'published' })),
+                insertIntoDatabase('comment', buildComment({ status: 'validated' })),
                 insertIntoDatabase('comment', buildComment({ status: 'archived' })),
             ]);
 
@@ -193,7 +193,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].status, 'published');
+            assert.strictEqual(response.body.avis[0].status, 'validated');
         });
 
         it(`[${profileName}] can search avis with reponse`, async () => {
@@ -203,7 +203,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 insertIntoDatabase('comment', buildComment({
                     reponse: {
                         text: 'Voici notre réponse',
-                        status: 'published',
+                        status: 'validated',
                     },
                 })),
                 insertIntoDatabase('comment', buildComment({
@@ -221,11 +221,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/avis?reponseStatuses=published')
+            .get('/api/backoffice/avis?reponseStatuses=validated')
             .set('authorization', `Bearer ${token}`);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].reponse.status, 'published');
+            assert.strictEqual(response.body.avis[0].reponse.status, 'validated');
 
             response = await request(app)
             .get('/api/backoffice/avis?reponseStatuses=rejected')

@@ -1,4 +1,4 @@
-const createLogger = require('../../src/common/components/logger');
+const createLogger = require('../../../src/common/components/logger');
 
 module.exports = createLogger('test', {
     log: {

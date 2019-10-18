@@ -9,14 +9,15 @@ import { getExportAvisUrl, searchAvis } from '../../../services/avisService';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import Avis from '../../common/avis/Avis';
 import Pagination from '../../common/page/panel/pagination/Pagination';
+import QueryBadges from './QueryBadges';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../common/Loader';
-import { getAvisStats } from '../../../services/statsService';
 
-export default class AvisPanel extends React.Component {
+export default class FinanceurAvisPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,
+        form: PropTypes.object.isRequired,
         onFilterClicked: PropTypes.func.isRequired,
     };
 
@@ -25,11 +26,9 @@ export default class AvisPanel extends React.Component {
         this.state = {
             message: null,
             loading: false,
-            stats: {},
             results: {
                 avis: [],
                 meta: {
-                    stats: {},
                     pagination: {
                         itemsOnThisPage: 0,
                         itemsPerPage: 0,
@@ -44,47 +43,63 @@ export default class AvisPanel extends React.Component {
 
     componentDidMount() {
         this.search();
-        this.fetchStats();
     }
 
     componentDidUpdate(previous) {
         if (!_.isEqual(this.props.query, previous.query)) {
             this.search();
-            this.fetchStats();
         }
     }
 
-    search = (options = {}) => {
+    search = () => {
         return new Promise(resolve => {
-            this.setState({ loading: !options.silent }, async () => {
+            this.setState({ loading: true }, async () => {
                 let results = await searchAvis(this.props.query);
                 this.setState({ results, loading: false }, () => resolve());
             });
         });
     };
 
-    fetchStats = async () => {
-        return new Promise(async resolve => {
-            let query = _.pick(this.props.query, ['departement', 'idFormation', 'startDate', 'scheduledEndDate']);
-            let stats = await getAvisStats(query);
-            this.setState({ stats }, () => resolve());
-        });
-    };
-
     render() {
 
-        let { stats, results, message } = this.state;
-        let { query, onFilterClicked } = this.props;
+        let { results, message } = this.state;
+        let { query, form, onFilterClicked } = this.props;
 
         return (
             <Panel
                 filters={
                     <Filters>
                         <Filter
-                            label="Nouveaux"
-                            isActive={() => query.read === 'false'}
-                            getNbElements={() => stats.total - stats.nbRead}
-                            onClick={() => onFilterClicked({ read: false, sortBy: 'date' })} />
+                            label="Tous"
+                            isActive={() => !query.statuses && !query.qualification}
+                            onClick={() => onFilterClicked({ sortBy: 'date' })}
+                        />
+
+                        <Filter
+                            label="Commentaires"
+                            isActive={() => query.commentaires === 'true'}
+                            onClick={() => onFilterClicked({ commentaires: true, sortBy: 'lastStatusUpdate' })}
+                        />
+
+                        <Filter
+                            label="Négatifs"
+                            isActive={() => query.qualification === 'négatif'}
+                            onClick={() => {
+                                return onFilterClicked({
+                                    statuses: 'validated', qualification: 'négatif', sortBy: 'lastStatusUpdate'
+                                });
+                            }}
+                        />
+
+                        <Filter
+                            label="Positifs ou neutres"
+                            isActive={() => query.qualification === 'positif'}
+                            onClick={() => {
+                                return onFilterClicked({
+                                    statuses: 'validated', qualification: 'positif', sortBy: 'lastStatusUpdate'
+                                });
+                            }}
+                        />
 
                         <Filter
                             label="Signalés"
@@ -93,32 +108,15 @@ export default class AvisPanel extends React.Component {
                         />
 
                         <Filter
-                            label="Répondus"
-                            isActive={() => query.reponseStatuses === 'none,published'}
-                            onClick={() => onFilterClicked({
-                                reponseStatuses: 'none,published',
-                                sortBy: 'reponse.lastStatusUpdate'
-                            })}
+                            label="Rejetés"
+                            isActive={() => query.statuses === 'rejected'}
+                            onClick={() => onFilterClicked({ statuses: 'rejected', sortBy: 'lastStatusUpdate' })}
                         />
-
-                        <Filter
-                            label="Réponses rejetées"
-                            isActive={() => query.reponseStatuses === 'rejected'}
-                            onClick={() => onFilterClicked({
-                                reponseStatuses: 'rejected',
-                                sortBy: 'reponse.lastStatusUpdate'
-                            })}
-                        />
-
-                        <Filter
-                            label="Tous"
-                            isActive={() => !query.read && !query.reponseStatuses && !query.reported}
-                            onClick={() => onFilterClicked({ sortBy: 'date' })} />
-
                     </Filters>
                 }
                 summary={
                     <Summary
+                        title={<QueryBadges form={form} query={query} />}
                         paginationLabel="avis"
                         pagination={results.meta.pagination}
                         buttons={
@@ -135,20 +133,8 @@ export default class AvisPanel extends React.Component {
                         <AvisResults
                             results={results}
                             message={message}
-                            renderAvis={avis => {
-                                return <Avis
-                                    avis={avis}
-                                    showStatus={true}
-                                    showReponse={true}
-                                    showReponseButtons={true}
-                                    onChange={() => {
-                                        return Promise.all([
-                                            this.search({ silent: true }),
-                                            this.fetchStats(),
-                                        ]);
-                                    }}
-                                />;
-                            }} />
+                            renderAvis={avis => <Avis avis={avis} />}
+                        />
                 }
                 pagination={
                     <Pagination

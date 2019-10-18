@@ -4,8 +4,7 @@ const passwords = require('./common/components/passwords');
 const getRegions = require('./common/components/regions');
 const createLogger = require('./common/components/logger');
 const sentry = require('./common/components/sentry');
-const moderation = require('./common/components/moderation');
-const consultation = require('./common/components/consultation');
+const workflow = require('./common/components/workflow');
 const database = require('./common/components/database');
 const communes = require('./common/components/communes');
 const createMailer = require('./smtp/mailer');
@@ -36,8 +35,7 @@ module.exports = async (options = {}) => {
         auth: auth(configuration),
         passwords: passwords(configuration),
         regions: regions,
-        moderation: moderation(db),
-        consultation: consultation(db),
+        workflow: workflow(db),
         communes: communes(db),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),

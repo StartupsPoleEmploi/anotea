@@ -77,7 +77,7 @@ describe(__filename, () => {
         let comment = newComment({
             reponse: {
                 text: 'Voici notre réponse',
-                status: 'published',
+                status: 'validated',
             },
         });
 
@@ -88,7 +88,7 @@ describe(__filename, () => {
         });
     });
 
-    it('should ignore réponse not published', async () => {
+    it('should ignore réponse not validated', async () => {
 
         let comment = newComment({
             reponse: {

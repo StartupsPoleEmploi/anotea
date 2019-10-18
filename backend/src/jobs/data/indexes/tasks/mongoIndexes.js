@@ -63,7 +63,7 @@ module.exports = {
                 'training.formacode': 1,
                 'training.certifInfo.id': 1,
                 'status': 1,
-                'published': 1,
+                'validated': 1,
                 'training.organisation.siret': 1,
             }, { name: 'reconciliation' }),
             db.collection('comment').createIndex({

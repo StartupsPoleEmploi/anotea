@@ -2,7 +2,7 @@ const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
-const logger = require('../../../../helpers/fake-logger');
+const logger = require('../../../../helpers/components/fake-logger');
 const doImport = require('../../../../../src/jobs/import/rome/importer');
 
 describe(__filename, withMongoDB(({ getTestDatabase }) => {

@@ -1,6 +1,6 @@
 const assert = require('assert');
 const moment = require('moment');
-const logger = require('../../../helpers/fake-logger');
+const logger = require('../../../helpers/components/fake-logger');
 const { withMongoDB } = require('../../../helpers/with-mongodb');
 const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
 const removePreviousImports = require('../../../../src/jobs/reconciliation/tasks/removePreviousImports');

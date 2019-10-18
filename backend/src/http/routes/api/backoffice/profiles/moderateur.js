@@ -8,6 +8,9 @@ module.exports = (db, user) => {
     const getStagiaire = email => db.collection('trainee').findOne({ 'trainee.email': email });
 
     return {
+        type: 'moderateur',
+        getUser: () => user,
+        getShield: () => ({ codeRegion: user.codeRegion }),
         validators: {
             form: () => {
                 return {
@@ -17,8 +20,8 @@ module.exports = (db, user) => {
             filters: () => {
                 return {
                     commentaires: Joi.bool(),
-                    statuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected', 'reported'])),
-                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected'])),
+                    statuses: arrayOf(Joi.string().valid(['none', 'validated', 'rejected', 'reported'])),
+                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'validated', 'rejected'])),
                     sortBy: Joi.string().allow(['date', 'lastStatusUpdate', 'reponse.lastStatusUpdate']),
                 };
             },
@@ -37,7 +40,7 @@ module.exports = (db, user) => {
             buildAvisQuery: async parameters => {
                 let {
                     fulltext, reponseStatuses, commentaires,
-                    statuses = ['none', 'published', 'reported', 'rejected']
+                    statuses = ['none', 'validated', 'reported', 'rejected']
                 } = parameters;
 
                 let fulltextIsEmail = isEmail(fulltext || '');
@@ -53,6 +56,6 @@ module.exports = (db, user) => {
                 };
 
             },
-        }
+        },
     };
 };

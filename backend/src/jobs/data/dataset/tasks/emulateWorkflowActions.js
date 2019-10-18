@@ -1,6 +1,6 @@
 const faker = require('faker');
 
-module.exports = async (db, moderation, consultation, options = {}) => {
+module.exports = async (db, workflow, options = {}) => {
 
     let makeAction = async (nbElements, selector, action) => {
         let cursor = await db.collection('comment').find(selector).limit(nbElements);
@@ -12,25 +12,25 @@ module.exports = async (db, moderation, consultation, options = {}) => {
 
     let nbModerationsActions = (options.commentaires || 100) / 5;
     await makeAction(nbModerationsActions, { status: 'none' }, avis => {
-        return moderation.publish(avis._id, 'positif');
+        return workflow.publish(avis._id, 'positif');
     });
     await makeAction(nbModerationsActions, { status: 'none' }, avis => {
-        return moderation.reject(avis._id, 'alerte');
+        return workflow.reject(avis._id, 'alerte');
     });
 
     let nbCommentairesActions = nbModerationsActions / 5;
-    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'published' }, avis => {
-        return consultation.report(avis._id, true);
+    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'validated' }, avis => {
+        return workflow.report(avis._id, true);
     });
-    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'published' }, avis => {
-        return consultation.addReponse(avis._id, faker.lorem.paragraph());
+    await makeAction(nbCommentairesActions, { comment: { $exists: true }, status: 'validated' }, avis => {
+        return workflow.addReponse(avis._id, faker.lorem.paragraph());
     });
 
     let nbReponsesActions = nbCommentairesActions / 5;
     await makeAction(nbReponsesActions, { 'reponse.status': 'none' }, avis => {
-        return moderation.publishReponse(avis._id, true);
+        return workflow.publishReponse(avis._id, true);
     });
     await makeAction(nbReponsesActions, { 'reponse.status': 'none' }, avis => {
-        return moderation.rejectReponse(avis._id, faker.lorem.paragraph());
+        return workflow.rejectReponse(avis._id, faker.lorem.paragraph());
     });
 };

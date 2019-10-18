@@ -12,8 +12,8 @@ import { getDepartements } from '../../services/departementsService';
 import FINANCEURS from '../common/data/financeurs';
 import UserContext from '../UserContext';
 import Button from '../common/Button';
-import AvisPanel from './components/AvisPanel';
-import StatsPanel from './components/StatsPanel';
+import FinanceurAvisPanel from './components/FinanceurAvisPanel';
+import FinanceurStatsPanel from './components/FinanceurStatsPanel';
 
 export default class FinanceurPage extends React.Component {
 
@@ -339,7 +339,7 @@ export default class FinanceurPage extends React.Component {
                 }
                 panel={
                     navigator.isActive('/admin/financeur/avis/liste') ?
-                        <AvisPanel
+                        <FinanceurAvisPanel
                             query={query}
                             form={form}
                             onFilterClicked={this.onFilterClicked} /> :
@@ -347,7 +347,7 @@ export default class FinanceurPage extends React.Component {
                             path={'/admin/financeur/avis/stats'}
                             render={() => {
                                 return (
-                                    <StatsPanel
+                                    <FinanceurStatsPanel
                                         query={query}
                                         form={form}
                                     />
