@@ -66,7 +66,7 @@ export default class OrganismeAvisPanel extends React.Component {
 
     fetchStats = async () => {
         return new Promise(async resolve => {
-            let query = _.pick(this.props.query, ['departement', 'idFormation', 'startDate', 'scheduledEndDate']);
+            let query = _.pick(this.props.query, ['departement', 'idFormation', 'startDate', 'scheduledEndDate', 'siren']);
             let stats = await getAvisStats(query);
             this.setState({ stats }, () => resolve());
         });
