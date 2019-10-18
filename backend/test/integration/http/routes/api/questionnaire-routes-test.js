@@ -364,6 +364,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             accord: true,
             accordEntreprise: true,
         });
+        assert.strictEqual(response.statusCode, 423);
         assert.strictEqual(response.body.alreadySent, true);
     });
 

@@ -169,7 +169,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         let stagiaire = req.trainee;
 
         if (stagiaire.avisCreated) {
-            res.status(200).send({ stagiaire, infosRegion: await getInfosRegion(stagiaire), alreadySent: true });
+            res.status(423).send({ stagiaire, infosRegion: await getInfosRegion(stagiaire), alreadySent: true });
             logger.error('Already sent');
             return;
         }

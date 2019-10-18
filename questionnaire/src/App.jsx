@@ -16,6 +16,16 @@ class App extends Component {
         showErrorPage: false,
     };
 
+
+    constructor() {
+        subscribeToHttpEvent('http:error', response => {
+            if (response.status === 423) {
+                // TODO merge pe-connect branch first
+                this.setState({ showRemerciements: true });
+            }
+        });
+    }
+
     fetchStagiaire = async () => {
         try {
             let token = getToken();
@@ -33,11 +43,6 @@ class App extends Component {
 
     componentDidMount() {
         this.fetchStagiaire(this.state.token);
-    }
-
-    onSubmit = (data) => {
-        // TODO merge PE-connect first
-        this.setState({ showRemerciements: true });
     }
 
     render() {
@@ -58,7 +63,7 @@ class App extends Component {
                     <Remerciements stagiaire={stagiaire} infosRegion={infosRegion} /> :
                     <Questionnaire
                         stagiaire={stagiaire}
-                        onSubmit={this.onSubmit} />
+                        onSubmit={() => this.setState({ showRemerciements: true })} />
                 }
                 <Footer stagiaire={stagiaire} infosRegion={infosRegion} />
             </div>
