@@ -84,13 +84,21 @@ export default class FinanceurAvisPanel extends React.Component {
                         <Filter
                             label="Négatifs"
                             isActive={() => query.qualification === 'négatif'}
-                            onClick={() => onFilterClicked({ qualification: 'négatif', sortBy: 'lastStatusUpdate' })}
+                            onClick={() => {
+                                return onFilterClicked({
+                                    statuses: 'validated', qualification: 'négatif', sortBy: 'lastStatusUpdate'
+                                });
+                            }}
                         />
 
                         <Filter
                             label="Positifs ou neutres"
                             isActive={() => query.qualification === 'positif'}
-                            onClick={() => onFilterClicked({ qualification: 'positif', sortBy: 'lastStatusUpdate' })}
+                            onClick={() => {
+                                return onFilterClicked({
+                                    statuses: 'validated', qualification: 'positif', sortBy: 'lastStatusUpdate'
+                                });
+                            }}
                         />
 
                         <Filter
@@ -125,7 +133,7 @@ export default class FinanceurAvisPanel extends React.Component {
                         <AvisResults
                             results={results}
                             message={message}
-                            renderAvis={avis => <Avis avis={avis} showStatus={true} />}
+                            renderAvis={avis => <Avis avis={avis} />}
                         />
                 }
                 pagination={

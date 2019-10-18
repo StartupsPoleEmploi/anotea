@@ -13,6 +13,7 @@ import Avis from '../../common/avis/Avis';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import { searchAvis } from '../../../services/avisService';
 import { getAvisStats } from '../../../services/statsService';
+import { Workflow } from '../../common/avis/Workflow';
 
 export default class ModerationAvisPage extends React.Component {
 
@@ -183,8 +184,10 @@ export default class ModerationAvisPage extends React.Component {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            showStatus={query.statuses !== 'none'}
                                             showModerationButtons={true}
+                                            renderWorkflow={avis => {
+                                                return <Workflow avis={avis} showStatus={query.statuses !== 'none'} />;
+                                            }}
                                             onChange={() => {
                                                 return Promise.all([
                                                     this.search({ silent: true }),

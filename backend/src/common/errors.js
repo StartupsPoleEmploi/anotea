@@ -27,6 +27,15 @@ const Errors = {
             return 404;
         }
     },
+    ForbiddenError: class ForbiddenError extends BasicError {
+        constructor(message, extra) {
+            super(message || 'Not Found', extra);
+        }
+
+        get status() {
+            return 403;
+        }
+    },
     AlreadySentError: class AlreadySentError extends BasicError {
         constructor(message, extra) {
             super(message || 'Already sent', extra);

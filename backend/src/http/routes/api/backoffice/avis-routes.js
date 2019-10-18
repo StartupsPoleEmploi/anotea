@@ -8,7 +8,7 @@ const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../rou
 const { objectId } = require('../../validators-utils');
 const getProfile = require('./profiles/getProfile');
 
-module.exports = ({ db, middlewares, configuration, logger, moderation, consultation, mailing, regions }) => {
+module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -78,20 +78,22 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.put('/backoffice/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
 
-        let avis = await moderation.maskPseudo(id, mask, { user: req.user });
+        let avis = await workflow.maskPseudo(id, mask, { profile });
 
         return res.json(avis);
     }));
 
     router.put('/backoffice/avis/:id/title', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { mask } = await Joi.validate(req.body, { mask: Joi.boolean().required() }, { abortEarly: false });
 
-        let avis = await moderation.maskTitle(id, mask, { user: req.user });
+        let avis = await workflow.maskTitle(id, mask, { profile });
 
         return res.json(avis);
     }));
@@ -99,6 +101,7 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
     router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { sendInjureMail, sendAlerteMail, sendSignalementAccepteNotification } = mailing;
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { qualification } = await Joi.validate(req.body, {
             qualification: Joi.string().required()
@@ -106,8 +109,8 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
         let previous = await db.collection('comment').findOne({ _id: new ObjectID(id) });
 
-        let updated = await moderation.reject(id, qualification, { user: req.user });
-        //TODO move into moderation.js
+        let updated = await workflow.reject(id, qualification, { profile });
+        //TODO move into workflow.js
         if (previous) {
             if (previous.status === 'reported') {
                 sendSignalementAccepteNotification(previous._id)
@@ -139,23 +142,25 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
-        await moderation.delete(id, { user: req.user });
+        await workflow.delete(id, { profile });
 
         return res.json({ 'message': 'avis deleted' });
     }));
 
     router.put('/backoffice/avis/:id/publish', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { qualification } = await Joi.validate(req.body, { qualification: Joi.string().required() }, { abortEarly: false });
 
         let previous = await db.collection('comment').findOne({ _id: new ObjectID(id) });
 
-        let updated = await moderation.publish(id, qualification, { user: req.user });
+        let updated = await workflow.publish(id, qualification, { profile });
         if (previous) {
-            //TODO move into moderation.js
+            //TODO move into workflow.js
             if (previous.status === 'reported') {
                 mailing.sendSignalementRejeteNotification(previous._id)
                 .catch(e => logger.error(e, 'Unable to send email'));
@@ -169,10 +174,11 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.put('/backoffice/avis/:id/edit', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
-        let avis = await moderation.edit(id, text, { user: req.user });
+        let avis = await workflow.edit(id, text, { profile });
 
         return res.json(avis);
 
@@ -180,20 +186,23 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.put('/backoffice/avis/:id/publishReponse', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
-        let avis = await moderation.publishReponse(id, { user: req.user });
+        let avis = await workflow.publishReponse(id, { profile });
 
         return res.json(avis);
 
     }));
 
     router.put('/backoffice/avis/:id/rejectReponse', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
-        let avis = await moderation.rejectReponse(id, { user: req.user });
+        let avis = await workflow.rejectReponse(id, { profile });
 
-        //TODO move into moderation
+        //TODO move into workflow
         mailing.sendReponseRejeteeNotification(avis._id)
         .catch(e => logger.error(e, 'Unable to send email'));
 
@@ -232,39 +241,43 @@ module.exports = ({ db, middlewares, configuration, logger, moderation, consulta
 
     router.put('/backoffice/avis/:id/addReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
 
-        let avis = await consultation.addReponse(id, text, { user: req.user });
+        let avis = await workflow.addReponse(id, text, { profile });
 
         return res.json(avis);
     }));
 
     router.put('/backoffice/avis/:id/removeReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
-        let avis = await consultation.removeReponse(id, { user: req.user });
+        let avis = await workflow.removeReponse(id, { profile });
 
         return res.json(avis);
     }));
 
     router.put('/backoffice/avis/:id/read', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { read } = await Joi.validate(req.body, { read: Joi.boolean().required() }, { abortEarly: false });
 
-        let avis = await consultation.markAsRead(id, read, { user: req.user });
+        let avis = await workflow.markAsRead(id, read, { profile });
 
         return res.json(avis);
     }));
 
     router.put('/backoffice/avis/:id/report', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
 
+        let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });
         let { report } = await Joi.validate(req.body, { report: Joi.boolean().required() }, { abortEarly: false });
 
-        let avis = await consultation.report(id, report, { user: req.user });
+        let avis = await workflow.report(id, report, { profile });
 
         return res.json(avis);
 

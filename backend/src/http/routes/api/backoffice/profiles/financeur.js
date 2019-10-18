@@ -9,6 +9,9 @@ module.exports = (db, regions, user) => {
     let region = regions.findRegionByCodeRegion(user.codeRegion);
 
     return {
+        type: 'financeur',
+        getUser: () => user,
+        getShield: () => ({}),
         validators: {
             form: () => {
                 return {
@@ -72,8 +75,7 @@ module.exports = (db, regions, user) => {
                     ...(_.isBoolean(commentaires) ? { comment: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
                 };
-
             },
-        }
+        },
     };
 };

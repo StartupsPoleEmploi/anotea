@@ -6,7 +6,7 @@ const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/with-server');
 const { newComment, newTrainee, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, createIndexes, getComponents, getTestDatabase }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, createIndexes, getComponents, getTestDatabase, logAsOrganisme }) => {
 
     let buildComment = (custom = {}) => {
         return newComment(_.merge({
@@ -318,6 +318,29 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 404);
+    });
+
+    it('can not publish an avis when logged as financeur', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/publish`)
+        .send({ qualification: 'positif' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 403);
+        assert.deepStrictEqual(response.body, {
+            error: 'Forbidden',
+            message: 'Action non autorisé',
+            statusCode: 403,
+        });
     });
 
     it('can reject an avis', async () => {
