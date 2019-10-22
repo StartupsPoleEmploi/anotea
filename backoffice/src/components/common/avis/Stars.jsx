@@ -5,8 +5,8 @@ import './Stars.scss';
 const Stars = props => {
 
     let isDecimalsNumber = props.note % 1 !== 0;
-    let note = Math.round(props.note);
-    let stars = new Array(5).fill('active', 0, note).fill('empty', note, 5);
+    let note = props.note;
+    let stars = new Array(5).fill('active', 0, Math.ceil(note)).fill('empty', Math.ceil(note), 5);
 
     return (
         <span>
