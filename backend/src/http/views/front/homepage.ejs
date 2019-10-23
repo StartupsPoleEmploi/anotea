@@ -48,16 +48,11 @@
             <img class="illustration" src="/static/images/home/intro.svg" />
         </div>
 
-        <div class="video">
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/YaQmZpbjmj4?rel=0" frameborder="0"
-                    allowfullscreen></iframe>
-        </div>
-
         <div class="stats">
             <h2>Anotéa c'est déjà :</h2>
 
             <div class="avis">
-                <h3>+200 000 <img  src="/static/images/home/message-square.svg" /></h3>
+                <h3>+200 000 <img  src="/static/images/home/Icone_Message.svg" /></h3>
                 <p>Avis recueillis</p>
             </div>
 
@@ -67,7 +62,7 @@
             </div>
 
             <div class="stagiaires">
-                <h3>+900 000 <img  src="/static/images/home/users.svg" /></h3>
+                <h3>+900 000 <img  src="/static/images/home/user.png" /></h3>
                 <p>Stagiaires interrogés</p>
             </div>
         </div>
@@ -120,10 +115,7 @@
                 </ul>
             </div>
     
-        <div class="question">
-            <h1>Une question ? <br /> Un doute ?</h1>
-            <p><a href="mailto:anotea@pole-emploi.fr">Contactez-nous</a></p>
-        </div>
+        <%- include('../../views/contact.ejs'); %>
         <%- include('../../views/front/footer.ejs'); %>
         <%- include('../../views/analyticsTrackers.ejs'); %>
     </body>

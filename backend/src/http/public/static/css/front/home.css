@@ -4,6 +4,7 @@ body {
     font-family: Lato;
     font-weight: normal;
     margin: 0;
+    color: #24303A;
 }
 
 .button {
@@ -23,10 +24,6 @@ body {
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
-}
-
-h1 {
-    display: inline;
 }
 
 .video {
@@ -51,6 +48,7 @@ h1 {
     width: 85%;
     margin: auto;
     padding-left: 15%;
+    height: 450px;
 }
 
 .content-intro p {
@@ -135,12 +133,16 @@ h1 {
 .services {
     text-align: center;
     padding-bottom: 40px;
+    width: 60%;
+    margin: auto;
 }
 
 .services h1 {
-    font-weight: bold;
+    font-weight: 900;
     text-align: center;
+    margin-top: 80px;
     margin-bottom: 60px;
+    font-size: 32px;
 }
 
 .services img {
@@ -150,9 +152,9 @@ h1 {
 }
 
 .services h2 {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
-    line-height: 29px;
+    line-height: 22px;
     text-align: center;
     margin-top: -30px;
     margin-bottom: 0px;
@@ -170,6 +172,7 @@ h1 {
     font-size: 16px;
     text-align: center;
     vertical-align: top;
+    width: 30%;
 }
 
 .services li.last {
@@ -178,6 +181,8 @@ h1 {
 
 .services p {
     padding: 0px 10px 0px 10px;
+    opacity: 0.8;
+    font-size: 14px;
 }
 
 .services .organismes a {
@@ -211,43 +216,13 @@ h1 {
     vertical-align: middle;
 }
 
-.question {
-    padding-top: 30px;
-    background-color: #373B46;
-    text-align: center;
-    padding-bottom: 10px;
-    outline: none;
-}
-
-.question h1 {
-    color: #FFFFFF;
-    font-size: 36px;
-    font-weight: bold;
-    line-height: 55px;
-    text-align: center;
-    margin-bottom: 25px
-}
-
-.question a {
-    height: 27px;
-    background: #F0801A;
-    color: #24303A;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 27px;
-    text-align: center;
-    padding: 5px 10px 5px 10px;
-    text-decoration: none;
-    border-radius: 10px;
-}
-
 #cookie-bar-prompt-content {
     display: none;
 }
 
 @media (min-width: 1024px) {
     .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
-        font-size: 42px;
+        font-size: 32px;
     }
 
     .video {
@@ -257,21 +232,11 @@ h1 {
     .content-how ul {
         width: 1000px;
     }
-
-    .services ul {
-        width: 972px;
-    }
-
-    .services li {
-        width: 281px;
-        margin-right: 60px;
-        height: 350px;
-    }
 }
 
 @media (max-width: 1024px) {
     .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
-        font-size: 38px;
+        font-size: 12px;
     }
 
     .video {
