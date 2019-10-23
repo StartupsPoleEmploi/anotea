@@ -54,6 +54,14 @@ a {
     font-weight: normal;
 }
 
+.stagiaire .intro h2 {
+    color: #384EAA;
+    font-weight: 900;
+}
+.stagiaire .intro .button {
+    background-color: #384EAA;
+}
+
 .intro h2 strong {
     font-weight: 900;
 }
