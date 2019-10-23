@@ -62,6 +62,13 @@ a {
     background-color: #384EAA;
 }
 
+.financeur .intro h2 {
+    color: #0d7d57;
+}
+.financeur .intro .button {
+    background-color: #0d7d57;
+}
+
 .intro h2 strong {
     font-weight: 900;
 }

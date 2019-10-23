@@ -1,69 +1,115 @@
 <!DOCTYPE HTML>
 <html>
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
-        <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
-        <link rel="stylesheet" type="text/css" href="/static/css/front/faq.css" media="all">
-        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+    <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/css/front/faq.css" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
-        <script>
-            $(document).ready(function() {
-                $( ".question a").click(function(e) {
-                    $('.question').removeClass('open').addClass('closed').next().hide();
-                    $(e.target).parent().toggleClass('open closed');
-                    $(e.target).parent().next().toggle();
-                });
+    <script>
+        $(document).ready(function () {
+            $(".question a").click(function (e) {
+                e.preventDefault();
+                $('.question').removeClass('open').addClass('closed').next().hide();
+                $(e.target).parent().toggleClass('open closed');
+                $(e.target).parent().next().toggle();
             });
+        });
 
-        </script>
-    </head>
+    </script>
+</head>
 
-    <body>
-        <%- include('header.ejs'); %>
-        <div class="faq">
+<body>
+    <%- include('header.ejs'); %>
+    <div class="main financeur">
+        <div class="intro">
+            <div class="content">
+                <div class="text">
+                    <h2>Vous êtes un <strong>financeur ?</strong></h2>
+                    <p>
+                        Connectez-vous à votre espace Anotéa pour accéder aux avis des anciens stagiaires de vos
+                        formation et répondre à leurs commentaires.
+                    </p>
+                    <a class="button" href="/admin">Accéder à mon espace</a>
+                </div>
+                <img src="/static/images/home/faq/Illu_financeur.png" />
+            </div>
+        </div>
 
+        <div class="vous">
+            <div class="content">
+                <h2>Votre espace Financeur</h2>
+                <h3>Découvrez les fonctionnalités de votre espace personnel Financeur.</h3>
+                <div class="text">
+                    <ul>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_1.svg" />
+                            <p>Consulter et répondre aux avis laissés par les anciens stagiaires.</p>
+                        </li>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_2.svg" />
+                            <p>Consulter sous forme de graphique, la satisfaction des stagiaires de chaque formation.</p>
+                        </li>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_3.svg" />
+                            <p>Faire une recherche ciblée grâce aux filtres par organisme, formation, période ou encore lieu de formation.</p>
+                        </li>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_4.svg" />
+                            <p>Exporter les avis ainsi que les graphiques présents dans votre espace pour les partager à vos collaborateurs.</p>
+                        </li>
+                    </ul>
+                    <img class="bo" src="/static/images/home/faq/bo_fi.png" />
+                </div>
+            </div>
+        </div>
+
+        <div id="faq" class="faq">
+                <div class="content">
             <h2>Foire aux questions</h2>
 
             <ul class="nav">
                 <li><a href="/faq/organisme/fonctionnement">Fonctionnement d'Anotéa</a></li>
-                <li><a class="current"  href="/faq/organisme/qualite">Qualité</a></li>
-                <li><a href="/faq/organisme/services">Fonctionnement d'Anotéa</a></li>
+                <li><a class="current" href="/faq/organisme/qualite">Qualité</a></li>
+                <li><a href="/faq/organisme/services">Services</a></li>
             </ul>
 
             <div>
                 <div class="question closed">
-                    <a href="#">Quelles sont les points que doivent évaluer les anciens stagiaires à l'issue de leur formation ?
+                    <a href="#">Quelles sont les points que doivent évaluer les anciens stagiaires à l'issue de leur
+                        formation ?
                         <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
                         <img class="icon-open" src="/static/images/home/chevron-down.svg" />
                     </a>
                 </div>
                 <div class="reponse">
-                        Les 6 points pour lesquels les anciens stagiaires sont invités à mettre de 1 à 5 étoiles sont les suivants :
-                        <ul>
-                            <li><strong>Accueil</strong><br />
-                                Réunions d'information collective et entretiens à l'entrée en formation
-                            </li>
-                            <li><strong>Contenu de la formation</strong><br />
-                                Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique
-                            </li>
-                            <li><strong>Équipe de formateurs</strong><br />
-                                Prise en compte du besoin des stagiaires
-                            </li>
-                            <li><strong>Moyens matériels mis à disposition</strong><br />
-                                Salles de cours, documentation, plateaux techniques, équipement informatique
-                            </li>
-                            <li><strong>Accompagnement</strong><br />
-                                Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises
-                            </li>
-                        </ul>
+                    Les 6 points pour lesquels les anciens stagiaires sont invités à mettre de 1 à 5 étoiles sont les
+                    suivants :
+                    <ul>
+                        <li><strong>Accueil</strong><br />
+                            Réunions d'information collective et entretiens à l'entrée en formation
+                        </li>
+                        <li><strong>Contenu de la formation</strong><br />
+                            Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique
+                        </li>
+                        <li><strong>Équipe de formateurs</strong><br />
+                            Prise en compte du besoin des stagiaires
+                        </li>
+                        <li><strong>Moyens matériels mis à disposition</strong><br />
+                            Salles de cours, documentation, plateaux techniques, équipement informatique
+                        </li>
+                        <li><strong>Accompagnement</strong><br />
+                            Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises
+                        </li>
+                    </ul>
                 </div>
             </div>
-            
+
             <div>
                 <div class="question closed">
                     <a href="#">Est-ce qu’Anotéa vérifie que les avis sont réels ?
@@ -72,10 +118,12 @@
                     </a>
                 </div>
                 <div class="reponse">
-                        Pôle emploi s’assure que les avis recueillis sont ceux d’anciens stagiaires ayant effectivement effectué la formation. Nous identifions à partir de nos fichiers les stagiaires ayant suivi une formation pour leur transmettre un questionnaire à l’issue.
+                    Pôle emploi s’assure que les avis recueillis sont ceux d’anciens stagiaires ayant effectivement
+                    effectué la formation. Nous identifions à partir de nos fichiers les stagiaires ayant suivi une
+                    formation pour leur transmettre un questionnaire à l’issue.
                 </div>
             </div>
-            
+
             <div>
                 <div class="question closed">
                     <a href="#">Comment sont modérés les avis ?
@@ -84,10 +132,11 @@
                     </a>
                 </div>
                 <div class="reponse">
-                        Vous trouverez toutes les informations sur les conditions de publication des avis sur ce lien : <a href="http://anotea.pole-emploi.fr/cgu">CGU</a>
+                    Vous trouverez toutes les informations sur les conditions de publication des avis sur ce lien : <a
+                        href="http://anotea.pole-emploi.fr/cgu">CGU</a>
                 </div>
             </div>
-            
+
             <div>
                 <div class="question closed">
                     <a href="#">Comment est actualisé votre catalogue qualité ?
@@ -104,19 +153,22 @@
             <div>
                 <div class="question closed">
                     <a href="#">La conception et le fonctionnement d’Anotéa relèvent-ils de la norme NF Z74-501 ?
-                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
-                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                        <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                        <img class="icon-open" src="/static/images/home/chevron-down.svg" />
                     </a>
                 </div>
                 <div class="reponse">
-                    A ce stade, l'outil Anotéa ne relève pas de la norme NF Z74-501, mais il s'inscrit dans le cadre du décret
+                    A ce stade, l'outil Anotéa ne relève pas de la norme NF Z74-501, mais il s'inscrit dans le cadre du
+                    décret
                     qualité et des exigences CNIL.
                 </div>
             </div>
-
         </div>
-        <%- include('../../views/front/footer.ejs'); %>
-        <%- include('../../views/analyticsTrackers.ejs'); %>
-    </body>
+        </div>
+    </div>
+    <%- include('../../views/contact.ejs'); %>
+    <%- include('../../views/front/footer.ejs'); %>
+    <%- include('../../views/analyticsTrackers.ejs'); %>
+</body>
 
 </html>
