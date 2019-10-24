@@ -7,6 +7,7 @@ class SendAction {
 
     getQuery() {
         return {
+            'profile': 'organisme',
             'courriel': { $ne: null },
             'passwordHash': null,
             'mailSentDate': null,

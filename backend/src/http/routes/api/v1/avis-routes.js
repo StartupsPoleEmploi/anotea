@@ -34,16 +34,9 @@ const buildAvisQuery = filters => {
     });
 
     return {
-        'archived': false,
         '$and': [
             queries.length === 0 ? {} : { '$or': queries },
-            {
-                '$or': [
-                    { 'comment': { $exists: false } },
-                    { 'published': true },
-                    { 'rejected': true },
-                ]
-            }
+            { 'status': { $in: ['published', 'rejected'] } }
         ],
     };
 };

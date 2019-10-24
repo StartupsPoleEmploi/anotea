@@ -1,54 +1,44 @@
 const express = require('express');
 const Boom = require('boom');
 const Joi = require('joi');
-const { tryAndCatch, getRemoteAddress } = require('../../routes-utils');
+const { tryAndCatch } = require('../../routes-utils');
 
 module.exports = ({ db, auth, passwords }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let { checkPassword, hashPassword } = passwords;
 
-    const logLoginEvent = (req, profile, id) => {
+    const logLoginEvent = (identifiant, account) => {
         return db.collection('events').insertOne({
             date: new Date(),
             type: 'login',
-            source: { user: req.body.identifiant, profile, ip: getRemoteAddress(req), id }
+            source: { user: identifiant, profile: account.profile, id: account.profile }
         });
     };
 
-    const logLoginWithAccessTokenEvent = (req, organisme, id) => {
+    const logLoginWithAccessTokenEvent = (req, organisme) => {
         return db.collection('events').insertOne({
             date: new Date(),
             type: 'login-access-token',
             source: {
                 profile: 'organisme',
                 siret: organisme.meta.siretAsString,
-                ip: getRemoteAddress(req),
-                id
+                id: organisme._id,
             }
         });
     };
 
-    const handleModerateurOrFinanceur = async (req, account) => {
-        logLoginEvent(req, account.profile, account._id);
-        return await auth.buildJWT('backoffice', {
-            sub: req.body.identifiant,
-            profile: account.profile,
-            id: account._id,
-            codeRegion: account.codeRegion,
-            codeFinanceur: account.codeFinanceur,
-        });
-    };
+    const handleLogin = async (identifiant, account) => {
+        let profile = account.profile;
+        logLoginEvent(identifiant, account);
 
-    const handleOrganisme = async (req, account) => {
-        logLoginEvent(req, 'organisme', account._id);
         return await auth.buildJWT('backoffice', {
-            sub: account.meta.siretAsString,
-            profile: 'organisme',
-            id: account.meta.siretAsString,
+            sub: `${identifiant}`,
+            id: account._id,
+            profile,
             codeRegion: account.codeRegion,
-            raisonSociale: account.raisonSociale,
-            siret: account.meta.siretAsString,
+            ...(profile === 'financeur' ? { codeFinanceur: account.codeFinanceur } : {}),
+            ...(profile === 'organisme' ? { siret: account.meta.siretAsString, raisonSociale: account.raisonSociale } : {}),
         });
     };
 
@@ -90,19 +80,16 @@ module.exports = ({ db, auth, passwords }) => {
         }, { abortEarly: false });
 
         let token;
-        let account = await db.collection('accounts').findOne({ courriel: identifiant });
-        if (account && await checkPassword(password, account.passwordHash)) {
-            await rehashPassword(account, password);
-            token = await handleModerateurOrFinanceur(req, account);
-        }
-
-        account = await db.collection('accounts').findOne({
-            'meta.siretAsString': identifiant,
+        let account = await db.collection('accounts').findOne({
             'passwordHash': { $exists: true },
+            '$or': [
+                { 'courriel': identifiant },
+                { 'meta.siretAsString': identifiant },
+            ]
         });
         if (account && await checkPassword(password, account.passwordHash)) {
             await rehashPassword(account, password);
-            token = await handleOrganisme(req, account);
+            token = await handleLogin(req.body.identifiant, account);
         }
 
         if (token) {
@@ -136,9 +123,9 @@ module.exports = ({ db, auth, passwords }) => {
 
         if (organisme) {
             let [token] = await Promise.all([
-                handleOrganisme(req, organisme),
+                handleLogin(user.sub, organisme),
                 invalidateAuthToken(organisme._id, parameters.access_token),
-                logLoginWithAccessTokenEvent(req, organisme, organisme._id),
+                logLoginWithAccessTokenEvent(req, organisme),
             ]);
             return res.json(token);
         } else {

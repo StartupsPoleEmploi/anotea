@@ -58,7 +58,6 @@
       opacity: 0.6;
       white-space: nowrap;
       padding: 0.5rem 1rem 0.5rem 1rem;
-      position: relative;
 
       &.active {
         color: $color-white;
@@ -76,13 +75,6 @@
       }
     }
 
-    .badge.pastille {
-      background-color: $color-red;
-      color: $color-white;
-      border-radius: 10px;
-      font-size: 0.7em;
-      padding: 0.3em 0.6em;
-    }
   }
 
   .account-link {

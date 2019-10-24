@@ -8,19 +8,17 @@ export default function FinanceurHeaderItems() {
     return (
         <ul className="nav">
             <li className="nav-item">
-                <Link
-                    className="nav-link"
-                    label="Avis stagiaires"
-                    url="/admin/financeur/avis/stats" />
+                <Link className="nav-link" url="/admin/financeur/avis/stats">
+                    Avis stagiaires
+                </Link>
             </li>
             <li className="nav-item">
                 <a href={`${publicUrl}/stats`} target="_blank" rel="noopener noreferrer" className="nav-link">Statistiques Anotéa</a>
             </li>
             <li className="nav-item right">
-                <Link
-                    className="nav-link"
-                    url="/admin/financeur/mon-compte"
-                    label="Mon compte" />
+                <Link className="nav-link" url="/admin/financeur/mon-compte">
+                    Mon compte
+                </Link>
             </li>
         </ul>
     );

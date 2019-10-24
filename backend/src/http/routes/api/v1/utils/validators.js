@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { arrayOf } = require('../../../validators');
+const { arrayOf } = require('../../../validators-utils');
 
 module.exports = {
     arrayOf: arrayOf,

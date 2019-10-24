@@ -1,7 +1,7 @@
 const request = require('supertest');
 const assert = require('assert');
 const _ = require('lodash');
-const { withServer } = require('../../../../helpers/test-server');
+const { withServer } = require('../../../../helpers/with-server');
 const { newTrainee } = require('../../../../helpers/data/dataset');
 
 
@@ -78,6 +78,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             },
             unsubscribe: false,
             mailSent: true,
+            avisCreated: false,
             mailSentDate: date.toJSON(),
             tracking: {
                 firstRead: date.toJSON()
@@ -150,8 +151,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         });
 
         let result = await db.collection('comment').findOne({ token: trainee.token });
-
-        assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date']), {
+        assert.ok(result.lastStatusUpdate);
+        assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
             training: {
                 idFormation: 'F_XX_XX',
@@ -197,12 +198,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             },
             accord: true,
             accordEntreprise: true,
-            archived: false,
             read: false,
-            published: false,
-            rejected: false,
-            reported: false,
-            moderated: false,
+            status: 'none',
         });
     });
 
@@ -230,7 +227,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.strictEqual(response.statusCode, 200);
 
         let result = await db.collection('comment').findOne({ token: trainee.token });
-        assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date']), {
+        assert.ok(result.lastStatusUpdate);
+        assert.deepStrictEqual(_.omit(result, ['token', '_id', 'date', 'lastStatusUpdate']), {
             campaign: 'test-campaign',
             training: {
                 idFormation: 'F_XX_XX',
@@ -271,8 +269,8 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             pseudo: 'JohnD',
             accord: true,
             accordEntreprise: true,
-            archived: false,
             read: false,
+            status: 'published',
         });
     });
 

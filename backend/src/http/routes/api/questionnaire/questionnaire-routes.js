@@ -77,6 +77,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
 
     const buildAvis = (notes, token, body, trainee) => {
+
+        let text = _.get(body, 'commentaire.texte', null);
+        let title = _.get(body, 'commentaire.titre', null);
+        let hasCommentaires = title || text;
+
         let avis = {
             date: new Date(),
             token: token,
@@ -87,18 +92,12 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             pseudo: sanitize(body.pseudo.replace(/ /g, '').replace(/\./g, '')),
             accord: body.accord,
             accordEntreprise: body.accordEntreprise,
-            archived: false,
             read: false,
+            status: hasCommentaires ? 'none' : 'published',
+            lastStatusUpdate: new Date(),
         };
 
-        let text = _.get(body, 'commentaire.texte', null);
-        let title = _.get(body, 'commentaire.titre', null);
-        if (title || text) {
-            //TODO rework moderation status
-            avis.published = false;
-            avis.rejected = false;
-            avis.reported = false;
-            avis.moderated = false;
+        if (hasCommentaires) {
             avis.comment = {
                 title: sanitize(title),
                 text: sanitize(text),
@@ -156,6 +155,11 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
     router.get('/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
 
         let stagiaire = req.trainee;
+
+        if (stagiaire.training.scheduledEndDate < moment(`${moment().year() - 1}-01-01 00Z`).toDate()) {
+            throw Boom.notFound('Questionnaire plus disponible');
+        }
+
         let [comment, infosRegion] = await Promise.all([
             db.collection('comment').findOne({
                 'token': req.params.token,

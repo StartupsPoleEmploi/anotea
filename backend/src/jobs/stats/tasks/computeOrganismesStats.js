@@ -32,12 +32,12 @@ module.exports = (db, regions) => {
                 'profile': 'organisme', ...filter
             }),
             avis.countDocuments({
-                'published': true,
+                'status': 'published',
                 '$or': [{ 'read': false }, { 'read': { $ne: true } }], ...filter
             }),
-            avis.countDocuments({ 'moderated': true, 'rejected': false, ...filter }),
+            avis.countDocuments({ 'status': 'published', ...filter }),
             avis.countDocuments({ 'reponse': { $exists: true }, ...filter }),
-            avis.countDocuments({ 'reported': true, ...filter }),
+            avis.countDocuments({ 'status': 'reported', ...filter }),
         ]);
 
         return {

@@ -88,8 +88,8 @@ export default class AvisPanel extends React.Component {
 
                         <Filter
                             label="Signalés"
-                            isActive={() => query.status === 'reported'}
-                            onClick={() => onFilterClicked({ status: 'reported', sortBy: 'lastStatusUpdate' })}
+                            isActive={() => query.statuses === 'reported'}
+                            onClick={() => onFilterClicked({ statuses: 'reported', sortBy: 'lastStatusUpdate' })}
                         />
 
                         <Filter

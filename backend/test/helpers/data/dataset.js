@@ -57,6 +57,7 @@ module.exports = {
             },
             unsubscribe: false,
             mailSent: true,
+            avisCreated: false,
             mailSentDate: date,
             token: randomize('token'),
             tracking: {
@@ -180,16 +181,11 @@ module.exports = {
             },
             date: date,
             accord: false,
-            reported: false,
-            moderated: true,
-            published: true,
-            rejected: false,
-            rejectReason: null,
+            status: 'published',
             qualification: 'positif',
             lastStatusUpdate: date,
             read: true,
             codeRegion: '11',
-            archived: false
         }, custom, { test: true });
     },
     newIntercarif: (options = {}) => {

@@ -67,11 +67,11 @@ module.exports = data => {
         avis.formation.action.numero = training.infoCarif.numeroAction;
     }
 
-    if (!data.pseudoMasked && !data.rejected && !_.isEmpty(data.pseudo)) {
+    if (!data.pseudoMasked && data.status !== 'rejected' && !_.isEmpty(data.pseudo)) {
         avis.pseudo = data.pseudo;
     }
 
-    if (data.comment && !data.rejected) {
+    if (data.comment && data.status !== 'rejected') {
         avis.commentaire = convertCommentaire(data);
     }
 

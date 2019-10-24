@@ -213,7 +213,7 @@ describe(__filename, () => {
     it('should not return commentaire when avis has been rejected', async () => {
 
         let comment = newComment({
-            rejected: true,
+            status: 'rejected',
             comment: {
                 title: 'Génial',
                 text: 'Formation géniale.'
@@ -228,7 +228,7 @@ describe(__filename, () => {
     it('should not return pseudo when avis has been rejected', async () => {
 
         let comment = newComment({
-            rejected: true,
+            status: 'rejected',
             pseudo: 'hacker',
             comment: {
                 title: 'Génial',

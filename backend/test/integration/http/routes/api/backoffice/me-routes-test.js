@@ -1,14 +1,34 @@
 const request = require('supertest');
 const assert = require('assert');
-const { withServer } = require('../../../../../helpers/test-server');
+const { withServer } = require('../../../../../helpers/with-server');
 const { newModerateurAccount } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, logAsOrganisme }) => {
+
+    it('can update my password (organisme)', async () => {
+
+        let app = await startServer();
+        let token = await logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' });
+
+        let response = await request(app)
+        .put(`/api/backoffice/me/updatePassword`)
+        .set('authorization', `Bearer ${token}`)
+        .send({
+            current: 'password',
+            password: 'A1234!',
+        });
+        assert.strictEqual(response.statusCode, 200);
+
+        //can login with new password
+        response = await request(app)
+        .post('/api/backoffice/login')
+        .send({ identifiant: '11111111111111', password: 'A1234!' });
+        assert.strictEqual(response.statusCode, 200);
+    });
 
     it('can update my password', async () => {
 
         let app = await startServer();
-        await insertIntoDatabase('accounts', newModerateurAccount({ courriel: 'admin@pole-emploi.fr' }));
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
 
         let response = await request(app)

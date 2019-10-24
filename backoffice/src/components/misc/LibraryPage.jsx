@@ -137,7 +137,27 @@ const LibraryPage = () => {
                             },
                             {
                                 'id': 'Données 2',
-                                'value': 20,
+                                'value': 10,
+                            },
+                            {
+                                'id': 'Données 3',
+                                'value': 10,
+                            },
+                        ]} />
+                    </div>
+                    <div className="col-4">
+                        <Pie data={[
+                            {
+                                'id': 'Données 1',
+                                'value': 80,
+                            },
+                            {
+                                'id': 'Données 2',
+                                'value': 5,
+                            },
+                            {
+                                'id': 'Données 3',
+                                'value': 5,
                             },
                         ]} />
                     </div>

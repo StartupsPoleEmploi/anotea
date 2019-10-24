@@ -1,10 +1,10 @@
 module.exports = (db, mailer, logger) => {
 
-    return (email, trainee, comment, reason) => {
+    return (email, trainee, comment, qualification) => {
         return new Promise((resolve, reject) => {
             mailer.sendInjureMail({ to: email }, trainee, comment,
                 async () => {
-                    logger.info(`email sent to ${email} pour`, reason);
+                    logger.info(`email sent to ${email} pour`, qualification);
                     resolve();
                 },
                 async err => {

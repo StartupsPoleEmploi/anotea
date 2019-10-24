@@ -11,43 +11,35 @@ const reconcile = require('../../reconciliation/tasks/reconcile');
 const synchronizeOrganismesWithAccounts = require('../../organismes/tasks/synchronizeAccountsWithIntercarif');
 const computeOrganismesScore = require('../../organismes/tasks/computeScore');
 const resetPasswords = require('../reset/tasks/resetPasswords');
+const createStagiaires = require('./tasks/createStagiaires');
 const createAvis = require('./tasks/createAvis');
-const dumpAvis = require('./tasks/dumpAvis');
+const emulateBackofficeActions = require('./tasks/emulateBackofficeActions');
+const importCommunes = require('../../import/communes/tasks/importCommunes');
 
 cli.description('Inject dataset')
 .option('-d, --drop', 'Drop database')
-.option('-p, --password [password]', 'Password for injected accounts')
-.option('--dump [dump]', 'Absolute path to the dumped file')
-.option('--generate', 'Generate a avis.json and exit')
+.option('-p, --password [password]', 'Password for accounts')
 .parse(process.argv);
 
-execute(async ({ db, logger, moderation, consultation, exit, regions }) => {
-
-    if (cli.generate) {
-        if (!cli.dump) {
-            exit('You must specified a dump file');
-        }
-        logger.info('Dumping avis from database....');
-        return dumpAvis(db, cli.dump);
-    }
+execute(async ({ db, logger, moderation, consultation, regions, passwords }) => {
 
     if (cli.drop) {
         logger.info('Dropping database....');
         await db.dropDatabase();
     }
 
-    await Promise.all([
-        createIndexes(db),
-    ]);
+    let options = { nbStagiaires: 1000, notes: 10, commentaires: 500 };
+
+    await createIndexes(db);
 
     let file = path.join(__dirname, '../../../../test/helpers/data/intercarif-data-test.xml');
     logger.info(`Importing intercarif fomr file ${file}....`);
     await importIntercarif(db, logger, file, regions);
 
-    logger.info(`Generating avis and reconcile them....`);
-    await reconcile(db, logger);
-    await createAvis(db, moderation, consultation, cli.dump ? require(cli.dump) : {});
-    await reconcile(db, logger);
+    logger.info(`Generating stagiaires and avis....`);
+    await reconcile(db, logger);//Just to get a valid session
+    await createStagiaires(db, options);
+    await createAvis(db, options);
 
     logger.info(`Creating organismes....`);
     await synchronizeOrganismesWithAccounts(db, logger, regions);
@@ -55,10 +47,16 @@ execute(async ({ db, logger, moderation, consultation, exit, regions }) => {
 
     logger.info(`Creating accounts....`);
     await createAccounts(db, logger);
+    await resetPasswords(db, passwords, cli.password || 'password', { force: true });
+    await emulateBackofficeActions(db, moderation, consultation, options);
+    logger.info(`Reconcile avis and sessions....`);
 
-    logger.info(`Resetting all passwords....`);
-    await resetPasswords(db, cli.password || 'password', { force: true });
 
+    let communes = path.join(__dirname, '../../../../test/helpers/data/communes.csv');
+    let cedex = path.join(__dirname, '../../../../test/helpers/data/cedex.csv');
+    await importCommunes(db, logger, communes, cedex);
+
+    await reconcile(db, logger);
 
     return { dataset: 'ready' };
 });

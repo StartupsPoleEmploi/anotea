@@ -1,8 +1,8 @@
 const assert = require('assert');
 const configuration = require('config');
-const { withMongoDB } = require('../../../../../helpers/test-database');
+const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newTrainee, randomize } = require('../../../../../helpers/data/dataset');
-const logger = require('../../../../../helpers/test-logger');
+const logger = require('../../../../../helpers/fake-logger');
 const AvisMailer = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/AvisMailer');
 const SendAction = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/actions/SendAction');
 const { successMailer } = require('../../fake-mailers');
@@ -35,6 +35,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 unsubscribe: true,
                 trainee: {
                     email: 'not-sent@trainee.org',
+                },
+            })),
+            insertIntoDatabase('trainee', newTrainee({
+                codeRegion: '11',
+                sourceIDF: null,
+                mailSent: false,
+                avisCreated: true,
+                unsubscribe: false,
+                trainee: {
+                    email: 'not-sent-either@trainee.org',
                 },
             })),
         ]);

@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-database');
+const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const { newTrainee, newComment } = require('../../../../helpers/data/dataset');
 const optOutStagiaire = require('../../../../../src/jobs/data/optOut/tasks/optOutStagiaire');
 
