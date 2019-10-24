@@ -69,7 +69,7 @@ module.exports = {
     newModerateurAccount: custom => {
         return _.merge({
             courriel: 'admin@pole-emploi.fr',
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             codeRegion: '11',
             profile: 'moderateur'
         }, custom);
@@ -80,7 +80,7 @@ module.exports = {
             SIRET: 6080274100045,
             raisonSociale: 'Pole Emploi Formation',
             courriel: 'contact@poleemploi-formation.fr',
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             creationDate: getDateInThePast(),
             token: randomize('token'),
             mailSentDate: getDateInThePast(),
@@ -121,7 +121,7 @@ module.exports = {
     newFinancerAccount: custom => {
         return _.merge({
             courriel: 'contact@financer.fr',
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             codeRegion: '11',
             raisonSociale: 'Conseil Regional',
             codeFinanceur: '2',
@@ -181,7 +181,7 @@ module.exports = {
             },
             date: date,
             accord: false,
-            status: 'published',
+            status: 'validated',
             qualification: 'positif',
             lastStatusUpdate: date,
             read: true,

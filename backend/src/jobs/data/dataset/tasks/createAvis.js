@@ -43,7 +43,7 @@ module.exports = async (db, options) => {
         });
     };
 
-    await generateAvis(options.notes || 100, () => ({ status: 'published' }));
+    await generateAvis(options.notes || 100, () => ({ status: 'validated' }));
     await generateAvis(options.commentaires || 100, () => {
         return {
             //Must be reused from questionnaire-routes

@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const { randomize } = require('./data/dataset');
-const configuration = require('config');
-const logger = require('./fake-logger');
-const fakeMailer = require('./fake-mailer');
+const config = require('config');
+const logger = require('./components/fake-logger');
+const fakeMailer = require('./components/fake-mailer');
+const fakePasswords = require('./components/fake-passwords');
 const components = require('../../src/components');
 
 let _componentsHolder = null;
@@ -16,23 +17,26 @@ module.exports = {
         return () => {
             before(() => {
 
-                let uri = configuration.mongodb.uri.split('anotea').join(randomize('anotea_test').substring(0, 20));
+                let uri = config.mongodb.uri.split('anotea').join(randomize('anotea_test').substring(0, 20));
+                let configuration = Object.assign({}, config, {
+                    mongodb: {
+                        uri
+                    },
+                    api: {
+                        pagination: 2,
+                    },
+                    log: {
+                        datalake: {
+                            fileNamePrefix: randomize('anotea'),
+                            path: datalake,
+                        }
+                    },
+                });
+
                 _componentsHolder = components({
-                    configuration: Object.assign({}, configuration, {
-                        mongodb: {
-                            uri
-                        },
-                        api: {
-                            pagination: 2,
-                        },
-                        log: {
-                            datalake: {
-                                fileNamePrefix: randomize('anotea'),
-                                path: datalake,
-                            }
-                        },
-                    }),
+                    configuration,
                     logger,
+                    passwords: fakePasswords(configuration),
                     mailer: fakeMailer(),
                 });
             });

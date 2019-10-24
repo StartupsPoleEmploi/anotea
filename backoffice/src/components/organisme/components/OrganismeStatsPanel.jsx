@@ -8,7 +8,7 @@ import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 import StagiairesStats from './StagiairesStats';
 
-export default class StatsPanel extends React.Component {
+export default class OrganismeStatsPanel extends React.Component {
 
     static propTypes = {
         query: PropTypes.object.isRequired,

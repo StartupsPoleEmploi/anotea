@@ -3,7 +3,7 @@ const path = require('path');
 const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newTrainee } = require('../../../helpers/data/dataset');
 const patchCertifInfos = require('../../../../src/jobs/patch/certifInfos/tasks/refreshCertifInfos');
-const logger = require('../../../helpers/fake-logger');
+const logger = require('../../../helpers/components/fake-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 

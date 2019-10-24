@@ -9,6 +9,9 @@ module.exports = (db, regions, user) => {
     let region = regions.findRegionByCodeRegion(user.codeRegion);
 
     return {
+        type: 'financeur',
+        getUser: () => user,
+        getShield: () => ({}),
         validators: {
             form: () => {
                 return {
@@ -23,8 +26,8 @@ module.exports = (db, regions, user) => {
             },
             filters: () => {
                 return {
-                    statuses: arrayOf(Joi.string().valid(['published', 'rejected', 'reported', 'archived'])),
-                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'published', 'rejected'])),
+                    statuses: arrayOf(Joi.string().valid(['validated', 'rejected', 'reported', 'archived'])),
+                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'validated', 'rejected'])),
                     qualification: Joi.string().valid(['all', 'négatif', 'positif']),
                     commentaires: Joi.bool(),
                     sortBy: Joi.string().allow(['date', 'lastStatusUpdate']),
@@ -55,7 +58,7 @@ module.exports = (db, regions, user) => {
             buildAvisQuery: async parameters => {
                 let {
                     departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate,
-                    commentaires, qualification, statuses = ['published', 'rejected', 'reported', 'archived']
+                    commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived']
                 } = parameters;
 
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
@@ -72,8 +75,7 @@ module.exports = (db, regions, user) => {
                     ...(_.isBoolean(commentaires) ? { comment: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),
                 };
-
             },
-        }
+        },
     };
 };

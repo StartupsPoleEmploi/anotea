@@ -12,9 +12,9 @@ const Status = ({ avis }) => {
                     (En cours de modération)
                 </span>
             );
-        case 'published':
+        case 'validated':
             return (
-                <span className="status published">
+                <span className="status validated">
                     (<span>Validé le </span> <PrettyDate date={new Date(avis.reponse.lastStatusUpdate)} />)
                 </span>
             );
@@ -42,11 +42,13 @@ export default class Reponse extends React.Component {
 
         return (
             <div className="Reponse">
-                <div className="title">
-                    <span>Réponse de l&apos;organisme </span>
-                    <Status avis={avis} />
+                <div className="d-flex justify-content-between align-items-baseline">
+                    <div>
+                        <span className="title">Réponse de l&apos;organisme </span>
+                        <Status avis={avis} />
+                    </div>
                     {avis.reponse.date &&
-                    <span className="date float-right">le <PrettyDate date={new Date(avis.reponse.date)} /></span>
+                    <span className="date">le <PrettyDate date={new Date(avis.reponse.date)} /></span>
                     }
                 </div>
                 <p>{avis.reponse.text}</p>

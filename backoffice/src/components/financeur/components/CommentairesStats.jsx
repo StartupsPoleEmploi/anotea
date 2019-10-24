@@ -9,53 +9,63 @@ const CommentairesStats = ({ stats }) => {
         <div className="CommentairesStats d-flex flex-wrap flex-row">
             <div className="chart first">
                 <div className="title">Modération des commentaires</div>
-                <div className="description">Sur {stats.nbCommentaires} commentaires au total</div>
+                <div className="description">{stats.nbCommentaires} commentaires au total</div>
                 <Pie data={[
                     {
                         id: 'Validés',
-                        value: stats.nbPublished,
+                        value: stats.nbCommentairesValidated,
                         label: 'commentaires',
                     },
                     {
                         id: 'Rejetés',
-                        value: stats.nbRejected,
+                        value: stats.nbCommentairesRejected,
+                        label: 'commentaires',
+                    },
+                    {
+                        id: 'Signalés',
+                        value: stats.nbCommentairesReported,
+                        label: 'commentaires',
+                    },
+                    {
+                        id: 'Archived',
+                        value: stats.nbCommentairesArchived,
                         label: 'commentaires',
                     },
                 ]} />
             </div>
             <div className="chart second">
                 <div className="title">Commentaires validés</div>
-                <div className="description">Sur {stats.nbPublished} commentaires au total</div>
+                <div className="description">{stats.nbCommentairesValidated} commentaires au total</div>
                 <Pie data={[
                     {
                         id: 'Positifs',
-                        value: stats.nbPositifs,
+                        value: stats.nbCommentairesPositifs,
                         label: 'commentaires',
                     },
                     {
                         id: 'Négatifs',
-                        value: stats.nbNegatifs,
+                        value: stats.nbCommentairesNegatifs,
                         label: 'commentaires',
                     },
                 ]} />
             </div>
             <div className="chart last">
                 <div className="title">Commentaires rejetés</div>
-                <div className="description">Sur {stats.nbRejected} commentaires au total</div>
+                <div className="description">{stats.nbCommentairesRejected} commentaires au total</div>
                 <Pie data={[
                     {
                         id: 'Non concernés',
-                        value: stats.nbNonConcernes,
+                        value: stats.nbCommentairesNonConcernes,
                         label: 'commentaires',
                     },
                     {
                         id: 'Alertes',
-                        value: stats.nbAlertes,
+                        value: stats.nbCommentairesAlertes,
                         label: 'commentaires',
                     },
                     {
                         id: 'Injures',
-                        value: stats.nbInjures,
+                        value: stats.nbCommentairesInjures,
                         label: 'commentaires',
                     },
                 ]} />

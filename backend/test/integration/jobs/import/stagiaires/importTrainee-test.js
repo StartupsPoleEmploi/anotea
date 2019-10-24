@@ -1,10 +1,9 @@
 const md5 = require('md5');
-const moment = require('moment');
 const _ = require('lodash');
 const assert = require('assert');
 const md5File = require('md5-file/promise');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
-const logger = require('../../../../helpers/fake-logger');
+const logger = require('../../../../helpers/components/fake-logger');
 const importTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
 const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/ileDeFranceCSVHandler');

@@ -5,7 +5,7 @@ const cli = require('commander');
 
 cli.parse(process.argv);
 
-execute(async ({ db, logger }) => {
+execute(async ({ db }) => {
     let stats = {};
     return stats;
 });
