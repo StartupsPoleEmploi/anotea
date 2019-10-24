@@ -32,8 +32,9 @@
     width: 200px;
 }
 
-.menu a {
+.menu > a {
     outline: none;
+    font-weight: bold;
 }
 
 .menu ul {
@@ -48,6 +49,7 @@
 
 .menu img {
     vertical-align: middle;
+    width: 15px;
 }
 
 .menu.closed ul {

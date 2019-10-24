@@ -133,7 +133,7 @@ body {
 .services {
     text-align: center;
     padding-bottom: 40px;
-    width: 60%;
+    width: 80%;
     margin: auto;
 }
 
@@ -141,7 +141,7 @@ body {
     font-weight: 900;
     text-align: center;
     margin-top: 80px;
-    margin-bottom: 60px;
+    margin-bottom: 20px;
     font-size: 32px;
 }
 
@@ -163,7 +163,6 @@ body {
 .services ul {
     margin: auto;
     padding: 0px;
-    margin-top: 60px;
 }
 
 .services li {
@@ -172,7 +171,8 @@ body {
     font-size: 16px;
     text-align: center;
     vertical-align: top;
-    width: 30%;
+    width: 20%;
+    margin: 5%;
 }
 
 .services li.last {
@@ -212,7 +212,7 @@ body {
 }
 
 .partenaires img {
-    margin: 20px;
+    margin: 30px;
     vertical-align: middle;
 }
 
