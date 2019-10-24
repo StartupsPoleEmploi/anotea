@@ -37,11 +37,27 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
     });
 
     router.get('/faq/organismes', (req, res) => {
-        res.render('front/faq_organismes');
+        res.redirect('/faq/organismes/fonctionnement');
+    });
+
+    router.get('/faq/organismes/:page', (req, res) => {
+        if (['fonctionnement', 'qualite', 'services'].includes(req.params.page)) {
+            res.render('front/faq_organismes', { page: req.params.page });
+        } else {
+            res.status(404).render('errors/404');
+        }
     });
 
     router.get('/faq/stagiaires', (req, res) => {
-        res.render('front/faq_stagiaires');
+        res.redirect('/faq/stagiaires/ancien');
+    });
+
+    router.get('/faq/stagiaires/:page', (req, res) => {
+        if (['ancien', 'nouveau'].includes(req.params.page)) {
+            res.render('front/faq_stagiaires', { page: req.params.page });
+        } else {
+            res.status(404).render('errors/404');
+        }
     });
 
     router.get('/faq/financeurs', (req, res) => {

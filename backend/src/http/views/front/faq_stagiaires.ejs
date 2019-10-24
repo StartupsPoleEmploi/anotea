@@ -43,46 +43,19 @@
             </div>
         </div>
 
+        <a name="faq"></a>
         <div id="faq" class="faq">
             <div class="content">
                 <h2>Foire aux questions</h2>
 
                 <ul class="nav">
-                    <li><a class="current" href="/faq/stagiaire/ancien">Ancien stagiaire</a></li>
-                    <li><a href="/faq/stagiaire/nouveau">Nouveau stagiaire</a></li>
+                    <li><a <% if(page === 'ancien'){ %>class="current" <% } %> href="/faq/stagiaires/ancien#faq">Ancien
+                            stagiaire</a></li>
+                    <li><a <% if(page === 'nouveau'){ %>class="current" <% } %>
+                            href="/faq/stagiaires/nouveau#faq">Nouveau stagiaire</a></li>
                 </ul>
 
-                <div>
-                    <div class="question closed">
-                        <a href="#">Quelles sont les points que doivent évaluer les anciens stagiaires à l'issue de leur
-                            formation ?
-                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
-                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
-                        </a>
-                    </div>
-                    <div class="reponse">
-                        Les 6 points pour lesquels les anciens stagiaires sont invités à mettre de 1 à 5 étoiles sont
-                        les suivants :
-                        <ul>
-                            <li><strong>Accueil</strong><br />
-                                Réunions d'information collective et entretiens à l'entrée en formation
-                            </li>
-                            <li><strong>Contenu de la formation</strong><br />
-                                Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique
-                            </li>
-                            <li><strong>Équipe de formateurs</strong><br />
-                                Prise en compte du besoin des stagiaires
-                            </li>
-                            <li><strong>Moyens matériels mis à disposition</strong><br />
-                                Salles de cours, documentation, plateaux techniques, équipement informatique
-                            </li>
-                            <li><strong>Accompagnement</strong><br />
-                                Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
+                <% if(page === 'ancien'){ %>
                 <div>
                     <div class="question closed">
                         <a href="#">Où est publié mon avis ?
@@ -91,94 +64,107 @@
                         </a>
                     </div>
                     <div class="reponse">
-                        Pôle emploi s’assure que les avis recueillis sont ceux d’anciens stagiaires ayant effectivement
-                        effectué la formation. Nous identifions à partir de nos fichiers les stagiaires ayant suivi une
-                        formation pour leur transmettre un questionnaire à l’issue.
+                        Les avis sont publiés aujourd’hui sur plusieurs sites partenaires : <a
+                            href="https://www.defi-metiers.fr/">Défi métiers</a>, <a
+                            href="https://labonneformation.pole-emploi.fr/">La Bonne Formation</a>, <a
+                            href="https://www.meformerenregion.fr/">Me former en région Occitanie</a> et sur l’appli
+                        Mobile Ma Formation.
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Le modérateur peut-il modifier mon avis / ma note ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            <p>Les notes ne peuvent être modifiées par le modérateur. Pour les avis, seul l'ajout
+                                d’espaces pour faciliter la lecture sont autorisés.</p>
+                            <p>Vous trouverez toutes les informations sur les conditions de publication des avis sur ce
+                                lien : <a href="http://anotea.pole-emploi.fr/cgu">CGU</a></p>
+
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Est-il possible de modifier mon avis / ma note après publication ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Oui vous pouvez nous écrire pour demander à recevoir un nouveau questionnaire. Le
+                            questionnaire précédemment rempli sera alors supprimé.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Pourquoi certains avis sont publiés et pas d’autres ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            <p>Les avis ne respectant pas notre charte de modération ne sont pas publiés. Vous pouvez la
+                                retrouver sur ce lien : <a href="http://anotea.pole-emploi.fr/cgu">CGU</a>.</p>
+                            <p>Par ailleurs un avis n’est publié à l’échelle d’une formation que s’il existe en ligne
+                                une formation similaire : même Organisme de Formation, même Lieu de réalisation et même
+                                Certification.</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Je ne retrouve pas mon avis sur le site Anotéa, est-ce normal ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            <p>Le site anotea.pole-emploi.fr présente la façon dont sont recueillis et traités les notes
+                                et avis des anciens stagiaires.</p>
+                            <p>Les Notes et avis sont quand à eux publiés aujourd’hui sur deux sites partenaires : <a
+                                    href="https://www.defi-metiers.fr/">Défi métiers</a>, <a
+                                    href="https://labonneformation.pole-emploi.fr/">La Bonne Formation</a>, <a
+                                    href="https://www.meformerenregion.fr/">Me former en région Occitanie</a> et sur
+                                l’appli mobile Ma Formation de Pôle Emploi.
+                        </div>
                     </div>
                 </div>
+                <% } %>
 
+                <% if(page === 'nouveau'){ %>
                 <div>
                     <div class="question closed">
-                        <a href="#">Mon avis est-il anonyme ?
+                        <a href="#">Anotéa est-il disponible pour toutes les formations en France ?
                             <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
                             <img class="icon-open" src="/static/images/home/chevron-down.svg" />
                         </a>
                     </div>
                     <div class="reponse">
-                        Vous trouverez toutes les informations sur les conditions de publication des avis sur ce lien :
-                        <a href="http://anotea.pole-emploi.fr/cgu">CGU</a>
+                        Anotéa est déployé en France Métropolitaine, en Martinique et en Guadeloupe pour les Demandeurs
+                        d’Emploi ayant suivi une formation financée par Pole Emploi, l’Agefiph, un OPCO ou le Conseil
+                        régional lorsque ce dernier est partenaire.
                     </div>
-                </div>
 
-                <div>
-                    <div class="question closed">
-                        <a href="#">Le modérateur peut-il modifier mon avis / ma note ?
-                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
-                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
-                        </a>
-                    </div>
-                    <div class="reponse">
-                        Anotéa n’a pas de lien avec la constitution des catalogues qualité. Par ailleurs, il ne
-                        présentera
-                        les avis que des organismes qui proposeront des sessions à venir.
-                    </div>
-                </div>
-
-                <div>
-                    <div class="question closed">
-                        <a href="#">Les futurs stagiaires peuvent-ils me contacter ?
-                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
-                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
-                        </a>
-                    </div>
-                    <div class="reponse">
-                        A ce stade, l'outil Anotéa ne relève pas de la norme NF Z74-501, mais il s'inscrit dans le cadre
-                        du décret
-                        qualité et des exigences CNIL.
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Comment sont modérés les avis publiés ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Vous trouverez toutes les informations sur les conditions de publication des avis sur ce
+                            lien :
+                            <a href="http://anotea.pole-emploi.fr/cgu">CGU</a>
+                        </div>
                     </div>
                 </div>
-
-                <div>
-                    <div class="question closed">
-                        <a href="#">Est-il possible de modifier mon avis / ma note après publication ?
-                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
-                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
-                        </a>
-                    </div>
-                    <div class="reponse">
-                        A ce stade, l'outil Anotéa ne relève pas de la norme NF Z74-501, mais il s'inscrit dans le cadre
-                        du décret
-                        qualité et des exigences CNIL.
-                    </div>
-                </div>
-
-                <div>
-                    <div class="question closed">
-                        <a href="#">Pourquoi certains avis sont publiés et pas d’autres ?
-                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
-                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
-                        </a>
-                    </div>
-                    <div class="reponse">
-                        A ce stade, l'outil Anotéa ne relève pas de la norme NF Z74-501, mais il s'inscrit dans le cadre
-                        du décret
-                        qualité et des exigences CNIL.
-                    </div>
-                </div>
-
-                <div>
-                    <div class="question closed">
-                        <a href="#">Je ne retrouve pas mon avis sur le site Anotéa, est-ce normal ?
-                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
-                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
-                        </a>
-                    </div>
-                    <div class="reponse">
-                        A ce stade, l'outil Anotéa ne relève pas de la norme NF Z74-501, mais il s'inscrit dans le cadre
-                        du décret
-                        qualité et des exigences CNIL.
-                    </div>
-                </div>
+                <% } %>
             </div>
         </div>
     </div>
