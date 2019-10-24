@@ -108,11 +108,11 @@ module.exports = ({ db, middlewares }) => {
             'training.organisation.siret': parameters.id,
             ...(
                 parameters.commentaires === null ?
-                    { status: { $in: ['published', 'rejected'] } } :
+                    { status: { $in: ['validated', 'rejected'] } } :
                     {
                         $or: [
-                            { comment: { $exists: parameters.commentaires }, status: 'published' },
-                            { 'reponse.status': 'published', 'status': 'published' },
+                            { comment: { $exists: parameters.commentaires }, status: 'validated' },
+                            { 'reponse.status': 'validated', 'status': 'validated' },
                         ]
 
                     }

@@ -21,7 +21,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '10'),
-            insertIntoDatabase('comment', buildComment({ status: 'published' })),
+            insertIntoDatabase('comment', buildComment({ status: 'validated' })),
             insertIntoDatabase('comment', buildComment({ status: 'rejected' })),
             insertIntoDatabase('comment', buildComment({ status: 'reported' })),
             insertIntoDatabase('comment', buildComment({ status: 'none' })),
@@ -31,14 +31,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         .get('/api/backoffice/avis')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis.filter(a => ['published', 'rejected', 'reported'].includes(a.status)).length, 2);
+        assert.strictEqual(response.body.avis.filter(a => ['validated', 'rejected', 'reported'].includes(a.status)).length, 2);
 
         response = await request(app)
-        .get('/api/backoffice/avis?statuses=published')
+        .get('/api/backoffice/avis?statuses=validated')
         .set('authorization', `Bearer ${token}`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
-        assert.strictEqual(response.body.avis[0].status, 'published');
+        assert.strictEqual(response.body.avis[0].status, 'validated');
 
         response = await request(app)
         .get('/api/backoffice/avis?statuses=rejected')
@@ -185,7 +185,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsFinance
         let app = await startServer();
         let [token] = await Promise.all([
             logAsFinanceur(app, 'financeur@pole-emploi.fr', '4'),
-            insertIntoDatabase('comment', buildComment({ status: 'published' })),
+            insertIntoDatabase('comment', buildComment({ status: 'validated' })),
             insertIntoDatabase('comment', buildComment({ status: 'archived' })),
         ]);
 

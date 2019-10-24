@@ -75,7 +75,7 @@ module.exports = data => {
         avis.commentaire = convertCommentaire(data);
     }
 
-    if (data.reponse && data.reponse.status === 'published') {
+    if (data.reponse && data.reponse.status === 'validated') {
         avis.reponse = {
             texte: data.reponse.text,
         };

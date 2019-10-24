@@ -227,7 +227,7 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
         const avis = await db.collection('comment').find({
             'comment': { $ne: null },
             'read': false,
-            'status': 'published',
+            'status': 'validated',
             'training.organisation.siret': organisme.SIRET
         });
 

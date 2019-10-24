@@ -93,7 +93,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             accord: body.accord,
             accordEntreprise: body.accordEntreprise,
             read: false,
-            status: hasCommentaires ? 'none' : 'published',
+            status: hasCommentaires ? 'none' : 'validated',
             lastStatusUpdate: new Date(),
         };
 
@@ -173,19 +173,15 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             db.collection('trainee').updateOne({ token: req.params.token }, { $set: { 'tracking.click': new Date() } });
         }
 
-        return res.send({ stagiaire, infosRegion, submitted: !!comment });
+        let infosRegion = await getInfosRegion(stagiaire);
+        return res.send({ stagiaire, infosRegion, submitted: stagiaire.avisCreated });
     }));
 
     router.post('/questionnaire/:token', getTraineeFromToken, tryAndCatch(async (req, res) => {
 
         let stagiaire = req.trainee;
-        let comment = await db.collection('comment').findOne({
-            'token': req.params.token,
-            'training.formacode': stagiaire.training.formacode,
-            'training.idSession': stagiaire.training.idSession
-        });
 
-        if (comment) {
+        if (stagiaire.avisCreated) {
             throw new AlreadySentError();
         }
 

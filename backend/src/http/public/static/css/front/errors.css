@@ -24,7 +24,7 @@ header {
 }
 
 .logoAnotea {
-    height: 120px;
+    height: 80px;
 }
 
 .error-page {
@@ -37,7 +37,7 @@ header {
 
 .servicePro {
     font-size: 14px;
-    top: 60px;
+    top: 35px;
     margin-left: 500px;
     position: absolute;
 }

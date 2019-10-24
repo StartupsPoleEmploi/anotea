@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import Stagiaire from './Stagiaire';
 import Titre from './Titre';
 import Commentaire from './Commentaire';
 import Formation from './Formation';
 import CommentaireEditor from './CommentaireEditor';
 import Notes from './Notes';
 import Reponse from './Reponse';
-import PublishReponseButton from './buttons/PublishReponseButton';
+import ValidateReponseButton from './buttons/ValidateReponseButton';
 import RejectReponseButton from './buttons/RejectReponseButton';
-import PublishButton from './buttons/PublishButton';
+import ValidateButton from './buttons/ValidateButton';
 import RejectButton from './buttons/RejectButton';
 import EditButton from './buttons/EditButton';
 import LocalMessage from '../message/LocalMessage';
@@ -20,21 +19,24 @@ import MarkAsReadButton from './buttons/MarkAsReadButton';
 import ReportButton from './buttons/ReportButton';
 import EditReponseButton from './buttons/EditReponseButton';
 import ReponseEditor from './ReponseEditor';
+import { Workflow } from './Workflow';
+import Stars from './Stars';
 
 export default class Avis extends React.Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
-        showStatus: PropTypes.bool,
         showReponse: PropTypes.bool,
         showReponseButtons: PropTypes.bool,
         showModerationButtons: PropTypes.bool,
         showModerationReponseButtons: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
+        renderWorkflow: PropTypes.func,
     };
 
     static defaultProps = {
         onChange: () => ({}),
+        renderWorkflow: avis => <Workflow avis={avis} />,
     };
 
     constructor(props) {
@@ -78,7 +80,8 @@ export default class Avis extends React.Component {
 
     render() {
         let {
-            avis, showStatus, showReponse, showReponseButtons, showModerationButtons, showModerationReponseButtons
+            avis, renderWorkflow, showReponse, showReponseButtons,
+            showModerationButtons, showModerationReponseButtons,
         } = this.props;
         let { message, showReponseEditor } = this.state;
         let isLocalMessage = _.get(message, 'type') === 'local';
@@ -102,11 +105,8 @@ export default class Avis extends React.Component {
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
                         <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
-                                <Stagiaire
-                                    avis={avis}
-                                    showStatus={showStatus}
-                                    showModerationButtons={showModerationButtons}
-                                    onChange={this.handleChange} />
+                                <Stars note={avis.rates.global} />
+                                {renderWorkflow(avis)}
                             </div>
 
                             <div className="mb-1">
@@ -133,7 +133,7 @@ export default class Avis extends React.Component {
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
                                 <EditButton avis={avis} onChange={this.handleChange} onEdit={this.toggleCommentairesEditor} />
-                                <PublishButton avis={avis} onChange={this.handleChange} />
+                                <ValidateButton avis={avis} onChange={this.handleChange} />
                                 <RejectButton avis={avis} onChange={this.handleChange} />
                             </div>
                         </div>
@@ -168,7 +168,7 @@ export default class Avis extends React.Component {
                         {showModerationReponseButtons &&
                         <div className={`col-sm-2 col-md-1 ${disabledClass}`}>
                             <div className="btn-group-vertical">
-                                <PublishReponseButton avis={avis} onChange={this.handleChange} />
+                                <ValidateReponseButton avis={avis} onChange={this.handleChange} />
                                 <RejectReponseButton avis={avis} onChange={this.handleChange} />
                             </div>
                         </div>

@@ -8,8 +8,8 @@ import { Tab, Tabs } from '../common/page/tabs/Tabs';
 import { Form, Periode, Select } from '../common/page/form/Form';
 import { getFormations } from '../../services/formationsService';
 import Button from '../common/Button';
-import AvisPanel from './components/AvisPanel';
-import StatsPanel from './components/StatsPanel';
+import OrganismeAvisPanel from './components/OrganismeAvisPanel';
+import OrganismeStatsPanel from './components/OrganismeStatsPanel';
 import UserContext from '../UserContext';
 import { getDepartements } from '../../services/departementsService';
 
@@ -300,12 +300,12 @@ export default class OrganismePage extends React.Component {
                 }
                 panel={
                     navigator.isActive('/admin/organisme/avis/liste') ?
-                        <AvisPanel
+                        <OrganismeAvisPanel
                             query={navigator.getQuery()}
                             onFilterClicked={this.onFilterClicked} /> :
                         <Route
                             path={'/admin/organisme/avis/stats'}
-                            render={() => <StatsPanel query={navigator.getQuery()} />}
+                            render={() => <OrganismeStatsPanel query={navigator.getQuery()} />}
                         />
                 }
             />

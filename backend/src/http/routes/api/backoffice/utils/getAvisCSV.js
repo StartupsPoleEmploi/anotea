@@ -7,10 +7,10 @@ let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').repla
 let getStatus = comment => {
     if (comment.status === 'archived') {
         return 'Archivé';
-    } else if (comment.status === 'published') {
+    } else if (comment.status === 'validated') {
         return 'Validé';
     } else {
-        return 'En attente de modération';
+        return 'En cours de modération';
     }
 };
 
@@ -18,10 +18,10 @@ let getReponseStatus = reponse => {
     switch (reponse.status) {
         case 'rejected':
             return 'Rejetée';
-        case 'published':
+        case 'validated':
             return 'Validée';
         default:
-            return 'En attente de modération';
+            return 'En cours de modération';
     }
 };
 

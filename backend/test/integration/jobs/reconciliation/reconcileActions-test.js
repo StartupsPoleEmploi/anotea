@@ -1,5 +1,5 @@
 const assert = require('assert');
-const logger = require('../../../helpers/fake-logger');
+const logger = require('../../../helpers/components/fake-logger');
 const _ = require('lodash');
 const ObjectID = require('mongodb').ObjectID;
 const { withMongoDB } = require('../../../helpers/with-mongodb');
@@ -582,7 +582,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     postalCode: '75019',
                 },
             },
-            status: 'published',
+            status: 'validated',
         });
         delete comment.comment;
 
@@ -598,7 +598,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         assert.strictEqual(action.avis[0].commentaire, undefined);
     });
 
-    it('should ignore not yet published comment', async () => {
+    it('should ignore not yet validated comment', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
