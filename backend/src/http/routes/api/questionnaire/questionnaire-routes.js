@@ -173,7 +173,6 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             db.collection('trainee').updateOne({ token: req.params.token }, { $set: { 'tracking.click': new Date() } });
         }
 
-        let infosRegion = await getInfosRegion(stagiaire);
         return res.send({ stagiaire, infosRegion, submitted: stagiaire.avisCreated });
     }));
 
