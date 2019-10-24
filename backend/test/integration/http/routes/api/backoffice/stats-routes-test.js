@@ -211,9 +211,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 logUser(app),
                 insertIntoDatabase('trainee', buildTrainee({
                     mailSent: true,
+                    mailSentDate: new Date()
+                })),
+                insertIntoDatabase('trainee', buildTrainee({
+                    mailSent: null,
+                    mailSentDate: new Date()
                 })),
                 insertIntoDatabase('trainee', buildTrainee({
                     mailSent: false,
+                    mailSentDate: null
                 })),
             ]);
 
@@ -223,8 +229,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             assert.strictEqual(response.statusCode, 200);
             assert.deepStrictEqual(response.body, {
-                total: 2,
-                nbEmailsEnvoyes: 1,
+                total: 3,
+                nbEmailsEnvoyes: 2,
             });
         });
     });
