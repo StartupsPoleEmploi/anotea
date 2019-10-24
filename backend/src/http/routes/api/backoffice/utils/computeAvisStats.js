@@ -35,7 +35,6 @@ module.exports = async (db, query) => {
             }
         };
     };
-    console.log(query)
 
     let results = await db.collection('comment').aggregate([
         {
