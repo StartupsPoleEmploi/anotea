@@ -111,7 +111,7 @@ module.exports = function(db, logger, configuration, regions) {
 
     const list = {
         help: {
-            url: 'https://anotea.pole-emploi.fr/faq'
+            url: 'https://anotea.pole-emploi.fr/cgu'
         },
         unsubscribe: {
             url: 'https://anotea.pole-emploi.fr/admin',

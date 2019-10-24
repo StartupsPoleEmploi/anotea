@@ -42,11 +42,11 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
         res.render('front/cgu');
     });
 
-    router.get('/faq/organismes', (req, res) => {
-        res.redirect('/faq/organismes/fonctionnement');
+    router.get('/services/organismes', (req, res) => {
+        res.redirect('/services/organismes/fonctionnement');
     });
 
-    router.get('/faq/organismes/:page', (req, res) => {
+    router.get('/services/organismes/:page', (req, res) => {
         if (['fonctionnement', 'qualite', 'services'].includes(req.params.page)) {
             res.render('front/faq_organismes', { page: req.params.page });
         } else {
@@ -54,11 +54,11 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
         }
     });
 
-    router.get('/faq/stagiaires', (req, res) => {
-        res.redirect('/faq/stagiaires/ancien');
+    router.get('/services/stagiaires', (req, res) => {
+        res.redirect('/services/stagiaires/ancien');
     });
 
-    router.get('/faq/stagiaires/:page', (req, res) => {
+    router.get('/services/stagiaires/:page', (req, res) => {
         const connectionInfos = peconnect.initConnection();
         req.session.pe_connect = {
             state: connectionInfos.state,
@@ -72,7 +72,7 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
         }
     });
 
-    router.get('/faq/financeurs', (req, res) => {
+    router.get('/services/financeurs', (req, res) => {
         res.render('front/faq_financeurs');
     });
 
