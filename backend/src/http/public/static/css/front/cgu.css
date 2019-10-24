@@ -54,15 +54,15 @@ h2 {
     padding: 20px;
 }
 
-h3 {
+.main h3 {
     margin: 30px 0px 0px 0px;
 }
 
-p {
+.main p {
     margin-top: 5px;
 }
 
-p, ul, ol {
+.main p, .main ul,  .main ol {
     font-size: 1.2em;
 }
 
@@ -79,16 +79,16 @@ p, ul, ol {
     border-bottom-right-radius: 5px;
 }
 
-ul, ol {
+.main ul, ol {
     padding: 0;
     list-style: none;
 }
 
-li {
+.main li {
     margin-top: 10px;
 }
 
-ul > li:before {
+.main ul > li:before {
     content: "- ";
     text-indent: -5px;
 }
