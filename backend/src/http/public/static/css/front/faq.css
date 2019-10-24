@@ -69,6 +69,10 @@ a {
     background-color: #0d7d57;
 }
 
+.financeur .vous {
+    margin-bottom: 60px;
+}
+
 .intro h2 strong {
     font-weight: 900;
 }
@@ -96,6 +100,7 @@ a {
     display: inline-block;
     vertical-align: top;
     margin-right: 5%;
+    font-weight: 900;
 }
 
 .description .button {
@@ -133,6 +138,11 @@ a {
 .affichez .button {
     background-color: #FF9533;
     color: #24303A;
+}
+
+.faqContent {
+    width: 60%;
+    margin: auto;
 }
 
 .faq {
