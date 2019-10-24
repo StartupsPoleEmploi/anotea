@@ -1,0 +1,94 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    font-family: Lato;
+    font-weight: normal;
+    margin: 0;
+}
+
+.cgu .header {
+    box-shadow: inherit;
+}
+
+.main {
+    width: 60%;
+    margin: auto;
+    background: white;
+    border-radius: 5px;
+}
+
+.main.cgu {
+    padding: 20px;
+}
+
+h1 {
+    background-color: #F0801A;
+    color: white;
+    width: 100%;
+    text-align: center;
+    height: 160px;
+    line-height: 160px;
+    font-size: 32px;
+    font-weight: 900;
+    margin-top: 0px;
+}
+
+h2 {
+    font-weight: 900;
+    font-size: 24px;
+}
+
+.main a {
+    color: #24303A;
+}
+
+.main h1, .main h2 {
+    margin-top: 0px;
+}
+
+.main .links a {
+    margin-right: 30px;
+}
+
+.main .head {
+    padding: 20px;
+}
+
+h3 {
+    margin: 30px 0px 0px 0px;
+}
+
+p {
+    margin-top: 5px;
+}
+
+p, ul, ol {
+    font-size: 1.2em;
+}
+
+.main .block {
+    padding: 20px;
+}
+
+.main .block.even {
+    background-color: #EDEFF0;
+}
+
+.main .last {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+ul, ol {
+    padding: 0;
+    list-style: none;
+}
+
+li {
+    margin-top: 10px;
+}
+
+ul > li:before {
+    content: "- ";
+    text-indent: -5px;
+}

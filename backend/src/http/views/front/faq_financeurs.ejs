@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+    <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/css/front/faq.css" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $(".question a").click(function (e) {
+                e.preventDefault();
+                $('.question').removeClass('open').addClass('closed').next().hide();
+                $(e.target).parent().toggleClass('open closed');
+                $(e.target).parent().next().toggle();
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <%- include('header.ejs'); %>
+    <div class="main financeur">
+        <div class="intro">
+            <div class="content">
+                <div class="text">
+                    <h2>Vous êtes un <strong>financeur ?</strong></h2>
+                    <p>
+                        Connectez-vous à votre espace Anotéa pour accéder aux avis des anciens stagiaires de vos
+                        formation et répondre à leurs commentaires.
+                    </p>
+                    <a class="button" href="/admin">Accéder à mon espace</a>
+                </div>
+                <img src="/static/images/home/faq/Illu_financeur.png" />
+            </div>
+        </div>
+
+        <div class="vous">
+            <div class="content">
+                <h2>Votre espace Financeur</h2>
+                <h3>Découvrez les fonctionnalités de votre espace personnel Financeur.</h3>
+                <div class="text">
+                    <ul>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_1.svg" />
+                            <p>Consulter et répondre aux avis laissés par les anciens stagiaires.</p>
+                        </li>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_2.svg" />
+                            <p>Consulter sous forme de graphique, la satisfaction des stagiaires de chaque formation.
+                            </p>
+                        </li>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_3.svg" />
+                            <p>Faire une recherche ciblée grâce aux filtres par organisme, formation, période ou encore
+                                lieu de formation.</p>
+                        </li>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_4.svg" />
+                            <p>Exporter les avis ainsi que les graphiques présents dans votre espace pour les partager à
+                                vos collaborateurs.</p>
+                        </li>
+                    </ul>
+                    <img class="bo" src="/static/images/home/faq/bo_fi.png" />
+                </div>
+            </div>
+        </div>
+        <%- include('../../views/contact.ejs'); %>
+        <%- include('../../views/front/footer.ejs'); %>
+        <%- include('../../views/analyticsTrackers.ejs'); %>
+</body>
+
+</html>

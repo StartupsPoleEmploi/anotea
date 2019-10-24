@@ -1,0 +1,268 @@
+body {
+    font-family: Lato;
+    margin: 0;
+    color: #24303A;
+}
+
+.main {
+    width: 100%;
+}
+
+.main .content {
+    width: 60%;
+    margin: auto;
+}
+
+a {
+    color: #373B46;
+}
+
+.button {
+    display: inline-block;
+    position: relative;
+    margin: 0px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    background-color: #29333C;
+    box-shadow: none;
+    border: none;
+    font-size: 0.9em;
+    padding: 12px 20px 0px 20px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.intro {
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+.intro .text {
+    width: 30%;
+    display: inline-block;
+    margin-right: 20%;
+}
+
+.intro h2 {
+    padding-top: 30px;
+    font-size: 32px;
+    line-height: 35px;
+    font-weight: normal;
+}
+
+.stagiaire .intro h2 {
+    color: #384EAA;
+    font-weight: 900;
+}
+.stagiaire .intro .button {
+    background-color: #384EAA;
+}
+
+.financeur .intro h2 {
+    color: #0d7d57;
+}
+.financeur .intro .button {
+    background-color: #0d7d57;
+}
+
+.intro h2 strong {
+    font-weight: 900;
+}
+
+.intro img {
+    vertical-align: top;
+}
+
+.description {
+    background-color: #24303A;
+    color: white;
+    padding: 40px;
+}
+
+.description h2, .description div {
+    width: 40%;
+}
+
+.description .text {
+    display: inline-block;
+}
+
+.description h2 {
+    color: #FF9533;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 5%;
+}
+
+.description .button {
+    color: #FF9533;
+    background-color: white;
+}
+
+.affichez h2 {
+    font-size: 32px;
+}
+
+.affichez {
+    background-color: #24303A;
+    color: white;
+    padding: 40px;
+}
+
+.affichez img, .affichez .text {
+    display: inline-block;
+}
+
+.affichez .text {
+    width: 40%;
+    margin: 5%;
+}
+
+.affichez img {
+    vertical-align: middle;
+}
+
+.affichez h3 {
+    color: #FF9533;
+}
+
+.affichez .button {
+    background-color: #FF9533;
+    color: #24303A;
+}
+
+.faq {
+    margin-bottom: 300px;
+}
+
+.faq h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 900;
+}
+.faq .nav {
+    list-style: none;
+    padding: 0px;
+    text-align: center;
+}
+
+.faq .nav li {
+    display: inline;
+    margin: 20px;
+}
+
+.faq .nav li a {
+    text-decoration: none;
+    opacity: 0.6;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: bold;
+}
+
+.faq .nav li a.current {
+    font-weight: bolder;
+    opacity: 1;
+}
+
+.vous ul {
+    padding: 0;
+    width: 40%;
+}
+
+.vous li {
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px 0 rgba(0,0,0,0.1);
+    margin: 15px;
+    list-style: none;
+    padding: 15px 15px 5px 15px;
+}
+
+.vous li .icon, .vous li p {
+    display: inline-block;
+}
+
+.vous li .icon {
+    vertical-align: top;
+}
+
+.vous li p {
+    width: 80%;
+    margin: 2%;
+}
+
+.vous .bo, .vous ul {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.vous .main .content {
+    width: 80%;
+}
+
+.vous h2 {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 35px;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.vous h3 {
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.vous .bo {
+    width: 50%;
+    margin-left: 5%;
+}
+
+.question {
+    outline: none;
+    margin-bottom: 15px;
+}
+
+.question.open .icon-open {
+    display: none;
+}
+
+.question.closed .icon-closed {
+    display: none;
+}
+
+.question a {
+    color: #24303A;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    background-color: #F4F4F5;
+    border-radius: 5px;
+    line-height: 22px;
+    padding: 5px 15px;
+    outline: none;
+    padding: 20px;
+    font-size: 18px;
+}
+
+.question img {
+    float: inline-end;
+    margin: 0px 5px;
+}
+
+.reponse {
+    opacity: 0.8;
+    color: #24303A;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 15px;
+}
+
+.reponse {
+    display: none;
+}

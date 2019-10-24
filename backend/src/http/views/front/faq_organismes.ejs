@@ -1,0 +1,481 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+    <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
+    <link rel="stylesheet" type="text/css" href="/static/css/front/faq.css" media="all">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $(".question a").click(function (e) {
+                e.preventDefault();
+                $('.question').removeClass('open').addClass('closed').next().hide();
+                $(e.target).parent().toggleClass('open closed');
+                $(e.target).parent().next().toggle();
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <%- include('header.ejs'); %>
+    <div class="main">
+        <div class="intro">
+            <div class="content">
+                <div class="text">
+                    <h2>Vous êtes un <strong>organisme de la formation ?</strong></h2>
+                    <p>
+                        Connectez-vous à votre espace Anotéa pour accéder aux avis des anciens stagiaires de vos
+                        formation et répondre à leurs commentaires.
+                    </p>
+                    <a class="button" href="/admin">Accéder à mon espace</a>
+                </div>
+                <img src="/static/images/home/faq/Illu_OF.svg" />
+            </div>
+        </div>
+
+        <div class="description">
+            <div class="content">
+                <h2>80% des internautes déclarent faire confiance aux avis en ligne comme ils font confiance à l’avis
+                    d’un proche.
+                </h2>
+                <div class="text">
+                    <p>
+                        Les avis en ligne rassurent ou incitent l’internaute à rechercher des informations
+                        complémentaires sur
+                        l’organisme
+                        de formation.
+                    </p>
+                    <p> Votre réponse compte. Elle donne à l’internaute des informations sur la manière dont vous prenez
+                        en compte
+                        les
+                        attentes de vos stagiaires
+                    </p>
+                    <p>
+                        Voici quelques conseils pour répondre aux avis.
+                    </p>
+                    <a class="button" href="#faq">En savoir plus</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="vous">
+            <div class="content">
+                <h2>Votre espace Organisme</h2>
+                <h3>Découvrez les fonctionnalités de votre espace personnel Organisme.</h3>
+                <div class="text">
+                    <ul>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_1.svg" />
+                            <p>Consulter et répondre aux avis laissés par les anciens stagiaires.</p>
+                        </li>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_2.svg" />
+                            <p>Consulter sous forme de graphique, la satisfaction des stagiaires de chaque formation.
+                            </p>
+                        </li>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_3.svg" />
+                            <p>Faire une recherche ciblée grâce aux filtres par organisme, formation, période ou encore
+                                lieu de formation.</p>
+                        </li>
+                        <li>
+                            <img class="icon" src="/static/images/home/faq/faq_4.svg" />
+                            <p>Exporter les avis ainsi que les graphiques présents dans votre espace pour les partager à
+                                vos collaborateurs.</p>
+                        </li>
+                    </ul>
+                    <img class="bo" src="/static/images/home/faq/bo.png" />
+                </div>
+            </div>
+        </div>
+        <div class="affichez">
+            <div class="content">
+                <img src="/static/images/home/faq/screenshot.png" />
+                <div class="text">
+                    <h2>Affichez les avis d’anciens stagiaires
+                        sur votre site !</h2>
+                    <h3>83% des internautes tiennent compte des avis pour faire leur choix.</h3>
+                    <p>Nous avons développé une solution qui vous permet d'afficher les avis recueillis pour votre
+                        organisme sur votre propre site sans nécessiter de développements informatiques. Vous pouvez
+                        ainsi valoriser vos formations et votre démarche qualité auprès des futurs stagiaires.</p>
+                    <a class="button" href="#">Contactez-nous</a>
+                </div>
+            </div>
+        </div>
+
+        <a name="faq"></a>
+        <div id="faq" class="faq">
+            <div class="content">
+                <h2>Foire aux questions</h2>
+
+                <ul class="nav">
+                    <li><a <% if(page === 'fonctionnement'){ %>class="current" <% } %>
+                            href="/faq/organismes/fonctionnement#faq">Fonctionnement d'Anotéa</a></li>
+                    <li><a <% if(page === 'qualite'){ %>class="current" <% } %>
+                            href="/faq/organismes/qualite#faq">Qualité</a></li>
+                    <li><a <% if(page === 'services'){ %>class="current" <% } %>
+                            href="/faq/organismes/services#faq">Services</a></li>
+                </ul>
+
+                <% if(page === 'fonctionnement'){ %>
+                <div>
+                    <div class="question closed">
+                        <a href="#">Où puis-je consulter les avis déposés sur mon établissement ?
+                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                        </a>
+                    </div>
+                    <div class="reponse">
+                        <p>Dès qu’un avis est déposé par un stagiaire Demandeur d’Emploi sur une de vos formations, vous
+                            recevez un mail vous invitant à créer votre Espace Anotéa pour consulter et répondre aux
+                            avis.</p>
+                        <p>Si vous n’avez pas reçu ce mail, n’hésitez pas à <a href="mailto:anotea@pole-emploi.fr">nous
+                                Contacter</a>.</p>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Pourquoi Anotéa restitue des avis sur des Formations qui n’ont pas démarré ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            <p>C’est normal. L’objectif étant d’éclairer les futurs stagiaires, nous affichons sur les
+                                catalogues de formation en ligne, les avis que nous avons collecté sur des sessions de
+                                formation similaires.</p>
+                            <p>Comment procédons-nous ?</p>
+                            <p>Nous avons déterminé des critères communs entre l’avis collecté et la session affichée
+                                permettant de garantir la pertinence de la restitution en ligne :</p>
+                            <p>L’avis a été déposé par un stagiaire ayant suivi une formation : </p>
+                            <ul>
+                                <li>dans le même centre de formation (SIRET et lieu de réalisation)</li>
+                                <li>ayant le même CertifInfo si la formation est certifiante, sinon le même Formacode
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">A quel moment de la formation le stagiaire peut-il donner une évaluation ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Le stagiaire inscrit comme Demandeur d’Emploi reçoit un e-mail l’invitant à donner son avis
+                            une fois la formation terminée, même s’il a terminé de façon anticipée.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Sous quel délai après la formation est envoyé le questionnaire ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Le questionnaire est envoyé au stagiaire dans la semaine qui suit la fin de formation, dès
+                            lors que l’entrée en stage a bien été attestée.
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+
+                <% if(page === 'qualite'){ %>
+                <div>
+                    <div class="question closed">
+                        <a href="#">Quelles sont les points que doivent évaluer les anciens stagiaires à l'issue de leur
+                            formation ?
+                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                        </a>
+                    </div>
+                    <div class="reponse">
+                        Les 6 points pour lesquels les anciens stagiaires sont invités à mettre de 1 à 5 étoiles sont
+                        les
+                        suivants :
+                        <ul>
+                            <li><strong>Accueil</strong><br />
+                                Réunions d'information collective et entretiens à l'entrée en formation
+                            </li>
+                            <li><strong>Contenu de la formation</strong><br />
+                                Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique
+                            </li>
+                            <li><strong>Équipe de formateurs</strong><br />
+                                Prise en compte du besoin des stagiaires
+                            </li>
+                            <li><strong>Moyens matériels mis à disposition</strong><br />
+                                Salles de cours, documentation, plateaux techniques, équipement informatique
+                            </li>
+                            <li><strong>Accompagnement</strong><br />
+                                Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Est-ce qu’Anotéa vérifie que les avis sont réels ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Pôle emploi s’assure que les avis recueillis sont ceux d’anciens stagiaires ayant
+                            effectivement
+                            effectué la formation. Nous identifions à partir de nos fichiers les stagiaires ayant suivi
+                            une
+                            formation pour leur transmettre un questionnaire à l’issue.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Les Organismes de formation ont-ils un droit de réponse ? Comment l’exercer ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Oui les organismes de formation ont la possibilité de commenter librement les avis des
+                            stagiaires, à partir d’un Espace dédié qui est mis à leur disposition.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Est-il possible de connaître l’identité du stagiaire qui a posté l’avis ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Non, l’identité du stagiaire restera anonyme.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Comment sont modérés les avis ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Vous trouverez toutes les informations sur les conditions de publication des avis sur ce
+                            lien : <a href="http://anotea.pole-emploi.fr/cgu">CGU</a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Comment consulter les avis des stagiaires ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Les organismes ont la possibilité de consulter les avis concernant les formations qu’ils ont
+                            réalisées depuis leur Espace Anotéa
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Où sont publiés les avis ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Les avis sont publiés aujourd’hui sur les sites partenaires : <a
+                                href="https://www.defi-metiers.fr/">Défi métiers</a> Me Former en Région Occitanie, <a
+                                href="https://labonneformation.pole-emploi.fr/">La bonne formation</a> et
+                            sur l’appli mobile Ma Formation de Pole Emploi.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Est-il possible d’afficher un avis positif sur notre site ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            <p>Oui, le service Anotéa est construit sous forme d’API donc il est possible, via un
+                                contrat de licence, d’obtenir cette API pour afficher l’ensemble des avis sur le site de
+                                l’OF</p>
+                            <p>Nous avons également développé différents Widget (format ou contenu) qui permettent
+                                d’intégrer facilement les avis Anotéa sur votre site.</p>
+
+                            <p>L’API est disponible sur
+                                https://www.emploi-store-dev.fr/portail-developpeur-cms/home.html;JSESSIONID_JAHIA=44D1A19D7B5194C2AF619F0B547BD5D1
+                            </p>
+
+                            <p>Le Widget est disponible sur
+                                https://github.com/StartupsPoleEmploi/anotea/blob/master/WIDGET.md</p>
+
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Suis-je en droit de m'opposer à la mise en ligne d'avis sur mon OF?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Les commentaires publiés sont modérés en amont, les OF n’ont pas la possibilité de s’opposer
+                            à la mise en ligne d’un avis, mais peuvent y répondre depuis leur Espace Anotéa, cette
+                            réponse sera publiée avec le commentaire du stagiaire.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Combien faut-il d’avis négatifs pour qu’une action corrective se déclenche ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Le déclenchement d’actions correctives se fait au cas par cas, en fonction du nombre de
+                            retours négatifs, du contenu de ces retours et des notes émises.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Est-ce qu’un bilan des notes et avis sera délivré aux Organisme de Formation ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            A travers l’accès au back-office, les Organismes de Formation pourront accéder à l’ensemble
+                            des avis et notes les concernant et les exporter dans un fichier Excel.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Cela va-t-il donner lieu à un classement des Organismes de formation ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Non, le service Anotéa n’a pas pour objectif de réaliser un classement des organismes de
+                            formation.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Le service Anotéa peut-il être utilisé par les financeurs comme un label de
+                                qualité ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Le service Anotéa ne délivre pas un label de qualité, cela est néanmoins un outil utilisable
+                            par les financeurs dans l’actualisation du catalogue.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Les avis positifs sur Anotéa auront-ils un impact sur les notes de "La Bonne
+                                Formation" ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Il n'y a pas de lien entre les statistiques de retours à l'emploi affichés par domaine de
+                            formation sur "La Bonne Formation" et la notation des évaluations par les anciens stagiaires
+                            sur Anotéa.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">La conception et le fonctionnement d’Anotéa relèvent-ils de la norme NF Z74-501
+                                ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            A ce stade, l'outil Anotéa ne relève pas de la norme NF Z74-501, mais il s'inscrit dans le
+                            cadre du décret qualité et du respect RGPD.
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+
+                <% if(page === 'services'){ %>
+                <div>
+                    <div class="question closed">
+                        <a href="#">Les formations faisant parties d'un portage sont-elles identifiées au nom du porteur
+                            ou au nom de l'organisme de formation réalisateur ?
+                            <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                            <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                        </a>
+                    </div>
+                    <div class="reponse">
+                        Seul l’organisme qui effectue la formation est noté par l’ex-stagiaire à condition que le SIRET
+                        enregistré dans l’Attestation d’Entrée en Stage soit bien celui de l’Organisme Formateur
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Est-ce que les OF sont associés à l'identification des anciens stagiaires ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Les informations concernant les anciens stagiaires sont extraites des fichiers de Pôle
+                            Emploi uniquement.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="question closed">
+                            <a href="#">Je suis un site qui publie des offres de formation, comment obtenir ces avis ?
+                                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                            </a>
+                        </div>
+                        <div class="reponse">
+                            Le service Anotéa est accessible via API sur l’Emploi Store Développeurs , il vous suffit,
+                            via un contrat de licence, d’obtenir cette API pour afficher l’ensemble des avis sur votre
+                            site. Vous pouvez également utiliser notre Widget, disponible sous plusieurs formats. Pour
+                            cela, contactez-nous par mail.
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+        <%- include('../../views/contact.ejs'); %>
+        <%- include('../../views/front/footer.ejs'); %>
+        <%- include('../../views/analyticsTrackers.ejs'); %>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+.header {
+    box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
+    height: 107px;
+    line-height: 107px;
+}
+
+.login {
+    position: absolute;
+    top: 0px;
+    right: 20px;
+    width: auto;
+    padding: 0;
+}
+
+.login > * {
+    display: inline-block;
+    height: 40px;
+}
+
+.logo {
+    margin-left: 200px;
+    height: 75px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.header a {
+    outline: none;
+}
+
+.menu {
+    width: 200px;
+}
+
+.menu a {
+    outline: none;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
+    position: absolute;
+    top: 60px;
+    background: white;
+}
+
+.menu img {
+    vertical-align: middle;
+}
+
+.menu.closed ul {
+    display: none;
+}
+
+.menu .icon-open {
+    display: none;
+}
+
+.menu.closed .icon-open {
+    display: none;
+}
+
+.menu a {
+    color:#24303A;
+    text-decoration: none;
+}
+
+.menu li {
+    line-height: 25px;
+}

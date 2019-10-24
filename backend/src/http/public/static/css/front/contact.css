@@ -1,0 +1,30 @@
+
+.contact {
+    padding-top: 30px;
+    background-color: #373B46;
+    text-align: center;
+    padding-bottom: 10px;
+    outline: none;
+}
+
+.contact h1 {
+    color: #FFFFFF;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 55px;
+    text-align: center;
+    margin-bottom: 25px
+}
+
+.contact a {
+    height: 27px;
+    background: #F0801A;
+    color: #24303A;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 27px;
+    text-align: center;
+    padding: 5px 10px 5px 10px;
+    text-decoration: none;
+    border-radius: 10px;
+}
