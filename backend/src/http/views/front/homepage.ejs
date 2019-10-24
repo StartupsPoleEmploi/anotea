@@ -21,8 +21,11 @@
                     $('#cookie-bar-prompt-button').click(function(e) {
                         document.location = '/cgu';
                         e.preventDefault();
-                    });
-                }, 200);
+                    })
+                }, 200)
+
+
+                $('[data-toggle="tooltip"]').tooltip();
             });
         </script>
     </head>
@@ -44,6 +47,7 @@
                     <strong>Organisme de formation ou financeur</strong>, connectez-vous à votre Espace Anotéa pour consulter les avis laissés des stagiaires Demandeurs d'Emploi.
                 </p>
                 <a class="button" href="/admin">Accéder à mon espace</a>
+
             </div>
             <img class="illustration" src="/static/images/home/intro.svg" />
         </div>

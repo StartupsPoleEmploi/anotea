@@ -1,6 +1,6 @@
 const request = require('supertest');
 const assert = require('assert');
-const { withServer } = require('../../../../../helpers/test-server');
+const { withServer } = require('../../../../../helpers/with-server');
 
 describe(__filename, withServer(({ startServer, logAsFinanceur }) => {
 

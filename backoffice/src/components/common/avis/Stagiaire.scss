@@ -47,6 +47,7 @@
   }
 
   .status {
+    display: inline;
 
     &.published {
       color: $color-green;

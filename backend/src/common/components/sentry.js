@@ -1,4 +1,5 @@
 const { init, captureException, configureScope } = require('@sentry/node');
+const { getRemoteAddress } = require('../../http/routes/routes-utils');
 
 module.exports = (logger, configuration) => {
 
@@ -11,16 +12,29 @@ module.exports = (logger, configuration) => {
     }
 
     return {
-        sendError: (e, options) => {
+        sendError: (e, opts = {}) => {
+
+            let req = opts.req;
+            let options = req ? {
+                requestId: req.requestId,
+                user: {
+                    ...(req.user ? { id: req.user.id } : {}),
+                    ip_address: getRemoteAddress(req)
+                }
+            } : {};
+
             if (isEnabled) {
                 if (options) {
                     configureScope(scope => {
                         scope.setExtra('requestId', options.requestId);
+                        if (options.user) {
+                            scope.setUser(options.user);
+                        }
                     });
                 }
                 captureException(e);
             } else {
-                logger.error('Message sent to Sentry');
+                logger.error(e, 'Message sent to Sentry', options);
             }
         },
     };

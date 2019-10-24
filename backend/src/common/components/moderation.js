@@ -16,13 +16,9 @@ module.exports = db => {
                 { _id: oid },
                 {
                     $set: {
-                        reported: false,
-                        moderated: true,
-                        published: true,
-                        rejected: false,
-                        rejectReason: null,
+                        status: 'published',
                         qualification: qualification,
-                        lastStatusUpdate: new Date()
+                        lastStatusUpdate: new Date(),
                     }
                 },
                 { returnOriginal: false }
@@ -43,7 +39,7 @@ module.exports = db => {
 
 
         },
-        reject: async (id, reason, options = {}) => {
+        reject: async (id, qualification, options = {}) => {
 
             let oid = new ObjectID(id);
 
@@ -51,12 +47,9 @@ module.exports = db => {
                 { _id: oid },
                 {
                     $set: {
-                        reported: false,
-                        moderated: true,
-                        rejected: true,
-                        published: false,
-                        rejectReason: reason,
-                        lastStatusUpdate: new Date()
+                        status: 'rejected',
+                        qualification: qualification,
+                        lastStatusUpdate: new Date(),
                     }
                 },
                 { returnOriginal: false }

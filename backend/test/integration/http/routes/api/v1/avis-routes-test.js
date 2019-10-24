@@ -2,7 +2,7 @@ const request = require('supertest');
 const moment = require('moment/moment');
 const assert = require('assert');
 const ObjectID = require('mongodb').ObjectID;
-const { withServer } = require('../../../../../helpers/test-server');
+const { withServer } = require('../../../../../helpers/with-server');
 const { newComment, randomize, randomSIRET } = require('../../../../../helpers/data/dataset');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
@@ -410,13 +410,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('should return avis without commentaire', async () => {
+    it('should return avis (notes)', async () => {
 
         let app = await startServer();
         let pseudo = randomize('pseudo');
         let comment = newComment({
             pseudo: pseudo,
-            moderated: false,
         });
         delete comment.comment;
         await insertIntoDatabase('comment', comment);
@@ -449,7 +448,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         await insertIntoDatabase('comment', newComment({
             pseudo: pseudo,
-            published: false,
+            status: 'none',
         }));
 
         let response = await request(app).get(`/api/v1/avis`);
@@ -466,8 +465,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         await insertIntoDatabase('comment', newComment({
             _id: '12345',
             pseudo: pseudo,
-            published: false,
-            rejected: true,
+            status: 'rejected',
         }));
 
         let response = await request(app).get(`/api/v1/avis`);
@@ -550,13 +548,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(avis[0].formation.action.organisme_formateur.siret, siret);
     });
 
-    it('can search avis and ignoring those with archived true', async () => {
+    it('can search avis and ignoring those archived', async () => {
 
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({ archived: true }))
+            insertIntoDatabase('comment', newComment({ _id: '123', status: 'published' })),
+            insertIntoDatabase('comment', newComment({ status: 'archived' }))
         ]);
 
         let response = await request(app)
@@ -565,5 +563,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
         assert.deepStrictEqual(response.body.avis.length, 1);
+        assert.deepStrictEqual(response.body.avis[0].id, '123');
     });
 }));

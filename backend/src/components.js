@@ -17,6 +17,7 @@ const sendSignalementRejeteNotification = require('./common/components/mailing/s
 const sendSignalementAccepteNotification = require('./common/components/mailing/sendSignalementAccepteNotification');
 const sendInjureMail = require('./common/components/mailing/sendInjureMail');
 const sendAlerteMail = require('./common/components/mailing/sendAlerteMail');
+const createPeconnect = require('./common/components/peconnect');
 
 module.exports = async (options = {}) => {
 
@@ -48,6 +49,7 @@ module.exports = async (options = {}) => {
             sendSignalementAccepteNotification: sendSignalementAccepteNotification(db, mailer, logger),
             sendInjureMail: sendInjureMail(db, mailer, logger),
             sendAlerteMail: sendAlerteMail(db, mailer, logger)
-        }
+        },
+        peconnect: createPeconnect(configuration)
     }, options || {});
 };

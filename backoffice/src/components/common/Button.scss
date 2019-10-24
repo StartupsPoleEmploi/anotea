@@ -2,6 +2,43 @@
 
 .Button {
 
+  position: relative;
+
+  .tooltip-box {
+    display: none;
+
+    .message {
+      @include box();
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      padding: 0.25rem;
+      z-index: 1000;
+      text-transform: none;
+      font-size: 0.75rem;
+    }
+
+    .triangle {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      z-index: 1001;
+      left: 40%;
+      height: 0;
+      width: 0;
+      border-right: 5px solid transparent;
+      border-bottom: 7px solid $color-white;
+      border-left: 5px solid transparent;
+    }
+  }
+
+  &:hover {
+    .tooltip-box {
+      display: block;
+    }
+  }
+
   @mixin disable-button($background-color, $border-color ) {
     pointer-events: none;
     background-color: $background-color;

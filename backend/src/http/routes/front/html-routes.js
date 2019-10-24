@@ -3,8 +3,8 @@ const moment = require('moment');
 const titleize = require('underscore.string/titleize');
 const externalLinks = require('./utils/externalLinks');
 
-module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
-
+module.exports = ({ db, logger, configuration, communes, mailer, regions, peconnect }) => {
+    
     const router = express.Router(); // eslint-disable-line new-cap
 
     const getRegionEmail = region => {
@@ -29,7 +29,13 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
     };
 
     router.get('/', (req, res) => {
-        res.render('front/homepage', { data: configuration.front });
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.nonce
+        };
+
+        res.render('front/homepage', { data: configuration.front, connectionLink: connectionInfos.link, failed: req.query.failed });
     });
 
     router.get('/cgu', (req, res) => {
@@ -221,7 +227,7 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
         const avis = await db.collection('comment').find({
             'comment': { $ne: null },
             'read': false,
-            'published': true,
+            'status': 'published',
             'training.organisation.siret': organisme.SIRET
         });
 

@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const Boom = require('boom');
 const createMiddlewares = require('./middlewares/middlewares');
 const compression = require('compression');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 module.exports = components => {
 
@@ -36,9 +38,18 @@ module.exports = components => {
             }
         }
     }));
+    app.use(session({
+        secret: configuration.app.session_secret,
+        resave: false,
+        saveUninitialized: true,
+        store: new MongoStore({ client: components.client })
+    }));
 
-    //Pubic routes with HTML server-side rendering
+    //Public routes with HTML server-side rendering
     app.use('/', require('./routes/front/html-routes')(httpComponents));
+
+    //PE Connect API callback
+    app.use('/', require('./routes/front/peconnect-routes')(httpComponents));
 
     //API routes
     app.use('/api', middlewares.addRateLimit(sentry));
@@ -51,7 +62,7 @@ module.exports = components => {
     app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
     app.use('/api', require('./routes/api/exports-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/departements-routes')(httpComponents));
-    app.use('/api', require('./routes/api/stats-routes')(httpComponents));
+    app.use('/api', require('./routes/api/public-stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/kairos/kairos-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/login-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/password-routes')(httpComponents));
@@ -72,7 +83,6 @@ module.exports = components => {
 
     //Error middleware
     app.use((rawError, req, res, next) => { // eslint-disable-line no-unused-vars
-
         let error = req.err = rawError;
         if (!rawError.isBoom) {
             if (rawError.name === 'ValidationError') {
@@ -88,7 +98,7 @@ module.exports = components => {
         }
 
         if (error.output.statusCode > 404) {
-            sentry.sendError(rawError, { requestId: req.requestId });
+            sentry.sendError(rawError, { req: req });
         }
         return res.status(error.output.statusCode).send(error.output.payload);
     });

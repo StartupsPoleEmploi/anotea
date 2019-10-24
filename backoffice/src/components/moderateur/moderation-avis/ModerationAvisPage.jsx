@@ -133,26 +133,38 @@ export default class ModerationAvisPage extends React.Component {
                             <Filters>
                                 <Filter
                                     label="À modérer"
-                                    isActive={() => query.status === 'none'}
+                                    isActive={() => query.statuses === 'none'}
                                     getNbElements={() => stats.nbAModerer}
-                                    onClick={() => this.onFilterClicked({ status: 'none', sortBy: 'lastStatusUpdate' })}
+                                    onClick={() => this.onFilterClicked({ statuses: 'none', sortBy: 'lastStatusUpdate' })}
                                 />
 
                                 <Filter
-                                    label="Publiés"
-                                    isActive={() => query.status === 'published'}
-                                    onClick={() => this.onFilterClicked({ status: 'published', sortBy: 'lastStatusUpdate' })}
+                                    label="Validés"
+                                    isActive={() => query.statuses === 'published'}
+                                    onClick={() => {
+                                        return this.onFilterClicked({
+                                            statuses: 'published',
+                                            commentaires: true,
+                                            sortBy: 'lastStatusUpdate'
+                                        });
+                                    }}
                                 />
 
                                 <Filter
                                     label="Rejetés"
-                                    isActive={() => query.status === 'rejected'}
-                                    onClick={() => this.onFilterClicked({ status: 'rejected', sortBy: 'lastStatusUpdate' })}
+                                    isActive={() => query.statuses === 'rejected'}
+                                    onClick={() => {
+                                        return this.onFilterClicked({
+                                            statuses: 'rejected',
+                                            commentaires: true,
+                                            sortBy: 'lastStatusUpdate'
+                                        });
+                                    }}
                                 />
 
                                 <Filter
                                     label="Tous"
-                                    isActive={() => !query.status}
+                                    isActive={() => !query.statuses}
                                     onClick={() => this.onFilterClicked({ sortBy: 'date' })}
                                 />
 
@@ -171,7 +183,7 @@ export default class ModerationAvisPage extends React.Component {
                                     return (
                                         <Avis
                                             avis={avis}
-                                            showStatus={['all', 'rejected'].includes(query.status)}
+                                            showStatus={query.statuses !== 'none'}
                                             showModerationButtons={true}
                                             onChange={() => {
                                                 return Promise.all([

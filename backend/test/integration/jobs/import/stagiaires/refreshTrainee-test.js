@@ -1,8 +1,8 @@
 const _ = require('lodash');
 const assert = require('assert');
-const { withMongoDB } = require('../../../../helpers/test-database');
+const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const { newComment } = require('../../../../helpers/data/dataset');
-const logger = require('../../../../helpers/test-logger');
+const logger = require('../../../../helpers/fake-logger');
 const importTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/importTrainee');
 const refreshTrainee = require('../../../../../src/jobs/import/stagiaires/tasks/refreshTrainee');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');

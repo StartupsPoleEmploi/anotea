@@ -9,6 +9,7 @@ class SendAction {
         return {
             'sourceIDF': null,
             'mailSent': false,
+            'avisCreated': false,
             'unsubscribe': false,
             'training.organisation.siret': { $ne: '' },
             'training.scheduledEndDate': { $lte: new Date() },

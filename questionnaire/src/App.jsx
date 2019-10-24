@@ -14,6 +14,7 @@ class App extends Component {
         infosRegion: null,
         showRemerciements: false,
         showErrorPage: false,
+        avisDejaDepose: false,
     };
 
     fetchStagiaire = async () => {
@@ -23,7 +24,7 @@ class App extends Component {
             this.setState({
                 stagiaire: data.stagiaire,
                 infosRegion: data.infosRegion,
-                showRemerciements: data.submitted,
+                avisDejaDepose: data.submitted
             });
         } catch (err) {
             console.error('An error occured', err);
@@ -49,13 +50,13 @@ class App extends Component {
 
         return (
             <div>
-                {this.state.showRemerciements ?
-                    <Remerciements stagiaire={stagiaire} infosRegion={infosRegion} /> :
+                {this.state.showRemerciements || this.state.avisDejaDepose ?
+                    <Remerciements stagiaire={stagiaire} infosRegion={infosRegion} avisDejaDepose={this.state.avisDejaDepose} /> :
                     <Questionnaire
                         stagiaire={stagiaire}
                         onSubmit={() => this.setState({ showRemerciements: true })} />
                 }
-                <Footer stagiaire={stagiaire} infosRegion={infosRegion} />
+                <Footer stagiaire={stagiaire} infosRegion={infosRegion} avisDejaDepose={this.state.avisDejaDepose} />
             </div>
         );
     }

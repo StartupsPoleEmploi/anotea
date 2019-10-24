@@ -1,7 +1,7 @@
 const assert = require('assert');
-const { withMongoDB } = require('../../../../../helpers/test-database');
+const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newTrainee, randomize } = require('../../../../../helpers/data/dataset');
-const logger = require('../../../../../helpers/test-logger');
+const logger = require('../../../../../helpers/fake-logger');
 const Questionnaire6MoisMailer = require('../../../../../../src/jobs/mailing/stagiaires/questionnaire6mois/tasks/Questionnaire6MoisMailer');
 const { successMailer, errorMailer } = require('../../fake-mailers');
 

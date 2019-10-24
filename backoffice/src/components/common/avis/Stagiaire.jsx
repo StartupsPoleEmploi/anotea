@@ -28,35 +28,37 @@ Stars.propTypes = { note: PropTypes.number.isRequired };
 
 const Status = ({ avis }) => {
 
-    if (avis.archived) {
-        return (<span className="status">(Archivé)</span>);
-    } else if (avis.reported) {
-        return (
-            <span className="status reported">
-                (<span>Signalé le </span>
-                <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
-            </span>
-        );
-    } else if (avis.published) {
-        return (
-            <span className="status published">
-                (<span>Publié le </span>
-                <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
-            </span>
-        );
-    } else if (avis.rejected) {
-        return (
-            <span className="status rejected">
-                (<span>Rejeté le </span>
-                <PrettyDate date={new Date(avis.lastStatusUpdate)} /> pour « <b>{avis.rejectReason}</b> »)
-            </span>
-        );
-    } else if (!avis.moderated) {
-        return (<span className="status toModerate">(&Agrave; modérer)</span>);
+    if (!avis.comment) {
+        return <div />;
     }
 
-    return (<span />);
-
+    switch (avis.status) {
+        case 'archived':
+            return <div className="status">(Archivé)</div>;
+        case 'reported':
+            return (
+                <div className="status reported">
+                    (<span>Signalé le </span> <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
+                </div>
+            );
+        case 'published':
+            return (
+                <div className="status published">
+                    (<span>Validé le </span> <PrettyDate date={new Date(avis.lastStatusUpdate)} />)
+                </div>
+            );
+        case 'rejected':
+            return (
+                <div className="status rejected">
+                    (<span>Rejeté le </span>
+                    <PrettyDate date={new Date(avis.lastStatusUpdate)} /> pour « <b>{avis.qualification}</b> »)
+                </div>
+            );
+        case 'none':
+            return <div className="status toModerate">(&Agrave; modérer)</div>;
+        default:
+            return (<div />);
+    }
 };
 Status.propTypes = { avis: PropTypes.object.isRequired };
 

@@ -111,8 +111,8 @@ const NoteDetails = ({ notes, total }) => {
             <NoteGlobale note={notes.global} total={total} />
             <NoteRepartition label="Accueil" note={notes.accueil} total={total} />
             <NoteRepartition label="Contenu" note={notes.contenu_formation} total={total} />
-            <NoteRepartition label="Matériel" note={notes.moyen_materiel} total={total} />
-            <NoteRepartition label="Formateur" note={notes.equipe_formateurs} total={total} />
+            <NoteRepartition label="Formateurs" note={notes.equipe_formateurs} total={total} />
+            <NoteRepartition label="Matériels" note={notes.moyen_materiel} total={total} />
             <NoteRepartition label="Accompagnement" note={notes.accompagnement} total={total} />
         </div>
     );

@@ -24,7 +24,15 @@ const Button = props => {
                     e.preventDefault();
                 }
             }}
-        />
+        >
+            {props.tooltip &&
+            <div className="tooltip-box">
+                <div className="triangle"></div>
+                <div className="message">{props.tooltip}</div>
+            </div>
+            }
+            {props.children}
+        </button>
     );
 };
 
@@ -37,6 +45,8 @@ Button.propTypes = {
     style: PropTypes.object,
     onClick: PropTypes.func,
     className: PropTypes.string,
+    tooltip: PropTypes.string,
+    children: PropTypes.node,
 };
 
 export default Button;

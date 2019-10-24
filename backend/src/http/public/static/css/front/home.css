@@ -11,6 +11,7 @@ body {
     display: inline-block;
     position: relative;
     margin: 0px;
+    margin-left: 0px;
     height: 30px;
     border-radius: 5px;
     color: white;
@@ -29,7 +30,6 @@ body {
 .video {
     width: 100%;
     background-color: #D8D8D8;
-    margin-top: 15px;
 }
 
 .title {
@@ -309,5 +309,18 @@ body {
 
     .content-how .nav {
         display: inherit;
+    }
+
+    .pe-connect .content {
+        width: 100%;
+        min-width: 486px;
+    }
+
+    .pe-connect h1 {
+        font-size: 28px;
+    }
+
+    .pe-connect p {
+        font-size: 14px;
     }
 }

@@ -9,8 +9,8 @@ module.exports = ({ db, middlewares }) => {
 
     router.get('/backoffice/formations', checkAuth, tryAndCatch(async (req, res) => {
 
-        let { siret } = await Joi.validate(req.query, {
-            siret: Joi.string().min(9).max(15),
+        let { organisme } = await Joi.validate(req.query, {
+            organisme: Joi.string().min(9).max(15),
         }, { abortEarly: false });
 
         let stream = await db.collection('comment')
@@ -18,7 +18,7 @@ module.exports = ({ db, middlewares }) => {
             {
                 $match: {
                     'codeRegion': req.user.codeRegion,
-                    ...(siret ? { 'training.organisation.siret': new RegExp(`^${siret}`) } : {}),
+                    ...(organisme ? { 'training.organisation.siret': new RegExp(`^${organisme}`) } : {}),
                 }
             },
             {

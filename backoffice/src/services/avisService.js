@@ -21,8 +21,8 @@ export const maskTitle = (id, mask) => {
     return _put(`/backoffice/avis/${id}/title`, { mask });
 };
 
-export const rejectAvis = (id, reason) => {
-    return _put(`/backoffice/avis/${id}/reject`, { reason });
+export const rejectAvis = (id, qualification) => {
+    return _put(`/backoffice/avis/${id}/reject`, { qualification });
 };
 
 export const publishAvis = (id, qualification) => {

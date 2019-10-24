@@ -83,7 +83,7 @@ export default class Avis extends React.Component {
         let { message, showReponseEditor } = this.state;
         let isLocalMessage = _.get(message, 'type') === 'local';
         let isGlobalMessage = _.get(message, 'type') === 'global';
-        let disabledClass = isLocalMessage ? 'a-disabled' : '';
+        let disabledClass = isLocalMessage ? 'disabled' : '';
 
         return (
             <div className="Avis">

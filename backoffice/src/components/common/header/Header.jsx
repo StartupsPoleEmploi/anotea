@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import UserContext from '../../UserContext';
+import logo from './logo.svg';
 
 import './Header.scss';
 
-const Header = ({ items, logo, onLogout }) => {
+const Header = ({ items, onLogout }) => {
 
     let user = useContext(UserContext);
     let profile = user.profile;
@@ -39,7 +40,6 @@ const Header = ({ items, logo, onLogout }) => {
 
 Header.propTypes = {
     items: PropTypes.node.isRequired,
-    logo: PropTypes.string.isRequired,
     onLogout: PropTypes.func,
     profile: PropTypes.string,
 };
