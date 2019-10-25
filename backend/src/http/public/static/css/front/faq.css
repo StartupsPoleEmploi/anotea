@@ -276,3 +276,7 @@ a {
 .reponse {
     display: none;
 }
+
+p.more {
+    display: none;
+}

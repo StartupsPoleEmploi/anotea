@@ -12,6 +12,14 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
     <script src="/static/js/faq.js"></script>
+    <script>
+    $(document).ready(function () {
+        $("a.more").click(function (e) {
+            e.preventDefault();
+            $('p.more').toggle();
+        });
+    });
+    </script>
 </head>
 
 <body>
@@ -51,9 +59,12 @@
                     <p>
                         Voici quelques conseils pour répondre aux avis.
                     </p>
-                    <a class="button" href="#faq">En savoir plus</a>
+                    <a class="button more" href="#">En savoir plus</a>
                 </div>
             </div>
+            <p  class="more">
+                Votre réponse compte. Elle donne à l’internaute des informations sur la manière dont vous prenez en compte les attentes de vos stagiaires 
+            </p>
         </div>
 
         <div class="vous">
