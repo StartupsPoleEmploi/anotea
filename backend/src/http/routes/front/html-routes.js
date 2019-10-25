@@ -28,14 +28,23 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
         });
     };
 
-    router.get('/', (req, res) => {
+    
+
+
+    router.get('/', async (req, res) => {
         const connectionInfos = peconnect.initConnection();
         req.session.pe_connect = {
             state: connectionInfos.state,
             nonce: connectionInfos.nonce
         };
 
-        res.render('front/homepage', { data: configuration.front, connectionLink: connectionInfos.link, failed: req.query.failed });
+        const [avisCount, organismesCount, stagiairesCount] = await Promise.all([
+            db.collection('comment').count(),
+            db.collection('accounts').count({ 'profile': 'organisme', 'score.nb_avis': { $gte: 1 } }),
+            db.collection('trainee').count({ mailSentDate: { $ne: null } })
+        ]);
+
+        res.render('front/homepage', { avisCount: new Intl.NumberFormat('fr').format(avisCount), organismesCount: new Intl.NumberFormat('fr').format(organismesCount), stagiairesCount: new Intl.NumberFormat('fr').format(stagiairesCount), data: configuration.front, connectionLink: connectionInfos.link, failed: req.query.failed });
     });
 
     router.get('/cgu', (req, res) => {
