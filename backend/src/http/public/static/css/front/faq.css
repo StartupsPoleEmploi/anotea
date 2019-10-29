@@ -277,6 +277,9 @@ a {
     display: none;
 }
 
-p.more {
+div.more {
     display: none;
+    margin:auto;
+    width: 60%;
+    padding-top: 40px;
 }
