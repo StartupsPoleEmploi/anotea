@@ -34,7 +34,7 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
         codeRegion: region,
     };
 
-    if (financeur || !['2', '4'].includes(financeur)) {
+    if (financeur && !['2', '4'].includes(financeur)) {
         return exit('Invalid arguments');
     } else {
         filters.codeFinanceur = financeur;
