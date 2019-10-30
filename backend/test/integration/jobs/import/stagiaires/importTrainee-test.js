@@ -430,4 +430,42 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
+    it('should ignore trainee with codeFinanceur filtered', async () => {
+
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-bfc.csv');
+        let { regions } = await getComponents();
+
+        let stats = await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions), {
+            'codeFinanceur': '4'
+        });
+        assert.deepStrictEqual(stats, {
+            invalid: 0,
+            ignored: 3,
+            imported: 0,
+            total: 3,
+        });
+        let count = await db.collection('trainee').count({ 'training.codeFinanceur': { '$elemMatch': { '$in': ['2', '7', '13'] } } });
+        assert.deepStrictEqual(0, count);
+    });
+
+    it('can filter trainee by codeFinanceur', async () => {
+
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-bfc.csv');
+        let { regions } = await getComponents();
+
+        let stats = await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions), {
+            'codeFinanceur': '2'
+        });
+        assert.deepStrictEqual(stats, {
+            invalid: 0,
+            ignored: 1,
+            imported: 2,
+            total: 3,
+        });
+        let count = await db.collection('trainee').count({ 'training.codeFinanceur': { '$elemMatch': { '$eq': '2' } } });
+        assert.deepStrictEqual(2, count);
+    });
+
 }));

@@ -15,7 +15,13 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
     };
 
     const isFiltered = trainee => {
-        return !filters.codeRegion || filters.codeRegion === trainee.codeRegion;
+        if (filters.codeRegion) {
+            return filters.codeRegion === trainee.codeRegion;
+        }
+        if (filters.codeFinanceur) {
+            return trainee.training.codeFinanceur.includes(filters.codeFinanceur);
+        }
+        return true;
     };
 
     const hasNotBeenAlreadyImportedOrRemoved = async trainee => {

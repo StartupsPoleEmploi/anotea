@@ -13,12 +13,13 @@ cli.description('Import des stagiaires')
 .option('--validate', 'Validate CSV file but do not import it')
 .option('--refresh', 'Refresh stagiaires data from CSV file')
 .option('--region [codeRegion]', 'Code region to filter')
+.option('--financeur [codeFinanceur]', 'Code financeur to filter')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
 execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
 
-    let { file, source, region, validate, refresh } = cli;
+    let { file, source, region, financeur, validate, refresh } = cli;
     let sources = {
         'PE': 'poleEmploi',
         'IDF': 'ileDeFrance',
@@ -32,6 +33,12 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
     let filters = {
         codeRegion: region,
     };
+
+    if (financeur || !['2', '4'].includes(financeur)) {
+        return exit('Invalid arguments');
+    } else {
+        filters.codeFinanceur = financeur;
+    }
 
     if (validate) {
         logger.info(`Validating file ${file}...`);

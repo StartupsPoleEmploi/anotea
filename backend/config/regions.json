@@ -78,7 +78,7 @@
   {
     "nom": "Bourgogne-Franche-Comté",
     "active": true,
-    "since": "2017-09-01",
+    "since": "2018-05-01",
     "codeRegion": "3",
     "codeINSEE": "27",
     "contact": "anotea.bfc",
@@ -126,11 +126,13 @@
       }
     },
     "conseil_regional": {
-      "active": false,
+      "active": true,
       "import": "all"
     },
     "carif": {
-      "active": false
+      "active": true,
+      "nom": "Emfor",
+      "url": "http://www.emfor-bfc.org/"
     }
   },
   {
