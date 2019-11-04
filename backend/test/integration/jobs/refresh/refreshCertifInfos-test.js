@@ -1,4 +1,5 @@
 const assert = require('assert');
+const _ = require('lodash');
 const path = require('path');
 const { withMongoDB } = require('../../../helpers/with-mongodb');
 const { newTrainee } = require('../../../helpers/data/dataset');
@@ -19,13 +20,24 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     id: '10013',
                 },
             },
+            meta: {
+                history: [{ date: new Date(), value: 'something changed' }]
+            }
         }));
 
         let stats = await patchCertifInfos(db, logger, certifinfos);
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
-        assert.deepStrictEqual(avis.training.certifInfo.id, '74037');
-        assert.deepStrictEqual(avis.meta.patch.certifInfo, '10013');
+        assert.strictEqual(avis.training.certifInfo.id, '74037');
+        assert.strictEqual(avis.meta.history.length, 2);
+        assert.ok(avis.meta.history[0].date);
+        assert.deepStrictEqual(_.omit(avis.meta.history[0], ['date']), {
+            training: {
+                certifInfo: {
+                    id: '10013',
+                },
+            },
+        });
         assert.deepStrictEqual(stats, {
             updated: 1,
             invalid: 0,

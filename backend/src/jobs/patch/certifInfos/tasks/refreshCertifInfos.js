@@ -50,8 +50,21 @@ module.exports = async (db, logger, file) => {
                     {
                         $set: {
                             'training.certifInfo.id': newCertifinfos,
-                            'meta.patch.certifInfo': trainee.training.certifInfo.id,
                         },
+                        $push: {
+                            'meta.history': {
+                                $each: [{
+                                    date: new Date(),
+                                    training: {
+                                        certifInfo: {
+                                            id: trainee.training.certifInfo.id
+                                        },
+                                    },
+                                }],
+                                $slice: 10,
+                                $position: 0,
+                            },
+                        }
                     },
                     { upsert: false }
                 );
