@@ -78,7 +78,7 @@
   {
     "nom": "Bourgogne-Franche-Comté",
     "active": true,
-    "since": "2018-05-01",
+    "since": "2017-09-01",
     "codeRegion": "3",
     "codeINSEE": "27",
     "contact": "anotea.bfc",
@@ -127,7 +127,8 @@
     },
     "conseil_regional": {
       "active": true,
-      "import": "all"
+      "import": "all",
+      "since": "2018-05-01"
     },
     "carif": {
       "active": true,

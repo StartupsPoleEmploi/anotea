@@ -83,7 +83,9 @@ module.exports = (db, regions) => {
 
             let isValid = () => region && trainee.trainee.emailValid;
 
-            let isAfter = () => moment(trainee.training.scheduledEndDate).isAfter(moment(`${region.since} -0000`, 'YYYYMMDD Z'));
+            let since = region.conseil_regional && region.conseil_regional.active ? region.conseil_regional.since : region.since;
+
+            let isAfter = () => moment(trainee.training.scheduledEndDate).isAfter(moment(`${since} -0000`, 'YYYYMMDD Z'));
 
             let isNotExcluded = () => {
 
