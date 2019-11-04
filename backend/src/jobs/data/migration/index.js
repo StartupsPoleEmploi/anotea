@@ -7,5 +7,6 @@ cli.parse(process.argv);
 
 execute(async ({ db }) => {
     let stats = {};
+    stats.unsetPatchCertifInfos = await require('./tasks/unsetPatchCertifInfos')(db);
     return stats;
 });

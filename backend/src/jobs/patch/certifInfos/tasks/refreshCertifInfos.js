@@ -31,54 +31,64 @@ let loadCertifinfos = file => {
 
 module.exports = async (db, logger, file) => {
 
-    let stats = {
-        updated: 0,
-        invalid: 0,
-        total: 0,
+    const patch = async (collectionName, certifinfos) => {
+
+        let stats = {
+            updated: 0,
+            invalid: 0,
+            total: 0,
+        };
+
+        let cursor = db.collection(collectionName).find({});
+        while (await cursor.hasNext()) {
+            stats.total++;
+            const doc = await cursor.next();
+            try {
+                let newCertifinfos = certifinfos[doc.training.certifInfo.id];
+                if (newCertifinfos) {
+                    let results = await db.collection(collectionName).updateOne(
+                        { _id: doc._id },
+                        {
+                            $set: {
+                                'training.certifInfo.id': newCertifinfos,
+                            },
+                            $push: {
+                                'meta.history': {
+                                    $each: [{
+                                        date: new Date(),
+                                        training: {
+                                            certifInfo: {
+                                                id: doc.training.certifInfo.id
+                                            },
+                                        },
+                                    }],
+                                    $slice: 10,
+                                    $position: 0,
+                                },
+                            }
+                        },
+                        { upsert: false }
+                    );
+
+                    if (results.result.nModified === 1) {
+                        stats.updated++;
+                    }
+                }
+            } catch (e) {
+                stats.invalid++;
+                logger.error(`Stagiaire cannot be patched`, e);
+            }
+        }
+
+        return stats;
     };
 
     let certifinfos = await loadCertifinfos(file);
-    let cursor = db.collection('trainee').find({ 'meta.patch.certifInfo': { $exists: false } });
-    while (await cursor.hasNext()) {
-        stats.total++;
-        const trainee = await cursor.next();
-        try {
-            let newCertifinfos = certifinfos[trainee.training.certifInfo.id];
-            if (newCertifinfos) {
-                let results = await db.collection('trainee').updateOne(
-                    { _id: trainee._id },
-                    {
-                        $set: {
-                            'training.certifInfo.id': newCertifinfos,
-                        },
-                        $push: {
-                            'meta.history': {
-                                $each: [{
-                                    date: new Date(),
-                                    training: {
-                                        certifInfo: {
-                                            id: trainee.training.certifInfo.id
-                                        },
-                                    },
-                                }],
-                                $slice: 10,
-                                $position: 0,
-                            },
-                        }
-                    },
-                    { upsert: false }
-                );
+    let [trainee, comment] = await Promise.all([
+        patch('trainee', certifinfos),
+        patch('comment', certifinfos),
+    ]);
 
-                if (results.result.nModified === 1) {
-                    stats.updated++;
-                }
-            }
-        } catch (e) {
-            stats.invalid++;
-            logger.error(`Stagiaire cannot be patched`, e);
-        }
-    }
-
-    return stats;
+    return { trainee, comment };
 };
 
