@@ -62,7 +62,6 @@ module.exports = async (db, logger, file) => {
                                             },
                                         },
                                     }],
-                                    $slice: 10,
                                     $position: 0,
                                 },
                             }
