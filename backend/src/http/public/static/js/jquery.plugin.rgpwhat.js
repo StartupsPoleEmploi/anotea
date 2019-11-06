@@ -5,27 +5,28 @@
  * Released under the MIT license
  * Options:
  *  - class: set class for the cookie notice bar (default "cookie-notice")
+ *  - LoadCss: load default css rgpwhat/rgpwhat.css. Maybe false to load nothing.
  *  - delay: set delay before to appear (default 1000ms)
  *  - cookieDuration: define the max duration (in month) before to appear a new bar if it was first accepted (default 12 months)
- *  - cookieName: the cookie name to remember the acceptation (default "cookie-stop")
+ *  - cookieName: the cookie name to remember the acceptation (default "rgpwhat")
  *  - position: "top" or "bottom" -> defines the position of the bar at the top of the screen or at the bottom (default "top")
  *  - fixed: boolean (default true). If false, css position = "relative". If true css position = "absolute"
  *  - validateFollow: true/false -> is equal to a click on "ok" on first document click (default true). A false value specifies a click to button "ok" as mandatory
  *  - consent: array of specifics cookies (optional)
  *
- * Example:
+ * Example: (Attention to mandatory tags)
  *  - $.rgpWhat('Les cookies assurent le bon fonctionnement de nos services. En utilisant ces derniers, vous acceptez l\'utilisation des cookies. <a href="" target="_blank">En savoir plus</a>.',
  *    {
- *       class:"bandeau-cookie"
+ *       class: "rgpwhat"
  *       "consent": [
  *         {
- *             title: "hotjar",
- *             description: "Service de feedback",
- *             key: "hotjar",
- *             callbackAccepted: function() {
+ *             title: "hotjar", //Mandatory
+ *             description: "Service de feedback", //Usefull
+ *             key: "hotjar", //Mandatory
+ *             callbackAccepted: function() { //Optionnal
  *                 alert('callback accept hotjar');
  *             },
- *             callbackDenied: function() {
+ *             callbackDenied: function() { //Optionnal
  *                 alert('callback denied hotjar');
  *             }
  *         },
@@ -45,72 +46,21 @@
  *     "fixed": false
  *   });
  *
- * Less sample :
+ * Css sample :
  * 
- * .bandeau-cookie {
- *    background-color: rgba(33,33,33,0.9);
- *    color: white;
- *    text-align: center;
- *    line-height: 2.5em;
- *    padding: 2px;
- *    vertical-align: middle;
- *    position: relative;
- *    top: 0;
- *
- *    .consent-list {
- *        background-color: black;
- *        padding: 1em;
- *        width: 100%;
- *
- *        .all-cookies-choice {
- *            width: 50%;
- *            margin: auto;
- *        }
- *        .cookie-choice {
- *            width: 50%;
- *            margin: auto;
- *            display: flex;
- *            flex-direction: row;
- *            margin: auto;
- *            align-items: center;
- *            border-bottom: 1px solid grey;
- *        
- *            .explanations {
- *                text-align: left;
- *                flex: 2;
- *
- *                .title {
- *                    font-size: 1.5em;
- *                    font-weight: bold;
- *                }
- *                .description {
- *                    line-height: 1em;
- *                }
- *            }
- *            .buttons {
- *                flex: 1;
- *                text-align: right;
- *
- *                .accept, .deny {
- *                    color: white;
- *                }
- *            }
- *        }
- *        
- *        button {
- *            background-color: #f00;
- *            line-height: 2.2em;
- *            margin-top: 2px;
- *            opacity: .9;
- *
- *            &:hover {
- *                opacity: 1;
- *            }
- *            &.selected {
- *                background-color: #1BD2A4;
- *            }
- *        }
- *    }
+ * .rgpwhat {background-color: rgba(33,33,33,0.9); color: white; text-align: center; line-height: 2.5em; padding: 2px; vertical-align: middle; position: relative; top: 0;}
+ * .rgpwhat .consent-list {background-color: black; padding: 1em; width: 100%;}
+ * .rgpwhat .consent-list .all-cookies-choice {width: 50%; margin: auto;}
+ * .rgpwhat .consent-list .cookie-choice {width: 50%; margin: auto; display: flex; flex-direction: row; align-items: center; border-bottom: 1px solid grey;}
+ * .rgpwhat .consent-list .cookie-choice .explanations {text-align: left; flex: 2;}
+ * .rgpwhat .consent-list .cookie-choice .explanations .title {font-size: 1.5em; font-weight: bold;}
+ * .rgpwhat .consent-list .cookie-choice .explanations .description {line-height: 1em;}
+ * .rgpwhat .consent-list .cookie-choice .buttons {flex: 1; text-align: right;}
+ * .rgpwhat .consent-list .cookie-choice .buttons .accept, .rgpwhat .consent-list .cookie-choice .buttons .deny {color: white;}
+ * .rgpwhat .consent-list button {background-color: #f00; line-height: 2.2em; margin-top: 2px; opacity: .9;}
+ * .rgpwhat .consent-list button:hover {opacity: 1;}
+ * .rgpwhat .consent-list button.selected {background-color: #1BD2A4;}
+ * .rgpwhat button, .rgpwhat input[type=button] {color: white; background-color: #1BD2A4; border-radius: 5px; border: 0; padding: 0 20px; margin-left: 10px;}
  *
  * Change since v1
  * - authorize cookieDuration to 0
@@ -121,8 +71,8 @@
  */
 (function($) {
 	$.infoCookie=$.rgpWhat=function(text,options) {
-		var className="cookie-notice";
-		var cookieName="cookie-stop";
+		var className="rgpwhat";
+		var cookieName="rgpwhat";
 		var delay=1000;
 		var cookieDuration=12;
 		var position="top";
@@ -130,6 +80,8 @@
 		var consentOptions=true;
 		var forceDisplay=false;
 		var div=false;
+		var version="2";
+		var loadCss="";
 		var locale={
 			'ok': 'Ok',
 			'notOk': 'Interdire',
@@ -147,6 +99,7 @@
 			if(typeof options.position!=="undefined") position=options.position;
 			if(typeof options.fixed!=="undefined") fixed=options.fixed;
 			if(typeof options.forceDisplay!=="undefined") forceDisplay=options.forceDisplay;
+			if(typeof options.loadCss!=="undefined") loadCss=options.loadCss;
 			if(typeof options.locale!=="undefined") {
 				var loc=options.locale;
 
@@ -161,6 +114,26 @@
 		}
 		if(typeof options.consent!=="undefined") {
 			consentOptions=options.consent; //JSON.parse(JSON.stringify(options.consent));
+		}
+
+		var loadCssFile=function(name) {
+			if(typeof name==="boolean")
+				if(name==false) return;
+				else name="";
+
+			var src="";
+
+			if(name==="") {
+				src="/css/jquery/rgpwhat/rgpwhat.css";
+			} else {
+				src=name;
+			}
+
+			var link=document.createElement('link');
+			link.rel='stylesheet';
+			link.type='text/css';
+			link.href=src+"?v="+version;
+			document.getElementsByTagName('head')[0].appendChild(link);
 		}
 
 		var getCookie=function(name) {
@@ -205,26 +178,6 @@
 			setCookie(cookieName,response,cookieDuration);
 		}
 
-		var loadCookieConsent=function(consentCookie,consentOptions) {
-			if(typeof consentCookie!=="undefined") {
-				if(typeof consentCookie==="boolean") {
-					return;
-				}
-				var json=JSON.parse(consentCookie);
-
-				if(typeof consentOptions!=="undefined") {
-					if(typeof json!=="object") json=[];
-					json.forEach(function(ecookie) {
-						consentOptions.forEach(function(econsent) {
-							if(econsent.key==ecookie.key) {
-								econsent.value2=ecookie.value;
-								return;
-							}
-						});
-					});
-				}
-			}
-		}
 		var autoSelectButtons=function(consentOptions) {
 			consentOptions.forEach(function(e) {
 				setButtonClass(e);
@@ -266,6 +219,8 @@
 		
 
 		var display=function(consentOptions,text,className,position,fixed) {
+			loadCssFile(loadCss);
+
 			var div=$(document.createElement("div"));
 			var doc=$('<div>').addClass('consent-list').css('display','none');
 
@@ -335,19 +290,24 @@
 			if(position=='bottom')
 				div.appendTo("body");
 			else
-				$("body").prepend(div);
+                $("body").prepend(div);
 			return div;
 		};
 
 		/* Initialise les valeurs de chaque objet json représentant un cookie en spécifiant par "value" si le bouton est sur autorisé ou interdire */
 		var initConsentOptions=function(consentCookie,consentOptions) {
-			if(typeof consentCookie==='boolean') {
-				//A continuer: version sans consent.
+			var jsonCookie=[];
+			if(typeof consentCookie!=='undefined') {
+				jsonCookie=JSON.parse(consentCookie);
 			}
-			var jsonCookie=JSON.parse(consentCookie);
 
 			if(typeof consentOptions!=="undefined") {
 				var jsonOptions=consentOptions; //JSON.parse(JSON.stringify(consentOptions));
+
+				//Initialisation aux valeurs par defaut
+				jsonOptions.forEach(function(econsent) {
+					econsent.value=(typeof econsent.default!=="undefined" && econsent.default=="accept")?true:false;
+				});
 
 				if(typeof jsonCookie!=="object") jsonCookie=[];
 				jsonCookie.forEach(function(ecookie) {
@@ -360,12 +320,12 @@
 				return jsonOptions;
 			}
 		}
-
+        console.log("div")
 		var show=function() {
+            console.log(div)
 			if(div===false) {
 				div=display(consentOptions,text,className,position,fixed);
 			}
-			 div.show();
 		}
 
 		var consentCookie=getCookie(cookieName);
@@ -373,14 +333,8 @@
 		if(typeof consentCookie!=="undefined") {
 			if(typeof consentCookie==='boolean' && Array.isArray(consentOptions)) {
 			}
-			initConsentOptions(consentCookie,consentOptions);
-
 		}
-		//return;
-
-
-		//var consentCookie=getCookie(cookieName);
-		//loadCookieConsent(consentCookie,consentOptions);
+		initConsentOptions(consentCookie,consentOptions);
 
 
 		if(typeof consentCookie==="undefined" || forceDisplay) {
@@ -388,7 +342,9 @@
 			div=display(consentOptions,text,className,position,fixed);
 			autoSelectButtons(consentOptions);
 			if(delay) setTimeout(function() {div.slideDown("fast");},delay);
-			else div.show();
+            else div.show();
+            console.log(div.slideDown)
+            div.slideDown("fast")
 			return true;
 		} else {
 			//var div=display(consentOptions,text,className,position,fixed);
