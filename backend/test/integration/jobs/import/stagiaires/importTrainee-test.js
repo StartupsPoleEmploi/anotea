@@ -289,14 +289,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
-    it('cannot import same CSV twice', async () => {
+    it('cannot import same campaign twice', async () => {
 
         let db = await getTestDatabase();
         let csvFile = getTestFile('stagiaires-pe.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await importTrainee(db, logger, csvFile, handler);
 
+        await importTrainee(db, logger, csvFile, handler);
         let results = await importTrainee(db, logger, csvFile, handler);
 
         assert.deepStrictEqual(results, {
