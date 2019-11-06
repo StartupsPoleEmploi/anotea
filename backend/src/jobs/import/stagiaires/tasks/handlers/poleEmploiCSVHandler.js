@@ -80,28 +80,30 @@ module.exports = (db, regions) => {
         },
         shouldBeImported: trainee => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === trainee.codeRegion);
+            let conseilRegional = trainee.training.codeFinanceur.filter(c => isConseilRegional(c)).length > 0;
 
             let isValid = () => region && trainee.trainee.emailValid;
 
-            let isAfter = date => moment(trainee.training.scheduledEndDate).isAfter(moment(`${date} -0000`, 'YYYYMMDD Z'));
+            let isAfter = () => {
+                let since = conseilRegional && region.conseil_regional.since ? region.conseil_regional.since : region.since;
+                return moment(trainee.training.scheduledEndDate).isAfter(moment(`${since} -0000`, 'YYYYMMDD Z'));
+            };
 
             let isNotExcluded = () => {
 
-                let conseilRegional = trainee.training.codeFinanceur.filter(c => isConseilRegional(c)).length > 0;
                 if (conseilRegional && !region.conseil_regional.active) {
                     return false;
                 }
 
                 if (conseilRegional &&
                     region.conseil_regional.active &&
-                    isAfter(region.conseil_regional.since) &&
                     region.conseil_regional.import === 'certifications_only') {
                     return !_.isEmpty(trainee.training.certifInfo.id);
                 }
                 return true;
             };
 
-            return isValid() && isAfter(region.since) && isNotExcluded();
+            return isValid() && isAfter() && isNotExcluded();
         },
         buildTrainee: async (record, campaign) => {
 
