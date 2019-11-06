@@ -326,6 +326,66 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
+    it('should filter trainee with conseil regional filter (included)', async () => {
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-ara-conseil-regional.csv');
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
+            findActiveRegions: () => {
+                return [{
+                    codeRegion: '2',
+                    conseil_regional: {
+                        active: true,
+                    },
+                }];
+            }
+        }));
+
+        let results = await importTrainee(db, logger, csvFile, handler);
+
+        let count = await db.collection('trainee').count({
+            'trainee.email': {
+                $in: [
+                    'email@pe.com', 'email_2@pe.fr', 'email_4@pe.fr']
+            }
+        });
+        assert.strictEqual(count, 2);
+        assert.deepStrictEqual(results, {
+            invalid: 0,
+            ignored: 0,
+            imported: 3,
+            total: 3,
+        });
+    });
+
+    it('should filter trainee with conseil regional filter (since)', async () => {
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-ara-conseil-regional.csv');
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
+            findActiveRegions: () => {
+                return [{
+                    codeRegion: '2',
+                    conseil_regional: {
+                        active: true,
+                        since: '2018-09-01',
+                    },
+                }];
+            }
+        }));
+
+        let results = await importTrainee(db, logger, csvFile, handler);
+
+        let count = await db.collection('trainee').count({ 'trainee.email': { $in: ['email@pe.com', 'email_4@pe.fr'] } });
+        assert.strictEqual(count, 2);
+        assert.deepStrictEqual(results, {
+            invalid: 0,
+            ignored: 1,
+            imported: 2,
+            total: 3,
+        });
+    });
+
     it('should filter trainee with conseil regional filter (excluded)', async () => {
         let db = await getTestDatabase();
         let csvFile = getTestFile('stagiaires-pe-ara-conseil-regional.csv');
@@ -428,6 +488,44 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             id: '',
             label: '',
         });
+    });
+
+    it('should ignore trainee with codeFinanceur filtered', async () => {
+
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-bfc.csv');
+        let { regions } = await getComponents();
+
+        let stats = await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions), {
+            'codeFinanceur': '4'
+        });
+        assert.deepStrictEqual(stats, {
+            invalid: 0,
+            ignored: 3,
+            imported: 0,
+            total: 3,
+        });
+        let count = await db.collection('trainee').count({ 'training.codeFinanceur': { '$elemMatch': { '$in': ['2', '7', '13'] } } });
+        assert.deepStrictEqual(0, count);
+    });
+
+    it('can filter trainee by codeFinanceur', async () => {
+
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-bfc.csv');
+        let { regions } = await getComponents();
+
+        let stats = await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions), {
+            'codeFinanceur': '2'
+        });
+        assert.deepStrictEqual(stats, {
+            invalid: 0,
+            ignored: 1,
+            imported: 2,
+            total: 3,
+        });
+        let count = await db.collection('trainee').count({ 'training.codeFinanceur': { '$elemMatch': { '$eq': '2' } } });
+        assert.deepStrictEqual(2, count);
     });
 
 }));
