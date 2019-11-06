@@ -121,6 +121,21 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
+    it('should handle inseeCode with letters (corse)', async () => {
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
+
+        let results = await importTrainee(db, logger, getTestFile('stagiaires-pe-corse.csv'), handler);
+
+        assert.deepStrictEqual(results, {
+            invalid: 0,
+            ignored: 0,
+            imported: 1,
+            total: 1,
+        });
+    });
+
     it('should ignore trainee already removed', async () => {
         let db = await getTestDatabase();
         let { regions } = await getComponents();
