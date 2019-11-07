@@ -1,7 +1,6 @@
 .header {
     box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
     height: 107px;
-    line-height: 107px;
 }
 
 .login {
@@ -12,29 +11,69 @@
     padding: 0;
 }
 
+.login > div {
+    float: left;
+}
+
 .login > * {
     display: inline-block;
     height: 40px;
 }
 
 .logo {
-    margin-left: 200px;
+    margin: 15px 200px;
     height: 75px;
     vertical-align: middle;
     display: inline-block;
 }
 
-.header a {
-    outline: none;
-}
-
 .menu {
-    width: 200px;
+    width: 300px;
 }
 
-.menu > a {
+.menu .content, .menu a.unroll {
+    background-color: #f8f8f8;
+    padding: 15px;
+}
+
+.menu.closed .content, .menu.closed a.unroll {
+    background-color: inherit;
+    box-shadow: inherit;
+}
+
+.menu .content {
+    box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
+    border-radius: 5px;
+}
+
+.menu a.unroll {
     outline: none;
     font-weight: bold;
+    display: inline-block;
+    margin-top: 30px;
+    padding-bottom: 25px;
+}
+
+a.admin, a.contact {
+    line-height: 107px;
+}
+
+.menu .bar {
+    height: 3px;
+    width: 30px;
+    border-radius: 2px;
+}
+
+.financeur.menu .bar, .financeur.menu .button {
+    background-color: #0d7d57;
+}
+
+.de.menu .bar, .de.menu .button {
+    background-color: #384EAA;
+}
+
+.of.menu .bar, .of.menu .button {
+    background-color: #29333C;
 }
 
 .menu ul {
@@ -52,7 +91,7 @@
     width: 15px;
 }
 
-.menu.closed ul {
+.menu.closed div {
     display: none;
 }
 
@@ -71,4 +110,38 @@
 
 .menu li {
     line-height: 25px;
+}
+
+a.contact {
+    background: #F0801A;
+    color: #24303A;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
+    letter-spacing: 0.5px; 
+    text-align: center;
+    padding: 15px 15px 0px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    text-transform: uppercase;
+    margin: 0px 30px 0px 30px;
+}
+
+.menu .button {
+    display: inline-block;
+    position: relative;
+    margin: 0px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    background-color: #29333C;
+    box-shadow: none;
+    border: none;
+    font-size: 0.9em;
+    padding: 12px 20px 0px 20px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
 }

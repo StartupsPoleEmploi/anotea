@@ -28,9 +28,6 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
         });
     };
 
-    
-
-
     router.get('/', async (req, res) => {
         const connectionInfos = peconnect.initConnection();
         req.session.pe_connect = {
@@ -48,7 +45,13 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
     });
 
     router.get('/cgu', (req, res) => {
-        res.render('front/cgu');
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.nonce
+        };
+
+        res.render('front/cgu', { connectionLink: connectionInfos.link });
     });
 
     router.get('/services/organismes', (req, res) => {
@@ -56,8 +59,14 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
     });
 
     router.get('/services/organismes/:page', (req, res) => {
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.nonce
+        };
+
         if (['fonctionnement', 'qualite', 'services'].includes(req.params.page)) {
-            res.render('front/faq_organismes', { page: req.params.page });
+            res.render('front/faq_organismes', { page: req.params.page, connectionLink: connectionInfos.link });
         } else {
             res.status(404).render('errors/404');
         }
@@ -82,7 +91,13 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
     });
 
     router.get('/services/financeurs', (req, res) => {
-        res.render('front/faq_financeurs');
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.nonce
+        };
+
+        res.render('front/faq_financeurs', { connectionLink: connectionInfos.link });
     });
 
     router.get('/doc/:name', (req, res) => {
