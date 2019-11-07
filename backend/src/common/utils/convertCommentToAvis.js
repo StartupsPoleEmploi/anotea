@@ -71,11 +71,11 @@ module.exports = data => {
         avis.pseudo = data.pseudo;
     }
 
-    if (data.comment && data.status !== 'rejected') {
+    if (data.comment && data.status === 'validated') {
         avis.commentaire = convertCommentaire(data);
     }
 
-    if (data.reponse && data.reponse.status === 'validated') {
+    if (data.reponse && data.status === 'validated' && data.reponse.status === 'validated') {
         avis.reponse = {
             texte: data.reponse.text,
         };
