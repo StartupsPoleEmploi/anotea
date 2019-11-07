@@ -163,7 +163,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         });
     });
 
-    it('should reconcile sessions with avis (certifications only)', async () => {
+    it('should reconcile sessions with avis (same certifications only)', async () => {
 
         let db = await getTestDatabase();
         let noCertification = newComment({
@@ -187,6 +187,20 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 training: {
                     formacodes: ['22403'],
                     certifInfos: ['80735'],
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                    place: {
+                        postalCode: '75019',
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                training: {
+                    formacode: '22403',
+                    certifInfo: {
+                        id: '11111', //other certification
+                    },
                     organisation: {
                         siret: '22222222222222',
                     },
