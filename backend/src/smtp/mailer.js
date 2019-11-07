@@ -116,7 +116,6 @@ module.exports = function(db, logger, configuration, regions) {
     };
 
     return {
-        getConsultationLink: getConsultationLink,
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
         sendNewCommentsNotification: async (mailOptions, data, successCallback, errorCallback) => {
