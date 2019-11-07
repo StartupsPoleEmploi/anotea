@@ -67,27 +67,24 @@ module.exports = function(db, logger, configuration, regions) {
         });
     };
 
-    const sendMail = (template, params, mailOptions, successCallback, errorCallback, cc, textOnly) => {
+    const sendMail = (template, params, mailOptions, successCallback, errorCallback, options = {}) => {
         if (process.env.ANOTEA_MAIL_BCC) {
             mailOptions.bcc = process.env.ANOTEA_MAIL_BCC;
         }
 
-        if (cc) {
-            mailOptions.cc = cc;
-        }
         mailOptions.from = `Anotea <${configuration.smtp.from}>`;
 
         params.webView = false;
 
         let contents = [];
         contents.push(buildContent(template, 'txt', params));
-        if (!textOnly) {
+        if (!options.textOnly) {
             contents.push(buildContent(template, 'ejs', params));
         }
 
         Promise.all(contents).then(values => {
             mailOptions.text = values[0];
-            if (!textOnly) {
+            if (!options.textOnly) {
                 mailOptions.html = values[1];
             }
 
@@ -293,12 +290,12 @@ module.exports = function(db, logger, configuration, regions) {
         },
         sendMalformedImport: async (params, successCallback, errorCallback) => {
             let mailOptions = {};
-            let cc = configuration.smtp.import_error_cc;
 
             mailOptions.to = params.source === 'IDF' ? configuration.smtp.idf_error_to : configuration.smtp.pe_error_to;
+            mailOptions.cc = configuration.smtp.import_error_cc;
             mailOptions.subject = 'Imports stagiaires IDF : une erreur est survenue';
 
-            sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, cc, true);
+            sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, { textOnly: true });
         },
         sendInjureMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
 
