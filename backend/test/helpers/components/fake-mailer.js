@@ -8,7 +8,6 @@ module.exports = () => {
 
     return {
         getCalls: () => calls,
-        getConsultationLink: (...args) => registerCall(args),
         getUnsubscribeLink: (...args) => registerCall(args),
         getFormLink: (...args) => registerCall(args),
         getOrganisationPasswordForgottenLink: (...args) => registerCall(args),
