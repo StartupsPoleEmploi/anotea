@@ -45,13 +45,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await accountMailer.sendEmails(action);
 
-        let emailSent = mailer.getLastEmailSent();
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
             error: 0,
         });
-        assert.deepStrictEqual(emailSent[0], { to: 'new@organisme.fr' });
+        assert.strictEqual(mailer.getLastEmailAddress(), 'new@organisme.fr');
     });
 
     it('should send email only to organismes in active regions', async () => {

@@ -44,7 +44,7 @@ module.exports = (db, mailer) => {
             profile: account.profile
         });
 
-        return mailer.sendForgottenPasswordEmail({ to: contact }, codeRegion, passwordToken, account.profile)
+        return mailer.sendForgottenPasswordEmail(contact, codeRegion, passwordToken, account.profile)
         .then(() => _onSuccess(account))
         .catch(async err => {
             await _onError(err, account);

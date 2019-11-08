@@ -35,8 +35,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await avisMailer.sendEmails(action);
 
-        let emailSent = mailer.getLastEmailSent();
-        assert.deepStrictEqual(emailSent[0], { to: email });
+        assert.strictEqual(mailer.getLastEmailAddress(), email);
     });
 
     it('should not send email to trainee with avis', async () => {

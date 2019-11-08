@@ -210,8 +210,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 if (!result) {
                     reject(new Error('The condition was never met.'));
                 }
-                let params = mailer.getLastEmailSent();
-                assert.deepStrictEqual(params[0], { to: 'contact@poleemploi-formation.fr' });
+                assert.strictEqual(mailer.getLastEmailAddress(), 'contact@poleemploi-formation.fr');
                 resolve();
             });
         });

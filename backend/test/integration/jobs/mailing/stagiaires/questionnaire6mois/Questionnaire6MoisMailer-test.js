@@ -29,8 +29,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let questionnaire6MoisMailer = new Questionnaire6MoisMailer(db, logger, mailer);
         await questionnaire6MoisMailer.sendEmails();
 
-        let emailSent = mailer.getLastEmailSent();
-        assert.deepStrictEqual(emailSent[0], { to: email });
+        assert.strictEqual(mailer.getLastEmailAddress(), email);
         let trainee = await db.collection('trainee').findOne({ 'trainee.email': email });
         let status = trainee.mailing.questionnaire6Mois;
         assert.ok(status.mailSent);

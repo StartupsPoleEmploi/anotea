@@ -59,7 +59,7 @@ class QuestionnaireOrganismeMailer {
                 try {
                     this.logger.info(`Sending email to ${email}`);
 
-                    await this.mailer.sendQuestionnaireOrganisme({ to: email }, organisme);
+                    await this.mailer.sendQuestionnaireOrganisme(email, organisme);
 
                     await this._onSuccess(organisme);
 
