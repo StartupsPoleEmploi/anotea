@@ -4,19 +4,19 @@ const configuration = require('config');
 const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newTrainee, randomize } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
+const fakeMailer = require('../../../../../helpers/components/fake-mailer');
 const AvisMailer = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/AvisMailer');
 const ResendAction = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/actions/ResendAction');
-const { successMailer } = require('../../fake-mailers');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should send email to trainee already contacted but without avis', async () => {
 
-        let emailsSent = [];
         let db = await getTestDatabase();
+        let mailer = fakeMailer();
         let id = randomize('trainee');
         let email = `${randomize('name')}@email.fr`;
-        let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
+        let avisMailer = new AvisMailer(db, logger, mailer);
         let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
@@ -35,16 +35,17 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await avisMailer.sendEmails(action);
 
-        assert.deepStrictEqual(emailsSent, [{ to: email }]);
+        let emailSent = mailer.getLastEmailSent();
+        assert.deepStrictEqual(emailSent[0], { to: email });
     });
 
     it('should not send email to trainee with avis', async () => {
 
-        let emailsSent = [];
         let db = await getTestDatabase();
+        let mailer = fakeMailer();
         let id = randomize('trainee');
         let email = `${randomize('name')}@email.fr`;
-        let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
+        let avisMailer = new AvisMailer(db, logger, mailer);
         let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
@@ -63,7 +64,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await avisMailer.sendEmails(action);
 
-        assert.deepStrictEqual(emailsSent, []);
+        assert.deepStrictEqual(mailer.getCalls(), []);
     });
 
 }));

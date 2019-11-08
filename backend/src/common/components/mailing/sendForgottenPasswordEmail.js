@@ -2,9 +2,34 @@ const uuid = require('node-uuid');
 
 module.exports = (db, mailer) => {
 
+    let _onSuccess = async account => {
+        await db.collection('accounts').update({ _id: account._id }, {
+            $set: { mailSentDate: new Date() },
+            $unset: {
+                mailError: '',
+                mailErrorDetail: ''
+            }
+        });
+        await db.collection('events').insertOne({
+            id: account._id,
+            profile: account.profile,
+            date: new Date(),
+            type: 'askNewPassword'
+        });
+    };
+
+    let _onError = (err, account) => {
+        return db.collection('accounts').update({ _id: account._id }, {
+            $set: {
+                mailError: 'smtpError',
+                mailErrorDetail: err
+            }
+        });
+    };
+
+
     return async (_id, contact, codeRegion) => {
         let passwordToken = uuid.v4();
-
         let account = await db.collection('accounts').findOne({ _id });
 
         await db.collection('forgottenPasswordTokens').removeOne({
@@ -19,33 +44,11 @@ module.exports = (db, mailer) => {
             profile: account.profile
         });
 
-        return new Promise((resolve, reject) => {
-            mailer.sendPasswordForgotten({ to: contact }, codeRegion, passwordToken, account.profile,
-                async () => {
-                    await db.collection('accounts').update({ _id }, {
-                        $set: { mailSentDate: new Date() },
-                        $unset: {
-                            mailError: '',
-                            mailErrorDetail: ''
-                        }
-                    });
-                    await db.collection('events').insertOne({
-                        id: _id,
-                        profile: account.profile,
-                        date: new Date(),
-                        type: 'askNewPassword'
-                    });
-                    resolve();
-                },
-                async err => {
-                    await db.collection('accounts').update({ _id }, {
-                        $set: {
-                            mailError: 'smtpError',
-                            mailErrorDetail: err
-                        }
-                    });
-                    reject(new Error(err));
-                });
+        return mailer.sendForgottenPasswordEmail({ to: contact }, codeRegion, passwordToken, account.profile)
+        .then(() => _onSuccess(account))
+        .catch(async err => {
+            await _onError(err, account);
+            throw err;
         });
     };
 };

@@ -59,10 +59,7 @@ class QuestionnaireOrganismeMailer {
                 try {
                     this.logger.info(`Sending email to ${email}`);
 
-                    await new Promise((resolve, reject) => {
-                        let mailOptions = { to: email };
-                        this.mailer.sendQuestionnaireOrganisme(mailOptions, organisme, () => resolve(), err => reject(err));
-                    });
+                    await this.mailer.sendQuestionnaireOrganisme({ to: email }, organisme);
 
                     await this._onSuccess(organisme);
 

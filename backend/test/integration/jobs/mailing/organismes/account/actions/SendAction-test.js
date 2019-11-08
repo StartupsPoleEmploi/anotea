@@ -5,16 +5,16 @@ const { newOrganismeAccount } = require('../../../../../../helpers/data/dataset'
 const logger = require('../../../../../../helpers/components/fake-logger');
 const AccountMailer = require('../../../../../../../src/jobs/mailing/organismes/account/AccountMailer');
 const SendAction = require('../../../../../../../src/jobs/mailing/organismes/account/actions/SendAction');
-const { successMailer } = require('../../../fake-mailers');
+const fakeMailer = require('../../../../../../helpers/components/fake-mailer');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should send email to new organismes only', async () => {
 
-        let emailsSent = [];
+        let mailer = fakeMailer();
         let db = await getTestDatabase();
         let id = 31705038300064;
-        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
         let action = new SendAction(configuration);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
@@ -45,19 +45,20 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await accountMailer.sendEmails(action);
 
+        let emailSent = mailer.getLastEmailSent();
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
             error: 0,
         });
-        assert.deepStrictEqual(emailsSent, [{ to: 'new@organisme.fr' }]);
+        assert.deepStrictEqual(emailSent[0], { to: 'new@organisme.fr' });
     });
 
     it('should send email only to organismes in active regions', async () => {
 
-        let emailsSent = [];
+        let mailer = fakeMailer();
         let db = await getTestDatabase();
-        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111,

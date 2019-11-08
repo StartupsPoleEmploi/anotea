@@ -11,16 +11,9 @@ class AccountMailer {
     }
 
     _sendEmail(organisme) {
-        return new Promise((resolve, reject) => {
-            this.mailer.sendOrganisationAccountLink({ to: getOrganismeEmail(organisme) }, organisme,
-                async () => {
-                    await this._onSuccess(organisme);
-                    return resolve();
-                }, async err => {
-                    await this._onError(err, organisme);
-                    return reject(err);
-                });
-        });
+        return this.mailer.sendOrganisationAccountEmail({ to: getOrganismeEmail(organisme) }, organisme)
+        .then(() => this._onSuccess(organisme))
+        .catch(err => this._onError(err, organisme));
     }
 
     _onSuccess(organisme) {
@@ -84,6 +77,7 @@ class AccountMailer {
             return { total: 1, sent: 1, error: 0 };
         } catch (e) {
             await this._onError(e, organisme);
+            this.logger.error(e);
             return { total: 1, sent: 0, error: 1 };
         }
     }

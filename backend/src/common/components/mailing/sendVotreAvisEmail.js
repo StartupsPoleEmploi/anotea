@@ -23,17 +23,12 @@ module.exports = (db, mailer) => {
         });
     };
 
-    return trainee => {
-        return new Promise((resolve, reject) => {
-            mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee,
-                async () => {
-                    await _onSuccess(trainee);
-                    resolve();
-                },
-                async err => {
-                    await _onError(err, trainee);
-                    reject(new Error(err));
-                });
+    return async trainee => {
+        await mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee)
+        .then(() => _onSuccess(trainee))
+        .catch(async err => {
+            await _onError(err, trainee);
+            throw err;
         });
     };
 };

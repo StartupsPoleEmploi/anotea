@@ -9,8 +9,7 @@ const NotificationMailer = require('../../../../../../src/jobs/mailing/organisme
 
 let fakeMailer = spy => {
     return {
-        sendNewCommentsNotification: async (options, data, callback) => {
-            await callback();
+        sendNewCommentsNotification: options => {
             spy.push(options);
         }
     };

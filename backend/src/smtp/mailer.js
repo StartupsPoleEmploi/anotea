@@ -67,42 +67,41 @@ module.exports = function(db, logger, configuration, regions) {
         });
     };
 
-    const sendMail = (template, params, mailOptions, successCallback, errorCallback, options = {}) => {
+    const sendMail = (template, params, mailOptions, options = {}) => {
         if (process.env.ANOTEA_MAIL_BCC) {
             mailOptions.bcc = process.env.ANOTEA_MAIL_BCC;
         }
-
         mailOptions.from = `Anotea <${configuration.smtp.from}>`;
 
         params.webView = false;
 
-        let contents = [];
-        contents.push(buildContent(template, 'txt', params));
-        if (!options.textOnly) {
-            contents.push(buildContent(template, 'ejs', params));
-        }
-
-        Promise.all(contents).then(values => {
-            mailOptions.text = values[0];
-            if (!options.textOnly) {
-                mailOptions.html = values[1];
-            }
-
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    logger.error(`An error occurs while sending mail : ${error}̀`);
-                    errorCallback(error);
-                } else {
-                    logger.info(`Message sent to ${mailOptions.to}`, {
-                        messageId: info.messageId,
-                        response: info.response,
-                    });
-                    successCallback();
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                buildContent(template, 'txt', params),
+                options.textOnly ? Promise.resolve() : buildContent(template, 'ejs', params),
+            ])
+            .then(values => {
+                mailOptions.text = values[0];
+                if (!options.textOnly) {
+                    mailOptions.html = values[1];
                 }
+
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        logger.error(`An error occurs while sending mail : ${error}̀`);
+                        reject(error);
+                    } else {
+                        logger.info(`Message sent to ${mailOptions.to}`, {
+                            messageId: info.messageId,
+                            response: info.response,
+                        });
+                        resolve();
+                    }
+                });
+            }, reason => {
+                logger.error(`An error occurs while sending mail : ${reason}`);
+                reject(reason);
             });
-        }, reason => {
-            logger.error(`An error occurs while sending mail : ${reason}`);
-            errorCallback(reason);
         });
     };
 
@@ -118,7 +117,7 @@ module.exports = function(db, logger, configuration, regions) {
     return {
         getUnsubscribeLink: getUnsubscribeLink,
         getFormLink: getFormLink,
-        sendNewCommentsNotification: async (mailOptions, data, successCallback, errorCallback) => {
+        sendNewCommentsNotification: (mailOptions, data) => {
 
             let { organisme, pickedComment } = data;
 
@@ -136,9 +135,9 @@ module.exports = function(db, logger, configuration, regions) {
             mailOptions.replyTo = getReplyToEmail(region);
             mailOptions.subject = `Pôle Emploi - Vous avez ${data.nbUnreadComments} nouveaux avis stagiaires`;
 
-            sendMail('organisme_avis_non_lus', params, mailOptions, successCallback, errorCallback);
+            return sendMail('organisme_avis_non_lus', params, mailOptions);
         },
-        sendSignalementAccepteNotification: async (mailOptions, organisme, avis, successCallback, errorCallback) => {
+        sendSignalementAccepteNotification: (mailOptions, organisme, avis) => {
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
                 hostname: configuration.app.public_hostname,
@@ -152,9 +151,9 @@ module.exports = function(db, logger, configuration, regions) {
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
 
-            sendMail('organisme_avis_signale_rejete', params, mailOptions, successCallback, errorCallback);
+            return sendMail('organisme_avis_signale_rejete', params, mailOptions);
         },
-        sendSignalementRejeteNotification: async (mailOptions, organisme, avis, successCallback, errorCallback) => {
+        sendSignalementRejeteNotification: (mailOptions, organisme, avis) => {
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
                 hostname: configuration.app.public_hostname,
@@ -168,9 +167,9 @@ module.exports = function(db, logger, configuration, regions) {
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
 
-            sendMail('organisme_avis_signale_publie', params, mailOptions, successCallback, errorCallback);
+            return sendMail('organisme_avis_signale_publie', params, mailOptions);
         },
-        sendReponseRejeteeNotification: async (mailOptions, organisme, avis, successCallback, errorCallback) => {
+        sendReponseRejeteeNotification: (mailOptions, organisme, avis) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
@@ -186,9 +185,9 @@ module.exports = function(db, logger, configuration, regions) {
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
 
-            sendMail('organisme_reponse_rejetee', params, mailOptions, successCallback, errorCallback);
+            return sendMail('organisme_reponse_rejetee', params, mailOptions);
         },
-        sendOrganisationAccountLink: async (mailOptions, organisme, successCallback, errorCallback) => {
+        sendOrganisationAccountEmail: (mailOptions, organisme) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
@@ -204,9 +203,9 @@ module.exports = function(db, logger, configuration, regions) {
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
 
-            sendMail('organisation_password', params, mailOptions, successCallback, errorCallback);
+            return sendMail('organisation_password', params, mailOptions);
         },
-        sendQuestionnaireOrganisme: async (mailOptions, organisme, successCallback, errorCallback) => {
+        sendQuestionnaireOrganisme: (mailOptions, organisme) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {
@@ -220,9 +219,9 @@ module.exports = function(db, logger, configuration, regions) {
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
 
-            sendMail('organisme_questionnaire', params, mailOptions, successCallback, errorCallback);
+            return sendMail('organisme_questionnaire', params, mailOptions);
         },
-        sendPasswordForgotten: async (mailOptions, codeRegion, passwordToken, profile, successCallback, errorCallback) => {
+        sendForgottenPasswordEmail: (mailOptions, codeRegion, passwordToken, profile) => {
 
             let link = `${configuration.app.public_hostname}/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`;
             let consultationLink = `${configuration.app.public_hostname}/mail/${passwordToken}/passwordForgotten`;
@@ -233,9 +232,9 @@ module.exports = function(db, logger, configuration, regions) {
             mailOptions.list = list;
             mailOptions.replyTo = getReplyToEmail(region);
 
-            sendMail('password_forgotten', params, mailOptions, successCallback, errorCallback);
+            return sendMail('password_forgotten', params, mailOptions);
         },
-        sendVotreAvisMail: async (mailOptions, trainee, successCallback, errorCallback) => {
+        sendVotreAvisMail: (mailOptions, trainee) => {
 
             let unsubscribeLink = getUnsubscribeLink(trainee);
             let region = regions.findRegionByCodeRegion(trainee.codeRegion);
@@ -258,10 +257,10 @@ module.exports = function(db, logger, configuration, regions) {
             });
             mailOptions.replyTo = getReplyToEmail(region);
 
-            sendMail('votre_avis', params, mailOptions, successCallback, errorCallback);
+            return sendMail('votre_avis', params, mailOptions);
 
         },
-        sendQuestionnaire6MoisMail: async (mailOptions, trainee, successCallback, errorCallback) => {
+        sendQuestionnaire6MoisMail: (mailOptions, trainee) => {
 
             let unsubscribeLink = getUnsubscribeLink(trainee);
             let region = regions.findRegionByCodeRegion(trainee.codeRegion);
@@ -284,19 +283,19 @@ module.exports = function(db, logger, configuration, regions) {
             });
             mailOptions.replyTo = getReplyToEmail(region);
 
-            sendMail('questionnaire_6mois', params, mailOptions, successCallback, errorCallback);
+            return sendMail('questionnaire_6mois', params, mailOptions);
 
         },
-        sendMalformedImport: async (params, successCallback, errorCallback) => {
+        sendMalformedImport: params => {
             let mailOptions = {};
 
             mailOptions.to = params.source === 'IDF' ? configuration.smtp.idf_error_to : configuration.smtp.pe_error_to;
             mailOptions.cc = configuration.smtp.import_error_cc;
             mailOptions.subject = 'Imports stagiaires IDF : une erreur est survenue';
 
-            sendMail('malformed_import_idf', params, mailOptions, successCallback, errorCallback, { textOnly: true });
+            return sendMail('malformed_import_idf', params, mailOptions, { textOnly: true });
         },
-        sendInjureMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
+        sendInjureMail: (mailOptions, trainee, comment) => {
 
             let unsubscribeLink = getUnsubscribeLink(trainee);
             let region = regions.findRegionByCodeRegion(trainee.codeRegion);
@@ -319,9 +318,9 @@ module.exports = function(db, logger, configuration, regions) {
                 }
             });
             mailOptions.replyTo = getReplyToEmail(region);
-            sendMail('avis_injure', params, mailOptions, successCallback, errorCallback);
+            return sendMail('avis_injure', params, mailOptions);
         },
-        sendAlerteMail: async (mailOptions, trainee, comment, successCallback, errorCallback) => {
+        sendAlerteMail: (mailOptions, trainee, comment) => {
             let unsubscribeLink = getUnsubscribeLink(trainee);
             let region = regions.findRegionByCodeRegion(trainee.codeRegion);
             let params = {
@@ -342,7 +341,7 @@ module.exports = function(db, logger, configuration, regions) {
                 }
             });
             mailOptions.replyTo = getReplyToEmail(region);
-            sendMail('avis_alerte', params, mailOptions, successCallback, errorCallback);
+            return sendMail('avis_alerte', params, mailOptions);
         }
     };
 };
