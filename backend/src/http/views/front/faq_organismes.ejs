@@ -16,7 +16,7 @@
     $(document).ready(function () {
         $("a.more").click(function (e) {
             e.preventDefault();
-            $('div.more').toggle();
+            $('.more').toggleClass('open closed');
         });
     });
     </script>
@@ -59,46 +59,79 @@
                     <p>
                         Voici quelques conseils pour répondre aux avis.
                     </p>
-                    <a class="button more" href="#">En savoir plus</a>
+                    <a class="more closed" href="#">Voir nos conseils 
+                        <img class="icon-open" src="/static/images/home/chevron-down-orange.svg" />
+                        <img class="icon-closed" src="/static/images/home/chevron-up-orange.svg" />
+                    </a>
                 </div>
             </div>
-            <div  class="more">
-                <p>Répondre aux avis est un moyen d’établir une relation de confiance avec vos futurs stagiaires.</p>
-                <p>Lorsqu’ils consulteront les avis sur les formations, ils verront à la fois les avis des anciens stagiaires et vos réponses.</p>
+        </div>
 
-                <ul>
-                    <li><strong>Ayez à l’esprit qu’elle s’adresse aux personnes qui vont consulter les avis Anotéa en ligne</strong></li>
-                    <li><strong>Votre réponse ne s’adresse pas à une personne mais à l’ensemble des futurs stagiaires</strong></li>
-                    <li>Ne rédigez pas votre réponse comme une réponse à une réclamation</li>
-                    <li>Respectez l’anonymat des formateurs et des stagiaires</li>
-                    <li>Ne faites pas mention de coordonnées téléphoniques ou mail dans votre réponse</li>
+        <div class="more closed">
+            <h2>Répondre aux avis est un moyen d’établir <br />
+                <strong>une relation de confiance avec vos futurs stagiaires.</strong>
+            </h2>
+            <p class="subtitle">Lorsqu’ils consulteront les avis sur les formations, ils verront à la fois <strong>les avis des anciens stagiaires et vos réponses.</strong></p>
+
+            <div class="checklist">
+                <ul class="border">
+                    <li>
+                        <div>
+                            <img src="/static/images/home/faq/Icone_Check.svg" />
+                        </div>
+                        <p>Votre réponse ne s’adresse pas à une personne mais <strong>à des futurs stagiaires</strong> qui vont
+                            consulter les avis Anotéa en ligne.</p>
+                    </li>
+                    <li>
+                        <div>
+                            <img src="/static/images/home/faq/Icone_Check.svg" />
+                        </div>
+                        <p><strong>Ne rédigez pas</strong> votre réponse comme une réponse à une <strong>réclamation</strong></p>
+                    </li>
                 </ul>
-
-                <h3>Comment répondre à un avis négatif</h3>
-                <p></p>Lorsque l’avis est négatif, la qualité de votre réponse est d’autant plus importante.
-                <p></p>Conseil n°1 : <strong>prenez le temps de la réflexion</strong>. On n’aime pas faire l’objet d’un commentaire très critique, c’est pourquoi il est important de ne pas y répondre sous le coup de l’émotion. Prendre le temps de la réflexion, faire preuve d’empathie vous aideront à écrire une réponse constructive.
-                <p></p>Conseil n°2 : Remerciez la personne d’avoir laissé un commentaire et reformulez les points positifs du commentaire (un avis est rarement 100% négatif)
-                <p></p>Conseil n°3 : <strong>Montrez que vous prenez en compte</strong> les points d’amélioration à apporter à votre prestation
-                <p></p>ex : Merci, nous sommes ravis que vous ayez apprécié la qualité de nos formateurs. Il est vrai que nos locaux ont besoin d’être modernisés, des travaux sont planifiés sur l’année 2020 afin d’apporter les meilleures conditions de travail à nos futurs stagiaires.
-                
-                <p>ou </p>
-                
-                <p>Merci d’avoir laissé votre commentaire. Nous sommes sincèrement désolés des dysfonctionnements qui ont eu lieu durant cette session et nous avons mis en oeuvre toutes les actions nécessaires pour que cela ne se reproduise pas.
-                Conseil n°4 : lorsque cela est opportun, <strong>donnez des éléments factuels</strong> de type : taux de retour à l’emploi, taux de réussite à l’examen...</p>
-
-                <p>Enfin, voici ce que nous disent les tests utilisateurs :</p>
-                <p>Lorsqu’un avis négatif est isolé parmi des avis positifs, il sera écarté par le futur stagiaire</p>
-                <p>Lorsque l’ensemble des avis est très positif, cela peut entraîner une certaine suspicion de la part des lecteurs, ils peuvent penser que les avis négatifs ont été écartés (et oui, les avis négatifs rassurent aussi !)</p>
-                <p>D’une manière générale, les avis ne sont qu’une aide au choix qui intervient après d’autres critères :</p>
+            
                 <ul>
-                    <li>Un descriptif de formation soigné et détaillé</li>
-                    <li>La durée de la formation</li>
-                    <li>L’alternance Centre / Entreprise</li>
-                    <li>Le lieu de formation</li>
-                    <li>La performance de la formation sur le retour à l’emploi</li>
+                    <li>
+                        <div>
+                            <img src="/static/images/home/faq/Icone_Check.svg" />
+                        </div>
+                        <p>Respectez l’<strong>anonymat</strong> des formateurs et des stagiaires</p>
+                    </li>
+                    <li>
+                        <div>
+                            <img src="/static/images/home/faq/Icone_Check.svg" />
+                        </div>
+                        <p>Ne faites pas mention de <strong>coordonnées téléphoniques ou mail</strong> dans votre réponse</p>
+                    </li>
                 </ul>
-                <p><strong>Consulter les avis et leurs réponses servent essentiellement à conforter les personnes dans leurs choix et si les avis sont trop mitigés, cela va alors les inciter à mieux se renseigner sur l’organisme et la formation.</strong></p>
-                <p>N’hésitez pas à nous contacter pour nous faire part de vos expériences liées aux avis.</p>
+            </div>
+
+            <h2>Comment répondre à un avis négatif</h2>
+            <p class="subtitle">Lorsque l’avis est négatif, <strong>la qualité de votre réponse</strong> est d’autant plus <strong>importante</strong>.</p>
+
+            <div class="conseil">
+                <h3>Conseil n°1</h3>
+                <p><strong>prenez le temps de la réflexion</strong>. CONSEIL n°1 
+                    Prenez le temps de la réflexion. On n’aime pas faire l’objet d’un commentaire très critique, c’est pourquoi il est important de ne pas 
+                    y répondre sous le coup de l’émotion. Prendre le temps de la réflexion, faire preuve d’empathie vous aideront à écrire une 
+                    réponse constructive.</p>
+            </div>
+
+            <div class="conseil">
+                <h3>Conseil n°2</h3>
+                <p>Remerciez la personne d’avoir laissé un commentaire et reformulez les points positifs du commentaire (un avis est rarement 100% négatif)</p>
+            </div>
+            
+            <div class="conseil">
+                <h3>Conseil n°3</h3>
+                <p><strong>Montrez que vous prenez en compte</strong> les points d’amélioration à apporter à votre prestation</p>
+
+                <p class="example">Exemple :<br /> Merci, nous sommes ravis que vous ayez apprécié la qualité de nos formateurs. Il est vrai que nos locaux ont besoin d’être modernisés, des travaux sont planifiés sur l’année 2020 afin d’apporter les meilleures conditions de travail à nos futurs stagiaires.</p>
+                
+                <p class="example">-</p>
+                
+                <p class="example">Autre exemple :<br /> Merci d’avoir laissé votre commentaire. Nous sommes sincèrement désolés des dysfonctionnements qui ont eu lieu durant cette session et nous avons mis en oeuvre toutes les actions nécessaires pour que cela ne se reproduise pas.</p>
+                
             </div>
         </div>
 

@@ -85,6 +85,7 @@ a {
     background-color: #24303A;
     color: white;
     padding: 40px;
+    height: 245px;
 }
 
 .description h2, .description div {
@@ -238,12 +239,33 @@ a {
     margin-bottom: 15px;
 }
 
-.question.open .icon-open {
+.icon-open, .icon-closed {
+    vertical-align: middle;
+    padding-bottom: 2px;
+    margin-left: 10px;
+}
+
+.open .icon-open {
     display: none;
 }
 
-.question.closed .icon-closed {
+.closed .icon-closed {
     display: none;
+}
+
+a.more {
+    color: #F7B374;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    line-height: 24px;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+a.more:hover {
+    text-decoration: underline;
 }
 
 .question a {
@@ -277,9 +299,88 @@ a {
     display: none;
 }
 
-div.more {
+div.more.closed {
     display: none;
+}
+
+div.more {
     margin:auto;
     width: 60%;
     padding-top: 40px;
+	border-radius: 5px 5px 0 0;
+    background-color: #F8F8F8;
+    color: #24303A;
+    position: relative;
+    top: -40px;
+    padding: 10px 90px;
+}
+
+.more h2 {
+    font-size: 24px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.more p.subtitle {
+    text-align: center;
+    font-weight: normal;
+    padding-bottom: 30px;
+}
+
+.more .conseil {
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    box-shadow: 0 3px 20px 0 rgba(0,0,0,0.1);
+    padding: 15px;
+    margin: 20px;
+}
+
+.more .conseil h3 {
+    color: #F7B374;
+    text-transform: uppercase;
+}
+
+.more .conseil .example {
+    font-size: 0.9em;
+}
+
+.more .checklist {
+    margin: auto;
+    width: 80%;
+} class="example"
+
+.more .checklist ul {
+    width: calc(50% - 60px);
+    display: inline-block;
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+}
+
+.more .checklist ul.border {
+    border-width: 0px 1px 0px 0px;
+    border-color: #CCCFD1;
+    border-style: solid;
+    padding-right: 30px;
+    margin-right: 30px;
+}
+
+.more .checklist li {
+    list-style: none;
+    margin-bottom: 30px;
+}
+
+.more .checklist li div, .more .checklist li p {
+    display: inline-block;
+}
+
+.more .checklist li div {
+    width: 50px;
+    vertical-align: top;
+}
+
+.more .checklist li p {
+    width: calc(100% - 55px);
+    padding: 0px;
+    margin: 0px;
 }

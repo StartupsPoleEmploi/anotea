@@ -95,14 +95,6 @@ a.admin, a.contact {
     display: none;
 }
 
-.menu .icon-open {
-    display: none;
-}
-
-.menu.closed .icon-open {
-    display: none;
-}
-
 .menu a {
     color:#24303A;
     text-decoration: none;
