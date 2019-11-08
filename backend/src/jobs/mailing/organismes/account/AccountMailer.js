@@ -11,7 +11,8 @@ class AccountMailer {
     }
 
     _sendEmail(organisme) {
-        return this.mailer.sendOrganisationAccountEmail({ to: getOrganismeEmail(organisme) }, organisme)
+        let email = getOrganismeEmail(organisme);
+        return this.mailer.sendOrganisationAccountEmail(email)
         .then(() => this._onSuccess(organisme))
         .catch(err => this._onError(err, organisme));
     }

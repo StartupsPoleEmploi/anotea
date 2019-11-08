@@ -34,15 +34,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         let accountMailer = new AccountMailer(db, logger, configuration, mailer);
         let results = await accountMailer.sendEmailBySiret('31705038300064');
 
-        let emailSent = mailer.getLastEmailSent();
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
             error: 0,
         });
-        assert.deepStrictEqual(emailSent[0], {
-            to: 'new@organisme.fr'
-        });
+        assert.strictEqual(mailer.getLastEmailAddress(), 'new@organisme.fr');
     });
 
     it('should send emails', async () => {
@@ -54,15 +51,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let results = await accountMailer.sendEmails(dummyAction);
 
-        let emailSent = mailer.getLastEmailSent();
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
             error: 0,
         });
-        assert.deepStrictEqual(emailSent[0], {
-            to: 'new@organisme.fr'
-        });
+        assert.strictEqual(mailer.getLastEmailAddress(), 'new@organisme.fr');
     });
 
     it('should update organisme when mailer succeed', async () => {

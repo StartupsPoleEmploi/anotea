@@ -10,7 +10,7 @@ module.exports = (db, mailer, logger) => {
         });
         let email = getOrganismeEmail(organisme);
 
-        return mailer.sendSignalementAccepteNotification({ to: email }, organisme, avis)
+        return mailer.sendSignalementAccepteNotification(email, organisme, avis)
         .then(() => logger.info(`email sent to ${email} for validated avis`));
     };
 };

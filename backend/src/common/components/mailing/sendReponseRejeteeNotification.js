@@ -10,7 +10,7 @@ module.exports = (db, mailer, logger) => {
         });
         let email = getOrganismeEmail(organisme);
 
-        return mailer.sendReponseRejeteeNotification({ to: email }, organisme, comment)
+        return mailer.sendReponseRejeteeNotification(email, organisme, comment)
         .then(() => logger.info(`email sent to ${email} for rejected response`));
     };
 };

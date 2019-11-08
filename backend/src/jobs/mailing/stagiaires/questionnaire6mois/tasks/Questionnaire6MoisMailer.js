@@ -67,7 +67,7 @@ class Questionnaire6MoisMailer {
                 try {
                     this.logger.info(`Sending email to ${trainee.trainee.email}`);
 
-                    await this.mailer.sendQuestionnaire6MoisMail({ to: trainee.trainee.email }, trainee);
+                    await this.mailer.sendQuestionnaire6MoisMail(trainee.trainee.email, trainee);
                     await this._onSuccess(trainee);
 
                     if (options.delay) {

@@ -10,7 +10,7 @@ module.exports = (db, mailer, logger) => {
         });
         let email = getOrganismeEmail(organisme);
 
-        return mailer.sendSignalementRejeteNotification({ to: email }, organisme, avis)
+        return mailer.sendSignalementRejeteNotification(email, organisme, avis)
         .then(() => logger.info(`email sent to ${email} for rejected avis`));
     };
 };

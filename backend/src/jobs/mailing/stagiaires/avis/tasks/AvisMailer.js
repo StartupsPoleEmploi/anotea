@@ -56,8 +56,9 @@ class AvisMailer {
                 trainee.trainee.name = titleize(trainee.trainee.name);
 
                 try {
-                    this.logger.info(`Sending email to ${trainee.trainee.email} for campaign ${trainee.campaign}`);
-                    await this.mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee);
+                    let email = trainee.trainee.email;
+                    this.logger.info(`Sending email to ${email} for campaign ${trainee.campaign}`);
+                    await this.mailer.sendVotreAvisMail(email, trainee);
                     await this._onSuccess(trainee);
 
                     if (options.delay) {

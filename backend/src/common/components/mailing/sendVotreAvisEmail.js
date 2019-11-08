@@ -24,7 +24,7 @@ module.exports = (db, mailer) => {
     };
 
     return async trainee => {
-        await mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee)
+        await mailer.sendVotreAvisMail(trainee.trainee.email, trainee)
         .then(() => _onSuccess(trainee))
         .catch(async err => {
             await _onError(err, trainee);

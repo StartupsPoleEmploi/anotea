@@ -27,15 +27,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             getQuery: () => ({ _id: id }),
         });
 
-        let emailSent = mailer.getLastEmailSent();
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
             error: 0,
         });
-        assert.deepStrictEqual(emailSent[0], {
-            to: email,
-        });
+        assert.strictEqual(mailer.getLastEmailAddress(), email);
     });
 
     it('should update trainee when mailer succeed', async () => {
