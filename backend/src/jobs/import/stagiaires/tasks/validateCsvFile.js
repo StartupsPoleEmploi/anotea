@@ -78,7 +78,9 @@ module.exports = async (db, logger, file, handler, mailer) => {
                 date: moment().format('DD/MM/YYYY'),
                 reason: type.message,
                 source: handler.name
-            }, () => resolve(error), reject);
+            })
+            .then(() => resolve(error))
+            .catch(err => reject(err));
         };
 
         let rl = readline.createInterface({ input: fs.createReadStream(file) });

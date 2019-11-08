@@ -1,23 +1,29 @@
-module.exports = () => {
+module.exports = (options = {}) => {
 
     let calls = [];
     let registerCall = parameters => {
-        calls.push(parameters);
-        parameters.find(p => typeof p === 'function').apply();
+        if (options.fail) {
+            let err = new Error('Unable to send email');
+            calls.push(err);
+            return Promise.reject(err);
+        } else {
+            calls.push(parameters);
+            return Promise.resolve();
+        }
     };
 
     return {
         getCalls: () => calls,
+        getLastEmailSent: () => calls[calls.length - 1],
         getUnsubscribeLink: (...args) => registerCall(args),
         getFormLink: (...args) => registerCall(args),
-        getOrganisationPasswordForgottenLink: (...args) => registerCall(args),
         sendNewCommentsNotification: (...args) => registerCall(args),
-        sendOrganisationAccountLink: (...args) => registerCall(args),
-        sendPasswordForgotten: (...args) => registerCall(args),
+        sendOrganisationAccountEmail: (...args) => registerCall(args),
+        sendForgottenPasswordEmail: (...args) => registerCall(args),
         sendVotreAvisMail: (...args) => registerCall(args),
         sendMalformedImport: (...args) => registerCall(args),
-        sendAvisHorsSujetMail: (...args) => registerCall(args),
         sendReponseRejeteeNotification: (...args) => registerCall(args),
         sendInjureMail: (...args) => registerCall(args),
+        sendQuestionnaire6MoisMail: (...args) => registerCall(args),
     };
 };

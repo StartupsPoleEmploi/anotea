@@ -4,8 +4,7 @@ const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
 const AccountMailer = require('../../../../../../src/jobs/mailing/organismes/account/AccountMailer');
-const { successMailer, errorMailer } = require('../../fake-mailers');
-
+const fakeMailer = require('../../../../../helpers/components/fake-mailer');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
@@ -15,8 +14,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should send email by siret', async () => {
 
-        let emailsSent = [];
         let db = await getTestDatabase();
+        let mailer = fakeMailer();
         let id = 31705038300064;
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
@@ -32,43 +31,44 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
         let results = await accountMailer.sendEmailBySiret('31705038300064');
 
+        let emailSent = mailer.getLastEmailSent();
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
             error: 0,
         });
-        assert.deepStrictEqual(emailsSent, [{
+        assert.deepStrictEqual(emailSent[0], {
             to: 'new@organisme.fr'
-        }]);
+        });
     });
 
     it('should send emails', async () => {
 
-        let emailsSent = [];
         let db = await getTestDatabase();
-        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        let mailer = fakeMailer();
+        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
         await insertIntoDatabase('accounts', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
 
         let results = await accountMailer.sendEmails(dummyAction);
 
+        let emailSent = mailer.getLastEmailSent();
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
             error: 0,
         });
-        assert.deepStrictEqual(emailsSent, [{
+        assert.deepStrictEqual(emailSent[0], {
             to: 'new@organisme.fr'
-        }]);
+        });
     });
 
     it('should update organisme when mailer succeed', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
-        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer());
         await insertIntoDatabase('accounts', newOrganismeAccount({
             courriel: 'new@organisme.fr',
             mailSentDate: null
@@ -86,8 +86,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should update set resend property to true on resend', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
-        let accountMailer = new AccountMailer(db, logger, configuration, successMailer(emailsSent));
+        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer());
         await insertIntoDatabase('accounts', newOrganismeAccount({
             courriel: 'new@organisme.fr',
             mailSentDate: new Date()
@@ -103,7 +102,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should update organisme when mailer fails', async () => {
 
         let db = await getTestDatabase();
-        let accountMailer = new AccountMailer(db, logger, configuration, errorMailer());
+        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer({ fail: true }));
         await insertIntoDatabase('accounts', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
 
         try {
@@ -112,7 +111,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         } catch (e) {
             let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
             assert.deepStrictEqual(organisme.mailError, 'smtpError');
-            assert.deepStrictEqual(organisme.mailErrorDetail, 'timeout');
+            assert.deepStrictEqual(organisme.mailErrorDetail, 'Unable to send email');
         }
     });
 }));

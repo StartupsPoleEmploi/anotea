@@ -86,14 +86,12 @@ class NotificationMailer {
     }
 
     async _sendEmail(organisme, status) {
-        return new Promise(async (resolve, reject) => {
-            let data = {
-                organisme,
-                pickedComment: status.pickedComment,
-                nbUnreadComments: status.nbUnreadComments
-            };
-            this.mailer.sendNewCommentsNotification({ to: getOrganismeEmail(organisme) }, data, () => resolve(), err => reject(err));
-        });
+        let data = {
+            organisme,
+            pickedComment: status.pickedComment,
+            nbUnreadComments: status.nbUnreadComments
+        };
+        return this.mailer.sendNewCommentsNotification({ to: getOrganismeEmail(organisme) }, data);
     }
 
     async sendEmails(options = {}) {

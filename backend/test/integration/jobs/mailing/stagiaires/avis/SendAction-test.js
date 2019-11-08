@@ -5,17 +5,17 @@ const { newTrainee, randomize } = require('../../../../../helpers/data/dataset')
 const logger = require('../../../../../helpers/components/fake-logger');
 const AvisMailer = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/AvisMailer');
 const SendAction = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/actions/SendAction');
-const { successMailer } = require('../../fake-mailers');
+const fakeMailer = require('../../../../../helpers/components/fake-mailer');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should send email to new trainee', async () => {
 
-        let emailsSent = [];
         let db = await getTestDatabase();
+        let mailer = fakeMailer();
         let id = randomize('trainee');
         let email = `${randomize('name')}@email.fr`;
-        let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
+        let avisMailer = new AvisMailer(db, logger, mailer);
         let action = new SendAction(configuration);
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
@@ -41,14 +41,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await avisMailer.sendEmails(action);
 
-        assert.deepStrictEqual(emailsSent, [{ to: email }]);
+        let emailSent = mailer.getLastEmailSent();
+        assert.deepStrictEqual(emailSent[0], { to: email });
     });
 
     it('should ignore region', async () => {
 
-        let emailsSent = [];
         let db = await getTestDatabase();
-        let avisMailer = new AvisMailer(db, logger, successMailer(emailsSent));
+        let mailer = fakeMailer();
+        let avisMailer = new AvisMailer(db, logger, mailer);
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
                 codeRegion: 'XX',
@@ -63,8 +64,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         });
         await avisMailer.sendEmails(handler);
 
-        assert.deepStrictEqual(emailsSent, []);
+        let calls = mailer.getCalls();
+        assert.strictEqual(calls.length, 0);
     });
-
-
 }));

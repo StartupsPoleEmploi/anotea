@@ -57,16 +57,8 @@ class AvisMailer {
 
                 try {
                     this.logger.info(`Sending email to ${trainee.trainee.email} for campaign ${trainee.campaign}`);
-                    await new Promise((resolve, reject) => {
-                        this.mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee,
-                            async () => {
-                                await this._onSuccess(trainee);
-                                return resolve();
-                            }, async err => {
-                                await this._onError(err, trainee);
-                                return reject(err);
-                            });
-                    });
+                    await this.mailer.sendVotreAvisMail({ to: trainee.trainee.email }, trainee);
+                    await this._onSuccess(trainee);
 
                     if (options.delay) {
                         await delay(options.delay);
@@ -74,6 +66,7 @@ class AvisMailer {
 
                     stats.sent++;
                 } catch (err) {
+                    await this._onError(err, trainee);
                     stats.error++;
                     this.logger.error(err);
                 }

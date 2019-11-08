@@ -27,7 +27,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         });
 
         let { mailer } = await getComponents();
-        let email = mailer.getCalls()[0];
+        let email = mailer.getLastEmailSent();
         assert.deepStrictEqual(email[0], { to: 'contactus@poleemploi-formation.fr' });
     });
 

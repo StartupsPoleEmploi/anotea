@@ -67,11 +67,7 @@ class Questionnaire6MoisMailer {
                 try {
                     this.logger.info(`Sending email to ${trainee.trainee.email}`);
 
-                    await new Promise((resolve, reject) => {
-                        let mailOptions = { to: trainee.trainee.email };
-                        this.mailer.sendQuestionnaire6MoisMail(mailOptions, trainee, () => resolve(), err => reject(err));
-                    });
-
+                    await this.mailer.sendQuestionnaire6MoisMail({ to: trainee.trainee.email }, trainee);
                     await this._onSuccess(trainee);
 
                     if (options.delay) {
