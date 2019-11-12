@@ -4,34 +4,41 @@ const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
 const AccountMailer = require('../../../../../../src/jobs/mailing/organismes/account/AccountMailer');
+const organismeAccountEmail = require('../../../../../../src/common/components/emails/organismeAccountEmail');
 const fakeMailer = require('../../../../../helpers/components/fake-mailer');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
 
     let dummyAction = {
         getQuery: () => ({}),
     };
 
+    let createAccountMailer = async mailer => {
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+
+        let email = organismeAccountEmail(db, mailer, configuration, regions);
+        return new AccountMailer(db, logger, email);
+    };
+
     it('should send email by siret', async () => {
 
-        let db = await getTestDatabase();
         let mailer = fakeMailer();
-        let id = 31705038300064;
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: id,
-                SIRET: id,
+                _id: 31705038300064,
+                SIRET: 31705038300064,
                 courriel: 'new@organisme.fr',
                 score: {
                     nb_avis: 1,
                 },
                 meta: {
-                    siretAsString: `${id}`,
+                    siretAsString: `${31705038300064}`,
                 },
             })),
         ]);
 
-        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
+        let accountMailer = await createAccountMailer(mailer);
         let results = await accountMailer.sendEmailBySiret('31705038300064');
 
         assert.deepStrictEqual(results, {
@@ -44,9 +51,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should send emails', async () => {
 
-        let db = await getTestDatabase();
         let mailer = fakeMailer();
-        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
+        let accountMailer = await createAccountMailer(mailer);
         await insertIntoDatabase('accounts', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
 
         let results = await accountMailer.sendEmails(dummyAction);
@@ -62,7 +68,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should update organisme when mailer succeed', async () => {
 
         let db = await getTestDatabase();
-        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer());
+        let accountMailer = await createAccountMailer(fakeMailer());
         await insertIntoDatabase('accounts', newOrganismeAccount({
             courriel: 'new@organisme.fr',
             mailSentDate: null
@@ -80,7 +86,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should update set resend property to true on resend', async () => {
 
         let db = await getTestDatabase();
-        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer());
+        let accountMailer = await createAccountMailer(fakeMailer());
         await insertIntoDatabase('accounts', newOrganismeAccount({
             courriel: 'new@organisme.fr',
             mailSentDate: new Date()
@@ -96,7 +102,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should update organisme when mailer fails', async () => {
 
         let db = await getTestDatabase();
-        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer({ fail: true }));
+        let accountMailer = await createAccountMailer(fakeMailer({ fail: true }));
         await insertIntoDatabase('accounts', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
 
         try {

@@ -1,42 +1,11 @@
-const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 let { delay } = require('../../../job-utils');
 
 class AccountMailer {
 
-    constructor(db, logger, configuration, mailer) {
+    constructor(db, logger, organismeAccountEmail) {
         this.db = db;
         this.logger = logger;
-        this.configuration = configuration;
-        this.mailer = mailer;
-    }
-
-    _sendEmail(organisme) {
-        let email = getOrganismeEmail(organisme);
-        return this.mailer.sendOrganisationAccountEmail(email)
-        .then(() => this._onSuccess(organisme))
-        .catch(err => this._onError(err, organisme));
-    }
-
-    _onSuccess(organisme) {
-        return this.db.collection('accounts').updateOne({ '_id': organisme._id }, {
-            $set: {
-                mailSentDate: new Date(),
-                resend: !!organisme.mailSentDate,
-            },
-            $unset: {
-                mailError: '',
-                mailErrorDetail: ''
-            },
-        });
-    }
-
-    _onError(error, organisme) {
-        return this.db.collection('accounts').updateOne({ '_id': organisme._id }, {
-            $set: {
-                mailError: 'smtpError',
-                mailErrorDetail: error.message
-            }
-        });
+        this.organismeAccountEmail = organismeAccountEmail;
     }
 
     async sendEmails(action, options = {}) {
@@ -57,7 +26,7 @@ class AccountMailer {
 
             stats.total++;
             try {
-                await this._sendEmail(organisme);
+                await this.organismeAccountEmail.send(organisme);
 
                 if (options.delay) {
                     await delay(options.delay);
@@ -74,7 +43,7 @@ class AccountMailer {
     async sendEmailBySiret(siret) {
         let organisme = await this.db.collection('accounts').findOne({ 'meta.siretAsString': siret });
         try {
-            await this._sendEmail(organisme);
+            await this.organismeAccountEmail.send(organisme);
             return { total: 1, sent: 1, error: 0 };
         } catch (e) {
             await this._onError(e, organisme);

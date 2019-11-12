@@ -7,12 +7,11 @@ const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../
 const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 const { transformObject, encodeStream } = require('../../../../common/utils/stream-utils');
 
-module.exports = ({ db, configuration, mailing, emails, middlewares, logger }) => {
+module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let { sendOrganisationAccountEmail } = mailing;
     let itemsPerPage = configuration.api.pagination;
 
     const convertOrganismeToDTO = organisme => {
@@ -168,16 +167,17 @@ module.exports = ({ db, configuration, mailing, emails, middlewares, logger }) =
 
     router.post('/backoffice/moderateur/organismes/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
+        let { forgottenPasswordEmail, organismeAccountEmail } = emails;
 
         let organisme = await db.collection('accounts').findOne({ _id: id, profile: 'organisme' });
         if (organisme) {
             if (organisme.passwordHash) {
-                emails.forgottenPasswordEmail.send(organisme);
+                await forgottenPasswordEmail.send(organisme);
             } else {
-                await sendOrganisationAccountEmail(organisme, { ip: getRemoteAddress(req) });
+                await organismeAccountEmail.send(organisme);
             }
 
-            res.status(200).send({ 'status': 'OK' });
+            return res.json({ 'status': 'OK' });
 
         } else {
             throw Boom.notFound('Not found');

@@ -8,15 +8,15 @@ const workflow = require('./common/components/workflow');
 const database = require('./common/components/database');
 const communes = require('./common/components/communes');
 const createMailer = require('./smtp/mailer');
-const sendOrganisationAccountEmail = require('./common/components/mailing/sendOrganisationAccountEmail');
 const sendVotreAvisEmail = require('./common/components/mailing/sendVotreAvisEmail');
 const sendReponseRejeteeNotification = require('./common/components/mailing/sendReponseRejeteeNotification');
 const sendSignalementRejeteNotification = require('./common/components/mailing/sendSignalementRejeteNotification');
 const sendSignalementAccepteNotification = require('./common/components/mailing/sendSignalementAccepteNotification');
-const notificationEmail = require('./common/components/emails/notificationEmail');
-const forgottenPasswordEmail = require('./common/components/emails/forgottenPasswordEmail');
 const sendInjureMail = require('./common/components/mailing/sendInjureMail');
 const sendAlerteMail = require('./common/components/mailing/sendAlerteMail');
+const notificationEmail = require('./common/components/emails/notificationEmail');
+const forgottenPasswordEmail = require('./common/components/emails/forgottenPasswordEmail');
+const organismeAccountEmail = require('./common/components/emails/organismeAccountEmail');
 
 module.exports = async (options = {}) => {
 
@@ -39,7 +39,6 @@ module.exports = async (options = {}) => {
         workflow: workflow(db),
         communes: communes(db),
         mailing: {
-            sendOrganisationAccountEmail: sendOrganisationAccountEmail(db, mailer),
             sendVotreAvisEmail: sendVotreAvisEmail(db, mailer),
             sendReponseRejeteeNotification: sendReponseRejeteeNotification(db, mailer, logger),
             sendSignalementRejeteNotification: sendSignalementRejeteNotification(db, mailer, logger),
@@ -48,6 +47,7 @@ module.exports = async (options = {}) => {
             sendAlerteMail: sendAlerteMail(db, mailer, logger)
         },
         emails: {
+            organismeAccountEmail: organismeAccountEmail(db, mailer, configuration, regions),
             forgottenPasswordEmail: forgottenPasswordEmail(db, mailer, configuration, regions),
             notificationEmail: notificationEmail(db, mailer, configuration, regions),
         }

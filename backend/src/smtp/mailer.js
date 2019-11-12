@@ -199,25 +199,6 @@ module.exports = function(db, logger, configuration, regions) {
                 replyTo: getReplyToEmail(region),
             });
         },
-        sendOrganisationAccountEmail: (emailAddress, organisme) => {
-
-            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            let params = {
-                link: getOrganisationPasswordLink(organisme),
-                trackingLink: getTrackingLink(organisme),
-                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/password`,
-                hostname: configuration.app.public_hostname,
-                organisation: organisme,
-                contact: getRegionEmail(region)
-            };
-
-            return sendMail('organisation_password', params, {
-                to: emailAddress,
-                subject: 'Pôle Emploi vous donne accès aux avis de vos stagiaires',
-                list: list,
-                replyTo: getReplyToEmail(region),
-            });
-        },
         sendQuestionnaireOrganisme: (emailAddress, organisme) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);

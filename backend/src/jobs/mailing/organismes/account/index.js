@@ -14,10 +14,10 @@ cli.description('Send new account emails')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
-execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotification }) => {
+execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
     let type = cli.type || 'Send';
-    let accountMailer = new AccountMailer(db, logger, configuration, mailer);
+    let accountMailer = new AccountMailer(db, logger, emails.organismeAccountEmail);
     let options = {
         limit: cli.limit,
         delay: cli.delay,
