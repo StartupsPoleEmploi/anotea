@@ -1,4 +1,5 @@
 const emailHelper = require('../../../smtp/emailHelper');
+const getOrganismeEmail = require('../../utils/getOrganismeEmail');
 
 module.exports = (db, mailer, configuration, regions) => {
 
@@ -11,10 +12,8 @@ module.exports = (db, mailer, configuration, regions) => {
         });
     };
 
-    let build = async (data, options = {}) => {
-        let { organisme, readStatus } = data;
+    let build = async (organisme, readStatus, options = {}) => {
         let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-
         let params = {
             hostname: helper.getHostname(),
             consultationLink: helper.getPublicUrl(`/mail/${organisme.token}/nonLus`),
@@ -35,12 +34,11 @@ module.exports = (db, mailer, configuration, regions) => {
 
     return {
         build,
-        send: async (email, data) => {
-            let { organisme, readStatus } = data;
+        send: async (organisme, readStatus) => {
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            let content = await build(data, { webView: false });
+            let content = await build(organisme, readStatus, { webView: false });
 
-            await mailer.sendNewEmail(email, region, {
+            await mailer.sendNewEmail(getOrganismeEmail(organisme), region, {
                 subject: `Pôle Emploi - Vous avez ${readStatus.nbUnreadComments} nouveaux avis stagiaires`,
                 ...content,
             });

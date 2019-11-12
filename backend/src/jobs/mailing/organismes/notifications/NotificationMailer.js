@@ -1,14 +1,13 @@
 const moment = require('moment');
-const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 let { delay } = require('../../../job-utils');
 
 class NotificationMailer {
 
-    constructor(db, logger, configuration, notificationEmail) {
+    constructor(db, logger, configuration, organismeNotificationEmail) {
         this.db = db;
         this.logger = logger;
         this.configuration = configuration;
-        this.notificationEmail = notificationEmail;
+        this.organismeNotificationEmail = organismeNotificationEmail;
     }
 
     _findOrganismes(codeRegions) {
@@ -90,12 +89,12 @@ class NotificationMailer {
         cursor.batchSize(10);
 
         while (await cursor.hasNext()) {
-            let data = await cursor.next();
+            let { organisme, readStatus } = await cursor.next();
             stats.total++;
             try {
-                this.logger.info(`Sending email to ${data.organisme.courriel}`);
+                this.logger.info(`Sending email to ${organisme.courriel}`);
 
-                await this.notificationEmail.send(getOrganismeEmail(data.organisme), data);
+                await this.organismeNotificationEmail.send(organisme, readStatus);
 
                 if (options.delay) {
                     await delay(options.delay);

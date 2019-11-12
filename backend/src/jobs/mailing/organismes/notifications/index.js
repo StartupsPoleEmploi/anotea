@@ -14,8 +14,8 @@ cli.description('send notifications to organismes')
 
 execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
-    let { notificationEmail } = emails;
-    let notificationMailer = new NotificationMailer(db, logger, configuration, notificationEmail);
+    let { organismeNotificationEmail } = emails;
+    let notificationMailer = new NotificationMailer(db, logger, configuration, organismeNotificationEmail);
 
     logger.info(`Sending emails to organismes...`);
 

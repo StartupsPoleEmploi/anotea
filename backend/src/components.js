@@ -13,7 +13,7 @@ const sendSignalementRejeteNotification = require('./common/components/mailing/s
 const sendSignalementAccepteNotification = require('./common/components/mailing/sendSignalementAccepteNotification');
 const sendInjureMail = require('./common/components/mailing/sendInjureMail');
 const sendAlerteMail = require('./common/components/mailing/sendAlerteMail');
-const notificationEmail = require('./common/components/emails/notificationEmail');
+const organismeNotificationEmail = require('./common/components/emails/organismeNotificationEmail');
 const forgottenPasswordEmail = require('./common/components/emails/forgottenPasswordEmail');
 const organismeAccountEmail = require('./common/components/emails/organismeAccountEmail');
 const votreAvisEmail = require('./common/components/emails/votreAvisEmail');
@@ -48,7 +48,7 @@ module.exports = async (options = {}) => {
         emails: {
             organismeAccountEmail: organismeAccountEmail(db, mailer, configuration, regions),
             forgottenPasswordEmail: forgottenPasswordEmail(db, mailer, configuration, regions),
-            notificationEmail: notificationEmail(db, mailer, configuration, regions),
+            organismeNotificationEmail: organismeNotificationEmail(db, mailer, configuration, regions),
             votreAvisEmail: votreAvisEmail(db, mailer, configuration, regions),
         }
     }, options || {});

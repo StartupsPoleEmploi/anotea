@@ -6,7 +6,7 @@ const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newComment, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
 const NotificationMailer = require('../../../../../../src/jobs/mailing/organismes/notifications/NotificationMailer');
-const notificationEmail = require('../../../../../../src/common/components/emails/notificationEmail');
+const organismeNotificationEmail = require('../../../../../../src/common/components/emails/organismeNotificationEmail');
 const fakeMailer = require('../../../../../helpers/components/fake-mailer');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
@@ -15,7 +15,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
         let db = await getTestDatabase();
         let { regions } = await getComponents();
 
-        let email = notificationEmail(db, mailer, configuration, regions);
+        let email = organismeNotificationEmail(db, mailer, configuration, regions);
         return new NotificationMailer(db, logger, configuration, email);
     };
 
