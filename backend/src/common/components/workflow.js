@@ -23,6 +23,7 @@ module.exports = (db, logger, emails) => {
         publish: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
+            let original = await db.collection('comment').findOne({ _id: new ObjectID(id) });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 {
@@ -49,6 +50,15 @@ module.exports = (db, logger, emails) => {
                 profile: 'moderateur',
             });
 
+            if (original.status === 'reported') {
+                sendEmail(async () => {
+                    let organisme = await db.collection('accounts').findOne({
+                        SIRET: parseInt(original.training.organisation.siret)
+                    });
+                    return emails.avisReportedToValidatedEmail.send(organisme, original);
+                });
+            }
+
             return result.value;
 
 
@@ -56,6 +66,7 @@ module.exports = (db, logger, emails) => {
         reject: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
+            let original = await db.collection('comment').findOne({ _id: new ObjectID(id) });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 {
@@ -81,6 +92,14 @@ module.exports = (db, logger, emails) => {
                 user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
+            if (original.status === 'reported') {
+                sendEmail(async () => {
+                    let organisme = await db.collection('accounts').findOne({
+                        SIRET: parseInt(original.training.organisation.siret)
+                    });
+                    return emails.avisReportedToRejectedEmail.send(organisme, original);
+                });
+            }
 
             return result.value;
         },
@@ -270,7 +289,7 @@ module.exports = (db, logger, emails) => {
                 let organisme = await db.collection('accounts').findOne({
                     SIRET: parseInt(original.training.organisation.siret)
                 });
-                return emails.organismeReponseRejectedEmail.send(organisme, original);
+                return emails.avisReponseRejectedEmail.send(organisme, original);
             });
 
             return result.value;

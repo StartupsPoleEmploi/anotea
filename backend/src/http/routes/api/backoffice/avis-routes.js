@@ -99,7 +99,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, e
     }));
 
     router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let { sendInjureMail, sendAlerteMail, sendSignalementAccepteNotification } = mailing;
+        let { sendInjureMail, sendAlerteMail } = mailing;
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -107,18 +107,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, e
             qualification: Joi.string().required()
         }, { abortEarly: false });
 
-        let previous = await db.collection('comment').findOne({ _id: new ObjectID(id) });
-
         let updated = await workflow.reject(id, qualification, { profile });
-        //TODO move into workflow.js
-        if (previous) {
-            if (previous.status === 'reported') {
-                sendSignalementAccepteNotification(previous._id)
-                .catch(e => logger.error(e, 'Unable to send email'));
-            }
-        } else {
-            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-        }
 
         if (qualification === 'injure' || qualification === 'alerte') {
             let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
@@ -166,18 +155,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, e
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { qualification } = await Joi.validate(req.body, { qualification: Joi.string().required() }, { abortEarly: false });
 
-        let previous = await db.collection('comment').findOne({ _id: new ObjectID(id) });
-
         let updated = await workflow.publish(id, qualification, { profile });
-        if (previous) {
-            //TODO move into workflow.js
-            if (previous.status === 'reported') {
-                mailing.sendSignalementRejeteNotification(previous._id)
-                .catch(e => logger.error(e, 'Unable to send email'));
-            }
-        } else {
-            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-        }
 
         return res.json(updated);
     }));

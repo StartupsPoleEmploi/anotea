@@ -138,40 +138,6 @@ module.exports = function(db, logger, configuration, regions) {
         getRegionEmail,
         getTrackingLink,
         buildContent,
-        sendSignalementAccepteNotification: (emailAddress, organisme, avis) => {
-            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            let params = {
-                hostname: configuration.app.public_hostname,
-                trackingLink: getTrackingLink(organisme),
-                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementAccepte/${avis.token}`,
-                avis: avis.comment.text,
-                organisme
-            };
-
-            return sendMail('organisme_avis_signale_rejete', params, {
-                to: emailAddress,
-                subject: `Pôle Emploi - avis signalé dans votre Espace Anotéa`,
-                list: list,
-                replyTo: getReplyToEmail(region),
-            });
-        },
-        sendSignalementRejeteNotification: (emailAddress, organisme, avis) => {
-            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            let params = {
-                hostname: configuration.app.public_hostname,
-                trackingLink: getTrackingLink(organisme),
-                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/signalementRejete/${avis.token}`,
-                avis: avis.comment.text,
-                organisme
-            };
-
-            return sendMail('organisme_avis_signale_publie', params, {
-                to: emailAddress,
-                subject: `Pôle Emploi - avis signalé dans votre Espace Anotéa`,
-                list: list,
-                replyTo: getReplyToEmail(region),
-            });
-        },
         sendQuestionnaireOrganisme: (emailAddress, organisme) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
