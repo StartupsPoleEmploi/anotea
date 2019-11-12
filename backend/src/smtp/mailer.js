@@ -1,10 +1,10 @@
 const path = require('path');
+const nodemailer = require('nodemailer');
+const ejs = require('ejs');
+const moment = require('moment');
+const { promisify } = require('util');
 
 module.exports = function(db, logger, configuration, regions) {
-
-    const nodemailer = require('nodemailer');
-    const ejs = require('ejs');
-    const moment = require('moment');
 
     const configSmtp = {
         host: configuration.smtp.host,
@@ -54,17 +54,17 @@ module.exports = function(db, logger, configuration, regions) {
         return `Anotea <${getRegionEmail(region)}>`;
     };
 
-    const buildContent = (template, extension, params) => {
-        return new Promise((resolve, reject) => {
-            ejs.renderFile(path.join(__dirname, `views/${template}.${extension}`), params, (err, str) => {
-                if (err) {
-                    logger.error(err);
-                    reject(err);
-                    return;
-                }
-                resolve(str);
-            });
-        });
+    const buildContent = (template, params, options) => {
+        let renderFile = promisify(ejs.renderFile);
+
+        if (options.textOnly) {
+            return renderFile(path.join(__dirname, `views/${template}.txt`), params);
+        }
+
+        return Promise.all([
+            renderFile(path.join(__dirname, `views/${template}.txt`), params),
+            renderFile(path.join(__dirname, `views/${template}.ejs`), params),
+        ]);
     };
 
     const sendMail = (template, params, mailOptions, options = {}) => {
@@ -76,10 +76,7 @@ module.exports = function(db, logger, configuration, regions) {
         params.webView = false;
 
         return new Promise((resolve, reject) => {
-            Promise.all([
-                buildContent(template, 'txt', params),
-                options.textOnly ? Promise.resolve() : buildContent(template, 'ejs', params),
-            ])
+            buildContent(template, params, options)
             .then(values => {
                 mailOptions.text = values[0];
                 if (!options.textOnly) {
@@ -114,30 +111,41 @@ module.exports = function(db, logger, configuration, regions) {
         }
     };
 
-    return {
-        getUnsubscribeLink: getUnsubscribeLink,
-        getFormLink: getFormLink,
-        sendNewCommentsNotification: (emailAddress, data) => {
+    const sendNewEmail = (emailAddress, region, options = {}) => {
 
-            let { organisme, pickedComment } = data;
+        let transporterOptions = {
+            from: `Anotea <${configuration.smtp.from}>`,
+            to: emailAddress,
+            replyTo: getReplyToEmail(region),
+            subject: `Pôle Emploi`,
+            ...(process.env.ANOTEA_MAIL_BCC ? { bcc: process.env.ANOTEA_MAIL_BCC } : {}),
+            list,
+            ...options,
+        };
 
-            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            let params = {
-                hostname: configuration.app.public_hostname,
-                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/nonLus`,
-                trackingLink: getTrackingLink(organisme),
-                organisme: organisme,
-                comment: pickedComment ? pickedComment.comment.text : null,
-                contact: getRegionEmail(region)
-            };
-
-            return sendMail('organisme_avis_non_lus', params, {
-                to: emailAddress,
-                list: list,
-                replyTo: getReplyToEmail(region),
-                subject: `Pôle Emploi - Vous avez ${data.nbUnreadComments} nouveaux avis stagiaires`,
+        return new Promise((resolve, reject) => {
+            transporter.sendMail(transporterOptions, (error, info) => {
+                if (error) {
+                    logger.error(`An error occurs while sending mail : ${error}̀`);
+                    reject(error);
+                } else {
+                    logger.info(`Message sent to ${transporterOptions.to}`, {
+                        messageId: info.messageId,
+                        response: info.response,
+                    });
+                    resolve();
+                }
             });
-        },
+        });
+    };
+
+    return {
+        sendNewEmail,
+        getUnsubscribeLink,
+        getFormLink,
+        getRegionEmail,
+        getTrackingLink,
+        buildContent,
         sendSignalementAccepteNotification: (emailAddress, organisme, avis) => {
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let params = {

@@ -12,9 +12,10 @@ cli.description('send notifications to organismes')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
-execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotification }) => {
+execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
-    let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
+    let { notificationEmail } = emails;
+    let notificationMailer = new NotificationMailer(db, logger, configuration, notificationEmail);
 
     logger.info(`Sending emails to organismes...`);
 

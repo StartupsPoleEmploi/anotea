@@ -14,10 +14,10 @@ module.exports = (options = {}) => {
 
     return {
         getCalls: () => calls,
+        sendNewEmail: (...args) => registerCall(args),
         getLastEmailAddress: () => calls.length === 0 ? null : calls[calls.length - 1][0],
         getUnsubscribeLink: (...args) => registerCall(args),
         getFormLink: (...args) => registerCall(args),
-        sendNewCommentsNotification: (...args) => registerCall(args),
         sendOrganisationAccountEmail: (...args) => registerCall(args),
         sendForgottenPasswordEmail: (...args) => registerCall(args),
         sendVotreAvisMail: (...args) => registerCall(args),

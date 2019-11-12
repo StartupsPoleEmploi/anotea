@@ -6,15 +6,24 @@ const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newComment, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
 const NotificationMailer = require('../../../../../../src/jobs/mailing/organismes/notifications/NotificationMailer');
+const notificationEmail = require('../../../../../../src/common/components/emails/notificationEmail');
 const fakeMailer = require('../../../../../helpers/components/fake-mailer');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
+
+    let createNotificationMailer = async mailer => {
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+
+        let email = notificationEmail(db, mailer, configuration, regions);
+        return new NotificationMailer(db, logger, configuration, email);
+    };
 
     it('should send email notification to organisme when it as at least 5 not yet read comments', async () => {
 
         let db = await getTestDatabase();
         let mailer = fakeMailer();
-        let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
+        let notificationMailer = await createNotificationMailer(mailer);
         await Promise.all([
             ...(
                 _.range(5).map(() => {
@@ -58,7 +67,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         let db = await getTestDatabase();
         let mailer = fakeMailer();
-        let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
+        let notificationMailer = await createNotificationMailer(mailer);
         let newCommentsNotificationEmailSentDate = moment().subtract('45', 'days').toDate();
         await Promise.all([
             ...(
@@ -102,9 +111,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should ignore organisme with less than 5 comments', async () => {
 
-        let db = await getTestDatabase();
         let mailer = fakeMailer();
-        let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
+        let notificationMailer = await createNotificationMailer(mailer);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 31705038300064,
@@ -131,9 +139,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should ignore organisme with less than 5 comments not read yet', async () => {
 
-        let db = await getTestDatabase();
         let mailer = fakeMailer();
-        let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
+        let notificationMailer = await createNotificationMailer(mailer);
         await Promise.all([
             ...(
                 _.range(2).map(() => {
@@ -173,9 +180,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should ignore organisme when an email has been sent since less than 15 days', async () => {
 
-        let db = await getTestDatabase();
         let mailer = fakeMailer();
-        let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
+        let notificationMailer = await createNotificationMailer(mailer);
         await Promise.all([
             ...(
                 _.range(5).map(() => {

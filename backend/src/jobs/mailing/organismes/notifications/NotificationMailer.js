@@ -4,11 +4,11 @@ let { delay } = require('../../../job-utils');
 
 class NotificationMailer {
 
-    constructor(db, logger, configuration, mailer) {
+    constructor(db, logger, configuration, notificationEmail) {
         this.db = db;
         this.logger = logger;
         this.configuration = configuration;
-        this.mailer = mailer;
+        this.notificationEmail = notificationEmail;
     }
 
     _findOrganismes(codeRegions) {
@@ -60,38 +60,21 @@ class NotificationMailer {
                             }
                         },
                     ],
-                    as: 'status'
+                    as: 'readStatus'
                 }
             },
             {
                 $unwind: {
-                    path: '$status',
+                    path: '$readStatus',
                     preserveNullAndEmptyArrays: true,
                 }
             },
             {
                 $match: {
-                    'status.nbUnreadComments': { $gte: 5 }
+                    'readStatus.nbUnreadComments': { $gte: 5 }
                 }
             }
         ]);
-    }
-
-    _markEmailAsSent(organisme) {
-        return this.db.collection('accounts').updateOne({ _id: organisme._id }, {
-            $set: {
-                newCommentsNotificationEmailSentDate: new Date(),
-            }
-        });
-    }
-
-    async _sendEmail(organisme, status) {
-        let email = getOrganismeEmail(organisme);
-        return this.mailer.sendNewCommentsNotification(email, {
-            organisme,
-            pickedComment: status.pickedComment,
-            nbUnreadComments: status.nbUnreadComments
-        });
     }
 
     async sendEmails(options = {}) {
@@ -107,15 +90,17 @@ class NotificationMailer {
         cursor.batchSize(10);
 
         while (await cursor.hasNext()) {
-            let { organisme, status } = await cursor.next();
+            let data = await cursor.next();
             stats.total++;
             try {
-                this.logger.info(`Sending email to ${organisme.courriel}`);
-                await this._sendEmail(organisme, status);
-                await this._markEmailAsSent(organisme);
+                this.logger.info(`Sending email to ${data.organisme.courriel}`);
+
+                await this.notificationEmail.send(getOrganismeEmail(data.organisme), data);
+
                 if (options.delay) {
                     await delay(options.delay);
                 }
+
                 stats.sent++;
             } catch (e) {
                 this.logger.error('Unable to send email: ', e);
@@ -124,7 +109,6 @@ class NotificationMailer {
         }
         return stats;
     }
-
 }
 
 module.exports = NotificationMailer;
