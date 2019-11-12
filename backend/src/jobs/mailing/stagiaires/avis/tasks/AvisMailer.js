@@ -3,36 +3,10 @@ let { delay } = require('../../../../job-utils');
 
 class AvisMailer {
 
-    constructor(db, logger, mailer) {
+    constructor(db, logger, votreAvisEmail) {
         this.db = db;
         this.logger = logger;
-        this.mailer = mailer;
-    }
-
-    _onSuccess(trainee) {
-        return this.db.collection('trainee').updateOne({ '_id': trainee._id }, {
-            $set: {
-                mailSent: true,
-                mailSentDate: new Date(),
-            },
-            $unset: {
-                mailError: '',
-                mailErrorDetail: ''
-            },
-            $inc: {
-                mailRetry: trainee.mailRetry >= 0 ? 1 : 0
-            }
-        });
-    }
-
-    _onError(err, trainee) {
-        return this.db.collection('trainee').updateOne({ '_id': trainee._id }, {
-            $set: {
-                mailSent: true,
-                mailError: 'smtpError',
-                mailErrorDetail: err.message
-            }
-        });
+        this.votreAvisEmail = votreAvisEmail;
     }
 
     sendEmails(action, options = {}) {
@@ -56,10 +30,8 @@ class AvisMailer {
                 trainee.trainee.name = titleize(trainee.trainee.name);
 
                 try {
-                    let email = trainee.trainee.email;
-                    this.logger.info(`Sending email to ${email} for campaign ${trainee.campaign}`);
-                    await this.mailer.sendVotreAvisMail(email, trainee);
-                    await this._onSuccess(trainee);
+                    this.logger.info(`Sending email to ${(trainee.trainee.email)} for campaign ${trainee.campaign}`);
+                    await this.votreAvisEmail.send(trainee);
 
                     if (options.delay) {
                         await delay(options.delay);
@@ -67,7 +39,6 @@ class AvisMailer {
 
                     stats.sent++;
                 } catch (err) {
-                    await this._onError(err, trainee);
                     stats.error++;
                     this.logger.error(err);
                 }

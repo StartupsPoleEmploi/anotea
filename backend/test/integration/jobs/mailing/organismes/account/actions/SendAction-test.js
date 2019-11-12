@@ -6,15 +6,23 @@ const logger = require('../../../../../../helpers/components/fake-logger');
 const AccountMailer = require('../../../../../../../src/jobs/mailing/organismes/account/AccountMailer');
 const SendAction = require('../../../../../../../src/jobs/mailing/organismes/account/actions/SendAction');
 const fakeMailer = require('../../../../../../helpers/components/fake-mailer');
+const organismeAccountEmail = require('../../../../../../../src/common/components/emails/organismeAccountEmail');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
+
+    let createAccountMailer = async mailer => {
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+
+        let email = organismeAccountEmail(db, mailer, configuration, regions);
+        return new AccountMailer(db, logger, email);
+    };
 
     it('should send email to new organismes only', async () => {
 
         let mailer = fakeMailer();
-        let db = await getTestDatabase();
         let id = 31705038300064;
-        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
+        let accountMailer = await createAccountMailer(mailer);
         let action = new SendAction(configuration);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
@@ -56,8 +64,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
     it('should send email only to organismes in active regions', async () => {
 
         let mailer = fakeMailer();
-        let db = await getTestDatabase();
-        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
+        let accountMailer = await createAccountMailer(mailer);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111,

@@ -6,16 +6,24 @@ const logger = require('../../../../../helpers/components/fake-logger');
 const AvisMailer = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/AvisMailer');
 const SendAction = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/actions/SendAction');
 const fakeMailer = require('../../../../../helpers/components/fake-mailer');
+const votreAvisEmail = require('../../../../../../src/common/components/emails/votreAvisEmail');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
+
+    let createAvisMailer = async mailer => {
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+
+        let email = votreAvisEmail(db, mailer, configuration, regions);
+        return new AvisMailer(db, logger, email);
+    };
 
     it('should send email to new trainee', async () => {
 
-        let db = await getTestDatabase();
         let mailer = fakeMailer();
         let id = randomize('trainee');
         let email = `${randomize('name')}@email.fr`;
-        let avisMailer = new AvisMailer(db, logger, mailer);
+        let avisMailer = await createAvisMailer(mailer);
         let action = new SendAction(configuration);
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
@@ -46,9 +54,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should ignore region', async () => {
 
-        let db = await getTestDatabase();
         let mailer = fakeMailer();
-        let avisMailer = new AvisMailer(db, logger, mailer);
+        let avisMailer = await createAvisMailer(mailer);
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
                 codeRegion: 'XX',

@@ -8,7 +8,6 @@ const workflow = require('./common/components/workflow');
 const database = require('./common/components/database');
 const communes = require('./common/components/communes');
 const createMailer = require('./smtp/mailer');
-const sendVotreAvisEmail = require('./common/components/mailing/sendVotreAvisEmail');
 const sendReponseRejeteeNotification = require('./common/components/mailing/sendReponseRejeteeNotification');
 const sendSignalementRejeteNotification = require('./common/components/mailing/sendSignalementRejeteNotification');
 const sendSignalementAccepteNotification = require('./common/components/mailing/sendSignalementAccepteNotification');
@@ -17,6 +16,7 @@ const sendAlerteMail = require('./common/components/mailing/sendAlerteMail');
 const notificationEmail = require('./common/components/emails/notificationEmail');
 const forgottenPasswordEmail = require('./common/components/emails/forgottenPasswordEmail');
 const organismeAccountEmail = require('./common/components/emails/organismeAccountEmail');
+const votreAvisEmail = require('./common/components/emails/votreAvisEmail');
 
 module.exports = async (options = {}) => {
 
@@ -39,7 +39,6 @@ module.exports = async (options = {}) => {
         workflow: workflow(db),
         communes: communes(db),
         mailing: {
-            sendVotreAvisEmail: sendVotreAvisEmail(db, mailer),
             sendReponseRejeteeNotification: sendReponseRejeteeNotification(db, mailer, logger),
             sendSignalementRejeteNotification: sendSignalementRejeteNotification(db, mailer, logger),
             sendSignalementAccepteNotification: sendSignalementAccepteNotification(db, mailer, logger),
@@ -50,6 +49,7 @@ module.exports = async (options = {}) => {
             organismeAccountEmail: organismeAccountEmail(db, mailer, configuration, regions),
             forgottenPasswordEmail: forgottenPasswordEmail(db, mailer, configuration, regions),
             notificationEmail: notificationEmail(db, mailer, configuration, regions),
+            votreAvisEmail: votreAvisEmail(db, mailer, configuration, regions),
         }
     }, options || {});
 };

@@ -216,33 +216,6 @@ module.exports = function(db, logger, configuration, regions) {
                 replyTo: getReplyToEmail(region),
             });
         },
-        sendVotreAvisMail: (emailAddress, trainee) => {
-
-            let unsubscribeLink = getUnsubscribeLink(trainee);
-            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
-            let params = {
-                trainee,
-                moment,
-                region,
-                consultationLink: getConsultationLink(trainee),
-                unsubscribeLink: unsubscribeLink,
-                formLink: getFormLink(trainee),
-                trackingLink: getTrackingLink(trainee),
-                hostname: configuration.app.public_hostname,
-            };
-
-            return sendMail('votre_avis', params, {
-                to: emailAddress,
-                subject: 'Pôle Emploi vous demande votre avis sur votre formation',
-                replyTo: getReplyToEmail(region),
-                list: Object.assign({}, list, {
-                    unsubscribe: {
-                        url: unsubscribeLink,
-                    }
-                }),
-            });
-
-        },
         sendQuestionnaire6MoisMail: (emailAddress, trainee) => {
 
             let unsubscribeLink = getUnsubscribeLink(trainee);

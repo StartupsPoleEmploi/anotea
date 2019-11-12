@@ -18,7 +18,6 @@ module.exports = (options = {}) => {
         getLastEmailAddress: () => calls.length === 0 ? null : calls[calls.length - 1][0],
         getUnsubscribeLink: (...args) => registerCall(args),
         getFormLink: (...args) => registerCall(args),
-        sendVotreAvisMail: (...args) => registerCall(args),
         sendMalformedImport: (...args) => registerCall(args),
         sendReponseRejeteeNotification: (...args) => registerCall(args),
         sendInjureMail: (...args) => registerCall(args),

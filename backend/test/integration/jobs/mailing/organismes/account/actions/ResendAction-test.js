@@ -7,14 +7,22 @@ const logger = require('../../../../../../helpers/components/fake-logger');
 const fakeMailer = require('../../../../../../helpers/components/fake-mailer');
 const AccountMailer = require('../../../../../../../src/jobs/mailing/organismes/account/AccountMailer');
 const ResendAction = require('../../../../../../../src/jobs/mailing/organismes/account/actions/ResendAction');
+const organismeAccountEmail = require('../../../../../../../src/common/components/emails/organismeAccountEmail');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
+
+    let createAccountMailer = async mailer => {
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+
+        let email = organismeAccountEmail(db, mailer, configuration, regions);
+        return new AccountMailer(db, logger, email);
+    };
 
     it('should ignore organisme with email already resent', async () => {
 
-        let db = await getTestDatabase();
         let mailer = fakeMailer();
-        let accountMailer = new AccountMailer(db, logger, configuration, mailer);
+        let accountMailer = await createAccountMailer(mailer);
         let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
@@ -53,8 +61,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should ignore organisme with sent date lesser than relaunch delay', async () => {
 
-        let db = await getTestDatabase();
-        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer());
+        let accountMailer = await createAccountMailer(fakeMailer());
         let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
@@ -81,8 +88,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should ignore organisme with password already set', async () => {
 
-        let db = await getTestDatabase();
-        let accountMailer = new AccountMailer(db, logger, configuration, fakeMailer());
+        let accountMailer = await createAccountMailer(fakeMailer());
         let action = new ResendAction(configuration);
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({

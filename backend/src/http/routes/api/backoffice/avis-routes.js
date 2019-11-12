@@ -8,7 +8,7 @@ const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../rou
 const { objectId } = require('../../validators-utils');
 const getProfile = require('./profiles/getProfile');
 
-module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, regions }) => {
+module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, emails, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;

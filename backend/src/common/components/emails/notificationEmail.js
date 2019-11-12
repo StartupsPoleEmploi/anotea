@@ -18,7 +18,7 @@ module.exports = (db, mailer, configuration, regions) => {
         let params = {
             hostname: helper.getHostname(),
             consultationLink: helper.getPublicUrl(`/mail/${organisme.token}/nonLus`),
-            trackingLink: helper.getTrackingLink(organisme),
+            trackingLink: helper.getTrackingLink(organisme.token),
             contact: helper.getRegionEmail(region),
             organisme: organisme,
             comment: readStatus.pickedComment ? readStatus.pickedComment.comment.text : null,
