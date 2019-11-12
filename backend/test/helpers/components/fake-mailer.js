@@ -19,7 +19,6 @@ module.exports = (options = {}) => {
         getUnsubscribeLink: (...args) => registerCall(args),
         getFormLink: (...args) => registerCall(args),
         sendOrganisationAccountEmail: (...args) => registerCall(args),
-        sendForgottenPasswordEmail: (...args) => registerCall(args),
         sendVotreAvisMail: (...args) => registerCall(args),
         sendMalformedImport: (...args) => registerCall(args),
         sendReponseRejeteeNotification: (...args) => registerCall(args),

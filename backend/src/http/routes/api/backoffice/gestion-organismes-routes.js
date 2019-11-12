@@ -7,12 +7,12 @@ const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../
 const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 const { transformObject, encodeStream } = require('../../../../common/utils/stream-utils');
 
-module.exports = ({ db, configuration, mailing, middlewares, logger }) => {
+module.exports = ({ db, configuration, mailing, emails, middlewares, logger }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
+    let { sendOrganisationAccountEmail } = mailing;
     let itemsPerPage = configuration.api.pagination;
 
     const convertOrganismeToDTO = organisme => {
@@ -172,7 +172,7 @@ module.exports = ({ db, configuration, mailing, middlewares, logger }) => {
         let organisme = await db.collection('accounts').findOne({ _id: id, profile: 'organisme' });
         if (organisme) {
             if (organisme.passwordHash) {
-                await sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), organisme.codeRegion);
+                emails.forgottenPasswordEmail.send(organisme);
             } else {
                 await sendOrganisationAccountEmail(organisme, { ip: getRemoteAddress(req) });
             }

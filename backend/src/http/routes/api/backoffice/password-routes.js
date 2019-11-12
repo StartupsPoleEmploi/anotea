@@ -2,9 +2,8 @@ const express = require('express');
 const Joi = require('joi');
 const Boom = require('boom');
 const { tryAndCatch } = require('../../routes-utils');
-const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 
-module.exports = ({ db, mailing, passwords }) => {
+module.exports = ({ db, emails, passwords }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { hashPassword, isPasswordStrongEnough } = passwords;
@@ -15,20 +14,17 @@ module.exports = ({ db, mailing, passwords }) => {
             identifiant: Joi.string().required(),
         }, { abortEarly: false });
 
-        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': identifiant });
-        if (organisme) {
-            await mailing.sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), organisme.codeRegion);
-            return res.json({ 'message': 'mail sent' });
-        }
+        let [organisme, account] = await Promise.all([
+            db.collection('accounts').findOne({ 'meta.siretAsString': identifiant }),
+            db.collection('accounts').findOne({ courriel: identifiant }),
+        ]);
 
-        let account = await db.collection('accounts').findOne({ courriel: identifiant });
-        if (account) {
-            await mailing.sendForgottenPasswordEmail(account._id, account.courriel, account.codeRegion);
+        if (organisme || account) {
+            await emails.forgottenPasswordEmail.send(organisme || account);
             return res.json({ 'message': 'mail sent' });
         }
 
         throw Boom.badRequest('Identifiant invalide');
-
     }));
 
     router.get('/backoffice/checkIfPasswordTokenExists', async (req, res) => {

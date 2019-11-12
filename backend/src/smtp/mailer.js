@@ -235,20 +235,6 @@ module.exports = function(db, logger, configuration, regions) {
                 replyTo: getReplyToEmail(region),
             });
         },
-        sendForgottenPasswordEmail: (emailAddress, codeRegion, passwordToken, profile) => {
-
-            let link = `${configuration.app.public_hostname}/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`;
-            let consultationLink = `${configuration.app.public_hostname}/mail/${passwordToken}/passwordForgotten`;
-            let params = { link, hostname: configuration.app.public_hostname, codeRegion, profile, consultationLink };
-            let region = regions.findRegionByCodeRegion(codeRegion);
-
-            return sendMail('password_forgotten', params, {
-                to: emailAddress,
-                subject: 'Votre compte Anotéa : Demande de renouvellement de mot de passe',
-                list: list,
-                replyTo: getReplyToEmail(region),
-            });
-        },
         sendVotreAvisMail: (emailAddress, trainee) => {
 
             let unsubscribeLink = getUnsubscribeLink(trainee);
