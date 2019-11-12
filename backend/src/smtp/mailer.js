@@ -193,57 +193,5 @@ module.exports = function(db, logger, configuration, regions) {
 
             return sendMail('malformed_import_idf', params, mailOptions, { textOnly: true });
         },
-        sendInjureMail: (emailAddress, trainee, comment) => {
-
-            let unsubscribeLink = getUnsubscribeLink(trainee);
-            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
-            let params = {
-                trainee,
-                comment,
-                moment,
-                consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/injure?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
-                unsubscribeLink: unsubscribeLink,
-                formLink: getFormLink(trainee),
-                hostname: configuration.app.public_hostname,
-                email: getReplyToEmail(region)
-            };
-
-            return sendMail('avis_injure', params, {
-                to: emailAddress,
-                subject: 'Rejet de votre avis sur votre formation' +
-                    `${trainee.training.title} à ${trainee.training.organisation.name}`,
-                replyTo: getReplyToEmail(region),
-                list: Object.assign({}, list, {
-                    unsubscribe: {
-                        url: unsubscribeLink,
-                    }
-                }),
-            });
-        },
-        sendAlerteMail: (emailAddress, trainee, comment) => {
-            let unsubscribeLink = getUnsubscribeLink(trainee);
-            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
-            let params = {
-                trainee,
-                comment,
-                moment,
-                consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/alerte?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
-                unsubscribeLink: unsubscribeLink,
-                formLink: getFormLink(trainee),
-                hostname: configuration.app.public_hostname,
-                email: getReplyToEmail(region)
-            };
-
-            return sendMail('avis_alerte', params, {
-                to: emailAddress,
-                subject: 'Nous avons bien pris en compte votre commentaire',
-                replyTo: getReplyToEmail(region),
-                list: Object.assign({}, list, {
-                    unsubscribe: {
-                        url: unsubscribeLink,
-                    }
-                }),
-            });
-        }
     };
 };

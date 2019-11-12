@@ -2,13 +2,12 @@ const Joi = require('joi');
 const express = require('express');
 const Boom = require('boom');
 const ObjectID = require('mongodb').ObjectID;
-const { IdNotFoundError } = require('../../../../common/errors');
 const getAvisCSV = require('./utils/getAvisCSV');
 const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 const { objectId } = require('../../validators-utils');
 const getProfile = require('./profiles/getProfile');
 
-module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, emails, regions }) => {
+module.exports = ({ db, middlewares, configuration, logger, workflow, emails, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -99,7 +98,6 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, e
     }));
 
     router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let { sendInjureMail, sendAlerteMail } = mailing;
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -108,23 +106,6 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, e
         }, { abortEarly: false });
 
         let updated = await workflow.reject(id, qualification, { profile });
-
-        if (qualification === 'injure' || qualification === 'alerte') {
-            let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
-            let trainee = await db.collection('trainee').findOne({ token: comment.token });
-
-            let email = trainee.trainee.email;
-            let sendMail;
-
-            if (qualification === 'injure') {
-                sendMail = sendInjureMail;
-            } else if (qualification === 'alerte') {
-                sendMail = sendAlerteMail;
-            }
-
-            sendMail(email, trainee, comment, qualification)
-            .catch(e => logger.error(e, 'Unable to send email'));
-        }
 
         return res.json(updated);
     }));

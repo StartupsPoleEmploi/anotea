@@ -1,4 +1,3 @@
-const moment = require('moment');
 const emailHelper = require('../../../smtp/emailHelper');
 
 module.exports = (db, mailer, configuration, regions) => {
@@ -40,7 +39,6 @@ module.exports = (db, mailer, configuration, regions) => {
         let params = {
             hostname: helper.getHostname(),
             trainee,
-            moment,
             region,
             trackingLink: helper.getTrackingLink(token),
             unsubscribeLink: getUnsubscribeLink(token),

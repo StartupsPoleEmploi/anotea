@@ -92,6 +92,7 @@ module.exports = (db, logger, emails) => {
                 user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
+
             if (original.status === 'reported') {
                 sendEmail(async () => {
                     let organisme = await db.collection('accounts').findOne({
@@ -99,6 +100,13 @@ module.exports = (db, logger, emails) => {
                     });
                     return emails.avisReportedToRejectedEmail.send(organisme, original);
                 });
+            } else if (qualification === 'injure' || qualification === 'alerte') {
+                sendEmail(async () => {
+                    let trainee = await db.collection('trainee').findOne({ token: original.token });
+                    let type = qualification === 'injure' ? 'avisInjureEmail' : 'avisAlerteEmail';
+                    return emails[type].send(trainee, original);
+                });
+
             }
 
             return result.value;
