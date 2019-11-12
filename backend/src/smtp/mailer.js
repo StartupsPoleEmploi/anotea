@@ -26,10 +26,6 @@ module.exports = function(db, logger, configuration, regions) {
 
     const transporter = nodemailer.createTransport(configSmtp);
 
-    const getConsultationLink = trainee => {
-        return `${configuration.app.public_hostname}/mail/${trainee.token}?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`;
-    };
-
     const getUnsubscribeLink = trainee => {
         return `${configuration.app.public_hostname}/mail/${trainee.token}/unsubscribe`;
     };
@@ -40,10 +36,6 @@ module.exports = function(db, logger, configuration, regions) {
 
     const getTrackingLink = obj => {
         return `${configuration.app.public_hostname}/mail/${obj.token}/track`;
-    };
-
-    const getOrganisationPasswordLink = organisation => {
-        return `${configuration.app.public_hostname}/admin/activation-compte?token=${organisation.token}`;
     };
 
     const getRegionEmail = region => {
@@ -176,25 +168,6 @@ module.exports = function(db, logger, configuration, regions) {
             return sendMail('organisme_avis_signale_publie', params, {
                 to: emailAddress,
                 subject: `Pôle Emploi - avis signalé dans votre Espace Anotéa`,
-                list: list,
-                replyTo: getReplyToEmail(region),
-            });
-        },
-        sendReponseRejeteeNotification: (emailAddress, organisme, avis) => {
-
-            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            let params = {
-                hostname: configuration.app.public_hostname,
-                trackingLink: getTrackingLink(organisme),
-                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/reponseRejetee/${avis.token}`,
-                contact: getRegionEmail(region),
-                organisme: organisme,
-                reponse: avis.reponse.text
-            };
-
-            return sendMail('organisme_reponse_rejetee', params, {
-                to: emailAddress,
-                subject: `Pôle Emploi - votre réponse n'a pas été prise en compte`,
                 list: list,
                 replyTo: getReplyToEmail(region),
             });

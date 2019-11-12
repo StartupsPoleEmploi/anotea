@@ -1,7 +1,7 @@
 const ObjectID = require('mongodb').ObjectID;
 const { IdNotFoundError, ForbiddenError } = require('./../errors');
 
-module.exports = db => {
+module.exports = (db, logger, emails) => {
 
     const saveEvent = (id, type, data) => {
         db.collection('events').insertOne({ adviceId: id, date: new Date(), type: type, source: data });
@@ -12,6 +12,11 @@ module.exports = db => {
             throw new ForbiddenError(`User can not perform this action`);
         }
         return profile;
+    };
+
+    const sendEmail = callback => {
+        return callback()
+        .catch(e => logger.error(e, 'Unable to send email'));
     };
 
     return {
@@ -234,10 +239,12 @@ module.exports = db => {
         rejectReponse: async (id, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
+            let oid = new ObjectID(id);
+            let original = await db.collection('comment').findOne({ _id: oid });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: oid,
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
@@ -257,6 +264,13 @@ module.exports = db => {
                 app: 'moderation',
                 user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
+            });
+
+            sendEmail(async () => {
+                let organisme = await db.collection('accounts').findOne({
+                    SIRET: parseInt(original.training.organisation.siret)
+                });
+                return emails.organismeReponseRejectedEmail.send(organisme, original);
             });
 
             return result.value;

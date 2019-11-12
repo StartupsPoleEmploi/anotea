@@ -184,7 +184,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can reject reponse', async () => {
 
         let app = await startServer();
-        let comment = newComment();
+        let comment = newComment({
+            reponse: {
+                text: 'Voici notre réponse',
+                status: 'none',
+            },
+        });
         let organisme = newOrganismeAccount({ SIRET: parseInt(comment.training.organisation.siret) });
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
@@ -219,7 +224,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can not reject reponse of another region', async () => {
 
         let app = await startServer();
-        let comment = newComment({ codeRegion: '6' });
+        let comment = newComment({
+            codeRegion: '6',
+            reponse: {
+                text: 'Voici notre réponse',
+                status: 'none',
+            },
+        });
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', comment),

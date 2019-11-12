@@ -212,10 +212,6 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, e
 
         let avis = await workflow.rejectReponse(id, { profile });
 
-        //TODO move into workflow
-        mailing.sendReponseRejeteeNotification(avis._id)
-        .catch(e => logger.error(e, 'Unable to send email'));
-
         return res.json(avis);
 
     }));
