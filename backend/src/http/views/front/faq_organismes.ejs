@@ -18,6 +18,10 @@
             e.preventDefault();
             $('.more').toggleClass('open closed');
         });
+        $("a.criteres").click(function (e) {
+            e.preventDefault();
+            $('.criteres').toggleClass('open closed');
+        });
     });
     </script>
 </head>
@@ -132,6 +136,36 @@
                 
                 <p class="example">Autre exemple :<br /> Merci d’avoir laissé votre commentaire. Nous sommes sincèrement désolés des dysfonctionnements qui ont eu lieu durant cette session et nous avons mis en oeuvre toutes les actions nécessaires pour que cela ne se reproduise pas.</p>
                 
+            </div>
+        </div>
+
+        <div class="tests-utilisateurs">
+            <div class="content">
+                <div>
+                    <div class="col left">
+                        <h2>Les tests utilisateurs</h2>
+                        <h3>Et que pensent les stagiaires des avis ?</h3>
+                        <p class="subtitle">Voici ce que nous enseignent les tests utilisateurs que nous faisons régulièrement.</p>
+                    </div>
+                    <div class="col right">
+                        <img src="/static/images/home/faq/ILLU_TESTS.svg" />
+                    </div>
+                </div>
+                <div class="bar"></div>
+                <ul>
+                    <li>Lorsqu’un <strong>avis négatif</strong> est isolé parmi des avis positifs, il <strong>sera écarté</strong> par le futur stagiaire</li>
+                    <li>Lorsque <strong>l’ensemble des avis est très positif</strong>, cela peut entraîner une certaine <strong>suspicion</strong> de la part des lecteurs, ils peuvent penser que 
+                            les avis négatifs ont été écartés <strong>(et oui, les avis négatifs rassurent aussi)</strong>. </li>
+                    <li>D’une manière générale, les avis ne sont qu’une aide au choix qui intervient après d’autres critères :
+                            <a class="criteres closed" href="#">AFFICHER LES CRITÈRES<img class="icon-open" src="/static/images/home/chevron-down.svg" /><img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                            </a>
+                            <p class="criteres closed">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida ut sapien ut tempus. Maecenas et nisl non magna cursus pellentesque et ac sapien. Integer id nunc vitae libero ornare congue vel quis elit. Aenean et lectus ac nisl luctus ornare. Suspendisse potenti. Aenean nec quam quis justo hendrerit vestibulum sed nec quam. Nam a odio dolor. Pellentesque sed ligula orci. Duis tempus ac tellus a dapibus. Cras tortor leo, maximus ut venenatis posuere, lobortis quis metus. Aenean sed tempor libero. Proin porttitor sollicitudin diam. Fusce molestie orci vitae urna maximus pellentesque. Pellentesque et pellentesque mauris. Etiam sapien ex, fringilla id ullamcorper eu, feugiat quis dolor. Morbi eu orci dapibus, laoreet dui a, gravida risus.
+                            </p>
+                    </li>
+                </ul>
+
+                <p class="contact-block"><a class="contact" href="mailto:anotea@pole-emploi.fr" title="Contactez-nous">Contactez-nous</a></p>
             </div>
         </div>
 

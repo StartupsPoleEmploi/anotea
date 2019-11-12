@@ -384,3 +384,89 @@ div.more {
     padding: 0px;
     margin: 0px;
 }
+
+.tests-utilisateurs .content {
+    width: 60%;
+    margin: auto;
+    padding: 40px;
+}
+
+.tests-utilisateurs .content h3 {
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 56px;
+    margin: 0;
+}
+
+.tests-utilisateurs .content .col {
+    float: left;
+    margin: 0px;
+    padding: 0px;
+    height: 300px;
+}
+
+.tests-utilisateurs .content .col.left {
+    width: 60%;
+    padding: 60px 0px 0px 0px;
+}
+
+.tests-utilisateurs .content .col.right {
+    width: calc(30% - 5px);
+}
+
+.tests-utilisateurs .content .col.right img {
+    margin-top: 40px;
+}
+
+.tests-utilisateurs {
+    background-color: #FDF2E7;
+}
+.tests-utilisateurs h2 {
+    color: #FF9533;
+    margin: 10px 0px 10px 0px;
+}
+
+.tests-utilisateurs .subtitle {
+    color: #2B292D;
+    font-size: 24px;
+    line-height: 34px;
+    margin: 0;
+}
+
+.tests-utilisateurs ul {
+    padding: 0;
+}
+
+.tests-utilisateurs ul li {
+    list-style: none;
+    display: inline-block;
+    width: 30%;
+    margin-right: 25px;
+    vertical-align: top;
+}
+
+.tests-utilisateurs .bar {
+    height: 3px;
+    width: 30px;
+    border-radius: 2px;
+    background-color: #FF9533;
+    clear: both;
+}
+
+.tests-utilisateurs p.contact-block {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.tests-utilisateurs p.contact-block .contact {
+    padding: 15px;
+}
+
+.tests-utilisateurs a.criteres {
+    margin-top: 10px;
+    display: block;
+}
+
+.tests-utilisateurs p.criteres.closed  {
+    display: none;
+}
