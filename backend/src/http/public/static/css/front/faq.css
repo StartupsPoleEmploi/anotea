@@ -433,16 +433,20 @@ div.more {
     margin: 0;
 }
 
-.tests-utilisateurs ul {
+.tests-utilisateurs ul.items {
     padding: 0;
 }
 
-.tests-utilisateurs ul li {
+.tests-utilisateurs ul.items > li {
     list-style: none;
     display: inline-block;
     width: 30%;
     margin-right: 25px;
     vertical-align: top;
+}
+
+.tests-utilisateurs ul.items > li.last {
+    margin-right: 0;
 }
 
 .tests-utilisateurs .bar {
@@ -467,6 +471,14 @@ div.more {
     display: block;
 }
 
-.tests-utilisateurs p.criteres.closed  {
+.tests-utilisateurs div.criteres.closed {
     display: none;
+}
+
+.tests-utilisateurs div.criteres ul {
+    padding: 20px;
+}
+
+.tests-utilisateurs div.criteres li {
+    list-style: disc;
 }
