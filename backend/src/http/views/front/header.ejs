@@ -1,42 +1,26 @@
 <link rel="stylesheet" type="text/css" href="/static/css/front/header.css" media="all">
 
 <div class="header">
-    <a href="/" title="Accueil"><img class="logo" src="/static/images/logo_Anotea_Horizontal_baseline2.png" /></a>
+    <a href="/" title="Accueil" class="logo"><img  src="/static/images/logo_Anotea_Horizontal_baseline2.png" /></a>
     <div class="login">
-        <div class="menu closed de" onMouseOver="javascript:$('.menu.de').toggleClass('closed open')"
-            onMouseOut="javascript:$('.menu.de').toggleClass('closed open')">
-            <a href="#" class="unroll" alt="menu Financeurs">Demandeurs d'emploi
-                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
-                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
-            </a>
-            <div class="content">
-                <div class="bar"></div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <a class="button" href="<%= connectionLink %>" title="Évaluer ma formation">&Eacute;valuer ma formation</a>
-            </div>
-        </div>
-        <div class="menu closed financeur" onMouseOver="javascript:$('.menu.financeur').toggleClass('closed open')"
-            onMouseOut="javascript:$('.menu.financeur').toggleClass('closed open')">
-            <a href="#" class="unroll" alt="menu Financeurs">Financeurs
-                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
-                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
-            </a>
-            <div class="content">
-                <div class="bar"></div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <a class="button" href="/admin" title="Accès espace financeurs">Accéder à mon espace</a>
-            </div>
-        </div>
         <div class="menu closed of" onMouseOver="javascript:$('.menu.of').toggleClass('closed open')"
             onMouseOut="javascript:$('.menu.of').toggleClass('closed open')">
-            <a href="#" class="unroll" alt="menu Financeurs">Organismes de formation
+            <a href="#" class="unroll" alt="menu Financeurs">Nos services
                 <img class="icon-open" src="/static/images/home/chevron-down.svg" />
-                <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
+                <img class="icon-close" src="/static/images/home/chevron-up.svg" />
             </a>
             <div class="content">
-                <div class="bar"></div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <a class="button" href="/admin" title="Accès espace organisme de formation">Accéder à mon espace</a>
+                <ul>
+                    <li>
+                        <a href="/services/stagiaires" title="Demandeurd'emploi">Demandeur d'emploi</a>
+                    </li>
+                    <li>
+                        <a href="/services/organismes" title="Organisme de formation">Organisme de formation</a>
+                    </li>
+                    <li>
+                        <a href="/services/financeurs" title="Financeur">Financeur</a>
+                    </li>
+                </ul>
             </div>
         </div>
         <a href="mailto:anotea@pole-emploi.fr" title="Contactez-nous" class="contact">Contactez-nous</a>

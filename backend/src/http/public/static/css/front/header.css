@@ -20,7 +20,11 @@
     height: 40px;
 }
 
-.logo {
+.logo, .admin {
+    outline: none;
+}
+
+.logo img {
     margin: 15px 200px;
     height: 75px;
     vertical-align: middle;
@@ -28,22 +32,21 @@
 }
 
 .menu {
+    margin-top: 15px;
     width: 300px;
-}
-
-.menu .content, .menu a.unroll {
-    background-color: #f8f8f8;
-    padding: 15px;
-}
-
-.menu.closed .content, .menu.closed a.unroll {
-    background-color: inherit;
-    box-shadow: inherit;
 }
 
 .menu .content {
     box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
     border-radius: 5px;
+}
+
+.menu.closed .icon-close {
+    display: none;
+}
+
+.menu.open .icon-open {
+    display: none;
 }
 
 .menu a.unroll {
