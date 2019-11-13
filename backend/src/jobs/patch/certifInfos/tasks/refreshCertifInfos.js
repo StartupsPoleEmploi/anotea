@@ -4,23 +4,27 @@ const { ignoreFirstLine, pipeline, writeObject } = require('../../../../common/u
 const parse = require('csv-parse');
 
 let loadCertifinfos = async file => {
-    let handleCodeChaining = mapping => {
-        let chainDetected = false;
+    let handleChaining = mapping => {
 
-        let acc = Object.keys(mapping).reduce((acc, code) => {
-            let newCode = mapping[code];
-            let hasMapping = !!mapping[newCode];
-            if (hasMapping) {
-                chainDetected = true;
-            }
+        let codesReducer = codes => {
+            return codes.reduce((acc, code) => {
+                let newCodes = mapping[code];
+                if (newCodes) {
+                    return [...acc, ...codesReducer(newCodes)];
+                }
+                return [...acc, code];
+            }, []);
+        };
 
+        return Object.keys(mapping).reduce((acc, code) => {
+            let newCodes = mapping[code];
+
+            let hasChain = newCodes.filter(c => mapping[c]).length > 0;
             return {
                 ...acc,
-                [code]: hasMapping ? mapping[newCode] : mapping[code],
+                [code]: hasChain ? codesReducer(newCodes) : mapping[code],
             };
         }, {});
-
-        return chainDetected ? handleCodeChaining(acc) : acc;
     };
 
     let mapping = {};
@@ -41,11 +45,16 @@ let loadCertifinfos = async file => {
         }),
         ignoreFirstLine(),
         writeObject(data => {
-            mapping[data.cer3_code] = data.cer3_codenew;
+            let codenew = data.cer3_codenew;
+            if (mapping[data.cer3_code]) {
+                mapping[data.cer3_code].push(codenew);
+            } else {
+                mapping[data.cer3_code] = [codenew];
+            }
         }),
     ]);
 
-    return handleCodeChaining(mapping);
+    return handleChaining(mapping);
 };
 
 module.exports = async (db, logger, file) => {
@@ -59,9 +68,10 @@ module.exports = async (db, logger, file) => {
         };
 
         let getNewCertifInfos = doc => {
-            return doc.training.certifInfos.map(code => {
-                return certifications[code] ? certifications[code] : code;
-            });
+            return doc.training.certifInfos.reduce((acc, code) => {
+                let codes = certifications[code] ? certifications[code] : [code];
+                return [...acc, ...codes];
+            }, []);
         };
 
         let getNewMeta = doc => {

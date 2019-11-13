@@ -550,9 +550,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let comment = newComment({
             training: {
                 formacode: '22403',
-                certifInfos: [{
-                    id: '80735',
-                }],
+                certifInfos: ['80735'],
                 organisation: {
                     siret: '22222222222222',
                 },

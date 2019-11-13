@@ -153,10 +153,7 @@ module.exports = (db, regions) => {
                         ...(_.isEmpty(inseeCode) ? {} : { inseeCode }),
                         city: record['dc_ville_lieuformation']
                     },
-                    certifInfos: _.isEmpty(record['dn_certifinfo_1_id']) ? [] : [{
-                        id: record['dn_certifinfo_1_id'],
-                        label: record['dc_lblcertifinfo']
-                    }],
+                    certifInfos: _.isEmpty(record['dn_certifinfo_1_id']) ? [] : [record['dn_certifinfo_1_id']],
                     formacode: record['dc_formacode_ppal_id'],
                     idSession: record['dn_session_id'],
                     infoCarif: {

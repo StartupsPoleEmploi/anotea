@@ -57,10 +57,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     inseeCode: '91521',
                     city: 'Ris-Orangis'
                 },
-                certifInfos: [{
-                    id: '8122',
-                    label: 'Titre professionnel'
-                }],
+                certifInfos: ['8122'],
                 idSession: '3565575',
                 formacode: '31734',
                 infoCarif: {

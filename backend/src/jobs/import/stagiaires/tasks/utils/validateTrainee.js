@@ -40,10 +40,7 @@ module.exports = trainee => {
                 inseeCode: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[AB])|(97))[0-9]{3}$/),
                 city: Joi.string().required()
             },
-            certifInfos: Joi.array().items({
-                id: Joi.string().allow(null).allow('').required(),
-                label: Joi.string().allow(null).allow('').required()
-            }).required(),
+            certifInfos: Joi.array().items(Joi.string()).required(),
             idSession: Joi.string().allow(null).required(),
             formacode: Joi.string().allow(null).required(),
             infoCarif: {

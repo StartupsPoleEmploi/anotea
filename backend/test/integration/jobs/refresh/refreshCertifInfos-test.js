@@ -24,7 +24,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         let stats = await patchCertifInfos(db, logger, certifinfosFile);
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
-        assert.strictEqual(avis.training.certifInfos[0], '74037');
+        assert.deepStrictEqual(avis.training.certifInfos, ['74037']);
 
         //History
         assert.strictEqual(avis.meta.history.length, 2);
@@ -67,7 +67,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         let stats = await patchCertifInfos(db, logger, certifinfosFile);
 
         let avis = await db.collection('comment').findOne({ _id: '1234' });
-        assert.strictEqual(avis.training.certifInfos[0], '74037');
+        assert.deepStrictEqual(avis.training.certifInfos, ['74037']);
 
         //History
         assert.strictEqual(avis.meta.history.length, 2);
@@ -107,7 +107,24 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         await patchCertifInfos(db, logger, certifinfosFile);
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
-        assert.strictEqual(avis.training.certifInfos[0], '62229');
+        assert.deepStrictEqual(avis.training.certifInfos, ['62229']);
+    });
+
+    it('should update certifinfos (1 to N)', async () => {
+
+        let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos-1toN.csv');
+        await insertIntoDatabase('trainee', newTrainee({
+            _id: '1234',
+            training: {
+                certifInfos: ['26565'],
+            },
+        }));
+
+        await patchCertifInfos(db, logger, certifinfosFile);
+
+        let avis = await db.collection('trainee').findOne({ _id: '1234' });
+        assert.deepStrictEqual(avis.training.certifInfos, ['45814', '74090', '5542']);
     });
 
     it('should update certifinfos (chaine)', async () => {
@@ -124,7 +141,24 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         await patchCertifInfos(db, logger, certifinfosFile);
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
-        assert.strictEqual(avis.training.certifInfos[0], '99999');
+        assert.deepStrictEqual(avis.training.certifInfos, ['74963']);
+    });
+
+    it('should update certifinfos (chaine + 1toN)', async () => {
+
+        let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos-chaine1toN.csv');
+        await insertIntoDatabase('trainee', newTrainee({
+            _id: '1234',
+            training: {
+                certifInfos: ['AAAAA'],
+            },
+        }));
+
+        await patchCertifInfos(db, logger, certifinfosFile);
+
+        let avis = await db.collection('trainee').findOne({ _id: '1234' });
+        assert.deepStrictEqual(avis.training.certifInfos, ['YYYYY', 'ZZZZZ']);
     });
 
     it('should ignore up to date certifinfos', async () => {
@@ -141,7 +175,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         let stats = await patchCertifInfos(db, logger, certifinfosFile);
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
-        assert.deepStrictEqual(avis.training.certifInfos[0], '74037');
+        assert.deepStrictEqual(avis.training.certifInfos, ['74037']);
         assert.deepStrictEqual(stats.trainee, {
             updated: 0,
             invalid: 0,
@@ -163,7 +197,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         await patchCertifInfos(db, logger, certifinfosFile);
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
-        assert.deepStrictEqual(avis.training.certifInfos[0], 'XXXXX');
+        assert.deepStrictEqual(avis.training.certifInfos, ['XXXXX']);
     });
 
 }));
