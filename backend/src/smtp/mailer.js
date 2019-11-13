@@ -30,10 +30,6 @@ module.exports = function(db, logger, configuration, regions) {
         return `${configuration.app.public_hostname}/mail/${trainee.token}/unsubscribe`;
     };
 
-    const getFormLink = trainee => {
-        return `${configuration.app.public_hostname}/questionnaire/${trainee.token}?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`;
-    };
-
     const getTrackingLink = obj => {
         return `${configuration.app.public_hostname}/mail/${obj.token}/track`;
     };
@@ -133,28 +129,6 @@ module.exports = function(db, logger, configuration, regions) {
 
     return {
         sendNewEmail,
-        getUnsubscribeLink,
-        getFormLink,
-        getRegionEmail,
-        getTrackingLink,
-        buildContent,
-        sendQuestionnaireOrganisme: (emailAddress, organisme) => {
-
-            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            let params = {
-                formLink: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
-                consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/organisme_questionnaire?utm_source=PE&utm_medium=mail`,
-                hostname: configuration.app.public_hostname,
-                organisme,
-            };
-
-            return sendMail('organisme_questionnaire', params, {
-                to: emailAddress,
-                subject: 'Aidez-nous à améliorer Anotéa',
-                list: list,
-                replyTo: getReplyToEmail(region),
-            });
-        },
         sendQuestionnaire6MoisMail: (emailAddress, trainee) => {
 
             let unsubscribeLink = getUnsubscribeLink(trainee);

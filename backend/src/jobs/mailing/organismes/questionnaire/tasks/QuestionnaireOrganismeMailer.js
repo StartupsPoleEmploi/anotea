@@ -1,12 +1,15 @@
 let { delay } = require('../../../../job-utils');
 let getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
+let emailHelper = require('../../../../../smtp/emailHelper');
 
 class QuestionnaireOrganismeMailer {
 
-    constructor(db, logger, mailer) {
+    constructor(db, logger, configuration, mailer, regions) {
         this.db = db;
         this.logger = logger;
+        this.helper = emailHelper(configuration);
         this.mailer = mailer;
+        this.regions = regions;
     }
 
     _onSuccess(organisme) {
@@ -35,6 +38,27 @@ class QuestionnaireOrganismeMailer {
         });
     }
 
+    async sendEmail(organisme) {
+        let region = this.regions.findRegionByCodeRegion(organisme.codeRegion);
+        let params = {
+            hostname: this.helper.getHostname(),
+            formLink: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
+            consultationLink: this.helper.getPublicUrl(`/mail/${organisme.token}/organisme_questionnaire?utm_source=PE&utm_medium=mail`),
+            organisme,
+        };
+
+        let [html, text] = await Promise.all([
+            this.helper.templateHTML('organisme_questionnaire', params),
+            this.helper.templateText('organisme_questionnaire', params),
+        ]);
+
+        return this.mailer.sendNewEmail(getOrganismeEmail(organisme), region, {
+            subject: 'Aidez-nous à améliorer Anotéa',
+            html,
+            text
+        });
+    }
+
     sendEmails(options = {}) {
         return new Promise(async (resolve, reject) => {
 
@@ -59,7 +83,7 @@ class QuestionnaireOrganismeMailer {
                 try {
                     this.logger.info(`Sending email to ${email}`);
 
-                    await this.mailer.sendQuestionnaireOrganisme(email, organisme);
+                    await this.sendEmail(organisme);
 
                     await this._onSuccess(organisme);
 

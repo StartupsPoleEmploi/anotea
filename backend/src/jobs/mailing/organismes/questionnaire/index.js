@@ -10,11 +10,11 @@ cli.description('Envoie du questionnaire au organisme')
 .option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
 .parse(process.argv);
 
-execute(async ({ db, logger, mailer }) => {
+execute(async ({ db, logger, configuration, mailer, regions }) => {
 
     logger.info(`Sending emails to organismes...`);
 
-    return new QuestionnaireOrganismeMailer(db, logger, mailer).sendEmails({
+    return new QuestionnaireOrganismeMailer(db, logger, configuration, mailer, regions).sendEmails({
         limit: cli.limit,
         delay: cli.delay,
     });
