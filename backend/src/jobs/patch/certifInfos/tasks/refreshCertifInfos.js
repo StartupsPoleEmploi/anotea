@@ -7,15 +7,15 @@ let loadCertifinfos = async file => {
         let chainDetected = false;
 
         let acc = Object.keys(mapping).reduce((acc, code) => {
-            let codenew = mapping[code];
-            let hasCodeNew = !!mapping[codenew];
-            if (hasCodeNew) {
+            let newValue = mapping[code];
+            let hasMapping = !!mapping[newValue.code];
+            if (hasMapping) {
                 chainDetected = true;
             }
 
             return {
                 ...acc,
-                [code]: hasCodeNew ? mapping[codenew] : codenew,
+                [code]: hasMapping ? mapping[newValue.code] : mapping[code],
             };
         }, {});
 
@@ -34,13 +34,13 @@ let loadCertifinfos = async file => {
                 'cer3_libelle',
                 'cer3_etat',
                 'cer3_codenew',
-                'cer3_libelle',
+                'cer3_libellenew',
                 'cer3_etat',
             ],
         }),
         ignoreFirstLine(),
         writeObject(data => {
-            mapping[data.cer3_code] = data.cer3_codenew;
+            mapping[data.cer3_code] = { code: data.cer3_codenew, label: data.cer3_libellenew };
         }),
     ]);
 
@@ -68,7 +68,8 @@ module.exports = async (db, logger, file) => {
                         { _id: doc._id },
                         {
                             $set: {
-                                'training.certifInfo.id': newCertifinfos,
+                                'training.certifInfo.id': newCertifinfos.code,
+                                'training.certifInfo.label': newCertifinfos.label,
                             },
                             $push: {
                                 'meta.history': {
@@ -76,7 +77,8 @@ module.exports = async (db, logger, file) => {
                                         date: new Date(),
                                         training: {
                                             certifInfo: {
-                                                id: doc.training.certifInfo.id
+                                                id: doc.training.certifInfo.id,
+                                                label: doc.training.certifInfo.label,
                                             },
                                         },
                                     }],

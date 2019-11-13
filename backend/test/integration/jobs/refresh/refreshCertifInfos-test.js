@@ -27,12 +27,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
         assert.strictEqual(avis.training.certifInfo.id, '74037');
+        assert.strictEqual(avis.training.certifInfo.label, 'Master droit, économie, gestion mention droit privé et carrières judiciaires spécialité droit de l\'environnement, sécurité et qualité de l\'entreprise');
         assert.strictEqual(avis.meta.history.length, 2);
         assert.ok(avis.meta.history[0].date);
         assert.deepStrictEqual(_.omit(avis.meta.history[0], ['date']), {
             training: {
                 certifInfo: {
                     id: '10013',
+                    label: 'Développeur',
                 },
             },
         });
@@ -70,12 +72,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
 
         let avis = await db.collection('comment').findOne({ _id: '1234' });
         assert.strictEqual(avis.training.certifInfo.id, '74037');
+        assert.strictEqual(avis.training.certifInfo.label, 'Master droit, économie, gestion mention droit privé et carrières judiciaires spécialité droit de l\'environnement, sécurité et qualité de l\'entreprise');
         assert.strictEqual(avis.meta.history.length, 2);
         assert.ok(avis.meta.history[0].date);
         assert.deepStrictEqual(_.omit(avis.meta.history[0], ['date']), {
             training: {
                 certifInfo: {
                     id: '10013',
+                    label: 'Développeur',
                 },
             },
         });
