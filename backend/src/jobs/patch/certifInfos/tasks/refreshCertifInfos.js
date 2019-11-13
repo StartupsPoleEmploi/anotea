@@ -1,13 +1,13 @@
 const fs = require('fs');
-const { ignoreFirstLine } = require('../../../../common/utils/stream-utils');
+const { ignoreFirstLine, pipeline, writeObject } = require('../../../../common/utils/stream-utils');
 const parse = require('csv-parse');
 
-let loadCertifinfos = file => {
+let loadCertifinfos = async file => {
     let mapping = {};
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(file)
-        .on('error', err => reject(err))
-        .pipe(parse({
+
+    await pipeline([
+        fs.createReadStream(file),
+        parse({
             delimiter: ';',
             quote: '',
             relax_column_count: true,
@@ -19,14 +19,14 @@ let loadCertifinfos = file => {
                 'cer3_libelle',
                 'cer3_etat',
             ],
-        }))
-        .pipe(ignoreFirstLine())
-        .on('data', data => {
+        }),
+        ignoreFirstLine(),
+        writeObject(data => {
             mapping[data.cer3_code] = data.cer3_codenew;
-        })
-        .on('error', err => reject(err))
-        .on('end', async () => resolve(mapping));
-    });
+        }),
+    ]);
+
+    return mapping;
 };
 
 module.exports = async (db, logger, file) => {
