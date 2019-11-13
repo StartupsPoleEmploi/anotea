@@ -3,8 +3,26 @@ const { ignoreFirstLine, pipeline, writeObject } = require('../../../../common/u
 const parse = require('csv-parse');
 
 let loadCertifinfos = async file => {
-    let mapping = {};
+    let handleCodeChaining = mapping => {
+        let chainDetected = false;
 
+        let acc = Object.keys(mapping).reduce((acc, code) => {
+            let codenew = mapping[code];
+            let hasCodeNew = !!mapping[codenew];
+            if (hasCodeNew) {
+                chainDetected = true;
+            }
+
+            return {
+                ...acc,
+                [code]: hasCodeNew ? mapping[codenew] : codenew,
+            };
+        }, {});
+
+        return chainDetected ? handleCodeChaining(acc) : acc;
+    };
+
+    let mapping = {};
     await pipeline([
         fs.createReadStream(file),
         parse({
@@ -26,7 +44,7 @@ let loadCertifinfos = async file => {
         }),
     ]);
 
-    return mapping;
+    return handleCodeChaining(mapping);
 };
 
 module.exports = async (db, logger, file) => {

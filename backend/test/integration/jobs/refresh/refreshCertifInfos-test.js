@@ -7,11 +7,10 @@ const logger = require('../../../helpers/components/fake-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTestFile }) => {
 
-    let certifinfosFile = getTestFile('certifinfos.csv');
-
     it('should update certifinfos (stagiaire)', async () => {
 
         let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos.csv');
         await insertIntoDatabase('trainee', newTrainee({
             _id: '1234',
             training: {
@@ -54,6 +53,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
     it('should update certifinfos (avis)', async () => {
 
         let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos.csv');
         await insertIntoDatabase('comment', newComment({
             _id: '1234',
             training: {
@@ -93,9 +93,48 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         });
     });
 
+    it('should update certifinfos (N to 1)', async () => {
+
+        let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos-Nto1.csv');
+        await insertIntoDatabase('trainee', newTrainee({
+            _id: '1234',
+            training: {
+                certifInfo: {
+                    id: '66587',
+                },
+            },
+        }));
+
+        await patchCertifInfos(db, logger, certifinfosFile);
+
+        let avis = await db.collection('trainee').findOne({ _id: '1234' });
+        assert.strictEqual(avis.training.certifInfo.id, '62229');
+    });
+
+    it('should update certifinfos (chaine)', async () => {
+
+        let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos-chaine.csv');
+        await insertIntoDatabase('trainee', newTrainee({
+            _id: '1234',
+            training: {
+                certifInfo: {
+                    id: '44496',
+                },
+            },
+        }));
+
+        await patchCertifInfos(db, logger, certifinfosFile);
+
+        let avis = await db.collection('trainee').findOne({ _id: '1234' });
+        assert.strictEqual(avis.training.certifInfo.id, '99999');
+    });
+
     it('should ignore up to date certifinfos', async () => {
 
         let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos.csv');
         await insertIntoDatabase('trainee', newTrainee({
             _id: '1234',
             training: {
@@ -119,6 +158,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
     it('should ignore unknown certifinfos', async () => {
 
         let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos.csv');
         await insertIntoDatabase('trainee', newTrainee({
             _id: '1234',
             training: {
