@@ -98,7 +98,7 @@ module.exports = (db, regions) => {
                 if (conseilRegional &&
                     region.conseil_regional.active &&
                     region.conseil_regional.import === 'certifications_only') {
-                    return !_.isEmpty(trainee.training.certifInfo.id);
+                    return !_.isEmpty(trainee.training.certifInfos.length > 0);
                 }
                 return true;
             };
@@ -153,12 +153,12 @@ module.exports = (db, regions) => {
                         ...(_.isEmpty(inseeCode) ? {} : { inseeCode }),
                         city: record['dc_ville_lieuformation']
                     },
-                    certifInfo: {
+                    certifInfos: _.isEmpty(record['dn_certifinfo_1_id']) ? [] : [{
                         id: record['dn_certifinfo_1_id'],
                         label: record['dc_lblcertifinfo']
-                    },
-                    idSession: record['dn_session_id'],
+                    }],
                     formacode: record['dc_formacode_ppal_id'],
+                    idSession: record['dn_session_id'],
                     infoCarif: {
                         numeroSession: record['dc_numeroicsession'],
                         numeroAction: record['dc_numeroicaction']

@@ -22,7 +22,7 @@ const buildAvisQuery = filters => {
         }
 
         if (filter.certif_info) {
-            query['training.certifInfo.id'] = filter.certif_info;
+            query['training.certifInfos'] = filter.certif_info;
         }
 
         if (filter.formacode) {

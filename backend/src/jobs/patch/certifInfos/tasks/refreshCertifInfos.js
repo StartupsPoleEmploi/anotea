@@ -1,4 +1,5 @@
 const fs = require('fs');
+const _ = require('lodash');
 const { ignoreFirstLine, pipeline, writeObject } = require('../../../../common/utils/stream-utils');
 const parse = require('csv-parse');
 
@@ -7,15 +8,15 @@ let loadCertifinfos = async file => {
         let chainDetected = false;
 
         let acc = Object.keys(mapping).reduce((acc, code) => {
-            let newValue = mapping[code];
-            let hasMapping = !!mapping[newValue.code];
+            let newCode = mapping[code];
+            let hasMapping = !!mapping[newCode];
             if (hasMapping) {
                 chainDetected = true;
             }
 
             return {
                 ...acc,
-                [code]: hasMapping ? mapping[newValue.code] : mapping[code],
+                [code]: hasMapping ? mapping[newCode] : mapping[code],
             };
         }, {});
 
@@ -40,7 +41,7 @@ let loadCertifinfos = async file => {
         }),
         ignoreFirstLine(),
         writeObject(data => {
-            mapping[data.cer3_code] = { code: data.cer3_codenew, label: data.cer3_libellenew };
+            mapping[data.cer3_code] = data.cer3_codenew;
         }),
     ]);
 
@@ -49,7 +50,7 @@ let loadCertifinfos = async file => {
 
 module.exports = async (db, logger, file) => {
 
-    const patch = async (collectionName, certifinfos) => {
+    const patch = async (collectionName, certifications) => {
 
         let stats = {
             updated: 0,
@@ -57,37 +58,41 @@ module.exports = async (db, logger, file) => {
             total: 0,
         };
 
+        let getNewCertifInfos = doc => {
+            return doc.training.certifInfos.map(code => {
+                return certifications[code] ? certifications[code] : code;
+            });
+        };
+
+        let getNewMeta = doc => {
+            let meta = _.cloneDeep(doc.meta) || {};
+            meta.history = meta.history || [];
+            meta.history.unshift({
+                date: new Date(),
+                training: {
+                    certifInfos: doc.training.certifInfos,
+                },
+            });
+
+            return meta;
+        };
+
         let cursor = db.collection(collectionName).find({});
         while (await cursor.hasNext()) {
             stats.total++;
             const doc = await cursor.next();
             try {
-                let newCertifinfos = certifinfos[doc.training.certifInfo.id];
-                if (newCertifinfos) {
-                    let results = await db.collection(collectionName).updateOne(
+                if (doc.training.certifInfos.find(code => certifications[code])) {
+
+                    let results = await db.collection(collectionName).replaceOne(
                         { _id: doc._id },
-                        {
-                            $set: {
-                                'training.certifInfo.id': newCertifinfos.code,
-                                'training.certifInfo.label': newCertifinfos.label,
+                        Object.assign({}, doc, {
+                            training: {
+                                certifInfos: getNewCertifInfos(doc),
                             },
-                            $push: {
-                                'meta.history': {
-                                    $each: [{
-                                        date: new Date(),
-                                        training: {
-                                            certifInfo: {
-                                                id: doc.training.certifInfo.id,
-                                                label: doc.training.certifInfo.label,
-                                            },
-                                        },
-                                    }],
-                                    $position: 0,
-                                },
-                            }
-                        },
-                        { upsert: false }
-                    );
+                            meta: getNewMeta(doc),
+                        }),
+                        { upsert: false });
 
                     if (results.result.nModified === 1) {
                         stats.updated++;
@@ -102,10 +107,10 @@ module.exports = async (db, logger, file) => {
         return stats;
     };
 
-    let certifinfos = await loadCertifinfos(file);
+    let certifInfos = await loadCertifinfos(file);
     let [trainee, comment] = await Promise.all([
-        patch('trainee', certifinfos),
-        patch('comment', certifinfos),
+        patch('trainee', certifInfos),
+        patch('comment', certifInfos),
     ]);
 
     return { trainee, comment };

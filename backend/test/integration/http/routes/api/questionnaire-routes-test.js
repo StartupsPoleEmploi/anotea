@@ -64,10 +64,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     postalCode: '75011',
                     city: 'Paris'
                 },
-                certifInfo: {
-                    id: '78997',
-                    label: 'Développeur'
-                },
+                certifInfos: ['78997'],
                 idSession: '2422722',
                 formacode: '46242',
                 infoCarif: {
@@ -168,10 +165,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     postalCode: '75011',
                     city: 'Paris'
                 },
-                certifInfo: {
-                    id: '78997',
-                    label: 'Développeur'
-                },
+                certifInfos: ['78997'],
                 idSession: '2422722',
                 formacode: '46242',
                 infoCarif: {
@@ -244,10 +238,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                     postalCode: '75011',
                     city: 'Paris'
                 },
-                certifInfo: {
-                    id: '78997',
-                    label: 'Développeur'
-                },
+                certifInfos: ['78997'],
                 idSession: '2422722',
                 formacode: '46242',
                 infoCarif: {

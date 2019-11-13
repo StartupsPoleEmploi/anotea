@@ -257,9 +257,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('comment', newComment({
                 pseudo,
                 training: {
-                    certifInfo: {
-                        id: certifInfo,
-                    },
+                    certifInfos: [certifInfo],
                 }
             }, date)),
         ]);

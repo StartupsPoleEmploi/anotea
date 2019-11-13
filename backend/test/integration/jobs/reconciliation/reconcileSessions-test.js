@@ -21,9 +21,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 pseudo,
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -168,28 +166,27 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
     it('should reconcile sessions with avis (certifications only)', async () => {
 
         let db = await getTestDatabase();
+        let noCertification = newComment({
+            training: {
+                formacode: '22403',
+                certifInfos: [],
+                organisation: {
+                    siret: '22222222222222',
+                },
+                place: {
+                    postalCode: '75019',
+                },
+            }
+        });
+        noCertification.training.certifInfos = [];
+
         await Promise.all([
             importIntercarif(),
+            insertIntoDatabase('comment', noCertification),
             insertIntoDatabase('comment', newComment({
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: null,
-                    },
-                    organisation: {
-                        siret: '22222222222222',
-                    },
-                    place: {
-                        postalCode: '75019',
-                    },
-                }
-            })),
-            insertIntoDatabase('comment', newComment({
-                training: {
-                    formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -216,9 +213,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 _id: '1234',
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: null,
-                    },
+                    certifInfos: [],
                     organisation: {
                         siret: '22222222244444',
                     },
@@ -246,9 +241,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 status: 'archived',
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -273,9 +266,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: 'XXXXXXXXXXXXXX',
                     },
@@ -287,9 +278,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 training: {
                     formacode: 'XXXXX',
-                    certifInfo: {
-                        id: 'YYYYY',
-                    },
+                    certifInfos: [{
+                        code: 'YYYYY',
+                    }],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -301,9 +292,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -328,9 +317,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: 'YYYYYYYYYYYYYY',
                     },
@@ -372,9 +359,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -394,9 +379,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -416,9 +399,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -482,9 +463,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 pseudo,
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: null,
-                    },
+                    certifInfos: [],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -512,7 +491,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 pseudo,
                 training: {
                     formacode: null,
-                    certifInfo: { id: '80735' },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -534,9 +513,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         let comment = newComment({
             training: {
-                certifInfo: {
-                    id: '80735',
-                },
+                certifInfos: ['80735'],
                 organisation: {
                     siret: '22222222222222',
                 },
@@ -569,9 +546,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 status: 'none',
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },
@@ -601,9 +576,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 },
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '80735',
-                    },
+                    certifInfos: ['80735'],
                     organisation: {
                         siret: '22222222222222',
                     },

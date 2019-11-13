@@ -92,10 +92,7 @@ module.exports = (db, regions) => {
                             postalCode: record['Code Postal'],
                             city: record['Ville']
                         },
-                        certifInfo: {
-                            id: null,
-                            label: null
-                        },
+                        certifInfos: [],
                         idSession: null,
                         formacode: null,
                         infoCarif: {

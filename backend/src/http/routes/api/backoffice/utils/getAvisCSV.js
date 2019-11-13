@@ -49,10 +49,9 @@ module.exports = () => {
         'nom organisme': comment => comment.training.organisation.name,
         'code postal': comment => comment.training.place.postalCode,
         'ville': comment => comment.training.place.city,
-        'id certif info': comment => comment.training.certifInfo.id,
-        'libellé certifInfo': comment => comment.training.certifInfo.label,
-        'id session': comment => comment.training.idSession,
+        'certifInfos': comment => comment.training.certifInfos.join(','),
         'formacode': comment => comment.training.formacode,
+        'id session': comment => comment.training.idSession,
         'AES reçu': comment => comment.training.aesRecu,
         'code financeur': comment => comment.training.codeFinanceur,
     };

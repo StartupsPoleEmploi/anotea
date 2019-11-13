@@ -37,7 +37,7 @@ execute(async ({ logger, db, regions }) => {
             'Titre formation': data => data.training.title,
             'Siret organisme': data => `="${data.training.organisation.siret}"`,
             'Lieu de formation': data => data.training.place.postalCode,
-            'Certifinfo': data => `="${data.training.certifInfo.id}"`,
+            'Certifinfos': data => `="${data.training.certifInfos.join(',')}"`,
             'formacode': data => data.training.formacode,
         }),
         encodeIntoUTF8(),

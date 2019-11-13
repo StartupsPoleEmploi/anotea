@@ -41,12 +41,9 @@ const createStagiaire = session => {
                 postalCode: formation.action.lieu_de_formation.code_postal,
                 city: formation.action.lieu_de_formation.ville
             },
-            certifInfo: {
-                id: formation.certifications.certifinfos[0],
-                label: 'NULL'
-            },
-            idSession: session.numero,
+            certifInfos: formation.certifications.certifinfos,
             formacode: formation.domaine_formation.formacodes[0],
+            idSession: session.numero,
             infoCarif: {
                 numeroAction: formation.action.numero,
                 numeroSession: session.numero

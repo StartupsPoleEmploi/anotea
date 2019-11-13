@@ -48,10 +48,7 @@ class Questionnaire6MoisMailer {
                     $match: {
                         'mailing.questionnaire6Mois.mailSent': { $exists: false },
                         'campaign': 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
-                        '$or': [
-                            { 'training.certifInfo.id': { $ne: 'NULL' } },
-                            { 'training.certifInfo.id': { $ne: '' } }
-                        ],
+                        'training.certifInfos.0': { $exists: true },
                     }
                 },
                 {
