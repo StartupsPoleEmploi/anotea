@@ -43,7 +43,7 @@ module.exports = {
             db.collection('comment').createIndex({ 'qualification': 1 }),
             db.collection('comment').createIndex({ 'date': 1 }),
             db.collection('comment').createIndex({ 'comment': 1 }),
-            db.collection('comment').createIndex({ 'training.formacode': 1 }),
+            db.collection('comment').createIndex({ 'training.formacodes': 1 }),
             db.collection('comment').createIndex({ 'training.idSession': 1 }),
             db.collection('comment').createIndex({ 'training.codeFinanceur': 1 }),
             db.collection('comment').createIndex({ 'training.idFormation': 1 }),
@@ -60,8 +60,6 @@ module.exports = {
             db.collection('comment').createIndex({
                 'training.place.city': 1,
                 'training.place.postalCode': 1,
-                'training.formacode': 1,
-                'training.certifInfos': 1,
                 'status': 1,
                 'validated': 1,
                 'training.organisation.siret': 1,

@@ -154,7 +154,7 @@ module.exports = (db, regions) => {
                         city: record['dc_ville_lieuformation']
                     },
                     certifInfos: _.isEmpty(record['dn_certifinfo_1_id']) ? [] : [record['dn_certifinfo_1_id']],
-                    formacode: record['dc_formacode_ppal_id'],
+                    formacodes: _.isEmpty(record['dc_formacode_ppal_id']) ? [] : [record['dc_formacode_ppal_id']],
                     idSession: record['dn_session_id'],
                     infoCarif: {
                         numeroSession: record['dc_numeroicsession'],

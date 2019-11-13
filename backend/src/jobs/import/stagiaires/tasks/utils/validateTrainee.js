@@ -41,8 +41,8 @@ module.exports = trainee => {
                 city: Joi.string().required()
             },
             certifInfos: Joi.array().items(Joi.string()).required(),
+            formacodes: Joi.array().items(Joi.string()).required(),
             idSession: Joi.string().allow(null).required(),
-            formacode: Joi.string().allow(null).required(),
             infoCarif: {
                 numeroSession: Joi.string().allow(null).required(),
                 numeroAction: Joi.string().allow(null).required()

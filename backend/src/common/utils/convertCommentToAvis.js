@@ -34,7 +34,7 @@ module.exports = data => {
             numero: training.idFormation,
             intitule: training.title,
             domaine_formation: {
-                formacodes: [training.formacode],
+                formacodes: training.formacodes,
             },
             certifications: training.certifInfos.map(code => ({ certif_info: code })),
             action: {

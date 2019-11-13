@@ -45,7 +45,7 @@ module.exports = {
                 },
                 certifInfos: ['78997'],
                 idSession: '2422722',
-                formacode: '46242',
+                formacodes: ['46242'],
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -152,7 +152,7 @@ module.exports = {
                 },
                 certifInfos: ['78997'],
                 idSession: '2422722',
-                formacode: '46242',
+                formacodes: ['46242'],
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'

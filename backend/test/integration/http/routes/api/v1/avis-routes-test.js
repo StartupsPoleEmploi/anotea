@@ -279,7 +279,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('comment', newComment({
                 pseudo,
                 training: {
-                    formacode: formacode,
+                    formacodes: [formacode],
                 }
             })),
         ]);
@@ -304,7 +304,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             insertIntoDatabase('comment', newComment({
                 pseudo,
                 training: {
-                    formacode: formacode,
+                    formacodes: [formacode],
                 }
             })),
         ]);

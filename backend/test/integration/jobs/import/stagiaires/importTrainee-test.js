@@ -58,8 +58,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     city: 'Ris-Orangis'
                 },
                 certifInfos: ['8122'],
+                formacodes: ['31734'],
                 idSession: '3565575',
-                formacode: '31734',
                 infoCarif: {
                     numeroSession: 'SE_0000160070',
                     numeroAction: '14_SE_0000160070'
@@ -195,7 +195,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 },
                 certifInfos: [],
                 idSession: null,
-                formacode: null,
+                formacodes: [],
                 infoCarif: {
                     numeroAction: null,
                     numeroSession: null

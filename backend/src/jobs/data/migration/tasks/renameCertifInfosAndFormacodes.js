@@ -10,13 +10,17 @@ module.exports = db => {
         await batchCursor(cursor, async next => {
             let doc = await next();
 
-            let code = doc.training.certifInfo.id;
+            let certifInfo = doc.training.certifInfo.id;
+            let formacode = doc.training.formacode;
+
             let results = await db.collection(collectionName).updateOne({ token: doc.token }, {
                 $set: {
-                    'training.certifInfos': _.isEmpty(code) ? [] : [code],
+                    'training.certifInfos': _.isEmpty(certifInfo) ? [] : [certifInfo],
+                    'training.formacodes': _.isEmpty(formacode) ? [] : [formacode],
                 },
                 $unset: {
                     'training.certifInfo': 1,
+                    'training.formacode': 1,
                 }
             });
 

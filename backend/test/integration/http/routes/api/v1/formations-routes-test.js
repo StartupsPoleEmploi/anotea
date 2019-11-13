@@ -36,7 +36,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     pseudo: pseudo,
                     codeRegion: '11',
                     training: {
-                        formacode: '22252',
+                        formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
                         },
@@ -155,7 +155,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newComment({
                     codeRegion: '11',
                     training: {
-                        formacode: '22252',
+                        formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
                         },
@@ -219,7 +219,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newComment({
                     codeRegion: '11',
                     training: {
-                        formacode: '22252',
+                        formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
                         },
@@ -347,7 +347,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newComment({
                     codeRegion: '11',
                     training: {
-                        formacode: '22252',
+                        formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
                         },
@@ -474,7 +474,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newComment({
                     codeRegion: '11',
                     training: {
-                        formacode: '22252',
+                        formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
                         },
@@ -537,7 +537,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     pseudo,
                     codeRegion: '11',
                     training: {
-                        formacode: '22252',
+                        formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
                         },
@@ -624,7 +624,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             pseudo: 'pseudo',
             codeRegion: '11',
             training: {
-                formacode: '22252',
+                formacodes: ['22252'],
                 organisation: {
                     siret: '33333333333333',
                 },
@@ -650,7 +650,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newComment({
                     codeRegion: '11',
                     training: {
-                        formacode: '22252',
+                        formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
                         },
@@ -676,7 +676,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             pseudo: 'pseudo-avec-réponse',
             codeRegion: '11',
             training: {
-                formacode: '22252',
+                formacodes: ['22252'],
                 organisation: {
                     siret: '33333333333333',
                 },
@@ -707,7 +707,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 newComment({
                     codeRegion: '11',
                     training: {
-                        formacode: '22252',
+                        formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
                         },

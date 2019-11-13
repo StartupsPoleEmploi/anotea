@@ -13,7 +13,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         let db = await getTestDatabase();
         let avisReconciliable = newComment({
             training: {
-                formacode: '22403',
+                formacodes: ['22252'],
                 certifInfos: ['80735'],
                 organisation: {
                     siret: '22222222222222',

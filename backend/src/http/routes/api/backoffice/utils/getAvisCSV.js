@@ -50,7 +50,7 @@ module.exports = () => {
         'code postal': comment => comment.training.place.postalCode,
         'ville': comment => comment.training.place.city,
         'certifInfos': comment => comment.training.certifInfos.join(','),
-        'formacode': comment => comment.training.formacode,
+        'formacodes': comment => comment.training.formacodes.join(','),
         'id session': comment => comment.training.idSession,
         'AES reçu': comment => comment.training.aesRecu,
         'code financeur': comment => comment.training.codeFinanceur,

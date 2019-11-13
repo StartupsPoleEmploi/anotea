@@ -8,6 +8,6 @@ cli.parse(process.argv);
 execute(async ({ db }) => {
     let stats = {};
     stats.unsetPatchCertifInfos = await require('./tasks/unsetPatchCertifInfos')(db);
-    stats.renameCertifInfos = await require('./tasks/renameCertifInfos')(db);
+    stats.renameCertifInfosAndFormacodes = await require('./tasks/renameCertifInfosAndFormacodes')(db);
     return stats;
 });

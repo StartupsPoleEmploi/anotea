@@ -66,7 +66,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 },
                 certifInfos: ['78997'],
                 idSession: '2422722',
-                formacode: '46242',
+                formacodes: ['46242'],
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -167,7 +167,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 },
                 certifInfos: ['78997'],
                 idSession: '2422722',
-                formacode: '46242',
+                formacodes: ['46242'],
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -240,7 +240,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 },
                 certifInfos: ['78997'],
                 idSession: '2422722',
-                formacode: '46242',
+                formacodes: ['46242'],
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'

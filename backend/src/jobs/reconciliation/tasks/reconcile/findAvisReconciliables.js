@@ -14,7 +14,7 @@ module.exports = async (db, intercarif, action) => {
             {
                 '$or': [
                     { 'training.certifInfos': { $in: intercarif._meta.certifinfos } },
-                    { 'training.formacode': { $in: intercarif._meta.formacodes } },
+                    { 'training.formacodes': { $in: intercarif._meta.formacodes } },
                 ]
 
             },
