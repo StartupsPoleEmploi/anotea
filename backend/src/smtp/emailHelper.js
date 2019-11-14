@@ -7,15 +7,17 @@ const renderFile = promisify(ejs.renderFile);
 module.exports = configuration => {
     let hostname = configuration.app.public_hostname;
 
+    let getPublicUrl = path => `${hostname}${path}`;
+
     let templateHTML = (template, params) => {
-        return renderFile(path.join(__dirname, `views/${template}.ejs`), { ...params, moment, hostname });
+        return renderFile(path.join(__dirname, `views/${template}.ejs`), { ...params, utils: { moment, getPublicUrl } });
     };
     let templateText = (template, params) => {
-        return renderFile(path.join(__dirname, `views/${template}.txt`), { ...params, moment, hostname });
+        return renderFile(path.join(__dirname, `views/${template}.txt`), { ...params, utils: { moment, getPublicUrl } });
     };
 
     return {
-        getPublicUrl: path => `${hostname}${path}`,
+        getPublicUrl: getPublicUrl,
         getTrackingLink: token => `${hostname}/mail/${token}/track`,
         getRegionEmail: region => region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from,
         templates: async (templateName, params, options = {}) => {

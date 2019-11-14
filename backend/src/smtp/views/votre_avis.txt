@@ -1,6 +1,6 @@
 Donnez-nous votre avis en 1 minute.
 
-Vous avez suivi la formation de "<%= trainee.training.title %>" du <%= moment(trainee.training.startDate).format('DD/MM/YYYY') %> au <%= moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %> à <%= trainee.training.organisation.label %>.
+Vous avez suivi la formation de "<%= trainee.training.title %>" du <%= utils.moment(trainee.training.startDate).format('DD/MM/YYYY') %> au <%= utils.moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %> à <%= trainee.training.organisation.label %>.
 
 Évaluer ma formation
 <%= formLink %>

@@ -111,7 +111,7 @@
         </style>
     </head>
     <body style="background-color:#ebebeb;">
-        <%- include('common/header', { hostname, codeRegion: trainee.codeRegion }); %>
+        <%- include('common/header', { utils, codeRegion: trainee.codeRegion }); %>
 
         <div class="content">
             <h1>6 mois après votre formation où en êtes vous ?</h1>
@@ -133,7 +133,7 @@
         <div class="footer">
             <%- include('common/legal/stagiaires/mentions.ejs'); %>
 
-            <img id="lbf-logo" src="<%= hostname %>/static/images/lbf.jpg" />
+            <img id="lbf-logo" src="<%= utils.getPublicUrl('/static/images/lbf.jpg') %>" />
 
             <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
                     pouvez vous désinscrire</a>.</p>
