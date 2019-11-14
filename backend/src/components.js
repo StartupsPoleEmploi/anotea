@@ -10,7 +10,7 @@ const communes = require('./common/components/communes');
 const createMailer = require('./smtp/mailer');
 const organismeNotificationEmail = require('./common/components/emails/organismeNotificationEmail');
 const forgottenPasswordEmail = require('./common/components/emails/forgottenPasswordEmail');
-const organismeAccountEmail = require('./common/components/emails/organismeAccountEmail');
+const organismeAccountActivationEmail = require('./common/components/emails/organismeAccountActivationEmail');
 const votreAvisEmail = require('./common/components/emails/votreAvisEmail');
 const avisReponseRejectedEmail = require('./common/components/emails/avisReponseRejectedEmail');
 const avisReportedToValidatedEmail = require('./common/components/emails/avisReportedToValidatedEmail');
@@ -27,7 +27,7 @@ module.exports = async (options = {}) => {
     let mailer = options.mailer || createMailer(db, logger, configuration, regions);
     let emails = {
         forgottenPasswordEmail: forgottenPasswordEmail(db, mailer, configuration, regions),
-        organismeAccountEmail: organismeAccountEmail(db, mailer, configuration, regions),
+        organismeAccountActivationEmail: organismeAccountActivationEmail(db, mailer, configuration, regions),
         organismeNotificationEmail: organismeNotificationEmail(db, mailer, configuration, regions),
         votreAvisEmail: votreAvisEmail(db, mailer, configuration, regions),
         avisReponseRejectedEmail: avisReponseRejectedEmail(db, mailer, configuration, regions),

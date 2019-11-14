@@ -178,7 +178,7 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
 
         const region = regions.findRegionByCodeRegion(organisme.codeRegion);
 
-        res.render('../../smtp/views/organisation_password.ejs', {
+        res.render('../../smtp/views/organisme_account_activation.ejs', {
             trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
             link: `${configuration.app.public_hostname}/admin?action=passwordLost&token=${req.params.tokenOrganisme}`,
             consultationLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/password`,

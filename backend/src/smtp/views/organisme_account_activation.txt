@@ -4,7 +4,7 @@ Anotéa est un service initié par Pôle Emploi et déployé en partenariat avec
 
 Avec Anotéa, vous avez accès à toutes les notes et avis publiés sur vos formations et vous avez la possibilité d’y répondre. Votre réponse sera publiée avec l’avis.
 
-Votre identifiant est <%= organisation.SIRET %>
+Votre identifiant est <%= organisme.SIRET %>
 
 Accédez à mon espace : <%= link %>
 

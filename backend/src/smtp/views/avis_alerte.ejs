@@ -102,8 +102,8 @@
                     width: 33%;
                 }
             }
-        
-        <%- include('common/header.css'); %>
+
+            <%- include('common/header.css'); %>
         </style>
     </head>
     <body style="background-color:#ebebeb">
@@ -112,7 +112,8 @@
         <div class="content">
             <h1>Nous avons bien pris en compte votre commentaire</h1>
             <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
-            <p>Nous vous informons que nous allons prendre contact avec "<%= trainee.training.organisation.name %>" suite au commentaire que vous avez déposé sur "<%= trainee.training.title %>".
+            <p>Nous vous informons que nous allons prendre contact avec "<%= trainee.training.organisation.name %>"
+                suite au commentaire que vous avez déposé sur "<%= trainee.training.title %>".
             </p>
             <p><%- include('common/signature.ejs'); %>
             </p>

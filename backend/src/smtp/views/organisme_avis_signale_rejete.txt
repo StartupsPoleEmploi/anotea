@@ -4,7 +4,7 @@ Bonjour,
 
 Vous avez signalé l’avis suivant dans votre Espace Anotéa
 
-"<%= avis %>"
+"<%= commentaire %>"
 
 Le modérateur a ré-éxaminé le commentaire laissé par le stagiaire et a décidé de procéder à son rejet
 

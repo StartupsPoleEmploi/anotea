@@ -30,12 +30,12 @@ module.exports = (db, mailer, configuration, regions) => {
         let region = regions.findRegionByCodeRegion(organisme.codeRegion);
         let token = organisme.token;
 
-        return helper.templates('organisation_password', {
+        return helper.templates('organisme_account_activation', {
+            organisme,
+            contact: helper.getRegionEmail(region),
             link: helper.getPublicUrl(`/admin/activation-compte?token=${token}`),
             trackingLink: helper.getTrackingLink(token),
             consultationLink: helper.getPublicUrl(`/mail/${token}/password`),
-            organisation: organisme,
-            contact: helper.getRegionEmail(region),
             ...options,
         });
     };
@@ -44,7 +44,6 @@ module.exports = (db, mailer, configuration, regions) => {
         build,
         send: async organisme => {
             let email = getOrganismeEmail(organisme);
-
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             let content = await build(organisme, { webView: false });
 

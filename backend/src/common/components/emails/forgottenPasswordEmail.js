@@ -33,13 +33,11 @@ module.exports = (db, mailer, configuration, regions) => {
     let build = (account, token, options = {}) => {
 
         let link = helper.getPublicUrl(`/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${token}`);
-        let consultationLink = helper.getPublicUrl(`/mail/${token}/passwordForgotten`);
-
         return helper.templates('password_forgotten', {
             link,
             codeRegion: account.codeRegion,
             profile: account.profile,
-            consultationLink,
+            consultationLink: helper.getPublicUrl(`/mail/${token}/passwordForgotten`),
             ...options,
         });
     };

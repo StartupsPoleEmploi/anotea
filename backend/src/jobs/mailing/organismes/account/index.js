@@ -17,7 +17,7 @@ cli.description('Send new account emails')
 execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
     let type = cli.type || 'Send';
-    let accountMailer = new AccountMailer(db, logger, emails.organismeAccountEmail);
+    let accountMailer = new AccountMailer(db, logger, emails.organismeAccountActivationEmail);
     let options = {
         limit: cli.limit,
         delay: cli.delay,

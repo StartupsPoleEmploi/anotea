@@ -10,11 +10,11 @@ module.exports = (db, mailer, configuration, regions) => {
         let region = regions.findRegionByCodeRegion(organisme.codeRegion);
 
         return helper.templates('organisme_reponse_rejetee', {
-            trackingLink: helper.getTrackingLink(organisme.token),
-            consultationLink: helper.getPublicUrl(`/mail/${organisme.token}/reponseRejetee/${comment.token}`),
-            contact: helper.getRegionEmail(region),
             organisme,
             reponse: comment.reponse.text,
+            contact: helper.getRegionEmail(region),
+            trackingLink: helper.getTrackingLink(organisme.token),
+            consultationLink: helper.getPublicUrl(`/mail/${organisme.token}/reponseRejetee/${comment.token}`),
             ...options,
         });
     };

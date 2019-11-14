@@ -14,10 +14,9 @@ module.exports = (db, mailer, configuration, regions) => {
 
         return helper.templates('avis_injure', {
             trainee,
+            contact: helper.getRegionEmail(region),
             unsubscribeLink: getUnsubscribeLink(token),
             consultationLink: helper.getPublicUrl(`/mail/${token}/injure?${utm}`),
-            formLink: helper.getPublicUrl(`/questionnaire/${token}?${utm}`),
-            email: helper.getRegionEmail(region),
             ...options,
         });
     };

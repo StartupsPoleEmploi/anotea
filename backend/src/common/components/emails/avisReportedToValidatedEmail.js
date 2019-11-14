@@ -7,10 +7,10 @@ module.exports = (db, mailer, configuration, regions) => {
 
     let build = (organisme, comment, options = {}) => {
         return helper.templates('organisme_avis_signale_publie', {
-            trackingLink: helper.getTrackingLink(organisme.token),
-            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/reponseRejetee/${avis.token}`,
-            avis: comment.comment.text,
             organisme,
+            commentaire: comment.comment.text,
+            trackingLink: helper.getTrackingLink(organisme.token),
+            consultationLink: helper.getPublicUrl(`/mail/${organisme.token}/reponseRejetee/${comment.token}`),
             ...options,
         });
     };

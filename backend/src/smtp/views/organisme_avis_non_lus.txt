@@ -1,6 +1,6 @@
 Bonjour,
 
-"<%= comment %>"
+"<%= commentaire %>"
 
 Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur https://labonneformation.pole-emploi.fr
 

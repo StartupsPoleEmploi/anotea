@@ -6,22 +6,17 @@ module.exports = (db, mailer, configuration, regions) => {
 
     let getUnsubscribeLink = token => helper.getPublicUrl(`/mail/${token}/unsubscribe`);
 
-    let build = async (trainee, comment, options = {}) => {
+    let build = (trainee, comment, options = {}) => {
 
         let token = trainee.token;
         let utm = `utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`;
-        let region = regions.findRegionByCodeRegion(trainee.codeRegion);
 
-        let [html, text] = await helper.templates('avis_alerte', {
+        return helper.templates('avis_alerte', {
             trainee,
             unsubscribeLink: getUnsubscribeLink(token),
             consultationLink: helper.getPublicUrl(`/mail/${token}/injure?${utm}`),
-            formLink: helper.getPublicUrl(`/questionnaire/${token}?${utm}`),
-            email: helper.getRegionEmail(region),
             ...options,
         });
-
-        return { html, text };
     };
 
     return {

@@ -2,10 +2,10 @@ let { delay } = require('../../../job-utils');
 
 class AccountMailer {
 
-    constructor(db, logger, organismeAccountEmail) {
+    constructor(db, logger, organismeAccountActivationEmail) {
         this.db = db;
         this.logger = logger;
-        this.organismeAccountEmail = organismeAccountEmail;
+        this.organismeAccountActivationEmail = organismeAccountActivationEmail;
     }
 
     async sendEmails(action, options = {}) {
@@ -26,7 +26,7 @@ class AccountMailer {
 
             stats.total++;
             try {
-                await this.organismeAccountEmail.send(organisme);
+                await this.organismeAccountActivationEmail.send(organisme);
 
                 if (options.delay) {
                     await delay(options.delay);
@@ -43,10 +43,9 @@ class AccountMailer {
     async sendEmailBySiret(siret) {
         let organisme = await this.db.collection('accounts').findOne({ 'meta.siretAsString': siret });
         try {
-            await this.organismeAccountEmail.send(organisme);
+            await this.organismeAccountActivationEmail.send(organisme);
             return { total: 1, sent: 1, error: 0 };
         } catch (e) {
-            await this._onError(e, organisme);
             this.logger.error(e);
             return { total: 1, sent: 0, error: 1 };
         }

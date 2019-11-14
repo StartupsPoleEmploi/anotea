@@ -7,7 +7,7 @@ const logger = require('../../../../../../helpers/components/fake-logger');
 const fakeMailer = require('../../../../../../helpers/components/fake-mailer');
 const AccountMailer = require('../../../../../../../src/jobs/mailing/organismes/account/AccountMailer');
 const ResendAction = require('../../../../../../../src/jobs/mailing/organismes/account/actions/ResendAction');
-const organismeAccountEmail = require('../../../../../../../src/common/components/emails/organismeAccountEmail');
+const organismeAccountActivationEmail = require('../../../../../../../src/common/components/emails/organismeAccountActivationEmail');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
 
@@ -15,7 +15,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
         let db = await getTestDatabase();
         let { regions } = await getComponents();
 
-        let email = organismeAccountEmail(db, mailer, configuration, regions);
+        let email = organismeAccountActivationEmail(db, mailer, configuration, regions);
         return new AccountMailer(db, logger, email);
     };
 

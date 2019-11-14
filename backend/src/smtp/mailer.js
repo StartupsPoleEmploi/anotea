@@ -99,36 +99,34 @@ module.exports = function(db, logger, configuration, regions) {
         }
     };
 
-    const sendNewEmail = (emailAddress, region, options = {}) => {
-
-        let transporterOptions = {
-            from: `Anotea <${configuration.smtp.from}>`,
-            to: emailAddress,
-            replyTo: getReplyToEmail(region),
-            subject: `Pôle Emploi`,
-            ...(process.env.ANOTEA_MAIL_BCC ? { bcc: process.env.ANOTEA_MAIL_BCC } : {}),
-            list,
-            ...options,
-        };
-
-        return new Promise((resolve, reject) => {
-            transporter.sendMail(transporterOptions, (error, info) => {
-                if (error) {
-                    logger.error(`An error occurs while sending mail : ${error}̀`);
-                    reject(error);
-                } else {
-                    logger.info(`Message sent to ${transporterOptions.to}`, {
-                        messageId: info.messageId,
-                        response: info.response,
-                    });
-                    resolve();
-                }
-            });
-        });
-    };
-
     return {
-        sendNewEmail,
+        sendNewEmail: (to, region, options = {}) => {
+
+            let transporterOptions = {
+                from: `Anotea <${configuration.smtp.from}>`,
+                to: to,
+                replyTo: getReplyToEmail(region),
+                ...(process.env.ANOTEA_MAIL_BCC ? { bcc: process.env.ANOTEA_MAIL_BCC } : {}),
+                subject: `Pôle Emploi`,
+                list,
+                ...options,
+            };
+
+            return new Promise((resolve, reject) => {
+                transporter.sendMail(transporterOptions, (error, info) => {
+                    if (error) {
+                        logger.error(`An error occurs while sending mail : ${error}̀`);
+                        reject(error);
+                    } else {
+                        logger.info(`Message sent to ${transporterOptions.to}`, {
+                            messageId: info.messageId,
+                            response: info.response,
+                        });
+                        resolve();
+                    }
+                });
+            });
+        },
         sendQuestionnaire6MoisMail: (emailAddress, trainee) => {
 
             let unsubscribeLink = getUnsubscribeLink(trainee);

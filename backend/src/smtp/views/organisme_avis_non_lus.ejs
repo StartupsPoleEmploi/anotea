@@ -54,7 +54,7 @@
                 font-size: 0.7em;
             }
 
-            .comment {
+            .commentaire {
                 font-style: italic;
                 font-weight: bold;
             }
@@ -92,7 +92,7 @@
                     width: 33%;
                 }
             }
-            
+
             <%- include('common/header.css'); %>
         </style>
     </head>
@@ -103,8 +103,8 @@
         <div class="content">
             <p>Bonjour,</p>
 
-            <% if (comment) { %>
-                <p class="reponse">"<%= comment %>"</p>
+            <% if (commentaire) { %>
+                <p class="commentaire">"<%= commentaire %>"</p>
             <% } %>
 
             <p><strong>Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur

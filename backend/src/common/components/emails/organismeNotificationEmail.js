@@ -16,11 +16,11 @@ module.exports = (db, mailer, configuration, regions) => {
         let region = regions.findRegionByCodeRegion(organisme.codeRegion);
 
         return helper.templates('organisme_avis_non_lus', {
+            organisme: organisme,
+            commentaire: readStatus.commentaire ? readStatus.commentaire : null,
+            contact: helper.getRegionEmail(region),
             consultationLink: helper.getPublicUrl(`/mail/${organisme.token}/nonLus`),
             trackingLink: helper.getTrackingLink(organisme.token),
-            contact: helper.getRegionEmail(region),
-            organisme: organisme,
-            comment: readStatus.pickedComment ? readStatus.pickedComment.comment.text : null,
             ...options,
         });
     };

@@ -54,7 +54,7 @@ class NotificationMailer {
                         {
                             $group: {
                                 _id: null,
-                                pickedComment: { $first: '$$ROOT' },
+                                commentaire: { $first: 'comment.text' },
                                 nbUnreadComments: { $sum: 1 }
                             }
                         },

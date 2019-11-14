@@ -4,7 +4,7 @@ Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
 
 Il semblerait que votre avis comporte des propos à caractère injurieux ou diffamatoire et ne respecte donc pas notre charte. Seules les notes seront publiées sur une formation similaire.
 
-Contacter Anotéa : <%= email %>
+Contacter Anotéa : <%= contact %>
 
 Nous vous remercions de votre compréhension,
 
