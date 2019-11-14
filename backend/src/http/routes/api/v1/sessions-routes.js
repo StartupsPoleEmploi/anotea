@@ -103,10 +103,9 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro de session inconnu ou session expirée');
         }
 
-        let avis = session.avis;
-        if (parameters.commentaires !== null) {
-            avis = avis.filter(avis => parameters.commentaires ? (avis.commentaire || avis.reponse) : !avis.commentaire);
-        }
+        let avis = parameters.commentaires === null ?
+            session.avis :
+            session.avis.filter(avis => parameters.commentaires ? (avis.commentaire || avis.reponse) : !avis.commentaire);
 
         res.json({
             avis: avis.slice(skip, skip + limit),

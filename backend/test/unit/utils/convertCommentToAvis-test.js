@@ -72,7 +72,7 @@ describe(__filename, () => {
         });
     });
 
-    it('should map avis with réponse', async () => {
+    it('should add réponse', async () => {
 
         let comment = newComment({
             reponse: {
@@ -88,7 +88,21 @@ describe(__filename, () => {
         });
     });
 
-    it('should ignore réponse not validated', async () => {
+    it('should ignore réponse (not moderated)', async () => {
+
+        let comment = newComment({
+            reponse: {
+                text: 'Voici notre réponse',
+                status: 'none',
+            },
+        });
+
+        let data = convertCommentToAvis(comment);
+
+        assert.strictEqual(data.reponse, undefined);
+    });
+
+    it('should ignore réponse (rejected)', async () => {
 
         let comment = newComment({
             reponse: {
@@ -99,10 +113,22 @@ describe(__filename, () => {
 
         let data = convertCommentToAvis(comment);
 
-        assert.deepStrictEqual(data.commentaire, {
-            titre: 'Génial',
-            texte: 'Super formation.',
+        assert.strictEqual(data.reponse, undefined);
+    });
+
+    it('should ignore réponse (avis rejected)', async () => {
+
+        let comment = newComment({
+            status: 'rejected',
+            reponse: {
+                text: 'Voici notre réponse',
+                status: 'validated',
+            },
         });
+
+        let data = convertCommentToAvis(comment);
+
+        assert.strictEqual(data.reponse, undefined);
     });
 
     it('should set undefined when commentaire is missing', async () => {
@@ -214,6 +240,21 @@ describe(__filename, () => {
 
         let comment = newComment({
             status: 'rejected',
+            comment: {
+                title: 'Génial',
+                text: 'Formation géniale.'
+            },
+        });
+
+        let data = convertCommentToAvis(comment);
+
+        assert.deepStrictEqual(data.commentaire, undefined);
+    });
+
+    it('should not return commentaire when avis has not been moderated yet', async () => {
+
+        let comment = newComment({
+            status: 'none',
             comment: {
                 title: 'Génial',
                 text: 'Formation géniale.'
