@@ -36,8 +36,7 @@ module.exports = (db, mailer, configuration, regions) => {
         let token = trainee.token;
         let utm = `utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`;
 
-        let params = {
-            hostname: helper.getHostname(),
+        return helper.templates('votre_avis', {
             trainee,
             region,
             trackingLink: helper.getTrackingLink(token),
@@ -45,14 +44,7 @@ module.exports = (db, mailer, configuration, regions) => {
             consultationLink: helper.getPublicUrl(`/mail/${token}?${utm}`),
             formLink: helper.getPublicUrl(`/questionnaire/${token}?${utm}`),
             ...options,
-        };
-
-        let [html, text] = await Promise.all([
-            helper.templateHTML('votre_avis', params),
-            helper.templateText('votre_avis', params),
-        ]);
-
-        return { html, text };
+        });
     };
 
     return {

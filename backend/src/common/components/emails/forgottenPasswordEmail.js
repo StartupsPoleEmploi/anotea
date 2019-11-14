@@ -30,26 +30,18 @@ module.exports = (db, mailer, configuration, regions) => {
         });
     };
 
-    let build = async (account, token, options = {}) => {
+    let build = (account, token, options = {}) => {
 
         let link = helper.getPublicUrl(`/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${token}`);
         let consultationLink = helper.getPublicUrl(`/mail/${token}/passwordForgotten`);
 
-        let params = {
+        return helper.templates('password_forgotten', {
             link,
-            hostname: helper.getHostname(),
             codeRegion: account.codeRegion,
             profile: account.profile,
             consultationLink,
             ...options,
-        };
-
-        let [html, text] = await Promise.all([
-            helper.templateHTML('password_forgotten', params),
-            helper.templateText('password_forgotten', params),
-        ]);
-
-        return { html, text };
+        });
     };
 
     return {

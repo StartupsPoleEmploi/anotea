@@ -6,28 +6,20 @@ module.exports = (db, mailer, configuration, regions) => {
 
     let getUnsubscribeLink = token => helper.getPublicUrl(`/mail/${token}/unsubscribe`);
 
-    let build = async (trainee, comment, options = {}) => {
+    let build = (trainee, comment, options = {}) => {
 
         let token = trainee.token;
         let utm = `utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`;
         let region = regions.findRegionByCodeRegion(trainee.codeRegion);
 
-        let params = {
-            hostname: helper.getHostname(),
+        return helper.templates('avis_injure', {
             trainee,
             unsubscribeLink: getUnsubscribeLink(token),
             consultationLink: helper.getPublicUrl(`/mail/${token}/injure?${utm}`),
             formLink: helper.getPublicUrl(`/questionnaire/${token}?${utm}`),
             email: helper.getRegionEmail(region),
             ...options,
-        };
-
-        let [html, text] = await Promise.all([
-            helper.templateHTML('avis_injure', params),
-            helper.templateText('avis_injure', params),
-        ]);
-
-        return { html, text };
+        });
     };
 
     return {

@@ -12,20 +12,14 @@ module.exports = (db, mailer, configuration, regions) => {
         let utm = `utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`;
         let region = regions.findRegionByCodeRegion(trainee.codeRegion);
 
-        let params = {
-            hostname: helper.getHostname(),
+        let [html, text] = await helper.templates('avis_alerte', {
             trainee,
             unsubscribeLink: getUnsubscribeLink(token),
             consultationLink: helper.getPublicUrl(`/mail/${token}/injure?${utm}`),
             formLink: helper.getPublicUrl(`/questionnaire/${token}?${utm}`),
             email: helper.getRegionEmail(region),
             ...options,
-        };
-
-        let [html, text] = await Promise.all([
-            helper.templateHTML('avis_alerte', params),
-            helper.templateText('avis_alerte', params),
-        ]);
+        });
 
         return { html, text };
     };

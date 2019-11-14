@@ -12,24 +12,17 @@ module.exports = (db, mailer, configuration, regions) => {
         });
     };
 
-    let build = async (organisme, readStatus, options = {}) => {
+    let build = (organisme, readStatus, options = {}) => {
         let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-        let params = {
-            hostname: helper.getHostname(),
+
+        return helper.templates('organisme_avis_non_lus', {
             consultationLink: helper.getPublicUrl(`/mail/${organisme.token}/nonLus`),
             trackingLink: helper.getTrackingLink(organisme.token),
             contact: helper.getRegionEmail(region),
             organisme: organisme,
             comment: readStatus.pickedComment ? readStatus.pickedComment.comment.text : null,
             ...options,
-        };
-
-        let [html, text] = await Promise.all([
-            helper.templateHTML('organisme_avis_non_lus', params),
-            helper.templateText('organisme_avis_non_lus', params),
-        ]);
-
-        return { html, text };
+        });
     };
 
     return {

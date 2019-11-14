@@ -26,26 +26,18 @@ module.exports = (db, mailer, configuration, regions) => {
         });
     };
 
-    let build = async (organisme, options = {}) => {
+    let build = (organisme, options = {}) => {
         let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-
         let token = organisme.token;
-        let params = {
-            hostname: helper.getHostname(),
+
+        return helper.templates('organisation_password', {
             link: helper.getPublicUrl(`/admin/activation-compte?token=${token}`),
             trackingLink: helper.getTrackingLink(token),
             consultationLink: helper.getPublicUrl(`/mail/${token}/password`),
             organisation: organisme,
             contact: helper.getRegionEmail(region),
             ...options,
-        };
-
-        let [html, text] = await Promise.all([
-            helper.templateHTML('organisation_password', params),
-            helper.templateText('organisation_password', params),
-        ]);
-
-        return { html, text };
+        });
     };
 
     return {
