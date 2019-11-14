@@ -4,6 +4,7 @@ const { ignoreFirstLine, pipeline, writeObject } = require('../../../../common/u
 const parse = require('csv-parse');
 
 let loadCertifinfos = async file => {
+    const ETAT_ERRONE = '2';
     let handleChaining = mapping => {
 
         let codesReducer = codes => {
@@ -45,6 +46,11 @@ let loadCertifinfos = async file => {
         }),
         ignoreFirstLine(),
         writeObject(data => {
+
+            if (data.cer3_etat === ETAT_ERRONE) {
+                return; //etat erroné
+            }
+
             let codenew = data.cer3_codenew;
             if (mapping[data.cer3_code]) {
                 mapping[data.cer3_code].push(codenew);

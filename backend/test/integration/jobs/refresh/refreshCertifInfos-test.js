@@ -93,6 +93,26 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         });
     });
 
+    it('should ignore certifinfos (etat erroné)', async () => {
+
+        let db = await getTestDatabase();
+        let certifinfosFile = getTestFile('certifinfos.csv');
+        await insertIntoDatabase('trainee', newTrainee({
+            _id: '1234',
+            training: {
+                certifInfos: ['27624'],
+            },
+            meta: {
+                history: [{ date: new Date(), value: 'something changed' }]
+            }
+        }));
+
+        await patchCertifInfos(db, logger, certifinfosFile);
+
+        let avis = await db.collection('trainee').findOne({ _id: '1234' });
+        assert.deepStrictEqual(avis.training.certifInfos, ['27624']);
+    });
+
     it('should update certifinfos (N to 1)', async () => {
 
         let db = await getTestDatabase();
