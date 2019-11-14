@@ -49,9 +49,6 @@ Les améliorations apportées à la réconciliation sont listées dans le [CHANG
 ## Développement
 Travis Status ![Travis Status](https://travis-ci.org/StartupsPoleEmploi/anotea.svg?branch=master)
 
-BrowserStack Status ![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=cDdFS0VEeVkwNGplNWRRZTc3ajFXakk3Z1FYS1VXOVdDbHU1K0F0TDlYTT0tLWJJU1RoSk9YZzliWURyODU5a0xRZEE9PQ==--891e4fe6e282b4d38005ce6116797dbf12e80496)
-
-
 Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.js 10 soit installé. 
 
 Anotea est composé de quatre projets : 
@@ -69,50 +66,21 @@ npm install
 npm start
 ```
 
-Pour plus d'options démarrage, vous pouvez consulter la [Boite à outils](#Boite à outils)
+Pour plus d'options démarrage, vous pouvez consulter la [Boite à outils](#Boite-à-outils)
 
-#### Générer un jeu de données
-
-Vous pouvez créer un jeu de données en local au moyen de la commande suivante:
+Vous pouvez ensuite créer un jeu de données en local au moyen de la commande suivante:
 
 ```
 cd backend
 node src/jobs/data/dataset --drop
 ```
 
-Ce script va générer des comptes et des avis.
-Il est ensuite possible de se connecter à l'url `http://localhost:3000` avec le login `moderateur@pole-emploi.fr` et le mot de passe  `password`
-
-### Démarrer l'application via Docker
-
-Il est possible de démarrer Anotéa au sein de containers Docker
-Cette option permet d'avoir une environnement quasiment identique à celui de la production (reverse proxy,...) :
-
-```
-docker-compose up --build
-```
-
-Cette commande va construire et démarrer plusieurs containers :
-
-- Un container `nginx`, un reverse proxy qui est le point d'entrée de l'application pour tous les appels sur http
-- Un container `backend` contenant l'API et les batchs
-- Un container `mongodb`  
-- Des container servir les ressources web statiques (`widget`, `backoffice`, `questionnaire`,...)
-
-
-L'application est ensuite accessible à l'url `http://localhost`
-
-Pour executer un script dans un conteneur docker, il faut lancer la commande :
-
-```sh
-cd backend
-docker build -t anotea_script .
-docker run anotea_script bash -c "node src/jobs/<nom du script>"
-```
+Ce script va générer un ensemble de données permettant à l'application de fonctionner.
+Le sortie console du script vous donnera les instructions pour vous connecter à l'application.
 
 ### Boite à outils
 
-#### Mode développement
+#### Mode développement avancé
 
 Afin d'éviter de devoir lancer tous les projets à la main, il est possible de tous les démarrer en une seule commande :
 
@@ -128,7 +96,7 @@ Pour stopper les projets :
 pm2 delete dev.yml
 ```
 
-#### Tests d'intégration
+#### Tests
 
 Par défaut, les tests d'intégration utilisent la base MongoDB démarrée sur la port 27017.
 Afin que les tests s'éxecutent rapidement, vous pouvez démarrer un MongoDB in-memory :
@@ -143,9 +111,52 @@ Vous pouvez ensuite lancer les tests avec la commande suivante :
 ANOTEA_MONGODB_URI=mongodb://localhost:27018/anotea?w=1 npm run test
 ```
 
-#### Adapter la configuration docker en local
+#### Envoyer des emails en local
 
-Il est possible de fournir une configuration spécifique dans le fichier `docker-compose.local.yml` via le mécanisme de surcharge de docker-compose:
+Certains fonctionnalités envoient des emails et ont donc besoin d'un serveur SMTP.
+Vous pouvez démarrer en local un serveur MailHog :
+
+```
+cd backend
+npm run smtp:start
+```
+
+Si vous avez démarré l'application via Docker un container MailHog est automatiquement lancé. 
+
+### Démarrer l'application via Docker
+
+Il est possible de démarrer Anotéa au sein de containers Docker.
+
+Cette option permet d'avoir une environnement quasiment identique à celui de la production (reverse proxy,...).
+
+Nous l'utilisons la plupart du temps pour reproduire une anomalie liée au déploiement.
+
+```
+docker-compose up --build
+```
+
+Cette commande va construire et démarrer plusieurs containers :
+
+- Un container `nginx`, reverse proxy qui est le point d'entrée de l'application pour tous les appels http
+- Un container `backend` contenant le serveur node.js
+- Un container `mongodb`  
+- Des containers pour servir les ressources web statiques (`widget`, `backoffice`, `questionnaire`,...)
+- ...
+
+![Anotea Docker_Diagram](./misc/doc/diagram/anotea-docker-diagram.svg)
+
+L'application est ensuite accessible à l'url `http://localhost`
+
+Pour executer un script dans un conteneur Docker, il faut lancer la commande :
+
+```sh
+docker build -t anotea_script .
+docker run anotea_script bash -c "node src/jobs/<nom du script>"
+```
+
+#### Adapter la configuration Docker en local
+
+Il est possible de fournir une configuration spécifique dans le fichier `docker-compose.local.yml` :
 
 ```sh
 docker-compose -f docker-compose.yml -f docker-compose.local.yml up
@@ -153,11 +164,13 @@ docker-compose -f docker-compose.yml -f docker-compose.local.yml up
 
 Les fichiers seront fusionnés avec la configuration par défaut.
 
-Pour plus d'informations voir [https://docs.docker.com/compose/extends/](https://docs.docker.com/compose/extends/) 
-ainsi que le fichier `docker-compose.override.yml`.
+Vous pouvez prendre exemple sur les fichiers `docker-compose.override.yml` et `docker-compose.test.yml`
+
+Pour plus d'informations sur le mécanisme de surcharge de docker-compose voir [https://docs.docker.com/compose/extends/](https://docs.docker.com/compose/extends/) 
+
 
 Par exemple il est possible d'ajouter d'une variable d'environnement dans le backend
 
 <p align="center">
-<img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi-530.png" width="20%" height="20%" />
+<img src="https://anotea.pole-emploi.fr/static/images/logo-pole-emploi.svg" width="20%" height="20%" />
 </p>
