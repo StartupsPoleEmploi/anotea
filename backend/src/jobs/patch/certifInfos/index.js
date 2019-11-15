@@ -3,7 +3,7 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const patchCertifinfos = require('./tasks/refreshCertifInfos');
+const refreshCertifInfos = require('./tasks/refreshCertifInfos');
 
 cli
 .option('--file [file]', 'The CSV file with new certifInfos')
@@ -19,7 +19,7 @@ execute(async ({ logger, db, exit }) => {
     }
 
     logger.info(`Refreshing certifInfos...`);
-    stats.certifInfos = await patchCertifinfos(db, logger, file);
+    stats.certifInfos = await refreshCertifInfos(db, logger, file);
 
     return stats;
 

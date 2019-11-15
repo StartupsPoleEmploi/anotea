@@ -1,29 +1,30 @@
 const fs = require('fs');
 const _ = require('lodash');
 const { ignoreFirstLine, pipeline, writeObject } = require('../../../../common/utils/stream-utils');
+const { getNbModifiedDocuments } = require('../../../job-utils');
 const parse = require('csv-parse');
 
 let loadCertifinfos = async file => {
     const ETAT_ERRONE = '2';
-    let handleChaining = mapping => {
 
+    let handleChaining = mapping => {
         let codesReducer = codes => {
             return codes.reduce((acc, code) => {
                 let newCodes = mapping[code];
                 if (newCodes) {
-                    return [...acc, ...codesReducer(newCodes)];
+                    if (newCodes.filter(c => mapping[c]).length > 0) {
+                        return [...acc, ...codesReducer(newCodes)];
+                    }
+                    return [...acc, ...newCodes];
                 }
                 return [...acc, code];
             }, []);
         };
 
         return Object.keys(mapping).reduce((acc, code) => {
-            let newCodes = mapping[code];
-
-            let hasChain = newCodes.filter(c => mapping[c]).length > 0;
             return {
                 ...acc,
-                [code]: hasChain ? codesReducer(newCodes) : mapping[code],
+                [code]: codesReducer(mapping[code]),
             };
         }, {});
     };
@@ -110,7 +111,7 @@ module.exports = async (db, logger, file) => {
                         }),
                         { upsert: false });
 
-                    if (results.result.nModified === 1) {
+                    if (getNbModifiedDocuments(results) > 0) {
                         stats.updated++;
                     }
                 }
