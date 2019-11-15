@@ -22,5 +22,11 @@
     display: inline;
     margin-right: 0px;
     vertical-align: middle;
-    margin-left: 30%;
+}
+
+.footer .logo-pe {
+    margin: 15px  50px 15px 150px;
+    display: inline-block;
+    height: 75px;
+    vertical-align: middle;
 }

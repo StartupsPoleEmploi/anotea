@@ -24,16 +24,20 @@
     outline: none;
 }
 
-.logo img {
-    margin: 15px 200px;
+.header .logo-pe {
+    margin: 15px 50px 15px 200px;
+
+}
+
+.header .logo-pe, .logo img  {
+    display: inline-block;
     height: 75px;
     vertical-align: middle;
-    display: inline-block;
 }
 
 .menu {
     margin-top: 15px;
-    width: 300px;
+    width: 175px;
 }
 
 .menu .content {

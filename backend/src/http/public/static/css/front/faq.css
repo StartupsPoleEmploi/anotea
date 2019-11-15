@@ -457,15 +457,6 @@ div.more {
     clear: both;
 }
 
-.tests-utilisateurs p.contact-block {
-    margin-top: 80px;
-    text-align: center;
-}
-
-.tests-utilisateurs p.contact-block .contact {
-    padding: 15px;
-}
-
 .tests-utilisateurs a.criteres {
     margin-top: 10px;
     display: block;
@@ -481,4 +472,17 @@ div.more {
 
 .tests-utilisateurs div.criteres li {
     list-style: disc;
+}
+
+.logo-esd, .logo-github {
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.logo-esd {
+    width: 200px;
+}
+
+.logo-github {
+    width: 100px;
 }

@@ -73,21 +73,13 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
     });
 
     router.get('/services/stagiaires', (req, res) => {
-        res.redirect('/services/stagiaires/ancien');
-    });
-
-    router.get('/services/stagiaires/:page', (req, res) => {
         const connectionInfos = peconnect.initConnection();
         req.session.pe_connect = {
             state: connectionInfos.state,
             nonce: connectionInfos.nonce
         };
 
-        if (['ancien', 'nouveau'].includes(req.params.page)) {
-            res.render('front/faq_stagiaires', { page: req.params.page, connectionLink: connectionInfos.link });
-        } else {
-            res.status(404).render('errors/404');
-        }
+        res.render('front/faq_stagiaires', { connectionLink: connectionInfos.link });
     });
 
     router.get('/services/financeurs', (req, res) => {

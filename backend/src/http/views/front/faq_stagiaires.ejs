@@ -39,14 +39,6 @@
             <div class="content">
                 <h2>Foire aux questions</h2>
 
-                <ul class="nav">
-                    <li><a <% if(page === 'ancien'){ %>class="current" <% } %> href="/services/stagiaires/ancien#faq">Ancien
-                            stagiaire</a></li>
-                    <li><a <% if(page === 'nouveau'){ %>class="current" <% } %>
-                            href="/services/stagiaires/nouveau#faq">Nouveau stagiaire</a></li>
-                </ul>
-
-                <% if(page === 'ancien'){ %>
                 <div class="faqContent">
                     <div class="question closed">
                         <a href="#">Où est publié mon avis ?
@@ -73,7 +65,7 @@
                             <p>Les notes ne peuvent être modifiées par le modérateur. Pour les avis, seul l'ajout
                                 d’espaces pour faciliter la lecture sont autorisés.</p>
                             <p>Vous trouverez toutes les informations sur les conditions de publication des avis sur ce
-                                lien : <a href="http://anotea.pole-emploi.fr/cgu">CGU</a></p>
+                                lien : <a href="/cgu">CGU</a></p>
 
                         </div>
                     </div>
@@ -124,11 +116,6 @@
                                 l’appli mobile Ma Formation de Pôle Emploi.
                         </div>
                     </div>
-                </div>
-                <% } %>
-
-                <% if(page === 'nouveau'){ %>
-                <div class="faqContent">
                     <div class="question closed">
                         <a href="#">Anotéa est-il disponible pour toutes les formations en France ?
                             <img class="icon-closed" src="/static/images/home/chevron-up.svg" />
@@ -155,7 +142,6 @@
                         </div>
                     </div>
                 </div>
-                <% } %>
             </div>
         </div>
     </div>
