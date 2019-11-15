@@ -7,16 +7,9 @@ const sentry = require('./common/components/sentry');
 const workflow = require('./common/components/workflow');
 const database = require('./common/components/database');
 const communes = require('./common/components/communes');
-const createMailer = require('./smtp/mailer');
-const organismeNotificationEmail = require('./common/components/emails/organismeNotificationEmail');
-const forgottenPasswordEmail = require('./common/components/emails/forgottenPasswordEmail');
-const organismeAccountActivationEmail = require('./common/components/emails/organismeAccountActivationEmail');
-const votreAvisEmail = require('./common/components/emails/votreAvisEmail');
-const avisReponseRejectedEmail = require('./common/components/emails/avisReponseRejectedEmail');
-const avisReportedToValidatedEmail = require('./common/components/emails/avisReportedToValidatedEmail');
-const avisReportedToRejectedEmail = require('./common/components/emails/avisReportedToRejectedEmail');
-const avisInjureEmail = require('./common/components/emails/avisInjureEmail');
-const avisAlerteEmail = require('./common/components/emails/avisAlerteEmail');
+const createEmails = require('./common/components/emails');
+const createTemplates = require('./common/components/emails/templates/templates');
+const createMailer = require('./common/components/mailer');
 
 module.exports = async (options = {}) => {
 
@@ -24,18 +17,9 @@ module.exports = async (options = {}) => {
     let logger = options.logger || createLogger('backend', configuration);
     let { client, db } = await database(logger, configuration);
     let regions = getRegions();
-    let mailer = options.mailer || createMailer(db, logger, configuration, regions);
-    let emails = {
-        forgottenPasswordEmail: forgottenPasswordEmail(db, mailer, configuration, regions),
-        organismeAccountActivationEmail: organismeAccountActivationEmail(db, mailer, configuration, regions),
-        organismeNotificationEmail: organismeNotificationEmail(db, mailer, configuration, regions),
-        votreAvisEmail: votreAvisEmail(db, mailer, configuration, regions),
-        avisReponseRejectedEmail: avisReponseRejectedEmail(db, mailer, configuration, regions),
-        avisReportedToValidatedEmail: avisReportedToValidatedEmail(db, mailer, configuration, regions),
-        avisReportedToRejectedEmail: avisReportedToRejectedEmail(db, mailer, configuration, regions),
-        avisInjureEmail: avisInjureEmail(db, mailer, configuration, regions),
-        avisAlerteEmail: avisAlerteEmail(db, mailer, configuration, regions),
-    };
+    let mailer = options.mailer || createMailer(db, configuration);
+    let templates = createTemplates(configuration);
+    let emails = createEmails(db, regions, mailer, templates);
 
     return Object.assign({}, {
         configuration,
@@ -43,12 +27,13 @@ module.exports = async (options = {}) => {
         db,
         client,
         mailer,
+        regions,
+        emails,
+        templates,
         sentry: sentry(logger, configuration),
         auth: auth(configuration),
         passwords: passwords(configuration),
-        regions: regions,
         workflow: workflow(db, logger, emails),
         communes: communes(db),
-        emails,
     }, options || {});
 };

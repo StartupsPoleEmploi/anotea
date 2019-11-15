@@ -1,26 +1,20 @@
 const moment = require('moment');
-let { delay } = require('../../../job-utils');
+let { delay } = require('../../../../job-utils');
+const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
 
-class NotificationMailer {
+module.exports = async (db, logger, configuration, createEmail, options = {}) => {
 
-    constructor(db, logger, configuration, organismeNotificationEmail) {
-        this.db = db;
-        this.logger = logger;
-        this.configuration = configuration;
-        this.organismeNotificationEmail = organismeNotificationEmail;
-    }
+    let findOrganismes = () => {
+        logger.info('Searching organismes with at least 5 non read comments...');
+        let delay = configuration.smtp.organisme.notificationsRelaunchDelay;
 
-    _findOrganismes(codeRegions) {
-        this.logger.info('Searching organismes with at least 5 non read comments...');
-        let delay = this.configuration.smtp.organisme.notificationsRelaunchDelay;
-
-        return this.db.collection('accounts')
+        return db.collection('accounts')
         .aggregate([
             {
                 $match: {
                     'profile': 'organisme',
                     'passwordHash': { $ne: null },
-                    ...(codeRegions ? { 'codeRegion': { $in: codeRegions } } : {}),
+                    ...(options.codeRegions ? { 'codeRegion': { $in: options.codeRegions } } : {}),
                     '$or': [
                         { 'newCommentsNotificationEmailSentDate': { $lte: moment().subtract(delay, 'days').toDate() } },
                         { 'newCommentsNotificationEmailSentDate': null },
@@ -74,40 +68,39 @@ class NotificationMailer {
                 }
             }
         ]);
+    };
+
+    let stats = {
+        total: 0,
+        sent: 0,
+        error: 0,
+    };
+
+    let cursor = await findOrganismes();
+    if (options.limit) {
+        cursor.limit(options.limit);
     }
+    cursor.batchSize(10);
 
-    async sendEmails(options = {}) {
-        let stats = {
-            total: 0,
-            sent: 0,
-            error: 0,
-        };
-        let cursor = await this._findOrganismes(options.codeRegions);
-        if (options.limit) {
-            cursor.limit(options.limit);
-        }
-        cursor.batchSize(10);
+    while (await cursor.hasNext()) {
+        let { organisme, readStatus } = await cursor.next();
+        stats.total++;
+        try {
+            let email = getOrganismeEmail(organisme);
 
-        while (await cursor.hasNext()) {
-            let { organisme, readStatus } = await cursor.next();
-            stats.total++;
-            try {
-                this.logger.info(`Sending email to ${organisme.courriel}`);
+            logger.info(`Sending email to ${email}`);
+            await createEmail(organisme, readStatus).send(email);
 
-                await this.organismeNotificationEmail.send(organisme, readStatus);
-
-                if (options.delay) {
-                    await delay(options.delay);
-                }
-
-                stats.sent++;
-            } catch (e) {
-                this.logger.error('Unable to send email: ', e);
-                stats.error++;
+            if (options.delay) {
+                await delay(options.delay);
             }
-        }
-        return stats;
-    }
-}
 
-module.exports = NotificationMailer;
+            stats.sent++;
+        } catch (e) {
+            logger.error('Unable to send email: ', e);
+            stats.error++;
+        }
+    }
+    return stats;
+}
+;

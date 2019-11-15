@@ -3,7 +3,7 @@ const path = require('path');
 const { randomize } = require('./data/dataset');
 const config = require('config');
 const logger = require('./components/fake-logger');
-const fakeMailer = require('./components/fake-mailer');
+const fakeMailer = require('./components/fake-new-mailer');
 const fakePasswords = require('./components/fake-passwords');
 const components = require('../../src/components');
 

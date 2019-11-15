@@ -1,9 +1,7 @@
 const fs = require('fs');
 const md5 = require('md5');
-const moment = require('moment');
 const parse = require('csv-parse');
 const readline = require('readline');
-const path = require('path');
 const colors = require('colors/safe');
 const _ = require('lodash');
 const validateTrainee = require('./utils/validateTrainee');
@@ -56,7 +54,7 @@ const isLineValid = (file, handler, rawLine) => {
     });
 };
 
-module.exports = async (db, logger, file, handler, mailer) => {
+module.exports = async (db, logger, file, handler) => {
 
     return new Promise((resolve, reject) => {
         let error = null;
@@ -73,14 +71,7 @@ module.exports = async (db, logger, file, handler, mailer) => {
                 logger.error(`File is not valid due to '${type.name}'.\n${line}`);
             }
 
-            return mailer.sendMalformedImport({
-                filename: path.basename(file),
-                date: moment().format('DD/MM/YYYY'),
-                reason: type.message,
-                source: handler.name
-            })
-            .then(() => resolve(error))
-            .catch(err => reject(err));
+            return resolve(error);
         };
 
         let rl = readline.createInterface({ input: fs.createReadStream(file) });

@@ -207,15 +207,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         let { mailer } = await getComponents();
         return new Promise((resolve, reject) => {
+            let emailsSent = mailer.getCalls();
             waitUntil()
             .interval(100)
             .times(10)
-            .condition(() => mailer.getCalls().length > 0)
+            .condition(() => emailsSent.length > 0)
             .done(result => {
                 if (!result) {
                     reject(new Error('The condition was never met.'));
                 }
-                assert.strictEqual(mailer.getLastEmailAddress(), 'contact@poleemploi-formation.fr');
+                assert.strictEqual(emailsSent[0].email, 'contact@poleemploi-formation.fr');
                 resolve();
             });
         });
@@ -419,11 +420,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         const id = new ObjectID();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment({ _id: id })),
+            insertIntoDatabase('trainee', newTrainee({ token: '1234' })),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '1234' })),
         ]);
 
         let response = await request(app)
-        .delete(`/api/backoffice/avis/${id}?resendEmail=true`)
+        .delete(`/api/backoffice/avis/${id}?sendEmail=true`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -441,8 +443,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 if (!result) {
                     reject(new Error('The condition was never met.'));
                 }
-                let params = mailer.getCalls()[mailer.getCalls().length - 1];
-                assert.deepStrictEqual(params[0], { to: 'henri@email.fr' });
+                let emailSent = mailer.getCalls()[mailer.getCalls().length - 1];
+                assert.strictEqual(emailSent.email, 'henri@email.fr');
                 resolve();
             });
         });

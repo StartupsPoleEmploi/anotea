@@ -1,53 +1,14 @@
-const emailHelper = require('../../../smtp/emailHelper');
-const uuid = require('node-uuid');
-const getOrganismeEmail = require('../../utils/getOrganismeEmail');
+const uuid = require('uuid');
 
-module.exports = (db, mailer, configuration, regions) => {
+module.exports = (db, regions, mailer, templates) => {
 
-    let helper = emailHelper(configuration);
-    let _onSuccess = async account => {
-        await db.collection('accounts').update({ _id: account._id }, {
-            $set: { mailSentDate: new Date() },
-            $unset: {
-                mailError: '',
-                mailErrorDetail: ''
-            }
-        });
-        await db.collection('events').insertOne({
-            id: account._id,
-            profile: account.profile,
-            date: new Date(),
-            type: 'askNewPassword'
-        });
-    };
+    return account => {
 
-    let _onError = (err, account) => {
-        return db.collection('accounts').update({ _id: account._id }, {
-            $set: {
-                mailError: 'smtpError',
-                mailErrorDetail: err
-            }
-        });
-    };
+        let region = regions.findRegionByCodeRegion(account.codeRegion);
+        let regionalMailer = mailer.createRegionalMailer(region);
 
-    let build = (account, token, options = {}) => {
-
-        let link = helper.getPublicUrl(`/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${token}`);
-        return helper.templates('password_forgotten', {
-            link,
-            codeRegion: account.codeRegion,
-            profile: account.profile,
-            consultationLink: helper.getPublicUrl(`/mail/${token}/passwordForgotten`),
-            ...options,
-        });
-    };
-
-    return {
-        build,
-        send: async account => {
-            let email = account.profile === 'organisme' ? getOrganismeEmail(account) : account.courriel;
+        let generateForgottenPasswordToken = async () => {
             let passwordToken = uuid.v4();
-            let region = regions.findRegionByCodeRegion(account.codeRegion);
 
             await db.collection('forgottenPasswordTokens').removeOne({
                 id: account._id,
@@ -61,18 +22,65 @@ module.exports = (db, mailer, configuration, regions) => {
                 token: passwordToken,
             });
 
+            return passwordToken;
+        };
 
-            let content = await build(account, passwordToken, { webView: false });
+        let render = (passwordToken, options = {}) => {
+            let link = templates.getPublicUrl(`/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`);
 
-            return mailer.sendNewEmail(email, region, {
-                subject: 'Votre compte Anotéa : Demande de renouvellement de mot de passe',
-                ...content,
-            })
-            .then(() => _onSuccess(account))
-            .catch(async err => {
-                await _onError(err, account);
-                throw err;
+            return templates.render('forgotten_password', {
+                link,
+                codeRegion: account.codeRegion,
+                profile: account.profile,
+                consultationLink: templates.getPublicUrl(`/mail/${passwordToken}/passwordForgotten`),
+                ...options,
             });
-        },
+        };
+
+        let onSuccess = async () => {
+            await db.collection('accounts').update({ _id: account._id }, {
+                $set: { mailSentDate: new Date() },
+                $unset: {
+                    mailError: '',
+                    mailErrorDetail: ''
+                }
+            });
+            await db.collection('events').insertOne({
+                id: account._id,
+                profile: account.profile,
+                date: new Date(),
+                type: 'askNewPassword'
+            });
+        };
+
+        let onError = err => {
+            return db.collection('accounts').update({ _id: account._id }, {
+                $set: {
+                    mailError: 'smtpError',
+                    mailErrorDetail: err
+                }
+            });
+        };
+
+        return {
+            render,
+            send: emailAddress => {
+                return generateForgottenPasswordToken()
+                .then(async passwordToken => {
+
+                    let body = await render(passwordToken, { webView: false });
+
+                    return regionalMailer.sendEmail(
+                        emailAddress,
+                        {
+                            subject: 'Votre compte Anotéa : Demande de renouvellement de mot de passe',
+                            body,
+                        },
+                    );
+                })
+                .then(onSuccess)
+                .catch(onError);
+            },
+        };
     };
 };

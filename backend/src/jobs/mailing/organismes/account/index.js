@@ -2,7 +2,7 @@
 'use strict';
 
 const cli = require('commander');
-const AccountMailer = require('./AccountMailer');
+const sendAccountActivationEmails = require('./tasks/sendAccountActivationEmails');
 const { capitalizeFirstLetter, execute } = require('../../../job-utils');
 
 cli.description('Send new account emails')
@@ -16,42 +16,38 @@ cli.description('Send new account emails')
 
 execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
-    let type = cli.type || 'Send';
-    let accountMailer = new AccountMailer(db, logger, emails.organismeAccountActivationEmail);
+    let { createAccountActivationEmail } = emails;
     let options = {
         limit: cli.limit,
         delay: cli.delay,
+        siret: cli.siret,
     };
 
     logger.info('Sending emails to new organismes...');
 
-    if (cli.siret) {
-        return accountMailer.sendEmailBySiret(cli.siret, options);
-    } else {
-        let ActionClass = require(`./actions/${type}Action`);
-        let action = new ActionClass(configuration, {
-            codeRegions: cli.region ? [cli.region] :
-                regions.findActiveRegions('mailing.organismes.accounts').map(region => region.codeRegion),
-        });
+    let ActionClass = require(`./tasks/actions`);
+    let action = new ActionClass(configuration, {
+        codeRegions: cli.region ? [cli.region] :
+            regions.findActiveRegions('mailing.organismes.accounts').map(region => region.codeRegion),
+    });
 
-        try {
-            let stats = await accountMailer.sendEmails(action, options);
+    try {
+        let stats = await sendAccountActivationEmails(db, logger, createAccountActivationEmail, action, options);
 
-            if (stats.total > 0) {
-                sendSlackNotification({
-                    text: `[ORGANISME] Des emails de création de compte ont été envoyés à des organismes :  ` +
-                        `${stats.sent} envoyés / ${stats.error} erreurs`,
-                });
-            }
-
-            return stats;
-        } catch (stats) {
+        if (stats.total > 0) {
             sendSlackNotification({
-                text: `[ORGANISME] Une erreur est survenue lors de l'envoi des emails de création de compte aux organismes : ` +
+                text: `[ORGANISME] Des emails de création de compte ont été envoyés à des organismes :  ` +
                     `${stats.sent} envoyés / ${stats.error} erreurs`,
-            })
-            ;
-            throw stats;
+            });
         }
+
+        return stats;
+    } catch (stats) {
+        sendSlackNotification({
+            text: `[ORGANISME] Une erreur est survenue lors de l'envoi des emails de création de compte aux organismes : ` +
+                `${stats.sent} envoyés / ${stats.error} erreurs`,
+        })
+        ;
+        throw stats;
     }
 }, { slack: cli.slack });

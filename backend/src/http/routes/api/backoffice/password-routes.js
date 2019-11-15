@@ -1,6 +1,7 @@
 const express = require('express');
 const Joi = require('joi');
 const Boom = require('boom');
+const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 const { tryAndCatch } = require('../../routes-utils');
 
 module.exports = ({ db, emails, passwords }) => {
@@ -14,13 +15,17 @@ module.exports = ({ db, emails, passwords }) => {
             identifiant: Joi.string().required(),
         }, { abortEarly: false });
 
-        let [organisme, account] = await Promise.all([
-            db.collection('accounts').findOne({ 'meta.siretAsString': identifiant }),
-            db.collection('accounts').findOne({ courriel: identifiant }),
-        ]);
+        let account = await db.collection('accounts').findOne({
+            $or: [
+                { 'meta.siretAsString': identifiant },
+                { 'courriel': identifiant },
+            ]
+        });
 
-        if (organisme || account) {
-            await emails.forgottenPasswordEmail.send(organisme || account);
+        if (account) {
+            let email = account.profile === 'organisme' ? getOrganismeEmail(account) : account.courriel;
+            await emails.createForgottenPasswordEmail(account).send(email);
+
             return res.json({ 'message': 'mail sent' });
         }
 

@@ -1,13 +1,11 @@
 const Joi = require('joi');
 const express = require('express');
-const Boom = require('boom');
-const ObjectID = require('mongodb').ObjectID;
 const getAvisCSV = require('./utils/getAvisCSV');
 const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 const { objectId } = require('../../validators-utils');
 const getProfile = require('./profiles/getProfile');
 
-module.exports = ({ db, middlewares, configuration, logger, workflow, emails, regions }) => {
+module.exports = ({ db, middlewares, configuration, logger, workflow, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -105,7 +103,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, emails, re
             qualification: Joi.string().required()
         }, { abortEarly: false });
 
-        let updated = await workflow.reject(id, qualification, { profile });
+        let updated = await workflow.reject(id, qualification, { profile, sendEmail: true });
 
         return res.json(updated);
     }));
@@ -113,19 +111,12 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, emails, re
     router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
-        let { id, resendEmail } = await Joi.validate(req.params, {
+        let { id, sendEmail } = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: objectId().required(),
-            resendEmail: Joi.boolean().default(false),
+            sendEmail: Joi.boolean().default(false),
         }, { abortEarly: false });
 
-        await workflow.delete(id, { profile, resendEmail });
-
-        if (resendEmail) {
-            //TODO move this into workflow
-            let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
-            let trainee = await db.collection('trainee').findOne({ token: comment.token });
-            await mailing.sendVotreAvisEmail(trainee);
-        }
+        await workflow.delete(id, { profile, sendEmail });
 
         return res.json({ 'message': 'avis deleted' });
     }));
@@ -136,7 +127,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, emails, re
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { qualification } = await Joi.validate(req.body, { qualification: Joi.string().required() }, { abortEarly: false });
 
-        let updated = await workflow.publish(id, qualification, { profile });
+        let updated = await workflow.publish(id, qualification, { profile, sendEmail: true });
 
         return res.json(updated);
     }));
@@ -169,7 +160,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, emails, re
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
-        let avis = await workflow.rejectReponse(id, { profile });
+        let avis = await workflow.rejectReponse(id, { profile, sendEmail: true });
 
         return res.json(avis);
 

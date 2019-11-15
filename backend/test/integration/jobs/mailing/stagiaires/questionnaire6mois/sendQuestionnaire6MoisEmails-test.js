@@ -2,14 +2,23 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newTrainee, randomize } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
-const fakeMailer = require('../../../../../helpers/components/fake-mailer');
-const Questionnaire6MoisMailer = require('../../../../../../src/jobs/mailing/stagiaires/questionnaire6mois/tasks/Questionnaire6MoisMailer');
+const fakeMailer = require('../../../../../helpers/components/fake-new-mailer');
+const questionnaire6MoisEmail = require('../../../../../../src/common/components/emails/questionnaire6MoisEmail');
+const sendQuestionnaire6MoisEmails = require('../../../../../../src/jobs/mailing/stagiaires/questionnaire6mois/tasks/sendQuestionnaire6MoisEmails');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
+
+    let fakeEmailCreator = async (mailerOptions = {}) => {
+        let db = await getTestDatabase();
+        let { regions, templates } = await getComponents();
+
+        let mailer = fakeMailer(mailerOptions);
+        return questionnaire6MoisEmail(db, regions, mailer, templates);
+    };
 
     it('should send email to stagiaire', async () => {
 
-        let mailer = fakeMailer();
+        let emailsSent = [];
         let db = await getTestDatabase();
         let email = `${randomize('name')}@email.fr`;
         await Promise.all([
@@ -26,10 +35,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let questionnaire6MoisMailer = new Questionnaire6MoisMailer(db, logger, mailer);
-        await questionnaire6MoisMailer.sendEmails();
+        await sendQuestionnaire6MoisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }));
 
-        assert.strictEqual(mailer.getLastEmailAddress(), email);
+        assert.strictEqual(emailsSent[0].email, email);
         let trainee = await db.collection('trainee').findOne({ 'trainee.email': email });
         let status = trainee.mailing.questionnaire6Mois;
         assert.ok(status.mailSent);
@@ -41,7 +49,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     it('should not resend email to stagiaire', async () => {
 
-        let mailer = fakeMailer();
+        let emailsSent = [];
         let db = await getTestDatabase();
         let email = `${randomize('name')}@email.fr`;
         await Promise.all([
@@ -60,10 +68,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let questionnaire6MoisMailer = new Questionnaire6MoisMailer(db, logger, mailer);
-        await questionnaire6MoisMailer.sendEmails();
+        await sendQuestionnaire6MoisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }));
 
-        let emailsSent = mailer.getCalls();
         assert.strictEqual(emailsSent.length, 0);
     });
 
@@ -80,10 +86,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })),
         ]);
 
-        let questionnaire6MoisMailer = new Questionnaire6MoisMailer(db, logger, fakeMailer({ fail: true }));
-
         try {
-            await questionnaire6MoisMailer.sendEmails();
+            await sendQuestionnaire6MoisEmails(db, logger, await fakeEmailCreator({ fail: true }));
             assert.fail();
         } catch (e) {
             let trainee = await db.collection('trainee').findOne({ 'trainee.email': email });
@@ -93,6 +97,5 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             assert.deepStrictEqual(status.mailError, 'smtpError');
             assert.deepStrictEqual(status.mailErrorDetail, 'Unable to send email');
         }
-
     });
 }));

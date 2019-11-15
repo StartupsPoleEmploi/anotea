@@ -1,7 +1,6 @@
 const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const logger = require('../../../../helpers/components/fake-logger');
-const mailer = require('../../../../helpers/components/fake-mailer');
 const validateCsvFile = require('../../../../../src/jobs/import/stagiaires/tasks/validateCsvFile');
 const poleEmploiCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/poleEmploiCSVHandler');
 const ileDeFranceCSVHandler = require('../../../../../src/jobs/import/stagiaires/tasks/handlers/ileDeFranceCSVHandler');
@@ -14,7 +13,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile 
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
 
-        let errors = await validateCsvFile(db, logger, getTestFile('stagiaires-pe.csv'), handler, mailer());
+        let errors = await validateCsvFile(db, logger, getTestFile('stagiaires-pe.csv'), handler);
 
         assert.ok(!errors);
     });
@@ -25,7 +24,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile 
         let { regions } = await getComponents();
         let handler = ileDeFranceCSVHandler(db, regions);
 
-        let errors = await validateCsvFile(db, logger, getTestFile('stagiaires-idf.csv'), handler, mailer());
+        let errors = await validateCsvFile(db, logger, getTestFile('stagiaires-idf.csv'), handler);
 
         assert.ok(!errors);
     });
@@ -37,7 +36,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile 
         let csvFile = getTestFile('stagiaires-pe-invalid-header.csv');
         let handler = poleEmploiCSVHandler(db, regions);
 
-        let errors = await validateCsvFile(db, logger, csvFile, handler, mailer());
+        let errors = await validateCsvFile(db, logger, csvFile, handler);
 
         assert.deepStrictEqual(errors.type, {
             name: 'BAD_HEADER',
@@ -53,7 +52,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile 
         let csvFile = getTestFile('stagiaires-pe-invalid-line.csv');
         let handler = poleEmploiCSVHandler(db, regions);
 
-        let errors = await validateCsvFile(db, logger, csvFile, handler, mailer());
+        let errors = await validateCsvFile(db, logger, csvFile, handler);
 
         assert.deepStrictEqual(errors.type, {
             name: 'BAD_DATA',
@@ -69,7 +68,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile 
         let csvFile = getTestFile('stagiaires-pe-invalid-duplicated.csv');
         let handler = poleEmploiCSVHandler(db, regions);
 
-        let errors = await validateCsvFile(db, logger, csvFile, handler, mailer());
+        let errors = await validateCsvFile(db, logger, csvFile, handler);
 
         assert.deepStrictEqual(errors.type, {
             name: 'DUPLICATED',

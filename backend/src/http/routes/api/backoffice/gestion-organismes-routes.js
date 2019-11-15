@@ -167,14 +167,16 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
     router.post('/backoffice/moderateur/organismes/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
         let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
-        let { forgottenPasswordEmail, organismeAccountActivationEmail } = emails;
+        let { createForgottenPasswordEmail, createAccountActivationEmail } = emails;
 
         let organisme = await db.collection('accounts').findOne({ _id: id, profile: 'organisme' });
         if (organisme) {
+            let email = getOrganismeEmail(organisme);
+
             if (organisme.passwordHash) {
-                await forgottenPasswordEmail.send(organisme);
+                await createForgottenPasswordEmail(organisme).send(email);
             } else {
-                await organismeAccountActivationEmail.send(organisme);
+                await createAccountActivationEmail(organisme).send(email);
             }
 
             return res.json({ 'status': 'OK' });

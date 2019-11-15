@@ -7,6 +7,7 @@ const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = requir
 module.exports = {
     withServer: callback => {
         return withMongoDB(testContext => {
+
             return callback(Object.assign({}, testContext, {
                 startServer: async (custom = {}) => {
                     let components = await testContext.getComponents();

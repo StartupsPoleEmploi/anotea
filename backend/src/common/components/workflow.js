@@ -1,4 +1,5 @@
 const ObjectID = require('mongodb').ObjectID;
+const getOrganismeEmail = require('../utils/getOrganismeEmail');
 const { IdNotFoundError, ForbiddenError } = require('./../errors');
 
 module.exports = (db, logger, emails) => {
@@ -50,12 +51,14 @@ module.exports = (db, logger, emails) => {
                 profile: 'moderateur',
             });
 
-            if (original.status === 'reported') {
+            if (options.sendEmail && original.status === 'reported') {
                 sendEmail(async () => {
                     let organisme = await db.collection('accounts').findOne({
                         SIRET: parseInt(original.training.organisation.siret)
                     });
-                    return emails.avisReportedToValidatedEmail.send(organisme, original);
+
+                    let emailAdress = getOrganismeEmail(organisme);
+                    return emails.createAvisReportedCanceledEmail(organisme, original).send(emailAdress);
                 });
             }
 
@@ -93,20 +96,25 @@ module.exports = (db, logger, emails) => {
                 profile: 'moderateur',
             });
 
-            if (original.status === 'reported') {
-                sendEmail(async () => {
-                    let organisme = await db.collection('accounts').findOne({
-                        SIRET: parseInt(original.training.organisation.siret)
+            if (options.sendEmail) {
+                if (original.status === 'reported') {
+                    sendEmail(async () => {
+                        let organisme = await db.collection('accounts').findOne({
+                            SIRET: parseInt(original.training.organisation.siret)
+                        });
+                        return emails.createAvisReportedConfirmedEmail(organisme, original).send(getOrganismeEmail(organisme));
                     });
-                    return emails.avisReportedToRejectedEmail.send(organisme, original);
-                });
-            } else if (qualification === 'injure' || qualification === 'alerte') {
-                sendEmail(async () => {
-                    let trainee = await db.collection('trainee').findOne({ token: original.token });
-                    let type = qualification === 'injure' ? 'avisInjureEmail' : 'avisAlerteEmail';
-                    return emails[type].send(trainee, original);
-                });
+                }
 
+                if ((qualification === 'injure' || qualification === 'alerte')) {
+                    sendEmail(async () => {
+                        let trainee = await db.collection('trainee').findOne({ token: original.token });
+                        let type = qualification === 'injure' ?
+                            'createAvisRejectedInjureEmail' : 'createAvisRejectedAlerteEmail';
+
+                        return emails[type](trainee).send(trainee.trainee.email);
+                    });
+                }
             }
 
             return result.value;
@@ -176,6 +184,13 @@ module.exports = (db, logger, emails) => {
                 user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
+
+            if (options.sendEmail) {
+                sendEmail(async () => {
+                    let trainee = await db.collection('trainee').findOne({ token: previous.token });
+                    return emails.createAvisStagiaireEmail(trainee).send(trainee.trainee.email);
+                });
+            }
         },
         maskPseudo: async (id, mask, options = {}) => {
 
@@ -293,12 +308,15 @@ module.exports = (db, logger, emails) => {
                 profile: 'moderateur',
             });
 
-            sendEmail(async () => {
-                let organisme = await db.collection('accounts').findOne({
-                    SIRET: parseInt(original.training.organisation.siret)
+            if (options.sendEmail) {
+                sendEmail(async () => {
+                    let organisme = await db.collection('accounts').findOne({
+                        SIRET: parseInt(original.training.organisation.siret)
+                    });
+
+                    return emails.createReponseRejectedEmail(organisme, original).send(getOrganismeEmail(organisme));
                 });
-                return emails.avisReponseRejectedEmail.send(organisme, original);
-            });
+            }
 
             return result.value;
         },

@@ -17,6 +17,5 @@ module.exports = (options = {}) => {
         sendNewEmail: (...args) => registerCall(args),
         getLastEmailAddress: () => calls.length === 0 ? null : calls[calls.length - 1][0],
         sendMalformedImport: (...args) => registerCall(args),
-        sendQuestionnaire6MoisMail: (...args) => registerCall(args),
     };
 };

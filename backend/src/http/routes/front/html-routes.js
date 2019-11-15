@@ -153,22 +153,6 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
         });
     });
 
-    router.get('/mail/:token/organisme_questionnaire', async (req, res) => {
-        const organisme = await db.collection('accounts').findOne({ token: req.params.token });
-        if (!organisme) {
-            res.status(404).render('errors/404');
-            return;
-        }
-
-        res.render('../../smtp/views/organisme_questionnaire.ejs', {
-            organisme,
-            consultationLink: `${configuration.app.public_hostname}/mail/${organisme.token}/organisme_questionnaire?utm_source=PE&utm_medium=mail`,
-            formLink: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
-            hostname: configuration.app.public_hostname,
-            webView: true
-        });
-    });
-
     router.get('/mail/:tokenOrganisme/password', async (req, res) => {
         const organisme = await db.collection('accounts').findOne({ token: req.params.tokenOrganisme });
         if (organisme === null) {
@@ -205,7 +189,7 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
 
         const region = regions.findRegionByCodeRegion(organisme.codeRegion);
 
-        res.render('../../smtp/views/organisme_avis_non_lus.ejs', {
+        res.render('../../smtp/views/avis_notifications.ejs', {
             trackingLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/track`,
             link: `${configuration.app.public_hostname}/admin?action=passwordLost&token=${req.params.tokenOrganisme}`,
             consultationLink: `${configuration.app.public_hostname}/mail/${req.params.tokenOrganisme}/nonLus`,
@@ -309,7 +293,7 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
         trainee.trainee.name = titleize(trainee.trainee.name);
         let region = regions.findRegionByCodeRegion(trainee.codeRegion);
 
-        res.render('../../smtp/views/avis_injure.ejs', {
+        res.render('../../smtp/views/injure.ejs', {
             trainee: trainee,
             comment: comment,
             consultationLink: `${configuration.app.public_hostname}/mail/${trainee.token}/injure?utm_source=PE&utm_medium=mail&utm_campaign=${trainee.campaign}`,
