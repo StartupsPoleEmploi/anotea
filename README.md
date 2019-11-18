@@ -86,8 +86,7 @@ Afin d'éviter de devoir lancer tous les projets à la main, il est possible de 
 
 ```
 npm install pm2 -g
-pm2 start dev.yml
-pm2 logs --raw
+bash dev.sh
 ```
 
 Pour stopper les projets : 
