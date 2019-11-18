@@ -96,8 +96,8 @@ class App extends Component {
 
 App.defaultProps = {
     format: 'carrousel',
-    type: 'action',
-    identifiant: '26_100646|26_145859_7591',
+    type: 'session',
+    identifiant: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
     options: 'json-ld',
 };
 
