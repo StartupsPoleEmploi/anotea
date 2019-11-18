@@ -66,15 +66,12 @@ const createStagiaire = session => {
 
 module.exports = async (db, options) => {
 
-    let promises = [];
     let session = await db.collection('sessionsReconciliees').findOne();
 
-
-    promises.push(_.range(options.nbStagiaires || 1000).map(() => {
+    return Promise.all(_.range(options.nbStagiaires || 1000).map(() => {
         let stagiaire = createStagiaire(session);
-        return db.collection('trainee').insertOne(stagiaire);
+        return db.collection('trainee').insertOne(stagiaire)
+        .then(() => stagiaire.token);
     }));
-
-    return Promise.all(promises);
 
 };
