@@ -15,15 +15,16 @@
 
   .clarification {
     color: $color-black-60;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
 
     a {
       padding-left: 0.25rem;
       padding-right: 0.25rem;
+      color: $color-orange;
     }
 
-    .contactez-nous {
-      color: $color-blue;
+    a:hover {
+        color: $color-black;
     }
   }
 }

@@ -81,14 +81,13 @@ export default class ActivationComptePage extends React.Component {
         let { account, errors, message } = this.state;
 
         return (
-            <Page
-                title={'Accéder à mon espace Anotéa'}
+            <Page className="grey"
                 panel={
                     <Panel
-                        backgroundColor="blue"
+                        backgroundColor="grey"
                         results={
                             <CenteredForm
-                                title={<div className="a-blue">{account.nom}</div>}
+                                title={<div className="title">{account.nom}</div>}
                                 elements={
                                     <>
                                         <label>Votre identifiant pour la connexion</label>
@@ -146,7 +145,7 @@ export default class ActivationComptePage extends React.Component {
                                             <Button
                                                 type="submit"
                                                 size="large"
-                                                color="blue"
+                                                color="black"
                                                 disabled={this.state.loading}
                                                 onClick={() => this.onSubmit()}
                                             >

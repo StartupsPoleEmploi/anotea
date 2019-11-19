@@ -19,6 +19,7 @@ import './styles/global.scss';
 import Header from './components/common/header/Header';
 import MiscRoutes from './components/misc/MiscRoutes';
 import UserContext from './components/UserContext';
+import queryString from 'query-string';
 
 addLocaleData([...fr]);
 
@@ -30,6 +31,7 @@ class App extends Component {
 
     state = {
         profile: 'anonymous',
+        loggedIn: false
     };
 
     constructor(props) {
@@ -40,9 +42,17 @@ class App extends Component {
             }
         });
 
+        const profile = queryString.parse(window.location.search).profile;
+        if(profile && ['organisme', 'financeur'].includes(profile)) {
+            this.state = {
+                profile
+            }
+        }
+
         if (getToken()) {
             this.state = {
                 ...getSession(),
+                loggedIn: true
             };
         }
     }
@@ -58,6 +68,7 @@ class App extends Component {
 
         this.setState({
             ...getSession(),
+            loggedIn: true
         });
 
         this.props.navigator.goToPage('/admin');
@@ -84,11 +95,11 @@ class App extends Component {
             anonymous: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
-                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} />,
+                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} profile={this.state.profile} />,
             })
         };
 
-        let layout = backoffices[this.state.profile]();
+        let layout = this.state.loggedIn ? backoffices[this.state.profile]() : backoffices['anonymous']();
 
         return (
             <>
@@ -100,7 +111,7 @@ class App extends Component {
                                 <Redirect exact from="/admin" to={layout.defaultPath} />
                             </Switch>
 
-                            <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
+                            <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} profile={this.state.profile} loggedIn={this.state.loggedIn} />
                             <MiscRoutes />
                             {layout.routes}
                         </div>

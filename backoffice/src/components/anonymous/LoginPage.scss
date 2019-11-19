@@ -2,10 +2,41 @@
 
 .LoginPage {
 
-  .mot-de-passe-oublie {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
-  }
+    hr {
+        width: 100%;
+    }
 
+    hr.grey {
+        border-top: 2px solid $color-grey-50;
+        margin-top: 0;
+    }
+
+    hr.grey-5 {
+        border-top: 2px solid $color-grey-5;
+    }
+
+    .title {
+        color: $color-black;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .mot-de-passe-oublie {
+        margin-top: 1rem;
+        margin-bottom: 0rem;
+    }
+
+    .Button.login {
+        width: max-content;
+        margin: auto;
+    }
+
+    .help {
+        margin-bottom: 1rem;
+    }
+
+    .Form {
+        width: 450px;
+        border-radius: 5px;
+    }
 }

@@ -1,8 +1,8 @@
 @import '../../../styles/variables';
 
 .Header {
-  padding-top: 0.8em;
-  padding-bottom: 1.75em;
+  padding-top: 1.25em;
+  padding-bottom: 0.8em;
 
   @include profile-background-color();
 
@@ -17,6 +17,23 @@
       background-color: $color-green;
     }
   }
+
+    &.anonymous {
+        box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.1);
+        height: 107px;
+        padding-top: inherit;
+        position: relative;
+    }
+
+    .logo-pe {
+        margin: 15px 50px 15px 0px;
+    }
+
+    .logo-pe, img.logo  {
+        display: inline-block;
+        height: 75px;
+        vertical-align: middle;
+    }
 
   .nav {
     font-weight: $font-weight-400;
@@ -76,6 +93,67 @@
     }
 
   }
+
+
+  .menu {
+        margin-top: 15px;
+        width: 180px;
+        font-size: 1.15em;
+
+        .content {
+            box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
+            border-radius: 5px;
+            font-size: 0.8em;
+            position: relative;
+            top: -80px;
+        }
+
+        &.closed .icon-close {
+            display: none;
+        }
+        
+        &.open .icon-open {
+            display: none;
+        }
+        
+        a.unroll {
+            outline: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 30px;
+            padding-bottom: 25px;
+        }
+
+        &.closed .content {
+            display: none;
+        }
+
+        a {
+            color:#24303A;
+            text-decoration: none;
+        }
+        
+        li {
+            line-height: 25px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
+            position: absolute;
+            top: 60px;
+            background: white;
+        }
+        
+        img {
+            vertical-align: middle;
+            width: 15px;
+            margin-left: 10px;
+        }
+    }
+
 
   .account-link {
     color: white;

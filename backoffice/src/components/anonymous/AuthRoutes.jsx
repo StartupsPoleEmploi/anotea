@@ -11,6 +11,7 @@ export default class AuthRoutes extends React.Component {
     static propTypes = {
         navigator: PropTypes.object.isRequired,
         onLogin: PropTypes.func.isRequired,
+        profile: PropTypes.string
     };
 
     render() {
@@ -20,7 +21,7 @@ export default class AuthRoutes extends React.Component {
             <>
                 <Route
                     path="/admin/login"
-                    render={() => <LoginPage navigator={navigator} onLogin={this.props.onLogin} />}
+                    render={() => <LoginPage navigator={navigator} onLogin={this.props.onLogin} profile={this.props.profile} />}
                 />
                 <Route
                     path="/admin/mot-de-passe-oublie"

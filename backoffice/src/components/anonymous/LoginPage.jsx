@@ -26,7 +26,7 @@ export default class LoginPage extends React.Component {
             errors: false,
             identifiant: '',
             password: '',
-            message: null,
+            message: null
         };
     }
 
@@ -81,20 +81,21 @@ export default class LoginPage extends React.Component {
 
         return (
             <Page
-                className="LoginPage"
-                title={'Votre espace Anotéa'}
+                className="LoginPage grey"
                 panel={
                     <Panel
-                        backgroundColor="blue"
+                        backgroundColor="grey"
                         results={
                             <CenteredForm
-                                title={<div className="a-blue">Connexion</div>}
+                                title={<div className="title">Accès à mon espace Anotéa</div>}
+                                className="mb-2"
                                 elements={
                                     <>
-                                        <label>Identifiant</label>
+                                        <hr className="grey" />
+                                        <label>Votre identifiant pour la connexion</label>
                                         <InputText
                                             value={this.state.identifiant}
-                                            placeholder="Entrez votre SIRET"
+                                            placeholder="Identifiant Anotéa"
                                             onChange={event => this.setState({ identifiant: event.target.value })}
                                             error={this.state.error ? 'Votre identifiant est incorrect.' : ''}
                                         />
@@ -110,20 +111,26 @@ export default class LoginPage extends React.Component {
                                     </>
                                 }
                                 buttons={
-                                    <div className="d-flex flex-column">
+                                    <div className="d-flex flex-column clarification">
                                         <div className="mot-de-passe-oublie">
                                             <NavLink to="/admin/mot-de-passe-oublie">
                                                 Mot de passe oublié
                                             </NavLink>
                                         </div>
+                                        <hr className="grey-5" />
+                                        <div className="help">
+                                            Besoin d’aide ? Des questions ? Consultez notre <a href={`/services/${this.props.profile === 'financeur' ? 'financeur' : 'organisme'}s/fonctionnement#faq`}>FAQ</a>&nbsp; 
+                                            ou <a href="mailto:anotea@pole-emploi.fr">contactez-nous</a> par email.
+                                        </div>
                                         <Button
                                             type="submit"
                                             size="large"
-                                            color="blue"
+                                            color="black"
                                             disabled={this.state.loading}
                                             onClick={this.onSubmit}
+                                            className="login"
                                         >
-                                            Confirmer
+                                            Se connecter
                                         </Button>
                                         {message &&
                                         <GlobalMessage

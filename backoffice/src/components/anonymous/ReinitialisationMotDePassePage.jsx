@@ -65,14 +65,13 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         let { errors, message } = this.state;
 
         return (
-            <Page
-                title={'Votre espace Anotéa'}
+            <Page className="grey"
                 panel={
                     <Panel
-                        backgroundColor="blue"
+                        backgroundColor="grey"
                         results={
                             <CenteredForm
-                                title={<div className="a-blue">Créer un nouveau mot de passe</div>}
+                                title={<div className="title">Créer un nouveau mot de passe</div>}
                                 elements={
                                     <>
                                         <label>Nouveau mot de passe</label>
@@ -99,7 +98,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                         <Button
                                             type="submit"
                                             size="large"
-                                            color="blue"
+                                            color="black"
                                             disabled={this.state.loading}
                                             onClick={() => this.onSubmit()}
                                         >

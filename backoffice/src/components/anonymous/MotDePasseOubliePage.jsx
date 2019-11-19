@@ -39,14 +39,13 @@ export default class MotDePasseOubliePage extends React.Component {
     render() {
 
         return (
-            <Page
-                title={'Votre espace Anotéa'}
+            <Page className="grey"
                 panel={
                     <Panel
-                        backgroundColor="blue"
+                        backgroundColor="grey"
                         results={
                             <CenteredForm
-                                title={<div className="a-blue">Mot de passe oublié</div>}
+                                title={<div className="title">Mot de passe oublié</div>}
                                 elements={
                                     <>
                                         <label>Entrez votre identifiant</label>
@@ -80,7 +79,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                         <Button
                                             type="submit"
                                             size="large"
-                                            color="blue"
+                                            color="black"
                                             disabled={this.state.loading}
                                             onClick={this.onSubmit}
                                         >

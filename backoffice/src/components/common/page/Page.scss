@@ -4,6 +4,10 @@
 
   height: 100%;
 
+  &.grey {
+    background-color: $color-grey-5;
+  }
+
   .search-holder {
     @include profile-background-color();
     padding-bottom: 1rem;

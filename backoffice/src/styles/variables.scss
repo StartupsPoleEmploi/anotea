@@ -56,10 +56,6 @@ $shadow: 0 0.115rem 0.625rem -2px rgba(0, 0, 0, 0.15) !important;
   &.organisme {
     background-color: $color-black;
   }
-
-  &.anonymous {
-    background-color: $color-blue;
-  }
 }
 
 @mixin box() {

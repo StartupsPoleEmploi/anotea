@@ -143,5 +143,9 @@
     &.a-btn-orange {
       @include large-button($color-black, $color-orange, $color-orange-60);
     }
+
+    &.a-btn-black {
+        @include large-button($color-white,  $color-black, $color-grey-50);
+    }
   }
 }
