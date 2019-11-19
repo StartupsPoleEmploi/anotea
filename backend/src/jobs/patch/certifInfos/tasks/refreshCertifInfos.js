@@ -76,7 +76,7 @@ module.exports = async (db, logger, file) => {
 
         let getNewCertifInfos = doc => {
             return doc.training.certifInfos.reduce((acc, code) => {
-                let codes = certifications[code] ? certifications[code] : [code];
+                let codes = certifications[code] ? [...certifications[code], code] : [code];
                 return [...acc, ...codes];
             }, []);
         };
@@ -100,16 +100,11 @@ module.exports = async (db, logger, file) => {
             const doc = await cursor.next();
             try {
                 if (doc.training.certifInfos.find(code => certifications[code])) {
+                    let newDoc = _.cloneDeep(doc);
+                    newDoc.training.certifInfos = getNewCertifInfos(doc);
+                    newDoc.meta = getNewMeta(doc);
 
-                    let results = await db.collection(collectionName).replaceOne(
-                        { _id: doc._id },
-                        Object.assign({}, doc, {
-                            training: {
-                                certifInfos: getNewCertifInfos(doc),
-                            },
-                            meta: getNewMeta(doc),
-                        }),
-                        { upsert: false });
+                    let results = await db.collection(collectionName).replaceOne({ _id: doc._id }, newDoc, { upsert: false });
 
                     if (getNbModifiedDocuments(results) > 0) {
                         stats.updated++;
