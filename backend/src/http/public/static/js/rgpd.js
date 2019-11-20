@@ -9,10 +9,16 @@ $(document).ready(() => {
                     description: 'Service google de statistiques de trafic',
                     key: 'ga',
                     callbackAccepted: () => {
-                        alert('callback accept ga');
+                        // enable Google Analytics
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag() {
+                            dataLayer.push(arguments);
+                        }
+                        gtag('js', new Date());
+                        gtag('config', '<%= analytics.ga %>');
                     },
                     callbackDenied: () => {
-                        alert('callback denied ga');
+
                     }
                 }
             ],
@@ -21,5 +27,3 @@ $(document).ready(() => {
             forceDisplay: true
         });
 });
-
-console.log("coucou")

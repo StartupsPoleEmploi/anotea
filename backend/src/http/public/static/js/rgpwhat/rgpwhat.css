@@ -11,3 +11,6 @@
 .rgpwhat .consent-list button:hover {opacity: 1;}
 .rgpwhat .consent-list button.selected {background-color: #1BD2A4;}
 .rgpwhat button, .rgpwhat input[type=button] {color: white; background-color: #1BD2A4; border-radius: 5px; border: 0; padding: 0 20px; margin-left: 10px;}
+
+.rgpwhat button {  cursor: pointer; }
+.rgpwhat a {  color: #F28017; }
