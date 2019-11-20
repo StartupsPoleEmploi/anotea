@@ -59,7 +59,9 @@ module.exports = async (db, intercarif, action) => {
     })
     .toArray();
 
-    let certifiants = comments.filter(comment => comment.training.certifInfos.length > 0);
+    let certifiants = comments.filter(comment => {
+        return !!comment.training.certifInfos.find(c => intercarif._meta.certifinfos.includes(c));
+    });
 
     return { action, comments: certifiants.length > 0 ? certifiants : comments };
 };
