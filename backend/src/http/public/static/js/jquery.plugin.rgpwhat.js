@@ -83,9 +83,9 @@
 		var version="2";
 		var loadCss="";
 		var locale={
-			'ok': 'Ok',
+			'ok': 'Je refuse',
 			'notOk': 'Interdire',
-			'choice': 'Choisir mes cookies',
+			'choice': 'J\'accepte',
 			'acceptAll': 'Autoriser tous les cookies',
 			'denyAll': 'Interdire tous les cookies',
 			'accept': 'Autoriser',
