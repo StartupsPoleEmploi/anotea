@@ -36,35 +36,31 @@ module.exports = (db, regions) => {
                 'c_validitemail_id',
                 'dn_individu_national',
                 'dn_session_id',
-                'dc_aes_recue',
-                'dc_referencement',
                 'c_individulocal',
                 'dc_formation_id',
-                'dc_origine_session_id',
                 'dc_lblformation',
-                'dd_datedebutmodule',
-                'dd_datefinmodule',
+                'dd_datedebutplanformation',
+                'dd_datefinplanformation',
                 'dc_organisme_id',
                 'dc_cp_lieuformation',
                 'dc_insee_lieuformation',
                 'dc_ville_lieuformation',
                 'dc_formacode_ppal_id',
+                'dc_formacode_secondaire1_id',
+                'dc_formacode_secondaire2_id',
+                'dc_formacode_secondaire3_id',
+                'dc_formacode_secondaire4_id',
                 'dn_certifinfo_1_id',
-                'dc_lblcertifinfo',
+                'dn_certifinfo_2_id',
+                'dn_certifinfo_3_id',
+                'dn_certifinfo_4_id',
+                'dn_certifinfo_5_id',
                 'dc_siret',
                 'dc_lblorganisme',
                 'dc_raisonsociale',
                 'departement',
-                'dc_niveauformation_entree_id',
-                'dc_niveauformation_sortie_id',
-                'dn_dureehebdo',
-                'dn_dureemaxi',
-                'dn_dureeentreprise',
-                'dc_dureeindicative',
-                'dn_nombreheurescentre',
                 'dc_numeroicsession',
                 'dc_numeroicaction',
-                'kn_session_id',
                 'liste_financeur',
             ]
         },
@@ -90,7 +86,6 @@ module.exports = (db, regions) => {
             };
 
             let isNotExcluded = () => {
-
                 if (conseilRegional && !region.conseil_regional.active) {
                     return false;
                 }
@@ -98,7 +93,7 @@ module.exports = (db, regions) => {
                 if (conseilRegional &&
                     region.conseil_regional.active &&
                     region.conseil_regional.import === 'certifications_only') {
-                    return !_.isEmpty(trainee.training.certifInfos.length > 0);
+                    return trainee.training.certifInfos.length > 0;
                 }
                 return true;
             };
@@ -139,8 +134,8 @@ module.exports = (db, regions) => {
                 training: {
                     idFormation: record['dc_formation_id'],
                     title: buildFormationTitle(record['dc_lblformation']),
-                    startDate: parseDate(record['dd_datedebutmodule']),
-                    scheduledEndDate: parseDate(record['dd_datefinmodule']),
+                    startDate: parseDate(record['dd_datedebutplanformation']),
+                    scheduledEndDate: parseDate(record['dd_datefinplanformation']),
                     organisation: {
                         id: record['dc_organisme_id'],
                         siret: record['dc_siret'],

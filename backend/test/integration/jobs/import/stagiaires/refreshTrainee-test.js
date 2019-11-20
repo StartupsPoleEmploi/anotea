@@ -17,7 +17,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
         let previous = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
 
-        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
         assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
@@ -49,7 +49,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let handler = poleEmploiCSVHandler(db, regions);
         await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
 
-        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
         assert.deepStrictEqual(next.meta.history.length, 1);
@@ -76,7 +76,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let handler = poleEmploiCSVHandler(db, regions);
         await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
 
-        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_2@pe.com' });
         assert.strictEqual(next.training.place.inseeCode, '91521');
@@ -94,7 +94,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
         await insertIntoDatabase('comment', previous);
 
-        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
         let next = await db.collection('comment').findOne({ token: trainee.token });
         assert.deepStrictEqual(next.training.organisation, {
