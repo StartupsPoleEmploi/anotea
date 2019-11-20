@@ -57,12 +57,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     inseeCode: '91521',
                     city: 'Ris-Orangis'
                 },
-                certifInfo: {
-                    id: '8122',
-                    label: 'Titre professionnel'
-                },
+                certifInfos: ['8122'],
+                formacodes: ['31734'],
                 idSession: '3565575',
-                formacode: '31734',
                 infoCarif: {
                     numeroSession: 'SE_0000160070',
                     numeroAction: '14_SE_0000160070'
@@ -196,12 +193,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     postalCode: '93190',
                     city: 'LIVRY GARGAN'
                 },
-                certifInfo: {
-                    id: null,
-                    label: null
-                },
+                certifInfos: [],
                 idSession: null,
-                formacode: null,
+                formacodes: [],
                 infoCarif: {
                     numeroAction: null,
                     numeroSession: null
@@ -489,7 +483,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
-    it('should convert NULL value into ""', async () => {
+    it('should handle NULL value', async () => {
         let db = await getTestDatabase();
         let csvFile = getTestFile('stagiaires-pe-with-NULL.csv');
         let { regions } = await getComponents();
@@ -499,10 +493,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         let doc = await db.collection('trainee').findOne();
         assert.deepStrictEqual(doc.training.codeFinanceur, []);
-        assert.deepStrictEqual(doc.training.certifInfo, {
-            id: '',
-            label: '',
-        });
+        assert.deepStrictEqual(doc.training.certifInfos, []);
     });
 
     it('should ignore trainee with codeFinanceur filtered', async () => {

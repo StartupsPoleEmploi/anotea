@@ -101,7 +101,6 @@ module.exports = db => {
                                 date: new Date(),
                                 comment: { text: previous.comment.text }
                             }],
-                            $slice: 10,
                             $position: 0,
                         },
                     }

@@ -157,15 +157,10 @@ describe(__filename, () => {
         assert.strictEqual(data.formation.action.numero, undefined);
     });
 
-    it('should handle empty training.certifInfo.id', async () => {
+    it('should handle empty training.certifInfos', async () => {
 
-        let comment = newComment({
-            training: {
-                certifInfo: {
-                    id: ''
-                }
-            }
-        });
+        let comment = newComment();
+        comment.training.certifInfos = [];
 
         let data = convertCommentToAvis(comment);
 

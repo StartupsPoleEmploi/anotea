@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const asSiren = siret => siret.substring(0, 9);
 
 const getDepartement = codePostal => codePostal.substring(0, 2);
@@ -14,8 +13,8 @@ module.exports = async (db, intercarif, action) => {
         '$and': [
             {
                 '$or': [
-                    { 'training.certifInfo.id': { $in: intercarif._meta.certifinfos } },
-                    { 'training.formacode': { $in: intercarif._meta.formacodes } },
+                    { 'training.certifInfos': { $in: intercarif._meta.certifinfos } },
+                    { 'training.formacodes': { $in: intercarif._meta.formacodes } },
                 ]
 
             },
@@ -60,7 +59,9 @@ module.exports = async (db, intercarif, action) => {
     })
     .toArray();
 
-    let certifiants = comments.filter(comment => !_.isEmpty(comment.training.certifInfo.id));
+    let certifiants = comments.filter(comment => {
+        return !!comment.training.certifInfos.find(c => intercarif._meta.certifinfos.includes(c));
+    });
 
     return { action, comments: certifiants.length > 0 ? certifiants : comments };
 };

@@ -92,12 +92,9 @@ module.exports = (db, regions) => {
                             postalCode: record['Code Postal'],
                             city: record['Ville']
                         },
-                        certifInfo: {
-                            id: null,
-                            label: null
-                        },
+                        certifInfos: [],
+                        formacodes: [],
                         idSession: null,
-                        formacode: null,
                         infoCarif: {
                             numeroAction: null,
                             numeroSession: record['Id Session DOKELIO'] === '' ? null : record['Id Session DOKELIO']

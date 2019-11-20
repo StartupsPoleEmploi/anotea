@@ -17,7 +17,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         let { communes } = await getComponents();
         const trainee = newTrainee({
             training: {
-                formacode: '21032',
+                formacodes: ['21032'],
                 place: { postalCode: '84170' }
             }
         });
@@ -34,7 +34,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         let { communes } = await getComponents();
         const trainee = newTrainee({
             training: {
-                formacode: '21032',
+                formacodes: ['21032'],
                 place: { postalCode: '84170' }
             }
         });
@@ -51,7 +51,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         let { communes } = await getComponents();
         const trainee = newTrainee({
             training: {
-                formacode: '21032',
+                formacodes: ['21032'],
                 place: { postalCode: '84170' }
             }
         });
@@ -69,7 +69,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         let { communes } = await getComponents();
         const trainee = newTrainee({
             training: {
-                formacode: '21032',
+                formacodes: ['21032'],
                 place: { postalCode: '84170' }
             }
         });
@@ -87,7 +87,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         let { communes } = await getComponents();
         const trainee = newTrainee({
             training: {
-                formacode: '21032',
+                formacodes: ['21032'],
                 place: { postalCode: '84170' }
             }
         });
@@ -100,7 +100,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         let { communes } = await getComponents();
         const trainee = newTrainee({
             training: {
-                formacode: null,
+                formacodes: [],
                 place: { postalCode: '84170' }
             }
         });
@@ -117,7 +117,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents 
         let { communes } = await getComponents();
         const trainee = newTrainee({
             training: {
-                formacode: null,
+                formacodes: [],
                 place: { postalCode: '84170' }
             }
         });

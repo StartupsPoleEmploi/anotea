@@ -34,11 +34,9 @@ module.exports = data => {
             numero: training.idFormation,
             intitule: training.title,
             domaine_formation: {
-                formacodes: [training.formacode],
+                formacodes: training.formacodes,
             },
-            certifications: [
-                { certif_info: training.certifInfo.id }
-            ].filter(c => !_.isEmpty(c.certif_info)),
+            certifications: training.certifInfos.map(code => ({ certif_info: code })),
             action: {
                 lieu_de_formation: {
                     code_postal: training.place.postalCode,
