@@ -6,7 +6,7 @@ import './CenteredForm.scss';
 export const CenteredForm = props => {
     return (
         <div className="CenteredForm row">
-            <div className="offset-sm-2 col-sm-8 offset-lg-4 col-lg-6">
+            <div className="offset-sm-2 col-sm-8 offset-lg-3 col-lg-6">
                 <Form>
                     <div className="d-flex flex-column">
                         <div className="d-flex justify-content-center title mb-3">
