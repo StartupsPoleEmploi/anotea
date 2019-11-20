@@ -32,10 +32,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 firstName: 'EUGENE',
                 mailDomain: 'pe.com',
                 email: 'email_1@pe.com',
-                phoneNumbers: [
-                    '0611111111',
-                    ''
-                ],
+                phoneNumbers: ['0611111111'],
                 emailValid: true,
                 dnIndividuNational: '1111111111',
                 idLocal: '0167942369Z'
@@ -495,7 +492,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await importTrainee(db, logger, csvFile, handler);
 
         let doc = await db.collection('trainee').findOne();
-        //assert.deepStrictEqual(doc.trainee.phoneNumbers, ['0611111111']);
+        assert.deepStrictEqual(doc.trainee.phoneNumbers, ['0611111111']);
         assert.deepStrictEqual(doc.training.certifInfos, []);
         assert.strictEqual(doc.training.place.inseeCode, undefined);
     });

@@ -126,7 +126,7 @@ module.exports = (db, regions) => {
                     firstName: record['c_prenomcorrespondance'],
                     mailDomain: mailDomain,
                     email: email,
-                    phoneNumbers: [record['c_telephone1'], record['c_telephone2']],
+                    phoneNumbers: [record['c_telephone1'], record['c_telephone2']].filter(n => !_.isEmpty(n)),
                     emailValid: record['c_validitemail_id'] === 'V',
                     dnIndividuNational: record['dn_individu_national'],
                     idLocal: record['c_individulocal']
