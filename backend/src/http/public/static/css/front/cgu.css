@@ -6,36 +6,53 @@ body {
     margin: 0;
 }
 
-.cgu .header {
-    box-shadow: inherit;
-}
-
 .main {
-    width: 60%;
+    width: 50%;
     margin: auto;
     background: white;
     border-radius: 5px;
+    color: #24303A;
 }
 
 .main.cgu {
     padding: 20px;
+    margin-top: 50px;
+}
+
+.main .header-cgu {
+    margin-bottom: 80px;
+}
+
+.main .header-cgu h1 {
+    text-align: center;
+    color: #24303A;
+    font-size: 1.125em;
+    font-weight: 900;
+    margin-top: 0px;
+    float: left;
+    width: 50%;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(36,48,58,0.1);;
+    font-weight: normal;
+}
+
+.main .header-cgu h1.current {
+    border-bottom: 2px solid rgba(36,48,58,0.6);;
+    font-weight: bold;
+}
+
+.main .header-cgu h1 a {
+    text-decoration: none;
 }
 
 h1 {
-    background-color: #F0801A;
-    color: white;
-    width: 100%;
-    text-align: center;
-    height: 160px;
-    line-height: 160px;
-    font-size: 32px;
-    font-weight: 900;
-    margin-top: 0px;
+    font-size: 24px;
 }
 
 h2 {
     font-weight: 900;
-    font-size: 24px;
+    font-size: 1.125em;
+    clear:  both;
 }
 
 .main a {
@@ -63,7 +80,7 @@ h2 {
 }
 
 .main p, .main ul,  .main ol {
-    font-size: 1.2em;
+    font-size: 1em;
 }
 
 .main .block {

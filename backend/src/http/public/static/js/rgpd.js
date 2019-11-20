@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    $.rgpWhat('Les cookies assurent le bon fonctionnement de nos services. En utilisant ces derniers, vous acceptez l\'utilisation des cookies. <a href="/cgu" target="_blank">En savoir plus</a>.',
+    $.rgpWhat('En naviguant sur le site, vous acceptez l\'utilisation de cookies pour améliorer la qualité du service et pour réaliser des statistiques de visite. Pour en savoir plus, consultez notre <a href="/politique-confidentialite" target="_blank">Politique de Confidentialité</a>. Vous avez la possibilité de modifier vos préférences à tout moment ou bien d\'accepter les paramètres par défaut.',
         {
             class: 'rgpwhat',
             loadCss: '/static/js/rgpwhat/rgpwhat.css',

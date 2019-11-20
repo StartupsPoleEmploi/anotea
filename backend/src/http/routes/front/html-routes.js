@@ -45,13 +45,11 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
     });
 
     router.get('/cgu', (req, res) => {
-        const connectionInfos = peconnect.initConnection();
-        req.session.pe_connect = {
-            state: connectionInfos.state,
-            nonce: connectionInfos.nonce
-        };
+        res.render('front/cgu');
+    });
 
-        res.render('front/cgu', { connectionLink: connectionInfos.link });
+    router.get('/politique-confidentialite', (req, res) => {
+        res.render('front/politique-confidentialite');
     });
 
     router.get('/services/organismes', (req, res) => {
