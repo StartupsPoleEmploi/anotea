@@ -24,7 +24,7 @@
     outline: none;
 }
 
-.header .logo-pe {
+.logo img {
     margin: 15px 50px 15px 200px;
 
 }
@@ -33,6 +33,10 @@
     display: inline-block;
     height: 75px;
     vertical-align: middle;
+}
+
+.header .logo-pe {
+    margin-right: 20px;
 }
 
 .menu {

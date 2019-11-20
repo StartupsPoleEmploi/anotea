@@ -25,14 +25,14 @@
         position: relative;
     }
 
-    .logo-pe {
-        margin: 15px 50px 15px 0px;
-    }
-
     .logo-pe, img.logo  {
         display: inline-block;
         height: 75px;
         vertical-align: middle;
+    }
+
+    .logo-pe {
+        margin-top: 15px;
     }
 
   .nav {
@@ -99,6 +99,7 @@
         margin-top: 15px;
         width: 180px;
         font-size: 1.15em;
+        float: left;
 
         .content {
             box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);

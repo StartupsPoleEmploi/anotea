@@ -45,30 +45,33 @@ export default class Header extends React.Component {
                                 {this.props.profile === 'anonymous' &&
                                     <>
                                         <div>
-                                            <img src={logoPE} className="logo-pe" alt="logo Pôle Emploi" />
                                             <NavLink to="/admin">
                                                 <img src={logoAnonymous} className="logo" alt="logo Anotéa" />
                                             </NavLink>
                                         </div>
 
-                                        <div className={`menu ${this.state.menuOpen ? 'open' : 'closed'}`} onMouseOver={() => this.toggleMenu()} onMouseOut={() => this.toggleMenu()}>
-                                            <a href="#" className="unroll" alt="menu Financeurs"onClick={this.toggleMenu} >Nos services
-                                                <img className="icon-open" src="/static/images/home/chevron-down.svg" />
-                                                <img className="icon-close" src="/static/images/home/chevron-up.svg" />
-                                            </a>
-                                            <div className="content">
-                                                <ul>
-                                                    <li>
-                                                        <a href="/services/stagiaires" title="Demandeurd'emploi">Demandeur d'emploi</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="/services/organismes" title="Organisme de formation">Organisme de formation</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="/services/financeurs" title="Financeur">Financeur</a>
-                                                    </li>
-                                                </ul>
+                                        <div>
+                                            <div className={`menu ${this.state.menuOpen ? 'open' : 'closed'}`} onMouseOver={() => this.toggleMenu()} onMouseOut={() => this.toggleMenu()}>
+                                                <a href="#" className="unroll" alt="menu Financeurs"onClick={this.toggleMenu} >Nos services
+                                                    <img className="icon-open" src="/static/images/home/chevron-down.svg" />
+                                                    <img className="icon-close" src="/static/images/home/chevron-up.svg" />
+                                                </a>
+                                                <div className="content">
+                                                    <ul>
+                                                        <li>
+                                                            <a href="/services/stagiaires" title="Demandeurd'emploi">Demandeur d'emploi</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/services/organismes" title="Organisme de formation">Organisme de formation</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/services/financeurs" title="Financeur">Financeur</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
+
+                                            <img src={logoPE} className="logo-pe" alt="logo Pôle Emploi" />
                                         </div>
                                     </>
                                 }
