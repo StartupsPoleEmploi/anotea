@@ -13,6 +13,14 @@
     text-align: center;
   }
 
+  a {
+    color: $color-orange;
+    }
+
+    a:hover {
+        color: $color-black;
+    }
+
   .clarification {
     color: $color-black-60;
     font-size: 0.8rem;
@@ -20,11 +28,21 @@
     a {
       padding-left: 0.25rem;
       padding-right: 0.25rem;
-      color: $color-orange;
     }
 
-    a:hover {
-        color: $color-black;
-    }
   }
+
+  hr {
+    width: 100%;
+
+    &.grey {
+        border-top: 2px solid $color-grey-50;
+        margin-top: 0;
+    }
+    
+    &.grey-5 {
+        border-top: 2px solid $color-grey-5;
+    }
+   }
+
 }

@@ -48,6 +48,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                 title={<div className="title">Mot de passe oublié</div>}
                                 elements={
                                     <>
+                                        <hr className="grey" />
                                         <label>Entrez votre identifiant</label>
                                         <InputText
                                             value={this.state.identifiant}
@@ -55,6 +56,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                             error={this.state.error}
                                             onChange={event => this.setState({ identifiant: event.target.value })}
                                         />
+                                        <hr className="grey-5" />
                                         <p className="clarification mt-3">
                                             L&apos;adresse mail est celle sur laquelle vous avez reçu la
                                             proposition de création de compte Anotéa,

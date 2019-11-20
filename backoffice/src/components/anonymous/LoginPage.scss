@@ -2,19 +2,6 @@
 
 .LoginPage {
 
-    hr {
-        width: 100%;
-    }
-
-    hr.grey {
-        border-top: 2px solid $color-grey-50;
-        margin-top: 0;
-    }
-
-    hr.grey-5 {
-        border-top: 2px solid $color-grey-5;
-    }
-
     .title {
         color: $color-black;
         font-size: 1.5rem;
@@ -36,7 +23,6 @@
     }
 
     .Form {
-        width: 450px;
         border-radius: 5px;
     }
 }

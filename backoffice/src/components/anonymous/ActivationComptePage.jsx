@@ -12,6 +12,10 @@ import { login } from './loginService';
 import { NavLink } from 'react-router-dom';
 import GlobalMessage from '../common/message/GlobalMessage';
 
+import './ActivationComptePage.scss';
+import iconWarning from './Icone_warning.svg';
+import iconPassword from './Icone_Password.svg';
+
 export default class ActivationComptePage extends React.Component {
 
     static propTypes = {
@@ -81,7 +85,7 @@ export default class ActivationComptePage extends React.Component {
         let { account, errors, message } = this.state;
 
         return (
-            <Page className="grey"
+            <Page className="ActivationComptePage grey"
                 panel={
                     <Panel
                         backgroundColor="grey"
@@ -90,22 +94,34 @@ export default class ActivationComptePage extends React.Component {
                                 title={<div className="title">{account.nom}</div>}
                                 elements={
                                     <>
+                                        <hr className="grey" />
                                         <label>Votre identifiant pour la connexion</label>
                                         <div className="mb-3">
-                                            {account.identifiant}
+                                            <strong>{account.identifiant}</strong>
                                         </div>
                                         {account.status === 'active' ?
                                             <>
-                                                <div className="clarification">
-                                                    <div>Un Espace Anotéa a déjà été créé pour cet Organisme de Formation.</div>
-                                                    <div className="mt-1">
-                                                        Cliquez sur
-                                                        <NavLink to="/admin/mot-de-passe-oublie">
-                                                            Mot de passe oublié,
-                                                        </NavLink>
-                                                        un email contenant un lien pour modifier votre mot de passe
-                                                        vous sera transmis immédiatement.
+                                                <div  className="warnings">
+                                                    <div>
+                                                        <img src={iconWarning} />
+                                                        <p>Votre espace Anotéa a déjà été créé pour cet Organisme de Formation.</p>
                                                     </div>
+                                                    <div className="mt-1">
+                                                        <img src={iconPassword} />
+                                                        <p>
+                                                            Cliquez sur&nbsp;
+                                                            <NavLink to="/admin/mot-de-passe-oublie">
+                                                                Mot de passe oublié
+                                                            </NavLink>,&nbsp;
+                                                            un email contenant un lien pour modifier votre mot de passe
+                                                            vous sera transmis immédiatement.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <hr className="grey-5" />
+                                                <div className="clarification">
+                                                    Besoin d’aide ? Des questions ? Consultez notre <a href={`/services/organismes/fonctionnement#faq`}>FAQ</a>&nbsp; 
+                                                ou <a href="mailto:anotea@pole-emploi.fr">contactez-nous</a> par email.
                                                 </div>
                                             </> :
                                             <>
@@ -126,6 +142,7 @@ export default class ActivationComptePage extends React.Component {
                                                     error={errors.isNotSamePassword}
                                                     onChange={event => this.setState({ confirmation: event.target.value })}
                                                 />
+                                                <hr className="grey-5" />
                                                 <p className="clarification mt-3">
                                                     Vous souhaitez en savoir plus sur le service Anotéa : consultez
                                                     <a href="http://anotea.pole-emploi.fr" target="blank">
