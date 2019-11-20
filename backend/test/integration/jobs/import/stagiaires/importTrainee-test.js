@@ -130,6 +130,19 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
+    it('should handle multi formacodes and certifInfos', async () => {
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
+
+        await importTrainee(db, logger, getTestFile('stagiaires-pe-multi-formacodes-certifinfos.csv'), handler);
+
+        let doc = await db.collection('trainee').findOne();
+        assert.ok(doc.trainee);
+        assert.deepStrictEqual(doc.training.formacodes, ['31734', '31735', '31736']);
+        assert.deepStrictEqual(doc.training.certifInfos, ['8122', '8123', '8124']);
+    });
+
     it('should ignore trainee already removed', async () => {
         let db = await getTestDatabase();
         let { regions } = await getComponents();
