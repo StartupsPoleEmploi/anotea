@@ -22,6 +22,13 @@
             e.preventDefault();
             $('.criteres').toggleClass('open closed');
         });
+        $('.header-faq a').click(function (e) {
+            e.preventDefault();
+            $('h1.negatifs').toggleClass('current');
+            $('h1.positifs').toggleClass('current');
+            $('.conseils-avis-negatifs').toggle();
+            $('.conseils-avis-positifs').toggle();
+        });
     });
     </script>
 </head>
@@ -111,35 +118,58 @@
             </div>
 
             <h2>Comment répondre à un avis négatif</h2>
+
+            <div class="header-faq">
+                <h1 class="current negatifs"><a href="#" class="show-conseils-avis-negatifs">Si l'avis est négatif</a></h1>
+                <h1 class="positifs"><a href="#" class="show-conseils-avis-positifs">Si l'avis est positif</a></h1>
+            </div>
+
             <p class="subtitle">Lorsque l’avis est négatif, <strong>la qualité de votre réponse</strong> est d’autant plus <strong>importante</strong>.</p>
 
-            <div class="conseil">
-                <h3>Conseil n°1</h3>
-                <p><strong>prenez le temps de la réflexion</strong>. CONSEIL n°1 
-                    Prenez le temps de la réflexion. On n’aime pas faire l’objet d’un commentaire très critique, c’est pourquoi il est important de ne pas 
-                    y répondre sous le coup de l’émotion. Prendre le temps de la réflexion, faire preuve d’empathie vous aideront à écrire une 
-                    réponse constructive.</p>
-            </div>
+            <div class="conseils-avis-negatifs">
+                <div class="conseil">
+                    <h3>Conseil n°1</h3>
+                    <p><strong>Prenez le temps de la réflexion</strong>. CONSEIL n°1 
+                        Prenez le temps de la réflexion. On n’aime pas faire l’objet d’un commentaire très critique, c’est pourquoi il est important de ne pas 
+                        y répondre sous le coup de l’émotion. Prendre le temps de la réflexion, faire preuve d’empathie vous aideront à écrire une 
+                        réponse constructive.</p>
+                </div>
 
-            <div class="conseil">
-                <h3>Conseil n°2</h3>
-                <p>Remerciez la personne d’avoir laissé un commentaire et reformulez les points positifs du commentaire (un avis est rarement 100% négatif)</p>
-            </div>
-            
-            <div class="conseil">
-                <h3>Conseil n°3</h3>
-                <p><strong>Montrez que vous prenez en compte</strong> les points d’amélioration à apporter à votre prestation</p>
-
-                <p class="example">Exemple :<br /> Merci, nous sommes ravis que vous ayez apprécié la qualité de nos formateurs. Il est vrai que nos locaux ont besoin d’être modernisés, des travaux sont planifiés sur l’année 2020 afin d’apporter les meilleures conditions de travail à nos futurs stagiaires.</p>
+                <div class="conseil">
+                    <h3>Conseil n°2</h3>
+                    <p><strong>Remerciez la personne</strong> d’avoir laissé un commentaire et <strong>reformulez les points positifs</strong> du commentaire (un avis est rarement 100% négatif)</p>
+                </div>
                 
-                <p class="example">-</p>
-                
-                <p class="example">Autre exemple :<br /> Merci d’avoir laissé votre commentaire. Nous sommes sincèrement désolés des dysfonctionnements qui ont eu lieu durant cette session et nous avons mis en oeuvre toutes les actions nécessaires pour que cela ne se reproduise pas.</p>
-            </div>
+                <div class="conseil">
+                    <h3>Conseil n°3</h3>
+                    <p><strong>Montrez que vous prenez en compte les points d’amélioration</strong> à apporter à votre prestation</p>
 
-            <div class="conseil">
-                <h3>Conseil n°4</h3>
-                <p>Lorsque cela est opportun, <strong>donnez des éléments factuels</strong> de type : taux de retour à l’emploi, taux de réussite à l’examen...</p>
+                    <p class="example">Exemple :<br /> Merci, nous sommes ravis que vous ayez apprécié la qualité de nos formateurs. Il est vrai que nos locaux ont besoin d’être modernisés, des travaux sont planifiés sur l’année 2020 afin d’apporter les meilleures conditions de travail à nos futurs stagiaires.</p>
+                    
+                    <p class="example">-</p>
+                    
+                    <p class="example">Autre exemple :<br /> Merci d’avoir laissé votre commentaire. Nous sommes sincèrement désolés des dysfonctionnements qui ont eu lieu durant cette session et nous avons mis en oeuvre toutes les actions nécessaires pour que cela ne se reproduise pas.</p>
+                </div>
+            </div>
+            <div class="conseils-avis-positifs">
+                <div class="conseil">
+                    <h3>Conseil n°1</h3>
+                    <p>
+                        <strong>Evitez les copier-coller du type</strong> : «Merci de votre commentaire»… Réservez-le à quelques commentaires, si vous le faîtes pour tous ça devient redondant et ça ne donne pas d’informations au futur stagiaire.
+                    </p>
+                </div>
+                <div class="conseil">
+                    <h3>Conseil n°2</h3>
+                    <p>
+                        <strong>Utilisez les pour communiquer sur vos valeurs</strong>, futurs projets en lien avec le commentaire, évolution de la formation, taux de réussite…
+                    </p>
+                </div>
+                <div class="conseil">
+                    <h3>Conseil n°3</h3>
+                    <p>
+                        <strong>Vous pouvez aussi illustrer en racontant un parcours réussi</strong>, tout en respectant l’anonymat bien sûr.
+                    </p>
+                </div>
             </div>
         </div>
 
