@@ -18,7 +18,8 @@ import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './styles/global.scss';
 import Header from './components/common/header/Header';
 import MiscRoutes from './components/misc/MiscRoutes';
-import UserContext from './components/UserContext';
+import AppContext from './components/AppContext';
+import GlobalMessage from './components/common/message/GlobalMessage';
 
 addLocaleData([...fr]);
 
@@ -29,12 +30,16 @@ class App extends Component {
     };
 
     state = {
-        profile: 'anonymous',
+        account: {
+            profile: 'anonymous',
+        },
+        message: null,
     };
 
     constructor(props) {
         super(props);
         subscribeToHttpEvent('http:error', response => {
+            console.log(response);
             if (response.status === 401) {
                 this.onLogout();
             }
@@ -42,7 +47,7 @@ class App extends Component {
 
         if (getToken()) {
             this.state = {
-                ...getSession(),
+                account: getSession(),
             };
         }
     }
@@ -57,14 +62,19 @@ class App extends Component {
         setSession({ ...results, ...jwtDecode(results.access_token) });
 
         this.setState({
-            ...getSession(),
+            account: getSession(),
         });
 
         this.props.navigator.goToPage('/admin');
     };
 
+    showGlobalMessage = message => {
+        return this.setState({ message });
+    };
+
     render() {
 
+        let { account, message } = this.state;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
@@ -88,12 +98,16 @@ class App extends Component {
             })
         };
 
-        let layout = backoffices[this.state.profile]();
+        let layout = backoffices[account.profile]();
+        let appContext = {
+            account,
+            showMessage: this.showGlobalMessage,
+        };
 
         return (
             <>
                 <IntlProvider locale="fr">
-                    <UserContext.Provider value={this.state}>
+                    <AppContext.Provider value={appContext}>
                         <div className="anotea">
                             <Switch>
                                 <Redirect exact from="/" to={layout.defaultPath} />
@@ -104,10 +118,18 @@ class App extends Component {
                             <MiscRoutes />
                             {layout.routes}
                         </div>
-                    </UserContext.Provider>
+                        {message &&
+                        <GlobalMessage
+                            message={message}
+                            onClose={() => {
+                                return this.setState({ message: null });
+                            }} />
+                        }
+                    </AppContext.Provider>
                 </IntlProvider>
                 {false && <GridDisplayer />}
             </>
+
         );
     }
 }

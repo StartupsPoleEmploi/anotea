@@ -14,9 +14,11 @@ import { Form } from '../../common/page/form/Form';
 import Button from '../../common/Button';
 import InputText from '../../common/page/form/InputText';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
-import GlobalMessage from '../../common/message/GlobalMessage';
+import AppContext from '../../AppContext';
 
 export default class GestionOrganismePage extends React.Component {
+
+    static contextType = AppContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -26,7 +28,6 @@ export default class GestionOrganismePage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            message: null,
             form: {
                 search: '',
             },
@@ -84,6 +85,7 @@ export default class GestionOrganismePage extends React.Component {
 
     render() {
         let { navigator } = this.props;
+        let { showMessage } = this.context;
         let query = navigator.getQuery();
         let results = this.state.results;
 
@@ -194,7 +196,7 @@ export default class GestionOrganismePage extends React.Component {
                                                         onChange={(avis, options = {}) => {
                                                             let { message } = options;
                                                             if (message) {
-                                                                this.setState({ message });
+                                                                showMessage(message);
                                                             }
                                                             return this.search({ silent: true });
                                                         }} />
@@ -202,13 +204,6 @@ export default class GestionOrganismePage extends React.Component {
                                                 </div>
                                             );
                                         })
-                                    }
-                                    {this.state.message &&
-                                    <GlobalMessage
-                                        message={this.state.message}
-                                        onClose={() => {
-                                            return this.setState({ message: null });
-                                        }} />
                                     }
                                 </>
                         }
