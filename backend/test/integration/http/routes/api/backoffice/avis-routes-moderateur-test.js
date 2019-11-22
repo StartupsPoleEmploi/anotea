@@ -385,10 +385,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     it('can delete an avis', async () => {
 
         let app = await startServer();
+        let db = await getTestDatabase();
         const id = new ObjectID();
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
-            insertIntoDatabase('comment', newComment({ _id: id })),
+            insertIntoDatabase('trainee', newTrainee({ token: '123', avisCreated: true })),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '123' })),
         ]);
 
         let response = await request(app)
@@ -396,9 +398,44 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(await db.collection('comment').countDocuments({ _id: id }), 0);
+        let trainee = await db.collection('trainee').findOne({ token: '123' });
+        assert.strictEqual(trainee.avisCreated, false);
+    });
+
+    it('can delete an avis and resend email', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id })),
+        ]);
+
+        let response = await request(app)
+        .delete(`/api/backoffice/avis/${id}?resendEmail=true`)
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
         let db = await getTestDatabase();
         let count = await db.collection('comment').countDocuments({ _id: id });
         assert.strictEqual(count, 0);
+
+        let { mailer } = await getComponents();
+        return new Promise((resolve, reject) => {
+            waitUntil()
+            .interval(100)
+            .times(10)
+            .condition(() => mailer.getCalls().length > 0)
+            .done(result => {
+                if (!result) {
+                    reject(new Error('The condition was never met.'));
+                }
+                let params = mailer.getCalls()[mailer.getCalls().length - 1];
+                assert.deepStrictEqual(params[0], { to: 'henri@email.fr' });
+                resolve();
+            });
+        });
     });
 
     it('can not delete an avis of another region', async () => {

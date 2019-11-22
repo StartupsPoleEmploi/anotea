@@ -13,7 +13,7 @@ export default class Avis extends Component {
     render() {
 
         let { avis } = this.props;
-        let { debut, fin } = avis.formation.action.session.periode;
+        let { fin } = avis.formation.action.session.periode;
 
         return (
             <div className="Avis d-flex flex-column align-items-stretch">

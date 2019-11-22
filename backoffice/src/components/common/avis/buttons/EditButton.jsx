@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { deleteAvis, resendEmail } from '../../../../services/avisService';
+import { deleteAvis } from '../../../../services/avisService';
 import Modal from '../../Modal';
 import Button from '../../Button';
 import { Dropdown, DropdownDivider, DropdownItem } from '../../Dropdown';
@@ -59,7 +59,7 @@ export default class EditButton extends React.Component {
                 }
                 onClose={this.handleCancel}
                 onConfirmed={async () => {
-                    await resendEmail(this.props.avis._id);
+                    await deleteAvis(this.props.avis._id, { resendEmail: true });
                     await this.props.onChange(this.props.avis, {
                         message: {
                             text: 'Le questionnaire a bien été envoyé au stagiaire.',
