@@ -39,9 +39,15 @@ class App extends Component {
     constructor(props) {
         super(props);
         subscribeToHttpEvent('http:error', response => {
-            console.log(response);
             if (response.status === 401) {
                 this.onLogout();
+            } else if (response.status > 429) {
+                this.setState({
+                    message: {
+                        text: 'Désolé, le service est actuellement indisponible. Merci de réessayer plus tard',
+                        color: 'red',
+                    }
+                });
             }
         });
 
