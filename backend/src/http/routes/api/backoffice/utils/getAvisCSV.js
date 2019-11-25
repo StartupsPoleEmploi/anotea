@@ -25,7 +25,11 @@ let getReponseStatus = reponse => {
     }
 };
 
-module.exports = () => {
+let getQualification = comment => {
+    return _.isEmpty(comment.qualification) ? '' : comment.qualification;
+};
+
+module.exports = profile => {
     return {
         'id': comment => comment._id,
         'note accueil': comment => sanitizeNote(comment.rates.accueil),
@@ -36,7 +40,7 @@ module.exports = () => {
         'note global': comment => sanitizeNote(comment.rates.global),
         'titre': comment => sanitizeString(_.get(comment, 'comment.title', '')),
         'commentaire': comment => sanitizeString(_.get(comment, 'comment.text', '')),
-        'qualification': comment => _.isEmpty(comment.qualification) ? '' : comment.qualification,
+        ...(profile === 'organisme' ? {} : { 'qualification': comment => getQualification(comment) }),
         'statut': comment => getStatus(comment),
         'réponse': comment => sanitizeString(_.get(comment, 'reponse.text', '')),
         'réponse statut': comment => comment.reponse ? getReponseStatus(comment.reponse.status) : '',

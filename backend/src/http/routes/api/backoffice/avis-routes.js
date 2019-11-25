@@ -69,7 +69,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, r
         .stream();
 
         try {
-            await sendCSVStream(stream, res, getAvisCSV(), { encoding: 'UTF-16BE', filename: 'avis.csv' });
+            await sendCSVStream(stream, res, getAvisCSV(req.user.profile), { encoding: 'UTF-16BE', filename: 'avis.csv' });
         } catch (e) {
             //FIXME we must handle errors
             logger.error('Unable to send CSV file', e);
