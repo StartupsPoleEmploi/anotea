@@ -17,11 +17,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
         let previous = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
 
-        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
         assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
             training: {
+                formacodes: ['31734', '99999'],
+                certifInfos: ['8122', '99999'],
                 organisation: {
                     id: '14000000000000008098',
                     label: 'ANOTEA FORMATION (SARL)',
@@ -29,7 +31,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     siret: '82436343601239',
                 },
                 place: {
-                    inseeCode: '99999',
+                    inseeCode: '91999',
                 }
             }
         }));
@@ -48,15 +50,25 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
         await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
+        await db.collection('trainee').updateMany({}, {
+            $push: {
+                'meta.history': { value: 'something changed' }
+            }
+        });
 
-        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
-        assert.deepStrictEqual(next.meta.history.length, 1);
-        let history = next.meta.history[0];
-        assert.ok(history.date);
-        assert.deepStrictEqual(_.omit(history, ['date']), {
+        assert.deepStrictEqual(next.meta.history.length, 2);
+        assert.ok(next.meta.history[0].date);
+        assert.deepStrictEqual(_.omit(next.meta.history[0], ['date']), {
             training: {
+                certifInfos: {
+                    '1': null,
+                },
+                formacodes: {
+                    '1': null,
+                },
                 organisation: {
                     siret: '82436343601230',
                     label: 'ANOTEA FORMATION',
@@ -67,6 +79,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 }
             }
         });
+        assert.deepStrictEqual(next.meta.history[1], {
+            value: 'something changed'
+        });
     });
 
     it('should ignore missing inseeCode', async () => {
@@ -76,7 +91,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let handler = poleEmploiCSVHandler(db, regions);
         await importTrainee(db, logger, getTestFile('stagiaires-pe.csv'), handler);
 
-        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+        await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_2@pe.com' });
         assert.strictEqual(next.training.place.inseeCode, '91521');
@@ -94,21 +109,36 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
         await insertIntoDatabase('comment', previous);
 
-        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-updated.csv'), handler);
+        let stats = await refreshTrainee(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
         let next = await db.collection('comment').findOne({ token: trainee.token });
-        assert.deepStrictEqual(next.training.organisation, {
-            id: '14000000000000008098',
-            label: 'ANOTEA FORMATION (SARL)',
-            name: 'ANOTEA ACCES FORMATION (SARL)',
-            siret: '82436343601239',
-        });
-        assert.deepStrictEqual(next.training.place.inseeCode, '99999');
+        assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
+            training: {
+                formacodes: ['46242', '99999'],
+                certifInfos: ['78997', '99999'],
+                organisation: {
+                    id: '14000000000000008098',
+                    label: 'ANOTEA FORMATION (SARL)',
+                    name: 'ANOTEA ACCES FORMATION (SARL)',
+                    siret: '82436343601239',
+                },
+                place: {
+                    inseeCode: '91999',
+                }
+            }
+        }));
+
         assert.deepStrictEqual(next.meta.history.length, 1);
         let history = next.meta.history[0];
         assert.ok(history.date);
         assert.deepStrictEqual(_.omit(history, ['date']), {
             training: {
+                certifInfos: {
+                    '1': null,
+                },
+                formacodes: {
+                    '1': null,
+                },
                 organisation: {
                     id: '14_OF_XXXXXXXXXX',
                     siret: '11111111111111',
