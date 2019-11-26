@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import UserContext from '../../UserContext';
+import AppContext from '../../AppContext';
 import logo from './logo.svg';
 
 import './Header.scss';
 
 const Header = ({ items, onLogout }) => {
 
-    let user = useContext(UserContext);
-    let profile = user.profile;
+    let { account } = useContext(AppContext);
+    let profile = account.profile;
 
     return (
         <div className={`Header ${profile}`}>

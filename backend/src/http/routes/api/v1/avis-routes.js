@@ -22,12 +22,12 @@ const buildAvisQuery = filters => {
         }
 
         if (filter.certif_info) {
-            query['training.certifInfo.id'] = filter.certif_info;
+            query['training.certifInfos'] = filter.certif_info;
         }
 
         if (filter.formacode) {
             let code = filter.formacode;
-            query['training.formacode'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
+            query['training.formacodes'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
         }
 
         return query;

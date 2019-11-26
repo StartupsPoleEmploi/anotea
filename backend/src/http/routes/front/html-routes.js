@@ -43,16 +43,13 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions }) => {
     router.get('/doc/:name', (req, res) => {
         let template = req.params.name;
 
-        if (!['widget', 'popup'].includes(template)) {
+        if (!['widget'].includes(template)) {
             res.status(404).render('errors/404');
             return;
         }
 
-        if (template === 'widget') {
-            if (configuration.env === 'dev' && !req.query['load_anotea_widget_iframe_from_localhost']) {
-                return res.redirect('/doc/widget?load_anotea_widget_iframe_from_localhost=true');
-            }
-            return res.render('front/doc/widget');
+        if (template === 'widget' && configuration.env === 'dev' && !req.query['load_anotea_widget_iframe_from_localhost']) {
+            return res.redirect('/doc/widget?load_anotea_widget_iframe_from_localhost=true');
         }
 
         return res.render(`front/doc/${template}`);

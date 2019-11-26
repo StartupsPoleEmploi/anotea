@@ -10,14 +10,14 @@ import { getSirens } from '../../services/sirensService';
 import { getFormations } from '../../services/formationsService';
 import { getDepartements } from '../../services/departementsService';
 import FINANCEURS from '../common/data/financeurs';
-import UserContext from '../UserContext';
+import AppContext from '../AppContext';
 import Button from '../common/Button';
 import FinanceurAvisPanel from './components/FinanceurAvisPanel';
 import FinanceurStatsPanel from './components/FinanceurStatsPanel';
 
 export default class FinanceurPage extends React.Component {
 
-    static contextType = UserContext;
+    static contextType = AppContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -60,8 +60,8 @@ export default class FinanceurPage extends React.Component {
     }
 
     isPoleEmploi() {
-        let user = this.context;
-        return user.codeFinanceur === '4';
+        let { account } = this.context;
+        return account.codeFinanceur === '4';
     }
 
     async componentDidMount() {

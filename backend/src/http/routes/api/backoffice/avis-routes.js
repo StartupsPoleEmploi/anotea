@@ -143,9 +143,19 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, r
     router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
-        let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
+        let { id, resendEmail } = await Joi.validate(req.params, {
+            id: objectId().required(),
+            resendEmail: Joi.boolean().default(false),
+        }, { abortEarly: false });
 
-        await workflow.delete(id, { profile });
+        await workflow.delete(id, { profile, resendEmail });
+
+        if (resendEmail) {
+            //TODO move this into workflow
+            let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
+            let trainee = await db.collection('trainee').findOne({ token: comment.token });
+            await mailing.sendVotreAvisEmail(trainee);
+        }
 
         return res.json({ 'message': 'avis deleted' });
     }));
@@ -208,35 +218,6 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, r
 
         return res.json(avis);
 
-    }));
-
-    router.put('/backoffice/avis/:id/resendEmail', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let { sendVotreAvisEmail } = mailing;
-
-        const parameters = await Joi.validate(req.params, {
-            id: Joi.string().required(),
-        }, { abortEarly: false });
-
-        if (!ObjectID.isValid(parameters.id)) {
-            throw Boom.badRequest('Identifiant invalide');
-        }
-
-        let advice = await db.collection('comment').findOne({ _id: new ObjectID(parameters.id) });
-
-        if (!advice) {
-            throw Boom.notFound('Identifiant inconnu');
-        }
-
-        let trainee = await db.collection('trainee').findOne({ token: advice.token });
-
-        if (!trainee) {
-            throw Boom.notFound('Stagiaire introuvable');
-        }
-
-        await sendVotreAvisEmail(trainee);
-        await db.collection('comment').removeOne({ _id: new ObjectID(parameters.id) });
-
-        res.json({ 'message': 'trainee email resent' });
     }));
 
     router.put('/backoffice/avis/:id/addReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
