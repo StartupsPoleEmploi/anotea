@@ -75,7 +75,7 @@ module.exports = ({ db, auth, passwords }) => {
     router.post('/backoffice/login', tryAndCatch(async (req, res) => {
 
         let { identifiant, password } = await Joi.validate(req.body, {
-            identifiant: Joi.string().required(),
+            identifiant: Joi.string().lowercase().required(),
             password: Joi.string().required(),
         }, { abortEarly: false });
 

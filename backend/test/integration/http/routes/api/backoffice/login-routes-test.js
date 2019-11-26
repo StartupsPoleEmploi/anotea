@@ -149,6 +149,20 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.strictEqual(response.statusCode, 200);
     });
 
+    it('can login with uppercase', async () => {
+
+        let app = await startServerWithRealAuth();
+        await insertIntoDatabase('accounts', newModerateurAccount({
+            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C'
+        }));
+
+        let response = await request(app)
+        .post('/api/backoffice/login')
+        .send({ identifiant: 'ADMIN@pole-emploi.fr', password: 'password' });
+
+        assert.strictEqual(response.statusCode, 200);
+    });
+
     it('should rehash password', async () => {
 
         let app = await startServerWithRealAuth();
