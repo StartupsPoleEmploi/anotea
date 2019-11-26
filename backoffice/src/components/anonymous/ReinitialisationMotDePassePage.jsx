@@ -8,9 +8,11 @@ import Page from '../common/page/Page';
 import { CenteredForm } from '../common/page/form/CenteredForm';
 import { checkIfPasswordTokenExists, resetPassword } from './passwordService';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
-import GlobalMessage from '../common/message/GlobalMessage';
+import AppContext from '../AppContext';
 
 export default class ReinitialisationMotDePassePage extends React.Component {
+
+    static contextType = AppContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -20,7 +22,6 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            message: null,
             password: '',
             confirmation: '',
             errors: {
@@ -30,17 +31,28 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         };
     }
 
+
     componentDidMount() {
         let { navigator } = this.props;
         let { forgottenPasswordToken } = navigator.getQuery();
+        let { showMessage } = this.context;
 
+        this.setState({ loading: true });
         checkIfPasswordTokenExists(forgottenPasswordToken)
-        .catch(this.showErrorMessage);
+        .then(() => this.setState({ loading: false }))
+        .catch(() => {
+            showMessage({
+                timeout: 5000,
+                text: 'Le lien utilisé ne semble plus valide.',
+                color: 'red',
+            });
+        });
     }
 
     onSubmit = () => {
-
         let { password, confirmation } = this.state;
+        let { showMessage } = this.context;
+
         this.setState({
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
@@ -52,17 +64,30 @@ export default class ReinitialisationMotDePassePage extends React.Component {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
             if (isFormValid) {
                 let { forgottenPasswordToken } = this.props.navigator.getQuery();
-                this.setState({ loading: true });
 
+                this.setState({ loading: true });
                 resetPassword(password, forgottenPasswordToken)
-                .then(() => this.props.navigator.goToPage('/admin/login', { message: 'Votre mot de passe a été modifié avec succès' }))
-                .catch(() => this.setState({ loading: false, message: 'Une erreur est survenue' }));
+                .then(() => {
+                    showMessage({
+                        text: 'Votre mot de passe a été modifié avec succès',
+                        color: 'green',
+                    });
+
+                    return this.props.navigator.goToPage('/admin/login');
+                })
+                .catch(() => {
+                    this.setState({ loading: false });
+                    showMessage({
+                        text: 'Une erreur est survenue lors de la réinitialisation du mot de passe.',
+                        color: 'red',
+                    });
+                });
             }
         });
     };
 
     render() {
-        let { errors, message } = this.state;
+        let { errors } = this.state;
 
         return (
             <Page
@@ -105,11 +130,6 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                                         >
                                             Confirmer
                                         </Button>
-                                        {message &&
-                                        <GlobalMessage
-                                            message={{ text: message, color: 'red', timeout: 5000 }}
-                                            onClose={() => this.setState({ message: null })} />
-                                        }
                                     </>
                                 }
                             />

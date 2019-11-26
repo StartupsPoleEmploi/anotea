@@ -10,9 +10,11 @@ import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
 import { activate, getActivationStatus } from './activationService';
 import { login } from './loginService';
 import { NavLink } from 'react-router-dom';
-import GlobalMessage from '../common/message/GlobalMessage';
+import AppContext from '../AppContext';
 
 export default class ActivationComptePage extends React.Component {
+
+    static contextType = AppContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -23,7 +25,6 @@ export default class ActivationComptePage extends React.Component {
         super(props);
         this.state = {
             loading: true,
-            message: null,
             password: '',
             confirmation: '',
             errors: {
@@ -41,18 +42,24 @@ export default class ActivationComptePage extends React.Component {
     componentDidMount() {
         let { navigator } = this.props;
         let query = navigator.getQuery();
+        let { showMessage } = this.context;
+
 
         getActivationStatus(query.token)
         .then(account => this.setState({ account, loading: false }))
-        .catch(this.showErrorMessage);
+        .catch(() => {
+            showMessage({
+                timeout: 5000,
+                text: 'Le lien utilisé ne semble pas valide.',
+                color: 'red',
+            });
+        });
     }
-
-    showErrorMessage = () => {
-        this.setState({ loading: false, message: 'Une erreur est survenue' });
-    };
 
     onSubmit = () => {
         let { password, confirmation, account } = this.state;
+        let { showMessage } = this.context;
+
         this.setState({
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
@@ -71,14 +78,20 @@ export default class ActivationComptePage extends React.Component {
                     let data = await login(account.identifiant, password);
                     this.props.onLogin(data);
                 })
-                .catch(this.showErrorMessage);
+                .catch(() => {
+                    this.setState({ loading: false });
+                    showMessage({
+                        text: 'Une erreur est survenue lors de l\'activation du compte.',
+                        color: 'red',
+                    });
+                });
             }
         });
     };
 
     render() {
 
-        let { account, errors, message } = this.state;
+        let { account, errors } = this.state;
 
         return (
             <Page
@@ -152,11 +165,6 @@ export default class ActivationComptePage extends React.Component {
                                             >
                                                 Confirmer
                                             </Button>
-                                            {message &&
-                                            <GlobalMessage
-                                                message={{ text: message, level: 'error', timeout: 5000 }}
-                                                onClose={() => this.setState({ message: null })} />
-                                            }
                                         </>
                                 }
                             />
