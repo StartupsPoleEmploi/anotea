@@ -1,4 +1,4 @@
-const asSiren = siret => siret.substring(0, 9);
+const asSiren = require('../../../../common/utils/asSiren');
 
 const getDepartement = codePostal => codePostal.substring(0, 2);
 
