@@ -6,6 +6,7 @@ import 'popper.js/dist/popper.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './utils/datepicker.js';
+import './utils/moment-fr';
 import App from './App';
 import * as Sentry from './utils/sentry';
 import WithRouter from './components/WithRouter';

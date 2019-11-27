@@ -18,8 +18,8 @@ export default class Formation extends React.Component {
                     <span>{avis.training.title}</span><br />
                     <span>
                     {avis.training.place.city}
-                        &nbsp;du <PrettyDate date={new Date(avis.training.startDate)} short={true} />
-                        &nbsp;au <PrettyDate date={new Date(avis.training.scheduledEndDate)} short={true} />
+                        &nbsp;du <PrettyDate date={new Date(avis.training.startDate)} numeric={true} />
+                        &nbsp;au <PrettyDate date={new Date(avis.training.scheduledEndDate)} numeric={true} />
                 </span>
                 </p>
             </div>

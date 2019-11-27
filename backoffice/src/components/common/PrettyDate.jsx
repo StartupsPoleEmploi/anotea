@@ -1,19 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedDate } from 'react-intl';
+import moment from 'moment';
 
-const PrettyDate = ({ date, short }) => {
-    return (
-        <FormattedDate
-            value={date}
-            day="numeric"
-            month={short ? 'numeric' : 'long'}
-            year="numeric" />
-    );
-};
+const PrettyDate = ({ date, numeric }) => moment(date).format(numeric ? 'L' : 'LL');
+
 PrettyDate.propTypes = {
     date: PropTypes.object.isRequired,
-    short: PropTypes.bool,
+    numeric: PropTypes.bool,
 };
 
 export default PrettyDate;
