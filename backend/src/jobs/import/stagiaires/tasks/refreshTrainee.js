@@ -25,23 +25,31 @@ module.exports = async (db, logger, file, handler) => {
         });
     };
 
-    let pickPropertiesToRefresh = trainee => {
+    let pickTrainingPropertiesToRefresh = trainee => {
         let training = trainee.training;
         let inseeCode = training.place.inseeCode;
         return {
-            training: {
-                formacodes: training.formacodes,
-                certifInfos: training.certifInfos,
-                organisation: training.organisation,
-                ...(_.isEmpty(inseeCode) ? {} : { place: { inseeCode: inseeCode } }),
-            }
+            formacodes: training.formacodes,
+            certifInfos: training.certifInfos,
+            organisation: training.organisation,
+            ...(_.isEmpty(inseeCode) ? {} : { place: { inseeCode: inseeCode } }),
+        };
+    };
+
+    let pickTraineePropertiesToRefresh = trainee => {
+        return {
+            dnIndividuNational: trainee.trainee.dnIndividuNational,
+            idLocal: trainee.trainee.idLocal,
         };
     };
 
     let refreshStagiaire = async (previous, current) => {
 
-        let properties = pickPropertiesToRefresh(current);
-        let newTrainee = mergeDeep({}, previous, properties);
+        let newTrainee = mergeDeep({},
+            previous,
+            { training: pickTrainingPropertiesToRefresh(current) },
+            { trainee: pickTraineePropertiesToRefresh(current) },
+        );
 
         if (!isDeepEquals(previous, newTrainee)) {
             let differences = getDifferences(previous, newTrainee);
@@ -54,8 +62,10 @@ module.exports = async (db, logger, file, handler) => {
 
     let refreshAvis = async (previous, currentTrainee) => {
 
-        let properties = pickPropertiesToRefresh(currentTrainee);
-        let newComment = mergeDeep({}, previous, properties);
+        let newComment = mergeDeep({},
+            previous,
+            { training: pickTrainingPropertiesToRefresh(currentTrainee) }
+        );
 
         if (!isDeepEquals(previous, newComment)) {
             let differences = getDifferences(previous, newComment);
@@ -103,5 +113,5 @@ module.exports = async (db, logger, file, handler) => {
         }, { parallel: 100 }),
     ]);
 
-    return stats.invalid === 0 ? Promise.resolve(stats) : Promise.reject(stats);
+    return stats;
 };
