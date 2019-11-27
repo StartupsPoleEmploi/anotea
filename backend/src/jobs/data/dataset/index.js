@@ -74,9 +74,9 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
             backoffice: {
                 url: 'http://localhost:3000',
                 logins: [
-                    { login: 'moderateur@pole-emploi.fr', password, profile: 'moderateur' },
-                    { login: 'cr', password, profile: 'financeur' },
-                    { login: '22222222222222', password, profile: 'organisme' },
+                    { profile: 'moderateur', login: 'moderateur', password },
+                    { profile: 'financeur', login: 'conseil_regional', password },
+                    { profile: 'organisme', login: '22222222222222', password, },
                 ]
             },
         },
