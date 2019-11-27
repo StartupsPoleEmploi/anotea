@@ -21,6 +21,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         let next = await db.collection('trainee').findOne({ 'trainee.email': 'email_1@pe.com' });
         assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
+            trainee: {
+                dnIndividuNational: 'AAAAAAA',
+                idLocal: '0000000000Z',
+            },
             training: {
                 formacodes: ['31734', '99999'],
                 certifInfos: ['8122', '99999'],
@@ -62,6 +66,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.deepStrictEqual(next.meta.history.length, 2);
         assert.ok(next.meta.history[0].date);
         assert.deepStrictEqual(_.omit(next.meta.history[0], ['date']), {
+            trainee: {
+                dnIndividuNational: '1111111111',
+                idLocal: '0167942369Z',
+            },
             training: {
                 certifInfos: {
                     '1': null,
