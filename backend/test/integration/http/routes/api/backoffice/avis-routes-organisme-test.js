@@ -178,6 +178,27 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsOrganis
         });
     });
 
+    it('can create a reponse with same siren', async () => {
+
+        let app = await startServer();
+        let comment = buildComment({
+            training: {
+                organisation: { siret: '11111111111111' },
+            },
+        });
+        let [token] = await Promise.all([
+            logAsOrganisme(app, 'organisme@pole-emploi.fr', '11111111122222'),
+            insertIntoDatabase('comment', comment)
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${comment._id}/addReponse`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ text: 'Voici notre réponse' });
+
+        assert.strictEqual(response.statusCode, 200);
+    });
+
     it('can not create a reponse for another organisme', async () => {
 
         let app = await startServer();
