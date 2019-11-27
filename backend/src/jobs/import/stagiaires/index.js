@@ -17,12 +17,17 @@ cli.description('Import des stagiaires')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
+let sources = {
+    'PE': 'poleEmploi',
+    'IDF': 'ileDeFrance',
+};
+
 execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
 
     let { file, source, region, financeur, validate, refresh } = cli;
-    let sources = {
-        'PE': 'poleEmploi',
-        'IDF': 'ileDeFrance',
+    let filters = {
+        codeRegion: region,
+        codeFinanceur: financeur,
     };
 
     if (!file || !['PE', 'IDF'].includes(source)) {
@@ -30,15 +35,6 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
     }
 
     let handler = require(`./tasks/handlers/${sources[source]}CSVHandler`)(db, regions);
-    let filters = {
-        codeRegion: region,
-    };
-
-    if (financeur && !['2', '4'].includes(financeur)) {
-        return exit('Invalid arguments');
-    } else {
-        filters.codeFinanceur = financeur;
-    }
 
     if (validate) {
         logger.info(`Validating file ${file}...`);
