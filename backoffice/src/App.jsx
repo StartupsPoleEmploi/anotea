@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import fr from 'react-intl/locale-data/fr';
-import { addLocaleData, IntlProvider } from 'react-intl';
 import jwtDecode from 'jwt-decode';
 import { Redirect, Switch } from 'react-router-dom';
 import { getSession, getToken, removeSession, setSession } from './utils/session';
@@ -12,7 +10,6 @@ import FinanceurRoutes from './components/financeur/FinanceurRoutes';
 import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
 import AnonymousRoutes from './components/anonymous/AuthRoutes';
-import './utils/moment-fr';
 import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
 import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './styles/global.scss';
@@ -20,8 +17,6 @@ import Header from './components/common/header/Header';
 import MiscRoutes from './components/misc/MiscRoutes';
 import AppContext from './components/AppContext';
 import GlobalMessage from './components/common/message/GlobalMessage';
-
-addLocaleData([...fr]);
 
 class App extends Component {
 
@@ -112,27 +107,25 @@ class App extends Component {
 
         return (
             <>
-                <IntlProvider locale="fr">
-                    <AppContext.Provider value={appContext}>
-                        <div className="anotea">
-                            <Switch>
-                                <Redirect exact from="/" to={layout.defaultPath} />
-                                <Redirect exact from="/admin" to={layout.defaultPath} />
-                            </Switch>
+                <AppContext.Provider value={appContext}>
+                    <div className="anotea">
+                        <Switch>
+                            <Redirect exact from="/" to={layout.defaultPath} />
+                            <Redirect exact from="/admin" to={layout.defaultPath} />
+                        </Switch>
 
-                            <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
-                            <MiscRoutes />
-                            {layout.routes}
-                        </div>
-                        {message &&
-                        <GlobalMessage
-                            message={message}
-                            onClose={() => {
-                                return this.setState({ message: null });
-                            }} />
-                        }
-                    </AppContext.Provider>
-                </IntlProvider>
+                        <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
+                        <MiscRoutes />
+                        {layout.routes}
+                    </div>
+                    {message &&
+                    <GlobalMessage
+                        message={message}
+                        onClose={() => {
+                            return this.setState({ message: null });
+                        }} />
+                    }
+                </AppContext.Provider>
                 {false && <GridDisplayer />}
             </>
 
