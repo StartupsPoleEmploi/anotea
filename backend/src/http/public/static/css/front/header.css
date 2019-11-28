@@ -1,6 +1,10 @@
 .header {
     box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
     height: 107px;
+    width: 100%;
+    position: fixed;
+    z-index: 1000;
+    background: white;
 }
 
 .login {
@@ -24,9 +28,13 @@
     outline: none;
 }
 
-.logo img {
+.header .logo img {
     margin: 15px 50px 15px 200px;
+}
 
+.header .logo-pe-mobile {
+    display: none;
+    vertical-align: middle;
 }
 
 .header .logo-pe, .logo img  {
@@ -42,6 +50,10 @@
 .menu {
     margin-top: 15px;
     width: 175px;
+}
+
+.menu .burger {
+    display: none;
 }
 
 .menu .content {
@@ -71,19 +83,20 @@ a.admin, a.contact {
 
 .menu .bar {
     height: 3px;
-    width: 30px;
+    width: 32px;
     border-radius: 2px;
+    display: none;
 }
 
-.financeur.menu .bar, .financeur.menu .button {
+.menu .bar.financeur {
     background-color: #0d7d57;
 }
 
-.de.menu .bar, .de.menu .button {
+.menu .bar.de {
     background-color: #384EAA;
 }
 
-.of.menu .bar, .of.menu .button {
+.menu .bar.of {
     background-color: #29333C;
 }
 
@@ -113,6 +126,10 @@ a.admin, a.contact {
 
 .menu li {
     line-height: 25px;
+}
+
+.header .menu .content ul li .icon {
+    display: none;
 }
 
 a.contact {
@@ -147,4 +164,112 @@ a.contact {
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
+}
+
+.menu-mobile {
+    display: none;
+}
+
+@media (max-width: 740px) {
+
+    .header {
+        height: 48px;
+    }
+
+    .header .logo-pe {
+        display: none;
+    }
+
+    .header .logo-pe-mobile, .header .logo img {
+        display: inline-block;
+    }
+
+    .header .logo-pe-mobile, .header .logo img {
+        height: 36px;
+        margin: inherit;
+        margin-top: 5px;
+        display: inline-block;
+    }
+
+    .header .logo img, .header .logo-pe-mobile {
+        margin-left: 16px;
+    }
+
+    .header .menu {
+        margin-top: 2px;
+    }
+
+    .header .menu a.unroll {
+        margin-top: 0;
+        padding-bottom: 0;
+    }
+
+    .header .menu .burger {
+        display: inherit;
+        position: absolute;
+        right: 0;
+        width: 24px;
+    }
+
+    .header .admin, .header .menu span, .header  .menu .icon-close, .header  .menu .icon-open {
+        display: none;
+    }
+
+    .header .menu .content{
+        height: 100vh;
+        position: fixed;
+        top: 32px;
+        left: 0;
+        z-index: 1000;
+    }
+
+    .header .menu .content ul {
+        top: 0;
+        height: 100%;
+        width: 270px;
+    }
+
+    .header .menu .content ul li {
+        font-size: 1.1em;
+        line-height: 25px;
+        height: 40px;
+        margin: 20px 0px 20px 0px;
+    }
+
+    .header .menu .content ul li .icon {
+        display: inherit;
+        float: right;
+    }
+
+    .menu .bar {
+        display: inherit;
+        margin: 15px 0px 0px 5px;
+    }
+
+    .menu-mobile {
+        display: inherit;
+        position: fixed;
+        bottom: 0px;
+        width: 290px;
+    }
+
+    .menu-mobile .admin {
+        display: inherit;
+        font-size: 1em;
+    }
+
+    .menu-mobile .admin img {
+        width: 26px;
+        margin: 11px;
+    }
+
+    .menu-mobile a.contact {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        display: block;
+        padding: 0;
+        height: 48px;
+        line-height: 48px;
+    }
 }

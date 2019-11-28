@@ -13,6 +13,17 @@
  *  - fixed: boolean (default true). If false, css position = "relative". If true css position = "absolute"
  *  - validateFollow: true/false -> is equal to a click on "ok" on first document click (default true). A false value specifies a click to button "ok" as mandatory
  *  - consent: array of specifics cookies (optional)
+ *  - locale: json to change default text
+ *          ex: var locale={
+ *                    'ok': 'Ok',
+ *                    'notOk': 'Interdire',
+ *                    'choice': 'Choisir mes cookies',
+ *                    'acceptAll': 'Autoriser tous les cookies',
+ *                    'denyAll': 'Interdire tous les cookies',
+ *                    'accept': 'Autoriser',
+ *                    'deny': 'Interdire',
+ *                    'close': 'X'
+ *                   };
  *
  * Example: (Attention to mandatory tags)
  *  - $.rgpWhat('Les cookies assurent le bon fonctionnement de nos services. En utilisant ces derniers, vous acceptez l\'utilisation des cookies. <a href="" target="_blank">En savoir plus</a>.',
@@ -82,16 +93,19 @@
 		var div=false;
 		var version="2";
 		var loadCss="";
+		var buttons="ok|notOk|choice";
 		var locale={
-			'ok': 'Je refuse',
+			'ok': 'Ok',
 			'notOk': 'Interdire',
-			'choice': 'J\'accepte',
+			'choice': 'Choisir mes cookies',
 			'acceptAll': 'Autoriser tous les cookies',
 			'denyAll': 'Interdire tous les cookies',
 			'accept': 'Autoriser',
-			'deny': 'Interdire'
+			'deny': 'Interdire',
+			'close': 'X'
 		};
 		if(typeof options!=="undefined") {
+			if(typeof options.buttons!=="undefined") buttons=options.buttons;
 			if(typeof options.class!=="undefined") className=options.class;
 			if(typeof options.delay!=="undefined") delay=options.delay;
 			if(typeof options.cookieDuration!=="undefined") cookieDuration=options.cookieDuration;
@@ -210,87 +224,109 @@
 
 		var runCallbacks=function(consentOptions) {
 			/* Le cookie existe, on execute les callback */
-			if(Array.isArray(consentOptions))
-				consentOptions.forEach(function(e) {
-					runCallback(e);
-				});
+			consentOptions.forEach(function(e) {
+				runCallback(e);
+			});
 		}
 		/***************/
-		
 
 		var display=function(consentOptions,text,className,position,fixed) {
 			loadCssFile(loadCss);
 
 			var div=$(document.createElement("div"));
+			var txt=$(document.createElement("div")).addClass('text');
 			var doc=$('<div>').addClass('consent-list').css('display','none');
 
-			div.css({"display":"none","width":"100%","position":fixed?"fixed":"relative","zIndex":"255","left":"0"})
+			div.css({"display":"none","width":"100%","position":fixed?"fixed":"relative","left":"0"})
 			   .addClass(className);
 			if(position=="top") div.css("top","0"); else div.css("bottom","0");
-			div.html(text);
+            txt.html(text).appendTo(div);
+            
+            divBtns = $(document.createElement("div")).addClass('btns');
+            divBtns.appendTo(div);
 
-			$('<button>'+locale.ok+'</button>').appendTo(div).click(function() {
-				saveCookieConsent(cookieName,consentOptions);
-				runCallbacks(consentOptions);
-				div.slideUp();
+			/* Deploy buttons list */
+			buttons.split("|").forEach(function(button) {
+				switch(button) {
+					case "ok":
+						$('<button>'+locale.ok+'</button>').addClass('accept').appendTo(divBtns).click(function() {
+							div.slideUp();
+							consentOptions.forEach(function(e) {
+								e.value=true;
+							});
+							saveCookieConsent(cookieName,consentOptions);
+							runCallbacks(consentOptions);
+						});
+						break;
+					case "notOk":
+						$('<button>'+locale.notOk+'</button>').addClass('deny').appendTo(divBtns).click(function() {
+							div.slideUp();
+							consentOptions.forEach(function(e) {
+								e.value=false;
+							});
+							saveCookieConsent(cookieName,consentOptions);
+							runCallbacks(consentOptions);
+						});
+						break;
+					case "choice":
+						$('<button>'+locale.choice+'</button>').appendTo(divBtns).click(function() {
+							txt.slideUp();
+							doc.slideDown();
+							//doc.slideToggle();
+						});
+						break;
+				}
 			});
-			if(Array.isArray(consentOptions)) {
-				$('<button>'+locale.choice+'</button>').appendTo(div).click(function() {
-					doc.slideToggle();
-				});
 			
-				var row=$('<div>').addClass('all-cookies-choice').appendTo(doc);
+			row=$('<div>').addClass('all-cookies-choice').appendTo(doc);
 
-				var buttonAcceptAll=$(document.createElement("button")).addClass('accept').html(locale.acceptAll).click(function() {
-					$(this).addClass('selected');
-					buttonDenyAll.removeClass('selected');
-					saveConsent(null,true);
-				}).appendTo(row);
-				var buttonDenyAll=$(document.createElement("button")).addClass('deny').html(locale.denyAll).click(function() {
-					$(this).addClass('selected');
-					buttonAcceptAll.removeClass('selected');
-					saveConsent(null,false);
-				}).appendTo(row);
+			var buttonAcceptAll=$(document.createElement("button")).addClass('accept').html(locale.acceptAll).click(function() {
+				$(this).addClass('selected');
+				buttonDenyAll.removeClass('selected');
+				saveConsent(null,true);
+			}).appendTo(row);
+			var buttonDenyAll=$(document.createElement("button")).addClass('deny').html(locale.denyAll).click(function() {
+				$(this).addClass('selected');
+				buttonAcceptAll.removeClass('selected');
+				saveConsent(null,false);
+			}).appendTo(row);
+			var buttonClose=$(document.createElement("button")).addClass('action-close').html(locale.close).click(function() {
+				saveCookieConsent(cookieName,consentOptions);
+				div.slideUp();
+			}).appendTo(row);
 
-				/* Ajoute chaque ligne de demande de consentement */
-				consentOptions.forEach(function(e) {
-					var row=$('<div>').addClass('cookie-choice');
-					
-					var col;
-					col=$('<div>').addClass('explanations');
-					col.html('<span class="title">'+e.title+'</span><p class="description">'+e.description+"</p>");
-					col.appendTo(row);
+			/* Ajoute chaque ligne de demande de consentement */
+			consentOptions.forEach(function(e) {
+				var row=$('<div>').addClass('cookie-choice');
+				
+				var col;
+				col=$('<div>').addClass('explanations');
+				col.html('<span class="title">'+e.title+'</span><p class="description">'+e.description+"</p>");
+				col.appendTo(row);
 
-					col=$('<div>').addClass('buttons');
-					e.accept=$(document.createElement("button")).addClass('accept').html(locale.accept).click(function() {
-						e.value=true;
-						setButtonClass(e);
-						saveCookieConsent(cookieName,consentOptions);
-					}).appendTo(col);
-					e.denied=$(document.createElement("button")).addClass('deny').html(locale.deny).click(function() {
-						e.value=false;
-						setButtonClass(e);
-						saveCookieConsent(cookieName,consentOptions);
-					}).appendTo(col);
-					col.appendTo(row);
-
-					row.appendTo(doc);
-				});
-
-				doc.appendTo(div);
-			} else {
-				$('<button>'+locale.notOk+'</button>').appendTo(div).click(function() {
-					div.slideUp();
-					consentOptions=false;
-					runCallbacks(consentOptions);
+				col=$('<div>').addClass('buttons');
+				e.accept=$(document.createElement("button")).addClass('accept').html(locale.accept).click(function() {
+					e.value=true;
+					setButtonClass(e);
 					saveCookieConsent(cookieName,consentOptions);
-				});
-			}
+				}).appendTo(col);
+				e.denied=$(document.createElement("button")).addClass('deny').html(locale.deny).click(function() {
+					e.value=false;
+					setButtonClass(e);
+					saveCookieConsent(cookieName,consentOptions);
+				}).appendTo(col);
+				
+				col.appendTo(row);
+
+				row.appendTo(doc);
+			});
+
+			doc.appendTo(div);
 
 			if(position=='bottom')
 				div.appendTo("body");
 			else
-                $("body").prepend(div);
+				$("body").prepend(div);
 			return div;
 		};
 
@@ -320,38 +356,26 @@
 				return jsonOptions;
 			}
 		}
-        console.log("div")
+
 		var show=function() {
-            console.log(div)
 			if(div===false) {
 				div=display(consentOptions,text,className,position,fixed);
 			}
+			autoSelectButtons(consentOptions);
+			div.slideDown("fast")
 		}
 
+		/* Main */
 		var consentCookie=getCookie(cookieName);
 
-		if(typeof consentCookie!=="undefined") {
-			if(typeof consentCookie==='boolean' && Array.isArray(consentOptions)) {
-			}
-		}
 		initConsentOptions(consentCookie,consentOptions);
 
-
 		if(typeof consentCookie==="undefined" || forceDisplay) {
-			/* Le cookie n'existe pas, on demande le consentement */
-			div=display(consentOptions,text,className,position,fixed);
-			autoSelectButtons(consentOptions);
-			if(delay) setTimeout(function() {div.slideDown("fast");},delay);
-            else div.show();
-            console.log(div.slideDown)
-            div.slideDown("fast")
+			runCallbacks(consentOptions);
+			if(delay) setTimeout(function() {show();},delay);
+			else show();
 			return true;
 		} else {
-			//var div=display(consentOptions,text,className,position,fixed);
-			//autoSelectButtons(consentOptions);
-			//if(delay) setTimeout(function() {div.slideDown("fast");},delay);
-			//else div.show();
-
 			runCallbacks(consentOptions);
 		}
 		return false;
