@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { randomize } = require('./data/dataset');
 const config = require('config');
+const createEmails = require('../../src/common/components/emails/emails');
 const logger = require('./components/fake-logger');
 const fakeMailer = require('./components/fake-new-mailer');
 const fakePasswords = require('./components/fake-passwords');
@@ -13,26 +14,23 @@ module.exports = {
     withComponents: callback => {
 
         let datalake = path.join(__dirname, '../../../.data/datalake/test-logs');
+        let configuration = Object.assign({}, config, {
+            mongodb: {
+                uri: config.mongodb.uri.split('anotea').join(randomize('anotea_test').substring(0, 20))
+            },
+            api: {
+                pagination: 2,
+            },
+            log: {
+                datalake: {
+                    fileNamePrefix: randomize('anotea'),
+                    path: datalake,
+                }
+            },
+        });
 
         return () => {
             before(() => {
-
-                let uri = config.mongodb.uri.split('anotea').join(randomize('anotea_test').substring(0, 20));
-                let configuration = Object.assign({}, config, {
-                    mongodb: {
-                        uri
-                    },
-                    api: {
-                        pagination: 2,
-                    },
-                    log: {
-                        datalake: {
-                            fileNamePrefix: randomize('anotea'),
-                            path: datalake,
-                        }
-                    },
-                });
-
                 _componentsHolder = components({
                     configuration,
                     logger,
@@ -63,6 +61,14 @@ module.exports = {
 
             let testContext = {
                 getComponents: () => _componentsHolder,
+                createEmailMocks: async mailerOptions => {
+                    let { db, regions, templates } = await _componentsHolder;
+                    let mailer = fakeMailer(mailerOptions);
+                    return {
+                        mailer,
+                        emails: createEmails(db, configuration, regions, mailer, templates)
+                    };
+                },
                 getTestFile: fileName => path.join(__dirname, 'data', fileName)
             };
 

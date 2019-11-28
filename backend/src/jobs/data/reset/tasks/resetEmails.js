@@ -6,8 +6,9 @@ module.exports = db => {
                 mailSent: true
             },
             {
-                $set: {
-                    mailSent: false
+                $unset: {
+                    mailSent: 1,
+                    mailSentDate: 1,
                 }
             }
         ),
@@ -17,8 +18,10 @@ module.exports = db => {
                 passwordHash: { $ne: null }
             },
             {
-                $set: {
-                    newCommentsNotificationEmailSentDate: null
+                $unset: {
+                    newCommentsNotificationEmailSentDate: 1,
+                    mailSent: 1,
+                    mailSentDate: 1,
                 }
             }
         )

@@ -14,12 +14,10 @@ cli.description('send notifications to organismes')
 
 execute(async ({ logger, db, configuration, regions, emails, sendSlackNotification }) => {
 
-    let { createNouveauxAvisNotificationEmail } = emails;
-
     logger.info(`Sending emails to organismes...`);
 
     try {
-        let stats = await sendNotificationEmails(db, logger, configuration, createNouveauxAvisNotificationEmail, {
+        let stats = await sendNotificationEmails(db, logger, configuration, emails, {
             limit: cli.limit,
             delay: cli.delay,
             codeRegions: cli.region ? [cli.region] :

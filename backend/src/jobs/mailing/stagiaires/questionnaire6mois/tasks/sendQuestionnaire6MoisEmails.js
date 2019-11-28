@@ -1,7 +1,7 @@
 let { delay } = require('../../../../job-utils');
 
 
-module.exports = async (db, logger, createEmail, options = {}) => {
+module.exports = async (db, logger, emails, options = {}) => {
 
     let stats = {
         total: 0,
@@ -15,6 +15,7 @@ module.exports = async (db, logger, createEmail, options = {}) => {
                 'mailing.questionnaire6Mois.mailSent': { $exists: false },
                 'campaign': 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
                 'training.certifInfos.0': { $exists: true },
+                'unsubscribe': false,
             }
         },
         {
@@ -31,9 +32,10 @@ module.exports = async (db, logger, createEmail, options = {}) => {
         let { trainee } = await cursor.next();
 
         try {
-            let email = trainee.trainee.email;
-            logger.info(`Sending email to ${email}`);
-            await createEmail(trainee).send(email);
+            logger.info(`Sending email to ${(trainee.trainee.email)}`);
+            let message = emails.getEmailMessageByTemplateName('questionnaire6MoisEmail');
+
+            await message.send(trainee);
 
             if (options.delay) {
                 await delay(options.delay);

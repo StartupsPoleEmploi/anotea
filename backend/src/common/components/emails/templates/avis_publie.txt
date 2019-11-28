@@ -1,7 +1,0 @@
-Bonjour,
-
-Nous vous informons que nous allons prendre contact avec "<%= avis.training.organisation.label %>" suite au commentaire que vous avez déposé sur "<%= avis.training.title %>".
-
-<%- include('common/signature.txt'); %>
-
-<%- include('common/legal/stagiaires/mentions.txt'); %>

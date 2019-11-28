@@ -6,23 +6,13 @@ const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newComment, newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
 const sendNotificationEmails = require('../../../../../../src/jobs/mailing/organismes/notifications/tasks/sendNotificationEmails');
-const nouveauxAvisNotificationEmail = require('../../../../../../src/common/components/emails/nouveauxAvisNotificationEmail');
-const fakeMailer = require('../../../../../helpers/components/fake-new-mailer');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
-
-    let fakeEmailCreator = async (mailerOptions = {}) => {
-        let db = await getTestDatabase();
-        let { regions, templates } = await getComponents();
-
-        let mailer = fakeMailer(mailerOptions);
-        return nouveauxAvisNotificationEmail(db, regions, mailer, templates);
-    };
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createEmailMocks }) => {
 
     it('should send email notification to organisme when it as at least 5 not yet read comments', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         await Promise.all([
             ...(
                 _.range(5).map(() => {
@@ -50,10 +40,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        let results = await sendNotificationEmails(db, logger, configuration, await fakeEmailCreator({ calls: emailsSent }));
+        let results = await sendNotificationEmails(db, logger, configuration, emails);
 
-        assert.strictEqual(emailsSent[0].email, 'new@organisme.fr');
-        assert.strictEqual(emailsSent[0].message.subject, 'Pôle Emploi - Vous avez 5 nouveaux avis stagiaires');
+        let message = mailer.getLastEmailMessageSent();
+        assert.strictEqual(message.email, 'new@organisme.fr');
+        assert.strictEqual(message.parameters.subject, 'Pôle Emploi - Vous avez 5 nouveaux avis stagiaires');
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
@@ -66,7 +57,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
     it('should send another email notification to organisme when not email sent since 30 days', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         let newCommentsNotificationEmailSentDate = moment().subtract('45', 'days').toDate();
         await Promise.all([
             ...(
@@ -96,10 +87,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        let results = await sendNotificationEmails(db, logger, configuration, await fakeEmailCreator({ calls: emailsSent }));
+        let results = await sendNotificationEmails(db, logger, configuration, emails);
 
-        assert.deepStrictEqual(emailsSent[0].email, 'new@organisme.fr');
-        assert.strictEqual(emailsSent[0].message.subject, 'Pôle Emploi - Vous avez 5 nouveaux avis stagiaires');
+        let message = mailer.getLastEmailMessageSent();
+        assert.deepStrictEqual(message.email, 'new@organisme.fr');
+        assert.strictEqual(message.parameters.subject, 'Pôle Emploi - Vous avez 5 nouveaux avis stagiaires');
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
@@ -112,7 +104,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
     it('should ignore organisme with less than 5 comments', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 31705038300064,
@@ -127,9 +119,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        let results = await sendNotificationEmails(db, logger, configuration, await fakeEmailCreator({ calls: emailsSent }));
+        let results = await sendNotificationEmails(db, logger, configuration, emails);
 
-        assert.strictEqual(emailsSent.length, 0);
+        assert.strictEqual(mailer.getEmailMessagesSent().length, 0);
         assert.deepStrictEqual(results, {
             total: 0,
             sent: 0,
@@ -140,7 +132,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
     it('should ignore organisme with less than 5 comments not read yet', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         await Promise.all([
             ...(
                 _.range(2).map(() => {
@@ -168,9 +160,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        let results = await sendNotificationEmails(db, logger, configuration, await fakeEmailCreator({ calls: emailsSent }));
+        let results = await sendNotificationEmails(db, logger, configuration, emails);
 
-        assert.strictEqual(emailsSent.length, 0);
+        assert.strictEqual(mailer.getEmailMessagesSent().length, 0);
         assert.deepStrictEqual(results, {
             total: 0,
             sent: 0,
@@ -181,7 +173,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
     it('should ignore organisme when an email has been sent since less than 15 days', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         await Promise.all([
             ...(
                 _.range(5).map(() => {
@@ -210,9 +202,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        let results = await sendNotificationEmails(db, logger, configuration, await fakeEmailCreator({ calls: emailsSent }));
+        let results = await sendNotificationEmails(db, logger, configuration, emails);
 
-        assert.strictEqual(emailsSent.length, 0);
+        assert.strictEqual(mailer.getEmailMessagesSent().length, 0);
         assert.deepStrictEqual(results, {
             total: 0,
             sent: 0,

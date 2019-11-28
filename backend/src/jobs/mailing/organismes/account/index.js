@@ -2,7 +2,8 @@
 'use strict';
 
 const cli = require('commander');
-const sendAccountActivationEmails = require('./tasks/sendAccountActivationEmails');
+const _ = require('lodash');
+const sendAccountActivationEmails = require('./tasks/sendActivationCompteEmails');
 const { capitalizeFirstLetter, execute } = require('../../../job-utils');
 
 cli.description('Send new account emails')
@@ -16,23 +17,22 @@ cli.description('Send new account emails')
 
 execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
-    let { createAccountActivationEmail } = emails;
     let options = {
         limit: cli.limit,
         delay: cli.delay,
         siret: cli.siret,
     };
 
-    logger.info('Sending emails to new organismes...');
+    logger.info('Sending activation compte emails to new organismes...');
 
-    let ActionClass = require(`./tasks/actions`);
+    let ActionClass = require(`./tasks/actions/${_.capitalize(cli.type || 'send')}Action`);
     let action = new ActionClass(configuration, {
         codeRegions: cli.region ? [cli.region] :
             regions.findActiveRegions('mailing.organismes.accounts').map(region => region.codeRegion),
     });
 
     try {
-        let stats = await sendAccountActivationEmails(db, logger, createAccountActivationEmail, action, options);
+        let stats = await sendAccountActivationEmails(db, logger, emails, action, options);
 
         if (stats.total > 0) {
             sendSlackNotification({

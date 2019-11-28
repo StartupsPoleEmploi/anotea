@@ -27,9 +27,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         });
 
         let { mailer } = await getComponents();
-        let emailsSent = mailer.getCalls();
+        let message = mailer.getLastEmailMessageSent();
 
-        assert.strictEqual(emailsSent[0].email, 'contactus@poleemploi-formation.fr');
+        assert.strictEqual(message.email, 'contactus@poleemploi-formation.fr');
     });
 
     it('can not ask for a new password with an invalid identifier', async () => {

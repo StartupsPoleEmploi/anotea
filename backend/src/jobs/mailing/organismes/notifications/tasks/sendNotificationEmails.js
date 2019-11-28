@@ -2,7 +2,7 @@ const moment = require('moment');
 let { delay } = require('../../../../job-utils');
 const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
 
-module.exports = async (db, logger, configuration, createEmail, options = {}) => {
+module.exports = async (db, logger, configuration, emails, options = {}) => {
 
     let findOrganismes = () => {
         logger.info('Searching organismes with at least 5 non read comments...');
@@ -89,7 +89,8 @@ module.exports = async (db, logger, configuration, createEmail, options = {}) =>
             let email = getOrganismeEmail(organisme);
 
             logger.info(`Sending email to ${email}`);
-            await createEmail(organisme, readStatus).send(email);
+            let message = emails.getEmailMessageByTemplateName('avisNotificationEmail');
+            await message.send(organisme, readStatus);
 
             if (options.delay) {
                 await delay(options.delay);

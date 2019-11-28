@@ -7,9 +7,8 @@ const sentry = require('./common/components/sentry');
 const workflow = require('./common/components/workflow');
 const database = require('./common/components/database');
 const communes = require('./common/components/communes');
-const createEmails = require('./common/components/emails');
-const createTemplates = require('./common/components/emails/templates/templates');
-const createMailer = require('./common/components/mailer');
+const createEmails = require('./common/components/emails/emails');
+const createMailer = require('./common/components/emails/mailer');
 
 module.exports = async (options = {}) => {
 
@@ -18,18 +17,15 @@ module.exports = async (options = {}) => {
     let { client, db } = await database(logger, configuration);
     let regions = getRegions();
     let mailer = options.mailer || createMailer(db, configuration);
-    let templates = createTemplates(configuration);
-    let emails = createEmails(db, regions, mailer, templates);
+    let emails = createEmails(db, configuration, regions, mailer);
 
     return Object.assign({}, {
         configuration,
         logger,
         db,
         client,
-        mailer,
         regions,
         emails,
-        templates,
         sentry: sentry(logger, configuration),
         auth: auth(configuration),
         passwords: passwords(configuration),

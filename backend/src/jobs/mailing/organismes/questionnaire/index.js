@@ -12,10 +12,8 @@ cli.description('Envoie du questionnaire au organisme')
 
 execute(async ({ db, logger, emails }) => {
 
-    let { createQuestionnaireOrganismeEmail } = emails;
-
     logger.info(`Sending emails to organismes...`);
-    return sendOrganismeQuestionnaire(db, logger, createQuestionnaireOrganismeEmail, {
+    return sendOrganismeQuestionnaire(db, logger, emails, {
         limit: cli.limit,
         delay: cli.delay,
     });

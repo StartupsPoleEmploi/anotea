@@ -18,6 +18,24 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         }, custom));
     };
 
+    let checkEmail = callback => {
+        return new Promise(async (resolve, reject) => {
+            let { mailer } = await getComponents();
+            waitUntil()
+            .interval(100)
+            .times(10)
+            .condition(() => mailer.getEmailMessagesSent().length > 0)
+            .done(result => {
+                if (!result) {
+                    reject(new Error('The condition was never met.'));
+                }
+
+                callback(mailer);
+                resolve();
+            });
+        });
+    };
+
     it(`can search avis with status`, async () => {
 
         let app = await startServer();
@@ -205,20 +223,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.ok(response.body.reponse.lastStatusUpdate);
         assert.deepStrictEqual(response.body.reponse.status, 'rejected');
 
-        let { mailer } = await getComponents();
-        return new Promise((resolve, reject) => {
-            let emailsSent = mailer.getCalls();
-            waitUntil()
-            .interval(100)
-            .times(10)
-            .condition(() => emailsSent.length > 0)
-            .done(result => {
-                if (!result) {
-                    reject(new Error('The condition was never met.'));
-                }
-                assert.strictEqual(emailsSent[0].email, 'contact@poleemploi-formation.fr');
-                resolve();
-            });
+        return checkEmail(mailer => {
+            let message = mailer.getLastEmailMessageSent();
+            assert.strictEqual(message.email, 'contact@poleemploi-formation.fr');
+            assert.strictEqual(message.parameters.subject, 'Pôle Emploi - Votre réponse n\'a pas été prise en compte');
         });
     });
 
@@ -313,6 +321,61 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.ok(response.body.lastStatusUpdate);
     });
 
+    it('can cancel report', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345', status: 'reported' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: '11111111111111',
+                courriel: 'publish@email.fr',
+                SIRET: 11111111111111,
+            })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/publish`)
+        .send({ qualification: 'positif' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        return checkEmail(mailer => {
+            let message = mailer.getLastEmailMessageSent();
+            assert.strictEqual(message.email, 'publish@email.fr');
+            assert.strictEqual(message.parameters.subject, 'Pôle Emploi - Avis signalé dans votre Espace Anotéa');
+        });
+    });
+
+    it('can confirm report', async () => {
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345', status: 'reported' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: '11111111111111',
+                courriel: 'reject@email.fr',
+                SIRET: 11111111111111,
+            })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/reject`)
+        .send({ qualification: 'injure' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        return checkEmail(mailer => {
+            let message = mailer.getEmailMessagesSent().find(m => m.email === 'reject@email.fr');
+            assert.strictEqual(message.email, 'reject@email.fr');
+            assert.strictEqual(message.parameters.subject, 'Pôle Emploi - Avis signalé dans votre Espace Anotéa');
+        });
+    });
+
     it('can not publish an avis of another region', async () => {
 
         let app = await startServer();
@@ -354,7 +417,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         });
     });
 
-    it('can reject an avis', async () => {
+    it('can reject an avis (injure)', async () => {
 
         let app = await startServer();
         const id = new ObjectID();
@@ -373,6 +436,38 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.status, 'rejected');
         assert.deepStrictEqual(response.body.qualification, 'injure');
         assert.ok(response.body.lastStatusUpdate);
+
+        return checkEmail(mailer => {
+            let message = mailer.getLastEmailMessageSent();
+            assert.strictEqual(message.email, 'henri@email.fr');
+            assert.strictEqual(message.parameters.subject, 'Rejet de votre avis sur votre formation Développeur à INSTITUT DE FORMATION');
+        });
+    });
+
+    it('can reject an avis (alerte)', async () => {
+
+        let app = await startServer();
+        const id = new ObjectID();
+        let [token] = await Promise.all([
+            logAsModerateur(app, 'admin@pole-emploi.fr'),
+            insertIntoDatabase('comment', newComment({ _id: id, token: '12345' })),
+            insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
+        ]);
+
+        let response = await request(app)
+        .put(`/api/backoffice/avis/${id}/reject`)
+        .send({ qualification: 'alerte' })
+        .set('authorization', `Bearer ${token}`);
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.deepStrictEqual(response.body.status, 'rejected');
+        assert.deepStrictEqual(response.body.qualification, 'alerte');
+        assert.ok(response.body.lastStatusUpdate);
+        return checkEmail(mailer => {
+            let message = mailer.getLastEmailMessageSent();
+            assert.strictEqual(message.email, 'henri@email.fr');
+            assert.strictEqual(message.parameters.subject, 'Nous avons bien pris en compte votre commentaire');
+        });
     });
 
     it('can not reject an avis of another region', async () => {
@@ -433,20 +528,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let count = await db.collection('comment').countDocuments({ _id: id });
         assert.strictEqual(count, 0);
 
-        let { mailer } = await getComponents();
-        return new Promise((resolve, reject) => {
-            waitUntil()
-            .interval(100)
-            .times(10)
-            .condition(() => mailer.getCalls().length > 0)
-            .done(result => {
-                if (!result) {
-                    reject(new Error('The condition was never met.'));
-                }
-                let emailSent = mailer.getCalls()[mailer.getCalls().length - 1];
-                assert.strictEqual(emailSent.email, 'henri@email.fr');
-                resolve();
-            });
+        return checkEmail(mailer => {
+            let message = mailer.getLastEmailMessageSent();
+            assert.strictEqual(message.email, 'henri@email.fr');
         });
     });
 

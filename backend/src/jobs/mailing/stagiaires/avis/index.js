@@ -17,7 +17,6 @@ cli.description('send email campaign')
 execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
     let type = cli.type || 'Send';
-    let { createAvisStagiaireEmail } = emails;
     let ActionClass = require(`./tasks/actions/${type}Action`);
     let action = new ActionClass(configuration, {
         campaign: cli.campaign,
@@ -28,7 +27,7 @@ execute(async ({ logger, db, configuration, emails, regions, sendSlackNotificati
     logger.info(`Sending emails to stagiaires (${type})...`);
 
     try {
-        let stats = await sendAvisEmails(db, logger, createAvisStagiaireEmail, action, {
+        let stats = await sendAvisEmails(db, logger, emails, action, {
             limit: cli.limit,
             delay: cli.delay,
         });

@@ -1,7 +1,7 @@
 let { delay } = require('../../../../job-utils');
 let getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
 
-module.exports = (db, logger, createEmail, options = {}) => {
+module.exports = (db, logger, emails, options = {}) => {
 
     return new Promise(async (resolve, reject) => {
 
@@ -21,12 +21,12 @@ module.exports = (db, logger, createEmail, options = {}) => {
         while (await cursor.hasNext()) {
             stats.total++;
             let organisme = await cursor.next();
-            let email = getOrganismeEmail(organisme);
 
             try {
-                logger.info(`Sending email to ${email}`);
+                logger.info(`Sending email to ${(getOrganismeEmail(organisme))}`);
 
-                await createEmail(organisme).send(getOrganismeEmail(organisme));
+                let message = emails.getEmailMessageByTemplateName('questionnaireOrganismeEmail');
+                await message.send(organisme);
 
                 if (options.delay) {
                     await delay(options.delay);

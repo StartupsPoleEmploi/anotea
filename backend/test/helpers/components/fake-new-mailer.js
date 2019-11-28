@@ -9,7 +9,7 @@ module.exports = (options = {}) => {
         } else {
             calls.push({
                 email: parameters[0],
-                message: parameters[1],
+                parameters: parameters[1],
                 options: parameters[2],
             });
             return Promise.resolve();
@@ -17,7 +17,9 @@ module.exports = (options = {}) => {
     };
 
     return {
-        getCalls: () => calls,
+        getEmailAddresses: () => calls.map(call => call.email),
+        getEmailMessagesSent: () => calls,
+        getLastEmailMessageSent: () => calls[calls.length - 1],
         createRegionalMailer: () => {
             return {
                 sendEmail: (...args) => {

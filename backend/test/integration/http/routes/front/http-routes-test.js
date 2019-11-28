@@ -17,7 +17,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         });
         await insertIntoDatabase('trainee', trainee);
 
-        let response = await request(app).get(`/mail/${trainee.token}/track`);
+        let response = await request(app).get(`/mail/stagiaires/${trainee.token}/track`);
 
         assert.strictEqual(response.statusCode, 200);
 
@@ -35,7 +35,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         let account = newOrganismeAccount();
         await insertIntoDatabase('accounts', account);
 
-        let response = await request(app).get(`/mail/${account.token}/track`);
+        let response = await request(app).get(`/mail/organismes/${account.token}/track`);
 
         assert.strictEqual(response.statusCode, 200);
 

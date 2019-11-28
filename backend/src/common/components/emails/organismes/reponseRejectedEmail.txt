@@ -1,0 +1,25 @@
+Votre réponse n'a pas été prise en compte
+
+Bonjour,
+
+Nous avons pris connaissance de la réponse que vous avez formulée dans votre Espace Anotéa
+
+<%= reponse %>
+
+
+Nous vous remercions de votre contribution à notre service. En répondant aux commentaires, vous apportez vous aussi un éclairage aux personnes qui consultent les avis en ligne
+
+Voici quelques conseils pour formuler votre réponse :
+
+- Ayez à l’esprit qu’elle s’adresse aux personnes qui vont consulter les avis Anotéa en ligne
+- Faites part de la prise en compte des remarques formulées par l’émetteur de l’avis
+- Objectivez en apportant des éléments factuels de réponse (nombre de retours à l’emploi, taux de réussite..., travaux menés ou planifiés...)
+- Ne rédigez pas votre réponse comme une réponse à une réclamation
+- Respectez l’anonymat des formateurs et des stagiaires
+- Ne faîtes pas mention de coordonnées téléphoniques ou mail
+
+Nous avons procédé au rejet de la réponse ci-dessus et nous vous invitons à la modifier dans votre Espace.
+
+<%- include('../common/signature.txt'); %>
+
+<%- include('../common/legal/organismes/mentions.txt'); %>

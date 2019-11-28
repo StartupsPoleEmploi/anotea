@@ -13,9 +13,7 @@ cli.description('Envoie du questionnaire à 6 mois')
 execute(async ({ db, logger, emails }) => {
 
     logger.info(`Sending emails to stagiaires...`);
-
-    let { createQuestionnaire6MoisEmail } = emails;
-    return sendQuestionnaire6MoisEmails(db, logger, createQuestionnaire6MoisEmail, {
+    return sendQuestionnaire6MoisEmails(db, logger, emails, {
         limit: cli.limit,
         delay: cli.delay,
     });

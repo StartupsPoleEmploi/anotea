@@ -5,21 +5,11 @@ const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newTrainee, randomize } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
 const sendAvisEmails = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/sendAvisEmails');
-const avisStagiaireEmail = require('../../../../../../src/common/components/emails/avisStagiaireEmail');
 const SendAction = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/actions/SendAction');
 const RetryAction = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/actions/RetryAction');
 const ResendAction = require('../../../../../../src/jobs/mailing/stagiaires/avis/tasks/actions/ResendAction');
-const fakeMailer = require('../../../../../helpers/components/fake-new-mailer');
 
-describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComponents }) => {
-
-    let fakeEmailCreator = async (options = {}) => {
-        let db = await getTestDatabase();
-        let { regions, templates } = await getComponents();
-
-        let mailer = fakeMailer(options);
-        return avisStagiaireEmail(db, regions, mailer, templates);
-    };
+describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createEmailMocks }) => {
 
     let getDummyAction = (selector = {}) => {
         return {
@@ -29,8 +19,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
 
     it('should send email to trainee (DummyAction)', async () => {
 
-        let emailsSent = [];
         let db = await getTestDatabase();
+        let { mailer, emails } = await createEmailMocks();
         let email = `${randomize('name')}@email.fr`;
         let action = getDummyAction({ _id: '1234' });
         await Promise.all([
@@ -42,20 +32,23 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        let results = await sendAvisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }), action);
+        let results = await sendAvisEmails(db, logger, emails, action);
 
         assert.deepStrictEqual(results, {
             total: 1,
             sent: 1,
             error: 0,
         });
-        assert.strictEqual(emailsSent[0].email, email);
+        let emailMessagesSent = mailer.getEmailMessagesSent();
+        assert.strictEqual(emailMessagesSent.length, 1);
+        assert.strictEqual(emailMessagesSent[0].parameters.subject, 'Pôle Emploi vous demande votre avis sur votre formation');
+        assert.deepStrictEqual(mailer.getEmailAddresses(), [email]);
     });
 
     it('should update trainee when mailer succeed', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { emails } = await createEmailMocks();
         let id = randomize('trainee');
         let action = getDummyAction();
         await Promise.all([
@@ -67,7 +60,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        await sendAvisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }), action);
+        await sendAvisEmails(db, logger, emails, action);
 
         let trainee = await db.collection('trainee').findOne({ _id: id });
         assert.ok(trainee.mailSent);
@@ -80,7 +73,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
     it('should increase maxRetry when an email has already been sent', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { emails } = await createEmailMocks();
         let id = randomize('trainee');
         let action = getDummyAction();
         await Promise.all([
@@ -93,7 +86,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        await sendAvisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }), action);
+        await sendAvisEmails(db, logger, emails, action);
 
         let trainee = await db.collection('trainee').findOne({ _id: id });
         assert.deepStrictEqual(trainee.mailRetry, 1);
@@ -102,6 +95,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
     it('should update trainee when mailer fails', async () => {
 
         let db = await getTestDatabase();
+        let { emails } = await createEmailMocks({ fail: true });
         let id = randomize('trainee');
         let action = getDummyAction();
         await Promise.all([
@@ -114,7 +108,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
         ]);
 
         try {
-            await sendAvisEmails(db, logger, await fakeEmailCreator({ fail: true }), action);
+            await sendAvisEmails(db, logger, emails, action);
             assert.fail();
         } catch (e) {
             let trainee = await db.collection('trainee').findOne({ _id: id });
@@ -132,7 +126,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
     it('should send email to new trainee (SendAction)', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         let email = `${randomize('name')}@email.fr`;
         let action = new SendAction(configuration);
         await Promise.all([
@@ -157,15 +151,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        await sendAvisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }), action);
+        await sendAvisEmails(db, logger, emails, action);
 
-        assert.strictEqual(emailsSent[0].email, email);
+        assert.deepStrictEqual(mailer.getEmailAddresses(), [email]);
     });
 
     it('should ignore region (SendAction', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         await Promise.all([
             insertIntoDatabase('trainee', newTrainee({
                 codeRegion: 'XX',
@@ -178,16 +172,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             codeRegions: ['11']
         });
 
-        await sendAvisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }), action);
+        await sendAvisEmails(db, logger, emails, action);
 
-        assert.strictEqual(emailsSent.length, 0);
+        assert.strictEqual(mailer.getEmailMessagesSent().length, 0);
     });
 
     it('should send email to trainee with smtp error (RetryAction)', async () => {
 
         let db = await getTestDatabase();
         let id = randomize('trainee');
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         let email = `${randomize('name')}@email.fr`;
         let action = new RetryAction(configuration);
         await Promise.all([
@@ -205,16 +199,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        await sendAvisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }), action);
+        await sendAvisEmails(db, logger, emails, action);
 
-        assert.strictEqual(emailsSent[0].email, email);
+        assert.deepStrictEqual(mailer.getEmailAddresses(), [email]);
     });
 
 
     it('should resend email to trainee already contacted but without avis (ResendAction)', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         let email = `${randomize('name')}@email.fr`;
         let action = new ResendAction(configuration);
         await Promise.all([
@@ -232,15 +226,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        await sendAvisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }), action);
+        await sendAvisEmails(db, logger, emails, action);
 
-        assert.strictEqual(emailsSent[0].email, email);
+        assert.deepStrictEqual(mailer.getEmailAddresses(), [email]);
     });
 
     it('should not resend email to trainee with avis (ResendAction)', async () => {
 
         let db = await getTestDatabase();
-        let emailsSent = [];
+        let { mailer, emails } = await createEmailMocks();
         let email = `${randomize('name')}@email.fr`;
         let action = new ResendAction(configuration);
         await Promise.all([
@@ -258,8 +252,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getComp
             })),
         ]);
 
-        await sendAvisEmails(db, logger, await fakeEmailCreator({ calls: emailsSent }), action);
+        await sendAvisEmails(db, logger, emails, action);
 
-        assert.deepStrictEqual(emailsSent, []);
+        assert.deepStrictEqual(mailer.getEmailMessagesSent(), []);
     });
 }));

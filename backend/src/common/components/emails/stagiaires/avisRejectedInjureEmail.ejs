@@ -1,0 +1,146 @@
+<html>
+    <head>
+        <title>Rejet de votre avis sur votre formation</title>
+        <meta name="viewport" content="width=device-width">
+        <style>
+            body {
+                font-size: 1em;
+                padding: 0px;
+                margin: 0px;
+                background-color: #f4f3f5;
+                font-size: 1.3em;
+                font-family: lato, sans-serif;
+            }
+
+            .content, .header {
+                background-color: white;
+            }
+
+            .content, .header, .footer {
+                width: 80%;
+                margin: auto;
+            }
+
+            a {
+                color: black;
+            }
+
+            a:hover {
+                text-decoration: none;
+                color: black;
+            }
+
+            .content {
+                border-radius: 5px;
+                padding: 10px;
+            }
+
+            body td {
+                padding: 0.5em;
+                width: 33%;
+            }
+
+            h1 {
+                text-align: center;
+                font-weight: 900;
+                font-size: 1.2em;
+                line-height: 29px;
+            }
+
+            .content h2, .content h3, .content p {
+                text-align: center;
+            }
+
+            .content p {
+                color: rgba(36, 48, 58, 0.7);
+            }
+
+            p, ul {
+                color: rgba(35, 47, 56, 0.7);
+                font-size: 0.7em;
+            }
+
+            #lbf-logo {
+                margin: auto;
+                display: block;
+                width: 200px;
+            }
+
+            .button {
+                font-size: 16px;
+                font-weight: bold;
+                text-transform: uppercase;
+                border-radius: 5px;
+                padding: 15px;
+                text-decoration: none;
+                display: block;
+                width: fit-content;
+                margin: auto;
+            }
+
+            .button.contact {
+                background-color: #fdf4e6;
+                color: #fa8100;
+            }
+
+            .footer {
+                color: #24303A;
+            }
+
+            .footer p {
+                text-align: center;
+            }
+
+            @media only screen and (max-width: 596px) {
+                body {
+                    width: 100%;
+                    font-size: 1em;
+                }
+
+                body td {
+                    padding: .5em;
+                    width: 33%;
+                }
+            }
+
+            <%- include('../common/header.css'); %>
+        </style>
+    </head>
+    <body style="background-color:#ebebeb">
+        <%- include('../common/header', { utils, region, webView, consultationLink }); %>
+
+        <div class="content">
+            <h1>Votre commentaire a été rejeté</h1>
+            <p>Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,</p>
+            <p>Il semblerait que votre avis comporte des propos à caractère injurieux ou diffamatoire et ne respecte
+                donc pas notre charte. Seules les notes seront publiées sur une formation similaire.</p>
+            <p>
+                <a class="button contact" href="mailto:<%= utils.getRegionEmail(region) %>">Contacter Anotéa</a>
+            </p>
+            <p>Nous vous remercions de votre compréhension,
+                <%- include('../common/signature.ejs'); %>
+            </p>
+        </div>
+
+        <div class="footer">
+            <%- include('../common/legal/stagiaires/mentions.ejs'); %>
+
+            <img id="lbf-logo" src="<%= utils.getPublicUrl('/static/images/lbf.jpg') %>" />
+
+            <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
+                    pouvez vous désinscrire</a>.</p>
+        </div>
+
+        <% if (webView) { %>
+            <%- include('../common/analyticsTrackers'); %>
+            <script>
+                ga('send', {
+                    hitType: 'event',
+                    eventCategory: 'mail',
+                    eventAction: 'webview',
+                    eventLabel: 'Email en version Web'
+                });
+            </script>
+        <% } %>
+    </body>
+</html>

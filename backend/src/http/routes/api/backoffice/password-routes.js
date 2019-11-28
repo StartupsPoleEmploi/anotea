@@ -1,7 +1,6 @@
 const express = require('express');
 const Joi = require('joi');
 const Boom = require('boom');
-const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 const { tryAndCatch } = require('../../routes-utils');
 
 module.exports = ({ db, emails, passwords }) => {
@@ -23,8 +22,8 @@ module.exports = ({ db, emails, passwords }) => {
         });
 
         if (account) {
-            let email = account.profile === 'organisme' ? getOrganismeEmail(account) : account.courriel;
-            await emails.createForgottenPasswordEmail(account).send(email);
+            let message = emails.getEmailMessageByTemplateName('forgottenPasswordEmail');
+            await message.send(account);
 
             return res.json({ 'message': 'mail sent' });
         }

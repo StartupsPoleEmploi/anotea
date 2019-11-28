@@ -1,0 +1,142 @@
+<html>
+    <head>
+        <title>Pôle Emploi vous demande votre avis sur votre formation</title>
+        <meta name="viewport" content="width=device-width">
+        <style>
+            body {
+                padding: 0px;
+                margin: 0px;
+                background-color: #f4f3f5;
+                font-family: lato, sans-serif;
+            }
+
+            .content, .header {
+                background-color: white;
+            }
+
+            .content, .header, .footer {
+                width: 80%;
+                margin: auto;
+            }
+
+            .footer {
+                color: #24303A;
+            }
+
+            .footer p {
+                text-align: center;
+            }
+
+            a {
+                color: black;
+            }
+
+            a:hover {
+                text-decoration: none;
+                color: black;
+            }
+
+            .content {
+                border-radius: 5px;
+                padding: 10px;
+            }
+
+            h1 {
+                text-align: center;
+                font-weight: 900;
+                font-size: 1.2em;
+                line-height: 29px;
+            }
+
+            h3 {
+                margin-top: 24px;
+            }
+
+            body td {
+                padding: 2em;
+                width: 33%;
+            }
+
+            .button {
+                font-size: 18px;
+                font-weight: bold;
+                text-transform: uppercase;
+                border-radius: 5px;
+                padding: 20px 27px;
+                text-decoration: none;
+                display: block;
+                width: fit-content;
+                margin: auto;
+            }
+
+            .button.avis {
+                background-color: #F28017;
+                color: #24303A;
+                font-size: 16px;
+            }
+
+            .content h2, .content h3, .content p {
+                text-align: center;
+            }
+
+            .content p, .footer p {
+                color: rgba(36, 48, 58, 0.7);
+            }
+
+            hr {
+                width: 40%;
+                margin: auto;
+                border: 1px solid #F4F4F5;
+            }
+
+            #lbf-logo {
+                margin: auto;
+                display: block;
+                width: 200px;
+            }
+
+            @media only screen and (max-width: 596px) {
+                body {
+                    width: 100%;
+                    font-size: 1em;
+                }
+
+                body td {
+                    padding: .5em;
+                    width: 33%;
+                }
+            }
+
+            <%- include('../common/header.css'); %>
+        </style>
+    </head>
+    <body style="background-color:#ebebeb;">
+        <%- include('../common/header', { utils, region }); %>
+
+        <div class="content">
+            <h1>6 mois après votre formation où en êtes vous ?</h1>
+            <p>
+                Vous avez suivi une formation de
+                <strong class="trainingTitle"><%= trainee.training.title %></strong>
+            <p>
+            <p>
+                En 2 minutes, dites aux futurs stagiaires si cette formation vous a aidé à retrouver un emploi
+            <p>
+                <a href="<%= link %>" target="_blank" class="avis button">
+                    Cliquez ici
+                </a>
+            </p>
+
+            <%- include('../common/signature.ejs'); %>
+        </div>
+
+        <div class="footer">
+            <%- include('../common/legal/stagiaires/mentions.ejs'); %>
+
+            <img id="lbf-logo" src="<%= utils.getPublicUrl('/static/images/lbf.jpg') %>" />
+
+            <p>Si vous ne souhaitez plus participer à l'enquête, <a href="<%= unsubscribeLink %>">vous
+                    pouvez vous désinscrire</a>.</p>
+        </div>
+    </body>
+</html>

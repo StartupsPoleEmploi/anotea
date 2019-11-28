@@ -39,6 +39,7 @@ module.exports = components => {
 
     //Pubic routes with HTML server-side rendering
     app.use('/', require('./routes/front/html-routes')(httpComponents));
+    app.use('/', require('./routes/front/mail-routes')(httpComponents));
 
     //API routes
     app.use('/api', middlewares.addRateLimit(sentry));

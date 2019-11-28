@@ -2,7 +2,7 @@ let titleize = require('underscore.string/titleize');
 let { delay } = require('../../../../job-utils');
 
 
-module.exports = async (db, logger, createEmail, action, options = {}) => {
+module.exports = async (db, logger, emails, action, options = {}) => {
 
     let stats = {
         total: 0,
@@ -24,7 +24,8 @@ module.exports = async (db, logger, createEmail, action, options = {}) => {
 
         try {
             logger.info(`Sending email to ${email} for campaign ${trainee.campaign}`);
-            await createEmail(trainee).send(email);
+            let message = emails.getEmailMessageByTemplateName('avisStagiaireEmail');
+            await message.send(trainee);
 
             if (options.delay) {
                 await delay(options.delay);

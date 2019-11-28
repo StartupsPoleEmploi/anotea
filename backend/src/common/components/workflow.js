@@ -1,5 +1,5 @@
 const ObjectID = require('mongodb').ObjectID;
-const getOrganismeEmail = require('../utils/getOrganismeEmail');
+const _ = require('lodash');
 const { IdNotFoundError, ForbiddenError } = require('./../errors');
 
 module.exports = (db, logger, emails) => {
@@ -57,8 +57,8 @@ module.exports = (db, logger, emails) => {
                         SIRET: parseInt(original.training.organisation.siret)
                     });
 
-                    let emailAdress = getOrganismeEmail(organisme);
-                    return emails.createAvisReportedCanceledEmail(organisme, original).send(emailAdress);
+                    let message = emails.getEmailMessageByTemplateName('avisReportedCanceledEmail');
+                    return message.send(organisme, original);
                 });
             }
 
@@ -102,17 +102,18 @@ module.exports = (db, logger, emails) => {
                         let organisme = await db.collection('accounts').findOne({
                             SIRET: parseInt(original.training.organisation.siret)
                         });
-                        return emails.createAvisReportedConfirmedEmail(organisme, original).send(getOrganismeEmail(organisme));
+
+                        let message = emails.getEmailMessageByTemplateName('avisReportedConfirmedEmail');
+                        return message.send(organisme, original);
                     });
                 }
 
                 if ((qualification === 'injure' || qualification === 'alerte')) {
                     sendEmail(async () => {
                         let trainee = await db.collection('trainee').findOne({ token: original.token });
-                        let type = qualification === 'injure' ?
-                            'createAvisRejectedInjureEmail' : 'createAvisRejectedAlerteEmail';
 
-                        return emails[type](trainee).send(trainee.trainee.email);
+                        let message = emails.getEmailMessageByTemplateName(`avisRejected${_.capitalize(qualification)}Email`);
+                        return message.send(trainee);
                     });
                 }
             }
@@ -188,7 +189,8 @@ module.exports = (db, logger, emails) => {
             if (options.sendEmail) {
                 sendEmail(async () => {
                     let trainee = await db.collection('trainee').findOne({ token: previous.token });
-                    return emails.createAvisStagiaireEmail(trainee).send(trainee.trainee.email);
+                    let message = emails.getEmailMessageByTemplateName('avisStagiaireEmail');
+                    return message.send(trainee);
                 });
             }
         },
@@ -314,7 +316,8 @@ module.exports = (db, logger, emails) => {
                         SIRET: parseInt(original.training.organisation.siret)
                     });
 
-                    return emails.createReponseRejectedEmail(organisme, original).send(getOrganismeEmail(organisme));
+                    let message = emails.getEmailMessageByTemplateName('reponseRejectedEmail');
+                    return message.send(organisme, original);
                 });
             }
 
