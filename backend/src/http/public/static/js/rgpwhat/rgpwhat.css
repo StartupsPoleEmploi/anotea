@@ -20,7 +20,7 @@
     background-color: #22333C;
     color: #FAFAFA;
     font-size: 1.125em;
-    height: 150px;
+    min-height: 150px;
 }
 
 .rgpwhat .text {
