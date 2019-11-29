@@ -225,7 +225,7 @@ body {
 }
 
 .rgpd {
-    padding: 60px;
+    padding: 60px 0px 60px 0px;
     width: 100%;
     background-color: #F4F4F5;
 }
