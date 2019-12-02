@@ -26,8 +26,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 idLocal: '0000000000Z',
             },
             training: {
-                formacodes: ['31734', '99999'],
-                certifInfos: ['8122', '99999'],
+                formacodes: ['99999'],
+                certifInfos: ['99999'],
                 organisation: {
                     id: '14000000000000008098',
                     label: 'ANOTEA FORMATION (SARL)',
@@ -72,10 +72,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             },
             training: {
                 certifInfos: {
-                    '1': null,
+                    '0': '8122',
                 },
                 formacodes: {
-                    '1': null,
+                    '0': '31734',
                 },
                 organisation: {
                     siret: '82436343601230',
@@ -122,8 +122,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let next = await db.collection('comment').findOne({ token: trainee.token });
         assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
             training: {
-                formacodes: ['46242', '99999'],
-                certifInfos: ['78997', '99999'],
+                formacodes: ['99999'],
+                certifInfos: ['99999'],
                 organisation: {
                     id: '14000000000000008098',
                     label: 'ANOTEA FORMATION (SARL)',
@@ -142,10 +142,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.deepStrictEqual(_.omit(history, ['date']), {
             training: {
                 certifInfos: {
-                    '1': null,
+                    '0': '78997',
                 },
                 formacodes: {
-                    '1': null,
+                    '0': '46242',
                 },
                 organisation: {
                     id: '14_OF_XXXXXXXXXX',
