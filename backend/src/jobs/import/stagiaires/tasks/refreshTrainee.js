@@ -2,7 +2,7 @@ const fs = require('fs');
 const _ = require('lodash');
 const parse = require('csv-parse');
 const validateTrainee = require('./utils/validateTrainee');
-const { mergeDeep, isDeepEquals, getDifferences, flattenKeys } = require('../../../../common/utils/object-utils');
+const { mergeDeep, getDifferences, flattenKeys } = require('../../../../common/utils/object-utils');
 const { writeObject, pipeline, ignoreFirstLine, transformObject } = require('../../../../common/utils/stream-utils');
 const { sanitizeCsvLine } = require('./utils/utils');
 const { getNbModifiedDocuments } = require('../../../job-utils');
@@ -16,64 +16,82 @@ module.exports = async (db, logger, file, handler) => {
         total: 0,
     };
 
-    let addHistory = (doc, differences) => {
-        doc.meta = doc.meta || {};
-        doc.meta.history = doc.meta.history || [];
-        doc.meta.history.unshift({
+    let getNewMeta = (previous, current) => {
+
+        let differences = getDifferences(previous, current);
+        if (_.isEmpty(differences)) {
+            return previous.meta;
+        }
+
+        let meta = _.cloneDeep(previous.meta) || {};
+        meta.history = meta.history || [];
+        meta.history.unshift({
             date: new Date(),
             ...differences,
         });
+        return meta;
     };
 
-    let pickTrainingPropertiesToRefresh = trainee => {
-        let training = trainee.training;
-        let inseeCode = training.place.inseeCode;
-        return {
-            formacodes: training.formacodes,
-            certifInfos: training.certifInfos,
-            organisation: training.organisation,
-            ...(_.isEmpty(inseeCode) ? {} : { place: { inseeCode: inseeCode } }),
-        };
-    };
-
-    let pickTraineePropertiesToRefresh = trainee => {
-        return {
-            dnIndividuNational: trainee.trainee.dnIndividuNational,
-            idLocal: trainee.trainee.idLocal,
-        };
-    };
-
-    let refreshStagiaire = async (previous, current) => {
-
-        let newTrainee = mergeDeep({},
+    let refreshStagiaire = async (previous, trainee) => {
+        let merged = mergeDeep({},
             previous,
-            { training: pickTrainingPropertiesToRefresh(current) },
-            { trainee: pickTraineePropertiesToRefresh(current) },
+            {
+                trainee: {
+                    dnIndividuNational: trainee.trainee.dnIndividuNational,
+                    idLocal: trainee.trainee.idLocal,
+                },
+                training: {
+                    formacodes: trainee.training.formacodes,
+                    certifInfos: trainee.training.certifInfos,
+                    organisation: trainee.training.organisation,
+                    place: {
+                        inseeCode: trainee.training.place.inseeCode,
+                    },
+                },
+            },
         );
 
-        if (!isDeepEquals(previous, newTrainee)) {
-            let differences = getDifferences(previous, newTrainee);
-            addHistory(newTrainee, differences);
-
-            let res = await db.collection('trainee').replaceOne({ token: previous.token }, newTrainee);
-            stats.trainee += getNbModifiedDocuments(res);
-        }
+        let meta = getNewMeta(previous, merged);
+        let res = await db.collection('trainee').updateOne({ token: previous.token }, {
+            $set: {
+                'trainee.dnIndividuNational': merged.trainee.dnIndividuNational,
+                'trainee.idLocal': merged.trainee.idLocal,
+                'training.formacodes': merged.training.formacodes,
+                'training.certifInfos': merged.training.certifInfos,
+                'training.organisation': merged.training.organisation,
+                ...(merged.training.place.inseeCode ? { 'training.place.inseeCode': merged.training.place.inseeCode } : {}),
+                ...(meta ? { meta } : {}),
+            }
+        });
+        stats.trainee += getNbModifiedDocuments(res);
     };
 
-    let refreshAvis = async (previous, currentTrainee) => {
-
-        let newComment = mergeDeep({},
+    let refreshAvis = async (previous, trainee) => {
+        let merged = mergeDeep({},
             previous,
-            { training: pickTrainingPropertiesToRefresh(currentTrainee) }
+            {
+                training: {
+                    formacodes: trainee.training.formacodes,
+                    certifInfos: trainee.training.certifInfos,
+                    organisation: trainee.training.organisation,
+                    place: {
+                        inseeCode: trainee.training.place.inseeCode,
+                    },
+                },
+            },
         );
 
-        if (!isDeepEquals(previous, newComment)) {
-            let differences = getDifferences(previous, newComment);
-            addHistory(newComment, differences);
-
-            let res = await db.collection('comment').replaceOne({ token: previous.token }, newComment);
-            stats.comment += getNbModifiedDocuments(res);
-        }
+        let meta = getNewMeta(previous, merged);
+        let res = await db.collection('comment').updateOne({ token: previous.token }, {
+            $set: {
+                'training.formacodes': merged.training.formacodes,
+                'training.certifInfos': merged.training.certifInfos,
+                'training.organisation': merged.training.organisation,
+                ...(merged.training.place.inseeCode ? { 'training.place.inseeCode': merged.training.place.inseeCode } : {}),
+                ...(meta ? { meta } : {}),
+            }
+        });
+        stats.comment += getNbModifiedDocuments(res);
     };
 
     await pipeline([

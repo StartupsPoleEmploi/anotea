@@ -11,7 +11,7 @@ module.exports = {
     mergeDeep: (...args) => {
         return _.mergeWith.apply(null, [...args, (objValue, srcValue) => {
             if (_.isArray(objValue)) {
-                return _.union(objValue, srcValue);
+                return _.uniq(_.union(objValue, srcValue));
             }
         }
         ]);
