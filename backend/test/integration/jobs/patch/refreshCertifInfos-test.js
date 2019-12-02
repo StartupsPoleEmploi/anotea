@@ -15,7 +15,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
             _id: '1234',
             training: {
                 idFormation: 'F_XX_XX',
-                certifInfos: ['10013'],
+                certifInfos: ['10013', '10013'],
             },
             meta: {
                 history: [{ date: new Date(), value: 'something changed' }]
@@ -25,6 +25,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, getTest
         let stats = await patchCertifInfos(db, logger, certifinfosFile);
 
         let avis = await db.collection('trainee').findOne({ _id: '1234' });
+
         assert.deepStrictEqual(avis.training.certifInfos, ['74037', '10013']);
         assert.deepStrictEqual(avis.training.idFormation, 'F_XX_XX');
 
