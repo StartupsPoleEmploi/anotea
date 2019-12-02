@@ -6,6 +6,8 @@ body {
 
 .main {
     width: 100%;
+    top: 100px;
+    position: relative;
 }
 
 .main .content {
@@ -47,6 +49,10 @@ a {
     margin-right: 20%;
 }
 
+.main .intro .button {
+    width: max-content;
+}
+
 .intro h2 {
     padding-top: 30px;
     font-size: 32px;
@@ -77,8 +83,9 @@ a {
     font-weight: 900;
 }
 
-.intro img {
+.intro .illustration {
     vertical-align: top;
+    width: 45%;
 }
 
 .description {
@@ -119,17 +126,13 @@ a {
     padding: 40px;
 }
 
-.affichez img, .affichez .text {
+.affichez .text {
     display: inline-block;
 }
 
 .affichez .text {
     width: 40%;
     margin: 5%;
-}
-
-.affichez img {
-    vertical-align: middle;
 }
 
 .affichez h3 {
@@ -140,12 +143,6 @@ a {
     background-color: #FF9533;
     color: #24303A;
 }
-
-.faqContent {
-    width: 60%;
-    margin: auto;
-}
-
 
 .header-faq {
     margin-bottom: 80px;
@@ -210,6 +207,12 @@ a {
     opacity: 1;
 }
 
+.screenshot {
+    width: 48%;
+    vertical-align: baseline;
+    max-width: 520px;
+}
+
 .vous ul {
     padding: 0;
     width: 40%;
@@ -267,6 +270,12 @@ a {
 
 .question {
     outline: none;
+    margin-bottom: 15px;
+}
+
+.question, .reponse {
+    max-width: 1000px;
+    margin: auto;
     margin-bottom: 15px;
 }
 

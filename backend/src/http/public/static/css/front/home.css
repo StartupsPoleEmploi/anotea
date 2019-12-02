@@ -42,13 +42,13 @@ body {
 
 .content-intro {
     padding-top: 100px;
-}
-
-.content-intro {
     width: 85%;
     margin: auto;
     padding-left: 15%;
-    height: 450px;
+    top: 100px;
+    position: relative;
+    max-width: 1280px;
+    height: 550px;
 }
 
 .content-intro p {
@@ -87,6 +87,7 @@ body {
     position: relative;
     top: -280px;
     z-index: -1;
+    width: 80%;
 }
 
 .stats {
@@ -145,7 +146,7 @@ body {
     font-size: 32px;
 }
 
-.services img {
+.services .icon {
     margin: auto;
     position: relative;
     top: -38px;
@@ -185,17 +186,20 @@ body {
     font-size: 14px;
 }
 
-.services .organismes a {
-   color: #F28017;
+.services a {
+   color: #24303A;
+   font-weight: bold;
+   text-transform: uppercase;
+   text-decoration: none;
 }
 
-.services .financeurs a {
-    color: #007E54;
- }
+.services a img {
+    margin-left: 5px;
+}
 
- .services .stagiaires a {
-    color: #384EAA;
- }
+.services a:hover {
+    text-decoration: underline;
+}
 
 .partenaires {
     padding-top: 30px;
@@ -221,7 +225,7 @@ body {
 }
 
 .rgpd {
-    padding: 60px;
+    padding: 60px 0px 60px 0px;
     width: 100%;
     background-color: #F4F4F5;
 }
@@ -235,6 +239,10 @@ body {
 .rgpd h1 {
     margin: 0;
     padding: 0px 0px 40px 0px;
+}
+
+.rgpd ul {
+    padding: 0;
 }
 
 .rgpd li {
@@ -293,16 +301,6 @@ body {
         width: 700px;
     }
 
-    .services ul {
-        width: 724px;
-    }
-
-    .services li {
-        width: 215px;
-        margin-right: 35px;
-        height: 455px;
-    }
-
     .donnees ul {
         width: 700px;
     }
@@ -318,8 +316,61 @@ body {
         font-size: 30px;
     }
 
+    .illustration {
+        display: none;
+    }
+
+    .content-intro .stagiaire, .content-intro .organisme {
+        display: block;
+        width: inherit;
+        margin: 0px;
+        padding: 20px;
+    }
+
+    .content-intro .organisme {
+        text-align:  inherit;
+        margin-top: 20px;
+        background-color: #F8F8F8;
+    }
+
+    .content-intro .organisme p, .content-intro .stagiaire p {
+        margin: 10px;
+        width: inherit;
+    }
+    
+    .content-intro {
+        width: inherit;
+        padding-left: inherit;
+        top: inherit;
+        height: inherit;
+        text-align: center;
+        padding-top: 50px;
+    }
+
+    .content-intro a.button {
+        height: 48px;
+        width: 255px;
+        line-height: 40px;
+        font-size: 0.9em;
+    }
+
+    .content-intro a.button img {
+        margin-left: 30px;
+    }
+
     .video {
         height: 180px;
+    }
+
+    .stats > div {
+        display: inherit;
+        width: 100%;
+        margin: auto;
+    }
+
+    .partenaires img {
+        max-height: 62px;
+        max-width: 140px;
     }
 
     .content-how ul {
@@ -331,11 +382,12 @@ body {
     }
 
     .services ul {
-        width: 215px;
+        width: 80%;
+        margin-top: 40px;
     }
 
     .services li {
-        width: 215px;
+        width: 100%;
         margin-right: 35px;
         height: inherit;
         margin-bottom: 60px;
@@ -355,5 +407,15 @@ body {
 
     .content-how .nav {
         display: inherit;
+    }
+
+    .rgpd .content {
+        margin: inherit;
+    }
+
+    .rgpd li {
+        width: 100%;
+        margin-top: 20px;
+        float: inherit;
     }
 }

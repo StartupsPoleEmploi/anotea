@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    $.rgpWhat('En naviguant sur le site, vous acceptez l\'utilisation de cookies pour améliorer la qualité du service et pour réaliser des statistiques de visite. Pour en savoir plus, consultez notre <a href="/politique-confidentialite" target="_blank">Politique de Confidentialité</a>. Vous avez la possibilité de modifier vos préférences à tout moment ou bien d\'accepter les paramètres par défaut.',
+    $.rgpWhat('En naviguant sur le site, vous acceptez l\'utilisation de cookies pour améliorer la qualité du service et pour réaliser des statistiques de visite. Pour en savoir plus, consultez notre <a href="/politique-confidentialite" target="_blank">Politique de Confidentialité</a>.',
         {
             class: 'rgpwhat',
             loadCss: '/static/js/rgpwhat/rgpwhat.css',
@@ -18,12 +18,17 @@ $(document).ready(() => {
                         gtag('config', '<%= analytics.ga %>');
                     },
                     callbackDenied: () => {
-
+                        console.log("hihi")
                     }
                 }
             ],
             position: 'bottom',
             fixed: true,
-            forceDisplay: true
+            forceDisplay: true,
+            buttons: 'notOk|ok',
+            locale: {
+                ok: 'J\'accepte',
+                notOk: 'Je refuse'
+            }
         });
 });
