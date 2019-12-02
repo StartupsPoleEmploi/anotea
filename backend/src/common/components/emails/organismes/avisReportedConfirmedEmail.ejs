@@ -102,9 +102,13 @@
         <div class="content">
             <h1>Avis signalé dans votre Espace Anotéa</h1>
             <p>Bonjour,</p>
-            <p>Vous avez signalé l’avis suivant dans votre Espace Anotéa</p>
 
-            <p class="commentaire">"<%= commentaire %>"</p>
+            <% if (locals.comment && locals.comment.comment) { %>
+                <p>Vous avez signalé l’avis suivant dans votre Espace Anotéa</p>
+                <p class="commentaire">"<%= comment.comment.text %>"</p>
+            <% }  else { %>
+                <p>Vous avez signalé un avis dans votre Espace Anotéa</p>
+            <% } %>
 
             <p>
                 Le modérateur a ré-éxaminé le commentaire laissé par le stagiaire et a décidé de procéder à son rejet

@@ -2,9 +2,7 @@ Avis signalé dans votre Espace Anotéa
 
 Bonjour,
 
-Vous avez signalé l’avis suivant dans votre Espace Anotéa
-
-"<%= commentaire %>"
+Vous avez signalé un avis dans votre Espace Anotéa
 
 Le modérateur a ré-éxaminé le commentaire laissé par le stagiaire et a décidé de procéder à son rejet
 

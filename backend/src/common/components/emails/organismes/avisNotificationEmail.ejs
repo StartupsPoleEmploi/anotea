@@ -103,17 +103,20 @@
         <div class="content">
             <p>Bonjour,</p>
 
-            <% if (commentaire) { %>
-                <p class="commentaire">"<%= commentaire %>"</p>
+            <% if (locals.readStatus) { %>
+                <p class="commentaire">"<%= readStatus.commentaire %>"</p>
             <% } %>
 
-            <p><strong>Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur
-                    https://labonneformation.pole-emploi.fr</strong></p>
+            <p>
+                <strong>Vos anciens stagiaires ont donné leur avis sur leur formation.
+                    Ils sont publiés sur
+                    https://labonneformation.pole-emploi.fr</strong>
+            </p>
 
             <p>Consultez-les et apportez des éléments de réponse permettant d'éclairer le choix de vos
                 futurs stagiaires.</p>
 
-            <a class="button connect" href="https://anotea.pole-emploi.fr/admin/">Me connecter à mon espace</a>
+            <a class="button connect" href="<%= utils.getPublicUrl(`/admin`)%>">Me connecter à mon espace</a>
             </p>
 
             <p>

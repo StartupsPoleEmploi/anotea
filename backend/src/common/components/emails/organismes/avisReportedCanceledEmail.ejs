@@ -106,12 +106,14 @@
 
             <p>Vous avez signalé l’avis suivant dans votre Espace Anotéa</p>
 
-            <p class="commentaire">"<%= commentaire %>"</p>
+            <% if (locals.comment) { %>
+                <p class="commentaire">"<%= comment.comment.text %>"</p>
+            <% } %>
 
             <p>
                 Le modérateur a ré-éxaminé le commentaire laissé par le stagiaire et a décidé de procéder à publication
                 en accord de l’article 4 de nos
-                <a href="https://anotea.pole-emploi.fr/cgu">Conditions Générales d’Utilisation</a>
+                <a href="<%= utils.getPublicUrl(`/cgu`)%>">Conditions Générales d’Utilisation</a>
             </p>
 
             <p>

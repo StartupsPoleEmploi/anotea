@@ -4,7 +4,7 @@ Bonjour,
 
 Vous avez signalé l’avis suivant dans votre Espace Anotéa
 
-"<%= commentaire %>"
+"<%= comment.comment.text %>"
 
 Le modérateur a pris connaissance de ce signalement et a procédé à la validation du commentaire en accord de l’article 4 de nos Conditions Générales d’Utilisation
 

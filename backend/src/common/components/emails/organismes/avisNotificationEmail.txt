@@ -1,12 +1,10 @@
 Bonjour,
 
-"<%= commentaire %>"
-
 Vos anciens stagiaires ont donné leur avis sur leur formation. Ils sont publiés sur https://labonneformation.pole-emploi.fr
 
 Consultez-les et apportez des éléments de réponse permettant d’éclairer le choix de vos futurs stagiaires.
 
-Me connecter à mon espace : https://anotea.pole-emploi.fr/admin/
+Me connecter à mon espace : <%= utils.getPublicUrl(`/admin`)%>
 Contacter Anotéa : [<%= utils.getRegionEmail(region) %>]
 
 <%- include('../common/signature.txt'); %>

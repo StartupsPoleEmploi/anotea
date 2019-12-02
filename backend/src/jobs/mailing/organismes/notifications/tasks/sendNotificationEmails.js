@@ -48,7 +48,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
                         {
                             $group: {
                                 _id: null,
-                                commentaire: { $first: 'comment.text' },
+                                commentaire: { $first: '$comment.text' },
                                 nbUnreadComments: { $sum: 1 }
                             }
                         },

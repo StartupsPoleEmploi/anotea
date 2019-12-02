@@ -128,12 +128,15 @@
                 <li>Ne faites pas mention de coordonnées téléphoniques ou mail</li>
             </ul>
 
-            <p><strong>Nous avons procédé au rejet de la réponse ci-dessus et nous vous invitons à la modifier dans
+            <p>
+                <strong>Nous avons procédé au rejet de la réponse ci-dessus et nous vous invitons à la modifier dans
                     votre
-                    Espace. </strong></p>
+                    Espace.
+                </strong>
+            </p>
 
             <p>
-                <a class="button connect" href="https://anotea.pole-emploi.fr/admin/">Me connecter à mon espace</a>
+                <a class="button connect" href="<%= utils.getPublicUrl(`/admin`)%>">Me connecter à mon espace</a>
             </p>
             <p>
                 <a class="button contact" href="mailto:<%= utils.getRegionEmail(region) %>">Contacter Anotéa</a>
