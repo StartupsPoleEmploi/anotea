@@ -75,10 +75,10 @@ module.exports = async (db, logger, file) => {
         };
 
         let getNewCertifInfos = doc => {
-            return doc.training.certifInfos.reduce((acc, code) => {
+            return _.uniq(doc.training.certifInfos.reduce((acc, code) => {
                 let codes = certifications[code] ? [...certifications[code], code] : [code];
                 return [...acc, ...codes];
-            }, []);
+            }, []));
         };
 
         let getNewMeta = doc => {
@@ -87,7 +87,7 @@ module.exports = async (db, logger, file) => {
             meta.history.unshift({
                 date: new Date(),
                 training: {
-                    certifInfos: doc.training.certifInfos,
+                    certifInfos: _.uniq(doc.training.certifInfos),
                 },
             });
 
@@ -100,11 +100,12 @@ module.exports = async (db, logger, file) => {
             const doc = await cursor.next();
             try {
                 if (doc.training.certifInfos.find(code => certifications[code])) {
-                    let newDoc = _.cloneDeep(doc);
-                    newDoc.training.certifInfos = getNewCertifInfos(doc);
-                    newDoc.meta = getNewMeta(doc);
-
-                    let results = await db.collection(collectionName).replaceOne({ _id: doc._id }, newDoc, { upsert: false });
+                    let results = await db.collection(collectionName).updateOne({ _id: doc._id }, {
+                        $set: {
+                            'training.certifInfos': getNewCertifInfos(doc),
+                            'meta': getNewMeta(doc),
+                        }
+                    });
 
                     if (getNbModifiedDocuments(results) > 0) {
                         stats.updated++;
