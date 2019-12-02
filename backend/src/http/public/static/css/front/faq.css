@@ -85,6 +85,7 @@ a {
 
 .intro .illustration {
     vertical-align: top;
+    margin-top: 5%;
     width: 45%;
 }
 
@@ -525,4 +526,74 @@ div.more {
 
 .logo-github {
     width: 100px;
+}
+
+@media (max-width: 740px) {
+
+    .main {
+        top: 50px;
+    }
+
+    .intro {
+        margin-top: 0;
+    }
+
+    .intro .text {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+
+    .intro .illustration {
+        position: absolute;
+        top: 60px;
+        left: 20%;
+        z-index: -1;
+        opacity: 0.25;
+        max-height: 330px;
+        height: 65%;
+    }
+
+    .financeur .intro .illustration {
+        top: 80px;
+        height: auto;
+        max-height: 185px;
+    }
+
+    .financeur .intro .button {
+        margin-top: 90px;
+    }
+
+    .intro h2, .vous h2 {
+        font-size: 1.5em;
+    }
+
+    .intro h2 {
+        font-weight: 900;
+    }
+
+    .vous .bo {
+        display: none;
+    }
+
+    .vous li {
+        border-radius: inherit;
+        box-shadow: inherit;
+    }
+
+    .vous ul {
+        width: 100%;
+    }
+
+    .vous li .icon {
+        display: block;
+        margin: auto;
+        margin-bottom: 10px;
+    }
+
+    .vous li p {
+        text-align: center;
+        margin: 0;
+        width: 100%;
+    }
 }

@@ -30,3 +30,13 @@
     height: 75px;
     vertical-align: middle;
 }
+
+@media (max-width: 740px) {
+    .footer .logo-pe {
+        margin: 0px 20px 0px 0px;
+    }
+
+    .footer .logo-pe,.footer .logo {
+        height: 36px;
+    }
+}
