@@ -1,8 +1,10 @@
 $(document).ready(function () {
     $(".question a").click(function (e) {
         e.preventDefault();
-        $('.question').removeClass('open').addClass('closed').next().hide();
-        $(e.target).parent().toggleClass('open closed');
-        $(e.target).parent().next().toggle();
+
+        const elem = $(e.target).parent().parent();
+        elem.toggleClass('open closed');
+        elem.next().toggle();
+        $('.question.open').not(elem).removeClass('open').addClass('closed').next().hide();
     });
 });

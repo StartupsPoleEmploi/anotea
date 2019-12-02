@@ -93,7 +93,6 @@ a {
     background-color: #24303A;
     color: white;
     padding: 40px;
-    height: 245px;
 }
 
 .description h2, .description div {
@@ -243,6 +242,7 @@ a {
 .vous .bo, .vous ul {
     display: inline-block;
     vertical-align: middle;
+    margin: 0;
 }
 
 .vous .main .content {
@@ -448,7 +448,7 @@ div.more {
 
 .tests-utilisateurs .content .col.left {
     width: 60%;
-    padding: 60px 0px 0px 0px;
+    padding: 0px;
 }
 
 .tests-utilisateurs .content .col.right {
@@ -501,6 +501,7 @@ div.more {
 .tests-utilisateurs a.criteres {
     margin-top: 10px;
     display: block;
+    min-width: 215px;
 }
 
 .tests-utilisateurs div.criteres.closed {
@@ -595,5 +596,118 @@ div.more {
         text-align: center;
         margin: 0;
         width: 100%;
+    }
+
+    /* OF */
+
+    .description h2, .description div {
+        width: 100%;
+        margin: 0;
+        display: block;
+        font-size: 1em;
+    }
+
+    .description {
+        height: inherit;
+        text-align: center;
+    }
+
+    .main .content {
+        width: inherit;
+    }
+
+    div.more {
+        top: 0;
+        width: 100%;
+        border-radius: inherit;
+        padding: 0;
+    }
+
+    .more .checklist ul.border {
+        border: none;
+    }
+
+    .more .checklist ul {
+        display: block;
+        width: 100%;
+    }
+
+    .more .checklist {
+        width: 95%;
+    }
+
+    .more .conseil {
+        margin: 0px 0px 10px 0px;
+        border-radius: inherit;
+        box-shadow: inherit;
+    }
+
+    .tests-utilisateurs .content .col.left {
+        width: inherit;
+    }
+
+    .tests-utilisateurs ul.items > li {
+        width: 100%;
+        display: block;
+        margin: 0px 0px 10px 0px;
+        font-size: 1.125em;
+    }
+
+    .tests-utilisateurs h2 {
+        font-size: 1.4em;
+    }
+
+    .tests-utilisateurs .bar {
+        margin: 20px 0px 10px 0px;
+    }
+
+    .tests-utilisateurs .content h3 {
+        font-size: 1.5em;
+    }
+
+    .tests-utilisateurs .content .col {
+        float: inherit;
+        height: inherit;
+    }
+
+    .tests-utilisateurs .content .col.right {
+        width: 100%;
+        position: relative;
+        margin-top: inherit;
+        float: left;
+        height: 0;
+    }
+
+    .tests-utilisateurs .content .col.right img {
+        position: relative;
+        top: -180px;
+        width: 90%;
+        opacity: 0.3;
+    }
+
+    .screenshot {
+        display: none;
+    }
+
+    .affichez .text {
+        width: 100%;
+        margin: inherit;
+    }
+
+    .affichez .text p, .affichez .text h3, .affichez .text .button {
+        display: none;
+    }
+
+    .question a {
+        margin: 10px;
+    }
+
+    .question a span {
+        width: 92%;
+        display: inline-block;
+    }
+
+    .reponse {
+        margin: 0px 10px 0px 10px;
     }
 }
