@@ -61,6 +61,7 @@
     "node-mailjet": "3.3.1",
     "node-uuid": "1.4.8",
     "nodemailer": "4.7.0",
+    "nodemailer-html-to-text": "3.1.0",
     "remove-accents": "0.4.2",
     "rotating-file-stream": "1.4.3",
     "stream-transform": "1.0.8",

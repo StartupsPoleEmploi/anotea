@@ -15,14 +15,7 @@ module.exports = (configuration, regions) => {
 
     return {
         ...utils,
-        render: async (dir, templateName, data) => {
-            let [html, text] = await Promise.all([
-                renderFile(path.join(dir, `${templateName}.ejs`), data),
-                renderFile(path.join(dir, `${templateName}.txt`), data),
-            ]);
-
-            return { html, text };
-        },
+        render: (dir, templateName, data) => renderFile(path.join(dir, `${templateName}.ejs`), data),
         getStagiaireGlobals: (templateName, trainee) => {
             let token = trainee.token;
             let region = regions.findRegionByCodeRegion(trainee.codeRegion);

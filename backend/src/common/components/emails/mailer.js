@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const _ = require('lodash');
+const htmlToText = require('nodemailer-html-to-text').htmlToText;
 const nodemailer = require('nodemailer');
 
 module.exports = function(db, configuration) {
@@ -23,6 +24,7 @@ module.exports = function(db, configuration) {
             }
         })
     });
+    transporter.use('compile', htmlToText({ ignoreImage: true }));
 
 
     return {
@@ -32,10 +34,7 @@ module.exports = function(db, configuration) {
 
                     let { subject, body } = await Joi.validate(message, {
                         subject: Joi.string().required(),
-                        body: Joi.object({
-                            text: Joi.string().required(),
-                            html: Joi.string(),
-                        }).required(),
+                        body: Joi.string().required(),
                     }, { abortEarly: false });
 
                     let smtpOptions = {
@@ -51,8 +50,7 @@ module.exports = function(db, configuration) {
                         list: {
                             help: { url: getPublicUrl('/faq') },
                         },
-                        text: body.text,
-                        ...(body.html ? { html: body.html } : {}),
+                        html: body,
                     }, smtpOptions));
                 }
             };
