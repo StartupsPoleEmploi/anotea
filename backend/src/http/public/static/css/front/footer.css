@@ -19,13 +19,12 @@
 }
 
 .footer .logo {
+    margin: 15px  50px 15px 150px;
     display: inline;
-    margin-right: 0px;
     vertical-align: middle;
 }
 
 .footer .logo-pe {
-    margin: 15px  50px 15px 150px;
     display: inline-block;
     height: 75px;
     vertical-align: middle;
@@ -36,7 +35,7 @@
         padding: 0;
     }
 
-    .footer .logo-pe {
+    .footer .logo {
         margin: 0px 20px 0px 0px;
     }
 
