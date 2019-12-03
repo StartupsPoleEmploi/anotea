@@ -1,8 +1,14 @@
 $(document).ready(function () {
-    $(".question a").click(function (e) {
+    $('.question a').click(function (e) {
         e.preventDefault();
 
-        const elem = $(e.target).parent().parent();
+        const target = $(e.target);
+
+        let elem = target.parent();
+        if (target.prop('tagName') !== 'A') {
+            elem = elem.parent();
+        }
+
         elem.toggleClass('open closed');
         elem.next().toggle();
         $('.question.open').not(elem).removeClass('open').addClass('closed').next().hide();
