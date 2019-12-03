@@ -32,6 +32,10 @@
 }
 
 @media (max-width: 740px) {
+    .footer {
+        padding: 0;
+    }
+    
     .footer .logo-pe {
         margin: 0px 20px 0px 0px;
     }

@@ -237,7 +237,7 @@
 			var txt=$(document.createElement("div")).addClass('text');
 			var doc=$('<div>').addClass('consent-list').css('display','none');
 
-			div.css({"display":"none","width":"100%","position":fixed?"fixed":"relative","left":"0"})
+			div.css({"display":"none","width":"100vw","position":fixed?"fixed":"relative","left":"0"})
 			   .addClass(className);
 			if(position=="top") div.css("top","0"); else div.css("bottom","0");
             txt.html(text).appendTo(div);

@@ -110,3 +110,10 @@ h2 {
     content: "- ";
     text-indent: -5px;
 }
+
+@media (max-width: 740px) {
+    .main.cgu {
+        width: calc(100% - 20px);
+        padding: 10px;
+    }
+}

@@ -60,7 +60,8 @@ body {
 .content-intro .stagiaire, .content-intro .organisme {
     display: inline-block;
     width: 30%;
-}
+}    
+
 .content-intro .stagiaire {
     margin-left: 20px;
     margin-right: 200px;
@@ -326,7 +327,6 @@ body {
         display: block;
         width: inherit;
         margin: 0px;
-        padding: 20px;
     }
 
     .content-intro .organisme {
@@ -336,8 +336,12 @@ body {
     }
 
     .content-intro .organisme p, .content-intro .stagiaire p {
-        margin: 10px;
+        margin-bottom: 10px;
         width: inherit;
+    }
+
+    .content-intro .organisme p {
+        margin-left: inherit;
     }
     
     .content-intro {
