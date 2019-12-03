@@ -71,6 +71,7 @@
         margin-top: 18px;
         display: block;
         width: 90%;
+        padding: 0;
     }
 
     .rgpwhat button.accept {
