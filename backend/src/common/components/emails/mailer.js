@@ -37,21 +37,19 @@ module.exports = function(db, configuration) {
                         body: Joi.string().required(),
                     }, { abortEarly: false });
 
-                    let smtpOptions = {
-                        ...options,
-                        bcc: process.env.ANOTEA_MAIL_BCC ? { bcc: process.env.ANOTEA_MAIL_BCC } : {},
-                    };
-
                     return transporter.sendMail(_.merge({}, {
                         to: emailAddress,
                         subject,
                         from: `Anotea <${configuration.smtp.from}>`,
                         replyTo: `Anotea <${getRegionEmail(region)}>`,
                         list: {
-                            help: { url: getPublicUrl('/faq') },
+                            help: getPublicUrl('/faq'),
                         },
                         html: body,
-                    }, smtpOptions));
+                    }, {
+                        ...options,
+                        bcc: process.env.ANOTEA_MAIL_BCC ? { bcc: process.env.ANOTEA_MAIL_BCC } : {},
+                    }));
                 }
             };
         }
