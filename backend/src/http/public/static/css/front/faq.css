@@ -2,6 +2,8 @@ body {
     font-family: Lato;
     margin: 0;
     color: #24303A;
+    width: 100vw;
+    position: absolute;
 }
 
 .main {
@@ -596,6 +598,10 @@ div.more {
         text-align: center;
         margin: 0;
         width: 100%;
+    }
+
+    .faq .nav li {
+        margin: 1%;
     }
 
     /* OF */
