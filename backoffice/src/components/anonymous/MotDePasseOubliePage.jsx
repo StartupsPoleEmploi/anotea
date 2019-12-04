@@ -6,8 +6,11 @@ import InputText from '../common/page/form/InputText';
 import Button from '../common/Button';
 import { CenteredForm } from '../common/page/form/CenteredForm';
 import { askNewPassword } from './passwordService';
+import AppContext from '../AppContext';
 
 export default class MotDePasseOubliePage extends React.Component {
+
+    static contextType = AppContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -23,12 +26,18 @@ export default class MotDePasseOubliePage extends React.Component {
     }
 
     onSubmit = () => {
+
+        let { showMessage } = this.context;
+
         this.setState({ loading: true });
 
         askNewPassword(this.state.identifiant)
         .then(() => {
+            showMessage({
+                text: 'Une email vous a été envoyé.'
+            });
             this.setState({ error: null, identifiant: '', loading: false }, () => {
-                this.props.navigator.goToPage('/admin/login', { message: 'Une email vous a été envoyé.' });
+                this.props.navigator.goToPage('/admin/login');
             });
         })
         .catch(() => {

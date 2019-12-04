@@ -75,7 +75,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile 
             name: 'DUPLICATED',
             message: 'de la présence de doublons',
         });
-        assert.ok(errors.line.startsWith('DUPLICATED|EUGENE'));
+        assert.ok(errors.line.startsWith('MARTIN|EUGENE'));
     });
 
 }));

@@ -8,7 +8,7 @@ module.exports = async (db, query) => {
             $group: {
                 _id: null,
                 total: { $sum: 1 },
-                nbEmailsEnvoyes: { $sum: { $cond: [{ $eq: ['$mailSent', true] }, 1, 0] } },
+                nbEmailsEnvoyes: { $sum: { $cond: [{ $ne: ['$mailSentDate', null] }, 1, 0] } },
             }
         },
         {

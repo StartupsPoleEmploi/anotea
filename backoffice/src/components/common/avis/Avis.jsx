@@ -14,7 +14,6 @@ import RejectButton from './buttons/RejectButton';
 import EditButton from './buttons/EditButton';
 import LocalMessage from '../message/LocalMessage';
 import './Avis.scss';
-import GlobalMessage from '../message/GlobalMessage';
 import MarkAsReadButton from './buttons/MarkAsReadButton';
 import ReportButton from './buttons/ReportButton';
 import EditReponseButton from './buttons/EditReponseButton';
@@ -84,17 +83,13 @@ export default class Avis extends React.Component {
             showModerationButtons, showModerationReponseButtons,
         } = this.props;
         let { message, showReponseEditor } = this.state;
-        let isLocalMessage = _.get(message, 'type') === 'local';
-        let isGlobalMessage = _.get(message, 'type') === 'global';
-        let disabledClass = isLocalMessage ? 'disabled' : '';
+        let disabledClass = message ? 'disabled' : '';
 
         return (
             <div className="Avis">
-                {isLocalMessage &&
+
+                {message &&
                 <LocalMessage message={message} onClose={async () => await this.state.propagateChanges()} />
-                }
-                {isGlobalMessage &&
-                <GlobalMessage message={message} onClose={async () => await this.state.propagateChanges()} />
                 }
 
                 <div className="row">

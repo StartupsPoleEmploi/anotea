@@ -126,11 +126,14 @@
       }
     },
     "conseil_regional": {
-      "active": false,
-      "import": "all"
+      "active": true,
+      "import": "all",
+      "since": "2018-05-01"
     },
     "carif": {
-      "active": false
+      "active": true,
+      "nom": "Emfor",
+      "url": "http://www.emfor-bfc.org/"
     }
   },
   {

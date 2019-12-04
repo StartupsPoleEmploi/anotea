@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const Joi = require('joi');
 const moment = require('moment');
+const asSiren = require('../../../../../common/utils/asSiren');
 const { arrayOf } = require('../../../validators-utils');
 
 module.exports = (db, regions, user) => {
@@ -10,7 +11,7 @@ module.exports = (db, regions, user) => {
     return {
         type: 'organisme',
         getUser: () => user,
-        getShield: () => ({ 'training.organisation.siret': new RegExp(`^${user.siret}`) }),
+        getShield: () => ({ 'training.organisation.siret': new RegExp(`^${asSiren(user.siret)}`) }),
         validators: {
             form: () => {
                 return {

@@ -37,8 +37,8 @@ execute(async ({ logger, db, regions }) => {
             'Titre formation': data => data.training.title,
             'Siret organisme': data => `="${data.training.organisation.siret}"`,
             'Lieu de formation': data => data.training.place.postalCode,
-            'Certifinfo': data => `="${data.training.certifInfo.id}"`,
-            'formacode': data => data.training.formacode,
+            'Certifinfos': data => `="${data.training.certifInfos.join(',')}"`,
+            'Formacodes': data => data.training.formacodes.join(','),
         }),
         encodeIntoUTF8(),
         fs.createWriteStream(csvFile)

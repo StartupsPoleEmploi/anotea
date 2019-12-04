@@ -13,15 +13,21 @@ cli.description('Import des stagiaires')
 .option('--validate', 'Validate CSV file but do not import it')
 .option('--refresh', 'Refresh stagiaires data from CSV file')
 .option('--region [codeRegion]', 'Code region to filter')
+.option('--financeur [codeFinanceur]', 'Code financeur to filter')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
+let sources = {
+    'PE': 'poleEmploi',
+    'IDF': 'ileDeFrance',
+};
+
 execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
 
-    let { file, source, region, validate, refresh } = cli;
-    let sources = {
-        'PE': 'poleEmploi',
-        'IDF': 'ileDeFrance',
+    let { file, source, region, financeur, validate, refresh } = cli;
+    let filters = {
+        codeRegion: region,
+        codeFinanceur: financeur,
     };
 
     if (!file || !['PE', 'IDF'].includes(source)) {
@@ -29,9 +35,6 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
     }
 
     let handler = require(`./tasks/handlers/${sources[source]}CSVHandler`)(db, regions);
-    let filters = {
-        codeRegion: region,
-    };
 
     if (validate) {
         logger.info(`Validating file ${file}...`);

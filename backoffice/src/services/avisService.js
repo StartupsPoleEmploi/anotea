@@ -41,12 +41,8 @@ export const editAvis = (id, text) => {
     return _put(`/backoffice/avis/${id}/edit`, { text });
 };
 
-export const resendEmail = id => {
-    return _put(`/backoffice/avis/${id}/resendEmail`);
-};
-
-export const deleteAvis = id => {
-    return _delete(`/backoffice/avis/${id}`);
+export const deleteAvis = (id, options = { resendEmail: false }) => {
+    return _delete(`/backoffice/avis/${id}`, options);
 };
 
 export const addReponse = (id, text) => {

@@ -10,12 +10,12 @@ import { getFormations } from '../../services/formationsService';
 import Button from '../common/Button';
 import OrganismeAvisPanel from './components/OrganismeAvisPanel';
 import OrganismeStatsPanel from './components/OrganismeStatsPanel';
-import UserContext from '../UserContext';
+import AppContext from '../AppContext';
 import { getDepartements } from '../../services/departementsService';
 
 export default class OrganismePage extends React.Component {
 
-    static contextType = UserContext;
+    static contextType = AppContext;
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -54,7 +54,7 @@ export default class OrganismePage extends React.Component {
 
     async componentDidMount() {
 
-        let user = this.context;
+        let { account } = this.context;
         let query = this.props.navigator.getQuery();
 
         this.loadSelectBox('departements', () => getDepartements())
@@ -64,14 +64,14 @@ export default class OrganismePage extends React.Component {
 
         this.loadSelectBox('sirens', () => {
             return [
-                { siren: user.siret.substring(0, 9), name: 'Tous les centres' }
+                { siren: account.siret.substring(0, 9), name: 'Tous les centres' }
             ];
         })
         .then(results => {
             return this.updateSelectBox('sirens', results.find(o => o.siren === query.siren));
         });
 
-        this.loadSelectBox('formations', () => getFormations({ organisme: query.organisme || user.siret }))
+        this.loadSelectBox('formations', () => getFormations({ organisme: query.organisme || account.siret }))
         .then(results => {
             return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation));
         });

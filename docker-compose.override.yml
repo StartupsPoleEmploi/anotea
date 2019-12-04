@@ -11,14 +11,22 @@ services:
   backoffice:
     build:
       args:
-        - ANOTEA_GOOGLE_ANALYTICS_ID=UA-92533869-2
+        - ANOTEA_ENV=dev
+        - ANOTEA_SENTRY_ENABLED=false
+        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
         - ANOTEA_HOTJAR_ID=1234
 
   questionnaire:
     build:
       args:
-        - ANOTEA_GOOGLE_ANALYTICS_ID=UA-92533869-2
-        - ANOTEA_GOOGLE_OPTIMIZE_ID=GTM-WPGXZ4P
+        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
+        - ANOTEA_GOOGLE_OPTIMIZE_ID=1234
+        - ANOTEA_HOTJAR_ID=1234
+
+  widget:
+    build:
+      args:
+        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
         - ANOTEA_HOTJAR_ID=1234
 
   backend:

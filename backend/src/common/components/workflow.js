@@ -101,7 +101,6 @@ module.exports = db => {
                                 date: new Date(),
                                 comment: { text: previous.comment.text }
                             }],
-                            $slice: 10,
                             $position: 0,
                         },
                     }
@@ -124,11 +123,17 @@ module.exports = db => {
         delete: async (id, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
+            let oid = new ObjectID(id);
+            let previous = await db.collection('comment').findOne({ _id: oid });
 
-            let results = await db.collection('comment').removeOne({
-                _id: new ObjectID(id),
-                ...(profile ? profile.getShield() : {}),
-            });
+            let [results] = await Promise.all([
+                db.collection('comment').removeOne({ _id: oid, ...(profile ? profile.getShield() : {}) }),
+                db.collection('trainee').updateOne({ token: previous.token }, {
+                    $set: {
+                        avisCreated: false,
+                    }
+                })
+            ]);
 
             if (results.result.n !== 1) {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);

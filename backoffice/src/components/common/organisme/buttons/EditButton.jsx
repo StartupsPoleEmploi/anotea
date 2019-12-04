@@ -17,7 +17,6 @@ export default class EditButton extends React.Component {
         this.props.onChange(updated, {
             message: {
                 text: 'Email envoyé avec succès.',
-                position: 'bottom',
             }
         });
     };

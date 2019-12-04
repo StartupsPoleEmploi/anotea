@@ -100,10 +100,9 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro de formation inconnu ou formation expirée');
         }
 
-        let avis = formation.avis;
-        if (parameters.commentaires !== null) {
-            avis = avis.filter(avis => parameters.commentaires ? (avis.commentaire || avis.reponse) : !avis.commentaire);
-        }
+        let avis = parameters.commentaires === null ?
+            formation.avis :
+            formation.avis.filter(avis => parameters.commentaires ? (avis.commentaire || avis.reponse) : !avis.commentaire);
 
         res.json({
             avis: avis.slice(skip, skip + limit),

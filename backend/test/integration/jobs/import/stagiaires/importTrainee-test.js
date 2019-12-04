@@ -32,10 +32,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                 firstName: 'EUGENE',
                 mailDomain: 'pe.com',
                 email: 'email_1@pe.com',
-                phoneNumbers: [
-                    '0611111111',
-                    ''
-                ],
+                phoneNumbers: ['0611111111'],
                 emailValid: true,
                 dnIndividuNational: '1111111111',
                 idLocal: '0167942369Z'
@@ -57,12 +54,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     inseeCode: '91521',
                     city: 'Ris-Orangis'
                 },
-                certifInfo: {
-                    id: '8122',
-                    label: 'Titre professionnel'
-                },
+                certifInfos: ['8122'],
+                formacodes: ['31734'],
                 idSession: '3565575',
-                formacode: '31734',
                 infoCarif: {
                     numeroSession: 'SE_0000160070',
                     numeroAction: '14_SE_0000160070'
@@ -105,7 +99,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         assert.strictEqual(count, 0);
     });
 
-    it('should ignore trainee already imported', async () => {
+    it('should ignore trainee already imported in another campaign', async () => {
         let db = await getTestDatabase();
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
@@ -119,6 +113,34 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
             imported: 0,
             total: 1,
         });
+    });
+
+    it('should handle inseeCode with letters (corse)', async () => {
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
+
+        let results = await importTrainee(db, logger, getTestFile('stagiaires-pe-corse.csv'), handler);
+
+        assert.deepStrictEqual(results, {
+            invalid: 0,
+            ignored: 0,
+            imported: 1,
+            total: 1,
+        });
+    });
+
+    it('should handle multi formacodes and certifInfos', async () => {
+        let db = await getTestDatabase();
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, regions);
+
+        await importTrainee(db, logger, getTestFile('stagiaires-pe-multi-formacodes-certifinfos.csv'), handler);
+
+        let doc = await db.collection('trainee').findOne();
+        assert.ok(doc.trainee);
+        assert.deepStrictEqual(doc.training.formacodes, ['31734', '31735', '31736']);
+        assert.deepStrictEqual(doc.training.certifInfos, ['8122', '8123', '8124']);
     });
 
     it('should ignore trainee already removed', async () => {
@@ -181,12 +203,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     postalCode: '93190',
                     city: 'LIVRY GARGAN'
                 },
-                certifInfo: {
-                    id: null,
-                    label: null
-                },
+                certifInfos: [],
                 idSession: null,
-                formacode: null,
+                formacodes: [],
                 infoCarif: {
                     numeroAction: null,
                     numeroSession: null
@@ -274,14 +293,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
-    it('cannot import same CSV twice', async () => {
+    it('cannot import same campaign twice', async () => {
 
         let db = await getTestDatabase();
         let csvFile = getTestFile('stagiaires-pe.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
-        await importTrainee(db, logger, csvFile, handler);
 
+        await importTrainee(db, logger, csvFile, handler);
         let results = await importTrainee(db, logger, csvFile, handler);
 
         assert.deepStrictEqual(results, {
@@ -326,9 +345,64 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
+    it('should filter trainee with conseil regional filter (included)', async () => {
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-conseil-regional.csv');
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
+            findActiveRegions: () => {
+                return [{
+                    codeRegion: '2',
+                    conseil_regional: {
+                        active: true,
+                    },
+                }];
+            }
+        }));
+
+        let results = await importTrainee(db, logger, csvFile, handler);
+
+        let count = await db.collection('trainee').count();
+        assert.strictEqual(count, 2);
+        assert.deepStrictEqual(results, {
+            invalid: 0,
+            ignored: 0,
+            imported: 2,
+            total: 2,
+        });
+    });
+
+    it('should filter trainee with conseil regional filter (since)', async () => {
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-conseil-regional.csv');
+        let { regions } = await getComponents();
+        let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
+            findActiveRegions: () => {
+                return [{
+                    codeRegion: '2',
+                    conseil_regional: {
+                        active: true,
+                        since: '2018-08-23',
+                    },
+                }];
+            }
+        }));
+
+        let results = await importTrainee(db, logger, csvFile, handler);
+
+        let count = await db.collection('trainee').count();
+        assert.strictEqual(count, 1);
+        assert.deepStrictEqual(results, {
+            invalid: 0,
+            ignored: 1,
+            imported: 1,
+            total: 2,
+        });
+    });
+
     it('should filter trainee with conseil regional filter (excluded)', async () => {
         let db = await getTestDatabase();
-        let csvFile = getTestFile('stagiaires-pe-ara-conseil-regional.csv');
+        let csvFile = getTestFile('stagiaires-pe-conseil-regional.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
@@ -343,19 +417,19 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         let results = await importTrainee(db, logger, csvFile, handler);
 
-        let doc = await db.collection('trainee').findOne();
-        assert.deepStrictEqual(doc.trainee.email, 'email_4@pe.fr');
+        let count = await db.collection('trainee').count();
+        assert.strictEqual(count, 0);
         assert.deepStrictEqual(results, {
             invalid: 0,
             ignored: 2,
-            imported: 1,
-            total: 3,
+            imported: 0,
+            total: 2,
         });
     });
 
     it('should filter trainee with conseil regional filter (certifications_only)', async () => {
         let db = await getTestDatabase();
-        let csvFile = getTestFile('stagiaires-pe-ara-non-certifiantes.csv');
+        let csvFile = getTestFile('stagiaires-pe-certifications-only.csv');
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
             findActiveRegions: () => {
@@ -363,7 +437,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
                     codeRegion: '2',
                     conseil_regional: {
                         active: true,
-                        import: 'certifications_only'
+                        import: 'certifications_only',
                     },
                 }];
             }
@@ -371,13 +445,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         let results = await importTrainee(db, logger, csvFile, handler);
 
+        assert.strictEqual(await db.collection('trainee').count(), 1);
         let doc = await db.collection('trainee').findOne();
-        assert.deepStrictEqual(doc.trainee.email, 'email_4@pe.fr');
+        assert.deepStrictEqual(doc.trainee.email, 'email_1@pe.com');
         assert.deepStrictEqual(results, {
             invalid: 0,
             ignored: 1,
-            imported: 2,
-            total: 3,
+            imported: 1,
+            total: 2,
         });
     });
 
@@ -385,7 +460,14 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let db = await getTestDatabase();
         let csvFile = getTestFile('stagiaires-pe-old.csv');
         let { regions } = await getComponents();
-        let handler = poleEmploiCSVHandler(db, regions);
+        let handler = poleEmploiCSVHandler(db, Object.assign({}, regions, {
+            findActiveRegions: () => {
+                return [{
+                    codeRegion: '11',
+                    since: '2019-08-25',
+                }];
+            }
+        }));
 
         let results = await importTrainee(db, logger, csvFile, handler);
 
@@ -414,7 +496,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         });
     });
 
-    it('should convert NULL value into ""', async () => {
+    it('should handle NULL value', async () => {
         let db = await getTestDatabase();
         let csvFile = getTestFile('stagiaires-pe-with-NULL.csv');
         let { regions } = await getComponents();
@@ -423,10 +505,46 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await importTrainee(db, logger, csvFile, handler);
 
         let doc = await db.collection('trainee').findOne();
-        assert.deepStrictEqual(doc.training.codeFinanceur, []);
-        assert.deepStrictEqual(doc.training.certifInfo, {
-            id: '',
-            label: '',
+        assert.deepStrictEqual(doc.trainee.phoneNumbers, ['0611111111']);
+        assert.deepStrictEqual(doc.training.certifInfos, []);
+        assert.strictEqual(doc.training.place.inseeCode, undefined);
+    });
+
+    it('should ignore trainee with codeFinanceur filtered', async () => {
+
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-code-financeur-filtered.csv');
+        let { regions } = await getComponents();
+
+        let stats = await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions), {
+            'codeFinanceur': '2'
+        });
+
+        assert.deepStrictEqual(await db.collection('trainee').count(), 0);
+        assert.deepStrictEqual(stats, {
+            invalid: 0,
+            ignored: 1,
+            imported: 0,
+            total: 1,
+        });
+    });
+
+    it('can filter trainee by codeFinanceur', async () => {
+
+        let db = await getTestDatabase();
+        let csvFile = getTestFile('stagiaires-pe-code-financeur-filtered.csv');
+        let { regions } = await getComponents();
+
+        let stats = await importTrainee(db, logger, csvFile, poleEmploiCSVHandler(db, regions), {
+            codeFinanceur: '2',
+        });
+
+        assert.deepStrictEqual(await db.collection('trainee').count(), 0);
+        assert.deepStrictEqual(stats, {
+            invalid: 0,
+            ignored: 1,
+            imported: 0,
+            total: 1,
         });
     });
 

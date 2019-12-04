@@ -5,7 +5,7 @@ const connectToMongoDB = (logger, configuration) => {
         let retries = 0;
 
         const retry = (delay, maxRetries) => {
-            mongo.connect(configuration.mongodb.uri, { useNewUrlParser: true }, (err, client) => {
+            mongo.connect(configuration.mongodb.uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
                 if (err) {
                     if (retries > maxRetries) {
                         reject(err);

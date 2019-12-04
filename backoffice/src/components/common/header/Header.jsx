@@ -7,7 +7,6 @@ import logoPE from './pe.jpg';
 
 import './Header.scss';
 
-
 export default class Header extends React.Component {
 
     state = {

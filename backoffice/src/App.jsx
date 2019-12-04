@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import fr from 'react-intl/locale-data/fr';
-import { addLocaleData, IntlProvider } from 'react-intl';
 import jwtDecode from 'jwt-decode';
+import queryString from 'query-string';
 import { Redirect, Switch } from 'react-router-dom';
 import { getSession, getToken, removeSession, setSession } from './utils/session';
 import { subscribeToHttpEvent } from './utils/http-client';
@@ -12,16 +11,13 @@ import FinanceurRoutes from './components/financeur/FinanceurRoutes';
 import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
 import AnonymousRoutes from './components/anonymous/AuthRoutes';
-import './utils/moment-fr';
 import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
 import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './styles/global.scss';
 import Header from './components/common/header/Header';
 import MiscRoutes from './components/misc/MiscRoutes';
-import UserContext from './components/UserContext';
-import queryString from 'query-string';
-
-addLocaleData([...fr]);
+import AppContext from './components/AppContext';
+import GlobalMessage from './components/common/message/GlobalMessage';
 
 class App extends Component {
 
@@ -30,8 +26,11 @@ class App extends Component {
     };
 
     state = {
-        profile: 'anonymous',
-        loggedIn: false
+        loggedIn: false,
+        account: {
+            profile: 'anonymous',
+        },
+        message: null,
     };
 
     constructor(props) {
@@ -39,6 +38,13 @@ class App extends Component {
         subscribeToHttpEvent('http:error', response => {
             if (response.status === 401) {
                 this.onLogout();
+            } else if (response.status > 429) {
+                this.setState({
+                    message: {
+                        text: 'Désolé, le service est actuellement indisponible. Merci de réessayer plus tard',
+                        color: 'red',
+                    }
+                });
             }
         });
 
@@ -52,7 +58,8 @@ class App extends Component {
         if (getToken()) {
             this.state = {
                 ...getSession(),
-                loggedIn: true
+                loggedIn: true,
+                account: getSession(),
             };
         }
     }
@@ -68,14 +75,20 @@ class App extends Component {
 
         this.setState({
             ...getSession(),
-            loggedIn: true
+            loggedIn: true,
+            account: getSession(),
         });
 
         this.props.navigator.goToPage('/admin');
     };
 
+    showGlobalMessage = message => {
+        return this.setState({ message });
+    };
+
     render() {
 
+        let { account, message } = this.state;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
@@ -95,30 +108,40 @@ class App extends Component {
             anonymous: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
-                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} profile={this.state.profile} />,
+                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} profile={this.state.account.profile} />,
             })
         };
 
-        let layout = this.state.loggedIn ? backoffices[this.state.profile]() : backoffices['anonymous']();
+        let layout = backoffices[account.profile]();
+        let appContext = {
+            account,
+            showMessage: this.showGlobalMessage,
+        };
 
         return (
             <>
-                <IntlProvider locale="fr">
-                    <UserContext.Provider value={this.state}>
-                        <div className="anotea">
-                            <Switch>
-                                <Redirect exact from="/" to={layout.defaultPath} />
-                                <Redirect exact from="/admin" to={layout.defaultPath} />
-                            </Switch>
+                <AppContext.Provider value={appContext}>
+                    <div className="anotea">
+                        <Switch>
+                            <Redirect exact from="/" to={layout.defaultPath} />
+                            <Redirect exact from="/admin" to={layout.defaultPath} />
+                        </Switch>
 
-                            <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} profile={this.state.profile} loggedIn={this.state.loggedIn} />
-                            <MiscRoutes />
-                            {layout.routes}
-                        </div>
-                    </UserContext.Provider>
-                </IntlProvider>
+                        <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} profile={this.state.account.profile} loggedIn={this.state.loggedIn} />
+                        <MiscRoutes />
+                        {layout.routes}
+                    </div>
+                    {message &&
+                    <GlobalMessage
+                        message={message}
+                        onClose={() => {
+                            return this.setState({ message: null });
+                        }} />
+                    }
+                </AppContext.Provider>
                 {false && <GridDisplayer />}
             </>
+
         );
     }
 }

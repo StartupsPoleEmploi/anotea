@@ -7,15 +7,16 @@ import Button from '../common/Button';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
 import _ from 'lodash';
 import { updatePassword } from '../../services/meService';
-import GlobalMessage from '../common/message/GlobalMessage';
+import AppContext from '../AppContext';
 
 export default class MonComptePage extends React.Component {
+
+    static contextType = AppContext;
 
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
-            message: null,
             current: '',
             password: '',
             confirmation: '',
@@ -29,6 +30,8 @@ export default class MonComptePage extends React.Component {
     onSubmit = () => {
 
         let { current, password, confirmation } = this.state;
+        let { showMessage } = this.context;
+
         this.setState({
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
@@ -43,26 +46,29 @@ export default class MonComptePage extends React.Component {
 
                 updatePassword(current, password)
                 .then(() => {
+                    showMessage({
+                        text: 'Votre mot de passe a été modifié',
+                        color: 'green',
+                        timeout: 5000,
+                    });
+
                     return this.setState({
                         loading: false,
                         current: '',
                         password: '',
                         confirmation: '',
-                        message: {
-                            text: 'Votre mot de passe a été modifié',
-                            color: 'green',
-                            timeout: 5000,
-                        },
                     });
                 })
                 .catch(async error => {
                     let json = await error.json;
-                    return this.setState({
+
+                    showMessage({
+                        text: json.message,
+                        color: 'red',
+                    });
+
+                    this.setState({
                         loading: false,
-                        message: {
-                            text: json.message,
-                            color: 'red',
-                        },
                     });
                 });
             }
@@ -70,7 +76,7 @@ export default class MonComptePage extends React.Component {
     };
 
     render() {
-        let { errors, message } = this.state;
+        let { errors } = this.state;
 
         return <Page
             panel={
@@ -118,11 +124,6 @@ export default class MonComptePage extends React.Component {
                                     >
                                         Confirmer
                                     </Button>
-                                    {message &&
-                                    <GlobalMessage
-                                        message={message}
-                                        onClose={() => this.setState({ message: null })} />
-                                    }
                                 </>
                             }
                         />

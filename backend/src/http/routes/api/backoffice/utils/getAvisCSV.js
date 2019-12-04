@@ -25,7 +25,11 @@ let getReponseStatus = reponse => {
     }
 };
 
-module.exports = () => {
+let getQualification = comment => {
+    return _.isEmpty(comment.qualification) ? '' : comment.qualification;
+};
+
+module.exports = profile => {
     return {
         'id': comment => comment._id,
         'note accueil': comment => sanitizeNote(comment.rates.accueil),
@@ -36,7 +40,7 @@ module.exports = () => {
         'note global': comment => sanitizeNote(comment.rates.global),
         'titre': comment => sanitizeString(_.get(comment, 'comment.title', '')),
         'commentaire': comment => sanitizeString(_.get(comment, 'comment.text', '')),
-        'qualification': comment => _.isEmpty(comment.qualification) ? '' : comment.qualification,
+        ...(profile === 'organisme' ? {} : { 'qualification': comment => getQualification(comment) }),
         'statut': comment => getStatus(comment),
         'réponse': comment => sanitizeString(_.get(comment, 'reponse.text', '')),
         'réponse statut': comment => comment.reponse ? getReponseStatus(comment.reponse.status) : '',
@@ -49,10 +53,9 @@ module.exports = () => {
         'nom organisme': comment => comment.training.organisation.name,
         'code postal': comment => comment.training.place.postalCode,
         'ville': comment => comment.training.place.city,
-        'id certif info': comment => comment.training.certifInfo.id,
-        'libellé certifInfo': comment => comment.training.certifInfo.label,
+        'certifInfos': comment => comment.training.certifInfos.join(','),
+        'formacodes': comment => comment.training.formacodes.join(','),
         'id session': comment => comment.training.idSession,
-        'formacode': comment => comment.training.formacode,
         'AES reçu': comment => comment.training.aesRecu,
         'code financeur': comment => comment.training.codeFinanceur,
     };

@@ -41,12 +41,9 @@ const createStagiaire = session => {
                 postalCode: formation.action.lieu_de_formation.code_postal,
                 city: formation.action.lieu_de_formation.ville
             },
-            certifInfo: {
-                id: formation.certifications.certifinfos[0],
-                label: 'NULL'
-            },
+            certifInfos: formation.certifications.certifinfos,
+            formacodes: formation.domaine_formation.formacodes,
             idSession: session.numero,
-            formacode: formation.domaine_formation.formacodes[0],
             infoCarif: {
                 numeroAction: formation.action.numero,
                 numeroSession: session.numero
@@ -66,15 +63,12 @@ const createStagiaire = session => {
 
 module.exports = async (db, options) => {
 
-    let promises = [];
     let session = await db.collection('sessionsReconciliees').findOne();
 
-
-    promises.push(_.range(options.nbStagiaires || 1000).map(() => {
+    return Promise.all(_.range(options.nbStagiaires || 1000).map(() => {
         let stagiaire = createStagiaire(session);
-        return db.collection('trainee').insertOne(stagiaire);
+        return db.collection('trainee').insertOne(stagiaire)
+        .then(() => stagiaire.token);
     }));
-
-    return Promise.all(promises);
 
 };

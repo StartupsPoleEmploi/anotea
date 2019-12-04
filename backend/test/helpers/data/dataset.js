@@ -43,12 +43,9 @@ module.exports = {
                     postalCode: '75011',
                     city: 'Paris'
                 },
-                certifInfo: {
-                    id: '78997',
-                    label: 'Développeur'
-                },
+                certifInfos: ['78997'],
                 idSession: '2422722',
-                formacode: '46242',
+                formacodes: ['46242'],
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -154,12 +151,9 @@ module.exports = {
                     postalCode: '75011',
                     city: 'Paris'
                 },
-                certifInfo: {
-                    id: '78997',
-                    label: 'Développeur'
-                },
+                certifInfos: ['78997'],
                 idSession: '2422722',
-                formacode: '46242',
+                formacodes: ['46242'],
                 infoCarif: {
                     numeroAction: 'AC_XX_XXXXXX',
                     numeroSession: 'SE_XXXXXX'
@@ -194,7 +188,7 @@ module.exports = {
         let numeroAction = options.numeroAction || 'AC_XX_XXXXXX';
         let numeroSession = options.numeroSession || 'SE_XXXXXX';
         let formacode = options.formacode || '224032422722';
-        let certifinfo = options.certifinfo || '80735';
+        let certifInfo = options.certifInfo || '80735';
         let codeRegion = options.codeRegion || '11';
         let lieuDeFormation = options.lieuDeFormation || '93100';
         let organismeFormateur = options.organismeFormateur || '22222222222222';
@@ -518,7 +512,7 @@ module.exports = {
             certifications: [
                 {
                     code_rncp: '320',
-                    code_certifinfo: certifinfo
+                    code_certifinfo: certifInfo
                 }
             ],
             actions: [{
@@ -859,7 +853,7 @@ module.exports = {
                 ]
             }],
             _meta: {
-                certifinfos: [certifinfo],
+                certifinfos: [certifInfo],
                 formacodes: [formacode]
             },
             md5: '863aab7eacec39772b8f0f8336579bec'

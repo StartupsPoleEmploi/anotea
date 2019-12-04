@@ -17,6 +17,7 @@ const importCommunes = require('../../import/communes/tasks/importCommunes');
 const reconcile = require('../../reconciliation/tasks/reconcile');
 const addReconciliationAvisMetadata = require('../../reconciliation/tasks/addReconciliationAvisMetadata');
 const removePreviousImports = require('../../reconciliation/tasks/removePreviousImports');
+const computeStats = require('../../stats/tasks/computeStats');
 
 cli.description('Inject dataset')
 .option('-d, --drop', 'Drop database')
@@ -30,6 +31,7 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
         await db.dropDatabase();
     }
 
+    let password = cli.password || 'password';
     let options = { nbStagiaires: 1000, notes: 10, commentaires: 500 };
 
     await createIndexes(db);
@@ -40,7 +42,7 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
 
     logger.info(`Generating stagiaires and avis....`);
     await reconcile(db, logger);//Just to get a valid session
-    await createStagiaires(db, options);
+    let stagiaires = await createStagiaires(db, options);
     await createAvis(db, options);
 
     logger.info(`Creating organismes....`);
@@ -49,11 +51,10 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
 
     logger.info(`Creating accounts....`);
     await createAccounts(db, logger);
-    await resetPasswords(db, passwords, cli.password || 'password', { force: true });
+    await resetPasswords(db, passwords, password, { force: true });
     await emulateBackofficeActions(db, workflow, options);
+
     logger.info(`Reconcile avis and sessions....`);
-
-
     let communes = path.join(__dirname, '../../../../test/helpers/data/communes.csv');
     let cedex = path.join(__dirname, '../../../../test/helpers/data/cedex.csv');
     await importCommunes(db, logger, communes, cedex);
@@ -62,5 +63,22 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
     await addReconciliationAvisMetadata(db);
     await removePreviousImports(db);
 
-    return { dataset: 'ready' };
+    logger.info(`Compute stats accounts....`);
+    await computeStats(db, regions);
+
+    return {
+        dataset: 'ready',
+        urls: {
+            questionnaire: `http://localhost:3002/questionnaire/${stagiaires[0]}`,
+            widget: 'http://localhost:3001?format=carrousel&type=session&identifiant=F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
+            backoffice: {
+                url: 'http://localhost:3000',
+                logins: [
+                    { profile: 'moderateur', login: 'moderateur', password },
+                    { profile: 'financeur', login: 'conseil_regional', password },
+                    { profile: 'organisme', login: '22222222222222', password, },
+                ]
+            },
+        },
+    };
 });

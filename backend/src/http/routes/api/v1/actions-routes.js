@@ -101,10 +101,10 @@ module.exports = ({ db, middlewares }) => {
             throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
         }
 
-        let avis = action.avis;
-        if (parameters.commentaires !== null) {
-            avis = avis.filter(avis => parameters.commentaires ? (avis.commentaire || avis.reponse) : !avis.commentaire);
-        }
+        let avis = parameters.commentaires === null ?
+            action.avis :
+            action.avis.filter(avis => parameters.commentaires ? (avis.commentaire || avis.reponse) : !avis.commentaire);
+
 
         res.json({
             avis: avis.slice(skip, skip + limit),

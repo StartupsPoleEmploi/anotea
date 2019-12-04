@@ -1,13 +1,38 @@
 const fs = require('fs');
-const { ignoreFirstLine } = require('../../../../common/utils/stream-utils');
+const _ = require('lodash');
+const { ignoreFirstLine, pipeline, writeObject } = require('../../../../common/utils/stream-utils');
+const { getNbModifiedDocuments } = require('../../../job-utils');
 const parse = require('csv-parse');
 
-let loadCertifinfos = file => {
+let loadCertifinfos = async file => {
+    const ETAT_ERRONE = '2';
+
+    let handleChaining = mapping => {
+        let codesReducer = codes => {
+            return codes.reduce((acc, code) => {
+                let newCodes = mapping[code];
+                if (newCodes) {
+                    if (newCodes.filter(c => mapping[c]).length > 0) {
+                        return [...acc, ...codesReducer(newCodes)];
+                    }
+                    return [...acc, ...newCodes];
+                }
+                return [...acc, code];
+            }, []);
+        };
+
+        return Object.keys(mapping).reduce((acc, code) => {
+            return {
+                ...acc,
+                [code]: codesReducer(mapping[code]),
+            };
+        }, {});
+    };
+
     let mapping = {};
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(file)
-        .on('error', err => reject(err))
-        .pipe(parse({
+    await pipeline([
+        fs.createReadStream(file),
+        parse({
             delimiter: ';',
             quote: '',
             relax_column_count: true,
@@ -16,56 +41,91 @@ let loadCertifinfos = file => {
                 'cer3_libelle',
                 'cer3_etat',
                 'cer3_codenew',
-                'cer3_libelle',
+                'cer3_libellenew',
                 'cer3_etat',
             ],
-        }))
-        .pipe(ignoreFirstLine())
-        .on('data', data => {
-            mapping[data.cer3_code] = data.cer3_codenew;
-        })
-        .on('error', err => reject(err))
-        .on('end', async () => resolve(mapping));
-    });
+        }),
+        ignoreFirstLine(),
+        writeObject(data => {
+
+            if (data.cer3_etat === ETAT_ERRONE) {
+                return; //etat erroné
+            }
+
+            let codenew = data.cer3_codenew;
+            if (mapping[data.cer3_code]) {
+                mapping[data.cer3_code].push(codenew);
+            } else {
+                mapping[data.cer3_code] = [codenew];
+            }
+        }),
+    ]);
+
+    return handleChaining(mapping);
 };
 
 module.exports = async (db, logger, file) => {
 
-    let stats = {
-        updated: 0,
-        invalid: 0,
-        total: 0,
+    const patch = async (collectionName, certifications) => {
+
+        let stats = {
+            updated: 0,
+            invalid: 0,
+            total: 0,
+        };
+
+        let getNewCertifInfos = doc => {
+            return _.uniq(doc.training.certifInfos.reduce((acc, code) => {
+                let codes = certifications[code] ? [...certifications[code], code] : [code];
+                return [...acc, ...codes];
+            }, []));
+        };
+
+        let getNewMeta = doc => {
+            let meta = _.cloneDeep(doc.meta) || {};
+            meta.history = meta.history || [];
+            meta.history.unshift({
+                date: new Date(),
+                training: {
+                    certifInfos: _.uniq(doc.training.certifInfos),
+                },
+            });
+
+            return meta;
+        };
+
+        let cursor = db.collection(collectionName).find({});
+        while (await cursor.hasNext()) {
+            stats.total++;
+            const doc = await cursor.next();
+            try {
+                if (doc.training.certifInfos.find(code => certifications[code])) {
+                    let results = await db.collection(collectionName).updateOne({ _id: doc._id }, {
+                        $set: {
+                            'training.certifInfos': getNewCertifInfos(doc),
+                            'meta': getNewMeta(doc),
+                        }
+                    });
+
+                    if (getNbModifiedDocuments(results) > 0) {
+                        stats.updated++;
+                    }
+                }
+            } catch (e) {
+                stats.invalid++;
+                logger.error(`Stagiaire cannot be patched`, e);
+            }
+        }
+
+        return stats;
     };
 
-    let certifinfos = await loadCertifinfos(file);
-    let cursor = db.collection('trainee').find({ 'meta.patch.certifInfo': { $exists: false } });
-    while (await cursor.hasNext()) {
-        stats.total++;
-        const trainee = await cursor.next();
-        try {
-            let newCertifinfos = certifinfos[trainee.training.certifInfo.id];
-            if (newCertifinfos) {
-                let results = await db.collection('trainee').updateOne(
-                    { _id: trainee._id },
-                    {
-                        $set: {
-                            'training.certifInfo.id': newCertifinfos,
-                            'meta.patch.certifInfo': trainee.training.certifInfo.id,
-                        },
-                    },
-                    { upsert: false }
-                );
+    let certifInfos = await loadCertifinfos(file);
+    let [trainee, comment] = await Promise.all([
+        patch('trainee', certifInfos),
+        patch('comment', certifInfos),
+    ]);
 
-                if (results.result.nModified === 1) {
-                    stats.updated++;
-                }
-            }
-        } catch (e) {
-            stats.invalid++;
-            logger.error(`Stagiaire cannot be patched`, e);
-        }
-    }
-
-    return stats;
+    return { trainee, comment };
 };
 

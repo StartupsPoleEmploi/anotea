@@ -9,9 +9,9 @@ let flattenKeys = (obj, path = []) => {
 module.exports = {
     isDeepEquals: (v1, v2) => JSON.stringify(v1) === JSON.stringify(v2),
     mergeDeep: (...args) => {
-        return _.merge.apply(null, [...args, (objValue, srcValue) => {
+        return _.mergeWith.apply(null, [...args, (objValue, srcValue) => {
             if (_.isArray(objValue)) {
-                return objValue.concat(srcValue);
+                return _.uniq(_.union(objValue, srcValue));
             }
         }
         ]);

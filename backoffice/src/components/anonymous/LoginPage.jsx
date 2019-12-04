@@ -9,7 +9,6 @@ import { login, loginWithAccessToken } from './loginService';
 import './LoginPage.scss';
 import { NavLink } from 'react-router-dom';
 import Loader from '../common/Loader';
-import GlobalMessage from '../common/message/GlobalMessage';
 
 export default class LoginPage extends React.Component {
 
@@ -26,7 +25,6 @@ export default class LoginPage extends React.Component {
             errors: false,
             identifiant: '',
             password: '',
-            message: null
         };
     }
 
@@ -36,16 +34,6 @@ export default class LoginPage extends React.Component {
             this.setState({ loginWithAccessToken: true }, () => {
                 this.handleAccessToken(query);
             });
-        }
-        if (query.message) {
-            this.setState({ message: query.message });
-        }
-    }
-
-    componentDidUpdate(previous) {
-        let query = this.props.navigator.getQuery();
-        if (query.message !== previous.navigator.getQuery().message) {
-            this.setState({ message: query.message });
         }
     }
 
@@ -67,9 +55,6 @@ export default class LoginPage extends React.Component {
     };
 
     render() {
-
-        let { message } = this.state;
-        let { navigator } = this.props;
 
         if (this.state.loginWithAccessToken) {
             return <Page
@@ -132,11 +117,6 @@ export default class LoginPage extends React.Component {
                                         >
                                             Se connecter
                                         </Button>
-                                        {message &&
-                                        <GlobalMessage
-                                            message={{ text: message, timeout: 5000 }}
-                                            onClose={() => navigator.refreshCurrentPage()} />
-                                        }
                                     </div>
                                 }
                             />

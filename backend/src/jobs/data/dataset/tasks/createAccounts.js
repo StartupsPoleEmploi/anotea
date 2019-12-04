@@ -3,13 +3,13 @@ module.exports = db => {
     return Promise.all([
         db.collection('accounts').insertOne({
             profile: 'financeur',
-            courriel: 'cr',
+            courriel: 'conseil_regional',
             codeRegion: '11',
             codeFinanceur: '2',
         }),
         db.collection('accounts').insertOne({
             profile: 'moderateur',
-            courriel: 'moderateur@pole-emploi.fr',
+            courriel: 'moderateur',
             codeRegion: '11',
         }),
     ]);

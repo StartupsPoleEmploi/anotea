@@ -63,7 +63,5 @@ module.exports = (formation, action, session, comments) => {
             },
         },
     };
-    ;
-
 };
 

@@ -22,7 +22,6 @@ module.exports = async db => {
                             date: new Date(),
                             reconciliable: isReconciliable,
                         }],
-                        $slice: 10,
                         $position: 0,
                     },
                 }

@@ -15,7 +15,13 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
     };
 
     const isFiltered = trainee => {
-        return !filters.codeRegion || filters.codeRegion === trainee.codeRegion;
+        if (filters.codeRegion) {
+            return filters.codeRegion === trainee.codeRegion;
+        }
+        if (filters.codeFinanceur) {
+            return trainee.training.codeFinanceur.includes(filters.codeFinanceur);
+        }
+        return true;
     };
 
     const hasNotBeenAlreadyImportedOrRemoved = async trainee => {
@@ -38,7 +44,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         invalid: 0,
     };
 
-    if (await db.collection('importTrainee').findOne({ hash, filters })) {
+    if (await db.collection('importTrainee').findOne({ campaign: campaign.name })) {
         logger.info(`CSV file ${file} already imported`);
         return stats;
     }
@@ -82,5 +88,4 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
     });
 
     return stats;
-
 };

@@ -16,7 +16,7 @@ module.exports = (db, communes) => {
 
         let [romeMapping, commune] = await Promise.all([
             db.collection('formacodeRomeMapping').aggregate([{
-                $match: { formacodes: { $elemMatch: { formacode: trainee.training.formacode } } }
+                $match: { 'formacodes.formacode': { $in: trainee.training.formacodes } }
             }, {
                 $group: { _id: '$codeROME' }
             }]).toArray(),

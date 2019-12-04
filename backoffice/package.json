@@ -16,6 +16,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.10.2",
     "@nivo/pie": "0.59.1",
+    "@sentry/browser": "5.9.1",
     "bootstrap": "4.3.1",
     "bootstrap-datepicker": "1.9.0",
     "jquery": "3.4.1",
@@ -25,8 +26,8 @@
     "popper.js": "1.14.6",
     "query-string": "6.8.3",
     "react": "16.9.0",
+    "react-app-polyfill": "1.0.4",
     "react-dom": "16.9.0",
-    "react-intl": "2.7.2",
     "react-router-dom": "5.0.1",
     "react-scripts": "3.1.1",
     "react-virtualized-auto-sizer": "1.0.2",
@@ -42,7 +43,6 @@
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
-    "babel-plugin-react-intl": "3.0.1",
     "babel-preset-react-app": "6.1.0",
     "eslint-plugin-react": "7.14.3",
     "node-sass-chokidar": "1.3.5"
