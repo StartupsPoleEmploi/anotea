@@ -2,7 +2,7 @@ const fs = require('fs');
 const _ = require('lodash');
 const parse = require('csv-parse');
 const validateTrainee = require('./utils/validateTrainee');
-const { mergeDeep, getDifferences, flattenKeys } = require('../../../../common/utils/object-utils');
+const { getDifferences, flattenKeys } = require('../../../../common/utils/object-utils');
 const { writeObject, pipeline, ignoreFirstLine, transformObject } = require('../../../../common/utils/stream-utils');
 const { sanitizeCsvLine } = require('./utils/utils');
 const { getNbModifiedDocuments } = require('../../../job-utils');
@@ -33,7 +33,7 @@ module.exports = async (db, logger, file, handler) => {
     };
 
     let refreshStagiaire = async (previous, trainee) => {
-        let merged = mergeDeep({},
+        let merged = _.merge({},
             previous,
             {
                 trainee: {
@@ -67,7 +67,7 @@ module.exports = async (db, logger, file, handler) => {
     };
 
     let refreshAvis = async (previous, trainee) => {
-        let merged = mergeDeep({},
+        let merged = _.merge({},
             previous,
             {
                 training: {
