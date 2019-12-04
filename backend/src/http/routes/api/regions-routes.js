@@ -1,5 +1,4 @@
 const express = require('express');
-const Joi = require('joi');
 const { tryAndCatch } = require('../routes-utils');
 
 module.exports = ({ regions }) => {
@@ -7,12 +6,23 @@ module.exports = ({ regions }) => {
     const router = express.Router(); // eslint-disable-line new-cap
 
     router.get('/regions', tryAndCatch(async (req, res) => {
+        let regionList = regions.findActiveRegions().map(region => {
+            return {
+                codeRegion: region.codeRegion,
+                nom: region.nom,
+                email: `${region.contact}@pole-emploi.fr`
+            };
+        }).sort((a, b) => {
+            return a.nom.localeCompare(b.nom);
+        });
 
-        const parameters = await Joi.validate(req.query, {
-            active: Joi.boolean().default(false),
-        }, { abortEarly: false });
+        regionList.push({
+            codeRegion: null,
+            nom: 'Autre région',
+            email: 'anotea@anotea.pole-emploi.fr'
+        })
 
-        res.json(parameters.active ? regions.findActiveRegions() : regions.getRegions());
+        res.json(regionList);
     }));
 
     return router;
