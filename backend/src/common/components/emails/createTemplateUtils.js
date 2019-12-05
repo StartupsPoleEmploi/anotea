@@ -1,5 +1,6 @@
 const moment = require('moment');
 const path = require('path');
+const mjml = require('mjml');
 const ejs = require('ejs');
 const { promisify } = require('util');
 const renderFile = promisify(ejs.renderFile);
@@ -15,41 +16,14 @@ module.exports = (configuration, regions) => {
 
     return {
         ...utils,
-        render: (dir, templateName, data) => renderFile(path.join(dir, `${templateName}.ejs`), data),
-        getStagiaireGlobals: (templateName, trainee) => {
-            let token = trainee.token;
-            let region = regions.findRegionByCodeRegion(trainee.codeRegion);
-            let utm = utils.getUTM(trainee.campaign);
-
-            return {
-                region,
+        render: async (dir, templateName, data) => {
+            let mjmlTemplate = await renderFile(path.join(dir, `${templateName}.mjml.ejs`), {
+                ...data,
+                templateName,
                 utils: { moment, ...utils },
-                analytics: configuration.analytics,
-                unsubscribeLink: utils.getUnsubscribeLink(token),
-                trackingLink: utils.getPublicUrl(`/mail/stagiaires/${token}/track`),
-                consultationLink: utils.getPublicUrl(`/mail/stagiaires/${token}/templates/${templateName}?${(utm)}`),
-            };
-        },
-        getOrganismeGlobals: (templateName, organisme) => {
-            let region = regions.findRegionByCodeRegion(organisme.codeRegion);
-            let token = organisme.token;
-
-            return {
-                region,
-                utils: { moment, ...utils },
-                analytics: configuration.analytics,
-                trackingLink: utils.getPublicUrl(`/mail/organismes/${token}/track`),
-                consultationLink: utils.getPublicUrl(`/mail/organismes/${token}/templates/${templateName}`),
-            };
-        },
-        getAccountGlobals: (templateName, account) => {
-            let region = regions.findRegionByCodeRegion(account.codeRegion);
-
-            return {
-                region,
-                utils: { moment, ...utils },
-                analytics: configuration.analytics,
-            };
+                region: regions.findRegionByCodeRegion((data.account || data.organisme || data.trainee).codeRegion),
+            });
+            return mjml(mjmlTemplate, { minify: true }).html;
         },
     };
 };

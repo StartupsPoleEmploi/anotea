@@ -8,7 +8,6 @@ module.exports = (db, regions, mailer, utils) => {
         return utils.render(__dirname, templateName, {
             organisme,
             reponse: comment.reponse.text,
-            ...utils.getOrganismeGlobals(templateName, organisme),
             ...options,
         });
     };

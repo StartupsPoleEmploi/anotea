@@ -55,6 +55,7 @@
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.15",
     "md5-file": "4.0.0",
+    "mjml": "4.5.1",
     "mobile-detect": "1.4.3",
     "moment": "2.24.0",
     "mongodb": "3.3.2",

@@ -5,7 +5,6 @@ module.exports = (db, regions, mailer, utils) => {
     let render = (trainee, options = {}) => {
         return utils.render(__dirname, templateName, {
             trainee,
-            ...utils.getStagiaireGlobals(templateName, trainee),
             ...options,
         });
     };

@@ -1,0 +1,36 @@
+<mj-section>
+    <mj-column>
+        <mj-text>
+            <div class="text-tertiary">
+                Pôle emploi traite vos données à caractère personnel (données professionnelles, données de contact) pour
+                les besoins de la réalisation d’une enquête de satisfaction des stagiaires
+                de la formation professionnelle, ayant suivi une formation financée par votre Conseil régional.
+            </div>
+        </mj-text>
+        <mj-text>
+            <div class="text-tertiary">
+                Vos données seront conservées pendant la durée de l’enquête.
+            </div>
+        </mj-text>
+        <mj-text>
+            <div class="text-tertiary">
+                Conformément aux articles 12 à 23 du règlement général (UE) sur la protection des données n°2016/679
+                du 27 avril 2016 et à la loi Informatique et libertés n°78-17 du 6 janvier 1978 modifiée,
+                vous bénéficiez notamment d’un droit d’accès, de rectification, d’effacement et le droit de porter
+                une réclamation devant la Commission nationale de l’informatique et des libertés pour les données
+                vous concernant. Pour exercer vos droits, vous pouvez vous adresser à votre agence ou au délégué
+                à la protection des données de Pôle emploi (1 avenue du Docteur Gley, 75987 Paris cedex
+                20 ; <a href="mailto:courriers-cnil@pole-emploi.fr">courriers-cnil@pole-emploi.fr</a>).
+            </div>
+        </mj-text>
+        <mj-text>
+            <div class="text-tertiary">
+                Si vous ne parvenez pas à lire ce mail,
+                <a href="<%= utils.getPublicUrl(`/mail/organismes/${organisme.token}/templates/${templateName}`) %>"
+                   target="_blank" class="link">
+                    cliquez-ici
+                </a>
+            </div>
+        </mj-text>
+    </mj-column>
+</mj-section>

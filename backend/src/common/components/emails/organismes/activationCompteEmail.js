@@ -8,7 +8,6 @@ module.exports = (db, regions, mailer, utils) => {
         return utils.render(__dirname, templateName, {
             organisme,
             link: utils.getPublicUrl(`/admin/activation-compte?token=${(organisme.token)}`),
-            ...utils.getOrganismeGlobals(templateName, organisme),
             ...options,
         });
     };

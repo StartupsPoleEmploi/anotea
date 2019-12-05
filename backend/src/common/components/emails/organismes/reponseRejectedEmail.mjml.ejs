@@ -1,0 +1,106 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+            <mj-section>
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        Votre réponse n'a pas été prise en compte
+                    </mj-text>
+
+
+                    <mj-text css-class="text-secondary">
+                        Nous avons procédé au rejet de la réponse ci-dessus
+                        et nous vous invitons à la modifier dans votre Espace.
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding-top="0" padding-left="100px" padding-right="100px">
+                <mj-column border="1px dashed #C8CBCE">
+                    <mj-text css-class="text-secondary" font-style="italic">
+                        "<%= reponse %>"
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding-top="0" padding-bottom="0">
+                <mj-column>
+                    <mj-text css-class="text-secondary">
+                        Nous vous remercions de votre contribution à notre service. En répondant aux commentaires, vous
+                        apportez
+                        vous aussi un éclairage aux personnes qui consultent les avis en ligne
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Voici quelques conseils pour formuler votre réponse :
+
+                        <ul style="text-align: left">
+                            <li>
+                                Ayez à l’esprit qu’elle s’adresse aux personnes qui vont consulter les avis
+                                Anotéa en ligne
+                            </li>
+                            <li>Faites part de la prise en compte des remarques formulées par l’émetteur de l’avis</li>
+                            <li>Objectivez en apportant des éléments factuels de réponse (nombre de retours à l’emploi,
+                                taux de
+                                réussite...,
+                                travaux menés ou planifiés...)
+                            </li>
+                            <li>Ne rédigez pas votre réponse comme une réponse à une réclamation</li>
+                            <li>Respectez l’anonymat des formateurs et des stagiaires</li>
+                            <li>Ne faites pas mention de coordonnées téléphoniques ou mail</li>
+                        </ul>
+                    </mj-text>
+
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding-top="0" padding-bottom="0" padding-left="100px" padding-right="100px">
+                <mj-column border="1px solid #C8CBCE">
+                    <mj-text font-size="18px" font-weight="bold" line-height="22px" padding-bottom="0">
+                        Votre identifiant
+                    </mj-text>
+                    <mj-text font-size="14px" line-height="21px">
+                        <%= organisme.meta.siretAsString %>
+                    </mj-text>
+
+                    <mj-button
+                            href="<%= utils.getPublicUrl(`/admin`) %>"
+                            background-color="#24303A"
+                            color="#F4F4F5"
+                            font-size="16px"
+                            font-weight="bold"
+                            text-transform="uppercase">
+                        Accéder à mon espace
+                    </mj-button>
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding-top="0" padding-bottom="0">
+                <mj-column>
+                    <mj-text css-class="text-secondary">
+                        Si vous avez une question
+                    </mj-text>
+
+                    <mj-button
+                            href="mailto:<%= utils.getRegionEmail(region) %>"
+                            background-color="#FDF2E7"
+                            color="#F28017"
+                            font-size="16px"
+                            font-weight="bold"
+                            text-transform="uppercase">
+                        Contacter Anotéa
+                    </mj-button>
+                </mj-column>
+            </mj-section>
+
+        </mj-wrapper>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>

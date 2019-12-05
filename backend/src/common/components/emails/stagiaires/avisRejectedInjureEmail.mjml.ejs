@@ -1,0 +1,50 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+            <mj-section>
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        Votre commentaire a été rejeté
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary" padding-bottom="0">
+                        Il semblerait que votre avis comporte des propos à caractère injurieux ou diffamatoire et ne
+                        respecte donc pas notre charte.
+                    </mj-text>
+                    <mj-text css-class="text-secondary" padding-top="0">
+                        Seules les notes seront publiées.
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary" padding-bottom="0">
+                        Nous vous remercions de votre compréhension.
+                    </mj-text>
+                    <mj-text css-class="text-secondary" padding-top="0">
+                        L'équipe Anotéa.
+                    </mj-text>
+
+                    <mj-button
+                            href="mailto:<%= utils.getRegionEmail(region) %>"
+                            background-color="#FDF2E7"
+                            color="#F28017"
+                            font-size="16px"
+                            font-weight="bold"
+                            text-transform="uppercase">
+                        Contacter Anotéa
+                    </mj-button>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>

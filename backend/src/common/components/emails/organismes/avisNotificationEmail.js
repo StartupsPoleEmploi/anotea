@@ -7,7 +7,6 @@ module.exports = (db, regions, mailer, utils) => {
     let render = (organisme, options = {}) => {
         return utils.render(__dirname, templateName, {
             organisme,
-            ...utils.getOrganismeGlobals(templateName, organisme),
             ...options,
         });
     };

@@ -9,7 +9,6 @@ module.exports = (db, regions, mailer, utils) => {
         return utils.render(__dirname, templateName, {
             trainee,
             link: utils.getPublicUrl(`/questionnaire/${(trainee.token)}?${(utm)}`),
-            ...utils.getStagiaireGlobals(templateName, trainee),
             ...options,
         });
     };

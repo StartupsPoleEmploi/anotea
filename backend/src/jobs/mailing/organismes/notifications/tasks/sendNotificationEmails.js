@@ -90,7 +90,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
 
             logger.info(`Sending email to ${email}`);
             let message = emails.getEmailMessageByTemplateName('avisNotificationEmail');
-            await message.send(organisme, readStatus);
+            await message.send(organisme, { readStatus });
 
             if (options.delay) {
                 await delay(options.delay);

@@ -8,7 +8,6 @@ module.exports = (db, regions, mailer, utils) => {
         return utils.render(__dirname, templateName, {
             organisme,
             link: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
-            ...utils.getOrganismeGlobals(templateName, organisme),
             ...options,
         });
     };
@@ -49,7 +48,7 @@ module.exports = (db, regions, mailer, utils) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 getOrganismeEmail(organisme),
                 {
-                    subject: 'Aidez-nous à améliorer Anotéa',
+                    subject: 'Pôle Emploi - Aidez-nous à améliorer Anotéa',
                     body: await render(organisme, { webView: false }),
                 },
             )

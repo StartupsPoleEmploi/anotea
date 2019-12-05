@@ -9,7 +9,6 @@ module.exports = (db, regions, mailer, utils) => {
         return utils.render(__dirname, templateName, {
             account,
             link: utils.getPublicUrl(`/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`),
-            ...utils.getAccountGlobals(templateName, account),
             ...options,
         });
     };

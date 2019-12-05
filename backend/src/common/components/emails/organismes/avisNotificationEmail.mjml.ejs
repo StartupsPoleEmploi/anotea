@@ -1,0 +1,86 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+            <mj-section>
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        Vos anciens stagiaires ont donné leur avis sur leur formation.
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Ils sont publiés sur https://labonneformation.pole-emploi.fr
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <% if (locals.readStatus && locals.readStatus.commentaire) { %>
+                <mj-section padding-top="0" padding-left="100px" padding-right="100px">
+                    <mj-column border="1px dashed #C8CBCE">
+                        <mj-text css-class="text-secondary" font-style="italic">
+                            "<%= readStatus.commentaire %>"
+                        </mj-text>
+                    </mj-column>
+                </mj-section>
+            <% } %>
+
+            <mj-section padding-top="0" padding-bottom="0">
+                <mj-column>
+                    <mj-text css-class="text-secondary">
+                        Consultez-les et apportez des éléments de réponse permettant d'éclairer le choix de vos
+                        futurs stagiaires.
+                    </mj-text>
+
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding-top="0" padding-bottom="0" padding-left="100px" padding-right="100px">
+                <mj-column border="1px solid #C8CBCE">
+                    <mj-text font-size="18px" font-weight="bold" line-height="22px" padding-bottom="0">
+                        Votre identifiant
+                    </mj-text>
+                    <mj-text font-size="14px" line-height="21px">
+                        <%= organisme.meta.siretAsString %>
+                    </mj-text>
+
+                    <mj-button
+                            href="<%= utils.getPublicUrl(`/admin`) %>"
+                            background-color="#24303A"
+                            color="#F4F4F5"
+                            font-size="16px"
+                            font-weight="bold"
+                            text-transform="uppercase">
+                        Accéder à mon espace
+                    </mj-button>
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding-top="0">
+                <mj-column>
+                    <mj-text css-class="text-secondary">
+                        Si vous avez une question
+                    </mj-text>
+
+                    <mj-button
+                            href="mailto:<%= utils.getRegionEmail(region) %>"
+                            background-color="#FDF2E7"
+                            color="#F28017"
+                            font-size="16px"
+                            font-weight="bold"
+                            text-transform="uppercase">
+                        Contacter Anotéa
+                    </mj-button>
+                </mj-column>
+            </mj-section>
+
+
+        </mj-wrapper>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>

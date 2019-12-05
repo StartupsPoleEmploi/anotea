@@ -1,0 +1,39 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+            <mj-section>
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        Nous avons bien pris en compte votre commentaire
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Nous vous informons que nous allons prendre contact avec
+                        "<%= trainee.training.organisation.name %>"
+                        suite au commentaire que vous avez déposé sur "<%= trainee.training.title %>".
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary" padding-bottom="0">
+                        Cordialement.
+                    </mj-text>
+                    <mj-text css-class="text-secondary" padding-top="0">
+                        L'équipe Anotéa.
+                    </mj-text>
+
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>

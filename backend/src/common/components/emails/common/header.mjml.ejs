@@ -1,0 +1,27 @@
+<% const showRegion = region.conseil_regional.active; %>
+<mj-section padding-top="0" padding-bottom="0" border-radius="5px" background-color="#fff">
+    <mj-group>
+        <mj-column vertical-align="top" padding-top="0" padding-bottom="0">
+            <mj-table>
+                <tr>
+                    <td width="70%">
+                        <img width="70px"
+                             src="<%= utils.getPublicUrl('/static/images/logo_Anotea_Horizontal_baseline2.png') %>" />
+                    </td>
+                    <td width="<%= showRegion ? '15%' : '30%' %>"
+                        style="<%= showRegion ? 'padding-right:5px;border-right:1px solid #F4F4F5;' : 'text-align:right' %>">
+                        <img width="70px" src="<%= utils.getPublicUrl('/static/images/logo-pole-emploi-530.png') %>" />
+                    </td>
+                    <% if (showRegion) { %>
+                        <td width="15%" style="<%= 'padding-left:5px;' %>">
+                            <img width="50px"
+                                 src="<%= utils.getPublicUrl(`/static/images/regions/region-${region.codeRegion}.png`) %>" />
+                        </td>
+                    <% } %>
+                </tr>
+            </mj-table>
+        </mj-column>
+    </mj-group>
+</mj-section>
+
+<mj-section padding="8px"></mj-section>

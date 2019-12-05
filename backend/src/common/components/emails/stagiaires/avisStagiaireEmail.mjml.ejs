@@ -1,0 +1,72 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+            <mj-section padding-bottom="0">
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        Donnez-nous votre avis en 1 minute.
+                    </mj-text>
+                    <mj-text css-class="text-secondary">
+                        Vous avez suivi la formation de <%= trainee.training.title %>
+                        du <%= utils.moment(trainee.training.startDate).format('DD/MM/YYYY') %>
+                        au <%= utils.moment(trainee.training.scheduledEndDate).format('DD/MM/YYYY') %>
+                        à <%= trainee.training.organisation.label %>.
+                    </mj-text>
+
+                    <mj-button
+                            href="<%= link %>"
+                            background-color="#F28017"
+                            font-size="16px"
+                            font-weight="bold"
+                            text-transform="uppercase">
+                        Evaluer ma formation
+                    </mj-button>
+
+                    <mj-divider border-width="2px" border-color="#F4F4F5" />
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding-top="0">
+                <mj-column>
+
+                    <mj-text font-weight="bold">
+                        Pourquoi donner votre avis ?
+                    </mj-text>
+
+                    <mj-text font-size="16px" font-weight="bold">
+                        Aider les prochains à faire le bon choix
+                    </mj-text>
+                    <mj-text css-class="text-secondary">
+                        Votre avis sera publié sur plusieurs plateformes.
+                    </mj-text>
+
+                    <mj-text font-size="16px" font-weight="bold">
+                        <div>100% anonyme</div>
+                    </mj-text>
+                    <mj-text css-class="text-secondary">
+                        Cet avis est totalement anonyme.
+                    </mj-text>
+
+                    <mj-text font-size="16px" font-weight="bold">
+                        Participer à l'amélioration des formations
+                    </mj-text>
+                    <mj-text css-class="text-secondary">
+                        Donnez des retours directs aux centres de formation ainsi qu'à Pôle Emploi.
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+
+        <mj-text padding="0">
+            <img src="<%= utils.getPublicUrl(`/mail/stagiaires/${trainee.token}/track`) %>" />
+        </mj-text>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>

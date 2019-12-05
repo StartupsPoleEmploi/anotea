@@ -1,0 +1,39 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+            <mj-section>
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        Aidez-nous à améliorer Anotéa
+                    </mj-text>
+                    <mj-text css-class="text-secondary">
+                        Vous avez créé votre compte Anotéa qui vous permet de consulter les avis de vos stagiaires et d’y
+                        répondre.
+                    </mj-text>
+                    <mj-text css-class="text-secondary">
+                        Afin d’améliorer l’utilisation de votre Espace, merci de prendre quelques minutes pour répondre à ce
+                        questionnaire
+                    </mj-text>
+                    <mj-button
+                            href="<%= link %>"
+                            background-color="#FDF2E7"
+                            color="#F28017"
+                            font-size="16px"
+                            font-weight="bold"
+                            text-transform="uppercase">
+                        Cliquez ici
+                    </mj-button>
+                </mj-column>
+            </mj-section>
+
+        </mj-wrapper>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>
