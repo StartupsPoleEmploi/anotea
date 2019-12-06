@@ -71,7 +71,7 @@ module.exports = (db, regions, mailer, utils) => {
                     email,
                     {
                         subject: 'Votre compte Anotéa : Demande de renouvellement de mot de passe',
-                        body: await render(account, passwordToken, { webView: false }),
+                        body: await render(account, passwordToken),
                     },
                 );
             })

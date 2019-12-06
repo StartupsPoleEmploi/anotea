@@ -30,7 +30,7 @@ module.exports = (db, regions, mailer, utils) => {
                 getOrganismeEmail(organisme),
                 {
                     subject: `Pôle Emploi - Vous avez ${options.nbUnreadComments || 'des'} nouveaux avis stagiaires`,
-                    body: await render(organisme, { webView: false, ...options }),
+                    body: await render(organisme, options),
                 },
             )
             .then(onSuccess);

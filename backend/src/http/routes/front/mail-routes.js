@@ -35,7 +35,7 @@ module.exports = ({ db, logger, emails }) => {
         }
 
         let message = emails.getEmailMessageByTemplateName(templateName);
-        let { html } = await message.render(doc, { webView: true });
+        let { html } = await message.render(doc);
 
         return sendHTML(res, html);
     });

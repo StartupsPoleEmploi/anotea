@@ -19,7 +19,7 @@ module.exports = (db, regions, mailer, utils) => {
                 trainee.trainee.email,
                 {
                     subject: 'Nous avons bien pris en compte votre commentaire',
-                    body: await render(trainee, { webView: false }),
+                    body: await render(trainee),
                 },
                 {
                     list: {

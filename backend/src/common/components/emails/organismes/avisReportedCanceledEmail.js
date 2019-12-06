@@ -21,7 +21,7 @@ module.exports = (db, regions, mailer, utils) => {
                 getOrganismeEmail(organisme),
                 {
                     subject: 'Pôle Emploi - Avis signalé dans votre Espace Anotéa',
-                    body: await render(organisme, { ...options, webView: false }),
+                    body: await render(organisme, options),
                 },
             );
         },

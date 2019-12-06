@@ -45,7 +45,7 @@ module.exports = (db, regions, mailer, utils) => {
                 getOrganismeEmail(organisme),
                 {
                     subject: 'Pôle Emploi vous donne accès aux avis de vos stagiaires',
-                    body: await render(organisme, { webView: false }),
+                    body: await render(organisme),
                 },
             )
             .then(onSuccess)

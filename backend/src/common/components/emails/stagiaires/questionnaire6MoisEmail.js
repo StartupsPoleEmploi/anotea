@@ -47,7 +47,7 @@ module.exports = (db, regions, mailer, utils) => {
                 trainee.trainee.email,
                 {
                     subject: 'Pôle Emploi vous demande votre avis sur votre formation',
-                    body: await render(trainee, { webView: false }),
+                    body: await render(trainee),
                 },
                 {
                     list: {

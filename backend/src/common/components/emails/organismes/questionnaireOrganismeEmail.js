@@ -49,7 +49,7 @@ module.exports = (db, regions, mailer, utils) => {
                 getOrganismeEmail(organisme),
                 {
                     subject: 'Pôle Emploi - Aidez-nous à améliorer Anotéa',
-                    body: await render(organisme, { webView: false }),
+                    body: await render(organisme),
                 },
             )
             .then(onSuccess)

@@ -317,7 +317,7 @@ module.exports = (db, logger, emails) => {
                     });
 
                     let message = emails.getEmailMessageByTemplateName('reponseRejectedEmail');
-                    return message.send(organisme, original);
+                    return message.send(organisme, { comment: original });
                 });
             }
 
