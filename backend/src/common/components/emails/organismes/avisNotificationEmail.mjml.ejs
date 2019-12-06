@@ -18,11 +18,11 @@
                 </mj-column>
             </mj-section>
 
-            <% if (locals.readStatus && locals.readStatus.commentaire) { %>
+            <% if (locals.comment) { %>
                 <mj-section padding-top="0" padding-left="100px" padding-right="100px">
                     <mj-column border="1px dashed #C8CBCE">
                         <mj-text css-class="text-secondary" font-style="italic">
-                            "<%= readStatus.commentaire %>"
+                            "<%= comment.comment.text %>"
                         </mj-text>
                     </mj-column>
                 </mj-section>

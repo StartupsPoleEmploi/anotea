@@ -4,23 +4,23 @@ module.exports = (db, regions, mailer, utils) => {
 
     const templateName = 'avisReportedConfirmedEmail';
 
-    let render = (organisme, options = {}) => {
+    let render = (organisme, comment) => {
         return utils.render(__dirname, templateName, {
             organisme,
-            ...options,
+            comment
         });
     };
 
     return {
         templateName,
         render,
-        send: async (organisme, options) => {
+        send: async (organisme, comment) => {
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             return mailer.createRegionalMailer(region).sendEmail(
                 getOrganismeEmail(organisme),
                 {
                     subject: 'Pôle Emploi - Avis signalé dans votre Espace Anotéa',
-                    body: await render(organisme, options),
+                    body: await render(organisme, comment),
                 },
             );
         },

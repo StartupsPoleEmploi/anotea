@@ -26,7 +26,11 @@
         <mj-text>
             <div class="text-tertiary">
                 Si vous ne parvenez pas à lire ce mail,
-                <a href="<%= utils.getPublicUrl(`/mail/organismes/${organisme.token}/templates/${templateName}`) %>"
+                <%
+                const params = locals.comment ? `?avis=${comment.token}` : '';
+                const consultationLink = utils.getPublicUrl(`/mail/organismes/${organisme.token}/templates/${templateName}${params}`);
+                %>
+                <a href="<%= consultationLink %>"
                    target="_blank" class="link">
                     cliquez-ici
                 </a>

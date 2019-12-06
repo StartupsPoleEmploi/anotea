@@ -58,7 +58,7 @@ module.exports = (db, logger, emails) => {
                     });
 
                     let message = emails.getEmailMessageByTemplateName('avisReportedCanceledEmail');
-                    return message.send(organisme, { comment: original });
+                    return message.send(organisme, original);
                 });
             }
 
@@ -104,7 +104,7 @@ module.exports = (db, logger, emails) => {
                         });
 
                         let message = emails.getEmailMessageByTemplateName('avisReportedConfirmedEmail');
-                        return message.send(organisme, { comment: original });
+                        return message.send(organisme, original);
                     });
                 }
 
@@ -317,7 +317,7 @@ module.exports = (db, logger, emails) => {
                     });
 
                     let message = emails.getEmailMessageByTemplateName('reponseRejectedEmail');
-                    return message.send(organisme, { comment: original });
+                    return message.send(organisme, original);
                 });
             }
 

@@ -4,17 +4,17 @@ module.exports = (db, regions, mailer, utils) => {
 
     const templateName = 'avisNotificationEmail';
 
-    let render = (organisme, options = {}) => {
+    let render = (organisme, comment) => {
         return utils.render(__dirname, templateName, {
             organisme,
-            ...options,
+            comment,
         });
     };
 
     return {
         templateName,
         render,
-        send: async (organisme, options = {}) => {
+        send: async (organisme, comment, nbUnreadComments) => {
 
             let onSuccess = () => {
                 return db.collection('accounts').updateOne({ _id: organisme._id }, {
@@ -29,8 +29,8 @@ module.exports = (db, regions, mailer, utils) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 getOrganismeEmail(organisme),
                 {
-                    subject: `Pôle Emploi - Vous avez ${options.nbUnreadComments || 'des'} nouveaux avis stagiaires`,
-                    body: await render(organisme, options),
+                    subject: `Pôle Emploi - Vous avez ${nbUnreadComments || 'des'} nouveaux avis stagiaires`,
+                    body: await render(organisme, comment),
                 },
             )
             .then(onSuccess);

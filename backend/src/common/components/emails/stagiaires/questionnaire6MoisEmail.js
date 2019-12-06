@@ -2,11 +2,10 @@ module.exports = (db, regions, mailer, utils) => {
 
     const templateName = 'questionnaire6MoisEmail';
 
-    let render = (trainee, options = {}) => {
+    let render = trainee => {
         return utils.render(__dirname, templateName, {
             trainee,
             link: utils.getPublicUrl(`/questionnaire/${trainee.token}?${utils.getUTM(trainee.campaign)}`),
-            ...options,
         });
     };
 

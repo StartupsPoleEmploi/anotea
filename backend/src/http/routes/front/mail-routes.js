@@ -23,10 +23,11 @@ module.exports = ({ db, logger, emails }) => {
 
     router.get('/mail/:type/:token/templates/:templateName', async (req, res) => {
 
-        const { type, token, templateName } = await Joi.validate(req.params, {
+        const { type, token, templateName, avis } = await Joi.validate(Object.assign({}, req.params, req.query), {
             type: Joi.string().valid(['organismes', 'stagiaires']).required(),
             token: Joi.string().required(),
             templateName: Joi.string().required(),
+            avis: Joi.string(),
         }, { abortEarly: false });
 
         let doc = await db.collection(type === 'organismes' ? 'accounts' : 'trainee').findOne({ token });
@@ -34,8 +35,9 @@ module.exports = ({ db, logger, emails }) => {
             return send404(res);
         }
 
+        let comment = avis ? await db.collection('comment').findOne({ token: avis }) : null;
         let message = emails.getEmailMessageByTemplateName(templateName);
-        let { html } = await message.render(doc);
+        let html = await message.render(doc, comment);
 
         return sendHTML(res, html);
     });

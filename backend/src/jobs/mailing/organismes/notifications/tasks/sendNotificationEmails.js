@@ -48,23 +48,23 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
                         {
                             $group: {
                                 _id: null,
-                                commentaire: { $first: '$comment.text' },
+                                comment: { $first: '$$ROOT' },
                                 nbUnreadComments: { $sum: 1 }
                             }
                         },
                     ],
-                    as: 'readStatus'
+                    as: 'notificationStatus'
                 }
             },
             {
                 $unwind: {
-                    path: '$readStatus',
+                    path: '$notificationStatus',
                     preserveNullAndEmptyArrays: true,
                 }
             },
             {
                 $match: {
-                    'readStatus.nbUnreadComments': { $gte: 5 }
+                    'notificationStatus.nbUnreadComments': { $gte: 5 }
                 }
             }
         ]);
@@ -83,14 +83,14 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
     cursor.batchSize(10);
 
     while (await cursor.hasNext()) {
-        let { organisme, readStatus } = await cursor.next();
+        let { organisme, notificationStatus } = await cursor.next();
         stats.total++;
         try {
             let email = getOrganismeEmail(organisme);
 
             logger.info(`Sending email to ${email}`);
             let message = emails.getEmailMessageByTemplateName('avisNotificationEmail');
-            await message.send(organisme, { readStatus });
+            await message.send(organisme, notificationStatus.comment, notificationStatus.nbUnreadComments);
 
             if (options.delay) {
                 await delay(options.delay);

@@ -4,11 +4,10 @@ module.exports = (db, regions, mailer, utils) => {
 
     let templateName = 'questionnaireOrganismeEmail';
 
-    let render = (organisme, options = {}) => {
+    let render = organisme => {
         return utils.render(__dirname, templateName, {
             organisme,
             link: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
-            ...options,
         });
     };
 
