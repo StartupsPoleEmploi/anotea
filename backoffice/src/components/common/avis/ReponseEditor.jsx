@@ -27,7 +27,7 @@ export default class ReponseEditor extends React.Component {
         textarea.selectionEnd = this.state.text.length;
     }
 
-    publish = async () => {
+    sendReponse = async () => {
         let updated = await addReponse(this.props.avis._id, this.state.text);
         this.props.onClose();
         this.props.onChange(updated, {
@@ -51,6 +51,7 @@ export default class ReponseEditor extends React.Component {
                     ref={this.reference}
                     className="form-control"
                     rows="5"
+                    maxLength={300}
                     onChange={e => this.setState({ text: e.target.value })}
                     value={this.state.text} />
 
@@ -59,7 +60,7 @@ export default class ReponseEditor extends React.Component {
                         Annuler
                     </Button>
 
-                    <Button size="medium" color="blue" onClick={() => this.publish('négatif')}>
+                    <Button size="medium" color="blue" onClick={() => this.sendReponse()}>
                         Valider
                     </Button>
                 </div>
