@@ -4,7 +4,7 @@ module.exports = (db, regions, mailer, utils) => {
 
     const templateName = 'activationCompteEmail';
 
-    let render = (organisme) => {
+    let render = organisme => {
         return utils.render(__dirname, templateName, {
             organisme,
             link: utils.getPublicUrl(`/admin/activation-compte?token=${(organisme.token)}`),

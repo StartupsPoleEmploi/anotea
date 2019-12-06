@@ -6,7 +6,7 @@ const { newTrainee, newOrganismeAccount } = require('../../../../helpers/data/da
 
 describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatabase }) => {
 
-    it('/track should update tracking informations in stagiaires', async () => {
+    it('should update tracking informations in stagiaires', async () => {
 
         let app = await startServer();
         let db = await getTestDatabase();
@@ -17,7 +17,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         });
         await insertIntoDatabase('trainee', trainee);
 
-        let response = await request(app).get(`/mail/stagiaires/${trainee.token}/track`);
+        let response = await request(app).get(`/emails/stagiaires/${trainee.token}/track`);
 
         assert.strictEqual(response.statusCode, 200);
 
@@ -28,14 +28,14 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
         assert.ok(result.tracking.lastRead);
     });
 
-    it('/track should update tracking informations in organismes', async () => {
+    it('should update tracking informations in organismes', async () => {
 
         let app = await startServer();
         let db = await getTestDatabase();
         let account = newOrganismeAccount();
         await insertIntoDatabase('accounts', account);
 
-        let response = await request(app).get(`/mail/organismes/${account.token}/track`);
+        let response = await request(app).get(`/emails/organismes/${account.token}/track`);
 
         assert.strictEqual(response.statusCode, 200);
 
@@ -43,5 +43,26 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
 
         assert.deepStrictEqual(account.token, result.token);
         assert.ok(result.tracking.firstRead);
+    });
+
+    it('can unsubscribe', async () => {
+
+        let app = await startServer();
+        let db = await getTestDatabase();
+        let trainee = newTrainee({
+            tracking: {
+                firstRead: new Date(),
+            },
+            unsubscribe: false,
+        });
+        await insertIntoDatabase('trainee', trainee);
+
+        let response = await request(app).get(`/emails/stagiaires/${trainee.token}/unsubscribe`);
+
+        assert.strictEqual(response.statusCode, 200);
+
+        let result = await db.collection('trainee').findOne({ token: trainee.token });
+
+        assert.ok(result.unsubscribe);
     });
 }));

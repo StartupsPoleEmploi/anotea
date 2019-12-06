@@ -1,14 +1,12 @@
 const express = require('express');
 const Joi = require('joi');
+const { sendHTML } = require('../routes-utils');
+const createTemplateUtils = require('../../../common/components/emails/createTemplateUtils');
 
-module.exports = ({ db, logger, emails }) => {
+module.exports = ({ db, logger, emails, configuration, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-
-    let sendHTML = (res, html) => {
-        res.set('Content-Type', 'text/html');
-        res.send(new Buffer(html));
-    };
+    let utils = createTemplateUtils(configuration, regions);
 
     let send404 = res => {
         return res.status(404).render('errors/404');
@@ -21,7 +19,7 @@ module.exports = ({ db, logger, emails }) => {
         return res.send(buf, { 'Content-Type': 'image/gif' }, 200);
     };
 
-    router.get('/mail/:type/:token/templates/:templateName', async (req, res) => {
+    router.get('/emails/:type/:token/templates/:templateName', async (req, res) => {
 
         const { type, token, templateName, avis } = await Joi.validate(Object.assign({}, req.params, req.query), {
             type: Joi.string().valid(['organismes', 'stagiaires']).required(),
@@ -42,8 +40,7 @@ module.exports = ({ db, logger, emails }) => {
         return sendHTML(res, html);
     });
 
-
-    router.get('/mail/organismes/:token/track', async (req, res) => {
+    router.get('/emails/organismes/:token/track', async (req, res) => {
         let token = req.params.token;
         const organisme = await db.collection('accounts').findOne({ token });
         if (organisme) {
@@ -58,7 +55,7 @@ module.exports = ({ db, logger, emails }) => {
         return sendTrackingImage(res);
     });
 
-    router.get('/mail/stagiaires/:token/track', async (req, res) => {
+    router.get('/emails/stagiaires/:token/track', async (req, res) => {
         let token = req.params.token;
 
         let trainee = await db.collection('trainee').findOne({ token });
@@ -74,28 +71,23 @@ module.exports = ({ db, logger, emails }) => {
         return sendTrackingImage(res);
     });
 
-    router.get('/mail/stagiaires/:token/unsubscribe', async (req, res) => {
+    router.get('/emails/stagiaires/:token/unsubscribe', async (req, res) => {
         let trainee = await db.collection('trainee').findOne({ token: req.params.token });
-
-        if (trainee === null) {
-            res.status(404).render('errors/404');
-            return;
+        if (!trainee) {
+            return send404(res);
         }
 
-        db.collection('trainee').update({
-            '_id': trainee._id
-        }, {
-            $set: {
-                'unsubscribe': true
-            }
-        }, err => {
-            if (err) {
-                logger.error(err);
-                res.status(500).render('errors/error');
-            } else {
-                res.render('front/mailing/unsubscribe.ejs', { trainee: trainee });
-            }
-        });
+        try {
+            await db.collection('trainee').update({ '_id': trainee._id }, {
+                $set: {
+                    'unsubscribe': true
+                }
+            });
+            return res.render('front/unsubscribe');
+        } catch (e) {
+            logger.error(e);
+            return res.status(500).render('errors/error');
+        }
     });
 
     return router;

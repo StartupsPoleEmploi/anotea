@@ -7,21 +7,28 @@ const renderFile = promisify(ejs.renderFile);
 
 module.exports = (configuration, regions) => {
 
+    let getPublicUrl = path => `${(configuration.app.public_hostname)}${path}`;
+
     let utils = {
-        getPublicUrl: path => `${(configuration.app.public_hostname)}${path}`,
-        getUnsubscribeLink: token => `${(configuration.app.public_hostname)}/mail/stagiaires/${token}/unsubscribe`,
+        getPublicUrl,
         getUTM: campaign => `utm_source=PE&utm_medium=mail&utm_campaign=${campaign}`,
         getRegionEmail: region => region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from,
+        getUnsubscribeLink: token => getPublicUrl(`/emails/stagiaires/${token}/unsubscribe`),
+        getConsultationLink: (type, templateName, token, commentToken) => {
+            const params = commentToken ? `?avis=${commentToken}` : '';
+            return getPublicUrl(`/emails/${type}/${token}/templates/${templateName}${params}`);
+        },
     };
 
     return {
         ...utils,
-        render: async (dir, templateName, data) => {
-            let mjmlTemplate = await renderFile(path.join(dir, `${templateName}.mjml.ejs`), {
+        render: async (rootDir, templateName, data = {}) => {
+            let doc = (data.account || data.organisme || data.trainee);
+            let mjmlTemplate = await renderFile(path.join(rootDir, `${templateName}.mjml.ejs`), {
                 ...data,
+                ...(doc ? { region: regions.findRegionByCodeRegion(doc.codeRegion) } : {}),
                 templateName,
                 utils: { moment, ...utils },
-                region: regions.findRegionByCodeRegion((data.account || data.organisme || data.trainee).codeRegion),
             });
             return mjml(mjmlTemplate, { minify: true }).html;
         },

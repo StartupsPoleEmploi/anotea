@@ -30,7 +30,6 @@ module.exports = ({ db, configuration, communes }) => {
         }
 
         return res.render(`front/doc/${template}`);
-
     });
 
     router.get('/link/:token', async (req, res) => {

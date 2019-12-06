@@ -1,39 +1,41 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import GestionOrganismePage from './gestion-organismes/GestionOrganismePage';
-import CourrielsPage from './courriels/CourrielsPage';
-import { createNavigator } from '../../utils/navigator';
+import StagiairesEmailsPreviewPage from './courriels/StagiairesEmailsPreviewPage';
 import ModerationAvisPage from './moderation-avis/ModerationAvisPage';
 import ModerationReponsesPage from './moderation-avis/ModerationReponsesPage';
 import MonComptePage from '../misc/MonComptePage';
+import OrganismesEmailsPreviewPage from './courriels/OrganismesEmailsPreviewPage';
 
 export default class ModerateurRoutes extends React.Component {
 
+    static propTypes = {
+        navigator: PropTypes.object.isRequired,
+    };
+
     render() {
+        let { navigator } = this.props;
+
         return (
             <>
-                <Route path="/admin/moderateur/courriels/stagiaires" render={() => <CourrielsPage type="stagiaires" />} />
-                <Route path="/admin/moderateur/courriels/organismes" render={() => <CourrielsPage type="organismes" />} />
+                <Route path="/admin/moderateur/emails/stagiaires" render={() => {
+                    return <StagiairesEmailsPreviewPage navigator={navigator} />;
+                }} />
+                <Route path="/admin/moderateur/emails/organismes" render={() => {
+                    return <OrganismesEmailsPreviewPage navigator={navigator} />;
+                }} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"
-                    render={props => {
-                        let navigator = createNavigator(props);
-                        return <GestionOrganismePage navigator={navigator} />;
-                    }}
+                    render={() => <GestionOrganismePage navigator={navigator} />}
                 />
                 <Route
                     path="/admin/moderateur/moderation/avis/stagiaires"
-                    render={props => {
-                        let navigator = createNavigator(props);
-                        return <ModerationAvisPage navigator={navigator} />;
-                    }}
+                    render={() => <ModerationAvisPage navigator={navigator} />}
                 />
                 <Route
                     path="/admin/moderateur/moderation/avis/reponses"
-                    render={props => {
-                        let navigator = createNavigator(props);
-                        return <ModerationReponsesPage navigator={navigator} />;
-                    }}
+                    render={() => <ModerationReponsesPage navigator={navigator} />}
                 />
 
                 <Route

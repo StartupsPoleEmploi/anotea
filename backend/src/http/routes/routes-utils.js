@@ -35,4 +35,8 @@ module.exports = {
             res
         ]);
     },
+    sendHTML: (res, html) => {
+        res.set('Content-Type', 'text/html');
+        res.send(new Buffer(html));
+    },
 };
