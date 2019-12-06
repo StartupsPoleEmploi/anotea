@@ -224,7 +224,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, r
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
-        let { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
+        let { text } = await Joi.validate(req.body, { text: Joi.string().max(300).required() }, { abortEarly: false });
 
         let avis = await workflow.addReponse(id, text, { profile });
 
