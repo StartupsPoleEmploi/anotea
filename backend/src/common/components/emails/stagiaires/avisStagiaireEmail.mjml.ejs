@@ -61,14 +61,19 @@
                 </mj-column>
             </mj-section>
 
-            <mj-section padding-top="0" padding-left="100px" padding-right="100px">
+            <mj-section padding-top="0" padding-left="70px" padding-right="70px">
                 <mj-column vertical-align="middle">
-                    <mj-image align="center" width="100px"
+                    <mj-image align="center" width="100%"
                               src="<%= utils.getPublicUrl('/static/images/labonneformation.png') %>" />
                 </mj-column>
+                <mj-column vertical-align="middle">
+                    <mj-image align="center" width="50%"
+                              src="<%= utils.getPublicUrl('/static/images/ma-formation.jpg') %>" />
+                </mj-column>
+
                 <% if (showCarif) { %>
                     <mj-column vertical-align="middle">
-                        <mj-image align="center" width="70px"
+                        <mj-image align="center" width="100%"
                                   src="<%= utils.getPublicUrl(`/static/images/regions/carif-${region.codeRegion}.png`) %>" />
                     </mj-column>
                 <% } %>
