@@ -75,7 +75,7 @@ module.exports = (configuration, regions) => {
                         html: body,
                     }, {
                         ...options,
-                        bcc: process.env.ANOTEA_MAIL_BCC ? { bcc: process.env.ANOTEA_MAIL_BCC } : {},
+                        ...(process.env.ANOTEA_MAIL_BCC ? { bcc: process.env.ANOTEA_MAIL_BCC } : {}),
                     }));
                 }
             };

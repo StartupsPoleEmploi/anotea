@@ -39,4 +39,4 @@ execute(async ({ db, logger, sendSlackNotification }) => {
     }
 
     return stats;
-});
+}, { slack: cli.slack });
