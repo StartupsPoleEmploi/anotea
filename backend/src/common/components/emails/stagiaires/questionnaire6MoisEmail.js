@@ -6,7 +6,7 @@ module.exports = (db, regions, mailer) => {
     let render = trainee => {
         return mailer.render(__dirname, templateName, {
             trainee,
-            link: utils.getPublicUrl(`/questionnaire/${trainee.token}?${utils.getUTM(trainee.campaign)}`),
+            link: 'https://avril_la_vae_facile.typeform.com/to/gIFh4q',
         });
     };
 

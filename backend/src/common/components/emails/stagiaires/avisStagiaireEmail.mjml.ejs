@@ -79,11 +79,22 @@
                 <% } %>
             </mj-section>
 
-        </mj-wrapper>
+            <mj-section padding-top="0">
+                <mj-column>
+                    <mj-text css-class="text-secondary" padding-bottom="0">
+                        Merci de contribuer à notre service
+                    </mj-text>
 
-        <mj-text padding="0">
-            <img src="<%= utils.getPublicUrl(`/emails/stagiaires/${trainee.token}/track`) %>" />
-        </mj-text>
+                    <mj-text css-class="text-secondary" padding-top="0">
+                        L'équipe Anotéa.
+                    </mj-text>
+
+                    <mj-image padding="0" width="1px"
+                              src="<%= utils.getPublicUrl(`/emails/stagiaires/${trainee.token}/track`) %>" />
+
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
 
         <%- include('./footer.mjml.ejs', { utils }); %>
 

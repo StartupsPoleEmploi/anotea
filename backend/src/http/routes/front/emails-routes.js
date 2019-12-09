@@ -40,7 +40,7 @@ module.exports = ({ db, logger, emails }) => {
 
     router.get('/emails/organismes/:token/track', async (req, res) => {
         let token = req.params.token;
-        const organisme = await db.collection('accounts').findOne({ token });
+        let organisme = await db.collection('accounts').findOne({ token });
         if (organisme) {
             let trackingFieldName = organisme.tracking && organisme.tracking.firstRead ? 'lastRead' : 'firstRead';
             db.collection('accounts').updateOne({ token }, {
@@ -55,7 +55,6 @@ module.exports = ({ db, logger, emails }) => {
 
     router.get('/emails/stagiaires/:token/track', async (req, res) => {
         let token = req.params.token;
-
         let trainee = await db.collection('trainee').findOne({ token });
         if (trainee) {
             let trackingFieldName = trainee.tracking && trainee.tracking.firstRead ? 'lastRead' : 'firstRead';

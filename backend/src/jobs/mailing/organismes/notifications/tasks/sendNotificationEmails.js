@@ -86,9 +86,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
         let { organisme, notificationStatus } = await cursor.next();
         stats.total++;
         try {
-            let email = getOrganismeEmail(organisme);
-
-            logger.info(`Sending email to ${email}`);
+            logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${getOrganismeEmail(organisme)}`);
             let message = emails.getEmailMessageByTemplateName('avisNotificationEmail');
             await message.send(organisme, notificationStatus.comment, notificationStatus.nbUnreadComments);
 

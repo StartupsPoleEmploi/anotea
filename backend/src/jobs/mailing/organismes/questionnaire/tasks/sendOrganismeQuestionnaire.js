@@ -23,7 +23,7 @@ module.exports = (db, logger, emails, options = {}) => {
             let organisme = await cursor.next();
 
             try {
-                logger.info(`Sending email to ${(getOrganismeEmail(organisme))}`);
+                logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${getOrganismeEmail(organisme)}`);
 
                 let message = emails.getEmailMessageByTemplateName('questionnaireOrganismeEmail');
                 await message.send(organisme);
