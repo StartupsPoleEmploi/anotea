@@ -162,7 +162,7 @@ module.exports = (auth, logger, configuration) => {
                             response: {
                                 statusCode: res.statusCode,
                                 statusCodeAsString: `${res.statusCode}`,
-                                headers: res._headers,
+                                headers: res.getHeaders(),
                                 body: body ? body : undefined,
                                 size: recorder.getSize(),
                             },

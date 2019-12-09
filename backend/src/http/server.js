@@ -39,6 +39,7 @@ module.exports = components => {
 
     //Pubic routes with HTML server-side rendering
     app.use('/', require('./routes/front/html-routes')(httpComponents));
+    app.use('/', require('./routes/front/emails-routes')(httpComponents));
 
     //API routes
     app.use('/api', middlewares.addRateLimit(sentry));
@@ -50,8 +51,8 @@ module.exports = components => {
     app.use('/api', require('./routes/api/v1/sessions-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
     app.use('/api', require('./routes/api/exports-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/departements-routes')(httpComponents));
     app.use('/api', require('./routes/api/public-stats-routes')(httpComponents));
+    app.use('/api', require('./routes/api/regions-routes')(httpComponents));
     app.use('/api', require('./routes/api/kairos/kairos-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/login-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/password-routes')(httpComponents));
@@ -60,8 +61,10 @@ module.exports = components => {
     app.use('/api', require('./routes/api/backoffice/avis-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/formations-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/sirens-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/departements-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/backoffice/gestion-organismes-routes')(httpComponents));
+    app.use('/api', require('./routes/api/backoffice/emails-preview-routes')(httpComponents));
     app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
 
     // catch 404

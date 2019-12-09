@@ -7,6 +7,5 @@ cli.parse(process.argv);
 
 execute(async ({ db }) => {
     let stats = {};
-    stats.removeUselessHistoryElements = await require('./tasks/removeUselessHistoryElements')(db);
     return stats;
 });

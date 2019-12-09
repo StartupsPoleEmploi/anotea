@@ -2,7 +2,7 @@
 'use strict';
 
 const cli = require('commander');
-const TraineeMailer = require('./tasks/AvisMailer');
+const sendAvisEmails = require('./tasks/sendAvisEmails');
 const { capitalizeFirstLetter, execute } = require('../../../job-utils');
 
 cli.description('send email campaign')
@@ -14,10 +14,9 @@ cli.description('send email campaign')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
-execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotification }) => {
+execute(async ({ logger, db, configuration, emails, regions, sendSlackNotification }) => {
 
     let type = cli.type || 'Send';
-    let traineeMailer = new TraineeMailer(db, logger, mailer);
     let ActionClass = require(`./tasks/actions/${type}Action`);
     let action = new ActionClass(configuration, {
         campaign: cli.campaign,
@@ -28,7 +27,7 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
     logger.info(`Sending emails to stagiaires (${type})...`);
 
     try {
-        let stats = await traineeMailer.sendEmails(action, {
+        let stats = await sendAvisEmails(db, logger, emails, action, {
             limit: cli.limit,
             delay: cli.delay,
         });

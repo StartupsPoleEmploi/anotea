@@ -1,0 +1,69 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+
+            <mj-section>
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        83% des internautes tiennent compte des avis pour faire leur choix
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Anotéa est un service initié par Pôle Emploi et déployé en partenariat avec les Conseils
+                        Régionaux, qui permet de recueillir les avis des stagiaires de formation professionnelle et
+                        de les publier sur différents sites qui exposent l’offre de formation.
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary text-highlighted">
+                        Avec Anotéa, vous avez accès à toutes les notes et avis publiés sur vos formations et vous
+                        avez la possibilité d’y répondre. Votre réponse sera publiée avec l’avis.
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding-top="0" padding-left="100px" padding-right="100px">
+                <mj-column border="1px solid #C8CBCE">
+                    <mj-text font-size="18px" font-weight="bold" line-height="22px" padding-bottom="0">
+                        Votre identifiant
+                    </mj-text>
+                    <mj-text font-size="14px" line-height="21px">
+                        <%= organisme.meta.siretAsString %>
+                    </mj-text>
+
+                    <mj-text padding="0" css-class="text-secondary">
+                        Suivez ce lien pour créer votre mot de passe
+                    </mj-text>
+
+                    <mj-button
+                            href="<%= link %>"
+                            background-color="#24303A"
+                            color="#F4F4F5"
+                            font-size="16px"
+                            font-weight="bold"
+                            text-transform="uppercase">
+                        Accéder à mon espace
+                    </mj-button>
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding-top="0">
+                <mj-column>
+                    <%- include('../common/signature.mjml.ejs'); %>
+
+                    <mj-image padding="0" width="1px"
+                              src="<%= utils.getPublicUrl(`/emails/organismes/${organisme.token}/track`) %>" />
+
+                </mj-column>
+            </mj-section>
+
+        </mj-wrapper>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>

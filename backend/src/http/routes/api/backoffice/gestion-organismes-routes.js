@@ -7,12 +7,11 @@ const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../
 const getOrganismeEmail = require('../../../../common/utils/getOrganismeEmail');
 const { transformObject, encodeStream } = require('../../../../common/utils/stream-utils');
 
-module.exports = ({ db, configuration, mailing, middlewares, logger }) => {
+module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
     let checkAuth = createJWTAuthMiddleware('backoffice');
-    let { sendOrganisationAccountEmail, sendForgottenPasswordEmail } = mailing;
     let itemsPerPage = configuration.api.pagination;
 
     const convertOrganismeToDTO = organisme => {
@@ -171,13 +170,11 @@ module.exports = ({ db, configuration, mailing, middlewares, logger }) => {
 
         let organisme = await db.collection('accounts').findOne({ _id: id, profile: 'organisme' });
         if (organisme) {
-            if (organisme.passwordHash) {
-                await sendForgottenPasswordEmail(organisme._id, getOrganismeEmail(organisme), organisme.codeRegion);
-            } else {
-                await sendOrganisationAccountEmail(organisme, { ip: getRemoteAddress(req) });
-            }
+            let templateName = organisme.passwordHash ? 'forgottenPasswordEmail' : 'activationCompteEmail';
+            let message = emails.getEmailMessageByTemplateName(templateName);
+            await message.send(organisme);
 
-            res.status(200).send({ 'status': 'OK' });
+            return res.json({ 'status': 'OK' });
 
         } else {
             throw Boom.notFound('Not found');

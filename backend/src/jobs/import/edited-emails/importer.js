@@ -1,4 +1,4 @@
-const AccountMailer = require('../../mailing/organismes/account/AccountMailer');
+const AccountMailer = require('../../mailing/organismes/account/tasks/AccountMailer');
 
 module.exports = function(db, logger, configuration, mailer) {
 
