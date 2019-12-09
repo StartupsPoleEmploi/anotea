@@ -75,7 +75,7 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
                 url: 'http://localhost:3000',
                 logins: [
                     { profile: 'moderateur', login: 'moderateur', password },
-                    { profile: 'financeur', login: 'conseil_regional', password },
+                    { profile: 'financeur', login: 'financeur', password },
                     { profile: 'organisme', login: '22222222222222', password, },
                 ]
             },
