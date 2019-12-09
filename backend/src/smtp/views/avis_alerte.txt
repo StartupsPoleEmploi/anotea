@@ -1,9 +1,0 @@
-Nous avons bien pris en compte votre commentaire
-
-Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
-
-Nous vous informons que nous allons prendre contact avec "<%= trainee.training.organisation.name %>" suite au commentaire que vous avez déposé sur "<%= trainee.training.title %>".
-
-<%- include('common/signature.txt'); %>
-
-<%- include('common/legal/stagiaires/mentions.txt'); %>

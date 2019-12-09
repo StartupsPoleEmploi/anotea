@@ -1,14 +1,11 @@
 const Joi = require('joi');
 const express = require('express');
-const Boom = require('boom');
-const ObjectID = require('mongodb').ObjectID;
-const { IdNotFoundError } = require('../../../../common/errors');
 const getAvisCSV = require('./utils/getAvisCSV');
 const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../routes-utils');
 const { objectId } = require('../../validators-utils');
 const getProfile = require('./profiles/getProfile');
 
-module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, regions }) => {
+module.exports = ({ db, middlewares, configuration, logger, workflow, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
@@ -99,7 +96,6 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, r
     }));
 
     router.put('/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let { sendInjureMail, sendAlerteMail, sendSignalementAccepteNotification } = mailing;
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -107,35 +103,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, r
             qualification: Joi.string().required()
         }, { abortEarly: false });
 
-        let previous = await db.collection('comment').findOne({ _id: new ObjectID(id) });
-
-        let updated = await workflow.reject(id, qualification, { profile });
-        //TODO move into workflow.js
-        if (previous) {
-            if (previous.status === 'reported') {
-                sendSignalementAccepteNotification(previous._id)
-                .catch(e => logger.error(e, 'Unable to send email'));
-            }
-        } else {
-            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-        }
-
-        if (qualification === 'injure' || qualification === 'alerte') {
-            let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
-            let trainee = await db.collection('trainee').findOne({ token: comment.token });
-
-            let email = trainee.trainee.email;
-            let sendMail;
-
-            if (qualification === 'injure') {
-                sendMail = sendInjureMail;
-            } else if (qualification === 'alerte') {
-                sendMail = sendAlerteMail;
-            }
-
-            sendMail(email, trainee, comment, qualification)
-            .catch(e => logger.error(e, 'Unable to send email'));
-        }
+        let updated = await workflow.reject(id, qualification, { profile, sendEmail: true });
 
         return res.json(updated);
     }));
@@ -143,19 +111,12 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, r
     router.delete('/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
-        let { id, resendEmail } = await Joi.validate(req.params, {
+        let { id, sendEmail } = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: objectId().required(),
-            resendEmail: Joi.boolean().default(false),
+            sendEmail: Joi.boolean().default(false),
         }, { abortEarly: false });
 
-        await workflow.delete(id, { profile, resendEmail });
-
-        if (resendEmail) {
-            //TODO move this into workflow
-            let comment = await db.collection('comment').findOne({ _id: new ObjectID(id) });
-            let trainee = await db.collection('trainee').findOne({ token: comment.token });
-            await mailing.sendVotreAvisEmail(trainee);
-        }
+        await workflow.delete(id, { profile, sendEmail });
 
         return res.json({ 'message': 'avis deleted' });
     }));
@@ -166,18 +127,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, r
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { qualification } = await Joi.validate(req.body, { qualification: Joi.string().required() }, { abortEarly: false });
 
-        let previous = await db.collection('comment').findOne({ _id: new ObjectID(id) });
-
-        let updated = await workflow.publish(id, qualification, { profile });
-        if (previous) {
-            //TODO move into workflow.js
-            if (previous.status === 'reported') {
-                mailing.sendSignalementRejeteNotification(previous._id)
-                .catch(e => logger.error(e, 'Unable to send email'));
-            }
-        } else {
-            throw new IdNotFoundError(`Avis with identifier ${id} not found`);
-        }
+        let updated = await workflow.publish(id, qualification, { profile, sendEmail: true });
 
         return res.json(updated);
     }));
@@ -210,11 +160,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, mailing, r
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
-        let avis = await workflow.rejectReponse(id, { profile });
-
-        //TODO move into workflow
-        mailing.sendReponseRejeteeNotification(avis._id)
-        .catch(e => logger.error(e, 'Unable to send email'));
+        let avis = await workflow.rejectReponse(id, { profile, sendEmail: true });
 
         return res.json(avis);
 

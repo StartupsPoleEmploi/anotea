@@ -76,26 +76,27 @@ class App extends Component {
     render() {
 
         let { account, message } = this.state;
+        let { navigator } = this.props;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
                 headerItems: <ModerateurHeaderItems />,
-                routes: <ModerateurRoutes />,
+                routes: <ModerateurRoutes navigator={navigator} />,
             }),
             financeur: () => ({
                 defaultPath: '/admin/financeur/avis/stats',
                 headerItems: <FinanceurHeaderItems />,
-                routes: <FinanceurRoutes />,
+                routes: <FinanceurRoutes navigator={navigator} />,
             }),
             organisme: () => ({
                 defaultPath: '/admin/organisme/avis/stats',
                 headerItems: <OrganismeHeaderItems />,
-                routes: <OrganismeRoutes />,
+                routes: <OrganismeRoutes navigator={navigator} />,
             }),
             anonymous: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
-                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} />,
+                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={navigator} />,
             })
         };
 

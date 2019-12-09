@@ -1,7 +1,8 @@
 const ObjectID = require('mongodb').ObjectID;
+const _ = require('lodash');
 const { IdNotFoundError, ForbiddenError } = require('./../errors');
 
-module.exports = db => {
+module.exports = (db, logger, emails) => {
 
     const saveEvent = (id, type, data) => {
         db.collection('events').insertOne({ adviceId: id, date: new Date(), type: type, source: data });
@@ -14,10 +15,16 @@ module.exports = db => {
         return profile;
     };
 
+    const sendEmail = callback => {
+        return callback()
+        .catch(e => logger.error(e, 'Unable to send email'));
+    };
+
     return {
         publish: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
+            let original = await db.collection('comment').findOne({ _id: new ObjectID(id) });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 {
@@ -44,6 +51,17 @@ module.exports = db => {
                 profile: 'moderateur',
             });
 
+            if (options.sendEmail && original.status === 'reported') {
+                sendEmail(async () => {
+                    let organisme = await db.collection('accounts').findOne({
+                        SIRET: parseInt(original.training.organisation.siret)
+                    });
+
+                    let message = emails.getEmailMessageByTemplateName('avisReportedCanceledEmail');
+                    return message.send(organisme, original);
+                });
+            }
+
             return result.value;
 
 
@@ -51,6 +69,7 @@ module.exports = db => {
         reject: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
+            let original = await db.collection('comment').findOne({ _id: new ObjectID(id) });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 {
@@ -76,6 +95,28 @@ module.exports = db => {
                 user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
+
+            if (options.sendEmail) {
+                if (original.status === 'reported') {
+                    sendEmail(async () => {
+                        let organisme = await db.collection('accounts').findOne({
+                            SIRET: parseInt(original.training.organisation.siret)
+                        });
+
+                        let message = emails.getEmailMessageByTemplateName('avisReportedConfirmedEmail');
+                        return message.send(organisme, original);
+                    });
+                }
+
+                if ((qualification === 'injure' || qualification === 'alerte')) {
+                    sendEmail(async () => {
+                        let trainee = await db.collection('trainee').findOne({ token: original.token });
+
+                        let message = emails.getEmailMessageByTemplateName(`avisRejected${_.capitalize(qualification)}Email`);
+                        return message.send(trainee);
+                    });
+                }
+            }
 
             return result.value;
         },
@@ -144,6 +185,14 @@ module.exports = db => {
                 user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
+
+            if (options.sendEmail) {
+                sendEmail(async () => {
+                    let trainee = await db.collection('trainee').findOne({ token: previous.token });
+                    let message = emails.getEmailMessageByTemplateName('avisStagiaireEmail');
+                    return message.send(trainee);
+                });
+            }
         },
         maskPseudo: async (id, mask, options = {}) => {
 
@@ -234,10 +283,12 @@ module.exports = db => {
         rejectReponse: async (id, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
+            let oid = new ObjectID(id);
+            let original = await db.collection('comment').findOne({ _id: oid });
 
             let result = await db.collection('comment').findOneAndUpdate(
                 {
-                    _id: new ObjectID(id),
+                    _id: oid,
                     ...(profile ? profile.getShield() : {}),
                 },
                 {
@@ -258,6 +309,17 @@ module.exports = db => {
                 user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
             });
+
+            if (options.sendEmail) {
+                sendEmail(async () => {
+                    let organisme = await db.collection('accounts').findOne({
+                        SIRET: parseInt(original.training.organisation.siret)
+                    });
+
+                    let message = emails.getEmailMessageByTemplateName('reponseRejectedEmail');
+                    return message.send(organisme, original);
+                });
+            }
 
             return result.value;
         },

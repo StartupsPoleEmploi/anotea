@@ -1,9 +1,0 @@
-Bonjour,
-
-Le fichier stagiaires <%= filename %> n'a pu être importé dans Anotea le <%= date %> en raison <%= reason %>.
-
-Merci de vérifier le fichier et de déposer au bon format le serveur FTP. Il sera de nouveau traité.
-
-
-
-Ce message est envoyé par un automate. En cas de doute, n'hésitez pas à nous contacter.

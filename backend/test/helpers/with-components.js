@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { randomize } = require('./data/dataset');
 const config = require('config');
+const createEmails = require('../../src/common/components/emails/emails');
+const getRegions = require('../../src/common/components/regions');
 const logger = require('./components/fake-logger');
 const fakeMailer = require('./components/fake-mailer');
 const fakePasswords = require('./components/fake-passwords');
@@ -12,33 +14,36 @@ let _componentsHolder = null;
 module.exports = {
     withComponents: callback => {
 
+        let regions = getRegions();
         let datalake = path.join(__dirname, '../../../.data/datalake/test-logs');
+        let configuration = Object.assign({}, config, {
+            mongodb: {
+                uri: config.mongodb.uri.split('anotea').join(randomize('anotea_test').substring(0, 20))
+            },
+            api: {
+                pagination: 2,
+            },
+            log: {
+                datalake: {
+                    fileNamePrefix: randomize('anotea'),
+                    path: datalake,
+                }
+            },
+        });
+        let mailer = fakeMailer(configuration, regions);
 
         return () => {
             before(() => {
-
-                let uri = config.mongodb.uri.split('anotea').join(randomize('anotea_test').substring(0, 20));
-                let configuration = Object.assign({}, config, {
-                    mongodb: {
-                        uri
-                    },
-                    api: {
-                        pagination: 2,
-                    },
-                    log: {
-                        datalake: {
-                            fileNamePrefix: randomize('anotea'),
-                            path: datalake,
-                        }
-                    },
-                });
-
                 _componentsHolder = components({
                     configuration,
                     logger,
+                    mailer,
                     passwords: fakePasswords(configuration),
-                    mailer: fakeMailer(),
                 });
+            });
+
+            afterEach(function() {
+                mailer.flush();
             });
 
             after(async () => {
@@ -63,6 +68,14 @@ module.exports = {
 
             let testContext = {
                 getComponents: () => _componentsHolder,
+                createEmailMocks: async mailerOptions => {
+                    let { db, regions, templates } = await _componentsHolder;
+                    let mailer = fakeMailer(configuration, regions, mailerOptions);
+                    return {
+                        mailer,
+                        emails: createEmails(db, configuration, regions, mailer, templates)
+                    };
+                },
                 getTestFile: fileName => path.join(__dirname, 'data', fileName)
             };
 

@@ -22,7 +22,7 @@ let sources = {
     'IDF': 'ileDeFrance',
 };
 
-execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
+execute(async ({ logger, db, exit, configuration, regions, mailer, sendSlackNotification }) => {
 
     let { file, source, region, financeur, validate, refresh } = cli;
     let filters = {
@@ -38,7 +38,7 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
 
     if (validate) {
         logger.info(`Validating file ${file}...`);
-        await validateCsvFile(db, logger, file, handler, mailer);
+        await validateCsvFile(db, logger, file, handler, mailer, configuration);
 
     } else if (refresh) {
         logger.info(`Refreshing data with ${file}...`);

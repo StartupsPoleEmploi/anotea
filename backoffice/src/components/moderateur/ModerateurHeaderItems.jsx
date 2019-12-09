@@ -34,7 +34,7 @@ export default class ModerateurHeaderItems extends React.Component {
         return (
             <Route render={({ location }) => {
 
-                let isCourriels = location.pathname.indexOf('/admin/moderateur/courriels') !== -1;
+                let isEmailsPreview = location.pathname.indexOf('/admin/moderateur/emails') !== -1;
 
                 return (
                     <ul className="nav">
@@ -68,7 +68,7 @@ export default class ModerateurHeaderItems extends React.Component {
                         <li className="nav-item dropdown">
                             <a
                                 href="#"
-                                className={`nav-link dropdown-toggle  ${isCourriels ? 'active' : ''}`}
+                                className={`nav-link dropdown-toggle  ${isEmailsPreview ? 'active' : ''}`}
                                 data-toggle="dropdown"
                                 role="button"
                                 aria-haspopup="true"
@@ -77,10 +77,10 @@ export default class ModerateurHeaderItems extends React.Component {
                                 Courriels
                             </a>
                             <div className="dropdown-menu">
-                                <Link className="nav-link" url="/admin/moderateur/courriels/stagiaires">
+                                <Link className="nav-link" url="/admin/moderateur/emails/stagiaires">
                                     Stagiaires
                                 </Link>
-                                <Link className="nav-link" url="/admin/moderateur/courriels/organismes">
+                                <Link className="nav-link" url="/admin/moderateur/emails/organismes">
                                     Organismes
                                 </Link>
                             </div>

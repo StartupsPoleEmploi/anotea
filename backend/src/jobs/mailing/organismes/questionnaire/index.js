@@ -2,7 +2,7 @@
 'use strict';
 
 const cli = require('commander');
-const QuestionnaireOrganismeMailer = require('./tasks/QuestionnaireOrganismeMailer');
+const sendOrganismeQuestionnaire = require('./tasks/sendOrganismeQuestionnaire');
 const { execute } = require('../../../job-utils');
 
 cli.description('Envoie du questionnaire au organisme')
@@ -10,11 +10,10 @@ cli.description('Envoie du questionnaire au organisme')
 .option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
 .parse(process.argv);
 
-execute(async ({ db, logger, mailer }) => {
+execute(async ({ db, logger, emails }) => {
 
     logger.info(`Sending emails to organismes...`);
-
-    return new QuestionnaireOrganismeMailer(db, logger, mailer).sendEmails({
+    return sendOrganismeQuestionnaire(db, logger, emails, {
         limit: cli.limit,
         delay: cli.delay,
     });

@@ -2,7 +2,7 @@
 'use strict';
 
 const cli = require('commander');
-const NotificationMailer = require('./NotificationMailer');
+const sendNotificationEmails = require('./tasks/sendNotificationEmails');
 const { execute } = require('../../../job-utils');
 
 cli.description('send notifications to organismes')
@@ -12,14 +12,12 @@ cli.description('send notifications to organismes')
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
-execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotification }) => {
-
-    let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
+execute(async ({ logger, db, configuration, regions, emails, sendSlackNotification }) => {
 
     logger.info(`Sending emails to organismes...`);
 
     try {
-        let stats = await notificationMailer.sendEmails({
+        let stats = await sendNotificationEmails(db, logger, configuration, emails, {
             limit: cli.limit,
             delay: cli.delay,
             codeRegions: cli.region ? [cli.region] :
@@ -34,6 +32,7 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
         }
 
         return stats;
+
     } catch (stats) {
         sendSlackNotification({
             text: `[ORGANISME] Une erreur est survenue lors de l'envoi des emails de notifications d'avis aux organismes : ` +
