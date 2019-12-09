@@ -9,6 +9,7 @@ module.exports = db => {
                 $unset: {
                     mailSent: 1,
                     mailSentDate: 1,
+                    mailRetry: 1,
                 }
             }
         ),
