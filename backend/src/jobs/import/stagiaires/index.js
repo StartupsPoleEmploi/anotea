@@ -49,10 +49,12 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
         try {
             let stats = await importTrainee(db, logger, file, handler, filters);
 
-            sendSlackNotification({
-                text: `[STAGIAIRE] Le fichier ${file} a été importé : ` +
-                    `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`,
-            });
+            if (stats.total > 0) {
+                sendSlackNotification({
+                    text: `[STAGIAIRE] Le fichier ${file} a été importé : ` +
+                        `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`,
+                });
+            }
 
             return stats;
         } catch (stats) {
