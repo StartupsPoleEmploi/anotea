@@ -37,9 +37,8 @@
             <mj-section padding-top="0" padding-bottom="0">
                 <mj-column>
                     <mj-text css-class="text-secondary">
-                        Le modérateur a ré-éxaminé le commentaire laissé par le stagiaire et a décidé de procéder à
-                        publication
-                        en accord de l’article 4 de nos
+                        Le modérateur a ré-éxaminé le commentaire laissé par le stagiaire et a décidé de procéder à sa
+                        publication en accord de l’article 4 de nos
                         <a href="<%= utils.getPublicUrl(`/cgu`) %>">Conditions Générales d’Utilisation</a>
                     </mj-text>
 
@@ -69,6 +68,9 @@
 
                         Nous espérons que ces conseils vous ont été utiles.
                     </mj-text>
+
+                    <%- include('../common/comprehension.mjml.ejs'); %>
+
                 </mj-column>
             </mj-section>
 

@@ -1,12 +1,10 @@
 const express = require('express');
 const Joi = require('joi');
 const { sendHTML } = require('../routes-utils');
-const createTemplateUtils = require('../../../common/components/emails/createTemplateUtils');
 
-module.exports = ({ db, logger, emails, configuration, regions }) => {
+module.exports = ({ db, logger, emails }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    let utils = createTemplateUtils(configuration, regions);
 
     let send404 = res => {
         return res.status(404).render('errors/404');
