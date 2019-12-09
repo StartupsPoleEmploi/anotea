@@ -1,14 +1,14 @@
 const uuid = require('uuid');
 let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
 
-module.exports = (db, regions, mailer, utils) => {
+module.exports = (db, regions, mailer) => {
 
     const templateName = 'forgottenPasswordEmail';
 
     let render = (account, passwordToken, options = {}) => {
-        return utils.render(__dirname, templateName, {
+        return mailer.render(__dirname, templateName, {
             account,
-            link: utils.getPublicUrl(`/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`),
+            link: mailer.utils.getPublicUrl(`/admin/reinitialisation-mot-de-passe?forgottenPasswordToken=${passwordToken}`),
             ...options,
         });
     };

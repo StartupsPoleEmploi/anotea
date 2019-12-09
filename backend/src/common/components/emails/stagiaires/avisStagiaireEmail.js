@@ -1,12 +1,12 @@
-module.exports = (db, regions, mailer, utils) => {
+module.exports = (db, regions, mailer) => {
 
     const templateName = 'avisStagiaireEmail';
+    let { utils } = mailer;
 
     let render = trainee => {
-
         let utm = utils.getUTM(trainee.campaign);
 
-        return utils.render(__dirname, templateName, {
+        return mailer.render(__dirname, templateName, {
             trainee,
             link: utils.getPublicUrl(`/questionnaire/${(trainee.token)}?${(utm)}`),
         });

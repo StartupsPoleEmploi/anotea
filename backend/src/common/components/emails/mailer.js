@@ -2,12 +2,15 @@ const Joi = require('joi');
 const _ = require('lodash');
 const htmlToText = require('nodemailer-html-to-text').htmlToText;
 const nodemailer = require('nodemailer');
+const moment = require('moment');
+const path = require('path');
+const mjml = require('mjml');
+const ejs = require('ejs');
+const { promisify } = require('util');
+const renderFile = promisify(ejs.renderFile);
 
-module.exports = function(db, configuration) {
+module.exports = (configuration, regions) => {
 
-    let hostname = configuration.app.public_hostname;
-    let getPublicUrl = path => `${hostname}${path}`;
-    let getRegionEmail = region => region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from;
     let transporter = nodemailer.createTransport({
         name: configuration.smtp.hostname,
         host: configuration.smtp.host,
@@ -26,8 +29,32 @@ module.exports = function(db, configuration) {
     });
     transporter.use('compile', htmlToText({ ignoreImage: true }));
 
+    let getRegionEmail = region => region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from;
+    let getPublicUrl = path => `${(configuration.app.public_hostname)}${path}`;
+
+    let utils = {
+        getPublicUrl,
+        getUTM: campaign => `utm_source=PE&utm_medium=mail&utm_campaign=${campaign}`,
+        getRegionEmail: region => region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from,
+        getUnsubscribeLink: token => getPublicUrl(`/emails/stagiaires/${token}/unsubscribe`),
+        getConsultationLink: (type, templateName, token, commentToken) => {
+            const params = commentToken ? `?avis=${commentToken}` : '';
+            return getPublicUrl(`/emails/${type}/${token}/templates/${templateName}${params}`);
+        },
+    };
 
     return {
+        utils,
+        render: async (rootDir, templateName, data = {}) => {
+            let doc = (data.account || data.organisme || data.trainee);
+            let mjmlTemplate = await renderFile(path.join(rootDir, `${templateName}.mjml.ejs`), {
+                ...data,
+                ...(doc ? { region: regions.findRegionByCodeRegion(doc.codeRegion) } : {}),
+                templateName,
+                utils: { moment, ...utils },
+            });
+            return mjml(mjmlTemplate, { minify: true }).html;
+        },
         createRegionalMailer: region => {
             return {
                 sendEmail: async (emailAddress, message, options = {}) => {

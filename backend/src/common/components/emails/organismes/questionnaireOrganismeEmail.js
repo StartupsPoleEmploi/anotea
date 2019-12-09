@@ -1,11 +1,11 @@
 let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
 
-module.exports = (db, regions, mailer, utils) => {
+module.exports = (db, regions, mailer) => {
 
     let templateName = 'questionnaireOrganismeEmail';
 
     let render = organisme => {
-        return utils.render(__dirname, templateName, {
+        return mailer.render(__dirname, templateName, {
             organisme,
             link: 'https://avril_la_vae_facile.typeform.com/to/X4oxTv',
         });

@@ -16,7 +16,7 @@ module.exports = async (options = {}) => {
     let logger = options.logger || createLogger('backend', configuration);
     let { client, db } = await database(logger, configuration);
     let regions = getRegions();
-    let mailer = options.mailer || createMailer(db, configuration);
+    let mailer = options.mailer || createMailer(configuration, regions);
     let emails = createEmails(db, configuration, regions, mailer);
 
     return Object.assign({}, {

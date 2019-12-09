@@ -1,11 +1,11 @@
 let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
 
-module.exports = (db, regions, mailer, utils) => {
+module.exports = (db, regions, mailer) => {
 
     const templateName = 'reponseRejectedEmail';
 
     let render = (organisme, comment) => {
-        return utils.render(__dirname, templateName, {
+        return mailer.render(__dirname, templateName, {
             organisme,
             comment,
         });

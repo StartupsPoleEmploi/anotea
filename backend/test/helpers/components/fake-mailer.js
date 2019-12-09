@@ -1,4 +1,6 @@
-module.exports = (options = {}) => {
+const createMailer = require('../../../src/common/components/emails/mailer');
+
+module.exports = (configuration, regions, options = {}) => {
 
     let calls = options.calls || [];
     let registerCall = parameters => {
@@ -17,9 +19,11 @@ module.exports = (options = {}) => {
     };
 
     return {
+        ...createMailer(configuration, regions),
         getEmailAddresses: () => calls.map(call => call.email),
         getEmailMessagesSent: () => calls,
         getLastEmailMessageSent: () => calls[calls.length - 1],
+        flush: () => calls.splice(0, calls.length),
         createRegionalMailer: () => {
             return {
                 sendEmail: (...args) => {

@@ -3,8 +3,9 @@ const path = require('path');
 const { randomize } = require('./data/dataset');
 const config = require('config');
 const createEmails = require('../../src/common/components/emails/emails');
+const getRegions = require('../../src/common/components/regions');
 const logger = require('./components/fake-logger');
-const fakeMailer = require('./components/fake-new-mailer');
+const fakeMailer = require('./components/fake-mailer');
 const fakePasswords = require('./components/fake-passwords');
 const components = require('../../src/components');
 
@@ -13,6 +14,7 @@ let _componentsHolder = null;
 module.exports = {
     withComponents: callback => {
 
+        let regions = getRegions();
         let datalake = path.join(__dirname, '../../../.data/datalake/test-logs');
         let configuration = Object.assign({}, config, {
             mongodb: {
@@ -28,15 +30,20 @@ module.exports = {
                 }
             },
         });
+        let mailer = fakeMailer(configuration, regions);
 
         return () => {
             before(() => {
                 _componentsHolder = components({
                     configuration,
                     logger,
+                    mailer,
                     passwords: fakePasswords(configuration),
-                    mailer: fakeMailer(),
                 });
+            });
+
+            afterEach(function() {
+                mailer.flush();
             });
 
             after(async () => {
@@ -63,7 +70,7 @@ module.exports = {
                 getComponents: () => _componentsHolder,
                 createEmailMocks: async mailerOptions => {
                     let { db, regions, templates } = await _componentsHolder;
-                    let mailer = fakeMailer(mailerOptions);
+                    let mailer = fakeMailer(configuration, regions, mailerOptions);
                     return {
                         mailer,
                         emails: createEmails(db, configuration, regions, mailer, templates)

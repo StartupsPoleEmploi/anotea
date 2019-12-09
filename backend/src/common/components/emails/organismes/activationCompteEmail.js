@@ -1,11 +1,12 @@
 let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
 
-module.exports = (db, regions, mailer, utils) => {
+module.exports = (db, regions, mailer) => {
 
     const templateName = 'activationCompteEmail';
+    let { utils } = mailer;
 
     let render = organisme => {
-        return utils.render(__dirname, templateName, {
+        return mailer.render(__dirname, templateName, {
             organisme,
             link: utils.getPublicUrl(`/admin/activation-compte?token=${(organisme.token)}`),
         });

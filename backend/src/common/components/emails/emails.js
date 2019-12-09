@@ -9,29 +9,26 @@ const avisRejectedInjureEmail = require('./stagiaires/avisRejectedInjureEmail');
 const avisRejectedAlerteEmail = require('./stagiaires/avisRejectedAlerteEmail');
 const questionnaire6MoisEmail = require('./stagiaires/questionnaire6MoisEmail');
 const questionnaireOrganismeEmail = require('./organismes/questionnaireOrganismeEmail');
-const createTemplateUtils = require('./createTemplateUtils');
 
 module.exports = (db, configuration, regions, mailer) => {
 
-    let utils = createTemplateUtils(configuration, regions);
-
     let emails = [
         //Accounts
-        forgottenPasswordEmail(db, regions, mailer, utils),
+        forgottenPasswordEmail(db, regions, mailer),
 
         //Organismes
-        activationCompteEmail(db, regions, mailer, utils),
-        avisNotificationEmail(db, regions, mailer, utils),
-        avisReportedCanceledEmail(db, regions, mailer, utils),
-        avisReportedConfirmedEmail(db, regions, mailer, utils),
-        questionnaireOrganismeEmail(db, regions, mailer, utils),
-        reponseRejectedEmail(db, regions, mailer, utils),
+        activationCompteEmail(db, regions, mailer),
+        avisNotificationEmail(db, regions, mailer),
+        avisReportedCanceledEmail(db, regions, mailer),
+        avisReportedConfirmedEmail(db, regions, mailer),
+        questionnaireOrganismeEmail(db, regions, mailer),
+        reponseRejectedEmail(db, regions, mailer),
 
         //Stagiaires
-        avisStagiaireEmail(db, regions, mailer, utils),
-        avisRejectedInjureEmail(db, regions, mailer, utils),
-        avisRejectedAlerteEmail(db, regions, mailer, utils),
-        questionnaire6MoisEmail(db, regions, mailer, utils),
+        avisStagiaireEmail(db, regions, mailer),
+        avisRejectedInjureEmail(db, regions, mailer),
+        avisRejectedAlerteEmail(db, regions, mailer),
+        questionnaire6MoisEmail(db, regions, mailer),
     ];
 
     return {
