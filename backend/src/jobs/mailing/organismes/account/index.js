@@ -37,10 +37,12 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
         try {
             let stats = await accountMailer.sendEmails(action, options);
 
-            sendSlackNotification({
-                text: `[ORGANISME] Des emails de création de compte ont été envoyés à des organismes :  ` +
-                    `${stats.sent} envoyés / ${stats.error} erreurs`,
-            });
+            if (stats.total > 0) {
+                sendSlackNotification({
+                    text: `[ORGANISME] Des emails de création de compte ont été envoyés à des organismes :  ` +
+                        `${stats.sent} envoyés / ${stats.error} erreurs`,
+                });
+            }
 
             return stats;
         } catch (stats) {

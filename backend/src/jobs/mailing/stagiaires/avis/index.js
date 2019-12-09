@@ -33,10 +33,12 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
             delay: cli.delay,
         });
 
-        sendSlackNotification({
-            text: `[STAGIAIRE] Des emails stagiaires ont été envoyés : ` +
-                `${stats.sent} envoyés / ${stats.error} erreurs [${cli.campaign || type}]`,
-        });
+        if (stats.total > 0) {
+            sendSlackNotification({
+                text: `[STAGIAIRE] Des emails stagiaires ont été envoyés : ` +
+                    `${stats.sent} envoyés / ${stats.error} erreurs [${cli.campaign || type}]`,
+            });
+        }
 
         return stats;
 

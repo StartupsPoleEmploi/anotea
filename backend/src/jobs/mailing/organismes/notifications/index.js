@@ -26,10 +26,12 @@ execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotificati
                 regions.findActiveRegions('mailing.organismes.notifications').map(region => region.codeRegion),
         });
 
-        sendSlackNotification({
-            text: `[ORGANISME] Des emails de notifications de nouveaux avis ont été envoyés à des organismes` +
-                `${stats.sent} envoyés / ${stats.error} erreurs`,
-        });
+        if (stats.total > 0) {
+            sendSlackNotification({
+                text: `[ORGANISME] Des emails de notifications de nouveaux avis ont été envoyés à des organismes` +
+                    `${stats.sent} envoyés / ${stats.error} erreurs`,
+            });
+        }
 
         return stats;
     } catch (stats) {
