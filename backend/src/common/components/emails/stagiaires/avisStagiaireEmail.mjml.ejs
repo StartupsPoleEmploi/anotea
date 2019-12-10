@@ -63,17 +63,17 @@
 
             <mj-section padding-top="0" padding-left="70px" padding-right="70px">
                 <mj-column vertical-align="middle">
-                    <mj-image align="center" width="100%"
+                    <mj-image align="center" width="100%" alt="Logo La Bonne Formation"
                               src="<%= utils.getPublicUrl('/static/images/labonneformation.png') %>" />
                 </mj-column>
                 <mj-column vertical-align="middle">
-                    <mj-image align="center" width="50%"
+                    <mj-image align="center" width="50%" alt="Logo Ma Formation"
                               src="<%= utils.getPublicUrl('/static/images/ma-formation.jpg') %>" />
                 </mj-column>
 
                 <% if (showCarif) { %>
                     <mj-column vertical-align="middle">
-                        <mj-image align="center" width="100%"
+                        <mj-image align="center" width="100%" alt="Logo Carif"
                                   src="<%= utils.getPublicUrl(`/static/images/regions/carif-${region.codeRegion}.png`) %>" />
                     </mj-column>
                 <% } %>
@@ -89,7 +89,7 @@
                         L'équipe Anotéa.
                     </mj-text>
 
-                    <mj-image padding="0" width="1px"
+                    <mj-image padding="0" width="1px" alt="tracking"
                               src="<%= utils.getPublicUrl(`/emails/stagiaires/${trainee.token}/track`) %>" />
 
                 </mj-column>
