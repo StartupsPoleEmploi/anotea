@@ -19,7 +19,7 @@ export default function Link({ children, url, className }) {
 }
 
 Link.propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node,
     url: PropTypes.string.isRequired,
     className: PropTypes.string.isRequired,
 };

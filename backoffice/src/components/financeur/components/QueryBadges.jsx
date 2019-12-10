@@ -45,7 +45,7 @@ const QueryBadges = ({ form, query, ellipsis }) => {
             {siren && <Badge ellipsis={ellipsis} color="green" text={siren.name} />}
             {formation && <Badge ellipsis={ellipsis} color="green" text={formation.title} />}
             {financeur && <Badge ellipsis={ellipsis} color="green" text={financeur.label} />}
-            {(query.startDate || query.scheduledEndDate) && <Badge color="green" text={periode} />}
+            {(query.startDate || query.scheduledEndDate) && <Badge ellipsis={ellipsis} color="green" text={periode} />}
         </div>
     );
 };

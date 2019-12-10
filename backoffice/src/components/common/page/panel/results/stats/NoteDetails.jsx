@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Star from './Star';
 import './NoteDetails.scss';
 
 const NoteRepartition = props => {
@@ -11,7 +12,7 @@ const NoteRepartition = props => {
             <div className="moyenne">
                 <div className="label">{props.label}</div>
                 <div className="note">
-                    <span className="value">{props.note.moyenne}</span>/5<i className="star fas fa-star"></i>
+                    <span className="value">{props.note.moyenne}</span>/5<Star />
                 </div>
             </div>
             <div className="d-flex flex-column">
@@ -87,7 +88,7 @@ const NoteGlobale = props => {
             <span className="label">Moyenne globale</span>
             <div className="moyenne">
                 <div className="note">
-                    <span className="value">{props.note.moyenne}</span>/5<i className="star fas fa-star"></i>
+                    <span className="value">{props.note.moyenne}</span>/5<Star />
                 </div>
             </div>
             <div className="total">

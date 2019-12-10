@@ -126,7 +126,8 @@ export default class FinanceurAvisPanel extends React.Component {
                                 <i className="fas fa-download pr-2"></i>Exporter
                             </Button>
                         }
-                    />}
+                    />
+                }
                 results={
                     this.state.loading ?
                         <Loader centered={true} /> :

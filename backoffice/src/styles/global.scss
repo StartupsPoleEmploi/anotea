@@ -6,7 +6,6 @@ html, body, #root {
 }
 
 .anotea {
-
   font-size: 1em;
   font-family: 'Lato', sans-serif;
   font-weight: $font-weight-400;
@@ -44,6 +43,10 @@ html, body, #root {
 
   .a-blue {
     color: $color-blue;
+  }
+
+  .a-printable {
+    padding: 10px 5px 10px 5px;
   }
 }
 
