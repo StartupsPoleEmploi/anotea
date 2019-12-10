@@ -1,24 +1,31 @@
 <% const showConseilRegional = region.conseil_regional.active; %>
 <mj-section padding-top="0" padding-left="0" padding-bottom="0" border-radius="5px" background-color="#fff">
-    <mj-column vertical-align="middle" width="60%">
-        <mj-image align="left" padding-left="10px" width="70px"
-                  src="<%= utils.getPublicUrl('/static/images/logo_Anotea_Horizontal_baseline2.png') %>" />
-    </mj-column>
-    <% if (showConseilRegional) { %>
-        <mj-column vertical-align="middle" width="20%" border-right="1px solid #F4F4F5">
-            <mj-image padding-right="5px" width="80%"
-                      src="<%= utils.getPublicUrl('/static/images/logo-pole-emploi-530.png') %>" />
+    <mj-group>
+        <mj-column vertical-align="middle" width="25%">
+            <mj-image align="left" padding-left="10px" width="70px"
+                      src="<%= utils.getPublicUrl('/static/images/logo_Anotea_Horizontal_baseline2.png') %>" />
         </mj-column>
-        <mj-column vertical-align="middle" width="20%">
-            <mj-image padding-left="0" padding-right="8px" width="60%"
-                      src="<%= utils.getPublicUrl(`/static/images/regions/region-${region.codeRegion}.png`) %>" />
+        <mj-column vertical-align="middle" width="25%">
+            <mj-text>
+                &nbsp;
+            </mj-text>
         </mj-column>
-    <% } else{ %>
-        <mj-column vertical-align="middle" width="40%">
-            <mj-image padding-right="8px" width="80px" align="right"
-                      src="<%= utils.getPublicUrl('/static/images/logo-pole-emploi-530.png') %>" />
-        </mj-column>
-    <% } %>
+        <% if (showConseilRegional) { %>
+            <mj-column vertical-align="middle" width="25%" border-right="1px solid #F4F4F5">
+                <mj-image padding-right="5px" width="70px"
+                          src="<%= utils.getPublicUrl('/static/images/logo-pole-emploi-530.png') %>" />
+            </mj-column>
+            <mj-column vertical-align="middle" width="25%">
+                <mj-image  width="70px"
+                          src="<%= utils.getPublicUrl(`/static/images/regions/region-${region.codeRegion}.png`) %>" />
+            </mj-column>
+        <% } else{ %>
+            <mj-column vertical-align="middle" width="25%">
+                <mj-image width="80px" align="right"
+                          src="<%= utils.getPublicUrl('/static/images/logo-pole-emploi-530.png') %>" />
+            </mj-column>
+        <% } %>
+    </mj-group>
 </mj-section>
 
 <mj-section padding="8px"></mj-section>
