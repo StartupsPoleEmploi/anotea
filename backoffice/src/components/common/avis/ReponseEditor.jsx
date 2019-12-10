@@ -54,6 +54,7 @@ export default class ReponseEditor extends React.Component {
                     maxLength={300}
                     onChange={e => this.setState({ text: e.target.value })}
                     value={this.state.text} />
+                <div className="counter">Il vous reste {300 - this.state.text.length} caractères.</div>
 
                 <div className="py-2 text-right">
                     <Button size="small" color="red" className="mr-2" onClick={this.props.onClose}>
