@@ -12,9 +12,11 @@ cli.description('Envoie du questionnaire au organisme')
 
 execute(async ({ db, logger, emails }) => {
 
-    logger.info(`Sending emails to organismes...`);
+    let { limit = 1, delay = 100 } = cli;
+
+    logger.info(`Sending questionnaire email to organismes...`);
     return sendOrganismeQuestionnaire(db, logger, emails, {
-        limit: cli.limit,
-        delay: cli.delay,
+        limit,
+        delay,
     });
 });
