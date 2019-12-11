@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
-import MonComptePage from '../misc/MonComptePage';
+import MonComptePage from '../common/MonComptePage';
 import OrganismePage from './OrganismePage';
 
 export default class OrganismeRoutes extends React.Component {

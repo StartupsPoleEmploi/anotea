@@ -5,8 +5,9 @@ import ReinitialisationMotDePassePage from './ReinitialisationMotDePassePage';
 import MotDePasseOubliePage from './MotDePasseOubliePage';
 import LoginPage from './LoginPage';
 import ActivationComptePage from './ActivationComptePage';
+import LibraryPage from './LibraryPage';
 
-export default class AuthRoutes extends React.Component {
+export default class AnonymousRoutes extends React.Component {
 
     static propTypes = {
         navigator: PropTypes.object.isRequired,
@@ -34,6 +35,7 @@ export default class AuthRoutes extends React.Component {
                     path="/admin/activation-compte"
                     render={() => <ActivationComptePage navigator={navigator} onLogin={this.props.onLogin} />}
                 />
+                <Route exact path="/admin/library" render={() => <LibraryPage />} />
             </>
         );
     }

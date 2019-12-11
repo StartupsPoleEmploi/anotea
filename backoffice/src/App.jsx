@@ -9,12 +9,11 @@ import GridDisplayer from './components/common/GridDisplayer';
 import FinanceurRoutes from './components/financeur/FinanceurRoutes';
 import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
-import AnonymousRoutes from './components/anonymous/AuthRoutes';
+import AnonymousRoutes from './components/anonymous/AnonymousRoutes';
 import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
 import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './styles/global.scss';
 import Header from './components/common/header/Header';
-import MiscRoutes from './components/misc/MiscRoutes';
 import AppContext from './components/AppContext';
 import GlobalMessage from './components/common/message/GlobalMessage';
 
@@ -116,7 +115,6 @@ class App extends Component {
                         </Switch>
 
                         <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
-                        <MiscRoutes />
                         {layout.routes}
                     </div>
                     {message &&

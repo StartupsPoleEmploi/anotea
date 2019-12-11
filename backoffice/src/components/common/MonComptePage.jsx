@@ -1,9 +1,9 @@
 import React from 'react';
-import Page from '../common/page/Page';
-import Panel from '../common/page/panel/Panel';
-import { CenteredForm } from '../common/page/form/CenteredForm';
-import InputText from '../common/page/form/InputText';
-import Button from '../common/Button';
+import Page from './page/Page';
+import Panel from './page/panel/Panel';
+import { CenteredForm } from './page/form/CenteredForm';
+import InputText from './page/form/InputText';
+import Button from './Button';
 import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
 import _ from 'lodash';
 import { updatePassword } from '../../services/meService';
