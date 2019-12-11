@@ -1,7 +1,7 @@
 import html2canvas from 'html2canvas';
 import JSPDF from 'jspdf';
 
-export const printPDF = async element => {
+export const buildPDF = async element => {
     let pdf = new JSPDF('landscape', 'px', 'a4');
 
     let canvas = await html2canvas(element);

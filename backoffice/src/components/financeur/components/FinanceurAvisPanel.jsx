@@ -9,7 +9,7 @@ import { getExportAvisUrl, searchAvis } from '../../../services/avisService';
 import AvisResults from '../../common/page/panel/results/AvisResults';
 import Avis from '../../common/avis/Avis';
 import Pagination from '../../common/page/panel/pagination/Pagination';
-import QueryBadges from './QueryBadges';
+import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
 import Panel from '../../common/page/panel/Panel';
 import Loader from '../../common/Loader';
 
@@ -116,7 +116,7 @@ export default class FinanceurAvisPanel extends React.Component {
                 }
                 summary={
                     <Summary
-                        title={<QueryBadges form={form} query={query} />}
+                        title={<BadgeSummary form={form} query={query} />}
                         paginationLabel="avis"
                         pagination={results.meta.pagination}
                         buttons={

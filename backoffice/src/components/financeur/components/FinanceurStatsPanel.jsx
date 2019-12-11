@@ -3,17 +3,16 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { getAvisStats } from '../../../services/statsService';
 import Panel from '../../common/page/panel/Panel';
-import QueryBadges from './QueryBadges';
+import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
 import Loader from '../../common/Loader';
 import CommentairesStats from './CommentairesStats';
 import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 import Button from '../../common/Button';
-import { printPDF } from '../../../utils/print';
-import logo from '../../common/print/logo-anoteable-print.png';
-import moment from 'moment';
+import { buildPDF } from '../../../utils/pdf';
 import NoteExplications from '../../common/page/panel/results/stats/NoteExplications';
-
+import PDF from '../../common/pdf/PDF';
+import TextSummary from '../../common/page/panel/summary/TextSummary';
 
 export default class FinanceurStatsPanel extends React.Component {
 
@@ -27,9 +26,9 @@ export default class FinanceurStatsPanel extends React.Component {
         this.state = {
             loading: true,
             results: {},
-            pdf: false,
+            showPDFDocument: false,
         };
-        this.printable = React.createRef();
+        this.pdfReference = React.createRef();
     }
 
     componentDidMount() {
@@ -51,6 +50,24 @@ export default class FinanceurStatsPanel extends React.Component {
         });
     };
 
+    generatePDF = () => {
+        this.setState({ showPDFDocument: true }, async () => {
+            window.scrollTo(0, 0);
+            new Promise(resolve => setTimeout(() => resolve(), 250))
+            .then(() => buildPDF(this.pdfReference.current))
+            .then(() => this.setState({ showPDFDocument: false }));
+        });
+    };
+
+    getPDFTitle = () => {
+        let { query, form } = this.props;
+        let siren = form.sirens && form.sirens.results.find(f => f.siren === query.siren);
+        if (siren) {
+            return `Résultats pour ${siren.name}`;
+        }
+        return 'Résultats pour tous les organismes';
+    };
+
     render() {
 
         let { query, form } = this.props;
@@ -63,20 +80,13 @@ export default class FinanceurStatsPanel extends React.Component {
                     summary={
                         <div className="row">
                             <div className="col-sm-10">
-                                <QueryBadges form={form} query={query} ellipsis={30} />
+                                <BadgeSummary form={form} query={query} ellipsis={30} />
                             </div>
                             <div className="col-sm-2 text-right">
                                 <Button
                                     size="medium"
-                                    disabled={this.state.pdf}
-                                    onClick={() => {
-                                        this.setState({ pdf: true }, async () => {
-                                            window.scrollTo(0, 0);
-                                            new Promise(resolve => setTimeout(() => resolve(), 250))
-                                            .then(() => printPDF(this.printable.current))
-                                            .then(() => this.setState({ pdf: false }));
-                                        });
-                                    }}>
+                                    disabled={this.state.showPDFDocument}
+                                    onClick={() => this.generatePDF()}>
                                     <i className="fas fa-download pr-2"></i>Exporter
                                 </Button>
                             </div>
@@ -88,54 +98,40 @@ export default class FinanceurStatsPanel extends React.Component {
                                 <>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="section-title">Les commentaires</div>
-                                            <CommentairesStats stats={stats} />
+                                            <div className="section-title">Les notes</div>
+                                            <NoteDetails notes={stats.notes} total={stats.total} />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="section-title">Les notes</div>
-                                            <NoteDetails notes={stats.notes} total={stats.total} />
+                                            <div className="section-title">Les commentaires</div>
+                                            <CommentairesStats stats={stats} />
                                         </div>
                                     </div>
                                 </>
                             )
                     }
                 />
-                {this.state.pdf &&
-                <div ref={this.printable}>
-                    <Panel
-                        className={`a-printable`}
+                {this.state.showPDFDocument &&
+                <div ref={this.pdfReference}>
+                    <PDF
+                        title={this.getPDFTitle()}
                         summary={
-                            <>
-                                <div className="row align-items-center">
-                                    <div className="col-sm-2">
-                                        <img src={logo} className="logo" alt="logo" width={'80%'} />
-                                    </div>
-                                    <div className="offset-sm-7 col-sm-3 text-right">
-                                        Données exportées le {moment().format('DD/MM/YYYY')}
-                                    </div>
-                                </div>
-                                <div className="row" style={{ paddingTop: '30px' }}>
-                                    <div className="col-sm-12">
-                                        <QueryBadges form={form} query={query} ellipsis={300} />
-                                    </div>
-                                </div>
-                            </>
+                            <TextSummary form={form} query={query} />
                         }
                         results={
                             _.isEmpty(stats) ? <EmptyResults /> : (
                                 <>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="section-title">Les commentaires</div>
-                                            <CommentairesStats stats={stats} />
+                                            <div className="section-title">Les notes</div>
+                                            <NoteExplications notes={stats.notes} total={stats.total} />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="section-title">Les notes</div>
-                                            <NoteExplications notes={stats.notes} total={stats.total} />
+                                            <div className="section-title">Les commentaires</div>
+                                            <CommentairesStats stats={stats} />
                                         </div>
                                     </div>
                                 </>
