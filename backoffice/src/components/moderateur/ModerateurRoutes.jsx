@@ -5,7 +5,7 @@ import GestionOrganismePage from './gestion-organismes/GestionOrganismePage';
 import StagiairesEmailsPreviewPage from './courriels/StagiairesEmailsPreviewPage';
 import ModerationAvisPage from './moderation-avis/ModerationAvisPage';
 import ModerationReponsesPage from './moderation-avis/ModerationReponsesPage';
-import MonComptePage from '../misc/MonComptePage';
+import MonComptePage from '../common/MonComptePage';
 import OrganismesEmailsPreviewPage from './courriels/OrganismesEmailsPreviewPage';
 
 export default class ModerateurRoutes extends React.Component {
