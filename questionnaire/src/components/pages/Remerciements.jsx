@@ -78,7 +78,9 @@ class Remerciements extends Component {
                                             target="_blank"
                                             rel="noopener noreferrer">
                                             <img
-                                                src={process.env.PUBLIC_URL + `/images/regions/carif-${stagiaire.codeRegion}.png`}
+                                                src={
+                                                    process.env.PUBLIC_URL +
+                                                    `/images/regions/carif-${stagiaire.codeRegion}.png`}
                                                 alt="logo carif" />
                                         </a>
                                         }
