@@ -4,7 +4,8 @@ const moment = require('moment');
 const cli = require('commander');
 const { execute, batchCursor } = require('../job-utils');
 
-cli.description('Adding archived flag to old avis')
+cli.description('Archive avis')
+.option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
 execute(async ({ db, logger, sendSlackNotification }) => {
