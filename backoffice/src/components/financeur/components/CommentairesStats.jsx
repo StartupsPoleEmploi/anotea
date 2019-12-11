@@ -5,12 +5,14 @@ import Pie from '../../common/page/panel/results/stats/Pie';
 
 const CommentairesStats = ({ stats }) => {
 
+    let colors = ['#007E54', '#E5F2ED', '#66B298'];
+
     return (
         <div className="CommentairesStats d-flex flex-wrap flex-row">
             <div className="chart first">
                 <div className="title">Modération des commentaires</div>
                 <div className="description">{stats.nbCommentaires} commentaires au total</div>
-                <Pie data={[
+                <Pie colors={colors} data={[
                     {
                         id: 'Validés',
                         value: stats.nbCommentairesValidated,
@@ -36,7 +38,7 @@ const CommentairesStats = ({ stats }) => {
             <div className="chart second">
                 <div className="title">Commentaires validés</div>
                 <div className="description">{stats.nbCommentairesValidated} commentaires au total</div>
-                <Pie data={[
+                <Pie colors={colors} data={[
                     {
                         id: 'Positifs',
                         value: stats.nbCommentairesPositifs,
@@ -52,7 +54,7 @@ const CommentairesStats = ({ stats }) => {
             <div className="chart last">
                 <div className="title">Commentaires rejetés</div>
                 <div className="description">{stats.nbCommentairesRejected} commentaires au total</div>
-                <Pie data={[
+                <Pie colors={colors} data={[
                     {
                         id: 'Non concernés',
                         value: stats.nbCommentairesNonConcernes,
