@@ -26,16 +26,19 @@ const StagiairesStats = ({ stagiaires, avis }) => {
             <div className="d-flex justify-content-center stats mt-md-3 mt-lg-0">
                 <div className="chart">
                     <div className="title">Dépôt d'avis</div>
-                    <Pie data={[
-                        {
-                            'id': 'Commentaires',
-                            'value': avis.nbCommentaires,
-                        },
-                        {
-                            'id': 'Notes seules',
-                            'value': avis.nbNotesSeules,
-                        },
-                    ]} />
+                    <Pie
+                        colors={['#F28017', '#F7B374', '#FDF2E7']}
+                        data={[
+                            {
+                                'id': 'Commentaires',
+                                'value': avis.nbCommentaires,
+                            },
+                            {
+                                'id': 'Notes seules',
+                                'value': avis.nbNotesSeules,
+                            },
+                        ]}
+                    />
                 </div>
             </div>
         </div>

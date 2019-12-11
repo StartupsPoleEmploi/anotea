@@ -7,7 +7,7 @@ import './Pie.scss';
 
 let round = value => Number(Math.round(value + 'e1') + 'e-1');
 
-const Pie = ({ data }) => {
+const Pie = ({ data, colors }) => {
 
     let total = _.sumBy(data, d => d.value);
     let prettyLabel = element => `${element.id} (${round((element.value / total) * 100)}%)`;
@@ -32,7 +32,7 @@ const Pie = ({ data }) => {
                                 isInteractive={true}
                                 enableSlicesLabels={false}
                                 theme={{ fontSize: 12, fontFamily: 'Lato', textColor: '#24303A' }}
-                                colors={['#007E54', '#E5F2ED', '#66B298']}
+                                colors={colors}
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
                                 radialLabelsLinkHorizontalLength={5}
@@ -55,6 +55,7 @@ const Pie = ({ data }) => {
 
 Pie.propTypes = {
     data: PropTypes.array.isRequired,
+    colors: PropTypes.array.isRequired,
 };
 
 export default Pie;
