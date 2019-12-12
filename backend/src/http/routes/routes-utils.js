@@ -1,6 +1,15 @@
 const { jsonStream, transformObjectIntoCSV, pipeline } = require('../../common/utils/stream-utils');
 const { encodeStream } = require('iconv-lite');
 
+let sendJsonStream = (stream, res) => {
+    //TODO find a way to use pipeline and send 500 on error (ie. before pipeline calls end)
+    res.setHeader('Content-Type', 'application/json');
+    stream
+    .pipe(res)
+    .on('error', () => res.status(500))
+    .on('end', () => res.end());
+};
+
 module.exports = {
     getRemoteAddress: req => {
         return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -14,13 +23,9 @@ module.exports = {
             }
         };
     },
+    sendJsonStream,
     sendArrayAsJsonStream: (stream, res, wrapper) => {
-        res.setHeader('Content-Type', 'application/json');
-        stream
-        .pipe(jsonStream(wrapper))
-        .pipe(res)
-        .on('error', () => res.status(500))
-        .on('end', () => res.end());
+        sendJsonStream(stream.pipe(jsonStream(wrapper)), res);
     },
     sendCSVStream: (stream, res, columns, options = {}) => {
         let encoding = options.encoding || 'UTF-8';

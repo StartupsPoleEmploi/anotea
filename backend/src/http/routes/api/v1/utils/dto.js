@@ -13,7 +13,7 @@ let roundNotes = notes => {
     };
 };
 
-let createReconciliationDTO = (data, options = {}) => {
+let createIntercarifDTO = (data, options = {}) => {
     let dto = _.cloneDeep(data);
 
     dto.id = dto._id;
@@ -34,9 +34,10 @@ let createReconciliationDTO = (data, options = {}) => {
     return _.pick(dto, ['id', 'numero', 'region', 'score', 'avis', 'meta']);
 };
 module.exports = {
-    createFormationDTO: createReconciliationDTO,
-    createActionDTO: createReconciliationDTO,
-    createSessionDTO: createReconciliationDTO,
+    createIntercarifDTO,
+    createFormationDTO: createIntercarifDTO,
+    createActionDTO: createIntercarifDTO,
+    createSessionDTO: createIntercarifDTO,
     createPaginationDTO: (pagination, total) => {
         return {
             ...pagination,

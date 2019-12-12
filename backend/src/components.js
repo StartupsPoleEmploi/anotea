@@ -7,6 +7,7 @@ const sentry = require('./common/components/sentry');
 const workflow = require('./common/components/workflow');
 const database = require('./common/components/database');
 const communes = require('./common/components/communes');
+const reconciliation = require('./common/components/reconciliation');
 const createEmails = require('./common/components/emails/emails');
 const createMailer = require('./common/components/emails/mailer');
 
@@ -31,5 +32,6 @@ module.exports = async (options = {}) => {
         passwords: passwords(configuration),
         workflow: workflow(db, logger, emails),
         communes: communes(db),
+        reconciliation: reconciliation(db),
     }, options || {});
 };

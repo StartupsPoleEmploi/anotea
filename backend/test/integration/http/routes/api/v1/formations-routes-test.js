@@ -6,7 +6,7 @@ const { newComment, randomize, newIntercarif } = require('../../../../../helpers
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
 
-    let reconcileFormations = (intercarifs, avis = []) => {
+    let insertAndReconcile = (intercarifs, avis = []) => {
         return Promise.all([
             ...intercarifs.map(data => insertIntoDatabase('intercarif', data)),
             ...avis.map(data => insertIntoDatabase('comment', data)),
@@ -20,10 +20,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let pseudo = randomize('pseudo');
         let date = new Date();
         let commentId = new ObjectID();
-        await reconcileFormations(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
@@ -141,10 +143,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return Course for application/ld+json', async () => {
 
         let app = await startServer();
-        await reconcileFormations(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
@@ -205,14 +209,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         let date = new Date();
-        await reconcileFormations(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
-                    organismeFormateur: '33333333333333',
+                    organismeFormateur: '82422814200108',
                 })
             ],
             [
@@ -221,7 +227,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     training: {
                         formacodes: ['22252'],
                         organisation: {
-                            siret: '33333333333333',
+                            siret: '82422814200108',
                         },
                         place: {
                             postalCode: '75019',
@@ -245,14 +251,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('should return empty avis array when no avis can be found', async () => {
 
         let app = await startServer();
-        await reconcileFormations(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
-                    organismeFormateur: '33333333333333',
+                    organismeFormateur: '82422814200108',
                 })
             ],
             [
@@ -275,7 +283,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.statusCode, 404);
         assert.deepStrictEqual(response.body, {
             error: 'Not Found',
-            message: 'Numéro de formation inconnu ou formation expirée',
+            message: 'Numéro formation inconnu ou formation expirée',
             statusCode: 404,
         });
     });
@@ -284,7 +292,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileFormations([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2' }),
         ]);
@@ -300,7 +308,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all formations filtered by ids', async () => {
 
         let app = await startServer();
-        await reconcileFormations([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2' }),
             newIntercarif({ numeroFormation: 'F_XX_X3' }),
@@ -317,7 +325,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all formations filtered by numero', async () => {
 
         let app = await startServer();
-        await reconcileFormations([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2' }),
         ]);
@@ -332,15 +340,17 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all formations filtered by nb_avis', async () => {
 
         let app = await startServer();
-        await reconcileFormations(
+        await insertAndReconcile(
             [
-                newIntercarif({ numeroFormation: 'F_XX_X2' }),
+                newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
                 newIntercarif({
                     numeroFormation: 'F_XX_X1',
+                    numeroAction: 'AC_XX_XXXXX1',
+                    numeroSession: 'SE_XXXXX1',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
-                    organismeFormateur: '33333333333333',
+                    organismeFormateur: '82422814200108',
                 })
             ],
             [
@@ -349,7 +359,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     training: {
                         formacodes: ['22252'],
                         organisation: {
-                            siret: '33333333333333',
+                            siret: '82422814200108',
                         },
                         place: {
                             postalCode: '75019',
@@ -369,9 +379,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all formations with pagination', async () => {
 
         let app = await startServer();
-        await reconcileFormations([
-            newIntercarif({ numeroFormation: 'F_XX_X1' }),
-            newIntercarif({ numeroFormation: 'F_XX_X2' }),
+        await insertAndReconcile([
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
         ]);
 
 
@@ -390,41 +400,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
-    it('should fail when items_per_page is too big', async () => {
-
-        let app = await startServer();
-
-        let response = await request(app).get(`/api/v1/formations?page=0&items_par_page=5000`);
-
-        assert.strictEqual(response.statusCode, 400);
-        assert.deepStrictEqual(response.body, {
-            statusCode: 400,
-            error: 'Bad Request',
-            message: 'Erreur de validation',
-            details: [
-                {
-                    message: '"items_par_page" must be less than or equal to 2000',
-                    path: [
-                        'items_par_page'
-                    ],
-                    type: 'number.max',
-                    context: {
-                        limit: 2000,
-                        value: 5000,
-                        key: 'items_par_page',
-                        label: 'items_par_page'
-                    }
-                }
-            ]
-        });
-    });
-
     it('can search though all formations with projection (inclusion)', async () => {
 
         let app = await startServer();
 
-        await reconcileFormations([
-            newIntercarif({ numeroFormation: 'F_XX_X1' }),
+        await insertAndReconcile([
+            newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXXX' }),
         ]);
 
         let response = await request(app).get('/api/v1/formations?fields=score');
@@ -432,7 +413,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.body.formations.length, 1);
         assert.deepStrictEqual(Object.keys(response.body.formations[0]), ['id', 'score']);
 
-        response = await request(app).get('/api/v1/formations/F_XX_X1?fields=score');
+        response = await request(app).get('/api/v1/formations/F_XX_XX?fields=score');
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(Object.keys(response.body), ['id', 'score']);
     });
@@ -441,8 +422,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileFormations([
-            newIntercarif({ numeroFormation: 'F_XX_X1' }),
+        await insertAndReconcile([
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
         ]);
 
 
@@ -460,10 +441,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileFormations(
+        await insertAndReconcile(
             [
                 newIntercarif({
-                    numeroFormation: 'F_XX_X1',
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
@@ -504,7 +487,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             global: 2.4,
         });
 
-        response = await request(app).get('/api/v1/formations/F_XX_X1?notes_decimales=true');
+        response = await request(app).get('/api/v1/formations/F_XX_XX?notes_decimales=true');
         assert.deepStrictEqual(response.body.score.notes, {
             accompagnement: 1,
             accueil: 3,
@@ -521,10 +504,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let date = new Date();
         let pseudo = randomize('pseudo');
         let commentId = new ObjectID();
-        await reconcileFormations(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
@@ -635,10 +620,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
         delete sansCommentaire.comment;
 
-        await reconcileFormations(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
@@ -669,7 +656,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
 
-    it('can return avis avec reponse', async () => {
+    it('can return avis avec réponse', async () => {
 
         let app = await startServer();
         let avisAvecReponse = newComment({
@@ -692,10 +679,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
         delete avisAvecReponse.comment;
 
-        await reconcileFormations(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
@@ -724,6 +713,35 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
         assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo-avec-réponse');
+    });
+
+    it('should fail when items_per_page is too big', async () => {
+
+        let app = await startServer();
+
+        let response = await request(app).get(`/api/v1/formations?page=0&items_par_page=5000`);
+
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Erreur de validation',
+            details: [
+                {
+                    message: '"items_par_page" must be less than or equal to 2000',
+                    path: [
+                        'items_par_page'
+                    ],
+                    type: 'number.max',
+                    context: {
+                        limit: 2000,
+                        value: 5000,
+                        key: 'items_par_page',
+                        label: 'items_par_page'
+                    }
+                }
+            ]
+        });
     });
 
 }));

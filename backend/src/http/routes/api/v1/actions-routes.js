@@ -1,17 +1,11 @@
 const express = require('express');
-const Boom = require('boom');
 const Joi = require('joi');
-const _ = require('lodash');
-const { tryAndCatch, sendArrayAsJsonStream } = require('../../routes-utils');
+const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
-const buildProjection = require('./utils/buildProjection');
-const { createActionDTO, createPaginationDTO } = require('./utils/dto');
-const schema = require('./utils/schema');
 
-module.exports = ({ db, middlewares }) => {
+module.exports = ({ middlewares, reconciliation }) => {
 
     let router = express.Router();// eslint-disable-line new-cap
-    let collection = db.collection('actionsReconciliees');
     let { createHMACAuthMiddleware } = middlewares;
     let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
 
@@ -27,34 +21,11 @@ module.exports = ({ db, middlewares }) => {
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let pagination = _.pick(parameters, ['page', 'items_par_page']);
-        let limit = pagination.items_par_page;
-        let skip = pagination.page * limit;
-        let query = {
-            ...(parameters.id ? { '_id': { $in: parameters.id } } : {}),
-            ...(parameters.numero ? { 'numero': { $in: parameters.numero } } : {}),
+        let stream = await reconciliation.getDocumentsAsStream('action', parameters, {
             ...(parameters.region ? { 'region': { $in: parameters.region } } : {}),
-            ...(parameters.nb_avis ? { 'score.nb_avis': { $gte: parameters.nb_avis } } : {}),
-        };
-
-        let actions = await collection.find(query)
-        .project(buildProjection(parameters.fields))
-        .limit(limit)
-        .skip(skip);
-
-        let total = await actions.count();
-        let stream = actions.transformStream({
-            transform: action => createActionDTO(action, { notes_decimales: parameters.notes_decimales })
         });
 
-        return sendArrayAsJsonStream(stream, res, {
-            arrayPropertyName: 'actions',
-            arrayWrapper: {
-                meta: {
-                    pagination: createPaginationDTO(pagination, total)
-                },
-            }
-        });
+        return sendJsonStream(stream, res);
     }));
 
     router.get('/v1/actions/:id', checkAuth, tryAndCatch(async (req, res) => {
@@ -65,21 +36,11 @@ module.exports = ({ db, middlewares }) => {
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let action = await collection.findOne(
-            { _id: parameters.id },
-            { projection: buildProjection(parameters.fields) }
-        );
+        let dto = await reconciliation.getDocument('action', parameters, {
+            jsonLd: req.headers.accept === 'application/ld+json'
+        });
 
-        if (!action) {
-            throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
-        }
-
-        if (req.headers.accept === 'application/ld+json') {
-            res.json(schema.toCourse(action.formation, { score: action.score }));
-        } else {
-            let dto = createActionDTO(action, { notes_decimales: parameters.notes_decimales });
-            res.json(dto);
-        }
+        return res.json(dto);
     }));
 
     router.get('/v1/actions/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
@@ -91,28 +52,9 @@ module.exports = ({ db, middlewares }) => {
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let pagination = _.pick(parameters, ['page', 'items_par_page']);
-        let limit = pagination.items_par_page;
-        let skip = pagination.page * limit;
+        let avis = await reconciliation.getAvis('action', parameters);
 
-        let action = await collection.findOne({ _id: parameters.id }, { projection: { avis: 1 } });
-
-        if (!action) {
-            throw Boom.notFound('Numéro d\'action inconnu ou action expirée');
-        }
-
-        let avis = parameters.commentaires === null ?
-            action.avis :
-            action.avis.filter(avis => parameters.commentaires ? (avis.commentaire || avis.reponse) : !avis.commentaire);
-
-
-        res.json({
-            avis: avis.slice(skip, skip + limit),
-            meta: {
-                pagination: createPaginationDTO(pagination, avis.length)
-            },
-        });
-
+        return res.json(avis);
     }));
 
     return router;

@@ -6,7 +6,7 @@ const { newComment, randomize, newIntercarif } = require('../../../../../helpers
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
 
-    let reconcileSessions = (intercarifs, avis = []) => {
+    let insertAndReconcile = (intercarifs, avis = []) => {
         return Promise.all([
             ...intercarifs.map(data => insertIntoDatabase('intercarif', data)),
             ...avis.map(data => insertIntoDatabase('comment', data)),
@@ -20,7 +20,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let pseudo = randomize('pseudo');
         let date = new Date();
         let commentId = new ObjectID();
-        await reconcileSessions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -144,10 +144,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
-    it('can return CourseInstance for application/ld+json', async () => {
+    it('can return Course for application/ld+json', async () => {
 
         let app = await startServer();
-        await reconcileSessions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -239,7 +239,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         let date = new Date();
-        await reconcileSessions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -281,7 +281,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('should return empty avis array when no avis can be found', async () => {
 
         let app = await startServer();
-        await reconcileSessions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -304,7 +304,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.body.avis.length, 0);
     });
 
-    it('should fail when numero de session is unknown', async () => {
+    it('should fail when numero is unknown', async () => {
 
         let app = await startServer();
 
@@ -313,7 +313,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.statusCode, 404);
         assert.deepStrictEqual(response.body, {
             error: 'Not Found',
-            message: 'Numéro de session inconnu ou session expirée',
+            message: 'Numéro session inconnu ou session expirée',
             statusCode: 404,
         });
     });
@@ -322,7 +322,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileSessions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
         ]);
@@ -338,7 +338,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all sessions filtered by ids', async () => {
 
         let app = await startServer();
-        await reconcileSessions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
             newIntercarif({ numeroFormation: 'F_XX_X3', numeroAction: 'AC_XX_XXXXX3', numeroSession: 'SE_XXXXX3' }),
@@ -356,7 +356,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all sessions filtered by region', async () => {
 
         let app = await startServer();
-        await reconcileSessions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1', codeRegion: '11' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2', codeRegion: '24' }),
         ]);
@@ -371,7 +371,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all sessions filtered by numero', async () => {
 
         let app = await startServer();
-        await reconcileSessions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
             newIntercarif({ numeroFormation: 'F_XX_X3', numeroAction: 'AC_XX_XXXXX3', numeroSession: 'SE_XXXXX3' }),
@@ -387,7 +387,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all sessions filtered by nb_avis', async () => {
 
         let app = await startServer();
-        await reconcileSessions(
+        await insertAndReconcile(
             [
                 newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
                 newIntercarif({
@@ -426,7 +426,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all sessions with pagination', async () => {
 
         let app = await startServer();
-        await reconcileSessions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
         ]);
@@ -446,40 +446,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
-    it('should fail when items_per_page is too big', async () => {
-
-        let app = await startServer();
-
-        let response = await request(app).get(`/api/v1/sessions?page=0&items_par_page=5000`);
-
-        assert.strictEqual(response.statusCode, 400);
-        assert.deepStrictEqual(response.body, {
-            statusCode: 400,
-            error: 'Bad Request',
-            message: 'Erreur de validation',
-            details: [
-                {
-                    message: '"items_par_page" must be less than or equal to 2000',
-                    path: [
-                        'items_par_page'
-                    ],
-                    type: 'number.max',
-                    context: {
-                        limit: 2000,
-                        value: 5000,
-                        key: 'items_par_page',
-                        label: 'items_par_page'
-                    }
-                }
-            ]
-        });
-    });
-
     it('can get sessions with projection (inclusion)', async () => {
 
         let app = await startServer();
 
-        await reconcileSessions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_XX', numeroAction: 'AC_XX_XXXXXX', numeroSession: 'SE_XXXXXX' }),
         ]);
 
@@ -498,7 +469,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileSessions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
         ]);
 
@@ -516,7 +487,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileSessions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -589,7 +560,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let date = new Date();
         let pseudo = randomize('pseudo');
         let commentId = new ObjectID();
-        await reconcileSessions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -705,7 +676,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
         delete sansCommentaire.comment;
 
-        await reconcileSessions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -741,7 +712,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
 
-    it('can return avis avec commentaires', async () => {
+    it('can return avis avec réponse', async () => {
 
         let app = await startServer();
         let avisAvecReponse = newComment({
@@ -764,7 +735,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
         delete avisAvecReponse.comment;
 
-        await reconcileSessions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -798,5 +769,34 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.avis.length, 1);
         assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
+    });
+
+    it('should fail when items_per_page is too big', async () => {
+
+        let app = await startServer();
+
+        let response = await request(app).get(`/api/v1/sessions?page=0&items_par_page=5000`);
+
+        assert.strictEqual(response.statusCode, 400);
+        assert.deepStrictEqual(response.body, {
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Erreur de validation',
+            details: [
+                {
+                    message: '"items_par_page" must be less than or equal to 2000',
+                    path: [
+                        'items_par_page'
+                    ],
+                    type: 'number.max',
+                    context: {
+                        limit: 2000,
+                        value: 5000,
+                        key: 'items_par_page',
+                        label: 'items_par_page'
+                    }
+                }
+            ]
+        });
     });
 }));

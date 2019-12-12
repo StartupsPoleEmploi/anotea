@@ -6,7 +6,7 @@ const { newComment, randomize, newIntercarif } = require('../../../../../helpers
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile }) => {
 
-    let reconcileActions = (intercarifs, avis = []) => {
+    let insertAndReconcile = (intercarifs, avis = []) => {
         return Promise.all([
             ...intercarifs.map(data => insertIntoDatabase('intercarif', data)),
             ...avis.map(data => insertIntoDatabase('comment', data)),
@@ -21,7 +21,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let date = new Date();
         let commentId = new ObjectID();
 
-        await reconcileActions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -112,18 +112,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     global: 2
                 },
                 formation: {
-                    intitule: 'Développeur',
                     numero: 'F_XX_XX',
+                    intitule: 'Développeur',
                     domaine_formation: {
-                        formacodes: [
-                            '22252'
-                        ]
+                        formacodes: ['22252']
                     },
-                    certifications: [
-                        {
-                            certif_info: '78997'
-                        }
-                    ],
+                    certifications: [{ certif_info: '78997' }],
                     action: {
                         numero: 'AC_XX_XXXXXX',
                         lieu_de_formation: {
@@ -152,11 +146,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can return Course for application/ld+json', async () => {
 
         let app = await startServer();
-        await reconcileActions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
                     numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
@@ -216,11 +211,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('should return empty avis array when no avis can be found', async () => {
 
         let app = await startServer();
-        await reconcileActions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
                     numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
@@ -238,7 +234,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.body.avis.length, 0);
     });
 
-    it('should fail when numero d\'action is unknown', async () => {
+    it('should fail when numero is unknown', async () => {
 
         let app = await startServer();
 
@@ -247,7 +243,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.strictEqual(response.statusCode, 404);
         assert.deepStrictEqual(response.body, {
             error: 'Not Found',
-            message: 'Numéro d\'action inconnu ou action expirée',
+            message: 'Numéro action inconnu ou action expirée',
             statusCode: 404,
         });
     });
@@ -256,7 +252,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileActions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2' }),
         ]);
@@ -272,7 +268,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all actions filtered by ids', async () => {
 
         let app = await startServer();
-        await reconcileActions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2' }),
             newIntercarif({ numeroFormation: 'F_XX_X3', numeroAction: 'AC_XX_XXXXX3' }),
@@ -289,7 +285,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all actions filtered by region', async () => {
 
         let app = await startServer();
-        await reconcileActions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', codeRegion: '11' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', codeRegion: '24' }),
         ]);
@@ -304,7 +300,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all actions filtered by numero', async () => {
 
         let app = await startServer();
-        await reconcileActions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2' }),
         ]);
@@ -319,7 +315,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all actions filtered by nb_avis', async () => {
 
         let app = await startServer();
-        await reconcileActions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_X1',
@@ -356,7 +352,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
     it('can search though all actions with pagination', async () => {
 
         let app = await startServer();
-        await reconcileActions([
+        await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' }),
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2' }),
         ]);
@@ -380,7 +376,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' })]);
+        await insertAndReconcile([newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' })]);
 
         let response = await request(app).get('/api/v1/actions?fields=score');
         assert.strictEqual(response.statusCode, 200);
@@ -396,7 +392,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileActions([newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' })]);
+        await insertAndReconcile([newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1' })]);
 
         let response = await request(app).get('/api/v1/actions?fields=-avis');
         assert.strictEqual(response.statusCode, 200);
@@ -412,7 +408,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
 
-        await reconcileActions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -473,7 +469,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let date = new Date();
         let pseudo = randomize('pseudo');
         let commentId = new ObjectID();
-        await reconcileActions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
@@ -587,14 +583,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
         delete sansCommentaire.comment;
 
-        await reconcileActions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
                     numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
-                    organismeFormateur: '33333333333333',
                     lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
                 })
             ],
             [
@@ -621,7 +619,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         assert.deepStrictEqual(response.body.avis[0].pseudo, 'pseudo');
     });
 
-
     it('can return avis avec réponse', async () => {
 
         let app = await startServer();
@@ -645,14 +642,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
         delete avisAvecReponse.comment;
 
-        await reconcileActions(
+        await insertAndReconcile(
             [
                 newIntercarif({
                     numeroFormation: 'F_XX_XX',
                     numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
                     formacode: '22252',
-                    organismeFormateur: '33333333333333',
                     lieuDeFormation: '75019',
+                    codeRegion: '11',
+                    organismeFormateur: '33333333333333',
                 })
             ],
             [
