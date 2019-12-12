@@ -19,10 +19,22 @@ module.exports = (db, type) => async parameters => {
     let avis = parameters.commentaires === null ?
         doc.avis :
         doc.avis.filter(avis => parameters.commentaires ? (avis.commentaire || avis.reponse) : !avis.commentaire);
+
+    let sorted = _.orderBy(avis, [a => {
+        switch (parameters.tri) {
+            case 'notes':
+                return a.notes.global;
+            case 'formation':
+                return a.formation.intitule;
+            default:
+                return a.date;
+        }
+    }], [parameters.ordre]);
+
     return {
-        avis: avis.slice(skip, skip + limit),
+        avis: sorted.slice(skip, skip + limit),
         meta: {
-            pagination: createPaginationDTO(pagination, avis.length)
+            pagination: createPaginationDTO(pagination, sorted.length)
         },
     };
 };

@@ -41,7 +41,6 @@ module.exports = ({ middlewares, reconciliation }) => {
         });
 
         return res.json(dto);
-
     }));
 
     router.get('/v1/sessions/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
@@ -51,6 +50,7 @@ module.exports = ({ middlewares, reconciliation }) => {
             ...validators.pagination(),
             ...validators.commentaires(),
             ...validators.notesDecimales(),
+            ...validators.tri(),
         }, { abortEarly: false });
 
         let avis = await reconciliation.getAvisForSession(parameters);

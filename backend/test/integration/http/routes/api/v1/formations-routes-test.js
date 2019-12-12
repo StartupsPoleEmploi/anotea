@@ -1,4 +1,5 @@
 const request = require('supertest');
+const moment = require('moment');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
 const ObjectID = require('mongodb').ObjectID;
@@ -293,8 +294,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let app = await startServer();
 
         await insertAndReconcile([
-            newIntercarif({ numeroFormation: 'F_XX_X1' }),
-            newIntercarif({ numeroFormation: 'F_XX_X2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
         ]);
 
         let response = await request(app).get('/api/v1/formations');
@@ -309,9 +310,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         await insertAndReconcile([
-            newIntercarif({ numeroFormation: 'F_XX_X1' }),
-            newIntercarif({ numeroFormation: 'F_XX_X2' }),
-            newIntercarif({ numeroFormation: 'F_XX_X3' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X3', numeroAction: 'AC_XX_XXXXX3', numeroSession: 'SE_XXXXX3' }),
         ]);
 
         let response = await request(app).get(`/api/v1/formations?id=F_XX_X1,F_XX_X2`);
@@ -326,8 +327,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         let app = await startServer();
         await insertAndReconcile([
-            newIntercarif({ numeroFormation: 'F_XX_X1' }),
-            newIntercarif({ numeroFormation: 'F_XX_X2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
+            newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
+            newIntercarif({ numeroFormation: 'F_XX_X3', numeroAction: 'AC_XX_XXXXX3', numeroSession: 'SE_XXXXX3' }),
         ]);
 
         let response = await request(app).get(`/api/v1/formations?numero=F_XX_X1`);
@@ -342,7 +344,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         let app = await startServer();
         await insertAndReconcile(
             [
-                newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
                 newIntercarif({
                     numeroFormation: 'F_XX_X1',
                     numeroAction: 'AC_XX_XXXXX1',
@@ -350,8 +351,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     formacode: '22252',
                     lieuDeFormation: '75019',
                     codeRegion: '11',
-                    organismeFormateur: '82422814200108',
-                })
+                    organismeFormateur: '33333333333333',
+                }),
+                newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
             ],
             [
                 newComment({
@@ -359,7 +361,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     training: {
                         formacodes: ['22252'],
                         organisation: {
-                            siret: '82422814200108',
+                            siret: '33333333333333',
                         },
                         place: {
                             postalCode: '75019',
@@ -384,7 +386,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
             newIntercarif({ numeroFormation: 'F_XX_X2', numeroAction: 'AC_XX_XXXXX2', numeroSession: 'SE_XXXXX2' }),
         ]);
 
-
         let response = await request(app).get(`/api/v1/formations?page=0&items_par_page=1`);
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.formations.length, 1);
@@ -400,7 +401,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         });
     });
 
-    it('can search though all formations with projection (inclusion)', async () => {
+    it('can get formations with projection (inclusion)', async () => {
 
         let app = await startServer();
 
@@ -425,7 +426,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
         await insertAndReconcile([
             newIntercarif({ numeroFormation: 'F_XX_X1', numeroAction: 'AC_XX_XXXXX1', numeroSession: 'SE_XXXXX1' }),
         ]);
-
 
         let response = await request(app).get('/api/v1/formations?fields=-avis');
         assert.strictEqual(response.statusCode, 200);
@@ -489,6 +489,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
 
         response = await request(app).get('/api/v1/formations/F_XX_XX?notes_decimales=true');
         assert.deepStrictEqual(response.body.score.notes, {
+            accompagnement: 1,
+            accueil: 3,
+            contenu_formation: 2,
+            equipe_formateurs: 4,
+            moyen_materiel: 2,
+            global: 2.4,
+        });
+
+        response = await request(app).get('/api/v1/formations/F_XX_XX/avis?notes_decimales=true');
+        assert.deepStrictEqual(response.body.avis[0].notes, {
             accompagnement: 1,
             accueil: 3,
             contenu_formation: 2,
@@ -742,6 +752,170 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                 }
             ]
         });
+    });
+
+    it('can return avis sorted by date', async () => {
+
+        let app = await startServer();
+        await insertAndReconcile(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
+                    formacode: '22252',
+                    organismeFormateur: '33333333333333',
+                    lieuDeFormation: '75019',
+                })
+            ],
+            [
+                newComment({
+                    pseudo: '5minutesAgo',
+                    codeRegion: '11',
+                    training: {
+                        formacodes: ['22252'],
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                }, moment().subtract(5, 'minutes').toDate()),
+                newComment({
+                    pseudo: '7minutesAgo',
+                    codeRegion: '11',
+                    training: {
+                        formacodes: ['22252'],
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                }, moment().subtract(7, 'minutes').toDate()),
+            ]
+        );
+
+        let response = await request(app).get('/api/v1/formations/F_XX_XX/avis?tri=date&ordre=asc');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
+        assert.strictEqual(response.body.avis[1].pseudo, '5minutesAgo');
+    });
+
+    it('can return avis sorted by notes', async () => {
+
+        let app = await startServer();
+        await insertAndReconcile(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
+                    formacode: '22252',
+                    organismeFormateur: '33333333333333',
+                    lieuDeFormation: '75019',
+                })
+            ],
+            [
+                newComment({
+                    pseudo: '1',
+                    codeRegion: '11',
+                    training: {
+                        formacodes: ['22252'],
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        global: 1
+                    },
+                }),
+                newComment({
+                    pseudo: '2',
+                    codeRegion: '11',
+                    training: {
+                        formacodes: ['22252'],
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        global: 2,
+                    },
+                }),
+            ]
+        );
+
+        let response = await request(app).get('/api/v1/formations/F_XX_XX/avis?tri=notes&ordre=desc');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, '2');
+        assert.strictEqual(response.body.avis[1].pseudo, '1');
+    });
+
+    it('can return avis sorted by formation', async () => {
+
+        let app = await startServer();
+        await insertAndReconcile(
+            [
+                newIntercarif({
+                    numeroFormation: 'F_XX_XX',
+                    numeroAction: 'AC_XX_XXXXXX',
+                    numeroSession: 'SE_XXXXXX',
+                    formacode: '22252',
+                    organismeFormateur: '33333333333333',
+                    lieuDeFormation: '75019',
+                })
+            ],
+            [
+                newComment({
+                    pseudo: 'A',
+                    codeRegion: '11',
+                    training: {
+                        title: 'A',
+                        formacodes: ['22252'],
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                }),
+                newComment({
+                    pseudo: 'B',
+                    codeRegion: '11',
+                    training: {
+                        title: 'B',
+                        formacodes: ['22252'],
+                        organisation: {
+                            siret: '33333333333333',
+                        },
+                        place: {
+                            postalCode: '75019',
+                        },
+                    },
+                    rates: {
+                        global: 2,
+                    },
+                }),
+            ]
+        );
+
+        let response = await request(app).get('/api/v1/formations/F_XX_XX/avis?tri=formation&ordre=desc');
+
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, 'B');
+        assert.strictEqual(response.body.avis[1].pseudo, 'A');
     });
 
 }));

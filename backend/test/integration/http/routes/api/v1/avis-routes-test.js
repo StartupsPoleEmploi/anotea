@@ -375,16 +375,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: '5minutes' }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '6minutes' }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '7minutes' }, moment().subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '5minutes');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutes');
-        assert.strictEqual(response.body.avis[2].pseudo, '7minutes');
+        assert.strictEqual(response.body.avis[0].pseudo, '5minutesAgo');
+        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].pseudo, '7minutesAgo');
     });
 
     it('should sort avis by date (asc)', async () => {
@@ -392,16 +392,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: '5minutes' }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '6minutes' }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '7minutes' }, moment().subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date&ordre=asc');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '7minutes');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutes');
-        assert.strictEqual(response.body.avis[2].pseudo, '5minutes');
+        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
+        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].pseudo, '5minutesAgo');
     });
 
     it('should sort avis by notes', async () => {

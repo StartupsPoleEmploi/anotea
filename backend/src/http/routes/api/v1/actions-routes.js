@@ -50,6 +50,7 @@ module.exports = ({ middlewares, reconciliation }) => {
             ...validators.pagination(),
             ...validators.commentaires(),
             ...validators.notesDecimales(),
+            ...validators.tri(),
         }, { abortEarly: false });
 
         let avis = await reconciliation.getAvisForAction(parameters);
