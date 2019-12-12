@@ -227,56 +227,6 @@ body {
     display: none;
 }
 
-.rgpd {
-    padding: 60px 0px 60px 0px;
-    width: 100%;
-    background-color: #F4F4F5;
-}
-
-.rgpd .content {
-    width: 80%;
-    margin: auto;
-    text-align: center;
-}
-
-.rgpd h1 {
-    margin: 0;
-    padding: 0px 0px 40px 0px;
-}
-
-.rgpd ul {
-    padding: 0;
-}
-
-.rgpd li {
-    float: left;
-    width: calc(25% - 10px);
-    list-style: none;
-}
-
-.rgpd li p {
-    width: 80%;
-    margin: auto;
-    font-size: 1.1em;
-    padding-top: 16px;
-}
-
-.rgpd .icon {
-    margin: auto;
-}
-
-.rgpd a {
-    color: #373B46;
-}
-
-.rgpd a:hover {
-    text-decoration: none;
-}
-
-.clear {
-    clear: both;
-}
-
 @media (min-width: 1024px) {
     .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
         font-size: 32px;
@@ -413,11 +363,5 @@ body {
 
     .content-how .nav {
         display: inherit;
-    }
-
-    .rgpd li {
-        width: 100%;
-        margin-top: 20px;
-        float: inherit;
     }
 }

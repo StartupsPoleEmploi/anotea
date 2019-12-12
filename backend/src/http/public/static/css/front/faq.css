@@ -6,6 +6,10 @@ body {
     position: absolute;
 }
 
+.clear {
+    clear: both;
+}
+
 .main {
     width: 100vw;
     top: 100px;
@@ -141,9 +145,9 @@ a {
     color: #FF9533;
 }
 
-.affichez .button {
-    background-color: #FF9533;
-    color: #24303A;
+.affichez .button.esd {
+    height: 52px;
+    background-color: white;
 }
 
 .header-faq {
@@ -531,6 +535,52 @@ div.more {
     width: 100px;
 }
 
+.rgpd {
+    padding: 60px 0px 60px 0px;
+    width: 100%;
+    background-color: #F4F4F5;
+}
+
+.rgpd .content {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+.rgpd h1 {
+    margin: 0;
+    padding: 0px 0px 40px 0px;
+}
+
+.rgpd ul {
+    padding: 0;
+}
+
+.rgpd li {
+    float: left;
+    width: calc(25% - 10px);
+    list-style: none;
+}
+
+.rgpd li p {
+    width: 80%;
+    margin: auto;
+    font-size: 1.1em;
+    padding-top: 16px;
+}
+
+.rgpd .icon {
+    margin: auto;
+}
+
+.rgpd a {
+    color: #373B46;
+}
+
+.rgpd a:hover {
+    text-decoration: none;
+}
+
 @media (max-width: 740px) {
 
     .main {
@@ -549,7 +599,7 @@ div.more {
 
     .intro .illustration {
         position: absolute;
-        top: 60px;
+        top: -45px;
         left: 20%;
         z-index: -1;
         opacity: 0.25;
@@ -700,8 +750,10 @@ div.more {
         margin: inherit;
     }
 
-    .affichez .text p, .affichez .text h3, .affichez .text .button {
-        display: none;
+    .affichez .button.esd {
+        display: block;
+        margin: auto;
+        width: max-content;
     }
 
     .question a {
@@ -715,5 +767,11 @@ div.more {
 
     .reponse {
         margin: 0px 10px 0px 10px;
+    }
+
+    .rgpd li {
+        width: 100%;
+        margin-top: 20px;
+        float: inherit;
     }
 }

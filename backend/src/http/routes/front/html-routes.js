@@ -53,21 +53,13 @@ module.exports = ({ db, logger, configuration, communes, mailer, regions, peconn
     });
 
     router.get('/services/organismes', (req, res) => {
-        res.redirect('/services/organismes/fonctionnement');
-    });
-
-    router.get('/services/organismes/:page', (req, res) => {
         const connectionInfos = peconnect.initConnection();
         req.session.pe_connect = {
             state: connectionInfos.state,
             nonce: connectionInfos.nonce
         };
+        res.render('front/faq_organismes', { connectionLink: connectionInfos.link });
 
-        if (['fonctionnement', 'qualite', 'services'].includes(req.params.page)) {
-            res.render('front/faq_organismes', { page: req.params.page, connectionLink: connectionInfos.link });
-        } else {
-            res.status(404).render('errors/404');
-        }
     });
 
     router.get('/services/stagiaires', (req, res) => {

@@ -133,7 +133,7 @@ export default class ActivationComptePage extends React.Component {
                                                 </div>
                                                 <hr className="grey-5" />
                                                 <div className="clarification">
-                                                    Besoin d’aide ? Des questions ? Consultez notre <a href={`/services/organismes/fonctionnement#faq`}>FAQ</a>&nbsp; 
+                                                    Besoin d’aide ? Des questions ? Consultez notre <a href={`/services/organismes#faq`}>FAQ</a>&nbsp; 
                                                 ou <a href="mailto:anotea@pole-emploi.fr">contactez-nous</a> par email.
                                                 </div>
                                             </> :

@@ -1,10 +1,9 @@
 
 .footer {
-    width: 80%;
+    width: 100%;
     margin: auto;
     height: 150px;
     padding: 60px;
-    text-align: center;
 }
 
 .footer a {
@@ -19,15 +18,33 @@
 }
 
 .footer .logo {
-    margin: 15px  50px 15px 150px;
-    display: inline;
+    margin: 0px  50px 15px 150px;
     vertical-align: middle;
+    height: 75px;
 }
 
 .footer .logo-pe {
-    display: inline-block;
-    height: 75px;
     vertical-align: middle;
+    position: absolute;
+    right: 70px;
+}
+
+.footer .logo-pe, .footer .logo-pe-mobile, .footer .logo, .footer .logo-mobile {
+    height: 75px;
+}
+
+.footer .logo, .footer .menu-footer, .logo-pe-mobile, .footer .logo-mobile {
+    float: left;
+}
+
+.footer .logo-pe-mobile, .footer .logo-mobile {
+    display: none;
+}
+
+.footer .menu-footer {
+    width: inherit;
+    text-align: center;
+    margin-top: -90px;
 }
 
 @media (max-width: 740px) {
@@ -35,16 +52,34 @@
         padding: 0;
     }
 
-    .footer .logo {
-        margin: 0px 20px 0px 0px;
+    .footer .logo-mobile {
+        display: inherit;
+        margin: 10px 20px 0px 10px;
     }
 
-    .footer .logo-pe,.footer .logo {
+    .footer .logo-mobile,.footer .logo {
         height: 36px;
     }
 
     .footer a {
         padding: 0px 5px;
         font-size: 0.9em;
+    }
+
+    .footer .logo-pe, .footer .logo {
+        display: none;
+    }
+
+    .footer .logo-pe-mobile {
+        display: inherit;
+        height: 36px;
+        margin: 10px 0px 0px 10px;
+    }
+
+    .footer .menu-footer {
+        margin-left: 20px;
+        width: max-content;
+        text-align: inherit;
+        margin-top: inherit;
     }
 }

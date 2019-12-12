@@ -104,7 +104,7 @@ export default class LoginPage extends React.Component {
                                         </div>
                                         <hr className="grey-5" />
                                         <div className="help">
-                                            Besoin d’aide ? Des questions ? Consultez notre <a href={`/services/${this.props.profile === 'financeur' ? 'financeur' : 'organisme'}s/fonctionnement#faq`}>FAQ</a>&nbsp; 
+                                            Besoin d’aide ? Des questions ? Consultez notre <a href={`/services/${this.props.profile === 'financeur' ? 'financeur' : 'organisme'}s#faq`}>FAQ</a>&nbsp; 
                                             ou <a href="mailto:anotea@pole-emploi.fr">contactez-nous</a> par email.
                                         </div>
                                         <Button
