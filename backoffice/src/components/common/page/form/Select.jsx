@@ -31,12 +31,14 @@ export default class Select extends React.Component {
         label: PropTypes.func.isRequired,
         meta: PropTypes.func,
         onChange: PropTypes.func.isRequired,
-        placeholder: PropTypes.string.isRequired,
+        placeholder: PropTypes.string,
         loading: PropTypes.bool,
+        isClearable: PropTypes.bool,
     };
 
     static defaultProps = {
         optionKey: 'value',
+        isClearable: true
     };
 
     toReactSelectOption = option => {
@@ -49,8 +51,13 @@ export default class Select extends React.Component {
         };
     };
 
+    constructor(props) {
+        super();
+        console.log(props)
+    }
+
     render() {
-        let { value, placeholder, options, onChange, loading, optionKey } = this.props;
+        let { value, placeholder, options, onChange, loading, optionKey, isClearable } = this.props;
         let keyPropertyName = optionKey;
 
         return (
@@ -59,7 +66,7 @@ export default class Select extends React.Component {
                 classNamePrefix="Select"
                 isLoading={loading}
                 components={{ Option }}
-                isClearable
+                isClearable={isClearable}
                 isSearchable
                 value={_.isEmpty(value) ? null : this.toReactSelectOption(value)}
                 options={options.map(o => this.toReactSelectOption(o))}
