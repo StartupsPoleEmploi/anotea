@@ -7,7 +7,7 @@ const sentry = require('./common/components/sentry');
 const workflow = require('./common/components/workflow');
 const database = require('./common/components/database');
 const communes = require('./common/components/communes');
-const reconciliation = require('./common/components/reconciliation');
+const reconciliation = require('./common/components/reconcilication/reconciliation');
 const createEmails = require('./common/components/emails/emails');
 const createMailer = require('./common/components/emails/mailer');
 

@@ -21,7 +21,7 @@ module.exports = ({ middlewares, reconciliation }) => {
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let stream = await reconciliation.getDocumentsAsStream('session', parameters, {
+        let stream = await reconciliation.findSessionsAsStream(parameters, {
             ...(parameters.region ? { 'region': { $in: parameters.region } } : {}),
         });
 
@@ -36,7 +36,7 @@ module.exports = ({ middlewares, reconciliation }) => {
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let dto = await reconciliation.getDocument('session', parameters, {
+        let dto = await reconciliation.getSession(parameters, {
             jsonLd: req.headers.accept === 'application/ld+json'
         });
 
@@ -53,7 +53,7 @@ module.exports = ({ middlewares, reconciliation }) => {
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let avis = await reconciliation.getAvis('session', parameters);
+        let avis = await reconciliation.getAvisForSession(parameters);
 
         return res.json(avis);
     }));
