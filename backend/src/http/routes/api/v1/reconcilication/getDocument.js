@@ -1,7 +1,7 @@
-const buildProjection = require('../../../http/routes/api/v1/utils/buildProjection');
-const { createIntercarifDTO } = require('../../../http/routes/api/v1/utils/dto');
-const schema = require('../../../http/routes/api/v1/utils/schema');
-const { IdNotFoundError } = require('../../errors');
+const buildProjection = require('../utils/buildProjection');
+const { createIntercarifDTO } = require('../utils/dto');
+const schema = require('../utils/schema');
+const { IdNotFoundError } = require('../../../../../common/errors');
 
 module.exports = (db, type) => async (parameters, options = {}) => {
 

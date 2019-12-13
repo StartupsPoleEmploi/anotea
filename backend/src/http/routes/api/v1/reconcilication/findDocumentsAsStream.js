@@ -1,7 +1,7 @@
 const _ = require('lodash');
-const buildProjection = require('../../../http/routes/api/v1/utils/buildProjection');
-const { createIntercarifDTO, createPaginationDTO } = require('../../../http/routes/api/v1/utils/dto');
-const { jsonStream } = require('../../utils/stream-utils');
+const buildProjection = require('../utils/buildProjection');
+const { createIntercarifDTO, createPaginationDTO } = require('../utils/dto');
+const { jsonStream } = require('../../../../../common/utils/stream-utils');
 
 module.exports = (db, type) => async (parameters, options = {}) => {
 

@@ -2,12 +2,14 @@ const express = require('express');
 const Joi = require('joi');
 const { tryAndCatch, sendJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
+const createReconciliation = require('./reconcilication/reconciliation');
 
-module.exports = ({ middlewares, reconciliation }) => {
+module.exports = ({ db, middlewares }) => {
 
     let router = express.Router();// eslint-disable-line new-cap
     let { createHMACAuthMiddleware } = middlewares;
     let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
+    let reconciliation = createReconciliation(db);
 
     router.get('/v1/sessions', checkAuth, tryAndCatch(async (req, res) => {
 

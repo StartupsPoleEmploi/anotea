@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const { IdNotFoundError } = require('../../errors');
-const { createPaginationDTO } = require('../../../http/routes/api/v1/utils/dto');
+const { IdNotFoundError } = require('../../../../../common/errors');
+const { createPaginationDTO } = require('../utils/dto');
 
 module.exports = (db, type) => async parameters => {
 
