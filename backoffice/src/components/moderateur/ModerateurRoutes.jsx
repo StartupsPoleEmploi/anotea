@@ -11,31 +11,31 @@ import OrganismesEmailsPreviewPage from './courriels/OrganismesEmailsPreviewPage
 export default class ModerateurRoutes extends React.Component {
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     render() {
-        let { navigator } = this.props;
+        let { router } = this.props;
 
         return (
             <>
                 <Route path="/admin/moderateur/emails/stagiaires" render={() => {
-                    return <StagiairesEmailsPreviewPage navigator={navigator} />;
+                    return <StagiairesEmailsPreviewPage router={router} />;
                 }} />
                 <Route path="/admin/moderateur/emails/organismes" render={() => {
-                    return <OrganismesEmailsPreviewPage navigator={navigator} />;
+                    return <OrganismesEmailsPreviewPage router={router} />;
                 }} />
                 <Route
                     path="/admin/moderateur/gestion/organismes"
-                    render={() => <GestionOrganismePage navigator={navigator} />}
+                    render={() => <GestionOrganismePage router={router} />}
                 />
                 <Route
                     path="/admin/moderateur/moderation/avis/stagiaires"
-                    render={() => <ModerationAvisPage navigator={navigator} />}
+                    render={() => <ModerationAvisPage router={router} />}
                 />
                 <Route
                     path="/admin/moderateur/moderation/avis/reponses"
-                    render={() => <ModerationReponsesPage navigator={navigator} />}
+                    render={() => <ModerationReponsesPage router={router} />}
                 />
 
                 <Route

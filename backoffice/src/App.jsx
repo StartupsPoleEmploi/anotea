@@ -20,7 +20,7 @@ import GlobalMessage from './components/common/message/GlobalMessage';
 class App extends Component {
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     state = {
@@ -65,7 +65,7 @@ class App extends Component {
             account: getSession(),
         });
 
-        this.props.navigator.goToPage('/admin');
+        this.props.router.goToPage('/admin');
     };
 
     showGlobalMessage = message => {
@@ -75,27 +75,27 @@ class App extends Component {
     render() {
 
         let { account, message } = this.state;
-        let { navigator } = this.props;
+        let { router } = this.props;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
                 headerItems: <ModerateurHeaderItems />,
-                routes: <ModerateurRoutes navigator={navigator} />,
+                routes: <ModerateurRoutes router={router} />,
             }),
             financeur: () => ({
                 defaultPath: '/admin/financeur/avis/stats',
                 headerItems: <FinanceurHeaderItems />,
-                routes: <FinanceurRoutes navigator={navigator} />,
+                routes: <FinanceurRoutes router={router} />,
             }),
             organisme: () => ({
                 defaultPath: '/admin/organisme/avis/stats',
                 headerItems: <OrganismeHeaderItems />,
-                routes: <OrganismeRoutes navigator={navigator} />,
+                routes: <OrganismeRoutes router={router} />,
             }),
             anonymous: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
-                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={navigator} />,
+                routes: <AnonymousRoutes onLogin={this.onLogin} router={router} />,
             })
         };
 

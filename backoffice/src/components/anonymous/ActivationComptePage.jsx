@@ -17,7 +17,7 @@ export default class ActivationComptePage extends React.Component {
     static contextType = AppContext;
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
         onLogin: PropTypes.func.isRequired,
     };
 
@@ -40,8 +40,8 @@ export default class ActivationComptePage extends React.Component {
     }
 
     componentDidMount() {
-        let { navigator } = this.props;
-        let query = navigator.getQuery();
+        let { router } = this.props;
+        let query = router.getQuery();
         let { showMessage } = this.context;
 
 
@@ -70,7 +70,7 @@ export default class ActivationComptePage extends React.Component {
         }, () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
             if (isFormValid) {
-                let { token } = this.props.navigator.getQuery();
+                let { token } = this.props.router.getQuery();
 
                 this.setState({ loading: true });
                 activate(token, password)
