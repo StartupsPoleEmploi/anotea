@@ -20,15 +20,15 @@ export default class CarrouselWidget extends Component {
     };
 
     componentDidMount() {
-        this.props.fetchAvis({ page: 0, itemsParPage: ITEMS_PAR_PAGE });
+        this.props.fetchAvis({ page: 0, items_par_page: ITEMS_PAR_PAGE });
     }
 
     previous = () => {
-        this.props.fetchAvis({ page: this.props.results.meta.pagination.page - 1, itemsParPage: ITEMS_PAR_PAGE });
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page - 1, items_par_page: ITEMS_PAR_PAGE });
     };
 
     next = () => {
-        this.props.fetchAvis({ page: this.props.results.meta.pagination.page + 1, itemsParPage: ITEMS_PAR_PAGE });
+        this.props.fetchAvis({ page: this.props.results.meta.pagination.page + 1, items_par_page: ITEMS_PAR_PAGE });
     };
 
     getCarrousel = () => {

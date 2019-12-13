@@ -19,16 +19,40 @@ export default class ListeWidget extends Component {
         fetchAvis: PropTypes.func.isRequired,
     };
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            tri: 'date',
+            ordre: 'desc',
+        };
+    }
+
     componentDidMount() {
-        this.props.fetchAvis({ page: 0, itemsParPage: ITEMS_PAR_PAGE });
+        this.props.fetchAvis({ page: 0, items_par_page: ITEMS_PAR_PAGE });
     }
 
     previous = () => {
-        this.props.fetchAvis({ page: this.props.results.meta.pagination.page - 1, itemsParPage: ITEMS_PAR_PAGE });
+        this.props.fetchAvis({
+            page: this.props.results.meta.pagination.page - 1,
+            items_par_page: ITEMS_PAR_PAGE,
+            ...this.state,
+        });
     };
 
     next = () => {
-        this.props.fetchAvis({ page: this.props.results.meta.pagination.page + 1, itemsParPage: ITEMS_PAR_PAGE });
+        this.props.fetchAvis({
+            page: this.props.results.meta.pagination.page + 1,
+            items_par_page: ITEMS_PAR_PAGE,
+            ...this.state,
+        });
+    };
+
+    sort = () => {
+        this.props.fetchAvis({
+            page: this.props.results.meta.pagination.page,
+            items_par_page: ITEMS_PAR_PAGE,
+            ...this.state,
+        });
     };
 
     getListe() {
@@ -109,6 +133,42 @@ export default class ListeWidget extends Component {
                             </div>
                             <Verified />
                         </div>
+                        <div className="line sort d-flex justify-content-between align-items-center">
+                            <div className="d-flex justify-content-between">
+                                <span className="pr-3">Trier</span>
+                                <select value={this.state.tri} onChange={e => {
+                                    this.setState({ tri: e.target.value }, () => {
+                                        return this.sort();
+                                    });
+                                }}>
+                                    <option value="date">Par date</option>
+                                    <option value="notes">Par notes</option>
+                                    <option value="formation">Par formation</option>
+                                </select>
+                            </div>
+                            <div className="d-flex justify-content-between">
+                                <button
+                                    className={`mr-3 ${this.state.ordre === 'asc' ? 'active' : ''}`}
+                                    onClick={() => {
+                                        this.setState({ ordre: 'asc' }, () => {
+                                            return this.sort();
+                                        });
+                                    }}
+                                >
+                                    <i className="fas fa-arrow-up"></i> Croissant
+                                </button>
+                                <button
+                                    className={this.state.ordre === 'desc' ? 'active' : ''}
+                                    onClick={() => {
+                                        this.setState({ ordre: 'desc' }, () => {
+                                            return this.sort();
+                                        });
+                                    }}
+                                >
+                                    <i className="fas fa-arrow-down"></i> Décroissant
+                                </button>
+                            </div>
+                        </div>
                         {this.getListe()}
                         <div className="d-flex justify-content-center mt-3">
                             <div className="d-xs-block d-sm-none">
@@ -117,7 +177,6 @@ export default class ListeWidget extends Component {
                         </div>
                     </div>
                 </div>
-
             </div>
         );
     }
