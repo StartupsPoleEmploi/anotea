@@ -266,6 +266,8 @@ export default class FinanceurPage extends React.Component {
                                         await this.updateSelectBox('sirens', option);
                                         if (option) {
                                             this.loadSelectBox('formations', () => getFormations({ organisme: option.siren }));
+                                        } else {
+                                            await this.updateSelectBox('formations', null);
                                         }
                                     }}
                                 />

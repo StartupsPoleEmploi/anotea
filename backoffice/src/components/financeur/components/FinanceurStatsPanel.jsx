@@ -3,11 +3,16 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { getAvisStats } from '../../../services/statsService';
 import Panel from '../../common/page/panel/Panel';
-import QueryBadges from './QueryBadges';
+import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
 import Loader from '../../common/Loader';
 import CommentairesStats from './CommentairesStats';
 import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
+import Button from '../../common/Button';
+import { buildPDF } from '../../../utils/pdf';
+import NoteExplications from '../../common/page/panel/results/stats/NoteExplications';
+import PDF from '../../common/pdf/PDF';
+import TextSummary from '../../common/page/panel/summary/TextSummary';
 
 export default class FinanceurStatsPanel extends React.Component {
 
@@ -21,7 +26,9 @@ export default class FinanceurStatsPanel extends React.Component {
         this.state = {
             loading: true,
             results: {},
+            showPDFDocument: false,
         };
+        this.pdfReference = React.createRef();
     }
 
     componentDidMount() {
@@ -43,41 +50,97 @@ export default class FinanceurStatsPanel extends React.Component {
         });
     };
 
+    generatePDF = () => {
+        this.setState({ showPDFDocument: true }, async () => {
+            window.scrollTo(0, 0);
+            new Promise(resolve => setTimeout(() => resolve(), 250))
+            .then(() => buildPDF(this.pdfReference.current))
+            .then(() => this.setState({ showPDFDocument: false }));
+        });
+    };
+
+    getPDFTitle = () => {
+        let { query, form } = this.props;
+        let siren = form.sirens && form.sirens.results.find(f => f.siren === query.siren);
+        if (siren) {
+            return `Résultats pour ${siren.name}`;
+        }
+        return 'Résultats pour tous les organismes';
+    };
+
     render() {
 
         let { query, form } = this.props;
         let stats = this.state.results;
 
         return (
-            <Panel
-                backgroundColor="grey"
-                summary={
-                    <div className="row">
-                        <div className="col-sm-10">
-                            <QueryBadges form={form} query={query} ellipsis={30} />
+            <>
+                <Panel
+                    backgroundColor="grey"
+                    summary={
+                        <div className="row">
+                            <div className="col-sm-10">
+                                <BadgeSummary form={form} query={query} ellipsis={30} />
+                            </div>
+                            <div className="col-sm-2 text-right">
+                                <Button
+                                    size="medium"
+                                    disabled={this.state.showPDFDocument}
+                                    onClick={() => this.generatePDF()}>
+                                    <i className="fas fa-download pr-2"></i>Exporter
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                }
-                results={
-                    this.state.loading ?
-                        <Loader centered={true} /> :
-                        _.isEmpty(stats) ? <EmptyResults /> :
-                            <>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="section-title">Les commentaires</div>
-                                        <CommentairesStats stats={stats} />
+                    }
+                    results={
+                        this.state.loading ? <Loader centered={true} /> :
+                            _.isEmpty(stats) ? <EmptyResults /> : (
+                                <>
+                                    <div className="row">
+                                        <div className="col-sm-12">
+                                            <div className="section-title">Les notes</div>
+                                            <NoteDetails notes={stats.notes} total={stats.total} />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="section-title">Les notes</div>
-                                        <NoteDetails notes={stats.notes} total={stats.total} />
+                                    <div className="row">
+                                        <div className="col-sm-12">
+                                            <div className="section-title">Les commentaires</div>
+                                            <CommentairesStats stats={stats} />
+                                        </div>
                                     </div>
-                                </div>
-                            </>
+                                </>
+                            )
+                    }
+                />
+                {this.state.showPDFDocument &&
+                <div ref={this.pdfReference}>
+                    <PDF
+                        title={this.getPDFTitle()}
+                        summary={
+                            <TextSummary form={form} query={query} />
+                        }
+                        results={
+                            _.isEmpty(stats) ? <EmptyResults /> : (
+                                <>
+                                    <div className="row">
+                                        <div className="col-sm-12">
+                                            <div className="section-title">Les notes</div>
+                                            <NoteExplications notes={stats.notes} total={stats.total} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-12">
+                                            <div className="section-title">Les commentaires</div>
+                                            <CommentairesStats stats={stats} />
+                                        </div>
+                                    </div>
+                                </>
+                            )
+                        }
+                    />
+                </div>
                 }
-            />
+            </>
         );
 
     }

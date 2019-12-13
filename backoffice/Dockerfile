@@ -1,6 +1,6 @@
 FROM nginx:latest
 RUN apt-get update \
-    && apt-get install -y curl \
+    && apt-get install -y curl git \
     && apt-get -y autoclean
 
 #Install nodejs

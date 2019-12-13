@@ -29,7 +29,7 @@ const CommentairesStats = ({ stats }) => {
                         label: 'commentaires',
                     },
                     {
-                        id: 'Archived',
+                        id: 'Archivés',
                         value: stats.nbCommentairesArchived,
                         label: 'commentaires',
                     },

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import './QueryBadges.scss';
+import './BadgeSummary.scss';
 
 const truncate = (input, max) => input.length > max ? `${input.substring(0, max)}...` : input;
 
@@ -27,7 +27,7 @@ Badge.propTypes = {
     ellipsis: PropTypes.number,
 };
 
-const QueryBadges = ({ form, query, ellipsis }) => {
+const BadgeSummary = ({ form, query, ellipsis }) => {
 
     let { departements, sirens, formations, financeurs } = form;
 
@@ -45,15 +45,15 @@ const QueryBadges = ({ form, query, ellipsis }) => {
             {siren && <Badge ellipsis={ellipsis} color="green" text={siren.name} />}
             {formation && <Badge ellipsis={ellipsis} color="green" text={formation.title} />}
             {financeur && <Badge ellipsis={ellipsis} color="green" text={financeur.label} />}
-            {(query.startDate || query.scheduledEndDate) && <Badge color="green" text={periode} />}
+            {(query.startDate || query.scheduledEndDate) && <Badge ellipsis={ellipsis} color="green" text={periode} />}
         </div>
     );
 };
 
-QueryBadges.propTypes = {
+BadgeSummary.propTypes = {
     query: PropTypes.object.isRequired,
     form: PropTypes.object.isRequired,
     ellipsis: PropTypes.number,
 };
 
-export default QueryBadges;
+export default BadgeSummary;
