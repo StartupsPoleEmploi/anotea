@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
-import { Route } from 'react-router-dom';
 import Page from '../common/page/Page';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
 import { Form, Periode, Select } from '../common/page/form/Form';
@@ -303,10 +302,7 @@ export default class OrganismePage extends React.Component {
                         <OrganismeAvisPanel
                             query={router.getQuery()}
                             onFilterClicked={this.onFilterClicked} /> :
-                        <Route
-                            path={'/admin/organisme/avis/stats'}
-                            render={() => <OrganismeStatsPanel query={router.getQuery()} />}
-                        />
+                        <OrganismeStatsPanel query={router.getQuery()} />
                 }
             />
         );

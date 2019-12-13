@@ -79,7 +79,7 @@ class App extends Component {
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
-                headerItems: <ModerateurHeaderItems />,
+                headerItems: <ModerateurHeaderItems router={router}  />,
                 routes: <ModerateurRoutes router={router} />,
             }),
             financeur: () => ({
