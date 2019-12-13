@@ -10,7 +10,7 @@ const stringifyQuery = data => {
     return queryString.stringify(parameters);
 };
 
-export const createNavigator = ({ history, location }) => {
+export const createRouter = ({ history, location }) => {
     return {
         getQuery: () => {
             return queryString.parse(location.search);

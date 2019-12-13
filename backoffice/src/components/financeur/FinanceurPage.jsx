@@ -20,7 +20,7 @@ export default class FinanceurPage extends React.Component {
     static contextType = AppContext;
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -66,7 +66,7 @@ export default class FinanceurPage extends React.Component {
 
     async componentDidMount() {
 
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
 
         this.loadSelectBox('departements', () => getDepartements())
         .then(results => {
@@ -176,7 +176,7 @@ export default class FinanceurPage extends React.Component {
     };
 
     getFormParametersFromQuery = () => {
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
         return _.pick(query, ['codeFinanceur', 'departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']);
     };
 
@@ -203,28 +203,28 @@ export default class FinanceurPage extends React.Component {
     };
 
     onSubmit = () => {
-        return this.props.navigator.refreshCurrentPage(this.getFormParameters());
+        return this.props.router.refreshCurrentPage(this.getFormParameters());
     };
 
     onTabClicked = (tab, parameters = {}) => {
-        return this.props.navigator.goToPage(`/admin/financeur/avis/${tab}`, {
+        return this.props.router.goToPage(`/admin/financeur/avis/${tab}`, {
             ...this.getFormParametersFromQuery(),
             ...parameters
         });
     };
 
     onFilterClicked = parameters => {
-        return this.props.navigator.refreshCurrentPage({
+        return this.props.router.refreshCurrentPage({
             ...this.getFormParametersFromQuery(),
             ...parameters,
         });
     };
 
     render() {
-        let { navigator } = this.props;
+        let { router } = this.props;
         let { form } = this.state;
         let { departements, sirens, formations, financeurs, periode } = form;
-        let query = navigator.getQuery();
+        let query = router.getQuery();
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
 
         return (
@@ -330,17 +330,17 @@ export default class FinanceurPage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => navigator.isActive('/admin/financeur/avis/stats')}
+                            isActive={() => router.isActive('/admin/financeur/avis/stats')}
                             onClick={() => this.onTabClicked('stats')} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => navigator.isActive('/admin/financeur/avis/liste')}
+                            isActive={() => router.isActive('/admin/financeur/avis/liste')}
                             onClick={() => this.onTabClicked('liste', { sortBy: 'date' })} />
                     </Tabs>
                 }
                 panel={
-                    navigator.isActive('/admin/financeur/avis/liste') ?
+                    router.isActive('/admin/financeur/avis/liste') ?
                         <FinanceurAvisPanel
                             query={query}
                             form={form}

@@ -13,7 +13,7 @@ export default class MotDePasseOubliePage extends React.Component {
     static contextType = AppContext;
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -37,7 +37,7 @@ export default class MotDePasseOubliePage extends React.Component {
                 text: 'Une email vous a été envoyé.'
             });
             this.setState({ error: null, identifiant: '', loading: false }, () => {
-                this.props.navigator.goToPage('/admin/login');
+                this.props.router.goToPage('/admin/login');
             });
         })
         .catch(() => {
@@ -82,7 +82,7 @@ export default class MotDePasseOubliePage extends React.Component {
                                         <Button
                                             size="small"
                                             type="submit"
-                                            onClick={this.props.navigator.goBack}
+                                            onClick={this.props.router.goBack}
                                         >
                                             Retour
                                         </Button>

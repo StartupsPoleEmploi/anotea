@@ -11,15 +11,15 @@ import App from './App';
 import * as Sentry from './utils/sentry';
 import WithRouter from './components/WithRouter';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { createNavigator } from './utils/navigator';
+import { createRouter } from './utils/router';
 
 Sentry.init();
 
 let app = (
     <Router>
         <WithRouter render={props => {
-            let navigator = createNavigator(props);
-            return <App navigator={navigator} />;
+            let router = createRouter(props);
+            return <App router={router} />;
         }} />
     </Router>
 );

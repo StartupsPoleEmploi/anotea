@@ -9,16 +9,16 @@ import './EmailsPreviewPage.scss';
 export default class StagiairesEmailsPreviewPage extends Component {
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     onFilterClicked = parameters => {
-        return this.props.navigator.refreshCurrentPage(parameters);
+        return this.props.router.refreshCurrentPage(parameters);
     };
 
     render() {
 
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
 
         return (
             <Page
