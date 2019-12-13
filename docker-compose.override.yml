@@ -47,7 +47,7 @@ services:
       - smtp
 
   mongodb:
-    image: mongo:4.0.4-xenial
+    image: mongo:4.2.2-bionic
     container_name: anotea_mongodb
     command: --wiredTigerCacheSizeGB 1
     mem_limit: 1g
