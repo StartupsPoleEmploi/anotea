@@ -13,7 +13,7 @@ import WithRouter from './components/WithRouter';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createRouter } from './utils/router';
 
-Sentry.init();
+Sentry.initialize();
 
 let app = (
     <Router>

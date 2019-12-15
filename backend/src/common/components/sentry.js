@@ -1,9 +1,10 @@
+const _ = require('lodash');
 const { init, captureException, configureScope } = require('@sentry/node');
 const { getRemoteAddress } = require('../../http/routes/routes-utils');
 
 module.exports = (logger, configuration) => {
 
-    let isEnabled = configuration.sentry.enabled;
+    let isEnabled = !_.isEmpty(configuration.sentry.dsn);
 
     if (isEnabled) {
         init({ dsn: configuration.sentry.dsn, environment: configuration.env });
@@ -34,7 +35,7 @@ module.exports = (logger, configuration) => {
                 }
                 captureException(e);
             } else {
-                logger.error(e, 'Message sent to Sentry', options);
+                logger.error(e, '[SENTRY] An error occurred', options);
             }
         },
     };

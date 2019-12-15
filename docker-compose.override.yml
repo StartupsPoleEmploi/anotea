@@ -12,7 +12,6 @@ services:
     build:
       args:
         - ANOTEA_ENV=dev
-        - ANOTEA_SENTRY_ENABLED=false
         - ANOTEA_GOOGLE_ANALYTICS_ID=1234
         - ANOTEA_HOTJAR_ID=1234
 
