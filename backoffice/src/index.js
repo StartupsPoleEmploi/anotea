@@ -9,11 +9,13 @@ import './utils/datepicker.js';
 import './utils/moment-fr';
 import App from './App';
 import * as Sentry from './utils/sentry';
+import * as Hotjar from './utils/hotjar';
 import WithRouter from './components/WithRouter';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createRouter } from './utils/router';
 
 Sentry.initialize();
+Hotjar.initialize();
 
 let app = (
     <Router>
