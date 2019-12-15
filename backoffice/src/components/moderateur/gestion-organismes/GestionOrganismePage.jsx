@@ -54,7 +54,7 @@ export default class GestionOrganismePage extends React.Component {
 
         this.setState({
             form: {
-                search: query.search,
+                search: query.search || '',
             }
         });
     }
