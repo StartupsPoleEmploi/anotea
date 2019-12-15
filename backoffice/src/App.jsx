@@ -21,6 +21,7 @@ class App extends Component {
 
     static propTypes = {
         router: PropTypes.object.isRequired,
+        debug: PropTypes.bool,
     };
 
     state = {
@@ -75,11 +76,11 @@ class App extends Component {
     render() {
 
         let { account, message } = this.state;
-        let { router } = this.props;
+        let { router, debug } = this.props;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
-                headerItems: <ModerateurHeaderItems router={router}  />,
+                headerItems: <ModerateurHeaderItems router={router} />,
                 routes: <ModerateurRoutes router={router} />,
             }),
             financeur: () => ({
@@ -106,27 +107,27 @@ class App extends Component {
         };
 
         return (
-            <>
-                <AppContext.Provider value={appContext}>
-                    <div className="anotea">
-                        <Switch>
-                            <Redirect exact from="/" to={layout.defaultPath} />
-                            <Redirect exact from="/admin" to={layout.defaultPath} />
-                        </Switch>
+            <AppContext.Provider value={appContext}>
+                <div className="anotea">
+                    <Switch>
+                        <Redirect exact from="/" to={layout.defaultPath} />
+                        <Redirect exact from="/admin" to={layout.defaultPath} />
+                    </Switch>
 
-                        <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
-                        {layout.routes}
-                    </div>
-                    {message &&
-                    <GlobalMessage
-                        message={message}
-                        onClose={() => {
-                            return this.setState({ message: null });
-                        }} />
-                    }
-                </AppContext.Provider>
-                {false && <GridDisplayer />}
-            </>
+                    <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
+                    {layout.routes}
+                </div>
+                {message &&
+                <GlobalMessage
+                    message={message}
+                    onClose={() => {
+                        return this.setState({ message: null });
+                    }} />
+                }
+                {debug &&
+                <GridDisplayer />
+                }
+            </AppContext.Provider>
 
         );
     }

@@ -14,6 +14,7 @@ import WithRouter from './components/WithRouter';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createRouter } from './utils/router';
 
+let debug = false;
 Sentry.initialize();
 Hotjar.initialize();
 
@@ -21,7 +22,7 @@ let app = (
     <Router>
         <WithRouter render={props => {
             let router = createRouter(props);
-            return <App router={router} />;
+            return <App router={router} debug={debug} />;
         }} />
     </Router>
 );
