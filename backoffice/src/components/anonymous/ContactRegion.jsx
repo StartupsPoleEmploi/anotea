@@ -18,10 +18,9 @@ export default class ContactRegion extends React.Component {
 
     constructor(props) {
         super(props);
-        this.loadData();
     }
 
-    loadData = async () => {
+    componentDidMount = async () => {
         const regions = await getRegionList();
         this.setState({
             regions,
@@ -39,6 +38,10 @@ export default class ContactRegion extends React.Component {
 
     doContinue = () => {
         this.props.onContinue(this.state.email);
+    }
+
+    cancel = () => {
+        this.props.onContinue(null);
     }
 
     render() {
@@ -68,6 +71,9 @@ export default class ContactRegion extends React.Component {
                             </div>
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end">
+                                    <Button size="large" onClick={this.cancel}>
+                                        Annuler
+                                    </Button>
                                     <Button size="large" onClick={this.doContinue}>
                                         Continuer
                                     </Button>

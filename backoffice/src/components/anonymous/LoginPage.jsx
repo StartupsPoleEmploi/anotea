@@ -51,7 +51,6 @@ export default class LoginPage extends React.Component {
         loginWithAccessToken(data.access_token, data.origin)
         .then(result => this.props.onLogin(result))
         .catch(e => {
-            console.log(e);
             return this.setState({ loginWithAccessToken: false });
         });
     };
@@ -66,7 +65,9 @@ export default class LoginPage extends React.Component {
         this.setState({
             contactRegion: false
         });
-        window.location.href = `mailto:${email}`;
+        if(email !== null) {
+            window.location.href = `mailto:${email}`;
+        }
     }
 
     render() {
