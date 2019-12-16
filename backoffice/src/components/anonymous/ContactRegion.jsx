@@ -48,6 +48,7 @@ export default class ContactRegion extends React.Component {
 
         return (
             <div className="Modal">
+                <div className="dark-background"></div>
                 <div className='modal' tabIndex="-1" role="dialog">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
@@ -71,10 +72,10 @@ export default class ContactRegion extends React.Component {
                             </div>
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end">
-                                    <Button size="large" onClick={this.cancel}>
+                                    <Button className="cancel" size="large" onClick={this.cancel}>
                                         Annuler
                                     </Button>
-                                    <Button size="large" onClick={this.doContinue}>
+                                    <Button size="large" color="black" onClick={this.doContinue}>
                                         Continuer
                                     </Button>
                                 </div>
