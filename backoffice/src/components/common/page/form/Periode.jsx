@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Date from './Date';
+import Date from './date/Date';
 import './Periode.scss';
 
 export default class Periode extends React.Component {

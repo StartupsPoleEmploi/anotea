@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { clearDates, convertIntoDatepicker, setEndDate, setStartDate, updateDatepicker } from '../../../../utils/datepicker';
+import { clearDates, convertIntoDatepicker, setEndDate, setStartDate, updateDatepicker } from './datepicker';
 import './Date.scss';
 
 export default class Date extends React.Component {
