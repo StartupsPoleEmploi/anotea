@@ -6,7 +6,7 @@ import InputText from '../common/page/form/InputText';
 import Button from '../common/Button';
 import Page from '../common/page/Page';
 import { CenteredForm } from '../common/page/form/CenteredForm';
-import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
+import { isPasswordStrongEnough } from '../../utils/password-utils';
 import { activate, getActivationStatus } from './activationService';
 import { login } from './loginService';
 import { NavLink } from 'react-router-dom';
@@ -64,7 +64,7 @@ export default class ActivationComptePage extends React.Component {
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
                     null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
-                isNotSamePassword: isSamePassword(password, confirmation) ?
+                isNotSamePassword: password === confirmation ?
                     null : 'Les mots de passes ne sont pas identiques.',
             }
         }, () => {

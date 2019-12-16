@@ -7,7 +7,7 @@ import Button from '../common/Button';
 import Page from '../common/page/Page';
 import { CenteredForm } from '../common/page/form/CenteredForm';
 import { checkIfPasswordTokenExists, resetPassword } from './passwordService';
-import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
+import { isPasswordStrongEnough } from '../../utils/password-utils';
 import AppContext from '../AppContext';
 
 export default class ReinitialisationMotDePassePage extends React.Component {
@@ -57,7 +57,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
                     null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
-                isNotSamePassword: isSamePassword(password, confirmation) ?
+                isNotSamePassword: password === confirmation ?
                     null : 'Les mots de passes ne sont pas identiques.',
             }
         }, async () => {
