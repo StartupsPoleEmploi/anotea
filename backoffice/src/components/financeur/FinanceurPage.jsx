@@ -9,7 +9,7 @@ import { Form, Periode, Select } from '../common/page/form/Form';
 import { getSirens } from '../../services/sirensService';
 import { getFormations } from '../../services/formationsService';
 import { getDepartements } from '../../services/departementsService';
-import FINANCEURS from '../common/data/financeurs';
+import FINANCEURS from '../../utils/financeurs';
 import AppContext from '../AppContext';
 import Button from '../common/Button';
 import FinanceurAvisPanel from './components/FinanceurAvisPanel';
