@@ -32,18 +32,19 @@ export default class Pagination extends React.Component {
                 <div className="offset-4 col-4 d-flex justify-content-center">
                     <ul className="pagination">
                         <li className={`page-item ${isFirstPage ? 'active' : ''}`}>
-                            <a className="page-link" onClick={() => this.onClick(1)}>1</a>
+                            <a href="/#" className="page-link" onClick={() => this.onClick(1)}>1</a>
                         </li>
                         {
                             (totalPages > 5 && currentPage > 3) &&
                             <li className="page-item disabled">
-                                <a className="page-link" href="#">...</a>
+                                <a href="/#" className="page-link">...</a>
                             </li>
                         }
                         {
                             showPrevious &&
                             <li className="page-item">
                                 <a
+                                    href="/#"
                                     className="page-link"
                                     onClick={() => this.onClick(previousPage)}>{previousPage}
                                 </a>
@@ -53,6 +54,7 @@ export default class Pagination extends React.Component {
                             (!isFirstPage && !isLastPage) &&
                             <li className="page-item active">
                                 <a
+                                    href="/#"
                                     className="page-link"
                                     onClick={() => this.onClick(currentPage)}>{currentPage}
                                 </a>
@@ -61,17 +63,17 @@ export default class Pagination extends React.Component {
                         {
                             (nextPage < lastPage) &&
                             <li className="page-item">
-                                <a className="page-link" onClick={() => this.onClick(nextPage)}>{nextPage}</a>
+                                <a href="/#" className="page-link" onClick={() => this.onClick(nextPage)}>{nextPage}</a>
                             </li>
                         }
                         {
                             (currentPage < totalPages - 2) &&
                             <li className="page-item disabled">
-                                <a className="page-link" href="#">...</a>
+                                <a href="/#" className="page-link">...</a>
                             </li>
                         }
                         <li className={`page-item ${isLastPage && 'active'}`}>
-                            <a className="page-link" onClick={() => this.onClick(lastPage)}>{lastPage}</a>
+                            <a href="/#" className="page-link" onClick={() => this.onClick(lastPage)}>{lastPage}</a>
                         </li>
                     </ul>
                 </div>

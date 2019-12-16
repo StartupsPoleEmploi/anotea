@@ -8,8 +8,13 @@ const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled
     return (
         <li className={`Filter nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
             <a
+                href="/#"
                 className={`nav-link`}
-                onClick={onClick}>
+                onClick={e => {
+                    e.preventDefault();
+                    onClick(e);
+                }}
+            >
                 <div className="Pastille--holder">
                     {label}
                     {getNbElements() > 0 ? <Pastille value={getNbElements()} /> : <span />}

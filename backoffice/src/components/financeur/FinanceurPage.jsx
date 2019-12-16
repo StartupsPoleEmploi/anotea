@@ -237,7 +237,7 @@ export default class FinanceurPage extends React.Component {
                                 <label>Période</label>
                                 <Periode
                                     periode={periode}
-                                    min={moment('2016-01-01 Z').toDate()}
+                                    min={moment('2016-01-01T00:00:00Z').toDate()}
                                     onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>

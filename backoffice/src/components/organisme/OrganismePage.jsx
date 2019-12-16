@@ -216,7 +216,7 @@ export default class OrganismePage extends React.Component {
                                 <label>Période</label>
                                 <Periode
                                     periode={periode}
-                                    min={moment('2016-01-01 Z').toDate()}
+                                    min={moment('2016-01-01T00:00:00Z').toDate()}
                                     onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>
@@ -240,7 +240,7 @@ export default class OrganismePage extends React.Component {
                                     loading={sirens.loading}
                                     optionKey="organisme"
                                     label={option => option.name}
-                                    placeholder={user.raisonSociale}
+                                    placeholder={user.raisonSociale || ''}
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);
                                         this.loadSelectBox('formations', () => {

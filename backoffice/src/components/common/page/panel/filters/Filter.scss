@@ -10,14 +10,18 @@
     &.active {
       opacity: 1;
 
-      &:hover, &:focus {
+      &:hover, &:focus, &:link, &:visited {
         font-weight: $font-weight-400;
       }
     }
 
-    &:hover, &:focus {
+    &:hover, &:focus, &:link, &:visited {
       cursor: pointer;
       font-weight: $font-weight-700;
+    }
+
+    .nav-link {
+      color: $color-black;
     }
   }
 }
