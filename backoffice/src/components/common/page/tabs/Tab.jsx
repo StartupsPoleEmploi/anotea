@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Tab.scss';
+import { trackClick } from '../../../../utils/googleAnalytics';
 
 const Tab = ({ label, isActive, onClick, isDisabled = () => false }) => {
 
@@ -8,6 +9,7 @@ const Tab = ({ label, isActive, onClick, isDisabled = () => false }) => {
         <li className={`Tab nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
             <a href="/#" className={`nav-link`} onClick={e => {
                 e.preventDefault();
+                trackClick('tab', label);
                 onClick(e);
             }}>
                 <span>{label}</span>

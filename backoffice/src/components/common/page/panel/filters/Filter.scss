@@ -10,12 +10,12 @@
     &.active {
       opacity: 1;
 
-      &:hover, &:focus, &:link, &:visited {
+      &:hover, &:focus {
         font-weight: $font-weight-400;
       }
     }
 
-    &:hover, &:focus, &:link, &:visited {
+    &:hover, &:focus {
       cursor: pointer;
       font-weight: $font-weight-700;
     }

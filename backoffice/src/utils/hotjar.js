@@ -1,6 +1,10 @@
-const isEnabled = !!process.env.REACT_APP_ANOTEA_HOTJAR_ID;
+let isEnabled;
 
-export const initialize = () => {
+export const initialize = id => {
+
+    isEnabled = !!id;
+    console.log(`Hotjar enabled=${isEnabled}`);
+
     if (!isEnabled) {
         return;
     }
@@ -8,7 +12,7 @@ export const initialize = () => {
     // @formatter:off
     (function(h,o,t,j,a,r){
         h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:1,hjsv:5};
+        h._hjSettings={hjid:id,hjsv:5};
         a=o.getElementsByTagName('head')[0];
         r=o.createElement('script');r.async=1;
         r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;

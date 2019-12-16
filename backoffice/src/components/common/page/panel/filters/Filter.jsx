@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Filter.scss';
 import Pastille from '../../../Pastille';
+import { trackClick } from '../../../../../utils/googleAnalytics';
 
 const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false }) => {
 
@@ -12,6 +13,7 @@ const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled
                 className={`nav-link`}
                 onClick={e => {
                     e.preventDefault();
+                    trackClick('filter', label);
                     onClick(e);
                 }}
             >

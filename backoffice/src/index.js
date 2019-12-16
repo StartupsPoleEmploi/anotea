@@ -10,13 +10,17 @@ import './utils/moment-fr';
 import App from './App';
 import * as Sentry from './utils/sentry';
 import * as Hotjar from './utils/hotjar';
+import * as GoogleAnalytics from './utils/googleAnalytics';
 import WithRouter from './components/WithRouter';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createRouter } from './utils/router';
 
+let env = process.env;
 let debug = false;
-Sentry.initialize();
-Hotjar.initialize();
+
+Sentry.initialize(env.REACT_APP_ANOTEA_SENTRY_DSN);
+Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
+GoogleAnalytics.initialize(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug });
 
 let app = (
     <Router>

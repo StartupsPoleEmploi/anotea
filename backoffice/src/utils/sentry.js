@@ -1,15 +1,18 @@
 import * as Sentry from '@sentry/browser';
 
-const isEnabled = !!process.env.REACT_APP_ANOTEA_SENTRY_DSN;
+let isEnabled;
 
-export const initialize = () => {
+export const initialize = dsn => {
+
+    isEnabled = !!dsn;
+    console.log(`Sentry enabled=${isEnabled}`);
 
     if (!isEnabled) {
         return;
     }
 
     Sentry.init({
-        dsn: process.env.REACT_APP_ANOTEA_SENTRY_DSN,
+        dsn,
         environment: process.env.REACT_APP_ANOTEA_ENV || 'dev'
     });
 };
