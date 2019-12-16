@@ -53,7 +53,6 @@ export default class Select extends React.Component {
 
     constructor(props) {
         super();
-        console.log(props)
     }
 
     render() {
