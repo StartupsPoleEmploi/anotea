@@ -57,7 +57,7 @@ export default class ContactRegion extends React.Component {
                             </div>
                             <div className="modal-body">
                                 <div>
-                                    <h6>Renseigner votre département</h6>
+                                    <h6>Renseigner votre région</h6>
                                     { this.state.regions &&
                                         <Select
                                             value={this.state.selected}
