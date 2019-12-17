@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Date from './date/Date';
 import './Periode.scss';
+import { trackClick } from '../../../../utils/googleAnalytics';
 
 export default class Periode extends React.Component {
 
@@ -13,6 +14,7 @@ export default class Periode extends React.Component {
 
     onDateChange(type, date) {
         let { periode, onChange } = this.props;
+        trackClick('formulaire', 'periode');
         return onChange(Object.assign({}, periode, { [type]: date }));
     }
 

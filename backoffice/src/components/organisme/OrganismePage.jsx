@@ -229,6 +229,7 @@ export default class OrganismePage extends React.Component {
                                     optionKey="code"
                                     label={option => option.label}
                                     placeholder={'Tous les départements'}
+                                    trackingId="Départements"
                                     onChange={option => this.updateSelectBox('departements', option)}
                                 />
                             </div>
@@ -241,6 +242,7 @@ export default class OrganismePage extends React.Component {
                                     optionKey="organisme"
                                     label={option => option.name}
                                     placeholder={user.raisonSociale || ''}
+                                    trackingId="Centres"
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);
                                         this.loadSelectBox('formations', () => {
@@ -261,6 +263,7 @@ export default class OrganismePage extends React.Component {
                                     optionKey="idFormation"
                                     label={option => option.title}
                                     placeholder={'Toutes les formations'}
+                                    trackingId="Formation"
                                     onChange={option => this.updateSelectBox('formations', option)}
                                 />
                             </div>

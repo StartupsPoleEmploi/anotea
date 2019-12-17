@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ReactSelect, { components } from 'react-windowed-select';
 import './Select.scss';
+import { trackClick } from '../../../../utils/googleAnalytics';
 
 const Option = props => {
     let meta = props.data.meta;
@@ -33,6 +34,7 @@ export default class Select extends React.Component {
         onChange: PropTypes.func.isRequired,
         placeholder: PropTypes.string.isRequired,
         loading: PropTypes.bool,
+        trackingId: PropTypes.string,
     };
 
     static defaultProps = {
@@ -50,7 +52,7 @@ export default class Select extends React.Component {
     };
 
     render() {
-        let { value, placeholder, options, onChange, loading, optionKey } = this.props;
+        let { value, placeholder, options, onChange, loading, optionKey, trackingId } = this.props;
         let keyPropertyName = optionKey;
 
         return (
@@ -65,6 +67,7 @@ export default class Select extends React.Component {
                 options={options.map(o => this.toReactSelectOption(o))}
                 placeholder={options.length === 0 ? '' : placeholder}
                 onChange={option => {
+                    trackClick('select', trackingId || placeholder);
                     if (!option) {
                         return onChange(null);
                     }
