@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ReactSelect, { components } from 'react-windowed-select';
 import './Select.scss';
-import { trackClick } from '../../../../utils/googleAnalytics';
+import AnalyticsContext from '../../../analytics/AnalyticsContext';
 
 const Option = props => {
     let meta = props.data.meta;
@@ -24,6 +24,8 @@ Option.propTypes = {
 };
 
 export default class Select extends React.Component {
+
+    static contextType = AnalyticsContext;
 
     static propTypes = {
         value: PropTypes.object,
@@ -52,6 +54,7 @@ export default class Select extends React.Component {
     };
 
     render() {
+        let { trackClick } = this.context;
         let { value, placeholder, options, onChange, loading, optionKey, trackingId } = this.props;
         let keyPropertyName = optionKey;
 
@@ -67,7 +70,7 @@ export default class Select extends React.Component {
                 options={options.map(o => this.toReactSelectOption(o))}
                 placeholder={options.length === 0 ? '' : placeholder}
                 onChange={option => {
-                    trackClick('select', trackingId || placeholder);
+                    trackClick(trackingId || 'select');
                     if (!option) {
                         return onChange(null);
                     }

@@ -1,15 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Pagination.scss';
+import AnalyticsContext from '../../../../analytics/AnalyticsContext';
 
 export default class Pagination extends React.Component {
+
+    static contextType = AnalyticsContext;
 
     static propTypes = {
         pagination: PropTypes.object.isRequired,
         onClick: PropTypes.func.isRequired,
     };
 
-    onClick(page) {
+    onClick(e, page) {
+        let { trackClick } = this.context;
+
+        e.preventDefault();
+        trackClick('pagination');
         this.props.onClick(page - 1);
     }
 
@@ -32,7 +39,7 @@ export default class Pagination extends React.Component {
                 <div className="offset-4 col-4 d-flex justify-content-center">
                     <ul className="pagination">
                         <li className={`page-item ${isFirstPage ? 'active' : ''}`}>
-                            <a href="/#" className="page-link" onClick={() => this.onClick(1)}>1</a>
+                            <a href="/#" className="page-link" onClick={e => this.onClick(e, 1)}>1</a>
                         </li>
                         {
                             (totalPages > 5 && currentPage > 3) &&
@@ -46,7 +53,7 @@ export default class Pagination extends React.Component {
                                 <a
                                     href="/#"
                                     className="page-link"
-                                    onClick={() => this.onClick(previousPage)}>{previousPage}
+                                    onClick={e => this.onClick(e, previousPage)}>{previousPage}
                                 </a>
                             </li>
                         }
@@ -56,14 +63,14 @@ export default class Pagination extends React.Component {
                                 <a
                                     href="/#"
                                     className="page-link"
-                                    onClick={() => this.onClick(currentPage)}>{currentPage}
+                                    onClick={e => this.onClick(e, currentPage)}>{currentPage}
                                 </a>
                             </li>
                         }
                         {
                             (nextPage < lastPage) &&
                             <li className="page-item">
-                                <a href="/#" className="page-link" onClick={() => this.onClick(nextPage)}>{nextPage}</a>
+                                <a href="/#" className="page-link" onClick={e => this.onClick(e, nextPage)}>{nextPage}</a>
                             </li>
                         }
                         {
@@ -73,7 +80,7 @@ export default class Pagination extends React.Component {
                             </li>
                         }
                         <li className={`page-item ${isLastPage && 'active'}`}>
-                            <a href="/#" className="page-link" onClick={() => this.onClick(lastPage)}>{lastPage}</a>
+                            <a href="/#" className="page-link" onClick={e => this.onClick(e, lastPage)}>{lastPage}</a>
                         </li>
                     </ul>
                 </div>

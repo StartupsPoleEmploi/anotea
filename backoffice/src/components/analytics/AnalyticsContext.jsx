@@ -1,18 +1,7 @@
 /* global ga */
+import React from 'react';
 
 let isEnabled;
-
-const getEventLabel = () => {
-
-    let paths = window.location.pathname.split('/');
-
-    let suffix = '';
-    if (paths.length > 2 && ['moderateur', 'financeur', 'organisme'].includes(paths[2])) {
-        suffix = `-${paths[2]}`;
-    }
-    return `${paths[1]}${suffix || ''}`;
-
-};
 
 //from https://github.com/DavidWells/analytics/blob/ba4dd1054fd64b887c64fdefb8e51f91fdc86f05/examples/react/src/utils/routeChanges.js
 const onRouteChanged = callback => {
@@ -65,16 +54,23 @@ export const initialize = (trackingId, options = {}) => {
     });
 };
 
-export const trackClick = (category, action) => {
+export const createAnalytics = category => {
+    return {
+        category,
+        trackClick: action => {
 
-    if (!isEnabled) {
-        return;
-    }
+            if (!isEnabled) {
+                return;
+            }
 
-    ga('send', 'event', {
-        hitType: 'event',
-        eventCategory: category,
-        eventAction: action,
-        eventLabel: getEventLabel(),
-    });
+            ga('send', 'event', {
+                hitType: 'event',
+                eventCategory: category,
+                eventAction: action,
+            });
+        }
+    };
 };
+
+const context = React.createContext(createAnalytics('anotea'));
+export default context;

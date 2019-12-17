@@ -10,13 +10,11 @@ import App from './App';
 import WebFont from 'webfontloader';
 import * as Sentry from './utils/sentry';
 import * as Hotjar from './utils/hotjar';
-import * as GoogleAnalytics from './utils/googleAnalytics';
-import WithRouter from './components/WithRouter';
-import { BrowserRouter as Router } from 'react-router-dom';
+import * as GoogleAnalytics from './components/analytics/AnalyticsContext';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { createRouter } from './utils/router';
 
 let env = process.env;
-let debug = false;
 
 WebFont.load({
     google: {
@@ -26,14 +24,19 @@ WebFont.load({
 
 Sentry.initialize(env.REACT_APP_ANOTEA_SENTRY_DSN);
 Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
-GoogleAnalytics.initialize(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug });
+GoogleAnalytics.initialize(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });
 
 let app = (
     <Router>
-        <WithRouter render={props => {
+        <Switch>
+            <Redirect exact from="/" to="/admin" />
+        </Switch>
+        <Route path="/admin" render={props => {
             let router = createRouter(props);
-            return <App router={router} debug={debug} />;
-        }} />
+            return <App router={router} />;
+        }}
+        />
+
     </Router>
 );
 ReactDOM.render(app, document.getElementById('root'));

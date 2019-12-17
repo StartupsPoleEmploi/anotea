@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import AppContext from '../../AppContext';
 import './Page.scss';
+import WithAnalytics from '../../analytics/WithAnalytics';
 
 const Page = props => {
 
@@ -22,19 +23,23 @@ const Page = props => {
                 }
 
                 {props.form &&
-                <div className="form-holder">
-                    <div className="container">
-                        {props.form}
+                <WithAnalytics category="formulaire">
+                    <div className="form-holder">
+                        <div className="container">
+                            {props.form}
+                        </div>
                     </div>
-                </div>
+                </WithAnalytics>
                 }
 
                 {props.tabs &&
-                <div className="tabs-holder">
-                    <div className="container">
-                        {props.tabs}
+                <WithAnalytics category="tabs">
+                    <div className="tabs-holder">
+                        <div className="container">
+                            {props.tabs}
+                        </div>
                     </div>
-                </div>
+                </WithAnalytics>
                 }
             </div>
 

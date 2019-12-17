@@ -5,7 +5,7 @@ import AppContext from '../../AppContext';
 import logo from './logo.svg';
 import './Header.scss';
 
-const Header = ({ items, onLogout }) => {
+const Header = ({ items, defaultPath, onLogout }) => {
 
     let { account } = useContext(AppContext);
     let profile = account.profile;
@@ -16,7 +16,7 @@ const Header = ({ items, onLogout }) => {
                 <div className="row">
                     <div className="col-sm-12">
                         <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
-                            <NavLink to="/admin">
+                            <NavLink to={defaultPath}>
                                 <img src={logo} className="logo" alt="logo" />
                             </NavLink>
 
@@ -39,6 +39,7 @@ const Header = ({ items, onLogout }) => {
 
 Header.propTypes = {
     items: PropTypes.node.isRequired,
+    defaultPath: PropTypes.node.isRequired,
     onLogout: PropTypes.func,
     profile: PropTypes.string,
 };

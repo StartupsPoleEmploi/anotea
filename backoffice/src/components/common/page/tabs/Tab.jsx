@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import AnalyticsContext from '../../../analytics/AnalyticsContext';
 import './Tab.scss';
-import { trackClick } from '../../../../utils/googleAnalytics';
 
 const Tab = ({ label, isActive, onClick, isDisabled = () => false }) => {
+
+    let { trackClick } = React.useContext(AnalyticsContext);
 
     return (
         <li className={`Tab nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
             <a href="/#" className={`nav-link`} onClick={e => {
                 e.preventDefault();
-                trackClick('tab', label);
+                trackClick(label);
                 onClick(e);
             }}>
                 <span>{label}</span>

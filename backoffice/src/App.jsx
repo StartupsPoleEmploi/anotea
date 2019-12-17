@@ -16,12 +16,12 @@ import './styles/global.scss';
 import Header from './components/common/header/Header';
 import AppContext from './components/AppContext';
 import GlobalMessage from './components/common/message/GlobalMessage';
+import WithAnalytics from './components/analytics/WithAnalytics';
 
 class App extends Component {
 
     static propTypes = {
         router: PropTypes.object.isRequired,
-        debug: PropTypes.bool,
     };
 
     state = {
@@ -29,6 +29,7 @@ class App extends Component {
             profile: 'anonymous',
         },
         message: null,
+        debug: false,
     };
 
     constructor(props) {
@@ -75,8 +76,8 @@ class App extends Component {
 
     render() {
 
-        let { account, message } = this.state;
-        let { router, debug } = this.props;
+        let { account, message, debug } = this.state;
+        let { router } = this.props;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
@@ -107,28 +108,29 @@ class App extends Component {
         };
 
         return (
-            <AppContext.Provider value={appContext}>
-                <div className="anotea">
-                    <Switch>
-                        <Redirect exact from="/" to={layout.defaultPath} />
-                        <Redirect exact from="/admin" to={layout.defaultPath} />
-                    </Switch>
+            <WithAnalytics category={`backoffice/${account.profile}`}>
+                <AppContext.Provider value={appContext}>
+                    <div className="anotea">
+                        <Switch>
+                            <Redirect exact from="/" to={layout.defaultPath} />
+                            <Redirect exact from="/admin" to={layout.defaultPath} />
+                        </Switch>
 
-                    <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
-                    {layout.routes}
-                </div>
-                {message &&
-                <GlobalMessage
-                    message={message}
-                    onClose={() => {
+                        <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} />
+
+                        {layout.routes}
+                    </div>
+                    {message &&
+                    <GlobalMessage message={message} onClose={() => {
                         return this.setState({ message: null });
-                    }} />
-                }
-                {debug &&
-                <GridDisplayer />
-                }
-            </AppContext.Provider>
-
+                    }}
+                    />
+                    }
+                    {debug &&
+                    <GridDisplayer />
+                    }
+                </AppContext.Provider>
+            </WithAnalytics>
         );
     }
 }

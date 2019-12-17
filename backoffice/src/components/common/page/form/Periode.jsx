@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Date from './date/Date';
 import './Periode.scss';
-import { trackClick } from '../../../../utils/googleAnalytics';
+import AnalyticsContext from '../../../analytics/AnalyticsContext';
 
 export default class Periode extends React.Component {
+
+    static contextType = AnalyticsContext;
 
     static propTypes = {
         periode: PropTypes.object.isRequired,
@@ -13,8 +15,10 @@ export default class Periode extends React.Component {
     };
 
     onDateChange(type, date) {
+        let { trackClick } = this.context;
         let { periode, onChange } = this.props;
-        trackClick('formulaire', 'periode');
+
+        trackClick('periode');
         return onChange(Object.assign({}, periode, { [type]: date }));
     }
 

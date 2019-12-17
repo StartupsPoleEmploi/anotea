@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Filter.scss';
 import Pastille from '../../../Pastille';
-import { trackClick } from '../../../../../utils/googleAnalytics';
+import AnalyticsContext from '../../../../analytics/AnalyticsContext';
 
 const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled = () => false }) => {
+
+    let { trackClick } = React.useContext(AnalyticsContext);
 
     return (
         <li className={`Filter nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
@@ -13,7 +15,7 @@ const Filter = ({ label, isActive, onClick, getNbElements = () => -1, isDisabled
                 className={`nav-link`}
                 onClick={e => {
                     e.preventDefault();
-                    trackClick('filter', label);
+                    trackClick(label);
                     onClick(e);
                 }}
             >
