@@ -2,6 +2,13 @@
 
 .StagiairesStats {
 
+  .title {
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
+    font-size: 1.5rem;
+    font-weight: $font-weight-900;
+  }
+
   .stats {
 
     @include box();

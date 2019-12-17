@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Star from './Star';
+import Star from '../../../common/page/panel/results/stats/Star';
 import './NoteExplications.scss';
 
 const NoteCriteria = props => {
@@ -59,33 +59,36 @@ const NoteExplications = ({ notes, total }) => {
 
     return (
         <div className="NoteExplications">
-            <NoteGlobale note={notes.global} total={total} />
-            <div className="label">Par critères</div>
-            <div className="d-flex flex-nowrap justify-content-center">
-                <NoteCriteria label="Accueil" note={notes.accueil} total={total} explications={[
-                    'Les réunions d\'informations',
-                    'les entretiens à l\'entrée en formation',
-                ]} />
-                <NoteCriteria label="Contenu" note={notes.contenu_formation} total={total} explications={[
-                    'Le programme',
-                    'Les supports pédagogiques',
-                    'L\'organisation des modules',
-                    'L\'alertnance théorie / pratique',
-                ]} />
-                <NoteCriteria label="Formateurs" note={notes.equipe_formateurs} total={total} explications={[
-                    'L\'équipe de formateurs',
-                    'La prise en compte du besoin des stagiaires',
-                ]} />
-                <NoteCriteria label="Matériels" note={notes.moyen_materiel} total={total} explications={[
-                    'Les salles de cours',
-                    'La documentation',
-                    'les plateaux techniques',
-                    'L\'équipement informatique',
-                ]} />
-                <NoteCriteria label="Accompagnement" note={notes.accompagnement} total={total} explications={[
-                    'L\'aide à la recherche de stage / emploi',
-                    'De la mise en relation et rencontre avec les entreprises',
-                ]} />
+            <div className="title">Les notes</div>
+            <div className="box">
+                <NoteGlobale note={notes.global} total={total} />
+                <div className="label">Par critères</div>
+                <div className="d-flex flex-nowrap justify-content-center">
+                    <NoteCriteria label="Accueil" note={notes.accueil} total={total} explications={[
+                        'Les réunions d\'informations',
+                        'les entretiens à l\'entrée en formation',
+                    ]} />
+                    <NoteCriteria label="Contenu" note={notes.contenu_formation} total={total} explications={[
+                        'Le programme',
+                        'Les supports pédagogiques',
+                        'L\'organisation des modules',
+                        'L\'alertnance théorie / pratique',
+                    ]} />
+                    <NoteCriteria label="Formateurs" note={notes.equipe_formateurs} total={total} explications={[
+                        'L\'équipe de formateurs',
+                        'La prise en compte du besoin des stagiaires',
+                    ]} />
+                    <NoteCriteria label="Matériels" note={notes.moyen_materiel} total={total} explications={[
+                        'Les salles de cours',
+                        'La documentation',
+                        'les plateaux techniques',
+                        'L\'équipement informatique',
+                    ]} />
+                    <NoteCriteria label="Accompagnement" note={notes.accompagnement} total={total} explications={[
+                        'L\'aide à la recherche de stage / emploi',
+                        'De la mise en relation et rencontre avec les entreprises',
+                    ]} />
+                </div>
             </div>
         </div>
     );

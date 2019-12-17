@@ -18,7 +18,7 @@ const NoteRepartition = props => {
             <div className="d-flex flex-column">
                 <div className="repartition">
                     <div className="definition">
-                        5 <i className="star fas fa-star" />
+                        5 <Star />
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['5']) }}></div>
@@ -29,7 +29,7 @@ const NoteRepartition = props => {
                 </div>
                 <div className="repartition">
                     <div className="definition">
-                        4 <i className="star fas fa-star" />
+                        4 <Star />
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['4']) }}></div>
@@ -40,7 +40,7 @@ const NoteRepartition = props => {
                 </div>
                 <div className="repartition">
                     <div className="definition">
-                        3 <i className="star fas fa-star" />
+                        3 <Star />
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['3']) }}></div>
@@ -51,7 +51,7 @@ const NoteRepartition = props => {
                 </div>
                 <div className="repartition">
                     <div className="definition">
-                        2 <i className="star fas fa-star" />
+                        2 <Star />
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['2']) }}></div>
@@ -62,7 +62,7 @@ const NoteRepartition = props => {
                 </div>
                 <div className="repartition">
                     <div className="definition">
-                        1 <i className="star fas fa-star" />
+                        1 <Star />
                     </div>
                     <div className="gauge">
                         <div className="filler" style={{ width: percentage(props.note['1']) }}></div>
@@ -108,13 +108,16 @@ NoteGlobale.propTypes = {
 const NoteDetails = ({ notes, total }) => {
 
     return (
-        <div className="NoteDetails d-flex flex-wrap justify-content-between">
-            <NoteGlobale note={notes.global} total={total} />
-            <NoteRepartition label="Accueil" note={notes.accueil} total={total} />
-            <NoteRepartition label="Contenu" note={notes.contenu_formation} total={total} />
-            <NoteRepartition label="Formateurs" note={notes.equipe_formateurs} total={total} />
-            <NoteRepartition label="Matériels" note={notes.moyen_materiel} total={total} />
-            <NoteRepartition label="Accompagnement" note={notes.accompagnement} total={total} />
+        <div className="NoteDetails">
+            <div className="title">Les notes</div>
+            <div className="box d-flex flex-wrap justify-content-between">
+                <NoteGlobale note={notes.global} total={total} />
+                <NoteRepartition label="Accueil" note={notes.accueil} total={total} />
+                <NoteRepartition label="Contenu" note={notes.contenu_formation} total={total} />
+                <NoteRepartition label="Formateurs" note={notes.equipe_formateurs} total={total} />
+                <NoteRepartition label="Matériels" note={notes.moyen_materiel} total={total} />
+                <NoteRepartition label="Accompagnement" note={notes.accompagnement} total={total} />
+            </div>
         </div>
     );
 };

@@ -2,21 +2,29 @@
 
 .PDF {
 
-  .title {
-    font-size: 1.25rem;
-    font-weight: $font-weight-700;
+  .header {
+    padding-top: 1rem;
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: $font-weight-700;
+    }
+
+    .export {
+      font-size: 0.875rem;
+    }
+
+    .summary {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: $color-black-80;
+      padding: 10px;
+      background-color: $color-green-10;
+    }
   }
 
-  .export {
-    font-size: 0.875rem;
-  }
-
-  .summary {
+  .footer {
     margin-top: 1rem;
-    font-size: 0.875rem;
-    color: $color-black-80;
-    padding: 10px;
-    background-color: $color-green-10;
   }
 }
 
