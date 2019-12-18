@@ -70,7 +70,7 @@ module.exports = {
                 'training.title': 'text',
                 'training.organisation.label': 'text',
             }, { name: 'bo-search-fulltext' }),
-            db.collection('trainee').createIndex({
+            db.collection('comment').createIndex({
                 'codeRegion': 1,
                 'training.place.postalCode': 1,
                 'training.codeFinanceur': 1,
