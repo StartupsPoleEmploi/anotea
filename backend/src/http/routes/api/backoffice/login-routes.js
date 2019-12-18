@@ -1,9 +1,10 @@
 const express = require('express');
+const _ = require('lodash');
 const Boom = require('boom');
 const Joi = require('joi');
 const { tryAndCatch } = require('../../routes-utils');
 
-module.exports = ({ db, auth, passwords }) => {
+module.exports = ({ db, auth, passwords, regions }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
     let { checkPassword, hashPassword } = passwords;
@@ -30,12 +31,14 @@ module.exports = ({ db, auth, passwords }) => {
 
     const handleLogin = async (identifiant, account) => {
         let profile = account.profile;
+        let region = regions.findRegionByCodeRegion(account.codeRegion);
         logLoginEvent(identifiant, account);
 
         return await auth.buildJWT('backoffice', {
             sub: `${identifiant}`,
             id: account._id,
             profile,
+            region: region.nom,
             codeRegion: account.codeRegion,
             ...(profile === 'financeur' ? { codeFinanceur: account.codeFinanceur } : {}),
             ...(profile === 'organisme' ? { siret: account.meta.siretAsString, raisonSociale: account.raisonSociale } : {}),

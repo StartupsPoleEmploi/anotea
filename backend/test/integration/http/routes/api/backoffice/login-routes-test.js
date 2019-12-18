@@ -34,6 +34,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.ok(decodedToken.iat);
         assert.ok(decodedToken.exp);
         assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
+            region: 'Île-de-France',
             codeRegion: '11',
             profile: 'moderateur',
             sub: 'admin@pole-emploi.fr',
@@ -69,6 +70,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
             siret: '6080274100045',
             sub: '6080274100045',
             codeRegion: '11',
+            region: 'Île-de-France',
         });
     });
 
@@ -102,6 +104,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
             siret: '6080274100045',
             sub: 'contact@poleemploi-formation.fr',
             codeRegion: '11',
+            region: 'Île-de-France',
         });
     });
 
@@ -129,6 +132,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         assert.deepStrictEqual(_.omit(decodedToken, ['iat', 'exp', 'id']), {
             profile: 'financeur',
             codeRegion: '11',
+            region: 'Île-de-France',
             codeFinanceur: '2',
             sub: 'contact@financer.fr'
         });

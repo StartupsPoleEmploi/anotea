@@ -5,16 +5,18 @@ import { getAvisStats } from '../../../services/statsService';
 import Panel from '../../common/page/panel/Panel';
 import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
 import Loader from '../../common/Loader';
-import CommentairesStats from './CommentairesStats';
+import CommentairesStats from './stats/CommentairesStats';
 import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
 import EmptyResults from '../../common/page/panel/results/EmptyResults';
 import Button from '../../common/Button';
-import { buildPDF } from '../../../utils/pdf';
-import NoteExplications from '../../common/page/panel/results/stats/NoteExplications';
-import PDF from '../../common/pdf/PDF';
+import NoteExplications from './stats/NoteExplications';
+import PDF, { buildPDF } from '../../common/pdf/PDF';
 import TextSummary from '../../common/page/panel/summary/TextSummary';
+import AppContext from '../../AppContext';
 
 export default class FinanceurStatsPanel extends React.Component {
+
+    static contextType = AppContext;
 
     static propTypes = {
         query: PropTypes.object.isRequired,
@@ -70,6 +72,7 @@ export default class FinanceurStatsPanel extends React.Component {
 
     render() {
 
+        let { account } = this.context;
         let { query, form } = this.props;
         let stats = this.state.results;
 
@@ -98,13 +101,11 @@ export default class FinanceurStatsPanel extends React.Component {
                                 <>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="section-title">Les notes</div>
                                             <NoteDetails notes={stats.notes} total={stats.total} />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="section-title">Les commentaires</div>
                                             <CommentairesStats stats={stats} />
                                         </div>
                                     </div>
@@ -116,33 +117,28 @@ export default class FinanceurStatsPanel extends React.Component {
                 <div ref={this.pdfReference}>
                     <PDF
                         title={this.getPDFTitle()}
-                        summary={
-                            <TextSummary form={form} query={query} />
-                        }
-                        results={
+                        summary={<TextSummary form={form} query={query} />}
+                        main={
                             _.isEmpty(stats) ? <EmptyResults /> : (
                                 <>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="section-title">Les notes</div>
                                             <NoteExplications notes={stats.notes} total={stats.total} />
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="section-title">Les commentaires</div>
                                             <CommentairesStats stats={stats} />
                                         </div>
                                     </div>
                                 </>
                             )
                         }
+                        footer={account.region}
                     />
                 </div>
                 }
             </>
         );
-
     }
-
 }

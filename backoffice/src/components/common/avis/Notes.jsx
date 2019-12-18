@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Notes.scss';
 import Button from '../Button';
+import Star from '../page/panel/results/stats/Star';
 
 const Note = ({ label, note }) => {
     return (
         <div>
             <span>{label}</span>
-            <span className="float-right">{note}/5<i className="fas fa-star pl-1" /></span>
+            <span className="float-right">{note}/5<Star className="pl-1" /></span>
             <br />
         </div>
     );
@@ -32,7 +33,7 @@ export default class Notes extends React.Component {
             <div className="note">
                 <div className="title">{label}</div>
                 <div className="text">
-                    {note}/5 <i className="fas fa-star" />
+                    {note}/5 <Star />
                 </div>
             </div>
         );

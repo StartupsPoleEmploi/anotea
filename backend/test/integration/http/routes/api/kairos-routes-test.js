@@ -150,6 +150,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             sub: siret,
             siret: siret,
             codeRegion: '11',
+            region: 'Île-de-France',
         });
     });
 

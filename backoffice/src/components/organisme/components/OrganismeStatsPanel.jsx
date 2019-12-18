@@ -56,13 +56,11 @@ export default class OrganismeStatsPanel extends React.Component {
                             <>
                                 <div className="row">
                                     <div className="col-sm-12">
-                                        <div className="section-title">Les notes</div>
                                         <NoteDetails notes={avis.notes} total={avis.total} />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-sm-12">
-                                        <div className="section-title">Les avis et les commentaires</div>
                                         <StagiairesStats avis={avis} stagiaires={stagiaires} />
                                     </div>
                                 </div>
