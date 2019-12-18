@@ -45,6 +45,6 @@
   ],
   "devDependencies": {
     "eslint-plugin-react": "7.17.0",
-    "node-sass-chokidar": "1.4.0"
+    "node-sass": "4.13.0"
   }
 }

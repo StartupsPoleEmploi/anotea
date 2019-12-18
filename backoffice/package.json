@@ -45,10 +45,8 @@
     "translate": "NODE_ENV=production babel ./src >/dev/null"
   },
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-preset-react-app": "9.1.0",
     "eslint-plugin-react": "7.17.0",
-    "node-sass-chokidar": "1.4.0"
+    "node-sass": "4.13.0"
   },
   "proxy": "http://localhost:8080/",
   "browserslist": [
