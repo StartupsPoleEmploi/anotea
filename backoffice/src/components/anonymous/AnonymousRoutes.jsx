@@ -5,35 +5,37 @@ import ReinitialisationMotDePassePage from './ReinitialisationMotDePassePage';
 import MotDePasseOubliePage from './MotDePasseOubliePage';
 import LoginPage from './LoginPage';
 import ActivationComptePage from './ActivationComptePage';
+import LibraryPage from './LibraryPage';
 
-export default class AuthRoutes extends React.Component {
+export default class AnonymousRoutes extends React.Component {
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
         onLogin: PropTypes.func.isRequired,
     };
 
     render() {
-        let { navigator } = this.props;
+        let { router } = this.props;
 
         return (
             <>
                 <Route
                     path="/admin/login"
-                    render={() => <LoginPage navigator={navigator} onLogin={this.props.onLogin} />}
+                    render={() => <LoginPage router={router} onLogin={this.props.onLogin} />}
                 />
                 <Route
                     path="/admin/mot-de-passe-oublie"
-                    render={() => <MotDePasseOubliePage navigator={navigator} />}
+                    render={() => <MotDePasseOubliePage router={router} />}
                 />
                 <Route
                     path="/admin/reinitialisation-mot-de-passe"
-                    render={() => <ReinitialisationMotDePassePage navigator={navigator} />}
+                    render={() => <ReinitialisationMotDePassePage router={router} />}
                 />
                 <Route
                     path="/admin/activation-compte"
-                    render={() => <ActivationComptePage navigator={navigator} onLogin={this.props.onLogin} />}
+                    render={() => <ActivationComptePage router={router} onLogin={this.props.onLogin} />}
                 />
+                <Route exact path="/admin/library" render={() => <LibraryPage />} />
             </>
         );
     }

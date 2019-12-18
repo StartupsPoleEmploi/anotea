@@ -20,7 +20,7 @@ module.exports = ({ regions }) => {
             codeRegion: null,
             nom: 'Autre région',
             email: 'anotea@anotea.pole-emploi.fr'
-        })
+        });
 
         res.json(regionList);
     }));

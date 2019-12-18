@@ -7,20 +7,22 @@ const { execute } = require('../../../job-utils');
 
 cli.description('send notifications to organismes')
 .option('--region [region]', 'Limit emailing to the region')
-.option('--limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
-.option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
+.option('--limit [limit]', 'limit the number of emails sent (default: 1)', parseInt)
+.option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 100)', parseInt)
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
 execute(async ({ logger, db, configuration, regions, emails, sendSlackNotification }) => {
 
-    logger.info(`Sending emails to organismes...`);
+    let { region, limit = 1, delay = 100 } = cli;
+
+    logger.info(`Sending notification email to organismes...`);
 
     try {
         let stats = await sendNotificationEmails(db, logger, configuration, emails, {
-            limit: cli.limit,
-            delay: cli.delay,
-            codeRegions: cli.region ? [cli.region] :
+            limit,
+            delay,
+            codeRegions: region ? [region] :
                 regions.findActiveRegions('mailing.organismes.notifications').map(region => region.codeRegion),
         });
 

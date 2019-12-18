@@ -18,7 +18,7 @@ import { Workflow } from '../../common/avis/Workflow';
 export default class ModerationAvisPage extends React.Component {
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -44,7 +44,7 @@ export default class ModerationAvisPage extends React.Component {
     }
 
     componentDidMount() {
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
 
         this.search();
         this.fetchStats();
@@ -57,8 +57,8 @@ export default class ModerationAvisPage extends React.Component {
     }
 
     componentDidUpdate(previous) {
-        let query = this.props.navigator.getQuery();
-        let previousQuery = previous.navigator.getQuery();
+        let query = this.props.router.getQuery();
+        let previousQuery = previous.router.getQuery();
 
         if (!_.isEqual(query, previousQuery)) {
             this.search();
@@ -69,7 +69,7 @@ export default class ModerationAvisPage extends React.Component {
     search = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let query = this.props.navigator.getQuery();
+                let query = this.props.router.getQuery();
                 let results = await searchAvis(query);
                 this.setState({ results, loading: false }, () => resolve());
             });
@@ -84,25 +84,25 @@ export default class ModerationAvisPage extends React.Component {
     };
 
     getQueryFormParameters = () => {
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
         return _.pick(query, ['fulltext']);
     };
 
     onSubmit = () => {
-        return this.props.navigator.refreshCurrentPage({
+        return this.props.router.refreshCurrentPage({
             fulltext: this.state.fulltext,
         });
     };
 
     onFilterClicked = parameters => {
-        return this.props.navigator.refreshCurrentPage({
+        return this.props.router.refreshCurrentPage({
             ...this.getQueryFormParameters(),
             ...parameters,
         });
     };
 
     render() {
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
         let { results, stats } = this.state;
 
         return (

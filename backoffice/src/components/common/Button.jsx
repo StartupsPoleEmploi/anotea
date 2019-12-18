@@ -19,6 +19,7 @@ const Button = props => {
             type={props.type || 'button'}
             style={props.style || {}}
             className={`Button ${classes}`}
+            disabled={props.disabled}
             {...(props.toggable ? { 'data-toggle': 'dropdown' } : {})}
             {..._.omit(props, ['size', 'color', 'toggable', 'className', 'onClick'])}
             onClick={!props.onClick ? noop : e => {

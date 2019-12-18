@@ -6,9 +6,12 @@ module.exports = db => {
                 mailSent: true
             },
             {
+                $set: {
+                    mailSent: false,
+                },
                 $unset: {
-                    mailSent: 1,
                     mailSentDate: 1,
+                    mailRetry: 1,
                 }
             }
         ),

@@ -15,7 +15,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
     static contextType = AppContext;
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -33,8 +33,8 @@ export default class ReinitialisationMotDePassePage extends React.Component {
 
 
     componentDidMount() {
-        let { navigator } = this.props;
-        let { forgottenPasswordToken } = navigator.getQuery();
+        let { router } = this.props;
+        let { forgottenPasswordToken } = router.getQuery();
         let { showMessage } = this.context;
 
         this.setState({ loading: true });
@@ -63,7 +63,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
             if (isFormValid) {
-                let { forgottenPasswordToken } = this.props.navigator.getQuery();
+                let { forgottenPasswordToken } = this.props.router.getQuery();
 
                 this.setState({ loading: true });
                 resetPassword(password, forgottenPasswordToken)
@@ -73,7 +73,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                         color: 'green',
                     });
 
-                    return this.props.navigator.goToPage('/admin/login');
+                    return this.props.router.goToPage('/admin/login');
                 })
                 .catch(() => {
                     this.setState({ loading: false });
