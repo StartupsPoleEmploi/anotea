@@ -198,9 +198,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             insertIntoDatabase('comment', newComment({
                 training: {
                     formacode: '22403',
-                    certifInfo: {
-                        id: '11111', //other certification
-                    },
+                    certifInfos: ['11111'], //other certification
                     organisation: {
                         siret: '22222222222222',
                     },
