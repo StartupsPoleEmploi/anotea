@@ -9,7 +9,7 @@ import { Form, Periode, Select } from '../common/page/form/Form';
 import { getSirens } from '../../services/sirensService';
 import { getFormations } from '../../services/formationsService';
 import { getDepartements } from '../../services/departementsService';
-import FINANCEURS from '../common/data/financeurs';
+import FINANCEURS from '../../utils/financeurs';
 import AppContext from '../AppContext';
 import Button from '../common/Button';
 import FinanceurAvisPanel from './components/FinanceurAvisPanel';
@@ -237,7 +237,7 @@ export default class FinanceurPage extends React.Component {
                                 <label>Période</label>
                                 <Periode
                                     periode={periode}
-                                    min={moment('2016-01-01 Z').toDate()}
+                                    min={moment('2016-01-01T00:00:00Z').toDate()}
                                     onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>
@@ -250,6 +250,7 @@ export default class FinanceurPage extends React.Component {
                                     optionKey="code"
                                     label={option => option.label}
                                     placeholder={'Tous les départements'}
+                                    trackingId="Départements"
                                     onChange={option => this.updateSelectBox('departements', option)}
                                 />
                             </div>
@@ -262,6 +263,7 @@ export default class FinanceurPage extends React.Component {
                                     optionKey="siren"
                                     label={option => option.name}
                                     placeholder={'Tous les organismes'}
+                                    trackingId="Organisme de formation"
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);
                                         if (option) {
@@ -282,6 +284,7 @@ export default class FinanceurPage extends React.Component {
                                     optionKey="idFormation"
                                     label={option => option.title}
                                     placeholder={'Toutes les formations'}
+                                    trackingId="Formation"
                                     onChange={option => this.updateSelectBox('formations', option)}
                                 />
                             </div>
@@ -297,6 +300,7 @@ export default class FinanceurPage extends React.Component {
                                         optionKey="code"
                                         label={option => option.label}
                                         placeholder={'Tous les financeurs'}
+                                        trackingId="Financeur"
                                         onChange={option => this.updateSelectBox('financeurs', option)}
                                     />
                                 </>

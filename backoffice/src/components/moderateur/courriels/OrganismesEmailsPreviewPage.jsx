@@ -57,7 +57,9 @@ export default class OrganismesEmailsPreviewPage extends Component {
                         results={
                             <div className="row  justify-content-md-center">
                                 <div className="col-md-6">
-                                    <iframe src={getEmailPreviewUrl('organismes', query.templateName || 'activationCompteEmail')}>
+                                    <iframe
+                                        title="organismes-emails-preview-page"
+                                        src={getEmailPreviewUrl('organismes', query.templateName || 'activationCompteEmail')}>
                                     </iframe>
                                 </div>
                             </div>

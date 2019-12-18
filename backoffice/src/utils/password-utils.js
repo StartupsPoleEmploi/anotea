@@ -14,11 +14,3 @@ export const isPasswordStrongEnough = password => {
     }
     return false;
 };
-
-export const isSamePassword = (password, passwordConfirm) => {
-    return password === passwordConfirm;
-};
-
-export const passwordIsOK = (password, passwordConfirm) => {
-    return isPasswordStrongEnough(password) && isSamePassword(password, passwordConfirm);
-};

@@ -16,6 +16,7 @@ import './styles/global.scss';
 import Header from './components/common/header/Header';
 import AppContext from './components/AppContext';
 import GlobalMessage from './components/common/message/GlobalMessage';
+import WithAnalytics from './components/analytics/WithAnalytics';
 
 class App extends Component {
 
@@ -28,6 +29,7 @@ class App extends Component {
             profile: 'anonymous',
         },
         message: null,
+        debug: false,
     };
 
     constructor(props) {
@@ -74,12 +76,12 @@ class App extends Component {
 
     render() {
 
-        let { account, message } = this.state;
+        let { account, message, debug } = this.state;
         let { router } = this.props;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
-                headerItems: <ModerateurHeaderItems router={router}  />,
+                headerItems: <ModerateurHeaderItems router={router} />,
                 routes: <ModerateurRoutes router={router} />,
             }),
             financeur: () => ({
@@ -106,7 +108,7 @@ class App extends Component {
         };
 
         return (
-            <>
+            <WithAnalytics category={`backoffice/${account.profile}`}>
                 <AppContext.Provider value={appContext}>
                     <div className="anotea">
                         <Switch>
@@ -114,20 +116,21 @@ class App extends Component {
                             <Redirect exact from="/admin" to={layout.defaultPath} />
                         </Switch>
 
-                        <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} />
+                        <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} />
+
                         {layout.routes}
                     </div>
                     {message &&
-                    <GlobalMessage
-                        message={message}
-                        onClose={() => {
-                            return this.setState({ message: null });
-                        }} />
+                    <GlobalMessage message={message} onClose={() => {
+                        return this.setState({ message: null });
+                    }}
+                    />
+                    }
+                    {debug &&
+                    <GridDisplayer />
                     }
                 </AppContext.Provider>
-                {false && <GridDisplayer />}
-            </>
-
+            </WithAnalytics>
         );
     }
 }

@@ -69,7 +69,7 @@ export default class ModerateurHeaderItems extends React.Component {
                 </li>
                 <li className="nav-item dropdown">
                     <a
-                        href="#"
+                        href="/#"
                         className={`nav-link dropdown-toggle  ${isEmailsPreview ? 'active' : ''}`}
                         data-toggle="dropdown"
                         role="button"

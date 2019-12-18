@@ -4,7 +4,7 @@ import Panel from './page/panel/Panel';
 import { CenteredForm } from './page/form/CenteredForm';
 import InputText from './page/form/InputText';
 import Button from './Button';
-import { isPasswordStrongEnough, isSamePassword } from '../../utils/validation';
+import { isPasswordStrongEnough } from '../../utils/password-utils';
 import _ from 'lodash';
 import { updatePassword } from '../../services/meService';
 import AppContext from '../AppContext';
@@ -36,7 +36,7 @@ export default class MonComptePage extends React.Component {
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
                     null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
-                isNotSamePassword: isSamePassword(password, confirmation) ?
+                isNotSamePassword: password === confirmation ?
                     null : 'Les mots de passes ne sont pas identiques.',
             }
         }, async () => {

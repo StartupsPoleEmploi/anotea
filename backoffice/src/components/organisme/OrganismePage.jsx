@@ -216,7 +216,7 @@ export default class OrganismePage extends React.Component {
                                 <label>Période</label>
                                 <Periode
                                     periode={periode}
-                                    min={moment('2016-01-01 Z').toDate()}
+                                    min={moment('2016-01-01T00:00:00Z').toDate()}
                                     onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>
@@ -229,6 +229,7 @@ export default class OrganismePage extends React.Component {
                                     optionKey="code"
                                     label={option => option.label}
                                     placeholder={'Tous les départements'}
+                                    trackingId="Départements"
                                     onChange={option => this.updateSelectBox('departements', option)}
                                 />
                             </div>
@@ -240,7 +241,8 @@ export default class OrganismePage extends React.Component {
                                     loading={sirens.loading}
                                     optionKey="organisme"
                                     label={option => option.name}
-                                    placeholder={user.raisonSociale}
+                                    placeholder={user.raisonSociale || ''}
+                                    trackingId="Centres"
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);
                                         this.loadSelectBox('formations', () => {
@@ -261,6 +263,7 @@ export default class OrganismePage extends React.Component {
                                     optionKey="idFormation"
                                     label={option => option.title}
                                     placeholder={'Toutes les formations'}
+                                    trackingId="Formation"
                                     onChange={option => this.updateSelectBox('formations', option)}
                                 />
                             </div>

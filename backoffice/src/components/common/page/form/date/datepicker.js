@@ -2,6 +2,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.js';
 import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css';
+import './datepicker.scss';
 
 $.fn.datepicker.dates.fr = {
     days: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],

@@ -3,51 +3,66 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './Button.scss';
 import Tooltip from './Tooltip';
+import AnalyticsContext from '../analytics/AnalyticsContext';
 
-const Button = props => {
+export default class Button extends React.Component {
 
-    let sizeClass = `a-btn-${props.size}`;
-    let colorClass = props.color ? `a-btn-${props.color}` : '';
-    let disabledClass = props.disabled ? 'a-btn-disabled' : '';
-    let toggableClass = props.toggable ? 'dropdown-toggle' : '';
-    let tooltipClass = props.tooltip ? 'Tooltip--holder' : '';
-    let classes = `${sizeClass} ${colorClass} ${disabledClass} ${toggableClass} ${tooltipClass} ${props.className || ''}`;
-    let noop = () => ({});
+    static contextType = AnalyticsContext;
 
-    return (
-        <button
-            type={props.type || 'button'}
-            style={props.style || {}}
-            className={`Button ${classes}`}
-            disabled={props.disabled}
-            {...(props.toggable ? { 'data-toggle': 'dropdown' } : {})}
-            {..._.omit(props, ['size', 'color', 'toggable', 'className', 'onClick'])}
-            onClick={!props.onClick ? noop : e => {
-                props.onClick(e);
-                if (props.type === 'submit') {
-                    e.preventDefault();
+    static propTypes = {
+        size: PropTypes.string.isRequired,
+        color: PropTypes.string,
+        type: PropTypes.string,
+        disabled: PropTypes.bool,
+        toggable: PropTypes.bool,
+        style: PropTypes.object,
+        onClick: PropTypes.func,
+        className: PropTypes.string,
+        tooltip: PropTypes.string,
+        children: PropTypes.node,
+    };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            showTransition: false,
+        };
+        this.reference = React.createRef();
+    }
+
+    render() {
+        let { trackClick } = this.context;
+        let sizeClass = `a-btn-${this.props.size}`;
+        let colorClass = this.props.color ? `a-btn-${this.props.color}` : '';
+        let disabledClass = this.props.disabled ? 'a-btn-disabled' : '';
+        let toggableClass = this.props.toggable ? 'dropdown-toggle' : '';
+        let tooltipClass = this.props.tooltip ? 'Tooltip--holder' : '';
+        let classes = `${sizeClass} ${colorClass} ${disabledClass} ${toggableClass} ${tooltipClass} ${this.props.className || ''}`;
+        let noop = () => ({});
+
+        let ref = this.reference;
+        return (
+            <button
+                ref={ref}
+                type={this.props.type || 'button'}
+                style={this.props.style || {}}
+                className={`Button ${classes}`}
+                disabled={this.props.disabled}
+                {...(this.props.toggable ? { 'data-toggle': 'dropdown' } : {})}
+                {..._.omit(this.props, ['size', 'color', 'toggable', 'className', 'onClick'])}
+                onClick={!this.props.onClick ? noop : e => {
+                    trackClick(ref.current.textContent);
+                    this.props.onClick(e);
+                    if (this.props.type === 'submit') {
+                        e.preventDefault();
+                    }
+                }}
+            >
+                {this.props.tooltip &&
+                <Tooltip value={this.props.tooltip} />
                 }
-            }}
-        >
-            {props.tooltip &&
-            <Tooltip value={props.tooltip} />
-            }
-            {props.children}
-        </button>
-    );
-};
-
-Button.propTypes = {
-    size: PropTypes.string.isRequired,
-    color: PropTypes.string,
-    type: PropTypes.string,
-    disabled: PropTypes.bool,
-    toggable: PropTypes.bool,
-    style: PropTypes.object,
-    onClick: PropTypes.func,
-    className: PropTypes.string,
-    tooltip: PropTypes.string,
-    children: PropTypes.node,
-};
-
-export default Button;
+                {this.props.children}
+            </button>
+        );
+    }
+}
