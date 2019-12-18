@@ -18,13 +18,12 @@ export const getScore = async (type, identifiant) => {
     return result.score;
 };
 
-export const getAvis = (type, identifiant, options) => {
+export const getAvis = (type, identifiant, options = {}) => {
 
     return _get(`/api/v1/${typeMapping[type]}/${identifiant}/avis?${queryString.stringify({
         notes_decimales: true,
         commentaires: true,
-        page: options.page || 0,
-        items_par_page: options.itemsParPage || 3,
+        ...options
     })}`);
 };
 

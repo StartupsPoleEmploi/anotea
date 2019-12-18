@@ -6,6 +6,7 @@ const ObjectID = require('mongodb').ObjectID;
 const { tryAndCatch, sendArrayAsJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const { createPaginationDTO, createAvisDTO } = require('./utils/dto');
+const buildSort = require('./utils/buildSort');
 
 const buildAvisQuery = filters => {
 
@@ -54,6 +55,7 @@ module.exports = ({ db, middlewares }) => {
             lieu_de_formation: Joi.string().regex(/^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/),
             certif_info: Joi.string(),
             formacode: Joi.string(),
+            ...validators.tri(),
             ...validators.pagination(),
             ...validators.notesDecimales(),
         }, { abortEarly: false });
@@ -67,7 +69,7 @@ module.exports = ({ db, middlewares }) => {
 
         let comments = await db.collection('comment')
         .find(query)
-        .sort({ date: -1 })
+        .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
         .limit(limit)
         .skip(skip);
 

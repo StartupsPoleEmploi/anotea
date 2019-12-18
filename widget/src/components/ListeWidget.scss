@@ -15,6 +15,35 @@
 
   .line {
     min-height: 3.4rem;
+
+    &.sort {
+      font-size: 0.875rem;
+      color: $color-black-80;
+      border-top: 1px solid $color-grey-25;
+
+      select {
+        background-color: $color-white;
+        border: 1px solid $color-black-80;
+
+        &:focus {
+          outline: 0;
+        }
+      }
+
+      button {
+        background-color: unset;
+        border: none;
+        color: $color-black-60;
+
+        &:focus {
+          outline: 0;
+        }
+
+        &.active {
+          color: $color-black;
+        }
+      }
+    }
   }
 
   .pagination {

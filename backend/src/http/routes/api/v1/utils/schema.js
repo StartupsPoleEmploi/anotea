@@ -16,7 +16,6 @@ let getOrganization = organisme => {
 };
 
 let getCourse = formation => {
-
     return {
         '@type': 'Course',
         'courseCode': formation.numero,
@@ -36,43 +35,37 @@ module.exports = {
             ...(hasScore ? { 'aggregateRating': getAggregateRating(organisme.score) } : {}),
         };
     },
-    toCourse: (formation, options = {}) => {
-        let score = options.score || formation.score;
+    toCourse: doc => {
+        let formation = doc.formation || doc;
+        let score = doc.score;
         let hasScore = score && score.nb_avis > 0;
 
         return {
             '@context': 'http://schema.org',
             ...getCourse(formation),
             ...(hasScore ? { 'aggregateRating': getAggregateRating(score) } : {}),
-        };
-    },
-    toCourseInstance: session => {
-
-        let hasScore = session.score && session.score.nb_avis > 0;
-        return {
-            '@context': 'http://schema.org',
-            ...getCourse(session.formation),
-            'hasCourseInstance': [
-                {
-                    '@type': 'CourseInstance',
-                    'name': session.formation.intitule,
-                    'courseMode': 'onsite',
-                    'location': {
-                        '@type': 'Place',
-                        'name': session.formation.action.lieu_de_formation.ville,
-                        'address': {
-                            '@type': 'PostalAddress',
-                            'addressLocality': session.formation.action.lieu_de_formation.ville,
-                            'postalCode': session.formation.action.lieu_de_formation.code_postal,
+            ...(doc.periode ? {
+                'hasCourseInstance': [
+                    {
+                        '@type': 'CourseInstance',
+                        'name': formation.intitule,
+                        'courseMode': 'onsite',
+                        'location': {
+                            '@type': 'Place',
+                            'name': formation.action.lieu_de_formation.ville,
+                            'address': {
+                                '@type': 'PostalAddress',
+                                'addressLocality': formation.action.lieu_de_formation.ville,
+                                'postalCode': formation.action.lieu_de_formation.code_postal,
+                            },
                         },
-                    },
-                    'organizer': getOrganization(session.formation.action.organisme_formateur),
-                    'performer': getOrganization(session.formation.action.organisme_formateur),
-                    'startDate': session.periode.debut,
-                    'endDate': session.periode.fin,
-                }
-            ],
-            ...(hasScore ? { 'aggregateRating': getAggregateRating(session.score) } : {}),
+                        'organizer': getOrganization(formation.action.organisme_formateur),
+                        'performer': getOrganization(formation.action.organisme_formateur),
+                        'startDate': doc.periode.debut,
+                        'endDate': doc.periode.fin,
+                    }
+                ]
+            } : {}),
         };
     },
 };

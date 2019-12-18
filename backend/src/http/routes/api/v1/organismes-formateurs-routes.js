@@ -5,6 +5,7 @@ const _ = require('lodash');
 const { tryAndCatch, sendArrayAsJsonStream } = require('../../routes-utils');
 const validators = require('./utils/validators');
 const buildProjection = require('./utils/buildProjection');
+const buildSort = require('./utils/buildSort');
 const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
 const schema = require('./utils/schema');
 
@@ -97,6 +98,7 @@ module.exports = ({ db, middlewares }) => {
             ...validators.pagination(),
             ...validators.notesDecimales(),
             ...validators.commentaires(),
+            ...validators.tri(),
         }, { abortEarly: false });
 
         let pagination = _.pick(parameters, ['page', 'items_par_page']);
@@ -118,7 +120,7 @@ module.exports = ({ db, middlewares }) => {
                     }
             )
         })
-        .sort({ date: -1 })
+        .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
         .limit(limit)
         .skip(skip);
 

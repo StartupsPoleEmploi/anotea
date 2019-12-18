@@ -85,7 +85,7 @@ module.exports = components => {
             } else {
                 error = Boom.boomify(rawError, {
                     statusCode: rawError.status || 500,
-                    message: rawError.message || 'Une erreur est survenue',
+                    ...(!rawError.message ? 'Une erreur est survenue' : {}),
                 });
             }
         }

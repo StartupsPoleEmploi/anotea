@@ -370,24 +370,72 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('should sort avis by date', async () => {
+    it('should sort avis by date (desc)', async () => {
 
         let app = await startServer();
-        let pseudo1 = randomize('pseudo');
-        let pseudo2 = randomize('pseudo');
-        let pseudo3 = randomize('pseudo');
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: pseudo1 }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: pseudo2 }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: pseudo3 }, moment().subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
         ]);
 
-        let response = await request(app).get('/api/v1/avis');
+        let response = await request(app).get('/api/v1/avis?tri=date');
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, pseudo1);
-        assert.strictEqual(response.body.avis[1].pseudo, pseudo2);
-        assert.strictEqual(response.body.avis[2].pseudo, pseudo3);
+        assert.strictEqual(response.body.avis[0].pseudo, '5minutesAgo');
+        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].pseudo, '7minutesAgo');
+    });
+
+    it('should sort avis by date (asc)', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('comment', newComment({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
+        ]);
+
+        let response = await request(app).get('/api/v1/avis?tri=date&ordre=asc');
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
+        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].pseudo, '5minutesAgo');
+    });
+
+    it('should sort avis by notes', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('comment', newComment({ pseudo: '1', rates: { global: 1 } })),
+            insertIntoDatabase('comment', newComment({ pseudo: '3', rates: { global: 3 } })),
+            insertIntoDatabase('comment', newComment({ pseudo: '2', rates: { global: 2 } })),
+        ]);
+
+        let response = await request(app).get('/api/v1/avis?tri=notes');
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, '3');
+        assert.strictEqual(response.body.avis[1].pseudo, '2');
+        assert.strictEqual(response.body.avis[2].pseudo, '1');
+    });
+
+    it('should sort avis by formation', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('comment', newComment({ pseudo: 'C', training: { title: 'C' } })),
+            insertIntoDatabase('comment', newComment({ pseudo: 'A', training: { title: 'A' } })),
+            insertIntoDatabase('comment', newComment({ pseudo: 'B', training: { title: 'B' } })),
+        ]);
+
+        let response = await request(app).get('/api/v1/avis?tri=formation&ordre=asc');
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, 'A');
+        assert.strictEqual(response.body.avis[1].pseudo, 'B');
+        assert.strictEqual(response.body.avis[2].pseudo, 'C');
     });
 
     it('should return empty array when no avis can be found', async () => {
