@@ -1,12 +1,13 @@
 const fs = require('fs');
 const moment = require('moment');
+const zlib = require('zlib');
 const { Transform } = require('stream');
 const { LineStream } = require('byline');
-const { pipeline, transformObject, writeObject } = require('../../../common/utils/stream-utils');
+const { pipeline, transformObject, writeObject } = require('../../../../common/utils/stream-utils');
 const xmlToJson = require('./utils/xmlToJson');
 const sanitizeJson = require('./utils/sanitizeJson');
 
-module.exports = async (db, logger, file, regions) => {
+module.exports = async (db, logger, file, regions, options = {}) => {
 
     let start = moment();
     let total = 0;
@@ -17,6 +18,7 @@ module.exports = async (db, logger, file, regions) => {
 
     return pipeline([
         fs.createReadStream(file),
+        ...(options.unpack ? [zlib.createGunzip()] : []),
         new LineStream(),
         new Transform({
             objectMode: true,
