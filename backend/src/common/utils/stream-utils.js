@@ -14,31 +14,31 @@ let transformObject = (transform, options = {}) => {
 
     return new Transform({
         objectMode: true,
-        transform: async function(data, encoding, done) {
+        transform: async function(chunk, encoding, callback) {
 
             if (promises.length >= parallel) {
                 await Promise.all(promises);
                 promises = [];
             }
 
-            if (isEmpty(data) || isFirstLine()) {
-                return done();
+            if (isEmpty(chunk) || isFirstLine()) {
+                return callback();
             }
 
             try {
-                let value = transform(data);
+                let value = transform(chunk);
                 promises.push(
                     Promise.resolve(value)
                     .then(res => {
                         if (!isEmpty(res)) {
                             this.push(res);
                         }
-                        done();
+                        callback();
                     })
-                    .catch(e => done(e))
+                    .catch(e => callback(e))
                 );
             } catch (e) {
-                done(e);
+                callback(e);
             }
         },
         async flush(done) {

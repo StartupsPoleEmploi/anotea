@@ -3,29 +3,21 @@
 
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const unpackGzFile = require('./utils/unpackGzFile');
-const importIntercarif = require('./importIntercarif');
+const importIntercarif = require('./tasks/importIntercarif');
 
-let unpack = false;
 cli.description('Import intercarif and generate all related collections')
 .option('-f, --file [file]', 'The file to import')
-.option('-x, --unpack', 'Handle file as an archive', () => {
-    unpack = true;
-})
+.option('-x, --unpack', 'Handle file as an archive')
 .parse(process.argv);
 
 execute(async ({ logger, db, exit, regions }) => {
 
-    if (!cli.file) {
+    let { file, unpack } = cli;
+
+    if (!file) {
         return exit('file are required');
     }
 
-    let xmlFile = cli.file;
-    if (unpack) {
-        logger.info(`Decompressing ${cli.file}...`);
-        xmlFile = await unpackGzFile(cli.file);
-    }
-
     logger.info(`Generating intercarif collection...`);
-    return importIntercarif(db, logger, xmlFile, regions);
+    return importIntercarif(db, logger, file, regions, { unpack });
 });
