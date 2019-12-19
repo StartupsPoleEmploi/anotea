@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import './Header.scss';
-import WidgetContext from './options/WidgetContext.jsx';
+import WidgetContext from '../WidgetContext.jsx';
 
 export default function Header() {
     let context = useContext(WidgetContext);

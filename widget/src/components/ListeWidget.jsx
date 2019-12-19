@@ -8,10 +8,13 @@ import Header from './common/Header';
 import Avis from './common/Avis';
 import './ListeWidget.scss';
 import Button from './common/library/Button';
+import WidgetContext from './WidgetContext';
 
 const ITEMS_PAR_PAGE = 2;
 
 export default class ListeWidget extends Component {
+
+    static contextType = WidgetContext;
 
     static propTypes = {
         score: PropTypes.object.isRequired,
@@ -84,6 +87,7 @@ export default class ListeWidget extends Component {
     }
 
     render() {
+        let context = this.context;
         let { score, results } = this.props;
         let { pagination } = results.meta;
         if (score.nb_avis === 0) {
@@ -133,6 +137,7 @@ export default class ListeWidget extends Component {
                             </div>
                             <Verified />
                         </div>
+                        {context.type === 'organisme' &&
                         <div className="line sort d-flex justify-content-between align-items-center">
                             <div className="d-flex justify-content-between">
                                 <span className="pr-3">Trier</span>
@@ -169,6 +174,7 @@ export default class ListeWidget extends Component {
                                 </button>
                             </div>
                         </div>
+                        }
                         {this.getListe()}
                         <div className="d-flex justify-content-center mt-3">
                             <div className="d-xs-block d-sm-none">
