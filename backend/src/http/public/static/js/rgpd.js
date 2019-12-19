@@ -16,15 +16,12 @@ $(document).ready(() => {
                         }
                         gtag('js', new Date());
                         gtag('config', '<%= analytics.ga %>');
-                    },
-                    callbackDenied: () => {
-                        console.log("hihi")
                     }
                 }
             ],
             position: 'bottom',
             fixed: true,
-            forceDisplay: true,
+            forceDisplay: false,
             buttons: 'notOk|ok',
             locale: {
                 ok: 'J\'accepte',
