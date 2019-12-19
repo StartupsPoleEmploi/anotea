@@ -9,8 +9,7 @@
     <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
     <link rel="stylesheet" type="text/css" href="/static/css/front/faq.css" media="all">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="/static/js/faq.js"></script>
     <script>
     $(document).ready(function () {
@@ -272,7 +271,7 @@
                         <p>Dès qu’un avis est déposé par un stagiaire Demandeur d’Emploi sur une de vos formations, vous
                             recevez un mail vous invitant à créer votre Espace Anotéa pour consulter et répondre aux
                             avis.</p>
-                        <p>Si vous n’avez pas reçu ce mail, n’hésitez pas à <a href="mailto:anotea@pole-emploi.fr">nous
+                        <p>Si vous n’avez pas reçu ce mail, n’hésitez pas à <a href="#" class="open-modal-contact">nous
                                 Contacter</a>.</p>
                     </div>
 
@@ -585,6 +584,7 @@
                 </div>
             </div>
         </div>
+        <%- include('../../views/modal-contact.ejs'); %>
         <%- include('../../views/contact.ejs'); %>
         <%- include('../../views/front/footer.ejs'); %>
         <%- include('../../views/analyticsTrackers.ejs'); %>

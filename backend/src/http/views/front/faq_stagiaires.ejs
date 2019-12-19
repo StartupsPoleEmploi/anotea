@@ -9,8 +9,7 @@
     <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
     <link rel="stylesheet" type="text/css" href="/static/css/front/faq.css" media="all">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="/static/js/faq.js"></script>
 </head>
 
@@ -59,7 +58,7 @@
                     <li>
                         <div class="icon"><img src="/static/images/home/rgpd/DELETE.svg" /></div>
                         <p>
-                            Vous pouvez à <strong>tout moment</strong> demander à <strong>modifier votre commentaire ou à le supprimer</strong> <a href="mailto:anotea@pole-emploi.fr">ici</a>
+                            Vous pouvez à <strong>tout moment</strong> demander à <strong>modifier votre commentaire ou à le supprimer</strong> <a href="#" class="open-modal-contact">ici</a>
                         </p>
                     </li>
                 </ul>
@@ -183,6 +182,7 @@
             </div>
         </div>
     </div>
+    <%- include('../../views/modal-contact.ejs'); %>
     <%- include('../../views/contact.ejs'); %>
     <%- include('../../views/front/footer.ejs'); %>
     <%- include('../../views/analyticsTrackers.ejs'); %>
