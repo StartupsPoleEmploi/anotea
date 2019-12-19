@@ -47,10 +47,6 @@
     "timeout": "ANOTEA_PECONNECT_TIMEOUT"
   },
   "sentry": {
-    "enabled": {
-      "__name": "ANOTEA_SENTRY_ENABLED",
-      "__format": "json"
-    },
     "dsn": "ANOTEA_SENTRY_DSN"
   },
   "analytics": {

@@ -22,7 +22,7 @@ let sources = {
     'IDF': 'ileDeFrance',
 };
 
-execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => {
+execute(async ({ logger, db, exit, configuration, regions, mailer, sendSlackNotification }) => {
 
     let { file, source, region, financeur, validate, refresh } = cli;
     let filters = {
@@ -38,7 +38,7 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
 
     if (validate) {
         logger.info(`Validating file ${file}...`);
-        await validateCsvFile(db, logger, file, handler, mailer);
+        await validateCsvFile(db, logger, file, handler, mailer, configuration);
 
     } else if (refresh) {
         logger.info(`Refreshing data with ${file}...`);
@@ -49,10 +49,12 @@ execute(async ({ logger, db, exit, regions, mailer, sendSlackNotification }) => 
         try {
             let stats = await importTrainee(db, logger, file, handler, filters);
 
-            sendSlackNotification({
-                text: `[STAGIAIRE] Le fichier ${file} a été importé : ` +
-                    `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`,
-            });
+            if (stats.total > 0) {
+                sendSlackNotification({
+                    text: `[STAGIAIRE] Des nouveaux stagiaires ont été importés : ` +
+                        `${stats.imported} importés / ${stats.ignored} ignorés / ${stats.invalid} erreurs)`,
+                });
+            }
 
             return stats;
         } catch (stats) {

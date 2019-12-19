@@ -27,7 +27,7 @@ export default class ReponseEditor extends React.Component {
         textarea.selectionEnd = this.state.text.length;
     }
 
-    publish = async () => {
+    sendReponse = async () => {
         let updated = await addReponse(this.props.avis._id, this.state.text);
         this.props.onClose();
         this.props.onChange(updated, {
@@ -51,15 +51,17 @@ export default class ReponseEditor extends React.Component {
                     ref={this.reference}
                     className="form-control"
                     rows="5"
+                    maxLength={300}
                     onChange={e => this.setState({ text: e.target.value })}
                     value={this.state.text} />
+                <div className="counter">Il vous reste {300 - this.state.text.length} caractères.</div>
 
                 <div className="py-2 text-right">
                     <Button size="small" color="red" className="mr-2" onClick={this.props.onClose}>
                         Annuler
                     </Button>
 
-                    <Button size="medium" color="blue" onClick={() => this.publish('négatif')}>
+                    <Button size="medium" color="blue" onClick={() => this.sendReponse()}>
                         Valider
                     </Button>
                 </div>

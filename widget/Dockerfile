@@ -5,8 +5,8 @@ RUN apt-get update \
     && apt-get -y autoclean
 
 #Install nodejs
-ENV NVM_VERSION v0.34.0
-ENV NODE_VERSION 10.14.1
+ENV NVM_VERSION v0.35.1
+ENV NODE_VERSION 12.13.1
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH

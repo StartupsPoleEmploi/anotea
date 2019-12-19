@@ -2,22 +2,21 @@
 'use strict';
 
 const cli = require('commander');
-const Questionnaire6MoisMailer = require('./tasks/Questionnaire6MoisMailer');
+const sendQuestionnaire6MoisEmails = require('./tasks/sendQuestionnaire6MoisEmails');
 const { execute } = require('../../../job-utils');
 
 cli.description('Envoie du questionnaire à 6 mois')
-.option('--limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
-.option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
+.option('--limit [limit]', 'limit the number of emails sent (default: 1)', parseInt)
+.option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 100)', parseInt)
 .parse(process.argv);
 
-execute(async ({ db, logger, mailer }) => {
+execute(async ({ db, logger, emails }) => {
 
-    logger.info(`Sending emails to stagiaires...`);
+    let { limit = 1, delay = 100 } = cli;
 
-    let questionnaire6MoisMailer = new Questionnaire6MoisMailer(db, logger, mailer);
-
-    return questionnaire6MoisMailer.sendEmails({
-        limit: cli.limit,
-        delay: cli.delay,
+    logger.info(`Sending questionnaire email to stagiaires...`);
+    return sendQuestionnaire6MoisEmails(db, logger, emails, {
+        limit,
+        delay,
     });
 });

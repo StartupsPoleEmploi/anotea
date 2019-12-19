@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { getExportAvisUrl, searchOrganismes } from './gestionOrganismesService';
-import Organisme from '../../common/organisme/Organisme';
+import Organisme from './components/Organisme';
 import Summary from '../../common/page/panel/summary/Summary';
 import Pagination from '../../common/page/panel/pagination/Pagination';
 import ResultDivider from '../../common/page/panel/results/ResultDivider';
@@ -21,7 +21,7 @@ export default class GestionOrganismePage extends React.Component {
     static contextType = AppContext;
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -48,20 +48,20 @@ export default class GestionOrganismePage extends React.Component {
     }
 
     componentDidMount() {
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
 
         this.search();
 
         this.setState({
             form: {
-                search: query.search,
+                search: query.search || '',
             }
         });
     }
 
     componentDidUpdate(previous) {
-        let query = this.props.navigator.getQuery();
-        if (!_.isEqual(query, previous.navigator.getQuery())) {
+        let query = this.props.router.getQuery();
+        if (!_.isEqual(query, previous.router.getQuery())) {
             this.search();
         }
     }
@@ -69,7 +69,7 @@ export default class GestionOrganismePage extends React.Component {
     search = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let query = this.props.navigator.getQuery();
+                let query = this.props.router.getQuery();
                 let results = await searchOrganismes(query);
                 this.setState({ results, loading: false }, () => resolve());
             });
@@ -84,9 +84,9 @@ export default class GestionOrganismePage extends React.Component {
     };
 
     render() {
-        let { navigator } = this.props;
+        let { router } = this.props;
         let { showMessage } = this.context;
-        let query = navigator.getQuery();
+        let query = router.getQuery();
         let results = this.state.results;
 
         return (
@@ -110,7 +110,7 @@ export default class GestionOrganismePage extends React.Component {
                                     type="submit"
                                     size="large"
                                     color="blue"
-                                    onClick={() => navigator.refreshCurrentPage(this.getFormAsQuery())}
+                                    onClick={() => router.refreshCurrentPage(this.getFormAsQuery())}
                                 >
                                     Rechercher
                                 </Button>
@@ -128,21 +128,21 @@ export default class GestionOrganismePage extends React.Component {
                                     label="Tous"
                                     isActive={() => !query.status || query.status === 'all'}
                                     onClick={() => {
-                                        return navigator.refreshCurrentPage({ ...this.getFormAsQuery(), status: 'all' });
+                                        return router.refreshCurrentPage({ ...this.getFormAsQuery(), status: 'all' });
                                     }} />
 
                                 <Filter
                                     label="Actifs"
                                     isActive={() => query.status === 'active'}
                                     onClick={() => {
-                                        return navigator.refreshCurrentPage({ ...this.getFormAsQuery(), status: 'active' });
+                                        return router.refreshCurrentPage({ ...this.getFormAsQuery(), status: 'active' });
                                     }} />
 
                                 <Filter
                                     label="Inactifs"
                                     isActive={() => query.status === 'inactive'}
                                     onClick={() => {
-                                        return navigator.refreshCurrentPage({ ...this.getFormAsQuery(), status: 'inactive' });
+                                        return router.refreshCurrentPage({ ...this.getFormAsQuery(), status: 'inactive' });
                                     }} />
 
                             </Filters>
@@ -210,7 +210,7 @@ export default class GestionOrganismePage extends React.Component {
                         pagination={
                             <Pagination
                                 pagination={results.meta.pagination}
-                                onClick={page => navigator.refreshCurrentPage(_.merge({}, query, { page }))}
+                                onClick={page => router.refreshCurrentPage(_.merge({}, query, { page }))}
                             />
                         }
                     />

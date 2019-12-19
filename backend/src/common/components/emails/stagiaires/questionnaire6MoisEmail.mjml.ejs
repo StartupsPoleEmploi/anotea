@@ -1,0 +1,46 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+            <mj-section>
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        6 mois après votre formation où en êtes vous ?
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Bonjour <%= trainee.trainee.firstName %> <%= trainee.trainee.name %>,
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Vous avez suivi une formation de <%= trainee.training.title %>
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        En 2 minutes, dites aux futurs stagiaires si cette formation vous a aidé à retrouver un emploi
+                    </mj-text>
+
+                    <mj-button
+                            href="<%= link %>"
+                            background-color="#FDF2E7"
+                            color="#F28017"
+                            font-size="16px"
+                            font-weight="bold"
+                            text-transform="uppercase">
+                        Cliquez ici
+                    </mj-button>
+
+                    <%- include('../common/signature.mjml.ejs'); %>
+
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>

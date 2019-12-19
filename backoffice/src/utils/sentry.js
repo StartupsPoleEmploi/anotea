@@ -1,20 +1,26 @@
 import * as Sentry from '@sentry/browser';
 
-const isEnabled = process.env.REACT_APP_ANOTEA_SENTRY_ENABLED === 'true';
+let isEnabled;
 
-export const init = () => {
-    if (isEnabled) {
-        Sentry.init({
-            dsn: process.env.REACT_APP_ANOTEA_SENTRY_DSN,
-            environment: process.env.REACT_APP_ANOTEA_ENV || 'dev'
-        });
+export const initialize = dsn => {
+
+    isEnabled = !!dsn;
+    console.log(`Sentry enabled=${isEnabled}`);
+
+    if (!isEnabled) {
+        return;
     }
+
+    Sentry.init({
+        dsn,
+        environment: process.env.REACT_APP_ANOTEA_ENV || 'dev'
+    });
 };
 
 export const sendError = e => {
-    if (isEnabled) {
-        return Sentry.captureException(e);
-    } else {
+    if (!isEnabled) {
         console.error('[SENTRY] An error occurred', e);
+    } else {
+        return Sentry.captureException(e);
     }
 };

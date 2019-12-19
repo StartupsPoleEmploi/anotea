@@ -1,0 +1,82 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+            <mj-section>
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        Avis signalé dans votre Espace Anotéa
+                    </mj-text>
+
+                    <% if (locals.comment && locals.comment.comment) { %>
+                        <mj-text css-class="text-secondary">
+                            Vous avez signalé l’avis suivant dans votre Espace Anotéa
+                        </mj-text>
+                    <% } else { %>
+                        <mj-text css-class="text-secondary">
+                            Vous avez signalé un avis dans votre Espace Anotéa
+                        </mj-text>
+                    <% } %>
+                </mj-column>
+            </mj-section>
+
+            <% if (locals.comment && locals.comment.comment) { %>
+                <mj-section padding-top="0" padding-left="100px" padding-right="100px">
+                    <mj-column border="1px dashed #C8CBCE">
+                        <mj-text css-class="text-secondary" font-style="italic">
+                            "<%= comment.comment.text %>"
+                        </mj-text>
+                    </mj-column>
+                </mj-section>
+            <% } %>
+
+            <mj-section padding-top="0" padding-bottom="0">
+                <mj-column>
+                    <mj-text css-class="text-secondary">
+                        Le modérateur a ré-éxaminé le commentaire laissé par le stagiaire et a décidé de procéder à sa
+                        publication en accord de l’article 4 de nos
+                        <a href="<%= utils.getPublicUrl(`/cgu`) %>">Conditions Générales d’Utilisation</a>
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Faîtes des commentaires négatifs une opportunité pour améliorer votre e-réputation : en
+                        répondant, vous
+                        démontrez comment vous gérez votre relation clients.
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Voici quelques conseils pour formuler votre réponse :
+
+                        <ul style="text-align: left">
+                            <li>Ayez à l’esprit qu’elle s’adresse aux personnes qui vont consulter les avis Anotéa en
+                                ligne
+                            </li>
+                            <li>Faites part de la prise en compte des remarques formulées par l’émetteur de l’avis</li>
+                            <li>Objectivez en apportant des éléments factuels de réponse (nombre de retours à l’emploi,
+                                taux de
+                                réussite...,
+                                travaux menés ou planifiés...)
+                            </li>
+                            <li>Ne rédigez pas votre réponse comme une réponse à une réclamation</li>
+                            <li>Respectez l’anonymat des formateurs et des stagiaires</li>
+                            <li>Ne faites pas mention de coordonnées téléphoniques ou mail</li>
+                        </ul>
+
+                        Nous espérons que ces conseils vous ont été utiles.
+                    </mj-text>
+
+                    <%- include('../common/comprehension.mjml.ejs'); %>
+
+                </mj-column>
+            </mj-section>
+
+        </mj-wrapper>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>

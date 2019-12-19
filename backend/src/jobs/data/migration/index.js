@@ -7,6 +7,5 @@ cli.parse(process.argv);
 
 execute(async ({ db }) => {
     let stats = {};
-    stats.sanitizePhoneNumbers = await require('./tasks/sanitizePhoneNumbers')(db);
     return stats;
 });

@@ -2,7 +2,7 @@ const _ = require('lodash');
 const assert = require('assert');
 const path = require('path');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
-const importIntercarif = require('../../../../../src/jobs/import/intercarif/importIntercarif');
+const importIntercarif = require('../../../../../src/jobs/import/intercarif/tasks/importIntercarif');
 const logger = require('../../../../helpers/components/fake-logger');
 
 describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
@@ -17,7 +17,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         await importIntercarif(db, logger, intercarifFile, regions);
 
         let formation = await db.collection('intercarif').findOne({ '_attributes.numero': 'F_XX_XX' });
-        assert.ok(formation.md5);
+        assert.strictEqual(formation.md5.length, 32);
         assert.deepStrictEqual(_.omit(formation, ['_id', 'md5']), {
             _attributes: {
                 numero: 'F_XX_XX',
@@ -701,6 +701,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents }) => {
         await importIntercarif(db, logger, intercarifFile, regions);
 
         let count = await db.collection('intercarif').countDocuments({});
-        assert.equal(count, 1);
+        assert.strictEqual(count, 1);
     });
 }));

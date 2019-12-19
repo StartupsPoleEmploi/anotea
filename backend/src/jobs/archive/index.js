@@ -4,10 +4,11 @@ const moment = require('moment');
 const cli = require('commander');
 const { execute, batchCursor } = require('../job-utils');
 
-cli.description('Adding archived flag to old avis')
+cli.description('Archive avis')
+.option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
-execute(async ({ db, logger }) => {
+execute(async ({ db, logger, sendSlackNotification }) => {
 
     logger.info(`Adding flag 'archived' to old avis...`);
     let stats = {
@@ -32,5 +33,11 @@ execute(async ({ db, logger }) => {
         }
     });
 
+    if (stats.archived > 0) {
+        sendSlackNotification({
+            text: `[STAGIAIRE] ${stats.archived} stagiaires ont été archivé(s)`,
+        });
+    }
+
     return stats;
-});
+}, { slack: cli.slack });

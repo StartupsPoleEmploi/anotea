@@ -14,7 +14,7 @@ import ContactRegion from './ContactRegion';
 export default class LoginPage extends React.Component {
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
         onLogin: PropTypes.func.isRequired,
     };
 
@@ -31,7 +31,7 @@ export default class LoginPage extends React.Component {
     }
 
     componentDidMount() {
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
         if (query.origin && query.access_token) {
             this.setState({ loginWithAccessToken: true }, () => {
                 this.handleAccessToken(query);

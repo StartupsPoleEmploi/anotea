@@ -85,6 +85,7 @@ export default class Header extends React.Component {
 
 Header.propTypes = {
     items: PropTypes.node.isRequired,
+    defaultPath: PropTypes.node.isRequired,
     onLogout: PropTypes.func,
     profile: PropTypes.string,
     loggedIn: PropTypes.bool

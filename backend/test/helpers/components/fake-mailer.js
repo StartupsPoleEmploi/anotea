@@ -1,24 +1,38 @@
-module.exports = () => {
+const createMailer = require('../../../src/common/components/emails/mailer');
 
-    let calls = [];
+module.exports = (configuration, regions, options = {}) => {
+
+    let calls = options.calls || [];
     let registerCall = parameters => {
-        calls.push(parameters);
-        parameters.find(p => typeof p === 'function').apply();
+
+        if (options.fail) {
+            let err = new Error('Unable to send email');
+            return Promise.reject(err);
+        } else {
+            calls.push({
+                email: parameters[0],
+                parameters: parameters[1],
+                options: parameters[2],
+            });
+            return Promise.resolve();
+        }
     };
 
     return {
-        getCalls: () => calls,
-        getConsultationLink: (...args) => registerCall(args),
-        getUnsubscribeLink: (...args) => registerCall(args),
-        getFormLink: (...args) => registerCall(args),
-        getOrganisationPasswordForgottenLink: (...args) => registerCall(args),
-        sendNewCommentsNotification: (...args) => registerCall(args),
-        sendOrganisationAccountLink: (...args) => registerCall(args),
-        sendPasswordForgotten: (...args) => registerCall(args),
-        sendVotreAvisMail: (...args) => registerCall(args),
-        sendMalformedImport: (...args) => registerCall(args),
-        sendAvisHorsSujetMail: (...args) => registerCall(args),
-        sendReponseRejeteeNotification: (...args) => registerCall(args),
-        sendInjureMail: (...args) => registerCall(args),
+        ...createMailer(configuration, regions),
+        getEmailAddresses: () => calls.map(call => call.email),
+        getEmailMessagesSent: () => calls,
+        getLastEmailMessageSent: () => calls[calls.length - 1],
+        flush: () => calls.splice(0, calls.length),
+        createRegionalMailer: () => {
+            return {
+                sendEmail: (...args) => {
+                    return registerCall(args);
+                }
+            };
+        }
     };
+
 };
+
+

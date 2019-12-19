@@ -6,7 +6,7 @@ const path = require('path');
 const { execute } = require('../../job-utils');
 const createIndexes = require('../indexes/tasks/createIndexes');
 const createAccounts = require('./tasks/createAccounts');
-const importIntercarif = require('../../import/intercarif/importIntercarif');
+const importIntercarif = require('../../import/intercarif/tasks/importIntercarif');
 const synchronizeOrganismesWithAccounts = require('../../organismes/tasks/synchronizeAccountsWithIntercarif');
 const computeOrganismesScore = require('../../organismes/tasks/computeScore');
 const resetPasswords = require('../reset/tasks/resetPasswords');
@@ -42,7 +42,7 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
 
     logger.info(`Generating stagiaires and avis....`);
     await reconcile(db, logger);//Just to get a valid session
-    let stagiaires = await createStagiaires(db, options);
+    await createStagiaires(db, options);
     await createAvis(db, options);
 
     logger.info(`Creating organismes....`);
@@ -66,16 +66,18 @@ execute(async ({ db, logger, workflow, regions, passwords }) => {
     logger.info(`Compute stats accounts....`);
     await computeStats(db, regions);
 
+    let stagiaire = await db.collection('trainee').findOne({ avisCreated: false });
+
     return {
         dataset: 'ready',
         urls: {
-            questionnaire: `http://localhost:3002/questionnaire/${stagiaires[0]}`,
-            widget: 'http://localhost:3001?format=carrousel&type=session&identifiant=F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
+            questionnaire: `http://localhost:3001/questionnaire/${stagiaire.token}`,
+            widget: 'http://localhost:3002?format=carrousel&type=session&identifiant=F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
             backoffice: {
                 url: 'http://localhost:3000',
                 logins: [
                     { profile: 'moderateur', login: 'moderateur', password },
-                    { profile: 'financeur', login: 'conseil_regional', password },
+                    { profile: 'financeur', login: 'financeur', password },
                     { profile: 'organisme', login: '22222222222222', password, },
                 ]
             },

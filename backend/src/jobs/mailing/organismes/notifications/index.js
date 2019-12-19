@@ -2,36 +2,39 @@
 'use strict';
 
 const cli = require('commander');
-const NotificationMailer = require('./NotificationMailer');
+const sendNotificationEmails = require('./tasks/sendNotificationEmails');
 const { execute } = require('../../../job-utils');
 
 cli.description('send notifications to organismes')
 .option('--region [region]', 'Limit emailing to the region')
-.option('--limit [limit]', 'limit the number of emails sent (default: unlimited)', parseInt)
-.option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 0)', parseInt)
+.option('--limit [limit]', 'limit the number of emails sent (default: 1)', parseInt)
+.option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 100)', parseInt)
 .option('--slack', 'Send a slack notification when job is finished')
 .parse(process.argv);
 
-execute(async ({ logger, db, configuration, mailer, regions, sendSlackNotification }) => {
+execute(async ({ logger, db, configuration, regions, emails, sendSlackNotification }) => {
 
-    let notificationMailer = new NotificationMailer(db, logger, configuration, mailer);
+    let { region, limit = 1, delay = 100 } = cli;
 
-    logger.info(`Sending emails to organismes...`);
+    logger.info(`Sending notification email to organismes...`);
 
     try {
-        let stats = await notificationMailer.sendEmails({
-            limit: cli.limit,
-            delay: cli.delay,
-            codeRegions: cli.region ? [cli.region] :
+        let stats = await sendNotificationEmails(db, logger, configuration, emails, {
+            limit,
+            delay,
+            codeRegions: region ? [region] :
                 regions.findActiveRegions('mailing.organismes.notifications').map(region => region.codeRegion),
         });
 
-        sendSlackNotification({
-            text: `[ORGANISME] Des emails de notifications de nouveaux avis ont été envoyés à des organismes` +
-                `${stats.sent} envoyés / ${stats.error} erreurs`,
-        });
+        if (stats.total > 0) {
+            sendSlackNotification({
+                text: `[ORGANISME] Des emails de notifications de nouveaux avis ont été envoyés à des organismes` +
+                    `${stats.sent} envoyés / ${stats.error} erreurs`,
+            });
+        }
 
         return stats;
+
     } catch (stats) {
         sendSlackNotification({
             text: `[ORGANISME] Une erreur est survenue lors de l'envoi des emails de notifications d'avis aux organismes : ` +

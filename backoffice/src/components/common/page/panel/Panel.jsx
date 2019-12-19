@@ -2,17 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Loader from '../../Loader';
 import './Panel.scss';
+import WithAnalytics from '../../../analytics/WithAnalytics';
 
 const Panel = props => {
 
     return (
         <div className={`Panel ${props.className || ''} ${props.backgroundColor || ''}`} style={props.style || {}}>
             {props.filters &&
-            <div className="filters-holder">
-                <div className="container">
-                    {props.filters}
+            <WithAnalytics category="filters">
+                <div className="filters-holder">
+                    <div className="container">
+                        {props.filters}
+                    </div>
                 </div>
-            </div>
+            </WithAnalytics>
             }
 
             {props.loading ?

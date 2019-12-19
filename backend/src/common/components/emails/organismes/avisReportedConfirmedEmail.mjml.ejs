@@ -1,0 +1,61 @@
+<mjml>
+    <%- include('../common/head.mjml.ejs'); %>
+
+    <mj-body background-color="#f0f0f0">
+
+        <%- include('../common/header.mjml.ejs', { utils }); %>
+
+        <mj-wrapper css-class="wrapper">
+            <mj-section>
+                <mj-column>
+                    <mj-text css-class="text-primary">
+                        Avis signalé dans votre Espace Anotéa
+                    </mj-text>
+
+                    <% if (locals.comment && locals.comment.comment) { %>
+                        <mj-text css-class="text-secondary">
+                            Vous avez signalé l’avis suivant dans votre Espace Anotéa
+                        </mj-text>
+                    <% } else { %>
+                        <mj-text css-class="text-secondary">
+                            Vous avez signalé un avis dans votre Espace Anotéa
+                        </mj-text>
+                    <% } %>
+                </mj-column>
+            </mj-section>
+
+            <% if (locals.comment && locals.comment.comment) { %>
+                <mj-section padding-top="0" padding-left="100px" padding-right="100px">
+                    <mj-column border="1px dashed #C8CBCE">
+                        <mj-text css-class="text-secondary" font-style="italic">
+                            "<%= comment.comment.text %>"
+                        </mj-text>
+                    </mj-column>
+                </mj-section>
+            <% } %>
+
+            <mj-section padding-top="0" padding-bottom="0">
+                <mj-column>
+                    <mj-text css-class="text-secondary">
+                        Le modérateur a ré-éxaminé le commentaire laissé par le stagiaire et a décidé de ne pas le publier
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary">
+                        Ce commentaire ne sera donc plus diffusé en ligne.
+                    </mj-text>
+
+                    <mj-text css-class="text-secondary" padding-bottom="0">
+                       Merci d'avoir contribué à l'amélioration de notre service.
+                    </mj-text>
+
+                    <%- include('../common/signature.mjml.ejs'); %>
+
+                </mj-column>
+            </mj-section>
+
+        </mj-wrapper>
+
+        <%- include('./footer.mjml.ejs', { utils }); %>
+
+    </mj-body>
+</mjml>

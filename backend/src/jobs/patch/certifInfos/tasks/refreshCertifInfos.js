@@ -1,6 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 const { ignoreFirstLine, pipeline, writeObject } = require('../../../../common/utils/stream-utils');
+const { getDifferences, mergeDeep } = require('../../../../common/utils/object-utils');
 const { getNbModifiedDocuments } = require('../../../job-utils');
 const parse = require('csv-parse');
 
@@ -8,6 +9,7 @@ let loadCertifinfos = async file => {
     const ETAT_ERRONE = '2';
 
     let handleChaining = mapping => {
+
         let codesReducer = codes => {
             return codes.reduce((acc, code) => {
                 let newCodes = mapping[code];
@@ -81,29 +83,42 @@ module.exports = async (db, logger, file) => {
             }, []));
         };
 
-        let getNewMeta = doc => {
-            let meta = _.cloneDeep(doc.meta) || {};
+        let getNewMeta = (previous, next) => {
+
+            let differences = getDifferences(previous, next);
+            if (_.isEmpty(differences)) {
+                return previous.meta;
+            }
+
+            let meta = _.cloneDeep(previous.meta) || {};
             meta.history = meta.history || [];
             meta.history.unshift({
                 date: new Date(),
-                training: {
-                    certifInfos: _.uniq(doc.training.certifInfos),
-                },
+                ...differences,
             });
-
             return meta;
         };
 
         let cursor = db.collection(collectionName).find({});
         while (await cursor.hasNext()) {
-            stats.total++;
-            const doc = await cursor.next();
             try {
-                if (doc.training.certifInfos.find(code => certifications[code])) {
-                    let results = await db.collection(collectionName).updateOne({ _id: doc._id }, {
+                stats.total++;
+                let previous = await cursor.next();
+                let merged = mergeDeep({},
+                    previous,
+                    {
+                        training: {
+                            certifInfos: getNewCertifInfos(previous),
+                        },
+                    },
+                );
+                let meta = getNewMeta(previous, merged);
+
+                if (previous.training.certifInfos.find(code => certifications[code])) {
+                    let results = await db.collection(collectionName).updateOne({ _id: previous._id }, {
                         $set: {
-                            'training.certifInfos': getNewCertifInfos(doc),
-                            'meta': getNewMeta(doc),
+                            'training.certifInfos': merged.training.certifInfos,
+                            ...(meta ? { meta } : {}),
                         }
                     });
 

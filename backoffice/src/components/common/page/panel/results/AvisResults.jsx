@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import EmptyResults from './EmptyResults';
 import ResultDivider from './ResultDivider';
+import WithAnalytics from '../../../../analytics/WithAnalytics';
 
 const AvisResults = ({ results, renderAvis }) => {
     return (
@@ -12,8 +13,10 @@ const AvisResults = ({ results, renderAvis }) => {
                     results.avis.map(avis => {
                         return (
                             <div key={avis._id}>
-                                {renderAvis(avis)}
-                                <ResultDivider />
+                                <WithAnalytics category="avis">
+                                    {renderAvis(avis)}
+                                    <ResultDivider />
+                                </WithAnalytics>
                             </div>
                         );
                     })

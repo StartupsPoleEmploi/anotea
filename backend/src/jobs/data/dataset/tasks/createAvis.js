@@ -35,6 +35,7 @@ module.exports = async (db, options) => {
         return batchCursor(cursor, async next => {
             let stagiaire = await next();
 
+            //TODO add a service to create avis
             let avis = buildAvis(stagiaire, getCustom());
             await Promise.all([
                 db.collection('trainee').updateOne({ token: stagiaire.token }, { $set: { avisCreated: true } }),

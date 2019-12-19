@@ -24,4 +24,10 @@ module.exports = {
             commentaires: Joi.boolean().default(null),
         };
     },
+    tri: () => {
+        return {
+            tri: Joi.string().valid(['date', 'notes', 'formation']).default('date'),
+            ordre: Joi.string().valid(['asc', 'desc']).default('desc'),
+        };
+    },
 };

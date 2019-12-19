@@ -1,8 +1,19 @@
 const _ = require('lodash');
-const roundNotes = require('./roundNotes');
 const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
 
-let createReconciliationDTO = (data, options = {}) => {
+let roundNotes = notes => {
+
+    return {
+        accueil: Math.round(notes.accueil),
+        contenu_formation: Math.round(notes.contenu_formation),
+        equipe_formateurs: Math.round(notes.equipe_formateurs),
+        moyen_materiel: Math.round(notes.moyen_materiel),
+        accompagnement: Math.round(notes.accompagnement),
+        global: Math.round(notes.global),
+    };
+};
+
+let createIntercarifDTO = (data, options = {}) => {
     let dto = _.cloneDeep(data);
 
     dto.id = dto._id;
@@ -23,9 +34,10 @@ let createReconciliationDTO = (data, options = {}) => {
     return _.pick(dto, ['id', 'numero', 'region', 'score', 'avis', 'meta']);
 };
 module.exports = {
-    createFormationDTO: createReconciliationDTO,
-    createActionDTO: createReconciliationDTO,
-    createSessionDTO: createReconciliationDTO,
+    createIntercarifDTO,
+    createFormationDTO: createIntercarifDTO,
+    createActionDTO: createIntercarifDTO,
+    createSessionDTO: createIntercarifDTO,
     createPaginationDTO: (pagination, total) => {
         return {
             ...pagination,

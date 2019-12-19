@@ -9,7 +9,7 @@ services:
       - ANOTEA_SMTP_PORT=1025
 
   mongodb:
-    image: mongo:4.0.4-xenial
+    image: mongo:4.2.2-bionic
     container_name: anotea_mongodb
     command: --storageEngine=ephemeralForTest --wiredTigerCacheSizeGB 1
 

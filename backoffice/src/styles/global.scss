@@ -6,7 +6,6 @@ html, body, #root {
 }
 
 .anotea {
-
   font-size: 1em;
   font-family: 'Lato', sans-serif;
   font-weight: $font-weight-400;
@@ -46,73 +45,3 @@ html, body, #root {
     color: $color-blue;
   }
 }
-
-.datepicker {
-
-  table {
-    tr, td {
-      padding: 0.5rem;
-    }
-  }
-
-  .datepicker-years {
-
-    .datepicker-switch {
-      visibility: hidden;
-    }
-
-    .year {
-
-      &.disabled, &.new {
-        display: none;
-      }
-
-      &.active, &.focused {
-        color: $color-black;
-        background-color: unset;
-        background-image: unset;
-
-        &:hover {
-          background-color: $color-grey-5;
-        }
-      }
-    }
-  }
-
-  .datepicker-months {
-    .month {
-      &.disabled, &.new {
-        display: none;
-      }
-
-      &.active, &.focused {
-        color: $color-black;
-        background-color: unset;
-        background-image: unset;
-
-        &:hover {
-          background-color: $color-grey-5;
-        }
-      }
-    }
-  }
-
-  .datepicker-days {
-    .day {
-      &.disabled, &.new {
-        display: none;
-      }
-
-      &.active, &.focused {
-        color: $color-black;
-        background-color: unset;
-        background-image: unset;
-
-        &:hover {
-          background-color: $color-grey-5;
-        }
-      }
-    }
-  }
-}
-

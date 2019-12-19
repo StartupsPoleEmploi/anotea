@@ -10,19 +10,19 @@ import GridDisplayer from './components/common/GridDisplayer';
 import FinanceurRoutes from './components/financeur/FinanceurRoutes';
 import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
-import AnonymousRoutes from './components/anonymous/AuthRoutes';
+import AnonymousRoutes from './components/anonymous/AnonymousRoutes';
 import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
 import OrganismeRoutes from './components/organisme/OrganismeRoutes';
 import './styles/global.scss';
 import Header from './components/common/header/Header';
-import MiscRoutes from './components/misc/MiscRoutes';
 import AppContext from './components/AppContext';
 import GlobalMessage from './components/common/message/GlobalMessage';
+import WithAnalytics from './components/analytics/WithAnalytics';
 
 class App extends Component {
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     state = {
@@ -31,6 +31,7 @@ class App extends Component {
             profile: 'anonymous',
         },
         message: null,
+        debug: false,
     };
 
     constructor(props) {
@@ -79,7 +80,7 @@ class App extends Component {
             account: getSession(),
         });
 
-        this.props.navigator.goToPage('/admin');
+        this.props.router.goToPage('/admin');
     };
 
     showGlobalMessage = message => {
@@ -88,27 +89,28 @@ class App extends Component {
 
     render() {
 
-        let { account, message } = this.state;
+        let { account, message, debug } = this.state;
+        let { router } = this.props;
         let backoffices = {
             moderateur: () => ({
                 defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
-                headerItems: <ModerateurHeaderItems />,
-                routes: <ModerateurRoutes />,
+                headerItems: <ModerateurHeaderItems router={router} />,
+                routes: <ModerateurRoutes router={router} />,
             }),
             financeur: () => ({
                 defaultPath: '/admin/financeur/avis/stats',
                 headerItems: <FinanceurHeaderItems />,
-                routes: <FinanceurRoutes />,
+                routes: <FinanceurRoutes router={router} />,
             }),
             organisme: () => ({
                 defaultPath: '/admin/organisme/avis/stats',
                 headerItems: <OrganismeHeaderItems />,
-                routes: <OrganismeRoutes />,
+                routes: <OrganismeRoutes router={router} />,
             }),
             anonymous: () => ({
                 defaultPath: '/admin/login',
                 headerItems: <div />,
-                routes: <AnonymousRoutes onLogin={this.onLogin} navigator={this.props.navigator} profile={this.state.account.profile} />,
+                routes: <AnonymousRoutes onLogin={this.onLogin} router={router} profile={this.state.account.profile} />,
             })
         };
 
@@ -119,7 +121,7 @@ class App extends Component {
         };
 
         return (
-            <>
+            <WithAnalytics category={`backoffice/${account.profile}`}>
                 <AppContext.Provider value={appContext}>
                     <div className="anotea">
                         <Switch>
@@ -127,21 +129,21 @@ class App extends Component {
                             <Redirect exact from="/admin" to={layout.defaultPath} />
                         </Switch>
 
-                        <Header items={layout.headerItems} logo={layout.logo} onLogout={this.onLogout} profile={this.state.account.profile} loggedIn={this.state.loggedIn} />
-                        <MiscRoutes />
+                        <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} profile={this.state.account.profile} loggedIn={this.state.loggedIn} />
+
                         {layout.routes}
                     </div>
                     {message &&
-                    <GlobalMessage
-                        message={message}
-                        onClose={() => {
-                            return this.setState({ message: null });
-                        }} />
+                    <GlobalMessage message={message} onClose={() => {
+                        return this.setState({ message: null });
+                    }}
+                    />
+                    }
+                    {debug &&
+                    <GridDisplayer />
                     }
                 </AppContext.Provider>
-                {false && <GridDisplayer />}
-            </>
-
+            </WithAnalytics>
         );
     }
 }

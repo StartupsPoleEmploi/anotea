@@ -3,7 +3,7 @@ module.exports = db => {
     return Promise.all([
         db.collection('accounts').insertOne({
             profile: 'financeur',
-            courriel: 'conseil_regional',
+            courriel: 'financeur',
             codeRegion: '11',
             codeFinanceur: '2',
         }),

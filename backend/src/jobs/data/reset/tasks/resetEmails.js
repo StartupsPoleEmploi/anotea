@@ -7,20 +7,35 @@ module.exports = db => {
             },
             {
                 $set: {
-                    mailSent: false
+                    mailSent: false,
+                },
+                $unset: {
+                    mailSentDate: 1,
+                    mailRetry: 1,
+                }
+            }
+        ),
+        db.collection('trainee').updateMany(
+            {
+                'mailing.questionnaire6Mois': { $exists: true },
+            },
+            {
+                $unset: {
+                    'mailing.questionnaire6Mois': 1,
                 }
             }
         ),
         db.collection('accounts').updateMany(
             {
                 profile: 'organisme',
-                passwordHash: { $ne: null }
             },
             {
-                $set: {
-                    newCommentsNotificationEmailSentDate: null
+                $unset: {
+                    newCommentsNotificationEmailSentDate: 1,
+                    mailSent: 1,
+                    mailSentDate: 1,
                 }
             }
-        )
+        ),
     ]);
 };

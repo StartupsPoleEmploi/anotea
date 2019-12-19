@@ -1,5 +1,6 @@
 const request = require('supertest');
 const assert = require('assert');
+const moment = require('moment');
 const ObjectID = require('mongodb').ObjectID;
 const { withServer } = require('../../../../../helpers/with-server');
 const { newOrganismeAccount, newComment, randomize } = require('../../../../../helpers/data/dataset');
@@ -585,6 +586,170 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
         assert.deepStrictEqual(response.body.avis.length, 1);
+    });
+
+    it('should sort avis by date (desc)', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+            })),
+            insertIntoDatabase('comment', newComment({
+                pseudo: '5minutesAgo',
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+            }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({
+                pseudo: '6minutesAgo',
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+            }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({
+                pseudo: '7minutesAgo',
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                },
+            }, moment().subtract(7, 'minutes').toDate())),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=date');
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, '5minutesAgo');
+        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].pseudo, '7minutesAgo');
+    });
+
+    it('should sort avis by date (asc)', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+            })),
+            insertIntoDatabase('comment', newComment({
+                pseudo: '5minutesAgo',
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            }, moment().subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({
+                pseudo: '6minutesAgo',
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            }, moment().subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('comment', newComment({
+                pseudo: '7minutesAgo',
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            }, moment().subtract(7, 'minutes').toDate())),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=date&ordre=asc');
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
+        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
+        assert.strictEqual(response.body.avis[2].pseudo, '5minutesAgo');
+    });
+
+    it('should sort avis by notes', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+            })),
+            insertIntoDatabase('comment', newComment({
+                pseudo: '1', rates: { global: 1 },
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                pseudo: '3', rates: { global: 3 },
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                pseudo: '2', rates: { global: 2 },
+                training: {
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            })),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=notes');
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, '3');
+        assert.strictEqual(response.body.avis[1].pseudo, '2');
+        assert.strictEqual(response.body.avis[2].pseudo, '1');
+    });
+
+    it('should sort avis by formation', async () => {
+
+        let app = await startServer();
+
+        await Promise.all([
+            insertIntoDatabase('accounts', newOrganismeAccount({
+                _id: 22222222222222,
+            })),
+            insertIntoDatabase('comment', newComment({
+                pseudo: 'C', training: {
+                    title: 'C',
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                pseudo: 'A', training: {
+                    title: 'A',
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            })),
+            insertIntoDatabase('comment', newComment({
+                pseudo: 'B', training: {
+                    title: 'B',
+                    organisation: {
+                        siret: '22222222222222',
+                    },
+                }
+            })),
+        ]);
+
+        let response = await request(app).get('/api/v1/organismes-formateurs/22222222222222/avis?tri=formation&ordre=asc');
+        assert.strictEqual(response.statusCode, 200);
+        assert.strictEqual(response.body.avis[0].pseudo, 'A');
+        assert.strictEqual(response.body.avis[1].pseudo, 'B');
+        assert.strictEqual(response.body.avis[2].pseudo, 'C');
     });
 
 }));

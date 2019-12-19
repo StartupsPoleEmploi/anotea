@@ -1,20 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import FinanceurPage from './FinanceurPage';
-import { createNavigator } from '../../utils/navigator';
-import MonComptePage from '../misc/MonComptePage';
+import MonComptePage from '../common/MonComptePage';
 
 export default class FinanceurRoutes extends React.Component {
 
+    static propTypes = {
+        router: PropTypes.object.isRequired,
+    };
+
     render() {
+        let { router } = this.props;
         return (
             <>
                 <Route
                     path={'/admin/financeur/avis'}
-                    render={props => {
-                        let navigator = createNavigator(props);
-                        return <FinanceurPage navigator={navigator} />;
-                    }}
+                    render={() => <FinanceurPage router={router} />}
                 />
                 <Route
                     path={'/admin/financeur/mon-compte'}

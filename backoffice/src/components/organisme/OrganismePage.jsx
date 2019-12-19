@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import moment from 'moment';
-import { Route } from 'react-router-dom';
 import Page from '../common/page/Page';
 import { Tab, Tabs } from '../common/page/tabs/Tabs';
 import { Form, Periode, Select } from '../common/page/form/Form';
@@ -18,7 +17,7 @@ export default class OrganismePage extends React.Component {
     static contextType = AppContext;
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -55,7 +54,7 @@ export default class OrganismePage extends React.Component {
     async componentDidMount() {
 
         let { account } = this.context;
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
 
         this.loadSelectBox('departements', () => getDepartements())
         .then(results => {
@@ -157,7 +156,7 @@ export default class OrganismePage extends React.Component {
     };
 
     getFormParametersFromQuery = () => {
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
         return _.pick(query, ['departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']);
     };
 
@@ -183,25 +182,25 @@ export default class OrganismePage extends React.Component {
     };
 
     onSubmit = () => {
-        return this.props.navigator.refreshCurrentPage(this.getFormParameters());
+        return this.props.router.refreshCurrentPage(this.getFormParameters());
     };
 
     onTabClicked = (tab, parameters) => {
-        return this.props.navigator.goToPage(`/admin/organisme/avis/${tab}`, {
+        return this.props.router.goToPage(`/admin/organisme/avis/${tab}`, {
             ...this.getFormParametersFromQuery(),
             ...parameters
         });
     };
 
     onFilterClicked = parameters => {
-        return this.props.navigator.refreshCurrentPage({
+        return this.props.router.refreshCurrentPage({
             ...this.getFormParametersFromQuery(),
             ...parameters,
         });
     };
 
     render() {
-        let { navigator } = this.props;
+        let { router } = this.props;
         let { form } = this.state;
         let { departements, sirens, formations, periode } = form;
         let user = this.context;
@@ -217,7 +216,7 @@ export default class OrganismePage extends React.Component {
                                 <label>Période</label>
                                 <Periode
                                     periode={periode}
-                                    min={moment('2016-01-01 Z').toDate()}
+                                    min={moment('2016-01-01T00:00:00Z').toDate()}
                                     onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>
@@ -230,6 +229,7 @@ export default class OrganismePage extends React.Component {
                                     optionKey="code"
                                     label={option => option.label}
                                     placeholder={'Tous les départements'}
+                                    trackingId="Départements"
                                     onChange={option => this.updateSelectBox('departements', option)}
                                 />
                             </div>
@@ -241,12 +241,13 @@ export default class OrganismePage extends React.Component {
                                     loading={sirens.loading}
                                     optionKey="organisme"
                                     label={option => option.name}
-                                    placeholder={user.raisonSociale}
+                                    placeholder={user.raisonSociale || ''}
+                                    trackingId="Centres"
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);
                                         this.loadSelectBox('formations', () => {
                                             let organisme = option ? option.siren : user.siret;
-                                            if (organisme !== navigator.getQuery().siren) {
+                                            if (organisme !== router.getQuery().siren) {
                                                 return getFormations({ organisme });
                                             }
                                         });
@@ -262,6 +263,7 @@ export default class OrganismePage extends React.Component {
                                     optionKey="idFormation"
                                     label={option => option.title}
                                     placeholder={'Toutes les formations'}
+                                    trackingId="Formation"
                                     onChange={option => this.updateSelectBox('formations', option)}
                                 />
                             </div>
@@ -289,24 +291,21 @@ export default class OrganismePage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => navigator.isActive('/admin/organisme/avis/stats')}
+                            isActive={() => router.isActive('/admin/organisme/avis/stats')}
                             onClick={() => this.onTabClicked('stats')} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => navigator.isActive('/admin/organisme/avis/liste')}
+                            isActive={() => router.isActive('/admin/organisme/avis/liste')}
                             onClick={() => this.onTabClicked('liste', { read: false, sortBy: 'date' })} />
                     </Tabs>
                 }
                 panel={
-                    navigator.isActive('/admin/organisme/avis/liste') ?
+                    router.isActive('/admin/organisme/avis/liste') ?
                         <OrganismeAvisPanel
-                            query={navigator.getQuery()}
+                            query={router.getQuery()}
                             onFilterClicked={this.onFilterClicked} /> :
-                        <Route
-                            path={'/admin/organisme/avis/stats'}
-                            render={() => <OrganismeStatsPanel query={navigator.getQuery()} />}
-                        />
+                        <OrganismeStatsPanel query={router.getQuery()} />
                 }
             />
         );

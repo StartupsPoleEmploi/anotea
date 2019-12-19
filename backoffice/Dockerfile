@@ -1,11 +1,11 @@
 FROM nginx:latest
 RUN apt-get update \
-    && apt-get install -y curl \
+    && apt-get install -y curl git \
     && apt-get -y autoclean
 
 #Install nodejs
-ENV NVM_VERSION v0.34.0
-ENV NODE_VERSION 10.14.1
+ENV NVM_VERSION v0.35.1
+ENV NODE_VERSION 12.13.1
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
@@ -24,14 +24,12 @@ RUN cd /tmp && npm ci && mkdir -p /opt/anotea/backoffice && mv /tmp/node_modules
 ARG ANOTEA_ENV
 ARG ANOTEA_GOOGLE_ANALYTICS_ID
 ARG ANOTEA_HOTJAR_ID
-ARG ANOTEA_SENTRY_ENABLED
 ARG ANOTEA_SENTRY_DSN
 COPY ./ /opt/anotea/backoffice
 WORKDIR /opt/anotea/backoffice
 RUN REACT_APP_ANOTEA_ENV=${ANOTEA_ENV} \
     REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID=${ANOTEA_GOOGLE_ANALYTICS_ID} \
     REACT_APP_ANOTEA_HOTJAR_ID=${ANOTEA_HOTJAR_ID} \
-    REACT_APP_ANOTEA_SENTRY_ENABLED=${ANOTEA_SENTRY_ENABLED} \
     REACT_APP_ANOTEA_SENTRY_DSN=${ANOTEA_SENTRY_DSN} \
     npm run build &&  mv build/* /usr/share/nginx/html
 

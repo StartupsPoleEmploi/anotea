@@ -9,7 +9,7 @@ import { Form, Periode, Select } from '../common/page/form/Form';
 import { getSirens } from '../../services/sirensService';
 import { getFormations } from '../../services/formationsService';
 import { getDepartements } from '../../services/departementsService';
-import FINANCEURS from '../common/data/financeurs';
+import FINANCEURS from '../../utils/financeurs';
 import AppContext from '../AppContext';
 import Button from '../common/Button';
 import FinanceurAvisPanel from './components/FinanceurAvisPanel';
@@ -20,7 +20,7 @@ export default class FinanceurPage extends React.Component {
     static contextType = AppContext;
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -66,7 +66,7 @@ export default class FinanceurPage extends React.Component {
 
     async componentDidMount() {
 
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
 
         this.loadSelectBox('departements', () => getDepartements())
         .then(results => {
@@ -176,7 +176,7 @@ export default class FinanceurPage extends React.Component {
     };
 
     getFormParametersFromQuery = () => {
-        let query = this.props.navigator.getQuery();
+        let query = this.props.router.getQuery();
         return _.pick(query, ['codeFinanceur', 'departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']);
     };
 
@@ -203,28 +203,28 @@ export default class FinanceurPage extends React.Component {
     };
 
     onSubmit = () => {
-        return this.props.navigator.refreshCurrentPage(this.getFormParameters());
+        return this.props.router.refreshCurrentPage(this.getFormParameters());
     };
 
     onTabClicked = (tab, parameters = {}) => {
-        return this.props.navigator.goToPage(`/admin/financeur/avis/${tab}`, {
+        return this.props.router.goToPage(`/admin/financeur/avis/${tab}`, {
             ...this.getFormParametersFromQuery(),
             ...parameters
         });
     };
 
     onFilterClicked = parameters => {
-        return this.props.navigator.refreshCurrentPage({
+        return this.props.router.refreshCurrentPage({
             ...this.getFormParametersFromQuery(),
             ...parameters,
         });
     };
 
     render() {
-        let { navigator } = this.props;
+        let { router } = this.props;
         let { form } = this.state;
         let { departements, sirens, formations, financeurs, periode } = form;
-        let query = navigator.getQuery();
+        let query = router.getQuery();
         let formSynchronizedWithQuery = this.isFormSynchronizedWithQuery();
 
         return (
@@ -237,7 +237,7 @@ export default class FinanceurPage extends React.Component {
                                 <label>Période</label>
                                 <Periode
                                     periode={periode}
-                                    min={moment('2016-01-01 Z').toDate()}
+                                    min={moment('2016-01-01T00:00:00Z').toDate()}
                                     onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>
@@ -250,6 +250,7 @@ export default class FinanceurPage extends React.Component {
                                     optionKey="code"
                                     label={option => option.label}
                                     placeholder={'Tous les départements'}
+                                    trackingId="Départements"
                                     onChange={option => this.updateSelectBox('departements', option)}
                                 />
                             </div>
@@ -262,10 +263,13 @@ export default class FinanceurPage extends React.Component {
                                     optionKey="siren"
                                     label={option => option.name}
                                     placeholder={'Tous les organismes'}
+                                    trackingId="Organisme de formation"
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);
                                         if (option) {
                                             this.loadSelectBox('formations', () => getFormations({ organisme: option.siren }));
+                                        } else {
+                                            await this.updateSelectBox('formations', null);
                                         }
                                     }}
                                 />
@@ -280,6 +284,7 @@ export default class FinanceurPage extends React.Component {
                                     optionKey="idFormation"
                                     label={option => option.title}
                                     placeholder={'Toutes les formations'}
+                                    trackingId="Formation"
                                     onChange={option => this.updateSelectBox('formations', option)}
                                 />
                             </div>
@@ -295,6 +300,7 @@ export default class FinanceurPage extends React.Component {
                                         optionKey="code"
                                         label={option => option.label}
                                         placeholder={'Tous les financeurs'}
+                                        trackingId="Financeur"
                                         onChange={option => this.updateSelectBox('financeurs', option)}
                                     />
                                 </>
@@ -328,17 +334,17 @@ export default class FinanceurPage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => navigator.isActive('/admin/financeur/avis/stats')}
+                            isActive={() => router.isActive('/admin/financeur/avis/stats')}
                             onClick={() => this.onTabClicked('stats')} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => navigator.isActive('/admin/financeur/avis/liste')}
+                            isActive={() => router.isActive('/admin/financeur/avis/liste')}
                             onClick={() => this.onTabClicked('liste', { sortBy: 'date' })} />
                     </Tabs>
                 }
                 panel={
-                    navigator.isActive('/admin/financeur/avis/liste') ?
+                    router.isActive('/admin/financeur/avis/liste') ?
                         <FinanceurAvisPanel
                             query={query}
                             form={form}

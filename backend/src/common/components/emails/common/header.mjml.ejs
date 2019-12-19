@@ -1,0 +1,31 @@
+<% const showConseilRegional = region.conseil_regional.active; %>
+<mj-section padding-top="0" padding-left="0" padding-bottom="0" border-radius="5px" background-color="#fff">
+    <mj-group>
+        <mj-column vertical-align="middle" width="25%">
+            <mj-image align="left" padding-left="10px" width="70px" alt="Logo Anotéa"
+                      src="<%= utils.getPublicUrl('/static/images/logo_Anotea_Horizontal_baseline2.png') %>" />
+        </mj-column>
+        <mj-column vertical-align="middle" width="25%">
+            <mj-text>
+                &nbsp;
+            </mj-text>
+        </mj-column>
+        <% if (showConseilRegional) { %>
+            <mj-column vertical-align="middle" width="25%" border-right="1px solid #F4F4F5">
+                <mj-image padding-right="5px" width="70px" alt="Logo Pole Emploi"
+                          src="<%= utils.getPublicUrl('/static/images/logo-pole-emploi-530.png') %>" />
+            </mj-column>
+            <mj-column vertical-align="middle" width="25%">
+                <mj-image  width="70px" alt="Logo Region"
+                          src="<%= utils.getPublicUrl(`/static/images/regions/conseil-regional-${region.codeRegion}.png`) %>" />
+            </mj-column>
+        <% } else{ %>
+            <mj-column vertical-align="middle" width="50%">
+                <mj-image width="80px" align="right" alt="Logo Pole Emploi"
+                          src="<%= utils.getPublicUrl('/static/images/logo-pole-emploi-530.png') %>" />
+            </mj-column>
+        <% } %>
+    </mj-group>
+</mj-section>
+
+<mj-section padding="8px"></mj-section>

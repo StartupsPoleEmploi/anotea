@@ -59,7 +59,7 @@ export default class EditButton extends React.Component {
                 }
                 onClose={this.handleCancel}
                 onConfirmed={async () => {
-                    await deleteAvis(this.props.avis._id, { resendEmail: true });
+                    await deleteAvis(this.props.avis._id, { sendEmail: true });
                     await this.props.onChange(this.props.avis, {
                         message: {
                             text: 'Le questionnaire a bien été envoyé au stagiaire.',

@@ -7,7 +7,6 @@ const sentry = require('./common/components/sentry');
 const workflow = require('./common/components/workflow');
 const database = require('./common/components/database');
 const communes = require('./common/components/communes');
-const createMailer = require('./smtp/mailer');
 const sendForgottenPasswordEmail = require('./common/components/mailing/sendForgottenPasswordEmail');
 const sendOrganisationAccountEmail = require('./common/components/mailing/sendOrganisationAccountEmail');
 const sendVotreAvisEmail = require('./common/components/mailing/sendVotreAvisEmail');
@@ -17,6 +16,8 @@ const sendSignalementAccepteNotification = require('./common/components/mailing/
 const sendInjureMail = require('./common/components/mailing/sendInjureMail');
 const sendAlerteMail = require('./common/components/mailing/sendAlerteMail');
 const createPeconnect = require('./common/components/peconnect');
+const createEmails = require('./common/components/emails/emails');
+const createMailer = require('./common/components/emails/mailer');
 
 module.exports = async (options = {}) => {
 
@@ -24,19 +25,20 @@ module.exports = async (options = {}) => {
     let logger = options.logger || createLogger('backend', configuration);
     let { client, db } = await database(logger, configuration);
     let regions = getRegions();
-    let mailer = options.mailer || createMailer(db, logger, configuration, regions);
+    let mailer = options.mailer || createMailer(configuration, regions);
+    let emails = createEmails(db, configuration, regions, mailer);
 
     return Object.assign({}, {
         configuration,
         logger,
         db,
         client,
-        mailer,
+        regions,
+        emails,
         sentry: sentry(logger, configuration),
         auth: auth(configuration),
         passwords: passwords(configuration),
-        regions: regions,
-        workflow: workflow(db),
+        workflow: workflow(db, logger, emails),
         communes: communes(db),
         mailing: {
             sendForgottenPasswordEmail: sendForgottenPasswordEmail(db, mailer),

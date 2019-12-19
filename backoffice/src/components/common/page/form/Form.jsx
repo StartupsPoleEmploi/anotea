@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Form.scss';
 
-export { default as Date } from './Date';
+export { default as Date } from './date/Date';
 export { default as Select } from './Select';
 export { default as Periode } from './Periode';
 

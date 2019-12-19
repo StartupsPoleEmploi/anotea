@@ -15,7 +15,7 @@ import { Workflow } from '../../common/avis/Workflow';
 export default class ModerationReponsesPage extends React.Component {
 
     static propTypes = {
-        navigator: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     };
 
     constructor(props) {
@@ -45,8 +45,8 @@ export default class ModerationReponsesPage extends React.Component {
     }
 
     componentDidUpdate(previous) {
-        let query = this.props.navigator.getQuery();
-        if (!_.isEqual(query, previous.navigator.getQuery())) {
+        let query = this.props.router.getQuery();
+        if (!_.isEqual(query, previous.router.getQuery())) {
             this.search();
             this.fetchStats();
         }
@@ -55,7 +55,7 @@ export default class ModerationReponsesPage extends React.Component {
     search = (options = {}) => {
         return new Promise(resolve => {
             this.setState({ loading: !options.silent }, async () => {
-                let query = this.props.navigator.getQuery();
+                let query = this.props.router.getQuery();
                 let results = await searchAvis(query);
                 this.setState({ results, loading: false }, () => resolve());
             });
@@ -70,8 +70,8 @@ export default class ModerationReponsesPage extends React.Component {
     };
 
     render() {
-        let { navigator } = this.props;
-        let query = navigator.getQuery();
+        let { router } = this.props;
+        let query = router.getQuery();
         let { results, stats } = this.state;
 
         return (
@@ -88,7 +88,7 @@ export default class ModerationReponsesPage extends React.Component {
                                     label="À modérer"
                                     isActive={() => query.reponseStatuses === 'none'}
                                     getNbElements={() => stats.nbReponseAModerer}
-                                    onClick={() => navigator.refreshCurrentPage({
+                                    onClick={() => router.refreshCurrentPage({
                                         reponseStatuses: 'none',
                                         sortBy: 'reponse.lastStatusUpdate'
                                     })}
@@ -97,7 +97,7 @@ export default class ModerationReponsesPage extends React.Component {
                                 <Filter
                                     label="Validés"
                                     isActive={() => query.reponseStatuses === 'validated'}
-                                    onClick={() => navigator.refreshCurrentPage({
+                                    onClick={() => router.refreshCurrentPage({
                                         reponseStatuses: 'validated',
                                         sortBy: 'reponse.lastStatusUpdate'
                                     })}
@@ -106,7 +106,7 @@ export default class ModerationReponsesPage extends React.Component {
                                 <Filter
                                     label="Rejetés"
                                     isActive={() => query.reponseStatuses === 'rejected'}
-                                    onClick={() => navigator.refreshCurrentPage({
+                                    onClick={() => router.refreshCurrentPage({
                                         reponseStatuses: 'rejected',
                                         sortBy: 'reponse.lastStatusUpdate'
                                     })}
@@ -116,7 +116,7 @@ export default class ModerationReponsesPage extends React.Component {
                                     label="Signalés"
                                     isActive={() => query.statuses === 'reported'}
                                     getNbElements={() => stats.nbCommentairesReported}
-                                    onClick={() => navigator.refreshCurrentPage({
+                                    onClick={() => router.refreshCurrentPage({
                                         statuses: 'reported',
                                         sortBy: 'lastStatusUpdate'
                                     })}
@@ -125,7 +125,7 @@ export default class ModerationReponsesPage extends React.Component {
                                 <Filter
                                     label="Tous"
                                     isActive={() => query.reponseStatuses === 'none,validated,rejected'}
-                                    onClick={() => navigator.refreshCurrentPage({
+                                    onClick={() => router.refreshCurrentPage({
                                         reponseStatuses: 'none,validated,rejected',
                                         sortBy: 'date'
                                     })}
@@ -166,7 +166,7 @@ export default class ModerationReponsesPage extends React.Component {
                         pagination={
                             <Pagination
                                 pagination={results.meta.pagination}
-                                onClick={page => navigator.refreshCurrentPage(_.merge({}, query, { page }))}
+                                onClick={page => router.refreshCurrentPage(_.merge({}, query, { page }))}
                             />
                         }
                     />
