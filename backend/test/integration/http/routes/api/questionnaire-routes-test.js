@@ -28,8 +28,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 texte: 'texte',
                 titre: 'titre'
             },
-            accord: true,
-            accordEntreprise: true,
         });
 
         assert.strictEqual(response.statusCode, 200);
@@ -189,8 +187,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 text: 'texte',
                 titleMasked: false,
             },
-            accord: true,
-            accordEntreprise: true,
             read: false,
             status: 'none',
         });
@@ -213,8 +209,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
             pseudo: 'John D.',
-            accord: true,
-            accordEntreprise: true,
         });
 
         assert.strictEqual(response.statusCode, 200);
@@ -257,8 +251,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 global: 1.8,
             },
             pseudo: 'JohnD',
-            accord: true,
-            accordEntreprise: true,
             read: false,
             status: 'validated',
         });
@@ -281,8 +273,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
             pseudo: 'John D.',
-            accord: true,
-            accordEntreprise: true,
             commentaire: {
                 texte: 'texte 😂',
                 titre: 'titre'
@@ -315,8 +305,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 texte: 'Super connard',
                 titre: 'titre'
             },
-            accord: true,
-            accordEntreprise: true,
         });
 
         assert.strictEqual(response.statusCode, 400);
@@ -338,8 +326,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
             pseudo: 'John D.',
-            accord: true,
-            accordEntreprise: true,
         });
         assert.strictEqual(response.statusCode, 200);
 
@@ -352,8 +338,6 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             avis_moyen_materiel: 2,
             avis_accompagnement: 2,
             pseudo: 'John D.',
-            accord: true,
-            accordEntreprise: true,
         });
         assert.strictEqual(response.statusCode, 423);
     });

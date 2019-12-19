@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Notes from './questionnaire/notes/Notes';
 import Commentaire from './questionnaire/commentaire/Commentaire';
-import Autorisations from './questionnaire/Autorisations';
 import ErrorMessage from './questionnaire/ErrorMessage';
 import Formation from '../common/Formation';
 import PropTypes from 'prop-types';
@@ -45,8 +44,6 @@ export default class Questionnaire extends Component {
             },
         },
         stagiaire: null,
-        accord: false,
-        accordEntreprise: false,
         showErrorMessage: null,
         goNextButtonClicked: false,
         submitting: false,
@@ -110,8 +107,6 @@ export default class Questionnaire extends Component {
                         texte: this.state.commentaire.texte.value,
                         titre: this.state.commentaire.titre.value,
                     },
-                    accord: this.state.accord,
-                    accordEntreprise: this.state.accordEntreprise
                 });
                 this.props.onSubmit(data);
                 this.scrollToTop();
@@ -149,10 +144,6 @@ export default class Questionnaire extends Component {
         });
     };
 
-    updateAccord = ({ accord, accordEntreprise }) => {
-        this.setState({ accord, accordEntreprise });
-    };
-
     render() {
         return (
             <div className="anotea questionnaire">
@@ -173,12 +164,7 @@ export default class Questionnaire extends Component {
                     }
 
                     {this.state.page === 1 &&
-                    <div>
-                        <Commentaire
-                            commentaire={this.state.commentaire}
-                            onChange={this.updateCommentaire} />
-                        <Autorisations onChange={this.updateAccord} />
-                    </div>
+                    <Commentaire commentaire={this.state.commentaire} onChange={this.updateCommentaire} />
                     }
 
                     <div className="row">
