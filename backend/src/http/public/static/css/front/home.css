@@ -29,11 +29,6 @@ body {
     font-weight: bold;
 }
 
-.video {
-    width: 100%;
-    background-color: #D8D8D8;
-}
-
 .title {
     color: #F0801A;
     font-weight: bold;
@@ -91,6 +86,18 @@ body {
     top: -280px;
     z-index: -1;
     width: 80%;
+}
+
+.video {
+    background-color: #2B2B2B;
+    height: 564px;
+    text-align: center;
+    margin-top:20px;
+}
+
+.video video {
+    margin-left: auto;
+    height:564px;
 }
 
 .stats {
@@ -232,10 +239,6 @@ body {
         font-size: 32px;
     }
 
-    .video {
-        height: 546px;
-    }
-
     .content-how ul {
         width: 1000px;
     }
@@ -247,7 +250,12 @@ body {
     }
 
     .video {
-        height: 415px;
+        background-color: inherit;
+        height: inherit;
+    }
+
+    .video video {
+        width: 100vw;
     }
 
     .content-how ul {
@@ -265,6 +273,15 @@ body {
 }
 
 @media (max-width: 740px) {
+    .video {
+        background-color: inherit;
+        height: inherit;
+    }
+
+    .video video {
+        width: 100vw;
+    }
+
     .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
         font-size: 30px;
     }
@@ -312,10 +329,6 @@ body {
 
     .content-intro a.button img {
         margin-left: 30px;
-    }
-
-    .video {
-        height: 180px;
     }
 
     .stats > div {
