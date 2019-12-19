@@ -8,7 +8,7 @@ module.exports = ({ tri, ordre }) => {
             field = 'training.title';
             break;
         default:
-            field = 'date';
+            field = 'training.scheduledEndDate';
     }
     return { [field]: ordre === 'asc' ? 1 : -1 };
 };

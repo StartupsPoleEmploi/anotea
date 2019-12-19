@@ -27,7 +27,7 @@ module.exports = (db, type) => async parameters => {
             case 'formation':
                 return a.formation.intitule;
             default:
-                return a.date;
+                return a.formation.action.session.periode.fin;
         }
     }], [parameters.ordre]);
 

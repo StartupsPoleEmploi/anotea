@@ -2,7 +2,6 @@ const _ = require('lodash');
 const convertCommentToAvis = require('../../../../../common/utils/convertCommentToAvis');
 
 let roundNotes = notes => {
-
     return {
         accueil: Math.round(notes.accueil),
         contenu_formation: Math.round(notes.contenu_formation),
@@ -13,31 +12,27 @@ let roundNotes = notes => {
     };
 };
 
-let createIntercarifDTO = (data, options = {}) => {
-    let dto = _.cloneDeep(data);
-
-    dto.id = dto._id;
-    delete dto._id;
-
-    if (dto.meta) {
-        delete dto.meta.import_date;
-    }
-
-    if (!options.notes_decimales && dto.avis) {
-        dto.avis = dto.avis.map(a => Object.assign(a, { notes: roundNotes(a.notes) }));
-    }
-
-    if (!options.notes_decimales && dto.score && dto.score.notes) {
-        dto.score.notes = roundNotes(dto.score.notes);
-    }
-
-    return _.pick(dto, ['id', 'numero', 'region', 'score', 'avis', 'meta']);
-};
 module.exports = {
-    createIntercarifDTO,
-    createFormationDTO: createIntercarifDTO,
-    createActionDTO: createIntercarifDTO,
-    createSessionDTO: createIntercarifDTO,
+    createIntercarifDTO: (data, options = {}) => {
+        let dto = _.cloneDeep(data);
+
+        dto.id = dto._id;
+        delete dto._id;
+
+        if (dto.meta) {
+            delete dto.meta.import_date;
+        }
+
+        if (!options.notes_decimales && dto.avis) {
+            dto.avis = dto.avis.map(a => Object.assign(a, { notes: roundNotes(a.notes) }));
+        }
+
+        if (!options.notes_decimales && dto.score && dto.score.notes) {
+            dto.score.notes = roundNotes(dto.score.notes);
+        }
+
+        return _.pick(dto, ['id', 'numero', 'region', 'score', 'avis', 'meta']);
+    },
     createPaginationDTO: (pagination, total) => {
         return {
             ...pagination,
