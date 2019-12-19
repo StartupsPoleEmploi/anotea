@@ -52,15 +52,6 @@ module.exports = db => {
                                         }
                                     }
                                 },
-                                allowToContact: {
-                                    $sum: {
-                                        $cond: {
-                                            if: { $eq: ['$accord', true] },
-                                            then: 1,
-                                            else: 0
-                                        }
-                                    }
-                                },
                             }
                         },
                     ],
@@ -82,7 +73,6 @@ module.exports = db => {
                     mailOpen: { $first: '$mailOpen' },
                     linkClick: { $first: '$linkClick' },
                     formValidated: { $first: '$stats.nbAvis' },
-                    allowToContact: { $first: '$stats.allowToContact' },
                     nbCommentaires: { $first: '$stats.nbCommentaires' },
                     nbCommentairesRejected: { $first: '$stats.nbCommentairesRejected' },
                 }

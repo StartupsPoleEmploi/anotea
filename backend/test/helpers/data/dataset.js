@@ -173,7 +173,6 @@ module.exports = {
                 text: 'Super formation.'
             },
             date: date,
-            accord: false,
             status: 'validated',
             qualification: 'positif',
             lastStatusUpdate: date,

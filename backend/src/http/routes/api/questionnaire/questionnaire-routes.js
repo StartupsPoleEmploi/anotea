@@ -90,8 +90,6 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             codeRegion: trainee.codeRegion,
             rates: notes,
             pseudo: sanitize(body.pseudo.replace(/ /g, '').replace(/\./g, '')),
-            accord: body.accord,
-            accordEntreprise: body.accordEntreprise,
             read: false,
             status: hasCommentaires ? 'none' : 'validated',
             lastStatusUpdate: new Date(),

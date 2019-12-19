@@ -193,7 +193,6 @@ export default class AvisStatsTable extends Component {
                             <th scope="col">Taux de clic</th>
                             <th scope="col">Personnes ayant validé le questionnaire</th>
                             <th scope="col">Taux de répondant</th>
-                            <th scope="col">Autorisation de contact</th>
                             <th scope="col">Commentaires</th>
                             <th scope="col">Taux avis avec commentaire</th>
                             <th scope="col">Commentaires rejetés</th>
@@ -227,9 +226,6 @@ export default class AvisStatsTable extends Component {
                             </td>
                             <td>
                                 {this.computeRate(this.getTotal('formValidated'), this.getTotal('mailSent'))}
-                            </td>
-                            <td>
-                                {this.getTotal('allowToContact')}
                             </td>
                             <td>
                                 {this.getTotal('nbCommentaires')}
@@ -270,9 +266,6 @@ export default class AvisStatsTable extends Component {
                                     </td>
                                     <td>
                                         {this.computeRate(a.formValidated, a.mailSent)}
-                                    </td>
-                                    <td>
-                                        {a.allowToContact}
                                     </td>
                                     <td>
                                         {a.nbCommentaires}
