@@ -35,6 +35,10 @@
         margin-top: 15px;
     }
 
+    .logo-pe-mobile {
+        display: none;
+    }
+
   .nav {
     font-weight: $font-weight-400;
 
@@ -109,6 +113,13 @@
             top: -80px;
         }
 
+        .bar {
+            height: 3px;
+            width: 32px;
+            border-radius: 2px;
+            display: none;
+        }
+
         &.closed .icon-close {
             display: none;
         }
@@ -170,4 +181,28 @@
     letter-spacing: 1px;
   }
 
+}
+
+@media (max-width: 740px) {
+    .Header.anonymous {
+        height: 48px;
+
+        .logo, .logo-pe-mobile {
+            height: 36px;
+            margin-top: 5px;
+        }
+
+        .logo-pe-mobile {
+            display: inline;
+            margin-right: 16px;
+        }
+
+        .logo-pe {
+            display: none;
+        }
+
+        .menu {
+            display: none;
+        }
+    }
 }

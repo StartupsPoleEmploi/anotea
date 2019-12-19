@@ -27,7 +27,7 @@ export default class Header extends React.Component {
                                         <NavLink to="/admin">
                                             <img src={logo} className="logo" alt="logo" />
                                         </NavLink>
-
+                                        
                                         {this.props.loggedIn &&
                                             <>
                                                 {this.props.items}
@@ -44,6 +44,7 @@ export default class Header extends React.Component {
                                 {this.props.profile === 'anonymous' &&
                                     <>
                                         <div>
+                                            <img src={logoPE} className="logo-pe-mobile" alt="logo Pôle Emploi" />
                                             <NavLink to="/admin">
                                                 <img src={logoAnonymous} className="logo" alt="logo Anotéa" />
                                             </NavLink>
@@ -58,7 +59,7 @@ export default class Header extends React.Component {
                                                 <div className="content">
                                                     <ul>
                                                         <li>
-                                                            <a href="/services/stagiaires" title="Demandeurd'emploi">Demandeur d'emploi</a>
+                                                            <a href="/services/stagiaires" title="Demandeur d'emploi">Demandeur d'emploi</a>
                                                         </li>
                                                         <li>
                                                             <a href="/services/organismes" title="Organisme de formation">Organisme de formation</a>

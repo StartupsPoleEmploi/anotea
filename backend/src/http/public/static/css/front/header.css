@@ -83,25 +83,6 @@ a.admin, a.contact {
     line-height: 107px;
 }
 
-.menu .bar {
-    height: 3px;
-    width: 32px;
-    border-radius: 2px;
-    display: none;
-}
-
-.menu .bar.financeur {
-    background-color: #0d7d57;
-}
-
-.menu .bar.de {
-    background-color: #384EAA;
-}
-
-.menu .bar.of {
-    background-color: #29333C;
-}
-
 .menu ul {
     list-style: none;
     padding: 10px;
@@ -217,7 +198,7 @@ a.contact {
         display: none;
     }
 
-    .header .menu .content{
+    .header .menu .content {
         height: 100vh;
         position: fixed;
         top: 32px;
