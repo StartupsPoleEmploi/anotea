@@ -9,6 +9,7 @@ import { login, loginWithAccessToken } from './loginService';
 import './LoginPage.scss';
 import { NavLink } from 'react-router-dom';
 import Loader from '../common/Loader';
+import ContactRegion from './ContactRegion';
 
 export default class LoginPage extends React.Component {
 
@@ -25,6 +26,7 @@ export default class LoginPage extends React.Component {
             errors: false,
             identifiant: '',
             password: '',
+            contactRegion: false,
         };
     }
 
@@ -49,10 +51,24 @@ export default class LoginPage extends React.Component {
         loginWithAccessToken(data.access_token, data.origin)
         .then(result => this.props.onLogin(result))
         .catch(e => {
-            console.log(e);
             return this.setState({ loginWithAccessToken: false });
         });
     };
+
+    showContactRegion = () => {
+        this.setState({
+            contactRegion: true
+        })
+    }
+
+    openMailto = (email) => {
+        this.setState({
+            contactRegion: false
+        });
+        if(email !== null) {
+            window.location.href = `mailto:${email}`;
+        }
+    }
 
     render() {
 
@@ -63,7 +79,6 @@ export default class LoginPage extends React.Component {
                 panel={<Loader centered={true} />}
             />;
         }
-
         return (
             <Page
                 className="LoginPage grey"
@@ -105,8 +120,11 @@ export default class LoginPage extends React.Component {
                                         <hr className="grey-5" />
                                         <div className="help">
                                             Besoin d’aide ? Des questions ? Consultez notre <a href={`/services/${this.props.profile === 'financeur' ? 'financeur' : 'organisme'}s#faq`}>FAQ</a>&nbsp; 
-                                            ou <a href="mailto:anotea@pole-emploi.fr">contactez-nous</a> par email.
+                                            ou <a href="#" onClick={this.showContactRegion}>contactez-nous</a> par email.
                                         </div>
+                                        { this.state.contactRegion &&
+                                            <ContactRegion onContinue={this.openMailto} />
+                                        }
                                         <Button
                                             type="submit"
                                             size="large"
