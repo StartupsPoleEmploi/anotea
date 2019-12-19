@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ListeWidget from './components/ListeWidget';
 import { getAvis, getScore } from './services/widgetService';
 import GridDisplayer from './components/common/library/GridDisplayer';
-import WidgetContext from './components/common/options/WidgetContext';
+import WidgetContext from './components/WidgetContext';
 import ScoreWidget from './components/ScoreWidget';
 import CarrouselWidget from './components/CarrouselWidget';
 import './App.scss';

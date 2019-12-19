@@ -776,6 +776,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                     pseudo: '5minutesAgo',
                     codeRegion: '11',
                     training: {
+                        scheduledEndDate: moment().subtract(5, 'minutes').toDate(),
                         formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
@@ -784,11 +785,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                }, moment().subtract(5, 'minutes').toDate()),
+                }),
                 newComment({
                     pseudo: '7minutesAgo',
                     codeRegion: '11',
                     training: {
+                        scheduledEndDate: moment().subtract(7, 'minutes').toDate(),
                         formacodes: ['22252'],
                         organisation: {
                             siret: '33333333333333',
@@ -797,7 +799,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                }, moment().subtract(7, 'minutes').toDate()),
+                }),
             ]
         );
 
