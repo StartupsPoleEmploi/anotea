@@ -91,7 +91,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             meta: {
                 siretAsString: '11111111111111'
             },
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: 'fake',
         });
         let inactif = newOrganismeAccount({
             _id: 33333333333333,
@@ -127,7 +127,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             meta: {
                 siretAsString: '11111111111111'
             },
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: 'fake',
         });
         let inactif = newOrganismeAccount({
             _id: 33333333333333,
