@@ -26,12 +26,12 @@ class App extends Component {
     };
 
     state = {
-        loggedIn: false,
         account: {
             profile: 'anonymous',
         },
         message: null,
         debug: false,
+        profile: 'anonymous'
     };
 
     constructor(props) {
@@ -51,17 +51,11 @@ class App extends Component {
 
         const profile = queryString.parse(window.location.search).profile;
         if(profile && ['organisme', 'financeur'].includes(profile)) {
-            this.state = {
-                profile
-            }
+            this.state.profile = profile;
         }
 
         if (getToken()) {
-            this.state = {
-                ...getSession(),
-                loggedIn: true,
-                account: getSession(),
-            };
+            this.state.account = getSession();
         }
     }
 
@@ -75,8 +69,6 @@ class App extends Component {
         setSession({ ...results, ...jwtDecode(results.access_token) });
 
         this.setState({
-            ...getSession(),
-            loggedIn: true,
             account: getSession(),
         });
 
@@ -129,7 +121,7 @@ class App extends Component {
                             <Redirect exact from="/admin" to={layout.defaultPath} />
                         </Switch>
 
-                        <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} profile={this.state.account.profile} loggedIn={this.state.loggedIn} />
+                        <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} profile={this.state.profile} loggedIn={this.state.account.profile !== 'anonymous'} />
 
                         {layout.routes}
                     </div>
