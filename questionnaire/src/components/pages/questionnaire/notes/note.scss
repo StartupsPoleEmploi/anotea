@@ -2,8 +2,7 @@
 
 .note {
 
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding: 1rem;
 
   @media (max-width: 575.98px) {
     padding-top: 0.5rem;
@@ -23,15 +22,14 @@
   }
 
   .description {
-    opacity: 0.6;
     color: $color-dark;
-    font-size: 0.875rem;
+    font-size: 1rem;
     line-height: 17px;
   }
 
   .row {
     .col-sm-7 {
-      padding-left: 0px;
+      padding-left: 0;
     }
   }
 }

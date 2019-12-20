@@ -6,15 +6,14 @@ import './notes.scss';
 
 class Notes extends Component {
 
-    state = {
-        collapsed: false,
-    };
-
     static propTypes = {
         notes: PropTypes.array.isRequired,
         averageScore: PropTypes.number.isRequired,
         onChange: PropTypes.func.isRequired,
         showErrorMessage: PropTypes.bool.isRequired
+    };
+    state = {
+        collapsed: false,
     };
 
     checkIfAllNotesAreValid = () => {
@@ -26,8 +25,6 @@ class Notes extends Component {
     };
 
     isMissing = index => this.props.notes[index].value === null && this.props.showErrorMessage;
-
-    showMoyenne = () => !this.props.notes.find(n => n.value === null);
 
     updateNote = (index, value) => {
         if (value !== null) {
@@ -55,21 +52,23 @@ class Notes extends Component {
 
                 <div className="row">
                     <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-                        {
-                            items.map((item, index) =>
-                                <div
-                                    key={index}
-                                    className={`note-container ${this.isMissing(index) ? 'missing' : ''}`}>
-                                    {this.isMissing(index) && <i className="fas fa-times" />}
-                                    <Note
-                                        index={index}
-                                        title={item.title}
-                                        description={item.description}
-                                        value={this.props.notes[index] ? this.props.notes[index].value : 0}
-                                        onSelect={this.updateNote} />
-                                </div>
-                            )
-                        }
+                        <div className="items m-2">
+                            {
+                                items.map((item, index) =>
+                                    <div
+                                        key={index}
+                                        className={`note-container ${this.isMissing(index) ? 'missing' : ''}`}>
+                                        {this.isMissing(index) && <i className="fas fa-times" />}
+                                        <Note
+                                            index={index}
+                                            title={item.title}
+                                            description={item.description}
+                                            value={this.props.notes[index] ? this.props.notes[index].value : 0}
+                                            onSelect={this.updateNote} />
+                                    </div>
+                                )
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
