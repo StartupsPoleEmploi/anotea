@@ -5,20 +5,19 @@
   text-align: center;
   padding-top: 3rem;
 
-  .title {
-    opacity: 0.6;
-  }
-
-  .logo {
-    position: fixed;
-    top: 5%;
-    right: 10%;
-    z-index: 1030;
-  }
-
   h1 {
     color: $color-blue;
-    font-size: 1.8rem;
-    font-weight: 900;
+    font-size: 2rem;
+    font-weight: $font-weight-900;
+  }
+
+  .description {
+    font-size: 1rem;
+    color: $color-black;
+
+    .title {
+      color: $color-black;
+      font-weight: $font-weight-700;
+    }
   }
 }

@@ -36,14 +36,14 @@
     }
 
     .star-tooltip {
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
 
       .label {
         border-radius: 2px;
         background-color: $color-black;
         color: $color-white;
-        font-size: 0.75rem;
-        line-height: 12px;
+        font-size: 0.68rem;
+        text-transform: uppercase;
         font-weight: normal;
         padding: 0.25rem;
       }

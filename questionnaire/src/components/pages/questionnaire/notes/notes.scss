@@ -2,6 +2,12 @@
 
 .notes {
 
+  h3 {
+    color: $color-dark;
+    font-size: 1.5rem;
+    font-weight: $font-weight-900;
+  }
+
   .inner-row {
     margin-left: 0;
     margin-right: 0;
@@ -29,24 +35,32 @@
     }
   }
 
-  .note-container {
-    position: relative;
+  .items {
+    border: 1px solid $color-grey-5;
 
-    &.missing {
-      .note {
-        margin-top: 5px;
-        padding-left: 1em;
-        border-radius: 5px;
-        background-color: $color-red-10;
-      }
+    &:first-child {
+      border-top: unset;
     }
 
-    .fas.fa-times {
-      color: $color-red;
-      float: left;
-      position: absolute;
-      left: -15px;
-      top: 40%;
+    .note-container {
+      position: relative;
+      border-top: 1px solid $color-grey-5;
+
+      &.missing {
+        .note {
+          margin-top: 5px;
+          padding-left: 1em;
+          background-color: $color-red-10;
+        }
+      }
+
+      .fas.fa-times {
+        color: $color-red;
+        float: left;
+        position: absolute;
+        left: -15px;
+        top: 40%;
+      }
     }
   }
 }

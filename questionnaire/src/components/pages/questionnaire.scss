@@ -2,14 +2,6 @@
 
 .questionnaire {
 
-  h3 {
-    color: $color-blue;
-    font-size: 0.875rem;
-    font-weight: $font-weight-900;
-    line-height: 29px;
-    font-size: 1.5rem;
-  }
-
   .plusQuneDerniere {
     height: 20px;
     color: $color-blue;
@@ -27,6 +19,7 @@
 
   .pageOne {
     .send-button {
+      font-size: 1.25rem;
       margin-top: 1rem;
     }
   }
@@ -34,7 +27,7 @@
   .pageTwo {
     .go-back {
       color: $color-black;
-      font-size: 14px;
+      font-size: 1.25rem;
       line-height: 20px;
       border: none;
       background: none;
@@ -47,6 +40,7 @@
     }
 
     .send-button {
+      font-size: 1.25rem;
       margin-top: 2rem;
     }
   }

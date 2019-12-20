@@ -2,6 +2,11 @@
 
 .commentaire {
 
+  h3 {
+    font-size: 1.5rem;
+    font-weight: $font-weight-700;
+  }
+
   .inner-row {
     margin-left: 0;
     margin-right: 0;
@@ -42,11 +47,10 @@
     }
 
     &::placeholder {
-      opacity: 0.6;
+      opacity: 0.8;
       color: $color-black;
       font-size: 0.9rem;
       font-style: italic;
-      line-height: 21px;
     }
   }
 
@@ -55,8 +59,7 @@
   }
 
   .facultatif, .chars-count {
-    font-size: 0.75rem;
-    font-style: italic;
+    font-size: 0.875rem;
   }
 
   .chars-count {
