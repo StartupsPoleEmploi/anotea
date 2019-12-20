@@ -8,6 +8,12 @@ let passwords = require('../../../../../../src/common/components/passwords');
 
 describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoDatabase, getTestDatabase, getComponents }) => {
 
+    let hashPassword = async value => {
+        let { configuration } = await getComponents();
+        let pwd = await passwords(configuration);
+        return pwd.hashPassword(value);
+    };
+
     let startServerWithRealAuth = async () => {
         let { configuration } = await getComponents();
         return startServer({ passwords: passwords(configuration) });
@@ -17,7 +23,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newModerateurAccount({
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C'
+            passwordHash: await hashPassword('password'),
         }));
 
         let response = await request(app)
@@ -45,7 +51,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newOrganismeAccount({
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: await hashPassword('password'),
             meta: {
                 siretAsString: '6080274100045'
             }
@@ -78,7 +84,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newOrganismeAccount({
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: await hashPassword('password'),
             courriel: 'contact@poleemploi-formation.fr',
             meta: {
                 siretAsString: '6080274100045'
@@ -112,7 +118,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newFinancerAccount({
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: await hashPassword('password'),
             courriel: 'contact@financer.fr',
         }));
 
@@ -143,7 +149,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newModerateurAccount({
             //old sha256 password hash + bcrypt
-            passwordHash: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG'
+            passwordHash: await hashPassword('password'),
         }));
 
         let response = await request(app)
@@ -157,7 +163,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newModerateurAccount({
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C'
+            passwordHash: await hashPassword('password'),
         }));
 
         let response = await request(app)
@@ -172,7 +178,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let app = await startServerWithRealAuth();
         let account = newModerateurAccount({
             //old sha256 password hash + bcrypt
-            passwordHash: '$2a$10$ReqjdfD4zLGnxpHIQGjVAOBHO7DezHlEMeidmLLQ1P1Kdl2dAMaAG',
+            passwordHash: await hashPassword('password'),
             meta: {
                 rehashed: false,
             },
@@ -201,7 +207,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newModerateurAccount({
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C'
+            passwordHash: await hashPassword('password')
         }));
 
         let response = await request(app)
@@ -220,7 +226,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         let account = newOrganismeAccount({
-            passwordHash: '$2b$10$9kI8ub4e/yw51/nWF8IlOuGQRjvvgVIPfsLB/aKuAXlIuiiyLy/4C',
+            passwordHash: await hashPassword('password'),
             meta: {
                 siretAsString: '6080274100045'
             },
