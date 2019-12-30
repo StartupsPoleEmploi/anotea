@@ -8,7 +8,7 @@
   h1 {
     color: $color-blue;
     font-size: 2rem;
-    font-weight: $font-weight-900;
+    font-weight: $font-weight-boldest;
   }
 
   .description {
@@ -17,7 +17,7 @@
 
     .title {
       color: $color-black;
-      font-weight: $font-weight-700;
+      font-weight: $font-weight-bold;
     }
   }
 }

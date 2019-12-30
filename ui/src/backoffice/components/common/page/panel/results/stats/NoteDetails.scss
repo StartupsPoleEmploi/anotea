@@ -6,7 +6,7 @@
     padding-top: 0.875rem;
     padding-bottom: 0.875rem;
     font-size: 1.5rem;
-    font-weight: $font-weight-900;
+    font-weight: $font-weight-boldest;
   }
 
   .box {
@@ -19,7 +19,7 @@
 
       .label {
         font-size: 1.125rem;
-        font-weight: $font-weight-700;
+        font-weight: $font-weight-bold;
       }
 
       .moyenne {
@@ -30,7 +30,7 @@
           .value {
             font-size: 2rem;
             color: $color-black;
-            font-weight: $font-weight-900;
+            font-weight: $font-weight-boldest;
           }
 
           .star {
@@ -63,13 +63,13 @@
 
         .label {
           font-size: 1rem;
-          font-weight: $font-weight-700;
+          font-weight: $font-weight-bold;
         }
 
         .note {
           .value {
             font-size: 1.125rem;
-            font-weight: $font-weight-700;
+            font-weight: $font-weight-bold;
           }
 
           .star {

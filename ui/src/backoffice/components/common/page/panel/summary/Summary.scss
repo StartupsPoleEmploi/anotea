@@ -3,16 +3,16 @@
 .Backoffice .Summary {
 
   font-size: 1.125rem;
-  font-weight: $font-weight-400;
+  font-weight: $font-weight-normal;
   position: relative;
 
   .type {
-    font-weight: $font-weight-700;
+    font-weight: $font-weight-bold;
   }
 
   .pages {
     color: $color-grey-50;
-    font-weight: $font-weight-400;
+    font-weight: $font-weight-normal;
     font-size: 0.875rem;
     opacity: 0.75;
   }

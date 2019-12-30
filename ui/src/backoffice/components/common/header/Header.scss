@@ -19,7 +19,7 @@
   }
 
   .nav {
-    font-weight: $font-weight-400;
+    font-weight: $font-weight-normal;
 
     .dropdown-menu {
       border: none;
@@ -61,7 +61,7 @@
 
       &.active {
         color: $color-white;
-        font-weight: $font-weight-700;
+        font-weight: $font-weight-bold;
         opacity: 1;
       }
 
@@ -69,7 +69,7 @@
       &:focus {
         cursor: pointer;
         color: $color-white;
-        font-weight: $font-weight-700;
+        font-weight: $font-weight-bold;
         opacity: 1;
         transition: opacity 0.2s linear;
       }
@@ -87,7 +87,7 @@
     border-radius: 7px;
     padding: 10px 20px;
     font-size: 0.825rem;
-    font-weight: $font-weight-700;
+    font-weight: $font-weight-bold;
     letter-spacing: 1px;
   }
 }

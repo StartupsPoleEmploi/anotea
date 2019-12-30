@@ -6,12 +6,12 @@
   font-size: 1rem;
 
   .titre {
-    font-weight: $font-weight-700;
+    font-weight: $font-weight-bold;
   }
 
   .pseudo {
     font-size: 0.875rem;
-    font-weight: $font-weight-700;
+    font-weight: $font-weight-bold;
   }
 
   .by {
@@ -21,7 +21,7 @@
 
   .missing {
     font-size: 0.875rem;
-    font-weight: $font-weight-400;
+    font-weight: $font-weight-normal;
     color: $color-grey-50;
   }
 

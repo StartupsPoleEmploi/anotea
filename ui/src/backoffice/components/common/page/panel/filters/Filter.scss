@@ -11,13 +11,13 @@
       opacity: 1;
 
       &:hover, &:focus {
-        font-weight: $font-weight-400;
+        font-weight: $font-weight-normal;
       }
     }
 
     &:hover, &:focus {
       cursor: pointer;
-      font-weight: $font-weight-700;
+      font-weight: $font-weight-bold;
     }
 
     .nav-link {

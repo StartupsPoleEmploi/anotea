@@ -21,7 +21,7 @@
 
   .titre {
     padding: 0.25rem 1rem;
-    font-weight: $font-weight-700;
+    font-weight: $font-weight-bold;
     background-color: $color-grey-5;
   }
 
@@ -39,7 +39,7 @@
       font-size: 0.75rem;
       letter-spacing: 0.38px;
       line-height: 1rem;
-      font-weight: $font-weight-700;
+      font-weight: $font-weight-bold;
     }
 
     .reponse-texte {
