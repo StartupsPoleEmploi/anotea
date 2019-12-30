@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ListeWidget from './components/ListeWidget';
 import { getAvis, getScore } from './services/widgetService';
-import GridDisplayer from './components/common/library/GridDisplayer';
+import GridDisplayer from '../common/components/GridDisplayer';
 import WidgetContext from './components/WidgetContext';
 import ScoreWidget from './components/ScoreWidget';
 import CarrouselWidget from './components/CarrouselWidget';
-import './App.scss';
+import './Widget.scss';
 
-class App extends Component {
+class Widget extends Component {
 
     static propTypes = {
         format: PropTypes.string.isRequired,
@@ -94,11 +94,11 @@ class App extends Component {
     }
 }
 
-App.defaultProps = {
-    format: 'liste',
-    type: 'organisme',
-    identifiant: '13000362700010',
+Widget.defaultProps = {
+    format: 'carrousel',
+    type: 'session',
+    identifiant: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
     options: 'json-ld',
 };
 
-export default App;
+export default Widget;

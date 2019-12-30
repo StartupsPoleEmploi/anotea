@@ -18,13 +18,27 @@ const handleResponse = (path, response) => {
     return response.json();
 };
 
+const getReferrerUrl = () => new URL((document.referrer || 'http://unknown'));
+const getHeaders = () => {
+
+    let token = getToken();
+
+    return {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        ...(window.location.pathname.startsWith('/widget') ? {
+            'X-Anotea-Widget': getReferrerUrl().origin,
+            'X-Anotea-Widget-Referrer': getReferrerUrl(),
+        } : {})
+    };
+};
+
 export const _get = path => {
     return fetch(`/api${path}`, {
         method: 'GET',
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`,
+            ...getHeaders(),
         }
     })
     .then(res => handleResponse(path, res));
@@ -33,11 +47,7 @@ export const _get = path => {
 export const _post = (path, body) => {
     return fetch(`/api${path}`, {
         method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`,
-        },
+        headers: getHeaders(),
         body: JSON.stringify(body)
     })
     .then(res => handleResponse(path, res));
@@ -46,11 +56,7 @@ export const _post = (path, body) => {
 export const _put = (path, body = {}) => {
     return fetch(`/api${path}`, {
         method: 'PUT',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`,
-        },
+        headers: getHeaders(),
         body: JSON.stringify(body)
     })
     .then(res => handleResponse(path, res));
@@ -59,11 +65,7 @@ export const _put = (path, body = {}) => {
 export const _delete = path => {
     return fetch(`/api${path}`, {
         method: 'DELETE',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`,
-        }
+        headers: getHeaders()
     })
     .then(res => handleResponse(path, res));
 };

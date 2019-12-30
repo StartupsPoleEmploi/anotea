@@ -7,7 +7,7 @@ import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
 import './ListeWidget.scss';
-import Button from './common/library/Button';
+import Button from '../../common/components/Button';
 import WidgetContext from './WidgetContext';
 
 const ITEMS_PAR_PAGE = 2;

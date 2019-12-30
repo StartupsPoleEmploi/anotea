@@ -6,7 +6,7 @@ import Verified from './common/Verified';
 import Propulsed from './common/Propulsed';
 import Header from './common/Header';
 import Avis from './common/Avis';
-import Button from './common/library/Button';
+import Button from '../../common/components/Button';
 import './CarrouselWidget.scss';
 
 const ITEMS_PAR_PAGE = 1;

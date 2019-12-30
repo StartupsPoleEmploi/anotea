@@ -1,4 +1,4 @@
-import { _get } from './http-client';
+import { _get } from '../../common/utils/http-client';
 import queryString from 'query-string';
 
 const typeMapping = {
@@ -10,7 +10,7 @@ const typeMapping = {
 
 export const getScore = async (type, identifiant) => {
 
-    let result = await _get(`/api/v1/${typeMapping[type]}/${identifiant}?${queryString.stringify({
+    let result = await _get(`/v1/${typeMapping[type]}/${identifiant}?${queryString.stringify({
         notes_decimales: true,
         fields: '-avis',
     })}`);
@@ -20,7 +20,7 @@ export const getScore = async (type, identifiant) => {
 
 export const getAvis = (type, identifiant, options = {}) => {
 
-    return _get(`/api/v1/${typeMapping[type]}/${identifiant}/avis?${queryString.stringify({
+    return _get(`/v1/${typeMapping[type]}/${identifiant}/avis?${queryString.stringify({
         notes_decimales: true,
         commentaires: true,
         ...options
