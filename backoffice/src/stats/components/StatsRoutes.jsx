@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import _ from 'lodash';
-import Loader from '../common/Loader';
+import Loader from '../../common/components/Loader';
 import AvisStatsTable from './AvisStatsTable';
 import OrganismesStatsTable from './OrganismesStatsTable';
 import ApiStatsTable from './ApiStatsTable';
-import { getLatestStatistics } from '../../services/statsService';
+import { getLatestStatistics } from '../services/statsService';
 import DiversStatsTable from './DiversStatsTable';
 
 export default class StatsRoutes extends Component {

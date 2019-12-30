@@ -13,6 +13,7 @@ import * as GoogleAnalytics from './common/components/analytics/AnalyticsContext
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { createRouter } from './common/utils/router';
 import Questionnaire from './questionnaire/Questionnaire';
+import Stats from './stats/Stats';
 
 let env = process.env;
 
@@ -45,6 +46,7 @@ let app = (
         />
 
         <Route path="/questionnaire" render={() => <Questionnaire />} />
+        <Route path="/stats" render={() => <Stats />} />
 
     </Router>
 );

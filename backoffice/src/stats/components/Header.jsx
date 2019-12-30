@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.scss';
-import logo from '../../images/logo-anotea.png';
+import logo from '../../../../backoffice/src/stats/images/logo-anotea.png';
 
 export default class Header extends Component {
 

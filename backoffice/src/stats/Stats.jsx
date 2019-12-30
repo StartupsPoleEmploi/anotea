@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import Header from './components/stats/Header';
-import StatsRoutes from './components/stats/StatsRoutes';
-import GridDisplayer from './components/common/library/GridDisplayer';
-import './App.scss';
+import Header from './components/Header';
+import StatsRoutes from './components/StatsRoutes';
+import GridDisplayer from '../common/components/GridDisplayer';
+import './Stats.scss';
 
-class App extends Component {
+class Stats extends Component {
 
     render() {
         return (
@@ -30,4 +30,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default Stats;
