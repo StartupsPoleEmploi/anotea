@@ -146,7 +146,7 @@ export default class Formulaire extends Component {
 
     render() {
         return (
-            <div className="anotea questionnaire">
+            <div className="formulaire">
                 {false && <GridDisplayer />}
                 {!this.state.error && this.props.stagiaire &&
                 <div className={`container ${this.state.page === 0 ? 'pageOne' : 'pageTwo'}`}>

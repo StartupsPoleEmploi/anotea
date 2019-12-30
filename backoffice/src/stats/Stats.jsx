@@ -10,7 +10,7 @@ class Stats extends Component {
     render() {
         return (
             <Router>
-                <div className="anotea">
+                <div className="Stats">
                     <Header />
                     <Switch>
                         <Redirect exact from="/" to="/stats/avis" />

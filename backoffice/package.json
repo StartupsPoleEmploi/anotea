@@ -1,18 +1,37 @@
 {
   "name": "backoffice",
   "version": "1.0.0",
-  "description": "Anotea : l'advisor de la formation ! Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
-  "author": "Loïc Guillois <loic@fitlab.fr>",
+  "description": "Anotea: Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
+  "homepage": "https://anotea.pole-emploi.fr/admin",
   "repository": {
     "type": "git",
     "url": "git@github.com:StartupsPoleEmploi/anotea.git"
   },
+  "author": "Loïc Guillois <loic@fitlab.fr>",
   "contributors": [
     "Loïc Guillois <loic@fitlab.fr>",
     "Benoît Guérout <bguerout@yonoma.com>",
     "Nabil Choukri <nabil.choukri@pole-emploi.fr>"
   ],
-  "homepage": "https://anotea.pole-emploi.fr/admin",
+  "scripts": {
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "lint": "eslint src/",
+    "start": "react-scripts start",
+    "test": "react-scripts test"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.12.0",
     "@nivo/pie": "0.60.0",
@@ -20,6 +39,7 @@
     "bootstrap": "4.4.1",
     "bootstrap-datepicker": "1.9.0",
     "html2canvas": "1.0.0-rc.5",
+    "iframe-resizer": "4.2.8",
     "jquery": "3.4.1",
     "jspdf": "1.5.3",
     "jwt-decode": "2.2.0",
@@ -36,23 +56,9 @@
     "react-windowed-select": "2.0.1",
     "webfontloader": "1.6.28"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "lint": "eslint src/",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "translate": "NODE_ENV=production babel ./src >/dev/null"
-  },
   "devDependencies": {
     "eslint-plugin-react": "7.17.0",
     "node-sass": "4.13.0"
   },
-  "proxy": "http://localhost:8080/",
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "proxy": "http://localhost:8080/"
 }

@@ -1,17 +1,7 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 @import 'src/common/styles/variables';
 
-html, body, #root {
-  height: 100vh;
-}
-
-.anotea {
-  font-size: 1em;
-  font-family: 'Lato', sans-serif;
-  font-weight: $font-weight-400;
-  color: $color-black;
-  background-color: $color-white;
-  height: 100%;
+.Backoffice {
 
   .a-icon {
     margin-right: 0.25rem;

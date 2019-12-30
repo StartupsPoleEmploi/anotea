@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './images/logo-pole-emploi.svg';
+import logo from '../images/logo-pole-emploi.svg';
 import './Verified.scss';
 
 export default function Verified() {

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Score from './common/Score';
-import Notes from './common/Notes';
-import Verified from './common/Verified';
-import Propulsed from './common/Propulsed';
-import Header from './common/Header';
-import Avis from './common/Avis';
+import Score from './components/Score';
+import Notes from './components/Notes';
+import Verified from './components/Verified';
+import Propulsed from './components/Propulsed';
+import Header from './components/Header';
+import Avis from './components/Avis';
 import './ListeWidget.scss';
-import Button from '../../common/components/Button';
+import Button from '../common/components/Button';
 import WidgetContext from './WidgetContext';
 
 const ITEMS_PAR_PAGE = 2;

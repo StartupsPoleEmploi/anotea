@@ -15,6 +15,7 @@ import { createRouter } from './common/utils/router';
 import Questionnaire from './questionnaire/Questionnaire';
 import Stats from './stats/Stats';
 import Widget from './widget/Widget';
+import './common/styles/global.scss';
 
 let env = process.env;
 
@@ -36,19 +37,17 @@ let app = (
             <Redirect exact from="/" to="/admin" />
         </Switch>
 
+        <Route path="/questionnaire" render={() => <Questionnaire />} />
+        <Route path="/stats" render={() => <Stats />} />
+        <Route path="/widget" render={() => <Widget />} />
         <Route path="/admin" render={props => {
-            let router = createRouter(props);
             return (
                 <Suspense fallback={<div></div>}>
-                    <BackofficeChunksLoader router={router} />
+                    <BackofficeChunksLoader router={createRouter(props)} />
                 </Suspense>
             );
         }}
         />
-
-        <Route path="/questionnaire" render={() => <Questionnaire />} />
-        <Route path="/stats" render={() => <Stats />} />
-        <Route path="/widget" render={() => <Widget />} />
 
     </Router>
 );

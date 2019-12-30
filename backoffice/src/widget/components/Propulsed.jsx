@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './images/logo-anotea.png';
+import logo from '../images/logo-anotea.png';
 import './Propulsed.scss';
 
 export default function Propulsed() {

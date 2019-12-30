@@ -18,16 +18,17 @@ const handleResponse = (path, response) => {
     return response.json();
 };
 
-const getReferrerUrl = () => new URL((document.referrer || 'http://unknown'));
+
 const getHeaders = () => {
 
-    let token = getToken();
+    let isApplication = name => window.location.pathname.startsWith(`/${name}`);
+    let getReferrerUrl = () => new URL((document.referrer || 'http://unknown'));
 
     return {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-        ...(window.location.pathname.startsWith('/widget') ? {
+        ...(isApplication('admin') ? { 'Authorization': `Bearer ${getToken()}` } : {}),
+        ...(isApplication('widget') ? {
             'X-Anotea-Widget': getReferrerUrl().origin,
             'X-Anotea-Widget-Referrer': getReferrerUrl(),
         } : {})
@@ -37,9 +38,7 @@ const getHeaders = () => {
 export const _get = path => {
     return fetch(`/api${path}`, {
         method: 'GET',
-        headers: {
-            ...getHeaders(),
-        }
+        headers: getHeaders()
     })
     .then(res => handleResponse(path, res));
 };

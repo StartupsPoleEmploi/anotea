@@ -110,7 +110,7 @@ class Backoffice extends Component {
         return (
             <WithAnalytics category={`backoffice/${account.profile}`}>
                 <AppContext.Provider value={appContext}>
-                    <div className="anotea">
+                    <div className="Backoffice">
                         <Switch>
                             <Redirect exact from="/" to={layout.defaultPath} />
                             <Redirect exact from="/admin" to={layout.defaultPath} />

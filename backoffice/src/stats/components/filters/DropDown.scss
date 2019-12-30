@@ -1,6 +1,6 @@
 @import '../../../common/styles/variables';
 
-.dropdown {
+.Stats .dropdown {
   margin: 8px 0px 0px 16px;
 
   @mixin drop-down-button($border-bottom, $border-radius) {

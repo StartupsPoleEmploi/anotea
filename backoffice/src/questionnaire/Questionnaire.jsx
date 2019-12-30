@@ -48,7 +48,7 @@ class Questionnaire extends Component {
         }
 
         return (
-            <div>
+            <div className="Questionnaire">
                 {this.state.showRemerciements ?
                     <Remerciements stagiaire={stagiaire} infosRegion={infosRegion} /> :
                     <Formulaire

@@ -1,6 +1,6 @@
-@import '../../common/styles/variables';
+@import 'src/common/styles/variables';
 
-.ListeWidget {
+.Widget .ListeWidget {
 
   &.empty {
     opacity: 0.8;
