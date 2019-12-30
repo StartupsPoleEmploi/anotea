@@ -18,15 +18,15 @@ RUN mkdir $NVM_DIR \
 
 #Download npm dependencies
 COPY package.json package-lock.json /tmp/
-RUN cd /tmp && npm ci && mkdir -p /opt/anotea/backoffice && mv /tmp/node_modules /opt/anotea/backoffice/
+RUN cd /tmp && npm ci && mkdir -p /opt/anotea/ui && mv /tmp/node_modules /opt/anotea/ui/
 
 #Build project
 ARG ANOTEA_ENV
 ARG ANOTEA_GOOGLE_ANALYTICS_ID
 ARG ANOTEA_HOTJAR_ID
 ARG ANOTEA_SENTRY_DSN
-COPY ./ /opt/anotea/backoffice
-WORKDIR /opt/anotea/backoffice
+COPY ./ /opt/anotea/ui
+WORKDIR /opt/anotea/ui
 RUN REACT_APP_ANOTEA_ENV=${ANOTEA_ENV} \
     REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID=${ANOTEA_GOOGLE_ANALYTICS_ID} \
     REACT_APP_ANOTEA_HOTJAR_ID=${ANOTEA_HOTJAR_ID} \
@@ -34,5 +34,5 @@ RUN REACT_APP_ANOTEA_ENV=${ANOTEA_ENV} \
     npm run build &&  mv build/* /usr/share/nginx/html
 
 #Install site into nginx
-COPY misc/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 WORKDIR /usr/share/nginx/html

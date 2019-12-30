@@ -5,8 +5,8 @@ apps:
     instances: 1
     watch: false
 
-  - name: backoffice
+  - name: ui
     script: 'npm run start'
-    cwd: backoffice
+    cwd: ui
     instances: 1
     watch: false

@@ -8,28 +8,15 @@ services:
     volumes:
       - ./.data/nginx:/data:rw
 
-  backoffice:
+  ui:
     build:
       args:
         - ANOTEA_ENV=dev
         - ANOTEA_GOOGLE_ANALYTICS_ID=1234
         - ANOTEA_HOTJAR_ID=1234
 
-  questionnaire:
-    build:
-      args:
-        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
-        - ANOTEA_GOOGLE_OPTIMIZE_ID=1234
-        - ANOTEA_HOTJAR_ID=1234
-
-  widget:
-    build:
-      args:
-        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
-        - ANOTEA_HOTJAR_ID=1234
-
   backend:
-    command: npm run start:watch
+    command: npm run start
     volumes:
       - ./backend:/opt/anotea/backend:ro
     environment:
