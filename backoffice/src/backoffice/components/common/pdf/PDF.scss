@@ -1,0 +1,30 @@
+@import 'src/common/styles/variables';
+
+.PDF {
+
+  .header {
+    padding-top: 1rem;
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: $font-weight-700;
+    }
+
+    .export {
+      font-size: 0.875rem;
+    }
+
+    .summary {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: $color-black-80;
+      padding: 10px;
+      background-color: $color-green-10;
+    }
+  }
+
+  .footer {
+    margin-top: 1rem;
+  }
+}
+

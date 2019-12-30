@@ -1,0 +1,15 @@
+@import 'src/common/styles/variables';
+
+.Form {
+
+  @include box();
+
+  label {
+    font-size: 1.125rem;
+    font-weight: $font-weight-700;
+  }
+
+  .buttons {
+    margin-bottom: 0;
+  }
+}

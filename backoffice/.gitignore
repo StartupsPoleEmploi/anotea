@@ -24,4 +24,4 @@ yarn-error.log*
 .idea/
 *.iml
 
-src/styles/index.css
+src/common/styles/index.css

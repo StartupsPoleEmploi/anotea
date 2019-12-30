@@ -1,0 +1,17 @@
+@import 'src/common/styles/variables';
+
+.Pie {
+
+  height: 130px;
+
+  .empty {
+    text-align: center;
+    font-size: 0.875rem;
+    color: $color-black-60;
+  }
+
+  .tooltip {
+    font-size: 10px;
+  }
+}
+

@@ -1,0 +1,69 @@
+@import 'src/common/styles/variables';
+
+.StagiairesStats {
+
+  .title {
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
+    font-size: 1.5rem;
+    font-weight: $font-weight-900;
+  }
+
+  .stats {
+
+    @include box();
+    flex-grow: 1;
+
+    .data {
+      flex-grow: 1;
+      width: 33%;
+      border-right: solid 1px $color-grey-25;
+      padding: 2rem 0.5rem;
+      text-align: center;
+
+      .value {
+        font-size: 1.5rem;
+        font-weight: $font-weight-900;
+
+        .icon {
+          font-size: 1rem;
+        }
+      }
+
+      .label {
+        font-size: 1rem;
+        font-weight: $font-weight-700;
+        color: $color-black-60;
+      }
+
+      &.last {
+        border-right: unset;
+      }
+    }
+
+    .chart {
+      flex-grow: 1;
+      min-width: 300px;
+
+      &.first, &.second {
+        border-right: solid 1px $color-grey-25;
+      }
+
+      &.last {
+        border-right: unset;
+      }
+
+      .title {
+        font-size: 1.125rem;
+        font-weight: $font-weight-700;
+      }
+
+      .description {
+        font-size: 0.875rem;
+        padding-bottom: 1rem;
+        opacity: 0.6;
+      }
+    }
+  }
+}
+

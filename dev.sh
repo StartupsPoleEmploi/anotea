@@ -14,10 +14,7 @@ function check_system() {
 function install_dependencies() {
     find . -type d -mindepth 1 -maxdepth 1 \( \
         -name "backend" \
-        -o -name "backoffice" \
-        -o -name "questionnaire" \
-        -o -name "widget" \
-        -o -name "stats" \) \
+        -o -name "backoffice" \) \
         -exec npm ci --prefix "{}" \;
 }
 

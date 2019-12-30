@@ -1,0 +1,37 @@
+@import 'src/common/styles/variables';
+
+.Avis {
+
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  min-height: 10rem;
+  position: relative;
+
+  .disabled {
+    pointer-events: none;
+    opacity: 0.05;
+  }
+
+  .with-opacity {
+    opacity: 0.6;
+    border: 1px solid $color-grey-5;
+    background-color: $color-grey-5;
+    padding: 0.875rem;
+  }
+
+  .stagiaire-actions {
+    span:first-child {
+      margin-right: 1rem;
+    }
+  }
+
+  .btn-group-vertical {
+    display: contents;
+
+    button {
+      width: 100%;
+      margin-bottom: 0.7rem;
+    }
+  }
+}
+

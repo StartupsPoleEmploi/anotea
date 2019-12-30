@@ -1,0 +1,56 @@
+@import 'src/common/styles/variables';
+
+.Avis .Notes {
+
+  font-size: 0.875rem;
+
+  .text {
+    padding-left: 0;
+  }
+
+  .details {
+
+    border: 1px solid $color-grey-5;
+    border-radius: 5px;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
+
+    .note {
+
+      padding: 0.5rem 1rem;
+
+      .title {
+        margin-bottom: 0.1rem;
+        color: $color-grey-50;
+      }
+
+      .text {
+        font-weight: $font-weight-700;
+      }
+
+      .fa-star {
+        color: $color-yellow;
+      }
+
+      .title {
+        margin-bottom: 0.1rem;
+        color: $color-grey-50;
+      }
+
+      .text {
+        font-weight: $font-weight-700;
+      }
+
+      .fa-star {
+        color: $color-yellow;
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
