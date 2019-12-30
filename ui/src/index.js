@@ -30,6 +30,7 @@ Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
 GoogleAnalytics.initialize(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });
 
 const BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
+const StatsChunksLoader = React.lazy(() => import('./stats/Stats.scss'));
 
 let app = (
     <Router>
@@ -38,8 +39,15 @@ let app = (
         </Switch>
 
         <Route path="/questionnaire" render={() => <Questionnaire />} />
-        <Route path="/stats" render={() => <Stats />} />
         <Route path="/widget" render={() => <Widget />} />
+        <Route path="/stats" render={() => {
+            return (
+                <Suspense fallback={<div></div>}>
+                    <StatsChunksLoader />
+                </Suspense>
+            );
+        }}
+        />
         <Route path="/admin" render={props => {
             return (
                 <Suspense fallback={<div></div>}>

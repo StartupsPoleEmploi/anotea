@@ -9,6 +9,7 @@ import CarrouselWidget from './CarrouselWidget';
 import queryString from 'query-string';
 import 'iframe-resizer/js/iframeResizer.contentWindow.min';
 import './Widget.scss';
+import WithAnalytics from '../common/components/analytics/WithAnalytics';
 
 class Widget extends Component {
 
@@ -89,14 +90,16 @@ class Widget extends Component {
         }
 
         return (
-            <div className="Widget">
-                {false && <GridDisplayer />}
-                <div className="container-fluid">
-                    <WidgetContext.Provider value={this.props}>
-                        {widget}
-                    </WidgetContext.Provider>
+            <WithAnalytics category="widget">
+                <div className="Widget">
+                    {false && <GridDisplayer />}
+                    <div className="container-fluid">
+                        <WidgetContext.Provider value={this.props}>
+                            {widget}
+                        </WidgetContext.Provider>
+                    </div>
                 </div>
-            </div>
+            </WithAnalytics>
         );
     }
 }

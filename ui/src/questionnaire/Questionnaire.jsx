@@ -6,6 +6,7 @@ import Remerciements from './components/Remerciements';
 import ErrorPage from './components/ErrorPage';
 import Footer from './components/Footer';
 import './Questionnaire.scss';
+import WithAnalytics from '../common/components/analytics/WithAnalytics';
 
 class Questionnaire extends Component {
 
@@ -48,16 +49,18 @@ class Questionnaire extends Component {
         }
 
         return (
-            <div className="Questionnaire">
-                {this.state.showRemerciements ?
-                    <Remerciements stagiaire={stagiaire} infosRegion={infosRegion} /> :
-                    <Formulaire
-                        stagiaire={stagiaire}
-                        onSubmit={() => this.setState({ showRemerciements: true })}
-                    />
-                }
-                <Footer stagiaire={stagiaire} infosRegion={infosRegion} />
-            </div>
+            <WithAnalytics category="questionnaire">
+                <div className="Questionnaire">
+                    {this.state.showRemerciements ?
+                        <Remerciements stagiaire={stagiaire} infosRegion={infosRegion} /> :
+                        <Formulaire
+                            stagiaire={stagiaire}
+                            onSubmit={() => this.setState({ showRemerciements: true })}
+                        />
+                    }
+                    <Footer stagiaire={stagiaire} infosRegion={infosRegion} />
+                </div>
+            </WithAnalytics>
         );
     }
 }
