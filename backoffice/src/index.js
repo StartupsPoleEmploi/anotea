@@ -12,12 +12,13 @@ import * as Hotjar from './common/utils/hotjar';
 import * as GoogleAnalytics from './common/components/analytics/AnalyticsContext';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { createRouter } from './common/utils/router';
+import Questionnaire from './questionnaire/Questionnaire';
 
 let env = process.env;
 
 WebFont.load({
     google: {
-        families: ['Lato']
+        families: ['Lato:400,700,900']
     }
 });
 
@@ -42,6 +43,8 @@ let app = (
             );
         }}
         />
+
+        <Route path="/questionnaire" render={() => <Questionnaire />} />
 
     </Router>
 );
