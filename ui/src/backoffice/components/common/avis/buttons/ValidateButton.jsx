@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { publishAvis } from '../../../../services/avisService';
+import { validateAvis } from '../../../../services/avisService';
 import Button from '../../../../../common/components/Button';
 import { Dropdown, DropdownDivider, DropdownItem } from '../../Dropdown';
 
@@ -11,10 +11,10 @@ export default class ValidateButton extends React.Component {
         onChange: PropTypes.func.isRequired,
     };
 
-    publish = async qualification => {
+    validate = async qualification => {
         let { avis } = this.props;
 
-        let updated = await publishAvis(avis._id, qualification);
+        let updated = await validateAvis(avis._id, qualification);
         this.props.onChange(updated, {
             message: {
                 type: 'local',
@@ -36,11 +36,11 @@ export default class ValidateButton extends React.Component {
                     }
                     items={
                         <div>
-                            <DropdownItem onClick={() => this.publish('négatif')}>
+                            <DropdownItem onClick={() => this.validate('négatif')}>
                                 <i className="far fa-thumbs-down a-icon" /> Négatif
                             </DropdownItem>
                             <DropdownDivider />
-                            <DropdownItem onClick={() => this.publish('positif')}>
+                            <DropdownItem onClick={() => this.validate('positif')}>
                                 <i className="far fa-thumbs-up a-icon" /> Positif ou neutre
                             </DropdownItem>
                         </div>

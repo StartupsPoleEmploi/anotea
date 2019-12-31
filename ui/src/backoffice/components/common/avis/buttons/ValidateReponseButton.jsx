@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { publishReponse } from '../../../../services/avisService';
+import { validateReponse } from '../../../../services/avisService';
 import Button from '../../../../../common/components/Button';
 
 export default class ValidateReponseButton extends React.Component {
@@ -13,7 +13,7 @@ export default class ValidateReponseButton extends React.Component {
     onClick = async () => {
         let { avis } = this.props;
 
-        let updated = await publishReponse(avis._id);
+        let updated = await validateReponse(avis._id);
         this.props.onChange(updated, {
             message: {
                 type: 'local',

@@ -121,13 +121,13 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         return res.json({ 'message': 'avis deleted' });
     }));
 
-    router.put('/backoffice/avis/:id/publish', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/validate', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
         let { qualification } = await Joi.validate(req.body, { qualification: Joi.string().required() }, { abortEarly: false });
 
-        let updated = await workflow.publish(id, qualification, { profile, sendEmail: true });
+        let updated = await workflow.validate(id, qualification, { profile, sendEmail: true });
 
         return res.json(updated);
     }));
@@ -144,12 +144,12 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
     }));
 
-    router.put('/backoffice/avis/:id/publishReponse', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/backoffice/avis/:id/validateReponse', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
 
-        let avis = await workflow.publishReponse(id, { profile });
+        let avis = await workflow.validateReponse(id, { profile });
 
         return res.json(avis);
 

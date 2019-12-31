@@ -25,12 +25,12 @@ export const rejectAvis = (id, qualification) => {
     return _put(`/backoffice/avis/${id}/reject`, { qualification });
 };
 
-export const publishAvis = (id, qualification) => {
-    return _put(`/backoffice/avis/${id}/publish`, { qualification });
+export const validateAvis = (id, qualification) => {
+    return _put(`/backoffice/avis/${id}/validate`, { qualification });
 };
 
-export const publishReponse = id => {
-    return _put(`/backoffice/avis/${id}/publishReponse`);
+export const validateReponse = id => {
+    return _put(`/backoffice/avis/${id}/validateReponse`);
 };
 
 export const rejectReponse = id => {

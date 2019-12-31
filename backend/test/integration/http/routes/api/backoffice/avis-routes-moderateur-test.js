@@ -165,7 +165,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.body.avis.length, 0);
     });
 
-    it('can publish reponse', async () => {
+    it('can validate reponse', async () => {
 
         let app = await startServer();
         let comment = newComment();
@@ -175,7 +175,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/publishReponse`)
+        .put(`/api/backoffice/avis/${comment._id}/validateReponse`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
@@ -183,7 +183,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.reponse.status, 'validated');
     });
 
-    it('can not publish reponse of another region', async () => {
+    it('can not validate reponse of another region', async () => {
 
         let app = await startServer();
         let comment = newComment({ codeRegion: '6' });
@@ -193,7 +193,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${comment._id}/publishReponse`)
+        .put(`/api/backoffice/avis/${comment._id}/validateReponse`)
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 404);
@@ -300,7 +300,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.strictEqual(response.statusCode, 404);
     });
 
-    it('can publish an avis', async () => {
+    it('can validate an avis', async () => {
 
         let app = await startServer();
         const id = new ObjectID();
@@ -311,7 +311,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${id}/publish`)
+        .put(`/api/backoffice/avis/${id}/validate`)
         .send({ qualification: 'positif' })
         .set('authorization', `Bearer ${token}`);
 
@@ -331,20 +331,20 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: '11111111111111',
-                courriel: 'publish@email.fr',
+                courriel: 'validate@email.fr',
                 SIRET: 11111111111111,
             })),
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${id}/publish`)
+        .put(`/api/backoffice/avis/${id}/validate`)
         .send({ qualification: 'positif' })
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 200);
         return checkEmail(mailer => {
             let message = mailer.getLastEmailMessageSent();
-            assert.strictEqual(message.email, 'publish@email.fr');
+            assert.strictEqual(message.email, 'validate@email.fr');
             assert.strictEqual(message.parameters.subject, 'Pôle Emploi - Avis signalé dans votre Espace Anotéa');
         });
     });
@@ -376,7 +376,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         });
     });
 
-    it('can not publish an avis of another region', async () => {
+    it('can not validate an avis of another region', async () => {
 
         let app = await startServer();
         const id = new ObjectID();
@@ -387,14 +387,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${id}/publish`)
+        .put(`/api/backoffice/avis/${id}/validate`)
         .send({ qualification: 'positif' })
         .set('authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.statusCode, 404);
     });
 
-    it('can not publish an avis when logged as financeur', async () => {
+    it('can not validate an avis when logged as financeur', async () => {
 
         let app = await startServer();
         const id = new ObjectID();
@@ -405,7 +405,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         ]);
 
         let response = await request(app)
-        .put(`/api/backoffice/avis/${id}/publish`)
+        .put(`/api/backoffice/avis/${id}/validate`)
         .send({ qualification: 'positif' })
         .set('authorization', `Bearer ${token}`);
 
