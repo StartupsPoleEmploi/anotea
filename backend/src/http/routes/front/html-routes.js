@@ -1,20 +1,62 @@
 const express = require('express');
 const externalLinks = require('./utils/externalLinks');
 
-module.exports = ({ db, configuration, communes }) => {
+module.exports = ({ db, configuration, communes, peconnect }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
-    router.get('/', (req, res) => {
-        res.render('front/homepage', { data: configuration.front });
+    router.get('/', async (req, res) => {
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.nonce
+        };
+
+        const [avisCount, organismesCount, stagiairesCount] = await Promise.all([
+            db.collection('comment').count(),
+            db.collection('accounts').count({ 'profile': 'organisme', 'score.nb_avis': { $gte: 1 } }),
+            db.collection('trainee').count({ mailSentDate: { $ne: null } })
+        ]);
+
+        res.render('front/homepage', { avisCount: new Intl.NumberFormat('fr').format(avisCount), organismesCount: new Intl.NumberFormat('fr').format(organismesCount), stagiairesCount: new Intl.NumberFormat('fr').format(stagiairesCount), data: configuration.front, connectionLink: connectionInfos.link, failed: req.query.failed });
     });
 
     router.get('/cgu', (req, res) => {
         res.render('front/cgu');
     });
 
-    router.get('/faq', (req, res) => {
-        res.render('front/faq');
+    router.get('/politique-confidentialite', (req, res) => {
+        res.render('front/politique-confidentialite');
+    });
+
+    router.get('/services/organismes', (req, res) => {
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.nonce
+        };
+        res.render('front/faq_organismes', { connectionLink: connectionInfos.link });
+
+    });
+
+    router.get('/services/stagiaires', (req, res) => {
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.nonce
+        };
+
+        res.render('front/faq_stagiaires', { connectionLink: connectionInfos.link });
+    });
+
+    router.get('/services/financeurs', (req, res) => {
+        const connectionInfos = peconnect.initConnection();
+        req.session.pe_connect = {
+            state: connectionInfos.state,
+            nonce: connectionInfos.nonce
+        };
+
+        res.render('front/faq_financeurs', { connectionLink: connectionInfos.link });
     });
 
     router.get('/doc/:name', (req, res) => {

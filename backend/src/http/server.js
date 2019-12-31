@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const Boom = require('boom');
 const createMiddlewares = require('./middlewares/middlewares');
 const compression = require('compression');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 module.exports = components => {
 
@@ -36,10 +38,19 @@ module.exports = components => {
             }
         }
     }));
+    app.use(session({
+        secret: configuration.app.session_secret,
+        resave: false,
+        saveUninitialized: true,
+        store: new MongoStore({ client: components.client })
+    }));
 
-    //Pubic routes with HTML server-side rendering
+    //Public routes with HTML server-side rendering
     app.use('/', require('./routes/front/html-routes')(httpComponents));
     app.use('/', require('./routes/front/emails-routes')(httpComponents));
+
+    //PE Connect API callback
+    app.use('/', require('./routes/front/peconnect-routes')(httpComponents));
 
     //API routes
     app.use('/api', middlewares.addRateLimit(sentry));
@@ -75,7 +86,6 @@ module.exports = components => {
 
     //Error middleware
     app.use((rawError, req, res, next) => { // eslint-disable-line no-unused-vars
-
         let error = req.err = rawError;
         if (!rawError.isBoom) {
             if (rawError.name === 'ValidationError') {

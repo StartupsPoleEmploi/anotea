@@ -3,7 +3,8 @@
   "app": {
     "name": "Anotea",
     "public_hostname": "http://127.0.0.1:3000",
-    "port": 8080
+    "port": 8080,
+    "session_secret": "1234"
   },
   "log": {
     "level": "info",
@@ -16,6 +17,14 @@
       "path": "../.data/datalake/logs",
       "fileNamePrefix": "anotea"
     }
+  },
+  "peconnect": {
+    "client_id": "12345",
+    "client_secret": "45678",
+    "callback_url": "http://127.0.0.1:8080/callback_pe_connect",
+    "auth_base_url": "https://authentification-candidat.pole-emploi.fr",
+    "api_base_url": "https://api.emploi-store.fr/partenaire",
+    "timeout": 1000
   },
   "sentry": {
     "dsn": null

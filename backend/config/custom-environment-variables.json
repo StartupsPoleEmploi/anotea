@@ -1,7 +1,8 @@
 {
   "env": "ANOTEA_ENV",
   "app": {
-    "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME"
+    "public_hostname": "ANOTEA_APP_PUBLIC_HOSTNAME",
+    "session_secret": "ANOTEA_APP_SESSION_SECRET"
   },
   "mongodb": {
     "uri": "ANOTEA_MONGODB_URI"
@@ -36,6 +37,14 @@
     "datalake": {
       "path": "ANOTEA_LOG_DATALAKE_PATH"
     }
+  },
+  "peconnect": {
+    "client_id": "ANOTEA_PECONNECT_CLIENT_ID",
+    "client_secret": "ANOTEA_PECONNECT_CLIENT_SECRET",
+    "callback_url": "ANOTEA_PECONNECT_CLIENT_CALLBACK_URL",
+    "auth_base_url": "ANOTEA_PECONNECT_AUTH_BASE_URL",
+    "api_base_url": "ANOTEA_PECONNECT_API_BASE_URL",
+    "timeout": "ANOTEA_PECONNECT_TIMEOUT"
   },
   "sentry": {
     "dsn": "ANOTEA_SENTRY_DSN"

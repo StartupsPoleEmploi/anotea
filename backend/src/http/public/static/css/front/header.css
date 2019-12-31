@@ -1,0 +1,258 @@
+.header {
+    box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
+    height: 107px;
+    width: 100vw;
+    top: 0px;
+    left: 0px;
+    position: fixed;
+    z-index: 1000;
+    background: white;
+}
+
+.login {
+    position: absolute;
+    top: 0px;
+    right: 20px;
+    width: auto;
+    padding: 0;
+}
+
+.login > div {
+    float: left;
+}
+
+.login > * {
+    display: inline-block;
+    height: 40px;
+}
+
+.logo, .admin {
+    outline: none;
+}
+
+.header .logo img {
+    margin: 15px 50px 15px 200px;
+}
+
+.header .logo-pe-mobile {
+    display: none;
+    vertical-align: middle;
+}
+
+.header .logo-pe, .logo img  {
+    display: inline-block;
+    height: 75px;
+    vertical-align: middle;
+}
+
+.header .logo-pe {
+    margin-right: 20px;
+}
+
+.menu {
+    margin-top: 15px;
+    width: 175px;
+}
+
+.menu .burger {
+    display: none;
+}
+
+.menu .content {
+    box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
+    border-radius: 5px;
+}
+
+.menu.closed .icon-close {
+    display: none;
+}
+
+.menu.open .icon-open {
+    display: none;
+}
+
+.menu a.unroll {
+    outline: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 30px;
+    padding-bottom: 25px;
+}
+
+a.admin, a.contact {
+    line-height: 107px;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
+    position: absolute;
+    top: 60px;
+    background: white;
+}
+
+.menu img {
+    vertical-align: middle;
+    width: 15px;
+}
+
+.menu.closed div {
+    display: none;
+}
+
+.menu a {
+    color:#24303A;
+    text-decoration: none;
+}
+
+.menu li {
+    line-height: 25px;
+}
+
+.header .menu .content ul li .icon {
+    display: none;
+}
+
+a.contact {
+    background: #F0801A;
+    color: #24303A;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
+    letter-spacing: 0.5px; 
+    text-align: center;
+    padding: 15px 15px 0px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    text-transform: uppercase;
+    margin: 0px 30px 0px 30px;
+}
+
+.menu .button {
+    display: inline-block;
+    position: relative;
+    margin: 0px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    background-color: #29333C;
+    box-shadow: none;
+    border: none;
+    font-size: 0.9em;
+    padding: 12px 20px 0px 20px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.menu-mobile {
+    display: none;
+}
+
+@media (max-width: 740px) {
+
+    .header {
+        height: 48px;
+    }
+
+    .header .logo-pe {
+        display: none;
+    }
+
+    .header .logo-pe-mobile, .header .logo img {
+        display: inline-block;
+    }
+
+    .header .logo-pe-mobile, .header .logo img {
+        height: 36px;
+        margin: inherit;
+        margin-top: 5px;
+        display: inline-block;
+    }
+
+    .header .logo img, .header .logo-pe-mobile {
+        margin-left: 16px;
+    }
+
+    .header .menu {
+        margin-top: 2px;
+    }
+
+    .header .menu a.unroll {
+        margin-top: 0;
+        padding-bottom: 0;
+    }
+
+    .header .menu .burger {
+        display: inherit;
+        position: absolute;
+        right: 0;
+        width: 24px;
+    }
+
+    .header .admin, .header .menu span, .header  .menu .icon-close, .header  .menu .icon-open {
+        display: none;
+    }
+
+    .header .menu .content {
+        height: 100vh;
+        position: fixed;
+        top: 32px;
+        left: 0;
+        z-index: 1000;
+    }
+
+    .header .menu .content ul {
+        top: 0;
+        height: 100%;
+        width: 270px;
+    }
+
+    .header .menu .content ul li {
+        font-size: 1.1em;
+        line-height: 25px;
+        height: 40px;
+        margin: 20px 0px 20px 0px;
+    }
+
+    .header .menu .content ul li .icon {
+        display: inherit;
+        float: right;
+    }
+
+    .menu .bar {
+        display: inherit;
+        margin: 15px 0px 0px 5px;
+    }
+
+    .menu-mobile {
+        display: inherit;
+        position: fixed;
+        bottom: 0px;
+        width: 290px;
+    }
+
+    .menu-mobile .admin {
+        display: inherit;
+        font-size: 1em;
+    }
+
+    .menu-mobile .admin img {
+        width: 26px;
+        margin: 11px;
+    }
+
+    .menu-mobile a.contact {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        display: block;
+        padding: 0;
+        height: 48px;
+        line-height: 48px;
+    }
+}
