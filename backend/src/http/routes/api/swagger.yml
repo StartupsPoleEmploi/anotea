@@ -8,7 +8,6 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-basePath: /api
 schemes:
   - https
   - http
@@ -501,7 +500,7 @@ definitions:
             $ref: "#/definitions/OrganismeFormateur"
 
 paths:
-  /v1/avis:
+  /api/v1/avis:
     get:
       description: Renvoie tous les avis triés par date et filtrés en fonction des paramètres
       operationId: getAvis
@@ -558,7 +557,7 @@ paths:
       tags:
         - Publique
 
-  /v1/avis/:id:
+  /api/v1/avis/:id:
     get:
       description: >
         Permet d'obtenir un avis à partir de son identifiant
@@ -589,7 +588,7 @@ paths:
       tags:
         - Publique
 
-  /v1/formations:
+  /api/v1/formations:
     get:
       description: >
         Permet d'obtenir la liste de toutes les formations contenues dans l'intercarif avec pour chacune d'elles, les avis réconciliés et le score.
@@ -655,7 +654,7 @@ paths:
       tags:
         - Publique
 
-  /v1/formations/:id:
+  /api/v1/formations/:id:
     get:
       description: >
         Permet d'obtenir une formation à partir de son identifiant
@@ -697,7 +696,7 @@ paths:
       tags:
         - Publique
 
-  /v1/formations/:id/avis:
+  /api/v1/formations/:id/avis:
     get:
       description: >
         Permet d'obtenir la liste des avis pour la formation
@@ -744,7 +743,7 @@ paths:
       tags:
         - Publique
 
-  /v1/sessions:
+  /api/v1/sessions:
     get:
       description: >
         Permet d'obtenir la liste de toutes les sessions contenues dans l'intercarif avec pour chacune d'elles, les avis réconciliés et le score.
@@ -818,7 +817,7 @@ paths:
       tags:
         - Publique
 
-  /v1/sessions/:id:
+  /api/v1/sessions/:id:
     get:
       description: >
         Permet d'obtenir une session à partir de son identifiant
@@ -861,7 +860,7 @@ paths:
       tags:
         - Publique
 
-  /v1/sessions/:id/avis:
+  /api/v1/sessions/:id/avis:
     get:
       description: >
         Permet d'obtenir la liste des avis pour la session
@@ -909,7 +908,7 @@ paths:
       tags:
         - Publique
 
-  /v1/actions:
+  /api/v1/actions:
     get:
       description: >
         Permet d'obtenir la liste de toutes les actions contenues dans l'intercarif avec pour chacune d'elles, les avis réconciliés et le score.
@@ -983,7 +982,7 @@ paths:
       tags:
         - Publique
 
-  /v1/actions/:id:
+  /api/v1/actions/:id:
     get:
       description: >
         Permet d'obtenir une action à partir de son identifiant
@@ -1026,7 +1025,7 @@ paths:
       tags:
         - Publique
 
-  /v1/actions/:id/avis:
+  /api/v1/actions/:id/avis:
     get:
       description: >
         Permet d'obtenir la liste des avis pour l'action
@@ -1074,7 +1073,7 @@ paths:
       tags:
         - Publique
 
-  /v1/organismes-formateurs:
+  /api/v1/organismes-formateurs:
     get:
       description: >
         Permet d'obtenir la liste de tous les organismes formateurs contenus dans l'intercarif avec pour chacun d'eux leur score.
@@ -1150,7 +1149,7 @@ paths:
       tags:
         - Publique
 
-  /v1/organismes-formateurs/:id:
+  /api/v1/organismes-formateurs/:id:
     get:
       description: >
         Permet d'obtenir un organisme formateur à partir de son identifiant
@@ -1183,7 +1182,7 @@ paths:
       tags:
         - Publique
 
-  /v1/organismes-formateurs/:id/avis:
+  /api/v1/organismes-formateurs/:id/avis:
     get:
       description: >
         Permet d'obtenir la liste des avis pour l'organisme formateur
@@ -1230,7 +1229,7 @@ paths:
       tags:
         - Publique
 
-  /v1/ping/anonymous:
+  /api/v1/ping/anonymous:
     get:
       description: Permet de vérifier que l'api fonctionne
       operationId: pingAnonymous
@@ -1248,7 +1247,7 @@ paths:
       tags:
         - Publique
 
-  /v1/ping/authenticated:
+  /api/v1/ping/authenticated:
     get:
       description: Permet de valider l'authentification
       operationId: pingAuthenticated
@@ -1264,7 +1263,7 @@ paths:
       tags:
         - Publique
 
-  /v1/ping/error:
+  /api/v1/ping/error:
     get:
       description: Permet de générer une erreur
       operationId: pingError
