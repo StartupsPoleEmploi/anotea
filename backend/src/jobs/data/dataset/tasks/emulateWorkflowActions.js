@@ -12,7 +12,7 @@ module.exports = async (db, workflow, options = {}) => {
 
     let nbModerationsActions = (options.commentaires || 100) / 5;
     await makeAction(nbModerationsActions, { status: 'none' }, avis => {
-        return workflow.publish(avis._id, 'positif');
+        return workflow.validate(avis._id, 'positif');
     });
     await makeAction(nbModerationsActions, { status: 'none' }, avis => {
         return workflow.reject(avis._id, 'alerte');
@@ -28,7 +28,7 @@ module.exports = async (db, workflow, options = {}) => {
 
     let nbReponsesActions = nbCommentairesActions / 5;
     await makeAction(nbReponsesActions, { 'reponse.status': 'none' }, avis => {
-        return workflow.publishReponse(avis._id, true);
+        return workflow.validateReponse(avis._id, true);
     });
     await makeAction(nbReponsesActions, { 'reponse.status': 'none' }, avis => {
         return workflow.rejectReponse(avis._id, faker.lorem.paragraph());

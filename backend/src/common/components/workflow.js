@@ -21,7 +21,7 @@ module.exports = (db, logger, emails) => {
     };
 
     return {
-        publish: async (id, qualification, options = {}) => {
+        validate: async (id, qualification, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
             let original = await db.collection('comment').findOne({ _id: new ObjectID(id) });
@@ -45,7 +45,7 @@ module.exports = (db, logger, emails) => {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
-            saveEvent(id, 'publish', {
+            saveEvent(id, 'validate', {
                 app: 'moderation',
                 user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
@@ -250,7 +250,7 @@ module.exports = (db, logger, emails) => {
 
             return result.value;
         },
-        publishReponse: async (id, options = {}) => {
+        validateReponse: async (id, options = {}) => {
 
             let profile = ensureProfile(options.profile, 'moderateur');
 
@@ -272,7 +272,7 @@ module.exports = (db, logger, emails) => {
                 throw new IdNotFoundError(`Avis with identifier ${id} not found`);
             }
 
-            saveEvent(id, 'publishReponse', {
+            saveEvent(id, 'validateReponse', {
                 app: 'moderation',
                 user: profile ? profile.getUser().id : 'admin',
                 profile: 'moderateur',
