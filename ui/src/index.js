@@ -12,8 +12,6 @@ import * as Hotjar from './common/utils/hotjar';
 import * as GoogleAnalytics from './common/components/analytics/AnalyticsContext';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { createRouter } from './common/utils/router';
-import Questionnaire from './questionnaire/Questionnaire';
-import Stats from './stats/Stats';
 import Widget from './widget/Widget';
 import './common/styles/global.scss';
 
@@ -29,8 +27,17 @@ Sentry.initialize(env.REACT_APP_ANOTEA_SENTRY_DSN);
 Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
 GoogleAnalytics.initialize(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });
 
-const BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
-const StatsChunksLoader = React.lazy(() => import('./stats/Stats.scss'));
+let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
+let StatsChunksLoader = React.lazy(() => import('./stats/Stats'));
+let QuestionnaireChunksLoader = React.lazy(() => import('./questionnaire/Questionnaire'));
+
+let getChunk = chunk => {
+    return (
+        <Suspense fallback={<div></div>}>
+            {chunk}
+        </Suspense>
+    );
+};
 
 let app = (
     <Router>
@@ -38,24 +45,10 @@ let app = (
             <Redirect exact from="/" to="/admin" />
         </Switch>
 
-        <Route path="/questionnaire" render={() => <Questionnaire />} />
         <Route path="/widget" render={() => <Widget />} />
-        <Route path="/stats" render={() => {
-            return (
-                <Suspense fallback={<div></div>}>
-                    <StatsChunksLoader />
-                </Suspense>
-            );
-        }}
-        />
-        <Route path="/admin" render={props => {
-            return (
-                <Suspense fallback={<div></div>}>
-                    <BackofficeChunksLoader router={createRouter(props)} />
-                </Suspense>
-            );
-        }}
-        />
+        <Route path="/questionnaire" render={() => getChunk(<QuestionnaireChunksLoader />)} />
+        <Route path="/stats" render={() => getChunk(<StatsChunksLoader />)} />
+        <Route path="/admin" render={props => getChunk(<BackofficeChunksLoader router={createRouter(props)} />)} />
 
     </Router>
 );
