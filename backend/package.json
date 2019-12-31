@@ -2,32 +2,32 @@
   "name": "anotea",
   "version": "1.0.0",
   "description": "Anotea : l'advisor de la formation ! Accédez aux avis des anciens stagiaires pour mieux choisir sa formation !",
-  "main": "index.js",
-  "scripts": {
-    "test": "npm run test:all",
-    "test:unit": "mocha --recursive --exit --timeout 1000 test/unit",
-    "test:coverage": "nyc --reporter=html --reporter=text-summary mocha --recursive --exit --timeout 5000 test",
-    "test:integration": "mocha --recursive --exit --timeout 5000 test/integration",
-    "test:all": "npm run test:unit && npm run test:integration",
-    "build": "mkdir -p build/public/static/js/widget/ && uglifyjs src/http/public/static/js/widget/anotea-widget-loader.js --source-map --output build/public/static/js/widget/anotea-widget-loader.min.js",
-    "start": "node index.js",
-    "start:watch": "nodemon --inspect --ignore test/ index.js",
-    "lint": "eslint src test",
-    "smtp:start": "docker rm smtp; docker run -d --name smtp -p 1025:1025 -p 8025:8025 mailhog/mailhog",
-    "smtp:stop": "docker stop smtp"
-  },
+  "homepage": "https://anotea.pole-emploi.fr",
   "repository": {
     "type": "git",
     "url": "git@github.com:StartupsPoleEmploi/anotea.git"
   },
+  "license": "ISC",
   "author": "Loïc Guillois <loic@fitlab.fr>",
   "contributors": [
     "Loïc Guillois <loic@fitlab.fr>",
     "Benoît Guérout <bguerout@yonoma.com>",
     "Nabil Choukri <nabil.choukri@pole-emploi.fr>"
   ],
-  "homepage": "https://anotea.pole-emploi.fr",
-  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "build": "mkdir -p build/public/static/js/widget/ && uglifyjs src/http/public/static/js/widget/anotea-widget-loader.js --source-map --output build/public/static/js/widget/anotea-widget-loader.min.js",
+    "lint": "eslint src test",
+    "smtp:start": "docker rm smtp; docker run -d --name smtp -p 1025:1025 -p 8025:8025 mailhog/mailhog",
+    "smtp:stop": "docker stop smtp",
+    "start": "node index.js",
+    "start:watch": "nodemon --inspect --ignore test/ index.js",
+    "test": "npm run test:all",
+    "test:all": "npm run test:unit && npm run test:integration",
+    "test:coverage": "nyc --reporter=html --reporter=text-summary mocha --recursive --exit --timeout 5000 test",
+    "test:integration": "mocha --recursive --exit --timeout 5000 test/integration",
+    "test:unit": "mocha --recursive --exit --timeout 1000 test/unit"
+  },
   "dependencies": {
     "@sentry/node": "5.10.2",
     "@slack/webhook": "5.0.2",
@@ -55,7 +55,7 @@
     "joi": "14.3.1",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.15",
-    "xml2js": "0.4.22",
+    "md5": "2.2.1",
     "md5-file": "4.0.0",
     "mjml": "4.5.1",
     "mobile-detect": "1.4.4",
@@ -72,12 +72,9 @@
     "swagger-ui-express": "4.1.2",
     "underscore.string": "3.3.5",
     "uuid": "3.3.3",
+    "xml2js": "0.4.22",
     "xss": "1.0.6",
-    "yamljs": "0.3.0",
-    "md5": "2.2.1"
-  },
-  "engines": {
-    "node": ">= 10.14.1"
+    "yamljs": "0.3.0"
   },
   "devDependencies": {
     "eslint": "6.7.2",
@@ -87,5 +84,8 @@
     "supertest": "4.0.2",
     "uglify-js": "3.7.2",
     "wait-until": "0.0.2"
+  },
+  "engines": {
+    "node": ">= 10.14.1"
   }
 }
