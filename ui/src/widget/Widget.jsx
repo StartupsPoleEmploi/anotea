@@ -10,6 +10,7 @@ import queryString from 'query-string';
 import 'iframe-resizer/js/iframeResizer.contentWindow.min';
 import './Widget.scss';
 import WithAnalytics from '../common/components/analytics/WithAnalytics';
+import { sendError } from '../common/utils/sentry';
 
 class Widget extends Component {
 
@@ -55,21 +56,41 @@ class Widget extends Component {
         return queryString.parse(urlParams);
     }
 
-    async fetchAvis(options) {
-        let { type, identifiant } = this.getParameters();
-
-        this.setState({ results: await getAvis(type, identifiant, options) });
-    }
-
     async componentDidMount() {
-        let { type, identifiant, format } = this.getParameters();
+        let { type, format } = this.getParameters();
 
         if (!['organisme', 'formation', 'action', 'session'].includes(type) ||
             !['score', 'carrousel', 'liste'].includes(format)) {
             return this.setState({ error: true });
         }
 
-        this.setState({ score: await getScore(type, identifiant) });
+        this.fetchScore();
+    }
+
+    async fetchScore() {
+        let { type, identifiant } = this.getParameters();
+
+        try {
+            let score = await getScore(type, identifiant);
+            this.setState({ score });
+        } catch (e) {
+            if (await e.json.statusCode > 400) {
+                sendError(e);
+            }
+        }
+    }
+
+    async fetchAvis(options) {
+        let { type, identifiant } = this.getParameters();
+
+        try {
+            let results = await getAvis(type, identifiant, options);
+            this.setState({ results });
+        } catch (e) {
+            if (await e.json.statusCode > 400) {
+                sendError(e);
+            }
+        }
     }
 
     render() {
