@@ -78,7 +78,7 @@ services:
     build:
       context: misc/efk/fluentbit
     ports:
-      - "24224:24224"
+      - "127.0.0.1:24224:24224"
     environment:
       - ANOTEA_FLUENTBIT_ELASTICSEARCH_HOST=elasticsearch
       - ANOTEA_FLUENTBIT_ELASTICSEARCH_PORT=9200
@@ -94,7 +94,7 @@ services:
     build:
       context: misc/efk/elasticsearch
     ports:
-      - "9200:9200"
+      - "127.0.0.1:9200:9200"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
     volumes:
@@ -106,7 +106,7 @@ services:
     build:
       context: misc/efk/kibana
     ports:
-      - "5601:5601"
+      - "127.0.0.1:5601:5601"
     depends_on:
       - elasticsearch
 
