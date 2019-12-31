@@ -1,0 +1,8 @@
+@import 'src/common/styles/variables';
+
+.Questionnaire .badwords {
+  color: $color-red;
+  font-size: 0.75rem;
+  font-style: italic;
+  line-height: 16px;
+}

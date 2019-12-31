@@ -1,0 +1,28 @@
+@import 'src/common/styles/variables';
+
+.Backoffice .Tabs {
+  .nav {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: $font-weight-boldest;
+    color: $color-white;
+
+    .nav-item {
+
+      opacity: 0.6;
+
+      &.active {
+        opacity: 1;
+
+        &:hover, &:focus {
+          font-weight: $font-weight-normal;
+        }
+      }
+
+      &:hover, &:focus {
+        cursor: pointer;
+        font-weight: $font-weight-bold;
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+@import 'src/common/styles/variables';
+
+.Widget .Verified {
+
+  font-size: 0.875rem;
+
+  span {
+    color: $color-black-80;
+  }
+}

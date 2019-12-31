@@ -1,0 +1,66 @@
+@import 'src/common/styles/variables';
+
+.Questionnaire .remerciements {
+
+  .header, .footer {
+    width: fit-content;
+    margin: auto;
+    left: inherit;
+  }
+
+  .panel-remerciements {
+
+    .links-block {
+      text-align: center;
+
+      h1 {
+        color: $color-blue;
+        font-size: 1.5rem;
+        line-height: 29px;
+        font-weight: 900;
+      }
+
+      .link {
+        margin: 20px 10px 0 10px;
+        background-color: $color-blue-10;
+        border-radius: 5px;
+
+        .btn {
+          color: $color-blue;
+          font-size: 1rem;
+          line-height: 24px;
+        }
+      }
+    }
+
+    .merci {
+      height: 252px;
+      background-color: $color-grey-5;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 3rem;
+
+      h2 {
+        color: $color-blue;
+      }
+
+      p {
+        margin: auto;
+        font-size: 0.9rem;
+        line-height: 21px;
+        color: $color-black;
+        margin-bottom: 2em;
+      }
+
+      a {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+      }
+    }
+  }
+
+
+  .footer {
+    margin-top: 2em;
+  }
+}

@@ -1,0 +1,39 @@
+.Backoffice .EmailsPreviewPage {
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  .carousel-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 210px;
+  }
+
+  .carousel {
+    position: relative;
+  }
+
+  .carousel__indicators {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 40px;
+
+    li {
+      &:nth-of-type(n + 2) {
+        margin-left: 9px;
+      }
+    }
+  }
+
+  iframe {
+    width: 100%;
+    height: 1200px;
+    border: 1px solid #C8CBCE;
+    pointer-events: none;
+  }
+}
+

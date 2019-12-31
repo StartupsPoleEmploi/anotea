@@ -1,0 +1,19 @@
+@import 'src/common/styles/variables';
+
+.Questionnaire .error-page {
+  color: $color-grey-50;
+  margin: auto;
+  background-color: $color-white;
+  padding: 20px;
+
+  section.error-page h2 {
+    font-size: 1.25em;
+    color: $color-blue;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  section.error-page, header {
+    text-align: center;
+  }
+}

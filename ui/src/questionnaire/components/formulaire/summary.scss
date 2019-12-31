@@ -1,0 +1,31 @@
+@import 'src/common/styles/variables';
+
+.Questionnaire .summary {
+  border: 1px solid $color-grey-5;
+  padding: 0.875rem;
+  font-size: 1rem;
+
+  .titre {
+    font-weight: $font-weight-bold;
+  }
+
+  .pseudo {
+    font-size: 0.875rem;
+    font-weight: $font-weight-bold;
+  }
+
+  .by {
+    font-size: 0.875rem;
+    color: $color-grey-50;
+  }
+
+  .missing {
+    font-size: 0.875rem;
+    font-weight: $font-weight-normal;
+    color: $color-grey-50;
+  }
+
+  .separator {
+    border-right: 1px solid $color-grey-5;
+  }
+}

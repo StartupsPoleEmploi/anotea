@@ -10,7 +10,7 @@
         if (env === 'recette' || location.indexOf('https://anotea.beta.pole-emploi.fr') !== -1) {
             return 'https://anotea.beta.pole-emploi.fr' + path;
         } else if (env === 'dev' || location.indexOf('load_anotea_widget_iframe_from_localhost=true') !== -1) {
-            return 'http://localhost:3002' + path;
+            return 'http://localhost:3000' + path;
         }
         return 'https://anotea.pole-emploi.fr' + path;
     };
