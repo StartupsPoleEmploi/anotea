@@ -1,62 +1,61 @@
-const uuid = require('uuid');
-const request = require('request');
+const { BadDataError } = require('../../common/errors');
+const { Issuer, generators, custom } = require('openid-client');
 
-const getState = () => uuid.v4().toString('base64');
+module.exports = (db, configuration) => {
 
-const getNonce = () => uuid.v4().toString('base64');
+    let clientId = configuration.peconnect.client_id;
+    let issuerUrl = configuration.peconnect.issuer_url;
+    let callbackUrl = configuration.peconnect.callback_url;
 
-const buildConnectionLink = (configuration, state, nonce) => `${configuration.peconnect.auth_base_url}/connexion/oauth2/authorize?realm=%2Findividu&response_type=code&client_id=${configuration.peconnect.client_id}&scope=application_${configuration.peconnect.client_id}%20api_peconnect-individuv1%20openid%20profile%20email&redirect_uri=${configuration.peconnect.callback_url}&state=${state}&nonce=${nonce}`;
+    let issuer = new Issuer({
+        issuer: issuerUrl,
+        jwks_uri: `https://entreprise.pole-emploi.fr/connexion/oauth2/connect/jwk_uri`,
+        authorization_endpoint: `${issuerUrl}/authorize`,
+        token_endpoint: `${issuerUrl}/access_token?realm=/individu`,
+        token_endpoint_auth_methods_supported: 'client_secret_post',
+        userinfo_endpoint: configuration.peconnect.api_url,
+    });
 
-const checkState = (realState, state) => realState === state;
+    let client = new issuer.Client({
+        client_id: clientId,
+        client_secret: configuration.peconnect.client_secret,
+        redirect_uris: [callbackUrl],
+        response_types: ['code'],
+    });
 
-module.exports = configuration => {
+    custom.setHttpOptionsDefaults({
+        timeout: configuration.peconnect.timeout,
+    });
+
     return {
-        initConnection: () => {
-            const state = getState();
-            const nonce = getNonce();
+        getAuthenticationUrl: async () => {
 
-            return {
+            let nonce = generators.nonce();
+            let state = generators.state();
+
+            await db.collection('peConnectTokens').insertOne({
+                nonce,
+                state,
+            });
+
+            return client.authorizationUrl({
+                scope: `api_peconnect-individuv1 openid profile email application_${clientId}`,
+                realm: '/individu',
                 state,
                 nonce,
-                link: buildConnectionLink(configuration, state, nonce)
-            };
+            });
         },
-        checkState: checkState,
-        buildAccessToken: (configuration, code, nonce) => {
-            return new Promise((resolve, reject) => {
-                const data = {
-                    grant_type: 'authorization_code',
-                    code,
-                    client_id: configuration.peconnect.client_id,
-                    client_secret: configuration.peconnect.client_secret,
-                    redirect_uri: configuration.peconnect.callback_url
-                };
-                request.post({ url: `${configuration.peconnect.auth_base_url}/connexion/oauth2/access_token?realm=%2Findividu`, form: data, timeout: configuration.peconnect.timeout }, (error, response, body) => {
-                    //TODO : manage timeout
-                    let json = JSON.parse(body);
+        getUserInfo: async url => {
+            let params = client.callbackParams(url);
 
-                    if (json.error) {
-                        reject({ error: json.error });
-                    } else if (json.nonce !== nonce) {
-                        reject({ error: 'nonce' });
-                    } else {
-                        resolve(json);
-                    }
-                });
-            });
+            let auth = await db.collection('peConnectTokens').findOne({ state: params.state });
+            if (!auth) {
+                throw new BadDataError('Unable to find PE connect token');
+            }
+
+            let tokenSet = await client.callback(callbackUrl, params, { state: auth.state, nonce: auth.nonce });
+
+            return await client.userinfo(tokenSet.access_token);
         },
-        getUserInfo: accessToken => {
-            return new Promise((resolve, reject) => {
-                const auth = `Bearer ${accessToken}`;
-                request.get({ url: `${configuration.peconnect.api_base_url}/peconnect-individu/v1/userinfo`, headers: { Authorization: auth }, timeout: configuration.peconnect.timeout }, (error, response, body) => {
-                    let json = JSON.parse(body);
-                    if (json.error) {
-                        reject({ error: json.error });
-                    } else {
-                        resolve(json);
-                    }
-                });
-            });
-        }
     };
 };

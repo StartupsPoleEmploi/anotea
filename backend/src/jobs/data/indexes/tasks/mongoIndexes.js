@@ -2,7 +2,6 @@ module.exports = {
     trainee: db => {
         return Promise.all([
             db.collection('trainee').createIndex({ 'token': 1 }, { unique: true }),
-            db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.idSession': 1 }),
             db.collection('trainee').createIndex({ 'codeRegion': 1 }),
             db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
             db.collection('trainee').createIndex({ 'mailSent': 1 }),
@@ -22,6 +21,7 @@ module.exports = {
             db.collection('trainee').createIndex({ 'avisCreated': 1 }),
             db.collection('trainee').createIndex({ 'tracking.firstRead': 1 }),
             db.collection('trainee').createIndex({ 'tracking.click': 1 }),
+            db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.idSession': 1 }),
             db.collection('trainee').createIndex({
                 'codeRegion': 1,
                 'training.place.postalCode': 1,

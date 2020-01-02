@@ -1,24 +1,25 @@
 const express = require('express');
 const externalLinks = require('./utils/externalLinks');
 
-module.exports = ({ db, configuration, communes, peconnect }) => {
+module.exports = ({ db, configuration, communes }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
 
     router.get('/', async (req, res) => {
-        const connectionInfos = peconnect.initConnection();
-        req.session.pe_connect = {
-            state: connectionInfos.state,
-            nonce: connectionInfos.nonce
-        };
 
-        const [avisCount, organismesCount, stagiairesCount] = await Promise.all([
+        let [avisCount, organismesCount, stagiairesCount] = await Promise.all([
             db.collection('comment').count(),
             db.collection('accounts').count({ 'profile': 'organisme', 'score.nb_avis': { $gte: 1 } }),
             db.collection('trainee').count({ mailSentDate: { $ne: null } })
         ]);
 
-        res.render('front/homepage', { avisCount: new Intl.NumberFormat('fr').format(avisCount), organismesCount: new Intl.NumberFormat('fr').format(organismesCount), stagiairesCount: new Intl.NumberFormat('fr').format(stagiairesCount), data: configuration.front, connectionLink: connectionInfos.link, failed: req.query.failed });
+        res.render('front/homepage', {
+            avisCount: new Intl.NumberFormat('fr').format(avisCount),
+            organismesCount: new Intl.NumberFormat('fr').format(organismesCount),
+            stagiairesCount: new Intl.NumberFormat('fr').format(stagiairesCount),
+            data: configuration.front,
+            failed: req.query.failed
+        });
     });
 
     router.get('/cgu', (req, res) => {
@@ -30,33 +31,16 @@ module.exports = ({ db, configuration, communes, peconnect }) => {
     });
 
     router.get('/services/organismes', (req, res) => {
-        const connectionInfos = peconnect.initConnection();
-        req.session.pe_connect = {
-            state: connectionInfos.state,
-            nonce: connectionInfos.nonce
-        };
-        res.render('front/faq_organismes', { connectionLink: connectionInfos.link });
+        res.render('front/faq_organismes');
 
     });
 
     router.get('/services/stagiaires', (req, res) => {
-        const connectionInfos = peconnect.initConnection();
-        req.session.pe_connect = {
-            state: connectionInfos.state,
-            nonce: connectionInfos.nonce
-        };
-
-        res.render('front/faq_stagiaires', { connectionLink: connectionInfos.link });
+        res.render('front/faq_stagiaires');
     });
 
     router.get('/services/financeurs', (req, res) => {
-        const connectionInfos = peconnect.initConnection();
-        req.session.pe_connect = {
-            state: connectionInfos.state,
-            nonce: connectionInfos.nonce
-        };
-
-        res.render('front/faq_financeurs', { connectionLink: connectionInfos.link });
+        res.render('front/faq_financeurs');
     });
 
     router.get('/doc/:name', (req, res) => {

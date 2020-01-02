@@ -14,6 +14,9 @@ module.exports = {
     getRemoteAddress: req => {
         return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     },
+    getFullUrl: req => {
+        return req.protocol + '://' + req.get('host') + req.baseUrl + req.url;
+    },
     tryAndCatch: callback => {
         return async (req, res, next) => {
             try {
