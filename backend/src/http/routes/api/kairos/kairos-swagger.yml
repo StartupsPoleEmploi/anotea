@@ -1,0 +1,78 @@
+#Can be edited online with https://editor.swagger.io/
+swagger: "2.0"
+info:
+  description: Documentation de l'API publique d'Anotéa
+  version: 1.0.0
+  title: Anotea
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+schemes:
+  - https
+  - http
+
+paths:
+  /kairos/generate-auth-url:
+    post:
+      description: >
+        Permet de générer un lien pour authentifier en SSO un organisme sur le backoffice Anotéa (signin).
+        Si l'organisme n'est pas connu par Anotéa, il sera créé durant l'appel (signup)
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: payload
+          required: true
+          description: L'ensemble des informations permettant l'identification ou la création d'un organisme
+          schema:
+            type: object
+            properties:
+              filters:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    siret:
+                      description: Le numéro SIRET de l'organisme formateur
+                      type: string
+                    raison_sociale:
+                      type: string
+                    courriel:
+                      type: string
+                    region:
+                      type: string
+
+      security:
+        - Bearer: []
+      responses:
+        200:
+          $ref: "#/responses/GenerateAuthUrlResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+      tags:
+        - Kairos
+
+  /kairos/check-if-organisme-is-eligible:
+    get:
+      description: >
+        Permet de vérifier si un organisme est éligible à la connexion Anotéa
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: siret
+          description: Le SIRET de l'organisme formateur
+          type: string
+          required: true
+      security:
+        - Bearer: []
+      responses:
+        200:
+          $ref: "#/responses/CheckIfOrganismeIsEligibleResponse"
+        400:
+          $ref: "#/responses/BadRequestErrorResponse"
+      tags:
+        - Kairos
+
+

@@ -7,9 +7,9 @@ module.exports = () => {
 
     // eslint-disable-next-line new-cap
     let router = express.Router();
-    let apiSpecifications = YAML.load(path.join(__dirname, './swagger.yml'));
+    let apiSpecifications = YAML.load(path.join(__dirname, './v1-swagger.yml'));
 
-    router.use('/doc', swaggerUi.serve, swaggerUi.setup(Object.assign({}, apiSpecifications)));
+    router.use('/v1/doc', swaggerUi.serve, swaggerUi.setup(Object.assign({}, apiSpecifications)));
 
     return router;
 };

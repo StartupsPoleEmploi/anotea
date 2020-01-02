@@ -4,6 +4,9 @@ const uuid = require('node-uuid');
 const Joi = require('joi');
 const _ = require('lodash');
 const configuration = require('config');
+const YAML = require('yamljs');
+const path = require('path');
+const swaggerUi = require('swagger-ui-express');
 const { tryAndCatch } = require('../../routes-utils');
 const { createOrganismeFomateurDTO } = require('../v1/utils/dto');
 const getCodeRegionFromKairosRegionName = require('../../../../jobs/organismes/tasks/kairos/getCodeRegionFromKairosRegionName');
@@ -81,6 +84,9 @@ module.exports = ({ db, auth, middlewares }) => {
             }
         });
     });
+
+    let apiSpecifications = YAML.load(path.join(__dirname, './kairos-swagger.yml'));
+    router.use('/kairos/doc', swaggerUi.serve, swaggerUi.setup(Object.assign({}, apiSpecifications)));
 
     router.post('/backoffice/generate-auth-url', checkAuth, generateAuthUrlRoute);//Deprecated
     router.post('/kairos/generate-auth-url', checkAuth, generateAuthUrlRoute);
