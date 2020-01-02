@@ -18,7 +18,7 @@
 }
 
 .footer .logo {
-    margin: 0px  50px 15px 150px;
+    margin: 0px 50px 15px 150px;
     vertical-align: middle;
     height: 75px;
 }
@@ -57,7 +57,7 @@
         margin: 10px 20px 0px 10px;
     }
 
-    .footer .logo-mobile,.footer .logo {
+    .footer .logo-mobile, .footer .logo {
         height: 36px;
     }
 

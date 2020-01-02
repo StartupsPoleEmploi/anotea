@@ -1,5 +1,5 @@
 .header {
-    box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
+    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.1);
     height: 107px;
     width: 100vw;
     top: 0px;
@@ -39,7 +39,7 @@
     vertical-align: middle;
 }
 
-.header .logo-pe, .logo img  {
+.header .logo-pe, .logo img {
     display: inline-block;
     height: 75px;
     vertical-align: middle;
@@ -59,7 +59,7 @@
 }
 
 .menu .content {
-    box-shadow: 0 2px 15px 0 rgba(0,0,0,0.1);
+    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.1);
     border-radius: 5px;
 }
 
@@ -87,7 +87,7 @@ a.admin, a.contact {
     list-style: none;
     padding: 10px;
     border-radius: 5px;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
     position: absolute;
     top: 60px;
     background: white;
@@ -103,7 +103,7 @@ a.admin, a.contact {
 }
 
 .menu a {
-    color:#24303A;
+    color: #24303A;
     text-decoration: none;
 }
 
@@ -121,7 +121,7 @@ a.contact {
     font-size: 16px;
     font-weight: bold;
     line-height: 24px;
-    letter-spacing: 0.5px; 
+    letter-spacing: 0.5px;
     text-align: center;
     padding: 15px 15px 0px 15px;
     text-decoration: none;
@@ -194,7 +194,7 @@ a.contact {
         width: 24px;
     }
 
-    .header .admin, .header .menu span, .header  .menu .icon-close, .header  .menu .icon-open {
+    .header .admin, .header .menu span, .header .menu .icon-close, .header .menu .icon-open {
         display: none;
     }
 

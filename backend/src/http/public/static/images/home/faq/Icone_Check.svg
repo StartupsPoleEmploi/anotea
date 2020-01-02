@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: sketchtool 57.1 (101010) - https://sketch.com -->
     <title>4A1A9830-EB0A-44D0-A562-147E27AA0EEC</title>
     <desc>Created with sketchtool.</desc>
@@ -9,7 +10,8 @@
                 <g id="LAYER_1" transform="translate(93.000000, 34.000000)">
                     <g id="Icone_Check" transform="translate(66.000000, 166.000000)">
                         <circle id="Oval" fill="#F28017" cx="15" cy="15" r="15"></circle>
-                        <polygon id="Path" fill="#FFFFFF" fill-rule="nonzero" points="11 22 6 17 7.66628571 15.3337143 11 18.6674286 22.6662857 7 24.3325714 8.6674"></polygon>
+                        <polygon id="Path" fill="#FFFFFF" fill-rule="nonzero"
+                                 points="11 22 6 17 7.66628571 15.3337143 11 18.6674286 22.6662857 7 24.3325714 8.6674"></polygon>
                     </g>
                 </g>
             </g>

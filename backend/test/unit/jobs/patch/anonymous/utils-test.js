@@ -12,7 +12,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE-TOTO ANGELIQUE 3222222V'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE');
     });
 
@@ -27,7 +27,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE-TOTO ANGELIQUE'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE');
     });
 
@@ -42,7 +42,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE - 3222222V'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE');
     });
 
@@ -57,7 +57,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE - 32222222'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE');
     });
 
@@ -72,7 +72,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE - Angélique Toto'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE');
     });
 
@@ -87,7 +87,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE - AIF CSP Angélique Toto'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE');
     });
 
@@ -102,7 +102,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE - Mme Angélique Toto'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE');
     });
 
@@ -117,7 +117,7 @@ describe(__filename, () => {
                 title: 'CAP BOULANGERIE marc toto'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP BOULANGERIE');
     });
 
@@ -132,7 +132,7 @@ describe(__filename, () => {
                 title: 'CAP MARCHANDISE'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP MARCHANDISE');
     });
 
@@ -147,7 +147,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE - Angélique Toto Saint François'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE SAINT FRANCOIS');
     });
 
@@ -162,7 +162,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE CERT 12345'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE CERT 12345');
     });
 
@@ -177,7 +177,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE CERT 12345'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE CERT 12345');
     });
 
@@ -192,7 +192,7 @@ describe(__filename, () => {
                 title: 'CAP PETITE ENFANCE CERT 15Q00312749I9902_15Q00312749I01S1'
             }
         });
-        
+
         assert.deepEqual(result.anonymizedTitle, 'CAP PETITE ENFANCE CERT 15Q00312749I9902_15Q00312749I01S1');
     });
 });
