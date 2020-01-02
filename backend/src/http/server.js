@@ -46,13 +46,13 @@ module.exports = components => {
 
     //API routes
     app.use('/api', middlewares.addRateLimit(sentry));
-    app.use('/api', require('./routes/api/swagger-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/ping-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/avis-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/formations-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/actions-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/sessions-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
+    app.use('/api', require('./routes/api/v1/swagger-routes')(httpComponents));
     app.use('/api', require('./routes/api/exports-routes')(httpComponents));
     app.use('/api', require('./routes/api/public-stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/regions-routes')(httpComponents));
