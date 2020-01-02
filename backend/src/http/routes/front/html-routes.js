@@ -4,17 +4,47 @@ const externalLinks = require('./utils/externalLinks');
 module.exports = ({ db, configuration, communes }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
+    let utils = {
+        getBackofficeUrl: () => `${(configuration.app.public_hostname)}/admin`,
+    };
 
-    router.get('/', (req, res) => {
-        res.render('front/homepage', { data: configuration.front });
+    router.get('/', async (req, res) => {
+
+        let [avisCount, organismesCount, stagiairesCount] = await Promise.all([
+            db.collection('comment').count(),
+            db.collection('accounts').count({ 'profile': 'organisme', 'score.nb_avis': { $gte: 1 } }),
+            db.collection('trainee').count({ mailSentDate: { $ne: null } })
+        ]);
+
+        res.render('front/homepage', {
+            avisCount: new Intl.NumberFormat('fr').format(avisCount),
+            organismesCount: new Intl.NumberFormat('fr').format(organismesCount),
+            stagiairesCount: new Intl.NumberFormat('fr').format(stagiairesCount),
+            data: configuration.front,
+            failed: req.query.failed,
+            utils,
+        });
     });
 
     router.get('/cgu', (req, res) => {
-        res.render('front/cgu');
+        res.render('front/cgu', { utils });
     });
 
-    router.get('/faq', (req, res) => {
-        res.render('front/faq');
+    router.get('/politique-confidentialite', (req, res) => {
+        res.render('front/politique-confidentialite', { utils });
+    });
+
+    router.get('/services/organismes', (req, res) => {
+        res.render('front/faq_organismes', { utils });
+
+    });
+
+    router.get('/services/stagiaires', (req, res) => {
+        res.render('front/faq_stagiaires', { utils });
+    });
+
+    router.get('/services/financeurs', (req, res) => {
+        res.render('front/faq_financeurs', { utils });
     });
 
     router.get('/doc/:name', (req, res) => {

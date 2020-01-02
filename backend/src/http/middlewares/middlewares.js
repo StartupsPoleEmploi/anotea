@@ -3,7 +3,7 @@ const _ = require('lodash');
 const basicAuth = require('basic-auth');
 const uuid = require('node-uuid');
 const RateLimit = require('express-rate-limit');
-const { tryAndCatch } = require('../routes/routes-utils');
+const { tryAndCatch, getFullUrl } = require('../routes/routes-utils');
 const createDatalakeExporter = require('./utils/createDatalakeExporter');
 const createResponseRecorder = require('./utils/createResponseRecorder');
 const findApplication = require('./utils/findApplication');
@@ -150,7 +150,7 @@ module.exports = (auth, logger, configuration) => {
                             request: {
                                 requestId: req.requestId,
                                 url: {
-                                    full: req.protocol + '://' + req.get('host') + req.baseUrl + req.url,
+                                    full: getFullUrl(req),
                                     relative: relativeUrl,
                                     path: (req.baseUrl || '') + (req.path || ''),
                                     parameters: _.omit(req.query, ['access_token']),

@@ -1,0 +1,48 @@
+<link rel="stylesheet" type="text/css" href="/static/css/front/header.css" media="all">
+
+<div class="header">
+    <a href="/" title="Accueil" class="logo" alt="logo Anotéa"><img src="/static/images/logo_Anotea_Horizontal_baseline2.png" /></a>
+    <img src="/static/images/pe.jpg" class="logo-pe-mobile" alt="logo Pôle Emploi"/>
+    <div class="login">
+        <div class="menu closed of" onMouseOver="javascript:$('.menu.of').not('.clicked').toggleClass('closed open')"
+            onMouseOut="javascript:$('.menu.of').not('.clicked').toggleClass('closed open')"
+            onClick="javascript:$('.menu.of.closed').toggleClass('closed open clicked');$('.menu.of.open').toggleClass('clicked')"
+            >
+            <a href="javascript:;" class="unroll" alt="menu Financeurs"><span>Nos services</span>
+                <img class="icon-open" src="/static/images/home/chevron-down.svg" />
+                <img class="icon-close" src="/static/images/home/chevron-up.svg" />
+                <img src="/static/images/home/burger.svg" class="burger" alt="Nos services" />
+            </a>
+            <div class="content">
+                <ul>
+                    <li>
+                        <a href="/services/stagiaires" title="Demandeurd'emploi">Demandeurs d'emploi
+                            <img class="icon" src="/static/images/home/chevron-right.png" />
+                        </a>
+                        <div class="de bar"></div>
+                    </li>
+                    <li>
+                        <a href="/services/organismes" title="Organisme de formation">Organismes de formation
+                            <img class="icon" src="/static/images/home/chevron-right.png" />
+                        </a>
+                        <div class="of bar"></div>
+                    </li>
+                    <li>
+                        <a href="/services/financeurs" title="Financeur">Financeurs
+                            <img class="icon" src="/static/images/home/chevron-right.png" />
+                        </a>
+                        <div class="financeur bar"></div>
+                    </li>
+                </ul>
+                <div class="menu-mobile">
+                    <a href="/admin" class="admin"><img src="/static/images/home/moderateur.svg"
+                        title="Accès espace modérateur" /> Espace modérateur</a>
+                    <a href="anotea@pole-emploi.fr" class="contact">Contactez-nous</a>
+                </div>
+            </div>
+        </div>
+        <img src="/static/images/pe.jpg" class="logo-pe" alt="logo Pôle Emploi"/>
+        <a href="/admin" class="admin"><img src="/static/images/home/moderateur.svg"
+                title="Accès espace modérateur" /></a>
+    </div>
+</div>

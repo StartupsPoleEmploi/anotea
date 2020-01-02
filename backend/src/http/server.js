@@ -37,9 +37,12 @@ module.exports = components => {
         }
     }));
 
-    //Pubic routes with HTML server-side rendering
+    //Public routes with HTML server-side rendering
     app.use('/', require('./routes/front/html-routes')(httpComponents));
     app.use('/', require('./routes/front/emails-routes')(httpComponents));
+
+    //PE Connect API callback
+    app.use('/', require('./routes/front/peconnect-routes')(httpComponents));
 
     //API routes
     app.use('/api', middlewares.addRateLimit(sentry));
@@ -68,14 +71,13 @@ module.exports = components => {
     app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
 
     // catch 404
-    app.use(function(req, res) {
+    app.use((req, res) => {
         res.status(404);
         res.render('errors/404');
     });
 
     //Error middleware
     app.use((rawError, req, res, next) => { // eslint-disable-line no-unused-vars
-
         let error = req.err = rawError;
         if (!rawError.isBoom) {
             if (rawError.name === 'ValidationError') {
