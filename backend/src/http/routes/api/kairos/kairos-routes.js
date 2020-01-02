@@ -88,7 +88,6 @@ module.exports = ({ db, auth, middlewares }) => {
     let apiSpecifications = YAML.load(path.join(__dirname, './kairos-swagger.yml'));
     router.use('/kairos/doc', swaggerUi.serve, swaggerUi.setup(Object.assign({}, apiSpecifications)));
 
-    router.post('/backoffice/generate-auth-url', checkAuth, generateAuthUrlRoute);//Deprecated
     router.post('/kairos/generate-auth-url', checkAuth, generateAuthUrlRoute);
 
     router.get('/kairos/check-if-organisme-is-eligible', checkAuth, tryAndCatch(async (req, res) => {
