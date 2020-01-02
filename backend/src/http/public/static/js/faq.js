@@ -1,5 +1,5 @@
-$(document).ready(function () {
-    $('.question a').click(function (e) {
+$(document).ready(function() {
+    $('.question a').click(function(e) {
         e.preventDefault();
 
         const target = $(e.target);

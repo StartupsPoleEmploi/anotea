@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    
+
     $.get('/api/regions', data => {
         let html = '';
         data.forEach(region => {
@@ -10,8 +10,8 @@ $(document).ready(() => {
 
     const closeModal = () => {
         $('.modal').hide();
-    }
-    
+    };
+
     const openModal = () => {
         $('.modal').show();
     };
@@ -20,14 +20,14 @@ $(document).ready(() => {
         e.preventDefault();
         openModal();
     });
-    
+
     $('.modal-contact .button.cancel').click(() => {
         closeModal();
     });
-    
+
     $('.modal-contact .button.ok').click(() => {
         closeModal();
         //console.log($('#region-select').val());
-        location.href=`mailto:${$('#region-select').val()}`;
+        location.href = `mailto:${$('#region-select').val()}`;
     });
 });

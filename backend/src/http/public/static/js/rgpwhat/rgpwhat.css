@@ -1,16 +1,80 @@
-.rgpwhat {background-color: rgba(33,33,33,0.9); color: white; text-align: center; line-height: 2.5em; padding: 2px; vertical-align: middle; position: relative; top: 0;}
-.rgpwhat .consent-list {background-color: black; padding: 1em; width: 100%;}
-.rgpwhat .consent-list .all-cookies-choice {width: 50%; margin: auto;}
-.rgpwhat .consent-list .cookie-choice {width: 50%; margin: auto; display: flex; flex-direction: row; align-items: center; border-bottom: 1px solid grey;}
-.rgpwhat .consent-list .cookie-choice .explanations {text-align: left; flex: 2;}
-.rgpwhat .consent-list .cookie-choice .explanations .title {font-size: 1.5em; font-weight: bold;}
-.rgpwhat .consent-list .cookie-choice .explanations .description {line-height: 1em;}
-.rgpwhat .consent-list .cookie-choice .buttons {flex: 1; text-align: right;}
-.rgpwhat .consent-list .cookie-choice .buttons .accept, .rgpwhat .consent-list .cookie-choice .buttons .deny {color: white;}
-.rgpwhat .consent-list button {background-color: #f00; line-height: 2.2em; margin-top: 2px; opacity: .9;}
-.rgpwhat .consent-list button:hover {opacity: 1;}
-.rgpwhat .consent-list button.selected {background-color: #1BD2A4;}
-.rgpwhat button, .rgpwhat input[type=button] {color: white; background-color: #1BD2A4; border-radius: 5px; border: 0; padding: 0 20px; margin-left: 10px;}
+.rgpwhat {
+    background-color: rgba(33, 33, 33, 0.9);
+    color: white;
+    text-align: center;
+    line-height: 2.5em;
+    padding: 2px;
+    vertical-align: middle;
+    position: relative;
+    top: 0;
+}
+
+.rgpwhat .consent-list {
+    background-color: black;
+    padding: 1em;
+    width: 100%;
+}
+
+.rgpwhat .consent-list .all-cookies-choice {
+    width: 50%;
+    margin: auto;
+}
+
+.rgpwhat .consent-list .cookie-choice {
+    width: 50%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid grey;
+}
+
+.rgpwhat .consent-list .cookie-choice .explanations {
+    text-align: left;
+    flex: 2;
+}
+
+.rgpwhat .consent-list .cookie-choice .explanations .title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.rgpwhat .consent-list .cookie-choice .explanations .description {
+    line-height: 1em;
+}
+
+.rgpwhat .consent-list .cookie-choice .buttons {
+    flex: 1;
+    text-align: right;
+}
+
+.rgpwhat .consent-list .cookie-choice .buttons .accept, .rgpwhat .consent-list .cookie-choice .buttons .deny {
+    color: white;
+}
+
+.rgpwhat .consent-list button {
+    background-color: #f00;
+    line-height: 2.2em;
+    margin-top: 2px;
+    opacity: .9;
+}
+
+.rgpwhat .consent-list button:hover {
+    opacity: 1;
+}
+
+.rgpwhat .consent-list button.selected {
+    background-color: #1BD2A4;
+}
+
+.rgpwhat button, .rgpwhat input[type=button] {
+    color: white;
+    background-color: #1BD2A4;
+    border-radius: 5px;
+    border: 0;
+    padding: 0 20px;
+    margin-left: 10px;
+}
 
 /* customisation */
 

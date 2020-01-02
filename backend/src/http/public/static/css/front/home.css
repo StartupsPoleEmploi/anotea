@@ -55,7 +55,7 @@ body {
 .content-intro .stagiaire, .content-intro .organisme {
     display: inline-block;
     width: 30%;
-}    
+}
 
 .content-intro .stagiaire {
     margin-left: 20px;
@@ -81,6 +81,7 @@ body {
 .content-intro .stagiaire .button {
     background-color: #384EAA;
 }
+
 .content-intro .illustration {
     position: relative;
     top: -280px;
@@ -92,12 +93,12 @@ body {
     background-color: #2B2B2B;
     height: 564px;
     text-align: center;
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 .video video {
     margin-left: auto;
-    height:564px;
+    height: 564px;
 }
 
 .stats {
@@ -123,15 +124,15 @@ body {
     margin-bottom: 5px;
 }
 
-.stats .avis h3  {
+.stats .avis h3 {
     color: #F28017;
 }
 
-.stats .organismes h3  {
+.stats .organismes h3 {
     color: #007E54;
 }
 
-.stats .stagiaires h3  {
+.stats .stagiaires h3 {
     color: #384EAA;
 }
 
@@ -197,10 +198,10 @@ body {
 }
 
 .services a {
-   color: #24303A;
-   font-weight: bold;
-   text-transform: uppercase;
-   text-decoration: none;
+    color: #24303A;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
 }
 
 .services a img {
@@ -297,7 +298,7 @@ body {
     }
 
     .content-intro .organisme {
-        text-align:  inherit;
+        text-align: inherit;
         margin-top: 20px;
         background-color: #F8F8F8;
     }
@@ -310,7 +311,7 @@ body {
     .content-intro .organisme p {
         margin-left: inherit;
     }
-    
+
     .content-intro {
         width: inherit;
         padding-left: inherit;
