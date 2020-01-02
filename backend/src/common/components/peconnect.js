@@ -36,6 +36,7 @@ module.exports = (db, configuration) => {
             await db.collection('peConnectTokens').insertOne({
                 nonce,
                 state,
+                creationDate: new Date(),
             });
 
             return client.authorizationUrl({
