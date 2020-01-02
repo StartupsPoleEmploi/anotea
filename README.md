@@ -105,6 +105,7 @@ mongod --dbpath <path to data dir> --port 27018 --storageEngine=ephemeralForTest
 Vous pouvez ensuite lancer les tests avec la commande suivante :
 
 ```
+cd backend
 ANOTEA_MONGODB_URI=mongodb://localhost:27018/anotea?w=1 npm run test
 ```
 
