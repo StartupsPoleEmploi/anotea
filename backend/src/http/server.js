@@ -42,7 +42,7 @@ module.exports = components => {
     app.use('/', require('./routes/home/emails-routes')(httpComponents));
 
     //PE Connect API callback
-    app.use('/', require('./routes/home/peconnect-routes')(httpComponents));
+    app.use('/', require('./routes/api/questionnaire/peconnect-routes')(httpComponents));
 
     //API routes
     app.use('/api', middlewares.addRateLimit(sentry));

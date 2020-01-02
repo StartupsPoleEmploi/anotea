@@ -1,6 +1,6 @@
 const express = require('express');
 const moment = require('moment');
-const { getFullUrl } = require('../routes-utils');
+const { getFullUrl } = require('../../routes-utils');
 
 module.exports = ({ db, peconnect, sentry, configuration }) => {
 
