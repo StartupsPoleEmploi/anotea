@@ -5,8 +5,6 @@ const cookieParser = require('cookie-parser');
 const Boom = require('boom');
 const createMiddlewares = require('./middlewares/middlewares');
 const compression = require('compression');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 
 module.exports = components => {
 
@@ -37,12 +35,6 @@ module.exports = components => {
                 req.rawBody = buf.toString(encoding || 'utf8');
             }
         }
-    }));
-    app.use(session({
-        secret: configuration.app.session_secret,
-        resave: false,
-        saveUninitialized: true,
-        store: new MongoStore({ client: components.client })
     }));
 
     //Public routes with HTML server-side rendering
@@ -79,7 +71,7 @@ module.exports = components => {
     app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
 
     // catch 404
-    app.use(function(req, res) {
+    app.use((req, res) => {
         res.status(404);
         res.render('errors/404');
     });

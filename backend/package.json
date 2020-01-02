@@ -65,6 +65,7 @@
     "node-uuid": "1.4.8",
     "nodemailer": "6.4.2",
     "nodemailer-html-to-text": "3.1.0",
+    "openid-client": "3.10.0",
     "remove-accents": "0.4.2",
     "rotating-file-stream": "1.4.3",
     "stream-transform": "2.0.1",

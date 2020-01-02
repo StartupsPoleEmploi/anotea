@@ -32,6 +32,6 @@ module.exports = async (options = {}) => {
         passwords: passwords(configuration),
         workflow: workflow(db, logger, emails),
         communes: communes(db),
-        peconnect: createPeconnect(configuration)
+        peconnect: createPeconnect(db, configuration)
     }, options || {});
 };
