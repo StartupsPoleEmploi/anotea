@@ -38,11 +38,11 @@ module.exports = components => {
     }));
 
     //Public routes with HTML server-side rendering
-    app.use('/', require('./routes/front/html-routes')(httpComponents));
-    app.use('/', require('./routes/front/emails-routes')(httpComponents));
+    app.use('/', require('./routes/home/html-routes')(httpComponents));
+    app.use('/', require('./routes/home/emails-routes')(httpComponents));
 
     //PE Connect API callback
-    app.use('/', require('./routes/front/peconnect-routes')(httpComponents));
+    app.use('/', require('./routes/home/peconnect-routes')(httpComponents));
 
     //API routes
     app.use('/api', middlewares.addRateLimit(sentry));
@@ -53,7 +53,6 @@ module.exports = components => {
     app.use('/api', require('./routes/api/v1/sessions-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
     app.use('/api', require('./routes/api/v1/swagger-routes')(httpComponents));
-    app.use('/api', require('./routes/api/exports-routes')(httpComponents));
     app.use('/api', require('./routes/api/public-stats-routes')(httpComponents));
     app.use('/api', require('./routes/api/regions-routes')(httpComponents));
     app.use('/api', require('./routes/api/kairos/kairos-routes')(httpComponents));

@@ -4,7 +4,7 @@ const { newTrainee } = require('../../../../../helpers/data/dataset');
 const doImportRome = require('../../../../../../src/jobs/import/rome/importer');
 const importCommunes = require('../../../../../../src/jobs/import/communes/tasks/importCommunes');
 const logger = require('../../../../../helpers/components/fake-logger');
-const externalLinks = require('../../../../../../src/http/routes/front/utils/externalLinks');
+const externalLinks = require('../../../../../../src/http/routes/home/utils/externalLinks');
 
 describe(__filename, withMongoDB(({ getTestDatabase, getTestFile, getComponents }) => {
 
