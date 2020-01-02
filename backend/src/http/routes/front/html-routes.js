@@ -4,6 +4,9 @@ const externalLinks = require('./utils/externalLinks');
 module.exports = ({ db, configuration, communes }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
+    let utils = {
+        getBackofficeUrl: () => `${(configuration.app.public_hostname)}/admin`,
+    };
 
     router.get('/', async (req, res) => {
 
@@ -18,29 +21,30 @@ module.exports = ({ db, configuration, communes }) => {
             organismesCount: new Intl.NumberFormat('fr').format(organismesCount),
             stagiairesCount: new Intl.NumberFormat('fr').format(stagiairesCount),
             data: configuration.front,
-            failed: req.query.failed
+            failed: req.query.failed,
+            utils,
         });
     });
 
     router.get('/cgu', (req, res) => {
-        res.render('front/cgu');
+        res.render('front/cgu', { utils });
     });
 
     router.get('/politique-confidentialite', (req, res) => {
-        res.render('front/politique-confidentialite');
+        res.render('front/politique-confidentialite', { utils });
     });
 
     router.get('/services/organismes', (req, res) => {
-        res.render('front/faq_organismes');
+        res.render('front/faq_organismes', { utils });
 
     });
 
     router.get('/services/stagiaires', (req, res) => {
-        res.render('front/faq_stagiaires');
+        res.render('front/faq_stagiaires', { utils });
     });
 
     router.get('/services/financeurs', (req, res) => {
-        res.render('front/faq_financeurs');
+        res.render('front/faq_financeurs', { utils });
     });
 
     router.get('/doc/:name', (req, res) => {
