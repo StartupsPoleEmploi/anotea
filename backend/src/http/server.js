@@ -2,7 +2,6 @@ const path = require('path');
 const compose = require('compose-middleware').compose;
 const express = require('express');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const Boom = require('boom');
 const compression = require('compression');
 const createMiddlewares = require('./utils/middlewares/middlewares');
@@ -26,7 +25,6 @@ module.exports = components => {
     app.use(middlewares.logHttpRequests());
     app.use(middlewares.allowCORS());
     app.use(compression());
-    app.use(cookieParser(configuration.security.secret));
     app.use(compose([
         express.static(path.join(__dirname, 'public')),
         express.static(path.join(path.dirname(require.main.filename), 'build/public'))
