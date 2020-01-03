@@ -2,8 +2,8 @@ const fs = require('fs');
 const _ = require('lodash');
 const parse = require('csv-parse');
 const validateTrainee = require('./utils/validateTrainee');
-const { getDifferences, flattenKeys } = require('../../../../common/utils/object-utils');
-const { writeObject, pipeline, ignoreFirstLine, transformObject } = require('../../../../common/utils/stream-utils');
+const { getDifferences, flattenKeys } = require('../../../../core/utils/object-utils');
+const { writeObject, pipeline, ignoreFirstLine, transformObject } = require('../../../../core/utils/stream-utils');
 const { sanitizeCsvLine } = require('./utils/utils');
 const { getNbModifiedDocuments } = require('../../../job-utils');
 

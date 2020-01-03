@@ -4,7 +4,7 @@ const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
 const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('../../../../../helpers/data/dataset');
-let passwords = require('../../../../../../src/common/components/passwords');
+let passwords = require('../../../../../../src/core/components/passwords');
 
 describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoDatabase, getTestDatabase, getComponents }) => {
 

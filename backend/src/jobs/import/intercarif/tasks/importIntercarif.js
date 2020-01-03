@@ -3,7 +3,7 @@ const moment = require('moment');
 const zlib = require('zlib');
 const { Transform } = require('stream');
 const { LineStream } = require('byline');
-const { pipeline, transformObject, writeObject } = require('../../../../common/utils/stream-utils');
+const { pipeline, transformObject, writeObject } = require('../../../../core/utils/stream-utils');
 const xmlToJson = require('./utils/xmlToJson');
 const sanitizeJson = require('./utils/sanitizeJson');
 

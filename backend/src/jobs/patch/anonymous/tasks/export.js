@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { getAnonymizedTitle } = require('../utils')();
-const getRegions = require('../../../../common/components/regions');
+const getRegions = require('../../../../core/components/regions');
 
 module.exports = (db, path) => {
     return new Promise((resolve, reject) => {

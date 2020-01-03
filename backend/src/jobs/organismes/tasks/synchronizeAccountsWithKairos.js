@@ -1,6 +1,6 @@
 const uuid = require('node-uuid');
 const _ = require('lodash');
-const { writeObject, pipeline } = require('../../../common/utils/stream-utils');
+const { writeObject, pipeline } = require('../../../core/utils/stream-utils');
 const getOrganismesFromKairosCSV = require('./kairos/getOrganismesFromKairosCSV');
 
 module.exports = async (db, logger, file) => {

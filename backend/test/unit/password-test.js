@@ -1,6 +1,6 @@
 const assert = require('assert');
 const config = require('config');
-const passwords = require('../../src/common/components/passwords.js');
+const passwords = require('../../src/core/components/passwords.js');
 
 describe('Password', function() {
 

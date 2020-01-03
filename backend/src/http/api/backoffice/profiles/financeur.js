@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const Joi = require('joi');
 const moment = require('moment');
-const { isPoleEmploi, getCodeFinanceurs } = require('../../../../common/utils/financeurs');
+const { isPoleEmploi, getCodeFinanceurs } = require('../../../../core/utils/financeurs');
 const { arrayOf } = require('../../../utils/validators-utils');
 
 module.exports = (db, regions, user) => {

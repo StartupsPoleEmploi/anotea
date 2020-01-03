@@ -1,5 +1,5 @@
 let { delay } = require('../../../../job-utils');
-let getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
+let getOrganismeEmail = require('../../../../../core/utils/getOrganismeEmail');
 
 module.exports = (db, logger, emails, options = {}) => {
 

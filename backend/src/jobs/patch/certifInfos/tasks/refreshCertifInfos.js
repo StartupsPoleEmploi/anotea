@@ -1,7 +1,7 @@
 const fs = require('fs');
 const _ = require('lodash');
-const { ignoreFirstLine, pipeline, writeObject } = require('../../../../common/utils/stream-utils');
-const { getDifferences, mergeDeep } = require('../../../../common/utils/object-utils');
+const { ignoreFirstLine, pipeline, writeObject } = require('../../../../core/utils/stream-utils');
+const { getDifferences, mergeDeep } = require('../../../../core/utils/object-utils');
 const { getNbModifiedDocuments } = require('../../../job-utils');
 const parse = require('csv-parse');
 

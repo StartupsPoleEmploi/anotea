@@ -1,5 +1,5 @@
-const computeScore = require('../../../../common/utils/computeScore');
-const convertCommentToAvis = require('../../../../common/utils/convertCommentToAvis');
+const computeScore = require('../../../../core/utils/computeScore');
+const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
 
 module.exports = (formation, comments) => {
 

@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const Joi = require('joi');
 const moment = require('moment');
-const asSiren = require('../../../../common/utils/asSiren');
+const asSiren = require('../../../../core/utils/asSiren');
 const { arrayOf } = require('../../../utils/validators-utils');
 
 module.exports = (db, regions, user) => {

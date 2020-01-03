@@ -1,4 +1,4 @@
-const { round } = require('../../../../common/utils/number-utils');
+const { round } = require('../../../../core/utils/number-utils');
 
 let getStatsWithProjectedNotes = stats => {
     return Object.keys(stats).reduce((acc, key) => {

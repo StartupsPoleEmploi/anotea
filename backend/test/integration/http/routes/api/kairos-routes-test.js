@@ -5,7 +5,7 @@ const assert = require('assert');
 const configuration = require('config');
 const { withServer } = require('../../../../helpers/with-server');
 const { newOrganismeAccount, randomSIRET } = require('../../../../helpers/data/dataset');
-const auth = require('../../../../../src/common/components/auth');
+const auth = require('../../../../../src/core/components/auth');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
 

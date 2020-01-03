@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const moment = require('moment');
 const { buildToken, buildEmail } = require('../utils/utils');
-const { isConseilRegional } = require('../../../../../common/utils/financeurs');
+const { isConseilRegional } = require('../../../../../core/utils/financeurs');
 
 const parseDate = value => new Date(value + 'Z');
 
