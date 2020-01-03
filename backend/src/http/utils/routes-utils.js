@@ -1,4 +1,4 @@
-const { jsonStream, transformObjectIntoCSV, pipeline } = require('../../common/utils/stream-utils');
+const { jsonStream, transformObjectIntoCSV, pipeline } = require('../../core/utils/stream-utils');
 const { encodeStream } = require('iconv-lite');
 
 let sendJsonStream = (stream, res) => {

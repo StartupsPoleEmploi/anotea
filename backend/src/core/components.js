@@ -1,15 +1,15 @@
 const config = require('config');
-const auth = require('./common/components/auth');
-const passwords = require('./common/components/passwords');
-const getRegions = require('./common/components/regions');
-const createLogger = require('./common/components/logger');
-const sentry = require('./common/components/sentry');
-const workflow = require('./common/components/workflow');
-const database = require('./common/components/database');
-const communes = require('./common/components/communes');
-const createPeconnect = require('./common/components/peconnect');
-const createEmails = require('./common/components/emails/emails');
-const createMailer = require('./common/components/emails/mailer');
+const auth = require('./components/auth');
+const passwords = require('./components/passwords');
+const getRegions = require('./components/regions');
+const createLogger = require('./components/logger');
+const sentry = require('./components/sentry');
+const workflow = require('./components/workflow');
+const database = require('./components/database');
+const communes = require('./components/communes');
+const createPeconnect = require('./components/peconnect');
+const createEmails = require('./components/emails/emails');
+const createMailer = require('./components/emails/mailer');
 
 module.exports = async (options = {}) => {
 

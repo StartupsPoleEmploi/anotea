@@ -2,8 +2,8 @@ const fs = require('fs');
 const md5File = require('md5-file/promise');
 const md5 = require('md5');
 const validateTrainee = require('./utils/validateTrainee');
-const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../common/utils/stream-utils');
-const { flattenKeys } = require('../../../../common/utils/object-utils');
+const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../core/utils/stream-utils');
+const { flattenKeys } = require('../../../../core/utils/object-utils');
 const { getCampaignDate, getCampaignName, sanitizeCsvLine } = require('./utils/utils');
 
 module.exports = async (db, logger, file, handler, filters = {}) => {

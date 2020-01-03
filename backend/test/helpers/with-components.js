@@ -2,12 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const { randomize } = require('./data/dataset');
 const config = require('config');
-const createEmails = require('../../src/common/components/emails/emails');
-const getRegions = require('../../src/common/components/regions');
+const createEmails = require('../../src/core/components/emails/emails');
+const getRegions = require('../../src/core/components/regions');
 const logger = require('./components/fake-logger');
 const fakeMailer = require('./components/fake-mailer');
 const fakePasswords = require('./components/fake-passwords');
-const components = require('../../src/components');
+const components = require('../../src/core/components');
 
 let _componentsHolder = null;
 

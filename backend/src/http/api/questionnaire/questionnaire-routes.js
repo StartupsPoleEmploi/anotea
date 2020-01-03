@@ -7,7 +7,7 @@ const Joi = require('joi');
 const externalLinks = require('../../html/utils/externalLinks');
 const { sanitize } = require('./utils/userInput');
 const { tryAndCatch } = require('../../utils/routes-utils');
-const { AlreadySentError, BadDataError } = require('../../../common/errors');
+const { AlreadySentError, BadDataError } = require('../../../core/errors');
 
 module.exports = ({ db, logger, configuration, regions, communes }) => {
 

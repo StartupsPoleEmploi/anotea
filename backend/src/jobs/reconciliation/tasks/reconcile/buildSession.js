@@ -1,7 +1,7 @@
 const moment = require('moment');
-const computeScore = require('../../../../common/utils/computeScore');
+const computeScore = require('../../../../core/utils/computeScore');
 const { flatten } = require('../../../job-utils');
-const convertCommentToAvis = require('../../../../common/utils/convertCommentToAvis');
+const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
 
 module.exports = (formation, action, session, comments) => {
 

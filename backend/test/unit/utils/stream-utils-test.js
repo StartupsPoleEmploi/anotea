@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { Readable } = require('stream');
-const { transformObject, ignoreFirstLine, ignoreEmpty, pipeline, writeObject } = require('../../../src/common/utils/stream-utils');
+const { transformObject, ignoreFirstLine, ignoreEmpty, pipeline, writeObject } = require('../../../src/core/utils/stream-utils');
 
 const createStream = () => {
     return new Readable({

@@ -1,4 +1,4 @@
-const createMailer = require('../../../src/common/components/emails/mailer');
+const createMailer = require('../../../src/core/components/emails/mailer');
 
 module.exports = (configuration, regions, options = {}) => {
 

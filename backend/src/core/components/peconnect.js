@@ -1,4 +1,4 @@
-const { BadDataError } = require('../../common/errors');
+const { BadDataError } = require('../errors');
 const { Issuer, generators, custom } = require('openid-client');
 
 module.exports = (db, configuration) => {

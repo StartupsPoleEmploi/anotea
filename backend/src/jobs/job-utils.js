@@ -1,8 +1,8 @@
 const moment = require('moment');
 const _ = require('lodash');
 const config = require('config');
-const createComponents = require('../components');
-const createLogger = require('../common/components/logger');
+const createComponents = require('../core/components');
+const createLogger = require('../core/components/logger');
 const { IncomingWebhook } = require('@slack/webhook');
 
 module.exports = {

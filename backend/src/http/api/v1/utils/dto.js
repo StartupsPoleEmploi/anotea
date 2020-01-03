@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const convertCommentToAvis = require('../../../../common/utils/convertCommentToAvis');
+const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
 
 let roundNotes = notes => {
     return {

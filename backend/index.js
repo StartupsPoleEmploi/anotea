@@ -1,5 +1,5 @@
 const server = require('./src/http/server');
-const createComponents = require('./src/components');
+const createComponents = require('./src/core/components');
 
 process.on('unhandledRejection', e => console.log(e));
 process.on('uncaughtException', e => console.log(e));
