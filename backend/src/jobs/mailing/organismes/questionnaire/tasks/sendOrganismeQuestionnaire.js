@@ -1,5 +1,5 @@
-let { delay } = require('../../../../job-utils');
-let getOrganismeEmail = require('../../../../../core/utils/getOrganismeEmail');
+let { delay } = require("../../../../job-utils");
+let getOrganismeEmail = require("../../../../../core/utils/getOrganismeEmail");
 
 module.exports = (db, logger, emails, options = {}) => {
 
@@ -11,10 +11,10 @@ module.exports = (db, logger, emails, options = {}) => {
             error: 0,
         };
 
-        let cursor = db.collection('accounts').find({
-            'profile': 'organisme',
-            'passwordHash': { $exists: true },
-            'mailing.questionnaire.mailSent': { $exists: false },
+        let cursor = db.collection("accounts").find({
+            "profile": "organisme",
+            "passwordHash": { $exists: true },
+            "mailing.questionnaire.mailSent": { $exists: false },
         })
         .limit(options.limit || 1);
 
@@ -25,7 +25,7 @@ module.exports = (db, logger, emails, options = {}) => {
             try {
                 logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${getOrganismeEmail(organisme)}`);
 
-                let message = emails.getEmailMessageByTemplateName('questionnaireOrganismeEmail');
+                let message = emails.getEmailMessageByTemplateName("questionnaireOrganismeEmail");
                 await message.send(organisme);
 
                 if (options.delay) {

@@ -1,8 +1,8 @@
-const _ = require('lodash');
-const { diff } = require('deep-object-diff');
+const _ = require("lodash");
+const { diff } = require("deep-object-diff");
 
 let flattenKeys = (obj, path = []) => {
-    return !_.isObject(obj) ? { [path.join('.')]: obj } :
+    return !_.isObject(obj) ? { [path.join(".")]: obj } :
         _.reduce(obj, (cum, next, key) => _.merge(cum, flattenKeys(next, [...path, key])), {});
 };
 

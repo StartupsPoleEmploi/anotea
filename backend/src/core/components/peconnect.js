@@ -1,5 +1,5 @@
-const { BadDataError } = require('../errors');
-const { Issuer, generators, custom } = require('openid-client');
+const { BadDataError } = require("../errors");
+const { Issuer, generators, custom } = require("openid-client");
 
 module.exports = (db, configuration) => {
 
@@ -12,7 +12,7 @@ module.exports = (db, configuration) => {
         jwks_uri: `https://entreprise.pole-emploi.fr/connexion/oauth2/connect/jwk_uri`,
         authorization_endpoint: `${issuerUrl}/authorize`,
         token_endpoint: `${issuerUrl}/access_token?realm=/individu`,
-        token_endpoint_auth_methods_supported: 'client_secret_post',
+        token_endpoint_auth_methods_supported: "client_secret_post",
         userinfo_endpoint: configuration.peconnect.api_url,
     });
 
@@ -20,7 +20,7 @@ module.exports = (db, configuration) => {
         client_id: clientId,
         client_secret: configuration.peconnect.client_secret,
         redirect_uris: [callbackUrl],
-        response_types: ['code'],
+        response_types: ["code"],
     });
 
     custom.setHttpOptionsDefaults({
@@ -33,7 +33,7 @@ module.exports = (db, configuration) => {
             let nonce = generators.nonce();
             let state = generators.state();
 
-            await db.collection('peConnectTokens').insertOne({
+            await db.collection("peConnectTokens").insertOne({
                 nonce,
                 state,
                 creationDate: new Date(),
@@ -41,7 +41,7 @@ module.exports = (db, configuration) => {
 
             return client.authorizationUrl({
                 scope: `api_peconnect-individuv1 openid email application_${clientId}`,
-                realm: '/individu',
+                realm: "/individu",
                 state,
                 nonce,
             });
@@ -49,9 +49,9 @@ module.exports = (db, configuration) => {
         getUserInfo: async url => {
             let params = client.callbackParams(url);
 
-            let auth = await db.collection('peConnectTokens').findOne({ state: params.state });
+            let auth = await db.collection("peConnectTokens").findOne({ state: params.state });
             if (!auth) {
-                throw new BadDataError('Unable to find PE connect token');
+                throw new BadDataError("Unable to find PE connect token");
             }
 
             let tokenSet = await client.callback(callbackUrl, params, { state: auth.state, nonce: auth.nonce });

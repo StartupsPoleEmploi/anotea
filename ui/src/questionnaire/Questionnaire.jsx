@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { getStagiaireInfo } from './services/stagiaireService';
-import { getTokenFromUrl } from './utils/token';
-import Formulaire from './components/Formulaire';
-import Remerciements from './components/Remerciements';
-import ErrorPage from './components/ErrorPage';
-import Footer from './components/Footer';
-import './Questionnaire.scss';
-import WithAnalytics from '../common/components/analytics/WithAnalytics';
+import React, { Component } from "react";
+import { getStagiaireInfo } from "./services/stagiaireService";
+import { getTokenFromUrl } from "./utils/token";
+import Formulaire from "./components/Formulaire";
+import Remerciements from "./components/Remerciements";
+import ErrorPage from "./components/ErrorPage";
+import Footer from "./components/Footer";
+import "./Questionnaire.scss";
+import WithAnalytics from "../common/components/analytics/WithAnalytics";
 
 class Questionnaire extends Component {
 
@@ -27,7 +27,7 @@ class Questionnaire extends Component {
                 showRemerciements: data.submitted,
             });
         } catch (err) {
-            console.error('An error occured', err);
+            console.error("An error occured", err);
             this.setState({ showErrorPage: true });
         }
     };

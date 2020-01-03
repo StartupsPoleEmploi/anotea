@@ -1,6 +1,6 @@
-const assert = require('assert');
-const { Readable } = require('stream');
-const { transformObject, ignoreFirstLine, ignoreEmpty, pipeline, writeObject } = require('../../../src/core/utils/stream-utils');
+const assert = require("assert");
+const { Readable } = require("stream");
+const { transformObject, ignoreFirstLine, ignoreEmpty, pipeline, writeObject } = require("../../../src/core/utils/stream-utils");
 
 const createStream = () => {
     return new Readable({
@@ -12,27 +12,27 @@ const createStream = () => {
 
 describe(__filename, () => {
 
-    it('should transformObject and writeObject', done => {
+    it("should transformObject and writeObject", done => {
         let chunks = [];
         let stream = createStream();
-        stream.push('andré');
-        stream.push('bruno');
+        stream.push("andré");
+        stream.push("bruno");
         stream.push(null);
 
         stream
         .pipe(transformObject(data => data.substring(0, 1)))
         .pipe(writeObject(data => chunks.push(data)))
-        .on('finish', () => {
-            assert.deepStrictEqual(chunks, ['a', 'b']);
+        .on("finish", () => {
+            assert.deepStrictEqual(chunks, ["a", "b"]);
             done();
         });
     });
 
-    it('should transformObject and writeObject (async)', done => {
+    it("should transformObject and writeObject (async)", done => {
         let chunks = [];
         let stream = createStream();
-        stream.push('andré');
-        stream.push('bruno');
+        stream.push("andré");
+        stream.push("bruno");
         stream.push(null);
 
         stream
@@ -47,18 +47,18 @@ describe(__filename, () => {
                 resolve();
             });
         }))
-        .on('finish', () => {
-            assert.deepStrictEqual(chunks, ['a', 'b']);
+        .on("finish", () => {
+            assert.deepStrictEqual(chunks, ["a", "b"]);
             done();
         });
     });
 
-    it('should transformObject and writeObject (async + parallel)', done => {
+    it("should transformObject and writeObject (async + parallel)", done => {
         let chunks = [];
         let stream = createStream();
-        stream.push('andré');
-        stream.push('bruno');
-        stream.push('robert');
+        stream.push("andré");
+        stream.push("bruno");
+        stream.push("robert");
         stream.push(null);
 
         stream
@@ -73,57 +73,57 @@ describe(__filename, () => {
                 return setTimeout(() => resolve(), 10);
             });
         }, { parallel: 2 }))
-        .on('finish', () => {
-            assert.deepStrictEqual(chunks, ['a', 'b', 'r']);
+        .on("finish", () => {
+            assert.deepStrictEqual(chunks, ["a", "b", "r"]);
             done();
         });
     });
 
-    it('should transformObject with error', done => {
+    it("should transformObject with error", done => {
         let stream = createStream();
-        stream.push('andré');
+        stream.push("andré");
         stream.push(null);
 
         stream
         .pipe(transformObject(() => {
-            throw new Error('An error occurred');
+            throw new Error("An error occurred");
         }))
-        .on('data', () => ({}))
-        .on('error', e => {
-            assert.strictEqual(e.message, 'An error occurred');
+        .on("data", () => ({}))
+        .on("error", e => {
+            assert.strictEqual(e.message, "An error occurred");
             done();
         })
-        .on('finish', () => {
+        .on("finish", () => {
             assert.fail();
             done();
         });
     });
 
-    it('should writeObject with error', done => {
+    it("should writeObject with error", done => {
         let stream = createStream();
-        stream.push('andré');
+        stream.push("andré");
         stream.push(null);
 
         stream
         .pipe(writeObject(() => {
-            throw new Error('An error occurred');
+            throw new Error("An error occurred");
         }))
-        .on('error', e => {
-            assert.strictEqual(e.message, 'An error occurred');
+        .on("error", e => {
+            assert.strictEqual(e.message, "An error occurred");
             done();
         })
-        .on('finish', () => {
+        .on("finish", () => {
             assert.fail();
             done();
         });
     });
 
-    it('can pipeline streams', async () => {
+    it("can pipeline streams", async () => {
         let chunks = [];
         let source = createStream();
-        source.push('andré');
-        source.push('bruno');
-        source.push('robert');
+        source.push("andré");
+        source.push("bruno");
+        source.push("robert");
         source.push(null);
 
         await pipeline([
@@ -132,10 +132,10 @@ describe(__filename, () => {
             writeObject(data => chunks.push(data)),
         ]);
 
-        assert.deepStrictEqual(chunks, ['a', 'b', 'r']);
+        assert.deepStrictEqual(chunks, ["a", "b", "r"]);
     });
 
-    it('can pipeline streams (error propagation)', async () => {
+    it("can pipeline streams (error propagation)", async () => {
         let source = createStream();
         let promise = pipeline([
             source,
@@ -143,62 +143,62 @@ describe(__filename, () => {
         ]);
 
         try {
-            source.emit('error', new Error('Error from source'));
+            source.emit("error", new Error("Error from source"));
 
             await promise;
             assert.fail();
         } catch (e) {
-            assert.strictEqual(e.message, 'Error from source');
+            assert.strictEqual(e.message, "Error from source");
         }
     });
 
-    it('can pipeline streams (error callback propagation)', async () => {
+    it("can pipeline streams (error callback propagation)", async () => {
         let source = createStream();
         let promise = pipeline([
             source,
             writeObject(() => {
-                throw new Error('An error occurred');
+                throw new Error("An error occurred");
             }),
         ]);
 
         try {
-            source.push('andré');
+            source.push("andré");
 
             await promise;
             assert.fail();
         } catch (e) {
-            assert.strictEqual(e.message, 'An error occurred');
+            assert.strictEqual(e.message, "An error occurred");
         }
     });
 
-    it('should ignoreEmpty', done => {
+    it("should ignoreEmpty", done => {
         let chunks = [];
         let stream = createStream();
-        stream.push('first');
-        stream.push('');
+        stream.push("first");
+        stream.push("");
         stream.push(null);
 
         stream
         .pipe(ignoreEmpty())
-        .on('data', d => chunks.push(d))
-        .on('end', () => {
-            assert.deepStrictEqual(chunks, ['first']);
+        .on("data", d => chunks.push(d))
+        .on("end", () => {
+            assert.deepStrictEqual(chunks, ["first"]);
             done();
         });
     });
 
-    it('should ignoreFirstLine', done => {
+    it("should ignoreFirstLine", done => {
         let chunks = [];
         let stream = createStream();
-        stream.push('first');
-        stream.push('second');
+        stream.push("first");
+        stream.push("second");
         stream.push(null);
 
         stream
         .pipe(ignoreFirstLine())
-        .on('data', d => chunks.push(d))
-        .on('end', () => {
-            assert.deepStrictEqual(chunks, ['second']);
+        .on("data", d => chunks.push(d))
+        .on("end", () => {
+            assert.deepStrictEqual(chunks, ["second"]);
             done();
         });
     });

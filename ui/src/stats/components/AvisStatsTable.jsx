@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import calculateRate from './utils/calculateRate';
-import './StatsTable.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import moment from "moment";
+import calculateRate from "./utils/calculateRate";
+import "./StatsTable.scss";
 
 export default class AvisStatsTable extends Component {
 
@@ -56,7 +56,8 @@ export default class AvisStatsTable extends Component {
                             <th scope="col" className="section">
                                 <span>Importés</span>
                                 <i className="fas fa-question-circle">
-                                    <span className="tooltip">Nombre de stagiaires présents dans le fichier datalake</span></i>
+                                    <span
+                                        className="tooltip">Nombre de stagiaires présents dans le fichier datalake</span></i>
                             </th>
                             <th scope="col">
                                 <span>Contactés</span>
@@ -71,12 +72,14 @@ export default class AvisStatsTable extends Component {
                             <th scope="col">
                                 <span>Ouverts</span>
                                 <i className="fas fa-question-circle">
-                                    <span className="tooltip">Nombre de mails ouverts / nombre de stagiaires contactés</span></i>
+                                    <span
+                                        className="tooltip">Nombre de mails ouverts / nombre de stagiaires contactés</span></i>
                             </th>
                             <th scope="col">
                                 <span>Cliqués</span>
                                 <i className="fas fa-question-circle">
-                                    <span className="tooltip">Nombre de clics dans le mail / nombre de mails ouverts</span></i>
+                                    <span
+                                        className="tooltip">Nombre de clics dans le mail / nombre de mails ouverts</span></i>
                             </th>
                             <th scope="col">
                                 <span>Validés</span>
@@ -93,7 +96,8 @@ export default class AvisStatsTable extends Component {
                             <th scope="col">
                                 <span>Avec commentaires</span>
                                 <i className="fas fa-question-circle">
-                                    <span className="tooltip">Nombre de commentaires / nombre de questionnaires validés</span>
+                                    <span
+                                        className="tooltip">Nombre de commentaires / nombre de questionnaires validés</span>
                                 </i>
                             </th>
                             <th scope="col" className="section">
@@ -207,34 +211,34 @@ export default class AvisStatsTable extends Component {
                                 -
                             </td>
                             <td>
-                                {this.getTotal('mailSent')}
+                                {this.getTotal("mailSent")}
                             </td>
                             <td>
-                                {this.getTotal('mailOpen')}
+                                {this.getTotal("mailOpen")}
                             </td>
                             <td>
-                                {this.computeRate(this.getTotal('mailOpen'), this.getTotal('mailSent'))}
+                                {this.computeRate(this.getTotal("mailOpen"), this.getTotal("mailSent"))}
                             </td>
                             <td>
-                                {this.getTotal('linkClick')}
+                                {this.getTotal("linkClick")}
                             </td>
                             <td>
-                                {this.computeRate(this.getTotal('linkClick'), this.getTotal('mailOpen'))}
+                                {this.computeRate(this.getTotal("linkClick"), this.getTotal("mailOpen"))}
                             </td>
                             <td>
-                                {this.getTotal('formValidated')}
+                                {this.getTotal("formValidated")}
                             </td>
                             <td>
-                                {this.computeRate(this.getTotal('formValidated'), this.getTotal('mailSent'))}
+                                {this.computeRate(this.getTotal("formValidated"), this.getTotal("mailSent"))}
                             </td>
                             <td>
-                                {this.getTotal('nbCommentaires')}
+                                {this.getTotal("nbCommentaires")}
                             </td>
                             <td>
-                                {this.computeRate(this.getTotal('nbCommentaires'), this.getTotal('formValidated'))}
+                                {this.computeRate(this.getTotal("nbCommentaires"), this.getTotal("formValidated"))}
                             </td>
                             <td>
-                                {this.getTotal('nbCommentairesRejected')}
+                                {this.getTotal("nbCommentairesRejected")}
                             </td>
                         </tr>
                         {
@@ -244,7 +248,7 @@ export default class AvisStatsTable extends Component {
                                         {a._id}
                                     </th>
                                     <td>
-                                        {a.date && moment(a.date).format('DD/MM/YYYY')}
+                                        {a.date && moment(a.date).format("DD/MM/YYYY")}
                                     </td>
                                     <td>
                                         {a.mailSent}

@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Score from './components/Score';
-import Notes from './components/Notes';
-import Verified from './components/Verified';
-import Propulsed from './components/Propulsed';
-import Header from './components/Header';
-import Avis from './components/Avis';
-import './ListeWidget.scss';
-import Button from '../common/components/Button';
-import WidgetContext from './WidgetContext';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Score from "./components/Score";
+import Notes from "./components/Notes";
+import Verified from "./components/Verified";
+import Propulsed from "./components/Propulsed";
+import Header from "./components/Header";
+import Avis from "./components/Avis";
+import "./ListeWidget.scss";
+import Button from "../common/components/Button";
+import WidgetContext from "./WidgetContext";
 
 const ITEMS_PAR_PAGE = 2;
 
@@ -25,8 +25,8 @@ export default class ListeWidget extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tri: 'date',
-            ordre: 'desc',
+            tri: "date",
+            ordre: "desc",
         };
     }
 
@@ -137,7 +137,7 @@ export default class ListeWidget extends Component {
                             </div>
                             <Verified />
                         </div>
-                        {context.type === 'organisme' &&
+                        {context.type === "organisme" &&
                         <div className="line sort d-flex justify-content-between align-items-center">
                             <div className="d-flex justify-content-between">
                                 <span className="pr-3">Trier</span>
@@ -153,9 +153,9 @@ export default class ListeWidget extends Component {
                             </div>
                             <div className="d-flex justify-content-between">
                                 <button
-                                    className={`mr-3 ${this.state.ordre === 'asc' ? 'active' : ''}`}
+                                    className={`mr-3 ${this.state.ordre === "asc" ? "active" : ""}`}
                                     onClick={() => {
-                                        this.setState({ ordre: 'asc' }, () => {
+                                        this.setState({ ordre: "asc" }, () => {
                                             return this.sort();
                                         });
                                     }}
@@ -163,9 +163,9 @@ export default class ListeWidget extends Component {
                                     <i className="fas fa-arrow-up"></i> Croissant
                                 </button>
                                 <button
-                                    className={this.state.ordre === 'desc' ? 'active' : ''}
+                                    className={this.state.ordre === "desc" ? "active" : ""}
                                     onClick={() => {
-                                        this.setState({ ordre: 'desc' }, () => {
+                                        this.setState({ ordre: "desc" }, () => {
                                             return this.sort();
                                         });
                                     }}

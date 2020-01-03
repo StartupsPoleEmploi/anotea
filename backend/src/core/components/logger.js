@@ -1,6 +1,6 @@
-const PrettyStream = require('bunyan-prettystream');
-const bunyan = require('bunyan');
-const fluent = require('fluent-logger');
+const PrettyStream = require("bunyan-prettystream");
+const bunyan = require("bunyan");
+const fluent = require("fluent-logger");
 
 let createStreams = (name, { log }) => {
 
@@ -8,7 +8,7 @@ let createStreams = (name, { log }) => {
         let pretty = new PrettyStream();
         pretty.pipe(process.stdout);
         return {
-            name: 'pretty',
+            name: "pretty",
             level: log.level,
             stream: pretty,
             close: () => ({}),
@@ -17,7 +17,7 @@ let createStreams = (name, { log }) => {
 
     const jsonStream = () => {
         return {
-            name: 'json',
+            name: "json",
             level: log.level,
             stream: process.stdout,
             close: () => ({}),
@@ -26,7 +26,7 @@ let createStreams = (name, { log }) => {
 
     const fluentStream = () => {
 
-        let sender = fluent.createFluentSender('docker', {
+        let sender = fluent.createFluentSender("docker", {
             host: log.fluentbit.host,
             port: log.fluentbit.port,
             timeout: 3.0,
@@ -34,21 +34,21 @@ let createStreams = (name, { log }) => {
         });
 
         return {
-            name: 'fluentbit',
+            name: "fluentbit",
             level: log.level,
             stream: sender.toStream(name),
             close: () => {
                 return new Promise((resolve, reject) => {
-                    sender.end('end', { message: 'Closing logger' }, err => err ? reject(err) : resolve());
+                    sender.end("end", { message: "Closing logger" }, err => err ? reject(err) : resolve());
                 });
             }
         };
     };
 
     switch (log.type) {
-        case 'json':
+        case "json":
             return [jsonStream()];
-        case 'fluentbit':
+        case "fluentbit":
             return [fluentStream(), jsonStream()];
         default:
             return [defaultStream()];

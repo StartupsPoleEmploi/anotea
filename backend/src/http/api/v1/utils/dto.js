@@ -1,5 +1,5 @@
-const _ = require('lodash');
-const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
+const _ = require("lodash");
+const convertCommentToAvis = require("../../../../core/utils/convertCommentToAvis");
 
 let roundNotes = notes => {
     return {
@@ -31,7 +31,7 @@ module.exports = {
             dto.score.notes = roundNotes(dto.score.notes);
         }
 
-        return _.pick(dto, ['id', 'numero', 'region', 'score', 'avis', 'meta']);
+        return _.pick(dto, ["id", "numero", "region", "score", "avis", "meta"]);
     },
     createPaginationDTO: (pagination, total) => {
         return {

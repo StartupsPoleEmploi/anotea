@@ -1,25 +1,25 @@
-const _ = require('lodash');
-const assert = require('assert');
-const { withMongoDB } = require('../../../helpers/with-mongodb');
-const { newOrganismeAccount, newModerateurAccount, newComment } = require('../../../helpers/data/dataset');
-const logger = require('../../../helpers/components/fake-logger');
-const computeOrganismesScore = require('../../../../src/jobs/organismes/tasks/computeScore');
+const _ = require("lodash");
+const assert = require("assert");
+const { withMongoDB } = require("../../../helpers/with-mongodb");
+const { newOrganismeAccount, newModerateurAccount, newComment } = require("../../../helpers/data/dataset");
+const logger = require("../../../helpers/components/fake-logger");
+const computeOrganismesScore = require("../../../../src/jobs/organismes/tasks/computeScore");
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
     const prepareDatabase = () => {
         return Promise.all([
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
                     organisation: {
-                        siret: '11111111111111',
+                        siret: "11111111111111",
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                 },
                 rates: {
@@ -31,10 +31,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     global: 1,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                 },
                 rates: {
@@ -46,10 +46,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                     global: 3,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                 },
                 rates: {
@@ -64,23 +64,23 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         ]);
     };
 
-    it('should compute rounded score', async () => {
+    it("should compute rounded score", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
+            insertIntoDatabase("accounts", _.omit(newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
                 meta: {
-                    siretAsString: '22222222222222'
+                    siretAsString: "22222222222222"
                 },
-            }), ['score'])),
+            }), ["score"])),
         ]);
 
         let stats = await computeOrganismesScore(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection("accounts").findOne({ SIRET: 22222222222222 });
         assert.deepStrictEqual(stats, {
             total: 1,
             updated: 1,
@@ -105,37 +105,37 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         });
     });
 
-    it('should not compute score for moderateur account', async () => {
+    it("should not compute score for moderateur account", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('accounts', newModerateurAccount({
-                courriel: 'admin@pole-emploi.fr',
+            insertIntoDatabase("accounts", newModerateurAccount({
+                courriel: "admin@pole-emploi.fr",
             })),
         ]);
 
         await computeOrganismesScore(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ courriel: 'admin@pole-emploi.fr' });
+        let doc = await db.collection("accounts").findOne({ courriel: "admin@pole-emploi.fr" });
         assert.deepStrictEqual(doc.score, undefined);
     });
 
 
-    it('should use rejected avis to compute score', async () => {
+    it("should use rejected avis to compute score", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
+            insertIntoDatabase("accounts", _.omit(newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
                 meta: {
-                    siretAsString: '22222222222222'
+                    siretAsString: "22222222222222"
                 },
-            })), ['score']),
-            insertIntoDatabase('comment', newComment({
-                status: 'rejected',
+            })), ["score"]),
+            insertIntoDatabase("comment", newComment({
+                status: "rejected",
                 rates: {
                     accueil: 0,
                     contenu_formation: 0,
@@ -146,7 +146,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                 },
                 training: {
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                 }
             })),
@@ -154,7 +154,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await computeOrganismesScore(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection("accounts").findOne({ SIRET: 22222222222222 });
         assert.deepStrictEqual(doc.score, {
             nb_avis: 4,
             notes: {
@@ -174,23 +174,23 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         });
     });
 
-    it('should give default score when no comments', async () => {
+    it("should give default score when no comments", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             prepareDatabase(),
-            insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
+            insertIntoDatabase("accounts", _.omit(newOrganismeAccount({
                 _id: 44444444444444,
                 SIRET: 44444444444444,
                 meta: {
-                    siretAsString: '44444444444444'
+                    siretAsString: "44444444444444"
                 },
-            })), ['score']),
+            })), ["score"]),
         ]);
 
         await computeOrganismesScore(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 44444444444444 });
+        let doc = await db.collection("accounts").findOne({ SIRET: 44444444444444 });
         assert.deepStrictEqual(doc.score, {
             nb_avis: 0,
         });

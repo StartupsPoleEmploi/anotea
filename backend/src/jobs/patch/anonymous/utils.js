@@ -1,4 +1,4 @@
-const accents = require('remove-accents');
+const accents = require("remove-accents");
 
 module.exports = () => {
 
@@ -9,16 +9,16 @@ module.exports = () => {
     };
 
     const containsWord = (word, content) => {
-        const re = new RegExp(word + '([^a-z]|$)', 'gi');
+        const re = new RegExp(word + "([^a-z]|$)", "gi");
         return content.match(re);
     };
 
     const removeAll = (word, str, regex) => {
         if (regex) {
-            const re = new RegExp(word, 'gi');
-            str = str.replace(re, '');
+            const re = new RegExp(word, "gi");
+            str = str.replace(re, "");
         } else {
-            str = str.replace(word, '');
+            str = str.replace(word, "");
         }
 
         if (contains(word, str)) {
@@ -34,18 +34,18 @@ module.exports = () => {
         return anonymizedTitle;
     };
 
-    const reID = new RegExp('(^|[^0-9a-z])[0-9]{7}\\s?[A-Z0-9]([^0-9a-z]|$)', 'gi');
+    const reID = new RegExp("(^|[^0-9a-z])[0-9]{7}\\s?[A-Z0-9]([^0-9a-z]|$)", "gi");
 
     const containsId = content => {
         return content.match(reID);
     };
 
     const removeId = content => {
-        return content.replace(reID, '');
+        return content.replace(reID, "");
     };
 
-    const tailWords = ['mme', 'mr', 'csp', 'aif'];
-    const tailSigns = ['-', '(', ')', '/', '*', '.'];
+    const tailWords = ["mme", "mr", "csp", "aif"];
+    const tailSigns = ["-", "(", ")", "/", "*", "."];
 
     const removeTail = content => {
         tailWords.forEach(tailWord => {
@@ -59,7 +59,7 @@ module.exports = () => {
 
     const normalize = str => accents.remove(str).toUpperCase();
 
-    const removeMultipleSpaces = str => str.replace(/\s\s+/g, ' ');
+    const removeMultipleSpaces = str => str.replace(/\s\s+/g, " ");
 
     const getAnonymizedTitle = trainee => {
         const title = trainee.training.title;

@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import ReactSelect, { components } from 'react-windowed-select';
-import './Select.scss';
-import AnalyticsContext from '../../../../../common/components/analytics/AnalyticsContext';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import ReactSelect, { components } from "react-windowed-select";
+import "./Select.scss";
+import AnalyticsContext from "../../../../../common/components/analytics/AnalyticsContext";
 
 const Option = props => {
     let meta = props.data.meta;
     return (
         <components.Option {...props}>
             <div className="d-flex justify-content-between">
-                <div className={`Select__label ${meta ? 'Select__label--with-meta' : ''}`}>{props.data.label}</div>
+                <div className={`Select__label ${meta ? "Select__label--with-meta" : ""}`}>{props.data.label}</div>
                 {meta &&
                 <div className="Select__meta">{meta}</div>
                 }
@@ -40,7 +40,7 @@ export default class Select extends React.Component {
     };
 
     static defaultProps = {
-        optionKey: 'value',
+        optionKey: "value",
     };
 
     toReactSelectOption = option => {
@@ -68,9 +68,9 @@ export default class Select extends React.Component {
                 isSearchable
                 value={_.isEmpty(value) ? null : this.toReactSelectOption(value)}
                 options={options.map(o => this.toReactSelectOption(o))}
-                placeholder={options.length === 0 ? '' : placeholder}
+                placeholder={options.length === 0 ? "" : placeholder}
                 onChange={option => {
-                    trackClick(trackingId || 'select');
+                    trackClick(trackingId || "select");
                     if (!option) {
                         return onChange(null);
                     }

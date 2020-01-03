@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { removeEditedCourriel, resendEmailAccount } from '../../gestionOrganismesService';
-import Button from '../../../../../../common/components/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from '../../../../common/Dropdown';
+import React from "react";
+import PropTypes from "prop-types";
+import { removeEditedCourriel, resendEmailAccount } from "../../gestionOrganismesService";
+import Button from "../../../../../../common/components/Button";
+import { Dropdown, DropdownDivider, DropdownItem } from "../../../../common/Dropdown";
 
 export default class EditButton extends React.Component {
 
@@ -16,7 +16,7 @@ export default class EditButton extends React.Component {
         let updated = await resendEmailAccount(this.props.organisme._id);
         this.props.onChange(updated, {
             message: {
-                text: 'Email envoyé avec succès.',
+                text: "Email envoyé avec succès.",
             }
         });
     };

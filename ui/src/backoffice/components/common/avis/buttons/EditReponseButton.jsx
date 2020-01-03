@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { removeReponse } from '../../../../services/avisService';
-import Modal from '../../../../../common/components/Modal';
-import Button from '../../../../../common/components/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from '../../Dropdown';
+import React from "react";
+import PropTypes from "prop-types";
+import { removeReponse } from "../../../../services/avisService";
+import Modal from "../../../../../common/components/Modal";
+import Button from "../../../../../common/components/Button";
+import { Dropdown, DropdownDivider, DropdownItem } from "../../Dropdown";
 
 export default class EditReponseButton extends React.Component {
 
@@ -16,12 +16,12 @@ export default class EditReponseButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: 'none',
+            showModal: "none",
         };
     }
 
     handleCancel = () => {
-        this.setState({ showModal: 'none' });
+        this.setState({ showModal: "none" });
     };
 
     showModal = actionName => {
@@ -40,12 +40,12 @@ export default class EditReponseButton extends React.Component {
                     await removeReponse(this.props.avis._id);
                     await this.props.onChange(this.props.avis, {
                         message: {
-                            type: 'local',
-                            text: 'La réponse a été supprimée.',
+                            type: "local",
+                            text: "La réponse a été supprimée.",
                             timeout: 2500,
                         },
                     });
-                    this.setState({ showModal: 'none' });
+                    this.setState({ showModal: "none" });
                 }} />
         );
     };
@@ -56,7 +56,7 @@ export default class EditReponseButton extends React.Component {
         let hasReponse = !!avis.reponse;
         return (
             <div className="EditReponseButton">
-                {this.state.showModal === 'delete' && this.getDeleteModal()}
+                {this.state.showModal === "delete" && this.getDeleteModal()}
                 <Dropdown
                     header="Edition"
                     button={
@@ -67,12 +67,12 @@ export default class EditReponseButton extends React.Component {
                     items={
                         <div>
                             <DropdownItem onClick={onEdit}>
-                                <i className="far fa-edit a-icon" /> {hasReponse ? 'Modifier la réponse' : 'Répondre'}
+                                <i className="far fa-edit a-icon" /> {hasReponse ? "Modifier la réponse" : "Répondre"}
                             </DropdownItem>
                             {hasReponse &&
                             <>
                                 <DropdownDivider />
-                                <DropdownItem onClick={() => this.showModal('delete')} className="a-text-important">
+                                <DropdownItem onClick={() => this.showModal("delete")} className="a-text-important">
                                     <i className="far fa-trash-alt a-icon" /> Supprimer
                                 </DropdownItem>
                             </>

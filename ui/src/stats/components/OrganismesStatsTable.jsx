@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import calculateRate from './utils/calculateRate';
-import './StatsTable.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import calculateRate from "./utils/calculateRate";
+import "./StatsTable.scss";
 
 export default class OrganismesStatsTable extends Component {
 

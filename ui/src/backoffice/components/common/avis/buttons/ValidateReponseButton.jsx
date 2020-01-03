@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { validateReponse } from '../../../../services/avisService';
-import Button from '../../../../../common/components/Button';
+import React from "react";
+import PropTypes from "prop-types";
+import { validateReponse } from "../../../../services/avisService";
+import Button from "../../../../../common/components/Button";
 
 export default class ValidateReponseButton extends React.Component {
 
@@ -16,14 +16,14 @@ export default class ValidateReponseButton extends React.Component {
         let updated = await validateReponse(avis._id);
         this.props.onChange(updated, {
             message: {
-                type: 'local',
-                text: 'La réponse a été validée.',
+                type: "local",
+                text: "La réponse a été validée.",
             },
         });
     };
 
     render() {
-        let isValidated = this.props.avis.reponse.status === 'validated';
+        let isValidated = this.props.avis.reponse.status === "validated";
         return (
             <div className="PublishReponseButton">
                 <Button size="large" color="green" disabled={isValidated} onClick={this.onClick}>

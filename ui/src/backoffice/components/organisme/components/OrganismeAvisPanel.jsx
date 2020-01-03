@@ -1,18 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Filters } from '../../common/page/panel/filters/Filters';
-import Filter from '../../common/page/panel/filters/Filter';
-import _ from 'lodash';
-import Summary from '../../common/page/panel/summary/Summary';
-import Button from '../../../../common/components/Button';
-import { getExportAvisUrl, searchAvis } from '../../../services/avisService';
-import AvisResults from '../../common/page/panel/results/AvisResults';
-import Avis from '../../common/avis/Avis';
-import Pagination from '../../common/page/panel/pagination/Pagination';
-import Panel from '../../common/page/panel/Panel';
-import Loader from '../../../../common/components/Loader';
-import { getAvisStats } from '../../../services/statsService';
-import { ReconciliationWorkflow, Workflow } from '../../common/avis/Workflow';
+import React from "react";
+import PropTypes from "prop-types";
+import { Filters } from "../../common/page/panel/filters/Filters";
+import Filter from "../../common/page/panel/filters/Filter";
+import _ from "lodash";
+import Summary from "../../common/page/panel/summary/Summary";
+import Button from "../../../../common/components/Button";
+import { getExportAvisUrl, searchAvis } from "../../../services/avisService";
+import AvisResults from "../../common/page/panel/results/AvisResults";
+import Avis from "../../common/avis/Avis";
+import Pagination from "../../common/page/panel/pagination/Pagination";
+import Panel from "../../common/page/panel/Panel";
+import Loader from "../../../../common/components/Loader";
+import { getAvisStats } from "../../../services/statsService";
+import { ReconciliationWorkflow, Workflow } from "../../common/avis/Workflow";
 
 export default class OrganismeAvisPanel extends React.Component {
 
@@ -66,7 +66,7 @@ export default class OrganismeAvisPanel extends React.Component {
 
     fetchStats = async () => {
         return new Promise(async resolve => {
-            let query = _.pick(this.props.query, ['departement', 'idFormation', 'startDate', 'scheduledEndDate', 'siren']);
+            let query = _.pick(this.props.query, ["departement", "idFormation", "startDate", "scheduledEndDate", "siren"]);
             let stats = await getAvisStats(query);
             this.setState({ stats }, () => resolve());
         });
@@ -83,38 +83,38 @@ export default class OrganismeAvisPanel extends React.Component {
                     <Filters>
                         <Filter
                             label="Nouveaux"
-                            isActive={() => query.read === 'false'}
+                            isActive={() => query.read === "false"}
                             getNbElements={() => stats.total - stats.nbRead}
-                            onClick={() => onFilterClicked({ read: false, sortBy: 'date' })} />
+                            onClick={() => onFilterClicked({ read: false, sortBy: "date" })} />
 
                         <Filter
                             label="Signalés"
-                            isActive={() => query.statuses === 'reported'}
-                            onClick={() => onFilterClicked({ statuses: 'reported', sortBy: 'lastStatusUpdate' })}
+                            isActive={() => query.statuses === "reported"}
+                            onClick={() => onFilterClicked({ statuses: "reported", sortBy: "lastStatusUpdate" })}
                         />
 
                         <Filter
                             label="Répondus"
-                            isActive={() => query.reponseStatuses === 'none,validated'}
+                            isActive={() => query.reponseStatuses === "none,validated"}
                             onClick={() => onFilterClicked({
-                                reponseStatuses: 'none,validated',
-                                sortBy: 'reponse.lastStatusUpdate'
+                                reponseStatuses: "none,validated",
+                                sortBy: "reponse.lastStatusUpdate"
                             })}
                         />
 
                         <Filter
                             label="Réponses rejetées"
-                            isActive={() => query.reponseStatuses === 'rejected'}
+                            isActive={() => query.reponseStatuses === "rejected"}
                             onClick={() => onFilterClicked({
-                                reponseStatuses: 'rejected',
-                                sortBy: 'reponse.lastStatusUpdate'
+                                reponseStatuses: "rejected",
+                                sortBy: "reponse.lastStatusUpdate"
                             })}
                         />
 
                         <Filter
                             label="Tous"
                             isActive={() => !query.read && !query.reponseStatuses && !query.reported}
-                            onClick={() => onFilterClicked({ sortBy: 'date' })} />
+                            onClick={() => onFilterClicked({ sortBy: "date" })} />
 
                     </Filters>
                 }
@@ -125,7 +125,7 @@ export default class OrganismeAvisPanel extends React.Component {
                         buttons={
                             <Button
                                 size="medium"
-                                onClick={() => window.open(getExportAvisUrl(_.omit(query, ['page'])))}>
+                                onClick={() => window.open(getExportAvisUrl(_.omit(query, ["page"])))}>
                                 <i className="fas fa-download pr-2"></i>Exporter
                             </Button>
                         }
@@ -142,7 +142,7 @@ export default class OrganismeAvisPanel extends React.Component {
                                     showReponse={true}
                                     showReponseButtons={true}
                                     renderWorkflow={avis => {
-                                        return query.statuses === 'reported' ?
+                                        return query.statuses === "reported" ?
                                             <Workflow avis={avis} /> :
                                             <ReconciliationWorkflow avis={avis} />;
 

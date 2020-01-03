@@ -1,30 +1,30 @@
-const moment = require('moment');
-const _ = require('lodash');
-const faker = require('faker');
-const uuid = require('uuid');
+const moment = require("moment");
+const _ = require("lodash");
+const faker = require("faker");
+const uuid = require("uuid");
 
-faker.locale = 'fr';
+faker.locale = "fr";
 
 const createStagiaire = session => {
 
     let randomize = value => `${value}-${uuid.v4()}`;
-    let getDateInThePast = () => moment().subtract('100', 'days').toDate();
+    let getDateInThePast = () => moment().subtract("100", "days").toDate();
     let formation = session.formation;
 
     let email = faker.internet.email();
     return {
-        token: randomize('token'),
-        campaign: 'dataset',
+        token: randomize("token"),
+        campaign: "dataset",
         importDate: getDateInThePast(),
         codeRegion: session.code_region,
         trainee: {
             name: faker.name.lastName(),
             firstName: faker.name.firstName(),
-            mailDomain: email.split('@')[1],
+            mailDomain: email.split("@")[1],
             email: email,
-            phoneNumbers: [faker.phone.phoneNumber('06########')],
+            phoneNumbers: [faker.phone.phoneNumber("06########")],
             emailValid: true,
-            dnIndividuNational: faker.phone.phoneNumber('##########')
+            dnIndividuNational: faker.phone.phoneNumber("##########")
         },
         training: {
             idFormation: formation.numero,
@@ -63,11 +63,11 @@ const createStagiaire = session => {
 
 module.exports = async (db, options) => {
 
-    let session = await db.collection('sessionsReconciliees').findOne();
+    let session = await db.collection("sessionsReconciliees").findOne();
 
     return Promise.all(_.range(options.nbStagiaires || 1000).map(() => {
         let stagiaire = createStagiaire(session);
-        return db.collection('trainee').insertOne(stagiaire)
+        return db.collection("trainee").insertOne(stagiaire)
         .then(() => stagiaire);
     }));
 

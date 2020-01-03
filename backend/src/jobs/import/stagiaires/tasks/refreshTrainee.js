@@ -1,11 +1,11 @@
-const fs = require('fs');
-const _ = require('lodash');
-const parse = require('csv-parse');
-const validateTrainee = require('./utils/validateTrainee');
-const { getDifferences, flattenKeys } = require('../../../../core/utils/object-utils');
-const { writeObject, pipeline, ignoreFirstLine, transformObject } = require('../../../../core/utils/stream-utils');
-const { sanitizeCsvLine } = require('./utils/utils');
-const { getNbModifiedDocuments } = require('../../../job-utils');
+const fs = require("fs");
+const _ = require("lodash");
+const parse = require("csv-parse");
+const validateTrainee = require("./utils/validateTrainee");
+const { getDifferences, flattenKeys } = require("../../../../core/utils/object-utils");
+const { writeObject, pipeline, ignoreFirstLine, transformObject } = require("../../../../core/utils/stream-utils");
+const { sanitizeCsvLine } = require("./utils/utils");
+const { getNbModifiedDocuments } = require("../../../job-utils");
 
 module.exports = async (db, logger, file, handler) => {
 
@@ -52,14 +52,14 @@ module.exports = async (db, logger, file, handler) => {
         );
 
         let meta = getNewMeta(previous, merged);
-        let res = await db.collection('trainee').updateOne({ token: previous.token }, {
+        let res = await db.collection("trainee").updateOne({ token: previous.token }, {
             $set: {
-                'trainee.dnIndividuNational': merged.trainee.dnIndividuNational,
-                'trainee.idLocal': merged.trainee.idLocal,
-                'training.formacodes': merged.training.formacodes,
-                'training.certifInfos': merged.training.certifInfos,
-                'training.organisation': merged.training.organisation,
-                ...(merged.training.place.inseeCode ? { 'training.place.inseeCode': merged.training.place.inseeCode } : {}),
+                "trainee.dnIndividuNational": merged.trainee.dnIndividuNational,
+                "trainee.idLocal": merged.trainee.idLocal,
+                "training.formacodes": merged.training.formacodes,
+                "training.certifInfos": merged.training.certifInfos,
+                "training.organisation": merged.training.organisation,
+                ...(merged.training.place.inseeCode ? { "training.place.inseeCode": merged.training.place.inseeCode } : {}),
                 ...(meta ? { meta } : {}),
             }
         });
@@ -82,12 +82,12 @@ module.exports = async (db, logger, file, handler) => {
         );
 
         let meta = getNewMeta(previous, merged);
-        let res = await db.collection('comment').updateOne({ token: previous.token }, {
+        let res = await db.collection("comment").updateOne({ token: previous.token }, {
             $set: {
-                'training.formacodes': merged.training.formacodes,
-                'training.certifInfos': merged.training.certifInfos,
-                'training.organisation': merged.training.organisation,
-                ...(merged.training.place.inseeCode ? { 'training.place.inseeCode': merged.training.place.inseeCode } : {}),
+                "training.formacodes": merged.training.formacodes,
+                "training.certifInfos": merged.training.certifInfos,
+                "training.organisation": merged.training.organisation,
+                ...(merged.training.place.inseeCode ? { "training.place.inseeCode": merged.training.place.inseeCode } : {}),
                 ...(meta ? { meta } : {}),
             }
         });
@@ -102,7 +102,7 @@ module.exports = async (db, logger, file, handler) => {
         writeObject(async record => {
             try {
                 stats.total++;
-                let trainee = await handler.buildTrainee(record, { name: 'refresh', date: new Date() });
+                let trainee = await handler.buildTrainee(record, { name: "refresh", date: new Date() });
                 await validateTrainee(trainee);
 
                 if (!handler.shouldBeImported(trainee)) {
@@ -110,14 +110,14 @@ module.exports = async (db, logger, file, handler) => {
                 }
 
                 let key = flattenKeys(handler.getKey(trainee));
-                let previous = await db.collection('trainee').findOne(key);
+                let previous = await db.collection("trainee").findOne(key);
                 if (!previous) {
                     return false;
                 }
 
                 await Promise.all([
                     refreshStagiaire(previous, trainee),
-                    db.collection('comment').findOne({ token: previous.token })
+                    db.collection("comment").findOne({ token: previous.token })
                     .then(comment => {
                         return comment ? refreshAvis(comment, trainee) : false;
                     }),

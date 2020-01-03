@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Note from './Note';
-import items from './data.json';
-import './notes.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Note from "./Note";
+import items from "./data.json";
+import "./notes.scss";
 
 class Notes extends Component {
 
@@ -57,7 +57,7 @@ class Notes extends Component {
                                 items.map((item, index) =>
                                     <div
                                         key={index}
-                                        className={`note-container ${this.isMissing(index) ? 'missing' : ''}`}>
+                                        className={`note-container ${this.isMissing(index) ? "missing" : ""}`}>
                                         {this.isMissing(index) && <i className="fas fa-times" />}
                                         <Note
                                             index={index}

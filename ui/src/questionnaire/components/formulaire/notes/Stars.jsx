@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-import './stars.scss';
+import "./stars.scss";
 
 const MAX_STARS = 5;
-const tooltipLabels = ['Pas du tout satisfait', 'Pas satisfait', 'Moyennement satisfait', 'Satisfait', 'Très satisfait'];
+const tooltipLabels = ["Pas du tout satisfait", "Pas satisfait", "Moyennement satisfait", "Satisfait", "Très satisfait"];
 const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
 export default class Stars extends React.PureComponent {
@@ -35,7 +35,7 @@ export default class Stars extends React.PureComponent {
         }
 
         this.state.starArray = new Array(MAX_STARS)
-        .fill('star', 0, MAX_STARS);
+        .fill("star", 0, MAX_STARS);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -54,18 +54,18 @@ export default class Stars extends React.PureComponent {
     getStarClass = index => {
         if (this.state.value % 1 !== 0) {
             if (this.state.selected === index + 1) {
-                return 'fas fa-star';
+                return "fas fa-star";
             } else if (this.state.selected - 1 > index) {
-                return 'fas fa-star';
+                return "fas fa-star";
             } else {
-                return 'fas fa-star inactive';
+                return "fas fa-star inactive";
             }
         } else {
             // eslint-disable-next-line no-lonely-if
             if (this.state.hover <= index && this.state.selected <= index) {
-                return 'fas fa-star inactive';
+                return "fas fa-star inactive";
             } else {
-                return 'fas fa-star';
+                return "fas fa-star";
             }
         }
     };
@@ -88,16 +88,16 @@ export default class Stars extends React.PureComponent {
         let isTooltipActive = (this.state.hover !== null || this.state.selected !== null) && !this.state.readonly;
         let tooltipLabel = tooltipLabels[this.state.hover !== null ? this.state.hover - 1 : this.state.selected - 1];
         return (
-            <div className={`stars ${this.state.readonly ? 'readonly' : ''}`}>
+            <div className={`stars ${this.state.readonly ? "readonly" : ""}`}>
                 <div className="buttons">
-                    <div className={`star-tooltip ${isTooltipActive ? 'active' : 'inactive'}`}>
+                    <div className={`star-tooltip ${isTooltipActive ? "active" : "inactive"}`}>
                         <span className="label">{tooltipLabel}</span>
                     </div>
                     {
                         this.state.starArray.map((star, index) =>
                             <button
                                 key={index}
-                                className={`star ${this.getStarClass(index)} ${this.props.className || ''}`}
+                                className={`star ${this.getStarClass(index)} ${this.props.className || ""}`}
                                 onMouseOver={this.onMouseOverStar.bind(this, index)}
                                 onMouseOut={this.onMouseOutStar.bind(this)}
                                 onClick={this.select.bind(this, index)}

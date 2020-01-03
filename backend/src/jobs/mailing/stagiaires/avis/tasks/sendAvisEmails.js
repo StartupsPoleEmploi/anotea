@@ -1,5 +1,5 @@
-let titleize = require('underscore.string/titleize');
-let { delay } = require('../../../../job-utils');
+let titleize = require("underscore.string/titleize");
+let { delay } = require("../../../../job-utils");
 
 
 module.exports = async (db, logger, emails, action, options = {}) => {
@@ -10,7 +10,7 @@ module.exports = async (db, logger, emails, action, options = {}) => {
         error: 0,
     };
 
-    let cursor = db.collection('trainee').find(action.getQuery());
+    let cursor = db.collection("trainee").find(action.getQuery());
     if (options.limit) {
         cursor.limit(options.limit);
     }
@@ -24,7 +24,7 @@ module.exports = async (db, logger, emails, action, options = {}) => {
 
         try {
             logger.info(`Sending email to ${email} for campaign ${trainee.campaign}`);
-            let message = emails.getEmailMessageByTemplateName('avisStagiaireEmail');
+            let message = emails.getEmailMessageByTemplateName("avisStagiaireEmail");
             await message.send(trainee);
 
             if (options.delay) {

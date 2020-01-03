@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import { addReponse } from '../../../services/avisService';
-import Button from '../../../../common/components/Button';
-import './ReponseEditor.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import { addReponse } from "../../../services/avisService";
+import Button from "../../../../common/components/Button";
+import "./ReponseEditor.scss";
 
 export default class ReponseEditor extends React.Component {
 
@@ -17,7 +17,7 @@ export default class ReponseEditor extends React.Component {
         super(props);
         this.reference = React.createRef();
         this.state = {
-            text: _.get(this.props.avis, 'reponse.text', ''),
+            text: _.get(this.props.avis, "reponse.text", ""),
         };
     }
 
@@ -32,7 +32,7 @@ export default class ReponseEditor extends React.Component {
         this.props.onClose();
         this.props.onChange(updated, {
             message: {
-                type: 'local',
+                type: "local",
                 text: <span>La réponse a été enregistrée.</span>,
                 timeout: 2500,
             },

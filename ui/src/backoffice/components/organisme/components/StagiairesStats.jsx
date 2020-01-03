@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Pie from '../../common/page/panel/results/stats/Pie';
-import './StagiairesStats.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import Pie from "../../common/page/panel/results/stats/Pie";
+import "./StagiairesStats.scss";
 
 const StagiairesStats = ({ stagiaires, avis }) => {
 
     let rate = stagiaires.nbEmailsEnvoyes ?
-        `${Math.round((avis.total / stagiaires.nbEmailsEnvoyes) * 100)}%` : '0%';
+        `${Math.round((avis.total / stagiaires.nbEmailsEnvoyes) * 100)}%` : "0%";
 
     return (
         <div className="StagiairesStats">
@@ -29,15 +29,15 @@ const StagiairesStats = ({ stagiaires, avis }) => {
                     <div className="chart">
                         <div className="title">Dépôt d'avis</div>
                         <Pie
-                            colors={['#F28017', '#F7B374', '#FDF2E7']}
+                            colors={["#F28017", "#F7B374", "#FDF2E7"]}
                             data={[
                                 {
-                                    'id': 'Commentaires',
-                                    'value': avis.nbCommentaires,
+                                    "id": "Commentaires",
+                                    "value": avis.nbCommentaires,
                                 },
                                 {
-                                    'id': 'Notes seules',
-                                    'value': avis.nbNotesSeules,
+                                    "id": "Notes seules",
+                                    "value": avis.nbNotesSeules,
                                 },
                             ]}
                         />

@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import Summary from '../../common/page/panel/summary/Summary';
-import Pagination from '../../common/page/panel/pagination/Pagination';
-import Page from '../../common/page/Page';
-import Panel from '../../common/page/panel/Panel';
-import { Filter, Filters } from '../../common/page/panel/filters/Filters';
-import Avis from '../../common/avis/Avis';
-import AvisResults from '../../common/page/panel/results/AvisResults';
-import { searchAvis } from '../../../services/avisService';
-import { getAvisStats } from '../../../services/statsService';
-import { Workflow } from '../../common/avis/Workflow';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import Summary from "../../common/page/panel/summary/Summary";
+import Pagination from "../../common/page/panel/pagination/Pagination";
+import Page from "../../common/page/Page";
+import Panel from "../../common/page/panel/Panel";
+import { Filter, Filters } from "../../common/page/panel/filters/Filters";
+import Avis from "../../common/avis/Avis";
+import AvisResults from "../../common/page/panel/results/AvisResults";
+import { searchAvis } from "../../../services/avisService";
+import { getAvisStats } from "../../../services/statsService";
+import { Workflow } from "../../common/avis/Workflow";
 
 export default class ModerationReponsesPage extends React.Component {
 
@@ -86,48 +86,48 @@ export default class ModerationReponsesPage extends React.Component {
 
                                 <Filter
                                     label="À modérer"
-                                    isActive={() => query.reponseStatuses === 'none'}
+                                    isActive={() => query.reponseStatuses === "none"}
                                     getNbElements={() => stats.nbReponseAModerer}
                                     onClick={() => router.refreshCurrentPage({
-                                        reponseStatuses: 'none',
-                                        sortBy: 'reponse.lastStatusUpdate'
+                                        reponseStatuses: "none",
+                                        sortBy: "reponse.lastStatusUpdate"
                                     })}
                                 />
 
                                 <Filter
                                     label="Validés"
-                                    isActive={() => query.reponseStatuses === 'validated'}
+                                    isActive={() => query.reponseStatuses === "validated"}
                                     onClick={() => router.refreshCurrentPage({
-                                        reponseStatuses: 'validated',
-                                        sortBy: 'reponse.lastStatusUpdate'
+                                        reponseStatuses: "validated",
+                                        sortBy: "reponse.lastStatusUpdate"
                                     })}
                                 />
 
                                 <Filter
                                     label="Rejetés"
-                                    isActive={() => query.reponseStatuses === 'rejected'}
+                                    isActive={() => query.reponseStatuses === "rejected"}
                                     onClick={() => router.refreshCurrentPage({
-                                        reponseStatuses: 'rejected',
-                                        sortBy: 'reponse.lastStatusUpdate'
+                                        reponseStatuses: "rejected",
+                                        sortBy: "reponse.lastStatusUpdate"
                                     })}
                                 />
 
                                 <Filter
                                     label="Signalés"
-                                    isActive={() => query.statuses === 'reported'}
+                                    isActive={() => query.statuses === "reported"}
                                     getNbElements={() => stats.nbCommentairesReported}
                                     onClick={() => router.refreshCurrentPage({
-                                        statuses: 'reported',
-                                        sortBy: 'lastStatusUpdate'
+                                        statuses: "reported",
+                                        sortBy: "lastStatusUpdate"
                                     })}
                                 />
 
                                 <Filter
                                     label="Tous"
-                                    isActive={() => query.reponseStatuses === 'none,validated,rejected'}
+                                    isActive={() => query.reponseStatuses === "none,validated,rejected"}
                                     onClick={() => router.refreshCurrentPage({
-                                        reponseStatuses: 'none,validated,rejected',
-                                        sortBy: 'date'
+                                        reponseStatuses: "none,validated,rejected",
+                                        sortBy: "date"
                                     })}
                                 />
 
@@ -136,7 +136,7 @@ export default class ModerationReponsesPage extends React.Component {
                         summary={
                             <Summary
                                 pagination={results.meta.pagination}
-                                paginationLabel={query.statuses === 'reported' ? 'avis' : 'réponse(s)'}
+                                paginationLabel={query.statuses === "reported" ? "avis" : "réponse(s)"}
                             />
                         }
                         results={
@@ -147,11 +147,12 @@ export default class ModerationReponsesPage extends React.Component {
                                         <Avis
                                             avis={avis}
                                             renderWorkflow={() => {
-                                                return <Workflow avis={avis} showStatus={query.statuses !== 'reported'} />;
+                                                return <Workflow avis={avis}
+                                                                 showStatus={query.statuses !== "reported"} />;
                                             }}
-                                            showReponse={query.statuses !== 'reported'}
-                                            showModerationButtons={query.statuses === 'reported'}
-                                            showModerationReponseButtons={query.statuses !== 'reported'}
+                                            showReponse={query.statuses !== "reported"}
+                                            showModerationButtons={query.statuses === "reported"}
+                                            showModerationReponseButtons={query.statuses !== "reported"}
                                             onChange={() => {
                                                 return Promise.all([
                                                     this.search({ silent: true }),

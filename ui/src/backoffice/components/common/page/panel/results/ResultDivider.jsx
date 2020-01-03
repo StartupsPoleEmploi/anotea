@@ -1,5 +1,5 @@
-import React from 'react';
-import './ResultDivider.scss';
+import React from "react";
+import "./ResultDivider.scss";
 
 const ResultDivider = () => {
 

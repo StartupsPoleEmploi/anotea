@@ -1,12 +1,12 @@
-const fs = require('fs');
-const parse = require('csv-parse');
-const { writeObject, pipeline, ignoreFirstLine } = require('../../../../core/utils/stream-utils');
+const fs = require("fs");
+const parse = require("csv-parse");
+const { writeObject, pipeline, ignoreFirstLine } = require("../../../../core/utils/stream-utils");
 
 let getCedexMapping = async file => {
     let accumulator = {};
     await pipeline([
         fs.createReadStream(file),
-        parse({ delimiter: ',' }),
+        parse({ delimiter: "," }),
         ignoreFirstLine(),
         writeObject(async record => {
             let libelle = record[17];
@@ -33,18 +33,18 @@ module.exports = async (db, logger, communesCsvFile, cedexCsvFile) => {
 
     let stats = { total: 0, created: 0, updated: 0, invalid: 0 };
 
-    await db.collection('communes').removeMany({});
+    await db.collection("communes").removeMany({});
 
     let cedexMapping = await getCedexMapping(cedexCsvFile);
     await pipeline([
         fs.createReadStream(communesCsvFile),
-        parse({ delimiter: ';' }),
+        parse({ delimiter: ";" }),
         ignoreFirstLine(),
         writeObject(async record => {
             stats.total++;
             let inseeCode = record[0];
             try {
-                let results = await db.collection('communes').updateOne(
+                let results = await db.collection("communes").updateOne(
                     { inseeCode },
                     {
                         $set: {
@@ -72,10 +72,10 @@ module.exports = async (db, logger, communesCsvFile, cedexCsvFile) => {
         }, { parallel: 100 }),
     ]);
 
-    await db.collection('communes').insertOne({
-        insee: '75100',
-        commune: 'Paris',
-        postalCodes: ['75000'],
+    await db.collection("communes").insertOne({
+        insee: "75100",
+        commune: "Paris",
+        postalCodes: ["75000"],
         cedex: []
     });
 

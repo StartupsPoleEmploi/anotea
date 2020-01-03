@@ -1,6 +1,6 @@
-const rfs = require('rotating-file-stream');
-const moment = require('moment');
-const findApplication = require('./findApplication');
+const rfs = require("rotating-file-stream");
+const moment = require("moment");
+const findApplication = require("./findApplication");
 
 module.exports = (logger, configuration) => {
 
@@ -12,14 +12,14 @@ module.exports = (logger, configuration) => {
                 return `${fileNamePrefix}.log`;
             }
 
-            return `${fileNamePrefix}-${moment(time).format('YYYY-MM-DD')}-${index}.log`;
+            return `${fileNamePrefix}-${moment(time).format("YYYY-MM-DD")}-${index}.log`;
         }, {
-            interval: '1d',
+            interval: "1d",
             path: configuration.log.datalake.path,
         }
     );
 
-    stream.on('error', err => logger.error(err, 'Unable to export log to datalake file. Stream closed'));
+    stream.on("error", err => logger.error(err, "Unable to export log to datalake file. Stream closed"));
 
     return {
         export: data => {
@@ -29,14 +29,14 @@ module.exports = (logger, configuration) => {
                 stream.write(JSON.stringify({
                     requestId: data.request.requestId,
                     date: new Date(),
-                    apiVersion: 'v1',
+                    apiVersion: "v1",
                     application: findApplication(data.request),
-                    widget: !!headers['x-anotea-widget'],
+                    widget: !!headers["x-anotea-widget"],
                     statusCode: data.response.statusCode
 
-                }) + '\n');
+                }) + "\n");
             } catch (e) {
-                logger.error(e, 'Unable to export log to datalake file');
+                logger.error(e, "Unable to export log to datalake file");
             }
         },
     };

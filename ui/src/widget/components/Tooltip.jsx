@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import './Tooltip.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import "./Tooltip.scss";
 
 export default class Tooltip extends Component {
 
@@ -23,7 +23,7 @@ export default class Tooltip extends Component {
 
     render() {
 
-        let { message, direction = 'left' } = this.props;
+        let { message, direction = "left" } = this.props;
 
         return (
             <div className="Tooltip">

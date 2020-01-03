@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Formation from './Formation';
-import labonneformation from '../images/labonneformation.png';
-import './remerciements.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Formation from "./Formation";
+import labonneformation from "../images/labonneformation.png";
+import "./remerciements.scss";
 
 class Remerciements extends Component {
 

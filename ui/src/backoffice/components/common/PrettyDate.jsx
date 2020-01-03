@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
+import React from "react";
+import PropTypes from "prop-types";
+import moment from "moment";
 
 const PrettyDate = ({ date, numeric }) => {
-    return (<span>{moment(date).format(numeric ? 'L' : 'LL')}</span>);
+    return (<span>{moment(date).format(numeric ? "L" : "LL")}</span>);
 };
 
 PrettyDate.propTypes = {

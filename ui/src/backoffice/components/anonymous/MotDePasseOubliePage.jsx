@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Page from '../common/page/Page';
-import Panel from '../common/page/panel/Panel';
-import InputText from '../common/page/form/InputText';
-import Button from '../../../common/components/Button';
-import { CenteredForm } from '../common/page/form/CenteredForm';
-import { askNewPassword } from '../../services/passwordService';
-import AppContext from '../../BackofficeContext';
+import React from "react";
+import PropTypes from "prop-types";
+import Page from "../common/page/Page";
+import Panel from "../common/page/panel/Panel";
+import InputText from "../common/page/form/InputText";
+import Button from "../../../common/components/Button";
+import { CenteredForm } from "../common/page/form/CenteredForm";
+import { askNewPassword } from "../../services/passwordService";
+import AppContext from "../../BackofficeContext";
 
 export default class MotDePasseOubliePage extends React.Component {
 
@@ -20,7 +20,7 @@ export default class MotDePasseOubliePage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            identifiant: '',
+            identifiant: "",
             error: null,
         };
     }
@@ -34,14 +34,14 @@ export default class MotDePasseOubliePage extends React.Component {
         askNewPassword(this.state.identifiant)
         .then(() => {
             showMessage({
-                text: 'Une email vous a été envoyé.'
+                text: "Une email vous a été envoyé."
             });
-            this.setState({ error: null, identifiant: '', loading: false }, () => {
-                this.props.router.goToPage('/admin/login');
+            this.setState({ error: null, identifiant: "", loading: false }, () => {
+                this.props.router.goToPage("/admin/login");
             });
         })
         .catch(() => {
-            this.setState({ error: 'Une erreur est survenue', loading: false });
+            this.setState({ error: "Une erreur est survenue", loading: false });
         });
     };
 
@@ -49,7 +49,7 @@ export default class MotDePasseOubliePage extends React.Component {
 
         return (
             <Page
-                title={'Votre espace Anotéa'}
+                title={"Votre espace Anotéa"}
                 panel={
                     <Panel
                         backgroundColor="blue"

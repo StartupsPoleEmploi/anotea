@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require("moment");
 
 class ResendAction {
 
@@ -11,15 +11,15 @@ class ResendAction {
         let delay = this.configuration.smtp.organisme.accountsRelaunchDelay;
 
         return {
-            'profile': 'organisme',
-            'score.nb_avis': { $gte: 1 },
-            '$and': [
+            "profile": "organisme",
+            "score.nb_avis": { $gte: 1 },
+            "$and": [
                 { mailSentDate: { $ne: null } },
-                { mailSentDate: { $lte: moment().subtract(delay, 'days').toDate() } },
+                { mailSentDate: { $lte: moment().subtract(delay, "days").toDate() } },
             ],
-            'passwordHash': null,
-            'resend': { $ne: true },
-            ...(this.filters.codeRegions ? { 'codeRegion': { $in: this.filters.codeRegions } } : {}),
+            "passwordHash": null,
+            "resend": { $ne: true },
+            ...(this.filters.codeRegions ? { "codeRegion": { $in: this.filters.codeRegions } } : {}),
         };
     }
 }

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const cli = require('commander');
-const { execute } = require('../job-utils');
-const reconcile = require('./tasks/reconcile');
-const addReconciliationAvisMetadata = require('./tasks/addReconciliationAvisMetadata');
-const removePreviousImports = require('./tasks/removePreviousImports');
+const cli = require("commander");
+const { execute } = require("../job-utils");
+const reconcile = require("./tasks/reconcile");
+const addReconciliationAvisMetadata = require("./tasks/addReconciliationAvisMetadata");
+const removePreviousImports = require("./tasks/removePreviousImports");
 
-cli.description('Reconciling sessions/actions with comments...')
+cli.description("Reconciling sessions/actions with comments...")
 .parse(process.argv);
 
 execute(async ({ db, logger }) => {

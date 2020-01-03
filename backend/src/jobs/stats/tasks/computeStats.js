@@ -1,7 +1,7 @@
-const computeOrganismesStats = require('./stats/computeOrganismesStats');
-const computeAvisStats = require('./stats/computeAvisStats');
-const computeApiStats = require('./stats/computeApiStats');
-const computeCampaignStats = require('./stats/computeCampaignStats');
+const computeOrganismesStats = require("./stats/computeOrganismesStats");
+const computeAvisStats = require("./stats/computeAvisStats");
+const computeApiStats = require("./stats/computeApiStats");
+const computeCampaignStats = require("./stats/computeCampaignStats");
 
 module.exports = async (db, regions) => {
 
@@ -12,7 +12,7 @@ module.exports = async (db, regions) => {
         computeCampaignStats(db, regions),
     ]);
 
-    return db.collection('statistics').insertOne({
+    return db.collection("statistics").insertOne({
         date: new Date(),
         organismes: stats[0],
         avis: stats[1],

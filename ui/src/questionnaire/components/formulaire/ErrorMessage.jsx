@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import './error-alert.scss';
+import "./error-alert.scss";
 
 class ErrorMessage extends Component {
 

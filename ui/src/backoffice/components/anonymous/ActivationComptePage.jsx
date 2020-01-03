@@ -1,16 +1,16 @@
-import React from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import Panel from '../common/page/panel/Panel';
-import InputText from '../common/page/form/InputText';
-import Button from '../../../common/components/Button';
-import Page from '../common/page/Page';
-import { CenteredForm } from '../common/page/form/CenteredForm';
-import { isPasswordStrongEnough } from '../../utils/password-utils';
-import { activate, getActivationStatus } from '../../services/activationService';
-import { login } from '../../services/loginService';
-import { NavLink } from 'react-router-dom';
-import AppContext from '../../BackofficeContext';
+import React from "react";
+import _ from "lodash";
+import PropTypes from "prop-types";
+import Panel from "../common/page/panel/Panel";
+import InputText from "../common/page/form/InputText";
+import Button from "../../../common/components/Button";
+import Page from "../common/page/Page";
+import { CenteredForm } from "../common/page/form/CenteredForm";
+import { isPasswordStrongEnough } from "../../utils/password-utils";
+import { activate, getActivationStatus } from "../../services/activationService";
+import { login } from "../../services/loginService";
+import { NavLink } from "react-router-dom";
+import AppContext from "../../BackofficeContext";
 
 export default class ActivationComptePage extends React.Component {
 
@@ -25,15 +25,15 @@ export default class ActivationComptePage extends React.Component {
         super(props);
         this.state = {
             loading: true,
-            password: '',
-            confirmation: '',
+            password: "",
+            confirmation: "",
             errors: {
                 passwordNotStrongEnough: null,
                 isNotSamePassword: null,
             },
             account: {
-                nom: '',
-                identifiant: '',
+                nom: "",
+                identifiant: "",
                 active: false,
             },
         };
@@ -50,8 +50,8 @@ export default class ActivationComptePage extends React.Component {
         .catch(() => {
             showMessage({
                 timeout: 5000,
-                text: 'Le lien utilisé ne semble pas valide.',
-                color: 'red',
+                text: "Le lien utilisé ne semble pas valide.",
+                color: "red",
             });
         });
     }
@@ -63,9 +63,9 @@ export default class ActivationComptePage extends React.Component {
         this.setState({
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
-                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
+                    null : "Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.",
                 isNotSamePassword: password === confirmation ?
-                    null : 'Les mots de passes ne sont pas identiques.',
+                    null : "Les mots de passes ne sont pas identiques.",
             }
         }, () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
@@ -81,8 +81,8 @@ export default class ActivationComptePage extends React.Component {
                 .catch(() => {
                     this.setState({ loading: false });
                     showMessage({
-                        text: 'Une erreur est survenue lors de l\'activation du compte.',
-                        color: 'red',
+                        text: "Une erreur est survenue lors de l'activation du compte.",
+                        color: "red",
                     });
                 });
             }
@@ -95,7 +95,7 @@ export default class ActivationComptePage extends React.Component {
 
         return (
             <Page
-                title={'Accéder à mon espace Anotéa'}
+                title={"Accéder à mon espace Anotéa"}
                 panel={
                     <Panel
                         backgroundColor="blue"
@@ -108,10 +108,12 @@ export default class ActivationComptePage extends React.Component {
                                         <div className="mb-3">
                                             {account.identifiant}
                                         </div>
-                                        {account.status === 'active' ?
+                                        {account.status === "active" ?
                                             <>
                                                 <div className="clarification">
-                                                    <div>Un Espace Anotéa a déjà été créé pour cet Organisme de Formation.</div>
+                                                    <div>Un Espace Anotéa a déjà été créé pour cet Organisme de
+                                                        Formation.
+                                                    </div>
                                                     <div className="mt-1">
                                                         Cliquez sur
                                                         <NavLink to="/admin/mot-de-passe-oublie">
@@ -154,7 +156,7 @@ export default class ActivationComptePage extends React.Component {
                                     </>
                                 }
                                 buttons={
-                                    account.status === 'active' ? <div /> :
+                                    account.status === "active" ? <div /> :
                                         <>
                                             <Button
                                                 type="submit"

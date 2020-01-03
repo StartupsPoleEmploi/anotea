@@ -1,21 +1,21 @@
-const { jsonStream, transformObjectIntoCSV, pipeline } = require('../../core/utils/stream-utils');
-const { encodeStream } = require('iconv-lite');
+const { jsonStream, transformObjectIntoCSV, pipeline } = require("../../core/utils/stream-utils");
+const { encodeStream } = require("iconv-lite");
 
 let sendJsonStream = (stream, res) => {
     //TODO find a way to use pipeline and send 500 on error (ie. before pipeline calls end)
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader("Content-Type", "application/json");
     stream
     .pipe(res)
-    .on('error', () => res.status(500))
-    .on('end', () => res.end());
+    .on("error", () => res.status(500))
+    .on("end", () => res.end());
 };
 
 module.exports = {
     getRemoteAddress: req => {
-        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        return req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     },
     getFullUrl: req => {
-        return req.protocol + '://' + req.get('host') + req.baseUrl + req.url;
+        return req.protocol + "://" + req.get("host") + req.baseUrl + req.url;
     },
     tryAndCatch: callback => {
         return async (req, res, next) => {
@@ -31,10 +31,10 @@ module.exports = {
         sendJsonStream(stream.pipe(jsonStream(wrapper)), res);
     },
     sendCSVStream: (stream, res, columns, options = {}) => {
-        let encoding = options.encoding || 'UTF-8';
+        let encoding = options.encoding || "UTF-8";
 
-        res.setHeader('Content-disposition', `attachment; filename=${options.filename || 'export.csv'}`);
-        res.setHeader('Content-Type', `text/csv; charset=${encoding}`);
+        res.setHeader("Content-disposition", `attachment; filename=${options.filename || "export.csv"}`);
+        res.setHeader("Content-Type", `text/csv; charset=${encoding}`);
 
         return pipeline([
             stream,
@@ -44,7 +44,7 @@ module.exports = {
         ]);
     },
     sendHTML: (res, html) => {
-        res.set('Content-Type', 'text/html');
+        res.set("Content-Type", "text/html");
         res.send(new Buffer(html));
     },
 };

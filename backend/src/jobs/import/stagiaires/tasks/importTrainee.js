@@ -1,10 +1,10 @@
-const fs = require('fs');
-const md5File = require('md5-file/promise');
-const md5 = require('md5');
-const validateTrainee = require('./utils/validateTrainee');
-const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require('../../../../core/utils/stream-utils');
-const { flattenKeys } = require('../../../../core/utils/object-utils');
-const { getCampaignDate, getCampaignName, sanitizeCsvLine } = require('./utils/utils');
+const fs = require("fs");
+const md5File = require("md5-file/promise");
+const md5 = require("md5");
+const validateTrainee = require("./utils/validateTrainee");
+const { transformObject, writeObject, ignoreFirstLine, pipeline, parseCSV } = require("../../../../core/utils/stream-utils");
+const { flattenKeys } = require("../../../../core/utils/object-utils");
+const { getCampaignDate, getCampaignName, sanitizeCsvLine } = require("./utils/utils");
 
 module.exports = async (db, logger, file, handler, filters = {}) => {
 
@@ -27,9 +27,9 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
     const hasNotBeenAlreadyImportedOrRemoved = async trainee => {
         let email = trainee.trainee.email;
         let [countTrainee, countOptOut] = await Promise.all([
-            db.collection('trainee').countDocuments(flattenKeys(handler.getKey(trainee))),
-            db.collection('optOut').countDocuments({
-                'md5': md5(email),
+            db.collection("trainee").countDocuments(flattenKeys(handler.getKey(trainee))),
+            db.collection("optOut").countDocuments({
+                "md5": md5(email),
             })
         ]);
 
@@ -44,7 +44,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         invalid: 0,
     };
 
-    if (await db.collection('importTrainee').findOne({ campaign: campaign.name })) {
+    if (await db.collection("importTrainee").findOne({ campaign: campaign.name })) {
         logger.info(`CSV file ${file} already imported`);
         return stats;
     }
@@ -63,12 +63,12 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
                     await hasNotBeenAlreadyImportedOrRemoved(trainee)) {
 
                     await validateTrainee(trainee);
-                    await db.collection('trainee').insertOne(trainee);
+                    await db.collection("trainee").insertOne(trainee);
                     stats.imported++;
-                    logger.debug('New trainee inserted');
+                    logger.debug("New trainee inserted");
                 } else {
                     stats.ignored++;
-                    logger.debug('Trainee ignored', trainee, {});
+                    logger.debug("Trainee ignored", trainee, {});
                 }
             } catch (e) {
                 stats.invalid++;
@@ -77,7 +77,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         }, { parallel: 25 })
     ]);
 
-    await db.collection('importTrainee').insertOne({
+    await db.collection("importTrainee").insertOne({
         hash,
         campaign: campaign.name,
         campaignDate: campaign.date,

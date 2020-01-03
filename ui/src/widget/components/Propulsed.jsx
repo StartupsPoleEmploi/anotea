@@ -1,6 +1,6 @@
-import React from 'react';
-import logo from '../images/logo-anotea.png';
-import './Propulsed.scss';
+import React from "react";
+import logo from "../images/logo-anotea.png";
+import "./Propulsed.scss";
 
 export default function Propulsed() {
     return (

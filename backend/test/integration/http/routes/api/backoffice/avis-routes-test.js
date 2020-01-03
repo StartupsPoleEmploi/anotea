@@ -1,17 +1,17 @@
-const _ = require('lodash');
-const request = require('supertest');
-const assert = require('assert');
-const { withServer } = require('../../../../../helpers/with-server');
-const { newComment } = require('../../../../../helpers/data/dataset');
+const _ = require("lodash");
+const request = require("supertest");
+const assert = require("assert");
+const { withServer } = require("../../../../../helpers/with-server");
+const { newComment } = require("../../../../../helpers/data/dataset");
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, logAsFinanceur, logAsOrganisme }) => {
 
     let buildComment = (custom = {}) => {
         return newComment(_.merge({
-            codeRegion: '11',
+            codeRegion: "11",
             training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+                organisation: { siret: "11111111111111" },
+                codeFinanceur: ["10"],
             },
         }, custom));
     };
@@ -19,44 +19,44 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     let profiles = (values, testCallback) => {
         let testParameters = [
             {
-                profileName: 'moderateur',
-                logUser: app => logAsModerateur(app, 'admin@pole-emploi.fr', { codeRegion: '11' }),
+                profileName: "moderateur",
+                logUser: app => logAsModerateur(app, "admin@pole-emploi.fr", { codeRegion: "11" }),
             },
             {
-                profileName: 'financeur',
-                logUser: app => logAsFinanceur(app, 'financeur@pole-emploi.fr', '10', { codeRegion: '11' }),
+                profileName: "financeur",
+                logUser: app => logAsFinanceur(app, "financeur@pole-emploi.fr", "10", { codeRegion: "11" }),
             },
             {
-                profileName: 'organisme',
-                logUser: app => logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
+                profileName: "organisme",
+                logUser: app => logAsOrganisme(app, "anotea.pe@gmail.com", "11111111111111", { codeRegion: "11" }),
             }
         ];
 
         return testParameters.filter(p => values.includes(p.profileName)).forEach(testCallback);
     };
 
-    it('can not search avis when not authenticated', async () => {
+    it("can not search avis when not authenticated", async () => {
 
         let app = await startServer();
 
-        let response = await request(app).get('/api/backoffice/avis');
+        let response = await request(app).get("/api/backoffice/avis");
         assert.strictEqual(response.statusCode, 401);
         assert.deepStrictEqual(response.body, { error: true });
     });
 
-    profiles(['moderateur', 'financeur', 'organisme'], ({ profileName, logUser }) => {
+    profiles(["moderateur", "financeur", "organisme"], ({ profileName, logUser }) => {
 
         it(`[${profileName}] can search avis`, async () => {
 
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment()),
+                insertIntoDatabase("comment", buildComment()),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/avis')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
@@ -75,15 +75,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
             let app = await startServer();
             let [token] = await Promise.all([
-                logAsModerateur(app, 'admin@pole-emploi.fr'),
-                insertIntoDatabase('comment', buildComment()),
-                insertIntoDatabase('comment', buildComment()),
-                insertIntoDatabase('comment', buildComment()),
+                logAsModerateur(app, "admin@pole-emploi.fr"),
+                insertIntoDatabase("comment", buildComment()),
+                insertIntoDatabase("comment", buildComment()),
+                insertIntoDatabase("comment", buildComment()),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/avis?page=0')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis?page=0")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.deepStrictEqual(response.body.avis.length, 2);
@@ -96,8 +96,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             });
 
             response = await request(app)
-            .get('/api/backoffice/avis?page=1')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis?page=1")
+            .set("authorization", `Bearer ${token}`);
 
             assert.deepStrictEqual(response.body.meta.pagination, {
                 page: 1,
@@ -109,35 +109,35 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         });
     });
 
-    profiles(['moderateur', 'financeur'], ({ profileName, logUser }) => {
+    profiles(["moderateur", "financeur"], ({ profileName, logUser }) => {
 
         it(`[${profileName}] can search avis with commentaires`, async () => {
 
             let app = await startServer();
-            let notes = buildComment({ token: 'sans-commentaire' });
+            let notes = buildComment({ token: "sans-commentaire" });
             delete notes.comment;
 
             let [token] = await Promise.all([
-                logAsModerateur(app, 'admin@pole-emploi.fr'),
-                insertIntoDatabase('comment', buildComment({ token: 'avec-commentaire' })),
-                insertIntoDatabase('comment', notes),
+                logAsModerateur(app, "admin@pole-emploi.fr"),
+                insertIntoDatabase("comment", buildComment({ token: "avec-commentaire" })),
+                insertIntoDatabase("comment", notes),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/avis?commentaires=true')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis?commentaires=true")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].token, 'avec-commentaire');
+            assert.strictEqual(response.body.avis[0].token, "avec-commentaire");
 
             response = await request(app)
-            .get('/api/backoffice/avis?commentaires=false')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis?commentaires=false")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].token, 'sans-commentaire');
+            assert.strictEqual(response.body.avis[0].token, "sans-commentaire");
         });
 
         it(`[${profileName}] should not return avis from other region`, async () => {
@@ -145,101 +145,101 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ codeRegion: '6' })),
+                insertIntoDatabase("comment", buildComment({ codeRegion: "6" })),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/avis')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 0);
         });
     });
 
-    profiles(['financeur', 'organisme'], ({ profileName, logUser }) => {
+    profiles(["financeur", "organisme"], ({ profileName, logUser }) => {
         it(`[${profileName}] should not return avis à moderer`, async () => {
 
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ status: 'validated' })),
-                insertIntoDatabase('comment', buildComment({ status: 'none' })),
+                insertIntoDatabase("comment", buildComment({ status: "validated" })),
+                insertIntoDatabase("comment", buildComment({ status: "none" })),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/avis')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.ok(response.body.avis[0].status, 'validated');
+            assert.ok(response.body.avis[0].status, "validated");
         });
     });
 
-    profiles(['moderateur', 'organisme'], ({ profileName, logUser }) => {
+    profiles(["moderateur", "organisme"], ({ profileName, logUser }) => {
         it(`[${profileName}] should not return archived avis`, async () => {
 
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ status: 'validated' })),
-                insertIntoDatabase('comment', buildComment({ status: 'archived' })),
+                insertIntoDatabase("comment", buildComment({ status: "validated" })),
+                insertIntoDatabase("comment", buildComment({ status: "archived" })),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/avis')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].status, 'validated');
+            assert.strictEqual(response.body.avis[0].status, "validated");
         });
 
         it(`[${profileName}] can search avis with reponse`, async () => {
             let app = await startServer();
             let [token] = await Promise.all([
-                logAsModerateur(app, 'admin@pole-emploi.fr'),
-                insertIntoDatabase('comment', buildComment({
+                logAsModerateur(app, "admin@pole-emploi.fr"),
+                insertIntoDatabase("comment", buildComment({
                     reponse: {
-                        text: 'Voici notre réponse',
-                        status: 'validated',
+                        text: "Voici notre réponse",
+                        status: "validated",
                     },
                 })),
-                insertIntoDatabase('comment', buildComment({
+                insertIntoDatabase("comment", buildComment({
                     reponse: {
-                        text: 'Voici notre réponse',
-                        status: 'rejected',
+                        text: "Voici notre réponse",
+                        status: "rejected",
                     },
                 })),
-                insertIntoDatabase('comment', buildComment({
+                insertIntoDatabase("comment", buildComment({
                     reponse: {
-                        text: 'Voici notre réponse',
-                        status: 'none',
+                        text: "Voici notre réponse",
+                        status: "none",
                     },
                 })),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/avis?reponseStatuses=validated')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis?reponseStatuses=validated")
+            .set("authorization", `Bearer ${token}`);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].reponse.status, 'validated');
+            assert.strictEqual(response.body.avis[0].reponse.status, "validated");
 
             response = await request(app)
-            .get('/api/backoffice/avis?reponseStatuses=rejected')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis?reponseStatuses=rejected")
+            .set("authorization", `Bearer ${token}`);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].reponse.status, 'rejected');
+            assert.strictEqual(response.body.avis[0].reponse.status, "rejected");
 
             response = await request(app)
-            .get('/api/backoffice/avis?reponseStatuses=none')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/avis?reponseStatuses=none")
+            .set("authorization", `Bearer ${token}`);
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.avis.length, 1);
-            assert.strictEqual(response.body.avis[0].reponse.status, 'none');
+            assert.strictEqual(response.body.avis[0].reponse.status, "none");
         });
     });
 

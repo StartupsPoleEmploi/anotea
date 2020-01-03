@@ -1,12 +1,12 @@
-const fs = require('fs');
-const _ = require('lodash');
-const { ignoreFirstLine, pipeline, writeObject } = require('../../../../core/utils/stream-utils');
-const { getDifferences, mergeDeep } = require('../../../../core/utils/object-utils');
-const { getNbModifiedDocuments } = require('../../../job-utils');
-const parse = require('csv-parse');
+const fs = require("fs");
+const _ = require("lodash");
+const { ignoreFirstLine, pipeline, writeObject } = require("../../../../core/utils/stream-utils");
+const { getDifferences, mergeDeep } = require("../../../../core/utils/object-utils");
+const { getNbModifiedDocuments } = require("../../../job-utils");
+const parse = require("csv-parse");
 
 let loadCertifinfos = async file => {
-    const ETAT_ERRONE = '2';
+    const ETAT_ERRONE = "2";
 
     let handleChaining = mapping => {
 
@@ -35,16 +35,16 @@ let loadCertifinfos = async file => {
     await pipeline([
         fs.createReadStream(file),
         parse({
-            delimiter: ';',
-            quote: '',
+            delimiter: ";",
+            quote: "",
             relax_column_count: true,
             columns: [
-                'cer3_code',
-                'cer3_libelle',
-                'cer3_etat',
-                'cer3_codenew',
-                'cer3_libellenew',
-                'cer3_etat',
+                "cer3_code",
+                "cer3_libelle",
+                "cer3_etat",
+                "cer3_codenew",
+                "cer3_libellenew",
+                "cer3_etat",
             ],
         }),
         ignoreFirstLine(),
@@ -117,7 +117,7 @@ module.exports = async (db, logger, file) => {
                 if (previous.training.certifInfos.find(code => certifications[code])) {
                     let results = await db.collection(collectionName).updateOne({ _id: previous._id }, {
                         $set: {
-                            'training.certifInfos': merged.training.certifInfos,
+                            "training.certifInfos": merged.training.certifInfos,
                             ...(meta ? { meta } : {}),
                         }
                     });
@@ -137,8 +137,8 @@ module.exports = async (db, logger, file) => {
 
     let certifInfos = await loadCertifinfos(file);
     let [trainee, comment] = await Promise.all([
-        patch('trainee', certifInfos),
-        patch('comment', certifInfos),
+        patch("trainee", certifInfos),
+        patch("comment", certifInfos),
     ]);
 
     return { trainee, comment };

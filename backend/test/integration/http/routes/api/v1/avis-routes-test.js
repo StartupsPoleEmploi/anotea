@@ -1,22 +1,22 @@
-const request = require('supertest');
-const moment = require('moment/moment');
-const assert = require('assert');
-const ObjectID = require('mongodb').ObjectID;
-const { withServer } = require('../../../../../helpers/with-server');
-const { newComment, randomize, randomSIRET } = require('../../../../../helpers/data/dataset');
+const request = require("supertest");
+const moment = require("moment/moment");
+const assert = require("assert");
+const ObjectID = require("mongodb").ObjectID;
+const { withServer } = require("../../../../../helpers/with-server");
+const { newComment, randomize, randomSIRET } = require("../../../../../helpers/data/dataset");
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
-    it('can search avis', async () => {
+    it("can search avis", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         let date = new Date();
         let oid = new ObjectID();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment()),
+            insertIntoDatabase("comment", newComment({
                 _id: oid,
                 pseudo: pseudo
             }, date))
@@ -32,8 +32,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             pseudo,
             date: date.toJSON(),
             commentaire: {
-                titre: 'Génial',
-                texte: 'Super formation.',
+                titre: "Génial",
+                texte: "Super formation.",
             },
             notes: {
                 accueil: 3,
@@ -44,32 +44,32 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 global: 2
             },
             formation: {
-                numero: 'F_XX_XX',
-                intitule: 'Développeur',
+                numero: "F_XX_XX",
+                intitule: "Développeur",
                 domaine_formation: {
                     formacodes: [
-                        '46242'
+                        "46242"
                     ]
                 },
                 certifications: [
                     {
-                        certif_info: '78997'
+                        certif_info: "78997"
                     }
                 ],
                 action: {
-                    numero: 'AC_XX_XXXXXX',
+                    numero: "AC_XX_XXXXXX",
                     lieu_de_formation: {
-                        code_postal: '75011',
-                        ville: 'Paris'
+                        code_postal: "75011",
+                        ville: "Paris"
                     },
                     organisme_financeurs: [],
                     organisme_formateur: {
-                        raison_sociale: 'INSTITUT DE FORMATION',
-                        siret: '11111111111111',
-                        numero: '14_OF_XXXXXXXXXX',
+                        raison_sociale: "INSTITUT DE FORMATION",
+                        siret: "11111111111111",
+                        numero: "14_OF_XXXXXXXXXX",
                     },
                     session: {
-                        numero: 'SE_XXXXXX',
+                        numero: "SE_XXXXXX",
                         periode: {
                             debut: date.toJSON(),
                             fin: date.toJSON(),
@@ -89,23 +89,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('can get a single avis', async () => {
+    it("can get a single avis", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         let date = new Date();
         let oid = new ObjectID();
 
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase("comment", newComment({
             _id: oid,
             pseudo: pseudo,
             comment: {
-                text: 'Formation super géniale.',
+                text: "Formation super géniale.",
             },
             meta: {
                 original: {
                     comment: {
-                        text: 'Cool',
+                        text: "Cool",
                     }
                 }
             }
@@ -119,8 +119,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
             pseudo,
             date: date.toJSON(),
             commentaire: {
-                titre: 'Génial',
-                texte: 'Formation super géniale.',
+                titre: "Génial",
+                texte: "Formation super géniale.",
             },
             notes: {
                 accueil: 3,
@@ -131,32 +131,32 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 global: 2
             },
             formation: {
-                numero: 'F_XX_XX',
-                intitule: 'Développeur',
+                numero: "F_XX_XX",
+                intitule: "Développeur",
                 domaine_formation: {
                     formacodes: [
-                        '46242'
+                        "46242"
                     ]
                 },
                 certifications: [
                     {
-                        certif_info: '78997'
+                        certif_info: "78997"
                     }
                 ],
                 action: {
-                    numero: 'AC_XX_XXXXXX',
+                    numero: "AC_XX_XXXXXX",
                     lieu_de_formation: {
-                        code_postal: '75011',
-                        ville: 'Paris'
+                        code_postal: "75011",
+                        ville: "Paris"
                     },
                     organisme_financeurs: [],
                     organisme_formateur: {
-                        raison_sociale: 'INSTITUT DE FORMATION',
-                        siret: '11111111111111',
-                        numero: '14_OF_XXXXXXXXXX',
+                        raison_sociale: "INSTITUT DE FORMATION",
+                        siret: "11111111111111",
+                        numero: "14_OF_XXXXXXXXXX",
                     },
                     session: {
-                        numero: 'SE_XXXXXX',
+                        numero: "SE_XXXXXX",
                         periode: {
                             debut: date.toJSON(),
                             fin: date.toJSON(),
@@ -167,7 +167,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('should fail when id is unknown', async () => {
+    it("should fail when id is unknown", async () => {
 
         let app = await startServer();
 
@@ -175,13 +175,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         assert.strictEqual(response.statusCode, 404);
         assert.deepStrictEqual(response.body, {
-            error: 'Not Found',
-            message: 'Identifiant inconnu',
+            error: "Not Found",
+            message: "Identifiant inconnu",
             statusCode: 404,
         });
     });
 
-    it('should fail when id is invalid', async () => {
+    it("should fail when id is invalid", async () => {
 
         let app = await startServer();
 
@@ -189,22 +189,22 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         assert.strictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.body, {
-            error: 'Bad Request',
-            message: 'Identifiant invalide',
+            error: "Bad Request",
+            message: "Identifiant invalide",
             statusCode: 400,
         });
     });
 
-    it('can search avis by organisme_formateur', async () => {
+    it("can search avis by organisme_formateur", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         let date = new Date();
         let siret = randomSIRET();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment()),
+            insertIntoDatabase("comment", newComment({
                 pseudo: pseudo,
                 training: {
                     organisation: {
@@ -220,16 +220,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
-    it('can search avis by lieu_de_formation', async () => {
+    it("can search avis by lieu_de_formation", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         let date = new Date();
-        let codePostal = '75000';
+        let codePostal = "75000";
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment()),
+            insertIntoDatabase("comment", newComment({
                 pseudo,
                 training: {
                     place: {
@@ -245,16 +245,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
-    it('can search avis by certif_info', async () => {
+    it("can search avis by certif_info", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         let date = new Date();
-        let certifInfo = '12345';
+        let certifInfo = "12345";
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment()),
+            insertIntoDatabase("comment", newComment({
                 pseudo,
                 training: {
                     certifInfos: [certifInfo],
@@ -268,15 +268,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
-    it('can search avis by formacode', async () => {
+    it("can search avis by formacode", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
-        let formacode = '11111';
+        let pseudo = randomize("pseudo");
+        let formacode = "11111";
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment()),
+            insertIntoDatabase("comment", newComment({
                 pseudo,
                 training: {
                     formacodes: [formacode],
@@ -292,16 +292,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(avis[0].formation.domaine_formation.formacodes[0], formacode);
     });
 
-    it('can search avis with partial code', async () => {
+    it("can search avis with partial code", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
-        let partialFormacode = '224';
-        let formacode = '224123';
+        let pseudo = randomize("pseudo");
+        let partialFormacode = "224";
+        let formacode = "224123";
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment()),
+            insertIntoDatabase("comment", newComment({
                 pseudo,
                 training: {
                     formacodes: [formacode],
@@ -317,21 +317,21 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.deepStrictEqual(avis[0].formation.domaine_formation.formacodes[0], formacode);
     });
 
-    it('can search avis with pagination', async () => {
+    it("can search avis with pagination", async () => {
 
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment()),
-            insertIntoDatabase('comment', newComment()),
+            insertIntoDatabase("comment", newComment()),
+            insertIntoDatabase("comment", newComment()),
+            insertIntoDatabase("comment", newComment()),
         ]);
 
-        let response = await request(app).get('/api/v1/avis?page=0&items_par_page=2');
+        let response = await request(app).get("/api/v1/avis?page=0&items_par_page=2");
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 2);
 
-        response = await request(app).get('/api/v1/avis?page=1&items_par_page=2');
+        response = await request(app).get("/api/v1/avis?page=1&items_par_page=2");
         assert.strictEqual(response.statusCode, 200);
         assert.strictEqual(response.body.avis.length, 1);
         assert.deepStrictEqual(response.body.meta.pagination, {
@@ -342,14 +342,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('can get score with notes décimales', async () => {
+    it("can get score with notes décimales", async () => {
 
         let app = await startServer();
         let comment = newComment();
 
-        await insertIntoDatabase('comment', comment);
+        await insertIntoDatabase("comment", comment);
 
-        let response = await request(app).get('/api/v1/avis?notes_decimales=true');
+        let response = await request(app).get("/api/v1/avis?notes_decimales=true");
         assert.deepStrictEqual(response.body.avis[0].notes, {
             accueil: 3,
             contenu_formation: 2,
@@ -370,75 +370,75 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('should sort avis by date (desc)', async () => {
+    it("should sort avis by date (desc)", async () => {
 
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
+            insertIntoDatabase("comment", newComment({ pseudo: "5minutesAgo" }, moment().subtract(5, "minutes").toDate())),
+            insertIntoDatabase("comment", newComment({ pseudo: "6minutesAgo" }, moment().subtract(6, "minutes").toDate())),
+            insertIntoDatabase("comment", newComment({ pseudo: "7minutesAgo" }, moment().subtract(7, "minutes").toDate())),
         ]);
 
-        let response = await request(app).get('/api/v1/avis?tri=date');
+        let response = await request(app).get("/api/v1/avis?tri=date");
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '5minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
-        assert.strictEqual(response.body.avis[2].pseudo, '7minutesAgo');
+        assert.strictEqual(response.body.avis[0].pseudo, "5minutesAgo");
+        assert.strictEqual(response.body.avis[1].pseudo, "6minutesAgo");
+        assert.strictEqual(response.body.avis[2].pseudo, "7minutesAgo");
     });
 
-    it('should sort avis by date (asc)', async () => {
+    it("should sort avis by date (asc)", async () => {
 
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('comment', newComment({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
+            insertIntoDatabase("comment", newComment({ pseudo: "5minutesAgo" }, moment().subtract(5, "minutes").toDate())),
+            insertIntoDatabase("comment", newComment({ pseudo: "6minutesAgo" }, moment().subtract(6, "minutes").toDate())),
+            insertIntoDatabase("comment", newComment({ pseudo: "7minutesAgo" }, moment().subtract(7, "minutes").toDate())),
         ]);
 
-        let response = await request(app).get('/api/v1/avis?tri=date&ordre=asc');
+        let response = await request(app).get("/api/v1/avis?tri=date&ordre=asc");
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '7minutesAgo');
-        assert.strictEqual(response.body.avis[1].pseudo, '6minutesAgo');
-        assert.strictEqual(response.body.avis[2].pseudo, '5minutesAgo');
+        assert.strictEqual(response.body.avis[0].pseudo, "7minutesAgo");
+        assert.strictEqual(response.body.avis[1].pseudo, "6minutesAgo");
+        assert.strictEqual(response.body.avis[2].pseudo, "5minutesAgo");
     });
 
-    it('should sort avis by notes', async () => {
+    it("should sort avis by notes", async () => {
 
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: '1', rates: { global: 1 } })),
-            insertIntoDatabase('comment', newComment({ pseudo: '3', rates: { global: 3 } })),
-            insertIntoDatabase('comment', newComment({ pseudo: '2', rates: { global: 2 } })),
+            insertIntoDatabase("comment", newComment({ pseudo: "1", rates: { global: 1 } })),
+            insertIntoDatabase("comment", newComment({ pseudo: "3", rates: { global: 3 } })),
+            insertIntoDatabase("comment", newComment({ pseudo: "2", rates: { global: 2 } })),
         ]);
 
-        let response = await request(app).get('/api/v1/avis?tri=notes');
+        let response = await request(app).get("/api/v1/avis?tri=notes");
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, '3');
-        assert.strictEqual(response.body.avis[1].pseudo, '2');
-        assert.strictEqual(response.body.avis[2].pseudo, '1');
+        assert.strictEqual(response.body.avis[0].pseudo, "3");
+        assert.strictEqual(response.body.avis[1].pseudo, "2");
+        assert.strictEqual(response.body.avis[2].pseudo, "1");
     });
 
-    it('should sort avis by formation', async () => {
+    it("should sort avis by formation", async () => {
 
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ pseudo: 'C', training: { title: 'C' } })),
-            insertIntoDatabase('comment', newComment({ pseudo: 'A', training: { title: 'A' } })),
-            insertIntoDatabase('comment', newComment({ pseudo: 'B', training: { title: 'B' } })),
+            insertIntoDatabase("comment", newComment({ pseudo: "C", training: { title: "C" } })),
+            insertIntoDatabase("comment", newComment({ pseudo: "A", training: { title: "A" } })),
+            insertIntoDatabase("comment", newComment({ pseudo: "B", training: { title: "B" } })),
         ]);
 
-        let response = await request(app).get('/api/v1/avis?tri=formation&ordre=asc');
+        let response = await request(app).get("/api/v1/avis?tri=formation&ordre=asc");
         assert.strictEqual(response.statusCode, 200);
-        assert.strictEqual(response.body.avis[0].pseudo, 'A');
-        assert.strictEqual(response.body.avis[1].pseudo, 'B');
-        assert.strictEqual(response.body.avis[2].pseudo, 'C');
+        assert.strictEqual(response.body.avis[0].pseudo, "A");
+        assert.strictEqual(response.body.avis[1].pseudo, "B");
+        assert.strictEqual(response.body.avis[2].pseudo, "C");
     });
 
-    it('should return empty array when no avis can be found', async () => {
+    it("should return empty array when no avis can be found", async () => {
 
         let app = await startServer();
 
@@ -456,15 +456,15 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         });
     });
 
-    it('should return avis (notes)', async () => {
+    it("should return avis (notes)", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         let comment = newComment({
             pseudo: pseudo,
         });
         delete comment.comment;
-        await insertIntoDatabase('comment', comment);
+        await insertIntoDatabase("comment", comment);
 
         let response = await request(app).get(`/api/v1/avis`);
 
@@ -472,11 +472,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
-    it('should return avis with commentaire=null', async () => {
+    it("should return avis with commentaire=null", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
-        await insertIntoDatabase('comment', newComment({
+        let pseudo = randomize("pseudo");
+        await insertIntoDatabase("comment", newComment({
             pseudo: pseudo,
             comment: null,
         }));
@@ -487,14 +487,14 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 1);
     });
 
-    it('should not return avis not validated yet', async () => {
+    it("should not return avis not validated yet", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
 
-        await insertIntoDatabase('comment', newComment({
+        await insertIntoDatabase("comment", newComment({
             pseudo: pseudo,
-            status: 'none',
+            status: "none",
         }));
 
         let response = await request(app).get(`/api/v1/avis`);
@@ -503,26 +503,26 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         assert.strictEqual(response.body.avis.filter(a => a.pseudo === pseudo).length, 0);
     });
 
-    it('should return rejected avis (without pseudo and comment)', async () => {
+    it("should return rejected avis (without pseudo and comment)", async () => {
 
         let app = await startServer();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
 
-        await insertIntoDatabase('comment', newComment({
-            _id: '12345',
+        await insertIntoDatabase("comment", newComment({
+            _id: "12345",
             pseudo: pseudo,
-            status: 'rejected',
+            status: "rejected",
         }));
 
         let response = await request(app).get(`/api/v1/avis`);
 
         assert.strictEqual(response.statusCode, 200);
-        let avis = response.body.avis.find(a => a.id === '12345');
+        let avis = response.body.avis.find(a => a.id === "12345");
         assert.ok(avis);
         assert.deepStrictEqual(avis.commentaire, undefined);
     });
 
-    it('should fail when parameters are invalid', async () => {
+    it("should fail when parameters are invalid", async () => {
 
         let app = await startServer();
 
@@ -530,51 +530,51 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         assert.strictEqual(response.statusCode, 400);
         assert.deepStrictEqual(response.body, {
-            error: 'Bad Request',
+            error: "Bad Request",
             statusCode: 400,
-            message: 'Erreur de validation',
+            message: "Erreur de validation",
             details: [
                 {
-                    message: '"organisme_formateur" length must be at least 9 characters long',
+                    message: "\"organisme_formateur\" length must be at least 9 characters long",
                     path: [
-                        'organisme_formateur'
+                        "organisme_formateur"
                     ],
-                    type: 'string.min',
+                    type: "string.min",
                     context: {
                         limit: 9,
-                        value: 'INVALID',
-                        key: 'organisme_formateur',
-                        label: 'organisme_formateur'
+                        value: "INVALID",
+                        key: "organisme_formateur",
+                        label: "organisme_formateur"
                     }
                 },
                 {
                     context: {
-                        key: 'lieu_de_formation',
-                        label: 'lieu_de_formation',
+                        key: "lieu_de_formation",
+                        label: "lieu_de_formation",
                         pattern: {},
-                        value: 'INVALID',
+                        value: "INVALID",
                     },
-                    message: '"lieu_de_formation" with value "INVALID" fails to match the required pattern: /^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/',
+                    message: "\"lieu_de_formation\" with value \"INVALID\" fails to match the required pattern: /^(([0-8][0-9])|(9[0-5])|(2[ab])|(97))[0-9]{3}$/",
                     path: [
-                        'lieu_de_formation',
+                        "lieu_de_formation",
                     ],
-                    type: 'string.regex.base',
+                    type: "string.regex.base",
                 }
             ]
         });
     });
 
-    it.skip('should return avis with partial intitulé and same siret/code_postal', async () => {
+    it.skip("should return avis with partial intitulé and same siret/code_postal", async () => {
 
         let app = await startServer();
-        let intitule = 'fullstack';
-        let siret = '12345678901234';
-        let codePostal = '75000';
+        let intitule = "fullstack";
+        let siret = "12345678901234";
+        let codePostal = "75000";
 
-        await insertIntoDatabase('comment', newComment({
-            pseudo: 'test-user-intitule',
+        await insertIntoDatabase("comment", newComment({
+            pseudo: "test-user-intitule",
             training: {
-                title: 'Développeur fullstack',
+                title: "Développeur fullstack",
                 organisation: {
                     siret: siret,
                 },
@@ -587,28 +587,28 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let response = await request(app).get(`/api/v1/organisme_formateurs/${siret}/lieu_de_formations/${codePostal}/formations/${intitule}/avis`);
 
         assert.strictEqual(response.statusCode, 200);
-        let avis = response.body.avis.filter(a => a.pseudo === 'test-user-intitule');
+        let avis = response.body.avis.filter(a => a.pseudo === "test-user-intitule");
         assert.strictEqual(avis.length, 1);
-        assert.deepStrictEqual(avis[0].formation.intitule, 'Développeur fullstack');
+        assert.deepStrictEqual(avis[0].formation.intitule, "Développeur fullstack");
         assert.deepStrictEqual(avis[0].formation.action.lieu_de_formation.code_postal, codePostal);
         assert.deepStrictEqual(avis[0].formation.action.organisme_formateur.siret, siret);
     });
 
-    it('can search avis and ignoring those archived', async () => {
+    it("can search avis and ignoring those archived", async () => {
 
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('comment', newComment({ _id: '123', status: 'validated' })),
-            insertIntoDatabase('comment', newComment({ status: 'archived' }))
+            insertIntoDatabase("comment", newComment({ _id: "123", status: "validated" })),
+            insertIntoDatabase("comment", newComment({ status: "archived" }))
         ]);
 
         let response = await request(app)
-        .get('/api/v1/avis');
+        .get("/api/v1/avis");
 
         assert.strictEqual(response.statusCode, 200);
         assert.ok(response.body.avis);
         assert.deepStrictEqual(response.body.avis.length, 1);
-        assert.deepStrictEqual(response.body.avis[0].id, '123');
+        assert.deepStrictEqual(response.body.avis[0].id, "123");
     });
 }));

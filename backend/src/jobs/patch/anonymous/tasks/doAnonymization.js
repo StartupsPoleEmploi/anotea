@@ -1,11 +1,11 @@
-const { getAnonymizedTitle } = require('../utils')();
+const { getAnonymizedTitle } = require("../utils")();
 
 module.exports = db => {
     return new Promise((resolve, reject) => {
-        let stream = db.collection('trainee').find().sort().stream();
+        let stream = db.collection("trainee").find().sort().stream();
         let promises = [];
 
-        stream.on('data', trainee => {
+        stream.on("data", trainee => {
             const result = getAnonymizedTitle(trainee);
 
             if (result.changeDetected) {
@@ -13,26 +13,26 @@ module.exports = db => {
 
                 const update = {
                     $set: {
-                        'training.title': result.anonymizedTitle,
-                        'anonymized': true,
-                        'meta.patch.training.title': trainee.training.title
+                        "training.title": result.anonymizedTitle,
+                        "anonymized": true,
+                        "meta.patch.training.title": trainee.training.title
                     }
                 };
 
                 let p = Promise.all([
-                    db.collection('trainee').updateOne(query, update),
-                    db.collection('comment').updateOne({ token: trainee.token }, update)
+                    db.collection("trainee").updateOne(query, update),
+                    db.collection("comment").updateOne({ token: trainee.token }, update)
                 ]);
 
                 promises.push(p);
             }
         });
 
-        stream.on('error', () => {
+        stream.on("error", () => {
             reject();
         });
 
-        stream.on('end', async () => {
+        stream.on("end", async () => {
             await Promise.all(promises);
             resolve();
         });

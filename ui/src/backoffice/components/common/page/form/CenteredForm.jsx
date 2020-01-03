@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Form } from './Form';
-import './CenteredForm.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import { Form } from "./Form";
+import "./CenteredForm.scss";
 
 export const CenteredForm = props => {
     return (

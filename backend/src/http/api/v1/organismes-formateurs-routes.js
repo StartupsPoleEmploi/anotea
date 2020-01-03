@@ -1,22 +1,22 @@
-const express = require('express');
-const Boom = require('boom');
-const Joi = require('joi');
-const _ = require('lodash');
-const { tryAndCatch, sendArrayAsJsonStream } = require('../../utils/routes-utils');
-const validators = require('./utils/validators');
-const buildProjection = require('./utils/buildProjection');
-const buildSort = require('./utils/buildSort');
-const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require('./utils/dto');
-const schema = require('./utils/schema');
+const express = require("express");
+const Boom = require("boom");
+const Joi = require("joi");
+const _ = require("lodash");
+const { tryAndCatch, sendArrayAsJsonStream } = require("../../utils/routes-utils");
+const validators = require("./utils/validators");
+const buildProjection = require("./utils/buildProjection");
+const buildSort = require("./utils/buildSort");
+const { createOrganismeFomateurDTO, createPaginationDTO, createAvisDTO } = require("./utils/dto");
+const schema = require("./utils/schema");
 
 module.exports = ({ db, middlewares }) => {
 
     let router = express.Router();// eslint-disable-line new-cap
-    let collection = db.collection('accounts');
+    let collection = db.collection("accounts");
     let { createHMACAuthMiddleware } = middlewares;
-    let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
+    let checkAuth = createHMACAuthMiddleware(["esd", "maformation"], { allowNonAuthenticatedRequests: true });
 
-    router.get('/api/v1/organismes-formateurs', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/v1/organismes-formateurs", checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
             ...validators.pagination(),
@@ -30,18 +30,18 @@ module.exports = ({ db, middlewares }) => {
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let pagination = _.pick(parameters, ['page', 'items_par_page']);
+        let pagination = _.pick(parameters, ["page", "items_par_page"]);
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
         let query = {
-            ...(parameters.id ? { '_id': { $in: parameters.id.map(id => parseInt(id)) } } : {}),
-            ...(parameters.numero ? { 'numero': { $in: parameters.numero } } : {}),
-            ...(parameters.siret ? { 'SIRET': { $in: parameters.siret.map(id => parseInt(id)) } } : {}),
-            ...(parameters.nb_avis ? { 'score.nb_avis': { $gte: parameters.nb_avis } } : {}),
+            ...(parameters.id ? { "_id": { $in: parameters.id.map(id => parseInt(id)) } } : {}),
+            ...(parameters.numero ? { "numero": { $in: parameters.numero } } : {}),
+            ...(parameters.siret ? { "SIRET": { $in: parameters.siret.map(id => parseInt(id)) } } : {}),
+            ...(parameters.nb_avis ? { "score.nb_avis": { $gte: parameters.nb_avis } } : {}),
             ...(parameters.lieu_de_formation ? {
                 $or: [
-                    { 'lieux_de_formation.adresse.code_postal': { $in: parameters.lieu_de_formation } },
-                    { 'lieux_de_formation.adresse.region': { $in: parameters.lieu_de_formation } }
+                    { "lieux_de_formation.adresse.code_postal": { $in: parameters.lieu_de_formation } },
+                    { "lieux_de_formation.adresse.region": { $in: parameters.lieu_de_formation } }
                 ]
             } : {}),
         };
@@ -57,7 +57,7 @@ module.exports = ({ db, middlewares }) => {
         });
 
         return sendArrayAsJsonStream(stream, res, {
-            arrayPropertyName: 'organismes_formateurs',
+            arrayPropertyName: "organismes_formateurs",
             arrayWrapper: {
                 meta: {
                     pagination: createPaginationDTO(pagination, total)
@@ -66,7 +66,7 @@ module.exports = ({ db, middlewares }) => {
         });
     }));
 
-    router.get('/api/v1/organismes-formateurs/:id', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/v1/organismes-formateurs/:id", checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
@@ -80,10 +80,10 @@ module.exports = ({ db, middlewares }) => {
         );
 
         if (!organisme) {
-            throw Boom.notFound('Identifiant inconnu');
+            throw Boom.notFound("Identifiant inconnu");
         }
 
-        if (req.headers.accept === 'application/ld+json') {
+        if (req.headers.accept === "application/ld+json") {
             res.json(schema.toOrganization(organisme));
         } else {
             let dto = createOrganismeFomateurDTO(organisme, { notes_decimales: parameters.notes_decimales });
@@ -91,7 +91,7 @@ module.exports = ({ db, middlewares }) => {
         }
     }));
 
-    router.get('/api/v1/organismes-formateurs/:id/avis', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/v1/organismes-formateurs/:id/avis", checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
@@ -101,26 +101,26 @@ module.exports = ({ db, middlewares }) => {
             ...validators.tri(),
         }, { abortEarly: false });
 
-        let pagination = _.pick(parameters, ['page', 'items_par_page']);
+        let pagination = _.pick(parameters, ["page", "items_par_page"]);
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
 
-        let comments = await db.collection('comment')
+        let comments = await db.collection("comment")
         .find({
-            'training.organisation.siret': parameters.id,
+            "training.organisation.siret": parameters.id,
             ...(
                 parameters.commentaires === null ?
-                    { status: { $in: ['validated', 'rejected'] } } :
+                    { status: { $in: ["validated", "rejected"] } } :
                     {
                         $or: [
-                            { comment: { $exists: parameters.commentaires }, status: 'validated' },
-                            { 'reponse.status': 'validated', 'status': 'validated' },
+                            { comment: { $exists: parameters.commentaires }, status: "validated" },
+                            { "reponse.status": "validated", "status": "validated" },
                         ]
 
                     }
             )
         })
-        .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
+        .sort(buildSort(_.pick(parameters, ["tri", "ordre"])))
         .limit(limit)
         .skip(skip);
 
@@ -130,7 +130,7 @@ module.exports = ({ db, middlewares }) => {
         ]);
 
         if (!organisme) {
-            throw Boom.notFound('Identifiant inconnu');
+            throw Boom.notFound("Identifiant inconnu");
         }
 
         let stream = comments.transformStream({
@@ -138,7 +138,7 @@ module.exports = ({ db, middlewares }) => {
         });
 
         return sendArrayAsJsonStream(stream, res, {
-            arrayPropertyName: 'avis',
+            arrayPropertyName: "avis",
             arrayWrapper: {
                 meta: {
                     pagination: createPaginationDTO(pagination, total)

@@ -1,18 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import { getAvisStats } from '../../../services/statsService';
-import Panel from '../../common/page/panel/Panel';
-import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
-import Loader from '../../../../common/components/Loader';
-import CommentairesStats from './stats/CommentairesStats';
-import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
-import EmptyResults from '../../common/page/panel/results/EmptyResults';
-import Button from '../../../../common/components/Button';
-import NoteExplications from './stats/NoteExplications';
-import PDF, { buildPDF } from '../../common/pdf/PDF';
-import TextSummary from '../../common/page/panel/summary/TextSummary';
-import AppContext from '../../../BackofficeContext';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import { getAvisStats } from "../../../services/statsService";
+import Panel from "../../common/page/panel/Panel";
+import BadgeSummary from "../../common/page/panel/summary/BadgeSummary";
+import Loader from "../../../../common/components/Loader";
+import CommentairesStats from "./stats/CommentairesStats";
+import NoteDetails from "../../common/page/panel/results/stats/NoteDetails";
+import EmptyResults from "../../common/page/panel/results/EmptyResults";
+import Button from "../../../../common/components/Button";
+import NoteExplications from "./stats/NoteExplications";
+import PDF, { buildPDF } from "../../common/pdf/PDF";
+import TextSummary from "../../common/page/panel/summary/TextSummary";
+import AppContext from "../../../BackofficeContext";
 
 export default class FinanceurStatsPanel extends React.Component {
 
@@ -67,7 +67,7 @@ export default class FinanceurStatsPanel extends React.Component {
         if (siren) {
             return `Résultats pour ${siren.name}`;
         }
-        return 'Résultats pour tous les organismes';
+        return "Résultats pour tous les organismes";
     };
 
     render() {

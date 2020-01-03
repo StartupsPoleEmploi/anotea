@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 module.exports = trainee => {
 
@@ -15,10 +15,10 @@ module.exports = trainee => {
         codeRegion: Joi.string().required(),
         trainee: {
             name: Joi.string().required(),
-            firstName: Joi.string().allow('').required(),
+            firstName: Joi.string().allow("").required(),
             mailDomain: Joi.string().required(),
             email: Joi.string().email().required(),
-            phoneNumbers: Joi.array().items(Joi.string().allow('')),
+            phoneNumbers: Joi.array().items(Joi.string().allow("")),
             emailValid: Joi.boolean().required(),
             dnIndividuNational: Joi.string().allow(null).required(),
             idLocal: Joi.string().allow(null).required(),
@@ -31,7 +31,7 @@ module.exports = trainee => {
             organisation: {
                 id: Joi.string().allow(null).required(),
                 siret: Joi.string().min(9).max(15).required(),
-                label: Joi.string().allow('').required(),
+                label: Joi.string().allow("").required(),
                 name: Joi.string().required()
             },
             place: {

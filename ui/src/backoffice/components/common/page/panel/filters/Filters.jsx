@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Filters.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Filters.scss";
 
-export { default as Filter } from './Filter';
+export { default as Filter } from "./Filter";
 export const Filters = ({ children }) => {
 
     return (

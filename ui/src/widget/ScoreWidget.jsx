@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Score from './components/Score';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Score from "./components/Score";
 
 export default class ScoreWidget extends Component {
 

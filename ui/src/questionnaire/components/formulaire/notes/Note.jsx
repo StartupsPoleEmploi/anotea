@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Stars from './Stars';
-import './note.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Stars from "./Stars";
+import "./note.scss";
 
 class Note extends Component {
 

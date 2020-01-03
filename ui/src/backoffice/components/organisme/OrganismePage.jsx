@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import moment from 'moment';
-import Page from '../common/page/Page';
-import { Tab, Tabs } from '../common/page/tabs/Tabs';
-import { Form, Periode, Select } from '../common/page/form/Form';
-import { getFormations } from '../../services/formationsService';
-import Button from '../../../common/components/Button';
-import OrganismeAvisPanel from './components/OrganismeAvisPanel';
-import OrganismeStatsPanel from './components/OrganismeStatsPanel';
-import AppContext from '../../BackofficeContext';
-import { getDepartements } from '../../services/departementsService';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import moment from "moment";
+import Page from "../common/page/Page";
+import { Tab, Tabs } from "../common/page/tabs/Tabs";
+import { Form, Periode, Select } from "../common/page/form/Form";
+import { getFormations } from "../../services/formationsService";
+import Button from "../../../common/components/Button";
+import OrganismeAvisPanel from "./components/OrganismeAvisPanel";
+import OrganismeStatsPanel from "./components/OrganismeStatsPanel";
+import AppContext from "../../BackofficeContext";
+import { getDepartements } from "../../services/departementsService";
 
 export default class OrganismePage extends React.Component {
 
@@ -56,23 +56,23 @@ export default class OrganismePage extends React.Component {
         let { account } = this.context;
         let query = this.props.router.getQuery();
 
-        this.loadSelectBox('departements', () => getDepartements())
+        this.loadSelectBox("departements", () => getDepartements())
         .then(results => {
-            return this.updateSelectBox('departements', results.find(f => f.code === query.departement));
+            return this.updateSelectBox("departements", results.find(f => f.code === query.departement));
         });
 
-        this.loadSelectBox('sirens', () => {
+        this.loadSelectBox("sirens", () => {
             return [
-                { siren: account.siret.substring(0, 9), name: 'Tous les centres' }
+                { siren: account.siret.substring(0, 9), name: "Tous les centres" }
             ];
         })
         .then(results => {
-            return this.updateSelectBox('sirens', results.find(o => o.siren === query.siren));
+            return this.updateSelectBox("sirens", results.find(o => o.siren === query.siren));
         });
 
-        this.loadSelectBox('formations', () => getFormations({ organisme: query.organisme || account.siret }))
+        this.loadSelectBox("formations", () => getFormations({ organisme: query.organisme || account.siret }))
         .then(results => {
-            return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation));
+            return this.updateSelectBox("formations", results.find(f => f.idFormation === query.idFormation));
         });
 
         this.setStateDeep({
@@ -157,15 +157,15 @@ export default class OrganismePage extends React.Component {
 
     getFormParametersFromQuery = () => {
         let query = this.props.router.getQuery();
-        return _.pick(query, ['departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']);
+        return _.pick(query, ["departement", "siren", "idFormation", "startDate", "scheduledEndDate"]);
     };
 
     getFormParameters = () => {
         let { form } = this.state;
         return {
-            departement: _.get(form, 'departements.selected.code', null),
-            siren: _.get(form, 'sirens.selected.siren', null),
-            idFormation: _.get(form, 'formations.selected.idFormation', null),
+            departement: _.get(form, "departements.selected.code", null),
+            siren: _.get(form, "sirens.selected.siren", null),
+            idFormation: _.get(form, "formations.selected.idFormation", null),
             startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
             scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
         };
@@ -216,7 +216,7 @@ export default class OrganismePage extends React.Component {
                                 <label>Période</label>
                                 <Periode
                                     periode={periode}
-                                    min={moment('2016-01-01T00:00:00Z').toDate()}
+                                    min={moment("2016-01-01T00:00:00Z").toDate()}
                                     onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>
@@ -228,9 +228,9 @@ export default class OrganismePage extends React.Component {
                                     loading={departements.loading}
                                     optionKey="code"
                                     label={option => option.label}
-                                    placeholder={'Tous les départements'}
+                                    placeholder={"Tous les départements"}
                                     trackingId="Départements"
-                                    onChange={option => this.updateSelectBox('departements', option)}
+                                    onChange={option => this.updateSelectBox("departements", option)}
                                 />
                             </div>
                             <div className="form-group col-lg-6">
@@ -241,11 +241,11 @@ export default class OrganismePage extends React.Component {
                                     loading={sirens.loading}
                                     optionKey="organisme"
                                     label={option => option.name}
-                                    placeholder={user.raisonSociale || ''}
+                                    placeholder={user.raisonSociale || ""}
                                     trackingId="Centres"
                                     onChange={async option => {
-                                        await this.updateSelectBox('sirens', option);
-                                        this.loadSelectBox('formations', () => {
+                                        await this.updateSelectBox("sirens", option);
+                                        this.loadSelectBox("formations", () => {
                                             let organisme = option ? option.siren : user.siret;
                                             if (organisme !== router.getQuery().siren) {
                                                 return getFormations({ organisme });
@@ -262,9 +262,9 @@ export default class OrganismePage extends React.Component {
                                     loading={formations.loading}
                                     optionKey="idFormation"
                                     label={option => option.title}
-                                    placeholder={'Toutes les formations'}
+                                    placeholder={"Toutes les formations"}
                                     trackingId="Formation"
-                                    onChange={option => this.updateSelectBox('formations', option)}
+                                    onChange={option => this.updateSelectBox("formations", option)}
                                 />
                             </div>
                         </div>
@@ -278,7 +278,7 @@ export default class OrganismePage extends React.Component {
                                     size="large"
                                     color="orange"
                                     onClick={() => this.onSubmit()}
-                                    style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
+                                    style={formSynchronizedWithQuery ? {} : { border: "2px solid" }}
                                 >
                                     {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
                                     Rechercher
@@ -291,17 +291,17 @@ export default class OrganismePage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => router.isActive('/admin/organisme/avis/stats')}
-                            onClick={() => this.onTabClicked('stats')} />
+                            isActive={() => router.isActive("/admin/organisme/avis/stats")}
+                            onClick={() => this.onTabClicked("stats")} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => router.isActive('/admin/organisme/avis/liste')}
-                            onClick={() => this.onTabClicked('liste', { read: false, sortBy: 'date' })} />
+                            isActive={() => router.isActive("/admin/organisme/avis/liste")}
+                            onClick={() => this.onTabClicked("liste", { read: false, sortBy: "date" })} />
                     </Tabs>
                 }
                 panel={
-                    router.isActive('/admin/organisme/avis/liste') ?
+                    router.isActive("/admin/organisme/avis/liste") ?
                         <OrganismeAvisPanel
                             query={router.getQuery()}
                             onFilterClicked={this.onFilterClicked} /> :

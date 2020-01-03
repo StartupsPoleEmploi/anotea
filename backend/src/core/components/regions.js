@@ -1,9 +1,9 @@
-const _ = require('lodash');
-const regions = require('../../../config/regions.json');
+const _ = require("lodash");
+const regions = require("../../../config/regions.json");
 
 module.exports = () => ({
     findRegionByPostalCode: postalCode => {
-        let code = postalCode.substr(0, 2) !== '97' ? postalCode.substr(0, 2) : postalCode.substr(0, 3);
+        let code = postalCode.substr(0, 2) !== "97" ? postalCode.substr(0, 2) : postalCode.substr(0, 3);
 
         let region = regions.find(region => region.departements.find(departement => departement.code === code));
 
@@ -28,9 +28,9 @@ module.exports = () => ({
     },
     findRegionByCodeINSEE: codeINSEE => {
 
-        if (codeINSEE === '06') {
+        if (codeINSEE === "06") {
             //Mayotte et La Réunion ont le même codeRegion PE
-            codeINSEE = '04';
+            codeINSEE = "04";
         }
 
         let region = regions.find(region => region.codeINSEE === codeINSEE);

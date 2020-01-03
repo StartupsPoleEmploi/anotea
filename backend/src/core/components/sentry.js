@@ -1,6 +1,6 @@
-const _ = require('lodash');
-const { init, captureException, configureScope } = require('@sentry/node');
-const { getRemoteAddress } = require('../../http/utils/routes-utils');
+const _ = require("lodash");
+const { init, captureException, configureScope } = require("@sentry/node");
+const { getRemoteAddress } = require("../../http/utils/routes-utils");
 
 module.exports = (logger, configuration) => {
 
@@ -8,8 +8,8 @@ module.exports = (logger, configuration) => {
 
     if (isEnabled) {
         init({ dsn: configuration.sentry.dsn, environment: configuration.env });
-        process.on('unhandledRejection', e => captureException(e));
-        process.on('uncaughtException', e => captureException(e));
+        process.on("unhandledRejection", e => captureException(e));
+        process.on("uncaughtException", e => captureException(e));
     }
 
     return {
@@ -27,7 +27,7 @@ module.exports = (logger, configuration) => {
             if (isEnabled) {
                 if (options) {
                     configureScope(scope => {
-                        scope.setExtra('requestId', options.requestId);
+                        scope.setExtra("requestId", options.requestId);
                         if (options.user) {
                             scope.setUser(options.user);
                         }
@@ -35,7 +35,7 @@ module.exports = (logger, configuration) => {
                 }
                 captureException(e);
             } else {
-                logger.error(e, '[SENTRY] An error occurred', options);
+                logger.error(e, "[SENTRY] An error occurred", options);
             }
         },
     };

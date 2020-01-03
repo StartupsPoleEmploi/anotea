@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
-import MonComptePage from '../common/MonComptePage';
-import OrganismePage from './OrganismePage';
+import React from "react";
+import PropTypes from "prop-types";
+import { Route } from "react-router-dom";
+import MonComptePage from "../common/MonComptePage";
+import OrganismePage from "./OrganismePage";
 
 export default class OrganismeRoutes extends React.Component {
 
@@ -15,11 +15,11 @@ export default class OrganismeRoutes extends React.Component {
         return (
             <>
                 <Route
-                    path={'/admin/organisme/avis'}
+                    path={"/admin/organisme/avis"}
                     render={() => <OrganismePage router={router} />}
                 />
                 <Route
-                    path={'/admin/organisme/mon-compte'}
+                    path={"/admin/organisme/mon-compte"}
                     component={MonComptePage}
                 />
             </>

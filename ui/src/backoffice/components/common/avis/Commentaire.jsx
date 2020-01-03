@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Commentaire.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Commentaire.scss";
 
 export default class Commentaire extends React.Component {
 

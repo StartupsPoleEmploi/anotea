@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Organisme.scss';
-import EditButton from './buttons/EditButton';
-import Edition from './buttons/Edition';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Organisme.scss";
+import EditButton from "./buttons/EditButton";
+import Edition from "./buttons/Edition";
 
 export default class Organisme extends React.Component {
 
@@ -27,7 +27,7 @@ export default class Organisme extends React.Component {
     render() {
         let { organisme, onChange } = this.props;
 
-        let isInactive = organisme.status === 'inactive';
+        let isInactive = organisme.status === "inactive";
 
         return (
             <div className="Organisme row align-items-center">
@@ -37,8 +37,8 @@ export default class Organisme extends React.Component {
                 </div>
 
                 <div className="col-2">
-                    <p className={`status ${isInactive ? 'inactive' : ''}`}>
-                        {isInactive ? 'Inactif' : 'Compte activé'}
+                    <p className={`status ${isInactive ? "inactive" : ""}`}>
+                        {isInactive ? "Inactif" : "Compte activé"}
                     </p>
                 </div>
 

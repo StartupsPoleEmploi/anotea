@@ -1,6 +1,6 @@
 module.exports = (db, regions, mailer) => {
 
-    const templateName = 'avisStagiaireEmail';
+    const templateName = "avisStagiaireEmail";
     let { utils } = mailer;
 
     let render = trainee => {
@@ -18,14 +18,14 @@ module.exports = (db, regions, mailer) => {
         send: async trainee => {
 
             let onSuccess = () => {
-                return db.collection('trainee').updateOne({ '_id': trainee._id }, {
+                return db.collection("trainee").updateOne({ "_id": trainee._id }, {
                     $set: {
                         mailSent: true,
                         mailSentDate: new Date(),
                     },
                     $unset: {
-                        mailError: '',
-                        mailErrorDetail: ''
+                        mailError: "",
+                        mailErrorDetail: ""
                     },
                     $inc: {
                         mailRetry: trainee.mailRetry >= 0 ? 1 : 0
@@ -34,10 +34,10 @@ module.exports = (db, regions, mailer) => {
             };
 
             let onError = async err => {
-                await db.collection('trainee').updateOne({ '_id': trainee._id }, {
+                await db.collection("trainee").updateOne({ "_id": trainee._id }, {
                     $set: {
                         mailSent: true,
-                        mailError: 'smtpError',
+                        mailError: "smtpError",
                         mailErrorDetail: err.message
                     }
                 });
@@ -49,7 +49,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 trainee.trainee.email,
                 {
-                    subject: 'Pôle Emploi vous demande votre avis sur votre formation',
+                    subject: "Pôle Emploi vous demande votre avis sur votre formation",
                     body: await render(trainee),
                 },
                 {

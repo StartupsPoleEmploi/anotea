@@ -1,6 +1,6 @@
-const computeScore = require('../../../../core/utils/computeScore');
-const { flatten } = require('../../../job-utils');
-const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
+const computeScore = require("../../../../core/utils/computeScore");
+const { flatten } = require("../../../job-utils");
+const convertCommentToAvis = require("../../../../core/utils/convertCommentToAvis");
 
 module.exports = (formation, action, comments) => {
 
@@ -43,7 +43,7 @@ module.exports = (formation, action, comments) => {
             source: {//TODO remove source field in v2
                 numero_formation: formation._attributes.numero,
                 numero_action: action._attributes.numero,
-                type: 'intercarif',
+                type: "intercarif",
             },
             reconciliation: {
                 //TODO must be converted into an array in v2

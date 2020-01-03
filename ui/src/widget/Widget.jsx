@@ -1,16 +1,16 @@
-import _ from 'lodash';
-import React, { Component } from 'react';
-import ListeWidget from './ListeWidget';
-import { getAvis, getScore } from './services/widgetService';
-import GridDisplayer from '../common/components/GridDisplayer';
-import WidgetContext from './WidgetContext';
-import ScoreWidget from './ScoreWidget';
-import CarrouselWidget from './CarrouselWidget';
-import queryString from 'query-string';
-import 'iframe-resizer/js/iframeResizer.contentWindow.min';
-import './Widget.scss';
-import WithAnalytics from '../common/components/analytics/WithAnalytics';
-import { sendError } from '../common/utils/sentry';
+import _ from "lodash";
+import React, { Component } from "react";
+import ListeWidget from "./ListeWidget";
+import { getAvis, getScore } from "./services/widgetService";
+import GridDisplayer from "../common/components/GridDisplayer";
+import WidgetContext from "./WidgetContext";
+import ScoreWidget from "./ScoreWidget";
+import CarrouselWidget from "./CarrouselWidget";
+import queryString from "query-string";
+import "iframe-resizer/js/iframeResizer.contentWindow.min";
+import "./Widget.scss";
+import WithAnalytics from "../common/components/analytics/WithAnalytics";
+import { sendError } from "../common/utils/sentry";
 
 class Widget extends Component {
 
@@ -47,10 +47,10 @@ class Widget extends Component {
         let urlParams = window.location.search;
         if (_.isEmpty(urlParams)) {
             return {
-                format: 'carrousel',
-                type: 'session',
-                identifiant: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
-                options: 'json-ld',
+                format: "carrousel",
+                type: "session",
+                identifiant: "F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX",
+                options: "json-ld",
             };
         }
         return queryString.parse(urlParams);
@@ -59,8 +59,8 @@ class Widget extends Component {
     async componentDidMount() {
         let { type, format } = this.getParameters();
 
-        if (!['organisme', 'formation', 'action', 'session'].includes(type) ||
-            !['score', 'carrousel', 'liste'].includes(format)) {
+        if (!["organisme", "formation", "action", "session"].includes(type) ||
+            !["score", "carrousel", "liste"].includes(format)) {
             return this.setState({ error: true });
         }
 
@@ -102,9 +102,9 @@ class Widget extends Component {
         }
 
         let widget;
-        if (format === 'score') {
+        if (format === "score") {
             widget = <ScoreWidget {...this.state} />;
-        } else if (format === 'carrousel') {
+        } else if (format === "carrousel") {
             widget = <CarrouselWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;
         } else {
             widget = <ListeWidget {...this.state} fetchAvis={options => this.fetchAvis(options)} />;

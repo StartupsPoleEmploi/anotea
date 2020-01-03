@@ -1,6 +1,6 @@
 module.exports = (db, regions, mailer) => {
 
-    const templateName = 'avisRejectedAlerteEmail';
+    const templateName = "avisRejectedAlerteEmail";
     let { utils } = mailer;
 
     let render = trainee => {
@@ -18,7 +18,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 trainee.trainee.email,
                 {
-                    subject: 'Nous avons bien pris en compte votre commentaire',
+                    subject: "Nous avons bien pris en compte votre commentaire",
                     body: await render(trainee),
                 },
                 {

@@ -1,30 +1,30 @@
-const AccountMailer = require('../../mailing/organismes/account/tasks/AccountMailer');
+const AccountMailer = require("../../mailing/organismes/account/tasks/AccountMailer");
 
 module.exports = function(db, logger, configuration, mailer) {
 
-    const fs = require('fs');
-    const moment = require('moment');
-    const parse = require('csv-parse');
-    const transform = require('stream-transform');
+    const fs = require("fs");
+    const moment = require("moment");
+    const parse = require("csv-parse");
+    const transform = require("stream-transform");
 
     const importEditedCourriel = file => {
-        logger.info('Organisation edited email import - launch');
+        logger.info("Organisation edited email import - launch");
 
         let accountMailer = new AccountMailer(db, logger, configuration, mailer);
         let launchTime = new Date().getTime();
-        let parser = parse({ delimiter: ',', quote: '"' });
-        let input = fs.createReadStream(file, { encoding: 'utf-8' });
+        let parser = parse({ delimiter: ",", quote: "\"" });
+        let input = fs.createReadStream(file, { encoding: "utf-8" });
 
         let found = 0;
         let notFound = 0;
         let updated = 0;
 
         let transformer = transform(async (record, callback) => {
-            let organisation = await db.collection('accounts').findOne({ courriel: record[0] });
+            let organisation = await db.collection("accounts").findOne({ courriel: record[0] });
 
             if (organisation !== null) {
                 found++;
-                db.collection('accounts').update({ courriel: organisation.courriel }, { $set: { editedCourriel: record[1] } }, {}, (err, count) => {
+                db.collection("accounts").update({ courriel: organisation.courriel }, { $set: { editedCourriel: record[1] } }, {}, (err, count) => {
                     if (err) {
                         logger.error(err);
                     } else {
@@ -36,8 +36,8 @@ module.exports = function(db, logger, configuration, mailer) {
             } else {
                 notFound++;
             }
-        }, { parallel: 10 }).on('finish', function() {
-            logger.info(`Organisation edited email import - completed (${found} organisation found; ${updated} emails updated, ${notFound} organisation not found, ${moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS')}`);
+        }, { parallel: 10 }).on("finish", function() {
+            logger.info(`Organisation edited email import - completed (${found} organisation found; ${updated} emails updated, ${notFound} organisation not found, ${moment.utc(new Date().getTime() - launchTime).format("HH:mm:ss.SSS")}`);
         });
         input.pipe(parser).pipe(transformer);
     };

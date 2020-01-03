@@ -1,8 +1,8 @@
 module.exports = (db, regions) => {
 
     let { findActiveRegions } = regions;
-    let avis = db.collection('comment');
-    let organismes = db.collection('accounts');
+    let avis = db.collection("comment");
+    let organismes = db.collection("accounts");
 
     const getOrganismesStats = async (label, codeRegions) => {
 
@@ -18,26 +18,26 @@ module.exports = (db, regions) => {
             nbReponses,
             avisSignales
         ] = await Promise.all([
-            organismes.countDocuments({ 'mailSentDate': { $ne: null }, 'profile': 'organisme', ...filter }),
-            organismes.countDocuments({ 'resend': true, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ "mailSentDate": { $ne: null }, "profile": "organisme", ...filter }),
+            organismes.countDocuments({ "resend": true, "profile": "organisme", ...filter }),
             organismes.countDocuments({
-                'mailSentDate': { $ne: null },
-                'tracking.firstRead': { $ne: null },
-                'profile': 'organisme', ...filter
+                "mailSentDate": { $ne: null },
+                "tracking.firstRead": { $ne: null },
+                "profile": "organisme", ...filter
             }),
-            organismes.countDocuments({ 'tracking.click': { $ne: null }, 'profile': 'organisme', ...filter }),
+            organismes.countDocuments({ "tracking.click": { $ne: null }, "profile": "organisme", ...filter }),
             organismes.countDocuments({
-                'mailSentDate': { $ne: null },
-                'passwordHash': { $ne: null },
-                'profile': 'organisme', ...filter
+                "mailSentDate": { $ne: null },
+                "passwordHash": { $ne: null },
+                "profile": "organisme", ...filter
             }),
             avis.countDocuments({
-                'status': 'validated',
-                '$or': [{ 'read': false }, { 'read': { $ne: true } }], ...filter
+                "status": "validated",
+                "$or": [{ "read": false }, { "read": { $ne: true } }], ...filter
             }),
-            avis.countDocuments({ 'status': 'validated', ...filter }),
-            avis.countDocuments({ 'reponse': { $exists: true }, ...filter }),
-            avis.countDocuments({ 'status': 'reported', ...filter }),
+            avis.countDocuments({ "status": "validated", ...filter }),
+            avis.countDocuments({ "reponse": { $exists: true }, ...filter }),
+            avis.countDocuments({ "status": "reported", ...filter }),
         ]);
 
         return {
@@ -57,7 +57,7 @@ module.exports = (db, regions) => {
 
     let activeRegions = findActiveRegions();
     return Promise.all([
-        getOrganismesStats('Toutes', activeRegions.map(region => region.codeRegion)),
+        getOrganismesStats("Toutes", activeRegions.map(region => region.codeRegion)),
         ...activeRegions.map(region => getOrganismesStats(region.nom, [region.codeRegion])),
     ]);
 };

@@ -1,17 +1,17 @@
-const { batchCursor } = require('../../../job-utils');
-const moment = require('moment');
-const _ = require('lodash');
-const faker = require('faker');
+const { batchCursor } = require("../../../job-utils");
+const moment = require("moment");
+const _ = require("lodash");
+const faker = require("faker");
 
-faker.locale = 'fr';
+faker.locale = "fr";
 
 const buildAvis = (stagiaire, custom = {}) => {
 
-    let getDateInThePast = () => moment().subtract('100', 'days').toDate();
+    let getDateInThePast = () => moment().subtract("100", "days").toDate();
 
     return _.merge({
         token: stagiaire.token,
-        campaign: 'dataset',
+        campaign: "dataset",
         read: false,
         codeRegion: stagiaire.codeRegion,
         training: stagiaire.training,
@@ -30,7 +30,7 @@ const buildAvis = (stagiaire, custom = {}) => {
 module.exports = async (db, options) => {
 
     let generateAvis = async (nbElements, getCustom = () => ({})) => {
-        let cursor = await db.collection('trainee').find({ avisCreated: false }).limit(nbElements);
+        let cursor = await db.collection("trainee").find({ avisCreated: false }).limit(nbElements);
 
         return batchCursor(cursor, async next => {
             let stagiaire = await next();
@@ -38,17 +38,17 @@ module.exports = async (db, options) => {
             //TODO add a service to create avis
             let avis = buildAvis(stagiaire, getCustom());
             await Promise.all([
-                db.collection('trainee').updateOne({ token: stagiaire.token }, { $set: { avisCreated: true } }),
-                db.collection('comment').insertOne(avis),
+                db.collection("trainee").updateOne({ token: stagiaire.token }, { $set: { avisCreated: true } }),
+                db.collection("comment").insertOne(avis),
             ]);
         });
     };
 
-    await generateAvis(options.notes || 100, () => ({ status: 'validated' }));
+    await generateAvis(options.notes || 100, () => ({ status: "validated" }));
     await generateAvis(options.commentaires || 100, () => {
         return {
             //Must be reused from questionnaire-routes
-            status: 'none',
+            status: "none",
             comment: {
                 title: faker.lorem.sentence(),
                 text: faker.lorem.paragraph(),

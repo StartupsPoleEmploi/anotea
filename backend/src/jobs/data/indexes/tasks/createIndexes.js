@@ -1,4 +1,4 @@
-const indexes = require('./mongoIndexes');
+const indexes = require("./mongoIndexes");
 
 module.exports = (db, collectionNames) => {
     return Promise.all(

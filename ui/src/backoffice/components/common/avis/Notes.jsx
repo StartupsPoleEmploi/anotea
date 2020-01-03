@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Notes.scss';
-import Button from '../../../../common/components/Button';
-import Star from '../page/panel/results/stats/Star';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Notes.scss";
+import Button from "../../../../common/components/Button";
+import Star from "../page/panel/results/stats/Star";
 
 const Note = ({ label, note }) => {
     return (
@@ -47,7 +47,7 @@ export default class Notes extends React.Component {
         let { avis } = this.props;
         let buttonText = (
             <span className="text">
-                Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? 'up' : 'down'}`} />
+                Détails des notes <i className={`fas fa-angle-${this.state.showDetails ? "up" : "down"}`} />
             </span>
         );
 
@@ -58,16 +58,16 @@ export default class Notes extends React.Component {
                     color="blue"
                     className="pl-0"
                     onClick={this.toggleDetails}
-                    style={{ backgroundColor: 'unset' }}>
+                    style={{ backgroundColor: "unset" }}>
                     {buttonText}
                 </Button>
                 {this.state.showDetails &&
                 <div className="details d-flex justify-content-between">
-                    {this.createNote('Accueil', avis.rates.accueil)}
-                    {this.createNote('Contenu', avis.rates.contenu_formation)}
-                    {this.createNote('Formateurs', avis.rates.equipe_formateurs)}
-                    {this.createNote('Matériels', avis.rates.moyen_materiel)}
-                    {this.createNote('Accompagnement', avis.rates.accompagnement)}
+                    {this.createNote("Accueil", avis.rates.accueil)}
+                    {this.createNote("Contenu", avis.rates.contenu_formation)}
+                    {this.createNote("Formateurs", avis.rates.equipe_formateurs)}
+                    {this.createNote("Matériels", avis.rates.moyen_materiel)}
+                    {this.createNote("Accompagnement", avis.rates.accompagnement)}
                 </div>
                 }
             </div>

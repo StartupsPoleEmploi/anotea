@@ -1,12 +1,12 @@
-const express = require('express');
-const Joi = require('joi');
-const _ = require('lodash');
-const Boom = require('boom');
-const ObjectID = require('mongodb').ObjectID;
-const { tryAndCatch, sendArrayAsJsonStream } = require('../../utils/routes-utils');
-const validators = require('./utils/validators');
-const { createPaginationDTO, createAvisDTO } = require('./utils/dto');
-const buildSort = require('./utils/buildSort');
+const express = require("express");
+const Joi = require("joi");
+const _ = require("lodash");
+const Boom = require("boom");
+const ObjectID = require("mongodb").ObjectID;
+const { tryAndCatch, sendArrayAsJsonStream } = require("../../utils/routes-utils");
+const validators = require("./utils/validators");
+const { createPaginationDTO, createAvisDTO } = require("./utils/dto");
+const buildSort = require("./utils/buildSort");
 
 const buildAvisQuery = filters => {
 
@@ -15,29 +15,29 @@ const buildAvisQuery = filters => {
         let query = {};
 
         if (filter.organisme_formateur) {
-            query['training.organisation.siret'] = filter.organisme_formateur;
+            query["training.organisation.siret"] = filter.organisme_formateur;
         }
 
         if (filter.lieu_de_formation) {
-            query['training.place.postalCode'] = filter.lieu_de_formation;
+            query["training.place.postalCode"] = filter.lieu_de_formation;
         }
 
         if (filter.certif_info) {
-            query['training.certifInfos'] = filter.certif_info;
+            query["training.certifInfos"] = filter.certif_info;
         }
 
         if (filter.formacode) {
             let code = filter.formacode;
-            query['training.formacodes'] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
+            query["training.formacodes"] = code.length < FORMACODE_LENGTH ? new RegExp(code) : code;
         }
 
         return query;
     });
 
     return {
-        '$and': [
-            queries.length === 0 ? {} : { '$or': queries },
-            { 'status': { $in: ['validated', 'rejected'] } }
+        "$and": [
+            queries.length === 0 ? {} : { "$or": queries },
+            { "status": { $in: ["validated", "rejected"] } }
         ],
     };
 };
@@ -46,9 +46,9 @@ module.exports = ({ db, middlewares }) => {
 
     let router = express.Router();// eslint-disable-line new-cap
     let { createHMACAuthMiddleware } = middlewares;
-    let checkAuth = createHMACAuthMiddleware(['esd', 'maformation'], { allowNonAuthenticatedRequests: true });
+    let checkAuth = createHMACAuthMiddleware(["esd", "maformation"], { allowNonAuthenticatedRequests: true });
 
-    router.get('/api/v1/avis', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/v1/avis", checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
             organisme_formateur: Joi.string().min(9).max(15),
@@ -60,16 +60,16 @@ module.exports = ({ db, middlewares }) => {
             ...validators.notesDecimales(),
         }, { abortEarly: false });
 
-        let pagination = _.pick(parameters, ['page', 'items_par_page']);
-        let filters = _.pick(parameters, ['organisme_formateur', 'lieu_de_formation', 'certif_info', 'formacode']);
+        let pagination = _.pick(parameters, ["page", "items_par_page"]);
+        let filters = _.pick(parameters, ["organisme_formateur", "lieu_de_formation", "certif_info", "formacode"]);
         let limit = pagination.items_par_page;
         let skip = pagination.page * limit;
         let query = buildAvisQuery(filters);
 
 
-        let comments = await db.collection('comment')
+        let comments = await db.collection("comment")
         .find(query)
-        .sort(buildSort(_.pick(parameters, ['tri', 'ordre'])))
+        .sort(buildSort(_.pick(parameters, ["tri", "ordre"])))
         .limit(limit)
         .skip(skip);
 
@@ -79,7 +79,7 @@ module.exports = ({ db, middlewares }) => {
         });
 
         return sendArrayAsJsonStream(stream, res, {
-            arrayPropertyName: 'avis',
+            arrayPropertyName: "avis",
             arrayWrapper: {
                 meta: {
                     pagination: createPaginationDTO(pagination, total)
@@ -88,7 +88,7 @@ module.exports = ({ db, middlewares }) => {
         });
     }));
 
-    router.get('/api/v1/avis/:id', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/v1/avis/:id", checkAuth, tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(Object.assign({}, req.query, req.params), {
             id: Joi.string().required(),
@@ -96,13 +96,13 @@ module.exports = ({ db, middlewares }) => {
         }, { abortEarly: false });
 
         if (!ObjectID.isValid(parameters.id)) {
-            throw Boom.badRequest('Identifiant invalide');
+            throw Boom.badRequest("Identifiant invalide");
         }
 
-        let comment = await db.collection('comment').findOne({ _id: new ObjectID(parameters.id) });
+        let comment = await db.collection("comment").findOne({ _id: new ObjectID(parameters.id) });
 
         if (!comment) {
-            throw Boom.notFound('Identifiant inconnu');
+            throw Boom.notFound("Identifiant inconnu");
         }
         res.json(createAvisDTO(comment, { notes_decimales: parameters.notes_decimales }));
     }));

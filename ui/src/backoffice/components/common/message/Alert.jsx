@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Alert.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Alert.scss";
 
 export class Alert extends React.Component {
 
@@ -12,10 +12,11 @@ export class Alert extends React.Component {
 
     render() {
         let { message, onClose, showTransition } = this.props;
-        let transitionClass = showTransition ? 'show' : '';
+        let transitionClass = showTransition ? "show" : "";
 
         return (
-            <div className={`Alert alert alert-dismissible fade ${transitionClass} ${message.color || ''}`} role="alert">
+            <div className={`Alert alert alert-dismissible fade ${transitionClass} ${message.color || ""}`}
+                 role="alert">
                 {message.title &&
                 <h4 className="alert-heading title">{message.title}</h4>
                 }

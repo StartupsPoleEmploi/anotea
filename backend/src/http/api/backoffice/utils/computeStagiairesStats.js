@@ -1,6 +1,6 @@
 module.exports = async (db, query) => {
 
-    let results = await db.collection('trainee').aggregate([
+    let results = await db.collection("trainee").aggregate([
         {
             $match: query
         },
@@ -8,7 +8,7 @@ module.exports = async (db, query) => {
             $group: {
                 _id: null,
                 total: { $sum: 1 },
-                nbEmailsEnvoyes: { $sum: { $cond: [{ $ne: ['$mailSentDate', null] }, 1, 0] } },
+                nbEmailsEnvoyes: { $sum: { $cond: [{ $ne: ["$mailSentDate", null] }, 1, 0] } },
             }
         },
         {

@@ -1,5 +1,5 @@
 export const isPasswordStrongEnough = password => {
-    if (password === null || password === undefined || password === '') {
+    if (password === null || password === undefined || password === "") {
         return false;
     }
     // length greater or equal 6

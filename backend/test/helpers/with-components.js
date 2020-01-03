@@ -1,13 +1,13 @@
-const fs = require('fs');
-const path = require('path');
-const { randomize } = require('./data/dataset');
-const config = require('config');
-const createEmails = require('../../src/core/components/emails/emails');
-const getRegions = require('../../src/core/components/regions');
-const logger = require('./components/fake-logger');
-const fakeMailer = require('./components/fake-mailer');
-const fakePasswords = require('./components/fake-passwords');
-const components = require('../../src/core/components');
+const fs = require("fs");
+const path = require("path");
+const { randomize } = require("./data/dataset");
+const config = require("config");
+const createEmails = require("../../src/core/components/emails/emails");
+const getRegions = require("../../src/core/components/regions");
+const logger = require("./components/fake-logger");
+const fakeMailer = require("./components/fake-mailer");
+const fakePasswords = require("./components/fake-passwords");
+const components = require("../../src/core/components");
 
 let _componentsHolder = null;
 
@@ -15,17 +15,17 @@ module.exports = {
     withComponents: callback => {
 
         let regions = getRegions();
-        let datalake = path.join(__dirname, '../../../.data/datalake/test-logs');
+        let datalake = path.join(__dirname, "../../../.data/datalake/test-logs");
         let configuration = Object.assign({}, config, {
             mongodb: {
-                uri: config.mongodb.uri.split('anotea').join(randomize('anotea_test').substring(0, 20))
+                uri: config.mongodb.uri.split("anotea").join(randomize("anotea_test").substring(0, 20))
             },
             api: {
                 pagination: 2,
             },
             log: {
                 datalake: {
-                    fileNamePrefix: randomize('anotea'),
+                    fileNamePrefix: randomize("anotea"),
                     path: datalake,
                 }
             },
@@ -76,7 +76,7 @@ module.exports = {
                         emails: createEmails(db, configuration, regions, mailer, templates)
                     };
                 },
-                getTestFile: fileName => path.join(__dirname, 'data', fileName)
+                getTestFile: fileName => path.join(__dirname, "data", fileName)
             };
 
             return callback(testContext);

@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import AnalyticsContext from '../../../../../common/components/analytics/AnalyticsContext';
-import './Tab.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import AnalyticsContext from "../../../../../common/components/analytics/AnalyticsContext";
+import "./Tab.scss";
 
 const Tab = ({ label, isActive, onClick, isDisabled = () => false }) => {
 
     let { trackClick } = React.useContext(AnalyticsContext);
 
     return (
-        <li className={`Tab nav-item ${isActive() ? 'active' : ''} ${isDisabled() ? 'disabled' : ''}`}>
+        <li className={`Tab nav-item ${isActive() ? "active" : ""} ${isDisabled() ? "disabled" : ""}`}>
             <a href="/#" className={`nav-link`} onClick={e => {
                 e.preventDefault();
                 trackClick(label);

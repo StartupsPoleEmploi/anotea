@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import './formation.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import moment from "moment";
+import "./formation.scss";
 
 class Formation extends Component {
 
@@ -10,8 +10,8 @@ class Formation extends Component {
     };
 
     render() {
-        let startDate = moment(this.props.stagiaire.training.startDate).format('DD/MM/YYYY');
-        let scheduledEndDate = moment(this.props.stagiaire.training.scheduledEndDate).format('DD/MM/YYYY');
+        let startDate = moment(this.props.stagiaire.training.startDate).format("DD/MM/YYYY");
+        let scheduledEndDate = moment(this.props.stagiaire.training.scheduledEndDate).format("DD/MM/YYYY");
         return (
             <div className="formation">
                 <div className="row pb-5">

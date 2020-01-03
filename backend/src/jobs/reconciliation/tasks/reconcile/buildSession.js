@@ -1,7 +1,7 @@
-const moment = require('moment');
-const computeScore = require('../../../../core/utils/computeScore');
-const { flatten } = require('../../../job-utils');
-const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
+const moment = require("moment");
+const computeScore = require("../../../../core/utils/computeScore");
+const { flatten } = require("../../../job-utils");
+const convertCommentToAvis = require("../../../../core/utils/convertCommentToAvis");
 
 module.exports = (formation, action, session, comments) => {
 
@@ -11,8 +11,8 @@ module.exports = (formation, action, session, comments) => {
         region: action.lieu_de_formation.coordonnees.adresse.region,
         code_region: action.lieu_de_formation.coordonnees.adresse.code_region,
         periode: {
-            debut: moment(`${session.periode.debut} -0000`, 'YYYYMMDD Z').toDate(),
-            fin: moment(`${session.periode.fin} -0000`, 'YYYYMMDD Z').toDate(),
+            debut: moment(`${session.periode.debut} -0000`, "YYYYMMDD Z").toDate(),
+            fin: moment(`${session.periode.fin} -0000`, "YYYYMMDD Z").toDate(),
         },
         avis: comments.map(a => convertCommentToAvis(a)) || [],
         score: computeScore(comments),
@@ -52,7 +52,7 @@ module.exports = (formation, action, session, comments) => {
                 numero_formation: formation._attributes.numero,
                 numero_action: action._attributes.numero,
                 numero_session: session._attributes.numero,
-                type: 'intercarif',
+                type: "intercarif",
             },
             reconciliation: {
                 //TODO must be converted into an array in v2

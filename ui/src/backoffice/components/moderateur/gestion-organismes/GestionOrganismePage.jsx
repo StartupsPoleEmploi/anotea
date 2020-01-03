@@ -1,20 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import { getExportAvisUrl, searchOrganismes } from './gestionOrganismesService';
-import Organisme from './components/Organisme';
-import Summary from '../../common/page/panel/summary/Summary';
-import Pagination from '../../common/page/panel/pagination/Pagination';
-import ResultDivider from '../../common/page/panel/results/ResultDivider';
-import './GestionOrganismePage.scss';
-import Page from '../../common/page/Page';
-import Panel from '../../common/page/panel/Panel';
-import { Filter, Filters } from '../../common/page/panel/filters/Filters';
-import { Form } from '../../common/page/form/Form';
-import Button from '../../../../common/components/Button';
-import InputText from '../../common/page/form/InputText';
-import EmptyResults from '../../common/page/panel/results/EmptyResults';
-import AppContext from '../../../BackofficeContext';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import { getExportAvisUrl, searchOrganismes } from "./gestionOrganismesService";
+import Organisme from "./components/Organisme";
+import Summary from "../../common/page/panel/summary/Summary";
+import Pagination from "../../common/page/panel/pagination/Pagination";
+import ResultDivider from "../../common/page/panel/results/ResultDivider";
+import "./GestionOrganismePage.scss";
+import Page from "../../common/page/Page";
+import Panel from "../../common/page/panel/Panel";
+import { Filter, Filters } from "../../common/page/panel/filters/Filters";
+import { Form } from "../../common/page/form/Form";
+import Button from "../../../../common/components/Button";
+import InputText from "../../common/page/form/InputText";
+import EmptyResults from "../../common/page/panel/results/EmptyResults";
+import AppContext from "../../../BackofficeContext";
 
 export default class GestionOrganismePage extends React.Component {
 
@@ -29,7 +29,7 @@ export default class GestionOrganismePage extends React.Component {
         this.state = {
             loading: false,
             form: {
-                search: '',
+                search: "",
             },
             results: {
                 organismes: [],
@@ -54,7 +54,7 @@ export default class GestionOrganismePage extends React.Component {
 
         this.setState({
             form: {
-                search: query.search || '',
+                search: query.search || "",
             }
         });
     }
@@ -102,7 +102,7 @@ export default class GestionOrganismePage extends React.Component {
                                         value={this.state.form.search}
                                         placeholder="Recherche un organisme"
                                         icon={<i className="fas fa-search" />}
-                                        reset={() => this.setState({ form: { search: '' } })}
+                                        reset={() => this.setState({ form: { search: "" } })}
                                         onChange={event => this.setState({ form: { search: event.target.value } })}
                                     />
                                 </div>
@@ -126,23 +126,29 @@ export default class GestionOrganismePage extends React.Component {
 
                                 <Filter
                                     label="Tous"
-                                    isActive={() => !query.status || query.status === 'all'}
+                                    isActive={() => !query.status || query.status === "all"}
                                     onClick={() => {
-                                        return router.refreshCurrentPage({ ...this.getFormAsQuery(), status: 'all' });
+                                        return router.refreshCurrentPage({ ...this.getFormAsQuery(), status: "all" });
                                     }} />
 
                                 <Filter
                                     label="Actifs"
-                                    isActive={() => query.status === 'active'}
+                                    isActive={() => query.status === "active"}
                                     onClick={() => {
-                                        return router.refreshCurrentPage({ ...this.getFormAsQuery(), status: 'active' });
+                                        return router.refreshCurrentPage({
+                                            ...this.getFormAsQuery(),
+                                            status: "active"
+                                        });
                                     }} />
 
                                 <Filter
                                     label="Inactifs"
-                                    isActive={() => query.status === 'inactive'}
+                                    isActive={() => query.status === "inactive"}
                                     onClick={() => {
-                                        return router.refreshCurrentPage({ ...this.getFormAsQuery(), status: 'inactive' });
+                                        return router.refreshCurrentPage({
+                                            ...this.getFormAsQuery(),
+                                            status: "inactive"
+                                        });
                                     }} />
 
                             </Filters>
@@ -154,7 +160,7 @@ export default class GestionOrganismePage extends React.Component {
                                 buttons={
                                     <Button
                                         size="medium"
-                                        onClick={() => window.open(getExportAvisUrl(_.omit(query, ['page'])))}>
+                                        onClick={() => window.open(getExportAvisUrl(_.omit(query, ["page"])))}>
                                         <i className="fas fa-download pr-2"></i>Exporter
                                     </Button>
                                 }

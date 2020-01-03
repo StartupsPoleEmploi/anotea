@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
-import AppContext from '../../../BackofficeContext';
-import logo from './logo.svg';
-import './Header.scss';
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
+import AppContext from "../../../BackofficeContext";
+import logo from "./logo.svg";
+import "./Header.scss";
 
 const Header = ({ items, defaultPath, onLogout }) => {
 
@@ -22,7 +22,7 @@ const Header = ({ items, defaultPath, onLogout }) => {
 
                             {items}
 
-                            {profile !== 'anonymous' &&
+                            {profile !== "anonymous" &&
                             <button
                                 onClick={onLogout}
                                 className="logout btn btn-outline-light">

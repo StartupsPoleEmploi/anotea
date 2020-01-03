@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Link from '../common/header/Link';
-import { getAvisStats } from '../../services/statsService';
-import Pastille from '../common/Pastille';
+import React from "react";
+import PropTypes from "prop-types";
+import Link from "../common/header/Link";
+import { getAvisStats } from "../../services/statsService";
+import Pastille from "../common/Pastille";
 
 export default class ModerateurHeaderItems extends React.Component {
 
@@ -36,7 +36,7 @@ export default class ModerateurHeaderItems extends React.Component {
         let { router } = this.props;
         let { stats } = this.state;
 
-        let isEmailsPreview = router.isActive('/admin/moderateur/emails');
+        let isEmailsPreview = router.isActive("/admin/moderateur/emails");
 
         return (
             <ul className="nav">
@@ -70,7 +70,7 @@ export default class ModerateurHeaderItems extends React.Component {
                 <li className="nav-item dropdown">
                     <a
                         href="/#"
-                        className={`nav-link dropdown-toggle  ${isEmailsPreview ? 'active' : ''}`}
+                        className={`nav-link dropdown-toggle  ${isEmailsPreview ? "active" : ""}`}
                         data-toggle="dropdown"
                         role="button"
                         aria-haspopup="true"

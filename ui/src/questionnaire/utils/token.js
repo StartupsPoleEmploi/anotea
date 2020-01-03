@@ -1,11 +1,11 @@
-const tokenKey = 'anotea:token';
+const tokenKey = "anotea:token";
 
 export const getToken = () => {
     return sessionStorage.getItem(tokenKey);
 };
 
 export const getTokenFromUrl = () => {
-    let urlParts = window.location.href.split('/');
+    let urlParts = window.location.href.split("/");
     let token = urlParts[urlParts.length - 1];
 
     if (!token) {

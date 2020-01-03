@@ -1,16 +1,16 @@
-const request = require('supertest');
-const assert = require('assert');
-const { withServer } = require('../../../helpers/with-server');
+const request = require("supertest");
+const assert = require("assert");
+const { withServer } = require("../../../helpers/with-server");
 
-describe('Server Security', withServer(({ startServer }) => {
+describe("Server Security", withServer(({ startServer }) => {
 
-    it('X-Powered-By is not set', async () => {
+    it("X-Powered-By is not set", async () => {
 
         let app = await startServer();
 
-        let response = await request(app).get('/api/v1/ping/anonymous');
+        let response = await request(app).get("/api/v1/ping/anonymous");
 
-        assert.equal(response.header['x-powered-by'], undefined);
+        assert.equal(response.header["x-powered-by"], undefined);
         assert.equal(response.statusCode, 200);
     });
 }));

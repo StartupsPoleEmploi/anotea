@@ -1,4 +1,4 @@
-const MobileDetect = require('mobile-detect');
+const MobileDetect = require("mobile-detect");
 
 module.exports = {
     getDeviceType: userAgent => {

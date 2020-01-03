@@ -1,4 +1,4 @@
-import { _get, _post } from '../../common/utils/http-client';
+import { _get, _post } from "../../common/utils/http-client";
 
 export const getStagiaireInfo = token => _get(`/questionnaire/${token}`);
 

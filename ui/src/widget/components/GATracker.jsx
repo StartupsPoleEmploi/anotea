@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 export default class GATracker extends Component {
 
@@ -10,8 +10,8 @@ export default class GATracker extends Component {
             window.dataLayer.push(arguments);
         }
 
-        gtag('js', new Date());
-        gtag('config', this.getID());
+        gtag("js", new Date());
+        gtag("config", this.getID());
     }
 
     getID = () => process.env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID;

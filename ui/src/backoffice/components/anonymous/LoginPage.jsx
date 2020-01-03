@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Page from '../common/page/Page';
-import Panel from '../common/page/panel/Panel';
-import InputText from '../common/page/form/InputText';
-import Button from '../../../common/components/Button';
-import { CenteredForm } from '../common/page/form/CenteredForm';
-import { login, loginWithAccessToken } from '../../services/loginService';
-import './LoginPage.scss';
-import { NavLink } from 'react-router-dom';
-import Loader from '../../../common/components/Loader';
+import React from "react";
+import PropTypes from "prop-types";
+import Page from "../common/page/Page";
+import Panel from "../common/page/panel/Panel";
+import InputText from "../common/page/form/InputText";
+import Button from "../../../common/components/Button";
+import { CenteredForm } from "../common/page/form/CenteredForm";
+import { login, loginWithAccessToken } from "../../services/loginService";
+import "./LoginPage.scss";
+import { NavLink } from "react-router-dom";
+import Loader from "../../../common/components/Loader";
 
 export default class LoginPage extends React.Component {
 
@@ -23,8 +23,8 @@ export default class LoginPage extends React.Component {
             loginWithAccessToken: false,
             loading: false,
             errors: false,
-            identifiant: '',
-            password: '',
+            identifiant: "",
+            password: "",
         };
     }
 
@@ -59,7 +59,7 @@ export default class LoginPage extends React.Component {
         if (this.state.loginWithAccessToken) {
             return <Page
                 className="LoginPage"
-                title={'Connexion à votre espace Anotéa en cours...'}
+                title={"Connexion à votre espace Anotéa en cours..."}
                 panel={<Loader centered={true} />}
             />;
         }
@@ -67,7 +67,7 @@ export default class LoginPage extends React.Component {
         return (
             <Page
                 className="LoginPage"
-                title={'Votre espace Anotéa'}
+                title={"Votre espace Anotéa"}
                 panel={
                     <Panel
                         backgroundColor="blue"
@@ -81,7 +81,7 @@ export default class LoginPage extends React.Component {
                                             value={this.state.identifiant}
                                             placeholder="Entrez votre SIRET"
                                             onChange={event => this.setState({ identifiant: event.target.value })}
-                                            error={this.state.error ? 'Votre identifiant est incorrect.' : ''}
+                                            error={this.state.error ? "Votre identifiant est incorrect." : ""}
                                         />
 
                                         <label className="mt-3">Mot de passe</label>
@@ -90,7 +90,7 @@ export default class LoginPage extends React.Component {
                                             value={this.state.password}
                                             placeholder="Entrez votre mot de passe "
                                             onChange={event => this.setState({ password: event.target.value })}
-                                            error={this.state.error ? 'Votre mot de passe est erroné.' : ''}
+                                            error={this.state.error ? "Votre mot de passe est erroné." : ""}
                                         />
                                     </>
                                 }

@@ -13,20 +13,20 @@
         <script src="/static/js/faq.js"></script>
         <script>
             $(document).ready(function() {
-                $('a.more').click(function(e) {
+                $("a.more").click(function(e) {
                     e.preventDefault();
-                    $('.more').toggleClass('open closed');
+                    $(".more").toggleClass("open closed");
                 });
-                $('a.criteres').click(function(e) {
+                $("a.criteres").click(function(e) {
                     e.preventDefault();
-                    $('.criteres').toggleClass('open closed');
+                    $(".criteres").toggleClass("open closed");
                 });
-                $('.header-faq a').click(function(e) {
+                $(".header-faq a").click(function(e) {
                     e.preventDefault();
-                    $('h1.negatifs').toggleClass('current');
-                    $('h1.positifs').toggleClass('current');
-                    $('.conseils-avis-negatifs').toggle();
-                    $('.conseils-avis-positifs').toggle();
+                    $("h1.negatifs").toggleClass("current");
+                    $("h1.positifs").toggleClass("current");
+                    $(".conseils-avis-negatifs").toggle();
+                    $(".conseils-avis-positifs").toggle();
                 });
             });
         </script>

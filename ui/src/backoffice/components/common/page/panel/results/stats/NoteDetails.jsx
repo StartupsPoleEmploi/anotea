@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Star from './Star';
-import './NoteDetails.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import Star from "./Star";
+import "./NoteDetails.scss";
 
 const NoteRepartition = props => {
 
@@ -21,10 +21,10 @@ const NoteRepartition = props => {
                         5 <Star />
                     </div>
                     <div className="gauge">
-                        <div className="filler" style={{ width: percentage(props.note['5']) }}></div>
+                        <div className="filler" style={{ width: percentage(props.note["5"]) }}></div>
                     </div>
                     <div className="percentage">
-                        {percentage(props.note['5'])}
+                        {percentage(props.note["5"])}
                     </div>
                 </div>
                 <div className="repartition">
@@ -32,10 +32,10 @@ const NoteRepartition = props => {
                         4 <Star />
                     </div>
                     <div className="gauge">
-                        <div className="filler" style={{ width: percentage(props.note['4']) }}></div>
+                        <div className="filler" style={{ width: percentage(props.note["4"]) }}></div>
                     </div>
                     <div className="percentage">
-                        {percentage(props.note['4'])}
+                        {percentage(props.note["4"])}
                     </div>
                 </div>
                 <div className="repartition">
@@ -43,10 +43,10 @@ const NoteRepartition = props => {
                         3 <Star />
                     </div>
                     <div className="gauge">
-                        <div className="filler" style={{ width: percentage(props.note['3']) }}></div>
+                        <div className="filler" style={{ width: percentage(props.note["3"]) }}></div>
                     </div>
                     <div className="percentage">
-                        {percentage(props.note['3'])}
+                        {percentage(props.note["3"])}
                     </div>
                 </div>
                 <div className="repartition">
@@ -54,10 +54,10 @@ const NoteRepartition = props => {
                         2 <Star />
                     </div>
                     <div className="gauge">
-                        <div className="filler" style={{ width: percentage(props.note['2']) }}></div>
+                        <div className="filler" style={{ width: percentage(props.note["2"]) }}></div>
                     </div>
                     <div className="percentage">
-                        {percentage(props.note['2'])}
+                        {percentage(props.note["2"])}
                     </div>
                 </div>
                 <div className="repartition">
@@ -65,10 +65,10 @@ const NoteRepartition = props => {
                         1 <Star />
                     </div>
                     <div className="gauge">
-                        <div className="filler" style={{ width: percentage(props.note['1']) }}></div>
+                        <div className="filler" style={{ width: percentage(props.note["1"]) }}></div>
                     </div>
                     <div className="percentage">
-                        {percentage(props.note['1'])}
+                        {percentage(props.note["1"])}
                     </div>
                 </div>
             </div>

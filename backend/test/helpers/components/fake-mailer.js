@@ -1,4 +1,4 @@
-const createMailer = require('../../../src/core/components/emails/mailer');
+const createMailer = require("../../../src/core/components/emails/mailer");
 
 module.exports = (configuration, regions, options = {}) => {
 
@@ -6,7 +6,7 @@ module.exports = (configuration, regions, options = {}) => {
     let registerCall = parameters => {
 
         if (options.fail) {
-            let err = new Error('Unable to send email');
+            let err = new Error("Unable to send email");
             return Promise.reject(err);
         } else {
             calls.push({

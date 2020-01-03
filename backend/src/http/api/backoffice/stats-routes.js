@@ -1,17 +1,17 @@
-const Joi = require('joi');
-const express = require('express');
-const computeStagiairesStats = require('./utils/computeStagiairesStats');
-const computeAvisStats = require('./utils/computeAvisStats');
-const { tryAndCatch } = require('../../utils/routes-utils');
-const getProfile = require('./profiles/getProfile');
+const Joi = require("joi");
+const express = require("express");
+const computeStagiairesStats = require("./utils/computeStagiairesStats");
+const computeAvisStats = require("./utils/computeAvisStats");
+const { tryAndCatch } = require("../../utils/routes-utils");
+const getProfile = require("./profiles/getProfile");
 
 module.exports = ({ db, middlewares, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware } = middlewares;
-    let checkAuth = createJWTAuthMiddleware('backoffice');
+    let checkAuth = createJWTAuthMiddleware("backoffice");
 
-    router.get('/api/backoffice/stats/avis', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/backoffice/stats/avis", checkAuth, tryAndCatch(async (req, res) => {
 
         let { validators, queries } = getProfile(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
@@ -24,7 +24,7 @@ module.exports = ({ db, middlewares, regions }) => {
         return res.json(results);
     }));
 
-    router.get('/api/backoffice/stats/stagiaires', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/backoffice/stats/stagiaires", checkAuth, tryAndCatch(async (req, res) => {
 
         let { validators, queries } = getProfile(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {

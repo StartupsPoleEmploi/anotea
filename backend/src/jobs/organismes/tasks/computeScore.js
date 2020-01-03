@@ -1,9 +1,9 @@
-const computeScore = require('../../../core/utils/computeScore');
-const { batchCursor } = require('../../job-utils');
+const computeScore = require("../../../core/utils/computeScore");
+const { batchCursor } = require("../../job-utils");
 
 module.exports = async (db, logger) => {
 
-    let cursor = db.collection('accounts').find({ profile: 'organisme' });
+    let cursor = db.collection("accounts").find({ profile: "organisme" });
     let stats = {
         total: 0,
         updated: 0,
@@ -14,12 +14,12 @@ module.exports = async (db, logger) => {
         const organisme = await next();
         stats.total++;
         try {
-            let avis = await db.collection('comment').find({
-                'training.organisation.siret': organisme.meta.siretAsString,
-                'status': { $in: ['validated', 'rejected'] },
+            let avis = await db.collection("comment").find({
+                "training.organisation.siret": organisme.meta.siretAsString,
+                "status": { $in: ["validated", "rejected"] },
             }).toArray();
 
-            await db.collection('accounts').updateOne({ _id: organisme._id }, {
+            await db.collection("accounts").updateOne({ _id: organisme._id }, {
                 $set: {
                     score: computeScore(avis),
                 },

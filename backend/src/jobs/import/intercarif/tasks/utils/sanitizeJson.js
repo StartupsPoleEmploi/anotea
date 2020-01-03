@@ -1,50 +1,50 @@
-const _ = require('lodash');
-const md5 = require('md5');
+const _ = require("lodash");
+const md5 = require("md5");
 
 const getCodeRegion = (regions, codeINSEE) => {
     try {
         return regions.findRegionByCodeINSEE(codeINSEE).codeRegion;
     } catch (err) {
-        return 'XX';
+        return "XX";
     }
 };
 
 //According to lheo.xsd theses fields are the only ones with maxOccurs > 1. see http://lheo.gouv.fr/2.2/lheo.xsd
-let excludedProperties = ['extras'];
+let excludedProperties = ["extras"];
 const tagsWithMultipleOccurrences = [
-    'code_formacode',
-    'code_nsf',
-    'code_rome',
-    'code_formacode',
-    'urlweb',
-    'sous_module',
-    'urlweb',
-    'reference_module',
-    'numtel',
-    'urlweb',
-    'code_public_vise',
-    'session',
-    'certification',
-    'resume_offre',
-    'numtel',
-    'ligne',
-    'resume_organisme',
-    'certification',
-    'action',
-    'numtel',
-    'ligne',
-    'formation',
-    'code_public_vise',
-    'session',
-    'date_information',
-    'code_modalite_pedagogique',
-    'organisme_financeur',
+    "code_formacode",
+    "code_nsf",
+    "code_rome",
+    "code_formacode",
+    "urlweb",
+    "sous_module",
+    "urlweb",
+    "reference_module",
+    "numtel",
+    "urlweb",
+    "code_public_vise",
+    "session",
+    "certification",
+    "resume_offre",
+    "numtel",
+    "ligne",
+    "resume_organisme",
+    "certification",
+    "action",
+    "numtel",
+    "ligne",
+    "formation",
+    "code_public_vise",
+    "session",
+    "date_information",
+    "code_modalite_pedagogique",
+    "organisme_financeur",
 ];
 
 module.exports = (json, regions) => {
 
     let document = _.cloneDeepWith(json, value => {
-        if (value && typeof value === 'object') {
+        if (value && typeof value === "object") {
             Object.keys(value).forEach(key => {
 
                 if (excludedProperties.includes(key)) {
@@ -52,12 +52,12 @@ module.exports = (json, regions) => {
                     return;
                 }
 
-                if (key === 'region') {
+                if (key === "region") {
                     value.code_region = getCodeRegion(regions, value[key]);
                     return;
                 }
 
-                if (key === 'siret') {
+                if (key === "siret") {
                     // Sometimes siret are prefixed by 0
                     value[key] = `${parseInt(value[key], 10)}`;
                     return;

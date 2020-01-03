@@ -1,18 +1,18 @@
-const Joi = require('joi');
-const express = require('express');
-const getAvisCSV = require('./utils/getAvisCSV');
-const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require('../../utils/routes-utils');
-const { objectId } = require('../../utils/validators-utils');
-const getProfile = require('./profiles/getProfile');
+const Joi = require("joi");
+const express = require("express");
+const getAvisCSV = require("./utils/getAvisCSV");
+const { tryAndCatch, sendArrayAsJsonStream, sendCSVStream } = require("../../utils/routes-utils");
+const { objectId } = require("../../utils/validators-utils");
+const getProfile = require("./profiles/getProfile");
 
 module.exports = ({ db, middlewares, configuration, logger, workflow, regions }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware, checkProfile } = middlewares;
-    let checkAuth = createJWTAuthMiddleware('backoffice');
+    let checkAuth = createJWTAuthMiddleware("backoffice");
     let itemsPerPage = configuration.api.pagination;
 
-    router.get('/api/backoffice/avis', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/backoffice/avis", checkAuth, tryAndCatch(async (req, res) => {
 
         let { validators, queries } = getProfile(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
@@ -22,9 +22,9 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         }, { abortEarly: false });
 
         let query = await queries.buildAvisQuery(parameters);
-        let cursor = db.collection('comment')
+        let cursor = db.collection("comment")
         .find(query)
-        .sort({ [parameters.sortBy || 'date']: -1 })
+        .sort({ [parameters.sortBy || "date"]: -1 })
         .skip((parameters.page || 0) * itemsPerPage)
         .limit(itemsPerPage);
 
@@ -34,7 +34,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         ]);
 
         return sendArrayAsJsonStream(cursor.stream(), res, {
-            arrayPropertyName: 'avis',
+            arrayPropertyName: "avis",
             arrayWrapper: {
                 meta: {
                     pagination: {
@@ -49,7 +49,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         });
     }));
 
-    router.get('/api/backoffice/avis.csv', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/backoffice/avis.csv", checkAuth, tryAndCatch(async (req, res) => {
 
         let { validators, queries } = getProfile(db, regions, req.user);
         let parameters = await Joi.validate(req.query, {
@@ -58,22 +58,25 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
             token: Joi.string(),
         }, { abortEarly: false });
 
-        let stream = db.collection('comment')
+        let stream = db.collection("comment")
         .find({
             ...await queries.buildAvisQuery(parameters),
         })
-        .sort({ [parameters.sortBy || 'date']: -1 })
+        .sort({ [parameters.sortBy || "date"]: -1 })
         .stream();
 
         try {
-            await sendCSVStream(stream, res, getAvisCSV(req.user.profile), { encoding: 'UTF-16BE', filename: 'avis.csv' });
+            await sendCSVStream(stream, res, getAvisCSV(req.user.profile), {
+                encoding: "UTF-16BE",
+                filename: "avis.csv"
+            });
         } catch (e) {
             //FIXME we must handle errors
-            logger.error('Unable to send CSV file', e);
+            logger.error("Unable to send CSV file", e);
         }
     }));
 
-    router.put('/api/backoffice/avis/:id/pseudo', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/pseudo", checkAuth, checkProfile("moderateur"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -84,7 +87,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         return res.json(avis);
     }));
 
-    router.put('/api/backoffice/avis/:id/title', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/title", checkAuth, checkProfile("moderateur"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -95,7 +98,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         return res.json(avis);
     }));
 
-    router.put('/api/backoffice/avis/:id/reject', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/reject", checkAuth, checkProfile("moderateur"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -108,7 +111,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         return res.json(updated);
     }));
 
-    router.delete('/api/backoffice/avis/:id', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.delete("/api/backoffice/avis/:id", checkAuth, checkProfile("moderateur"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id, sendEmail } = await Joi.validate(Object.assign({}, req.query, req.params), {
@@ -118,10 +121,10 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
         await workflow.delete(id, { profile, sendEmail });
 
-        return res.json({ 'message': 'avis deleted' });
+        return res.json({ "message": "avis deleted" });
     }));
 
-    router.put('/api/backoffice/avis/:id/validate', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/validate", checkAuth, checkProfile("moderateur"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -132,7 +135,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         return res.json(updated);
     }));
 
-    router.put('/api/backoffice/avis/:id/edit', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/edit", checkAuth, checkProfile("moderateur"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { text } = await Joi.validate(req.body, { text: Joi.string().required() }, { abortEarly: false });
@@ -144,7 +147,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
     }));
 
-    router.put('/api/backoffice/avis/:id/validateReponse', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/validateReponse", checkAuth, checkProfile("moderateur"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -155,7 +158,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
     }));
 
-    router.put('/api/backoffice/avis/:id/rejectReponse', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/rejectReponse", checkAuth, checkProfile("moderateur"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -166,7 +169,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
 
     }));
 
-    router.put('/api/backoffice/avis/:id/addReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/addReponse", checkAuth, checkProfile("organisme"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -177,7 +180,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         return res.json(avis);
     }));
 
-    router.put('/api/backoffice/avis/:id/removeReponse', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/removeReponse", checkAuth, checkProfile("organisme"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -187,7 +190,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         return res.json(avis);
     }));
 
-    router.put('/api/backoffice/avis/:id/read', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/read", checkAuth, checkProfile("organisme"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: objectId().required() }, { abortEarly: false });
@@ -198,7 +201,7 @@ module.exports = ({ db, middlewares, configuration, logger, workflow, regions })
         return res.json(avis);
     }));
 
-    router.put('/api/backoffice/avis/:id/report', checkAuth, checkProfile('organisme'), tryAndCatch(async (req, res) => {
+    router.put("/api/backoffice/avis/:id/report", checkAuth, checkProfile("organisme"), tryAndCatch(async (req, res) => {
 
         let profile = getProfile(db, regions, req.user);
         let { id } = await Joi.validate(req.params, { id: Joi.string().required() }, { abortEarly: false });

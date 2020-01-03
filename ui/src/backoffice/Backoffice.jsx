@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import jwtDecode from 'jwt-decode';
-import { Redirect, Switch } from 'react-router-dom';
-import { getSession, getToken, removeSession, setSession } from './utils/session';
-import { subscribeToHttpEvent } from '../common/utils/http-client';
-import ModerateurRoutes from './components/moderateur/ModerateurRoutes';
-import GridDisplayer from '../common/components/GridDisplayer';
-import FinanceurRoutes from './components/financeur/FinanceurRoutes';
-import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems';
-import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
-import AnonymousRoutes from './components/anonymous/AnonymousRoutes';
-import OrganismeHeaderItems from './components/organisme/OrganismeHeaderItems';
-import OrganismeRoutes from './components/organisme/OrganismeRoutes';
-import './Backoffice.scss';
-import Header from './components/common/header/Header';
-import AppContext from './BackofficeContext';
-import GlobalMessage from './components/common/message/GlobalMessage';
-import WithAnalytics from '../common/components/analytics/WithAnalytics';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import jwtDecode from "jwt-decode";
+import { Redirect, Switch } from "react-router-dom";
+import { getSession, getToken, removeSession, setSession } from "./utils/session";
+import { subscribeToHttpEvent } from "../common/utils/http-client";
+import ModerateurRoutes from "./components/moderateur/ModerateurRoutes";
+import GridDisplayer from "../common/components/GridDisplayer";
+import FinanceurRoutes from "./components/financeur/FinanceurRoutes";
+import ModerateurHeaderItems from "./components/moderateur/ModerateurHeaderItems";
+import FinanceurHeaderItems from "./components/financeur/FinanceurHeaderItems";
+import AnonymousRoutes from "./components/anonymous/AnonymousRoutes";
+import OrganismeHeaderItems from "./components/organisme/OrganismeHeaderItems";
+import OrganismeRoutes from "./components/organisme/OrganismeRoutes";
+import "./Backoffice.scss";
+import Header from "./components/common/header/Header";
+import AppContext from "./BackofficeContext";
+import GlobalMessage from "./components/common/message/GlobalMessage";
+import WithAnalytics from "../common/components/analytics/WithAnalytics";
 
 class Backoffice extends Component {
 
@@ -26,7 +26,7 @@ class Backoffice extends Component {
 
     state = {
         account: {
-            profile: 'anonymous',
+            profile: "anonymous",
         },
         message: null,
         debug: false,
@@ -34,14 +34,14 @@ class Backoffice extends Component {
 
     constructor(props) {
         super(props);
-        subscribeToHttpEvent('http:error', response => {
+        subscribeToHttpEvent("http:error", response => {
             if (response.status === 401) {
                 this.onLogout();
             } else if (response.status > 429) {
                 this.setState({
                     message: {
-                        text: 'Désolé, le service est actuellement indisponible. Merci de réessayer plus tard',
-                        color: 'red',
+                        text: "Désolé, le service est actuellement indisponible. Merci de réessayer plus tard",
+                        color: "red",
                     }
                 });
             }
@@ -56,7 +56,7 @@ class Backoffice extends Component {
 
     onLogout = () => {
         removeSession();
-        window.location.href = '/admin';//Reload page to flush all react states
+        window.location.href = "/admin";//Reload page to flush all react states
     };
 
     onLogin = results => {
@@ -67,7 +67,7 @@ class Backoffice extends Component {
             account: getSession(),
         });
 
-        this.props.router.goToPage('/admin');
+        this.props.router.goToPage("/admin");
     };
 
     showGlobalMessage = message => {
@@ -80,22 +80,22 @@ class Backoffice extends Component {
         let { router } = this.props;
         let backoffices = {
             moderateur: () => ({
-                defaultPath: '/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none',
+                defaultPath: "/admin/moderateur/moderation/avis/stagiaires?sortBy=lastStatusUpdate&statuses=none",
                 headerItems: <ModerateurHeaderItems router={router} />,
                 routes: <ModerateurRoutes router={router} />,
             }),
             financeur: () => ({
-                defaultPath: '/admin/financeur/avis/stats',
+                defaultPath: "/admin/financeur/avis/stats",
                 headerItems: <FinanceurHeaderItems />,
                 routes: <FinanceurRoutes router={router} />,
             }),
             organisme: () => ({
-                defaultPath: '/admin/organisme/avis/stats',
+                defaultPath: "/admin/organisme/avis/stats",
                 headerItems: <OrganismeHeaderItems />,
                 routes: <OrganismeRoutes router={router} />,
             }),
             anonymous: () => ({
-                defaultPath: '/admin/login',
+                defaultPath: "/admin/login",
                 headerItems: <div />,
                 routes: <AnonymousRoutes onLogin={this.onLogin} router={router} />,
             })

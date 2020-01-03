@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 
 class BasicError extends Error {
@@ -6,7 +6,7 @@ class BasicError extends Error {
         super();
         Error.captureStackTrace(this, this.constructor);
         this.name = this.constructor.name;
-        this.message = message || 'Error';
+        this.message = message || "Error";
         if (extra) {
             this.extra = extra;
         }
@@ -20,7 +20,7 @@ class BasicError extends Error {
 const Errors = {
     IdNotFoundError: class IdNotFoundError extends BasicError {
         constructor(message, extra) {
-            super(message || 'Not Found', extra);
+            super(message || "Not Found", extra);
         }
 
         get status() {
@@ -29,7 +29,7 @@ const Errors = {
     },
     ForbiddenError: class ForbiddenError extends BasicError {
         constructor(message, extra) {
-            super(message || 'Not Found', extra);
+            super(message || "Not Found", extra);
         }
 
         get status() {
@@ -38,7 +38,7 @@ const Errors = {
     },
     AlreadySentError: class AlreadySentError extends BasicError {
         constructor(message, extra) {
-            super(message || 'Already sent', extra);
+            super(message || "Already sent", extra);
         }
 
         get status() {
@@ -47,7 +47,7 @@ const Errors = {
     },
     BadDataError: class BadDataError extends BasicError {
         constructor(message, extra) {
-            super(message || 'Bad data', extra);
+            super(message || "Bad data", extra);
         }
 
         get status() {

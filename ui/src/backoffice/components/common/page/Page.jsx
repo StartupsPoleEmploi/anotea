@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
-import AppContext from '../../../BackofficeContext';
-import './Page.scss';
-import WithAnalytics from '../../../../common/components/analytics/WithAnalytics';
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
+import AppContext from "../../../BackofficeContext";
+import "./Page.scss";
+import WithAnalytics from "../../../../common/components/analytics/WithAnalytics";
 
 const Page = props => {
 
@@ -10,7 +10,7 @@ const Page = props => {
     let profile = account.profile;
 
     return (
-        <div className={`Page mb-0 ${props.className || ''}`}>
+        <div className={`Page mb-0 ${props.className || ""}`}>
 
             <div className={`search-holder ${profile}`}>
 

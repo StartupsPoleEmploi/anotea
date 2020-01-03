@@ -1,8 +1,8 @@
-const express = require('express');
-const _ = require('lodash');
-const Boom = require('boom');
-const Joi = require('joi');
-const { tryAndCatch } = require('../../utils/routes-utils');
+const express = require("express");
+const _ = require("lodash");
+const Boom = require("boom");
+const Joi = require("joi");
+const { tryAndCatch } = require("../../utils/routes-utils");
 
 module.exports = ({ db, auth, passwords, regions }) => {
 
@@ -10,19 +10,19 @@ module.exports = ({ db, auth, passwords, regions }) => {
     let { checkPassword, hashPassword } = passwords;
 
     const logLoginEvent = (identifiant, account) => {
-        return db.collection('events').insertOne({
+        return db.collection("events").insertOne({
             date: new Date(),
-            type: 'login',
+            type: "login",
             source: { user: identifiant, profile: account.profile, id: account.profile }
         });
     };
 
     const logLoginWithAccessTokenEvent = (req, organisme) => {
-        return db.collection('events').insertOne({
+        return db.collection("events").insertOne({
             date: new Date(),
-            type: 'login-access-token',
+            type: "login-access-token",
             source: {
-                profile: 'organisme',
+                profile: "organisme",
                 siret: organisme.meta.siretAsString,
                 id: organisme._id,
             }
@@ -34,19 +34,22 @@ module.exports = ({ db, auth, passwords, regions }) => {
         let region = regions.findRegionByCodeRegion(account.codeRegion);
         logLoginEvent(identifiant, account);
 
-        return await auth.buildJWT('backoffice', {
+        return await auth.buildJWT("backoffice", {
             sub: `${identifiant}`,
             id: account._id,
             profile,
             region: region.nom,
             codeRegion: account.codeRegion,
-            ...(profile === 'financeur' ? { codeFinanceur: account.codeFinanceur } : {}),
-            ...(profile === 'organisme' ? { siret: account.meta.siretAsString, raisonSociale: account.raisonSociale } : {}),
+            ...(profile === "financeur" ? { codeFinanceur: account.codeFinanceur } : {}),
+            ...(profile === "organisme" ? {
+                siret: account.meta.siretAsString,
+                raisonSociale: account.raisonSociale
+            } : {}),
         });
     };
 
     const invalidateAuthToken = async (id, token) => {
-        return db.collection('invalidAuthTokens').insertOne({
+        return db.collection("invalidAuthTokens").insertOne({
             subject: id,
             token,
             creationDate: new Date(),
@@ -54,7 +57,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
     };
 
     const isTokenAlreadyUsed = async (id, token) => {
-        let count = await db.collection('invalidAuthTokens').countDocuments({
+        let count = await db.collection("invalidAuthTokens").countDocuments({
             subject: id,
             token,
         });
@@ -67,15 +70,15 @@ module.exports = ({ db, auth, passwords, regions }) => {
             return Promise.resolve(account);
         }
 
-        return db.collection('accounts').updateOne({ _id: account._id }, {
+        return db.collection("accounts").updateOne({ _id: account._id }, {
             $set: {
-                'meta.rehashed': true,
-                'passwordHash': await hashPassword(password)
+                "meta.rehashed": true,
+                "passwordHash": await hashPassword(password)
             }
         });
     };
 
-    router.post('/api/backoffice/login', tryAndCatch(async (req, res) => {
+    router.post("/api/backoffice/login", tryAndCatch(async (req, res) => {
 
         let { identifiant, password } = await Joi.validate(req.body, {
             identifiant: Joi.string().lowercase().required(),
@@ -83,11 +86,11 @@ module.exports = ({ db, auth, passwords, regions }) => {
         }, { abortEarly: false });
 
         let token;
-        let account = await db.collection('accounts').findOne({
-            'passwordHash': { $exists: true },
-            '$or': [
-                { 'courriel': identifiant },
-                { 'meta.siretAsString': identifiant },
+        let account = await db.collection("accounts").findOne({
+            "passwordHash": { $exists: true },
+            "$or": [
+                { "courriel": identifiant },
+                { "meta.siretAsString": identifiant },
             ]
         });
         if (account && await checkPassword(password, account.passwordHash)) {
@@ -98,11 +101,11 @@ module.exports = ({ db, auth, passwords, regions }) => {
         if (token) {
             return res.json(token);
         } else {
-            throw Boom.badRequest('Identifiant ou mot de passe invalide');
+            throw Boom.badRequest("Identifiant ou mot de passe invalide");
         }
     }));
 
-    router.get('/api/backoffice/login', tryAndCatch(async (req, res) => {
+    router.get("/api/backoffice/login", tryAndCatch(async (req, res) => {
 
         const parameters = await Joi.validate(req.query, {
             access_token: Joi.string().required(),
@@ -111,17 +114,17 @@ module.exports = ({ db, auth, passwords, regions }) => {
 
         let user;
         try {
-            user = await auth.checkJWT('backoffice', parameters.access_token);
+            user = await auth.checkJWT("backoffice", parameters.access_token);
         } catch (e) {
-            throw Boom.badRequest('Token invalide', e);
+            throw Boom.badRequest("Token invalide", e);
         }
 
-        let organisme = await db.collection('accounts').findOne({
-            'meta.siretAsString': user.sub,
+        let organisme = await db.collection("accounts").findOne({
+            "meta.siretAsString": user.sub,
         });
 
         if (await isTokenAlreadyUsed(organisme._id, parameters.access_token)) {
-            throw Boom.badRequest('Token déjà utilisé');
+            throw Boom.badRequest("Token déjà utilisé");
         }
 
         if (organisme) {
@@ -132,7 +135,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
             ]);
             return res.json(token);
         } else {
-            throw Boom.badRequest('Token invalide');
+            throw Boom.badRequest("Token invalide");
         }
     }));
 

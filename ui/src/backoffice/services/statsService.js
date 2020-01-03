@@ -1,5 +1,5 @@
-import { _get } from '../../common/utils/http-client';
-import queryString from 'query-string';
+import { _get } from "../../common/utils/http-client";
+import queryString from "query-string";
 
 export const getStagiairesStats = (options = {}) => {
     return _get(`/backoffice/stats/stagiaires?${queryString.stringify(options)}`);

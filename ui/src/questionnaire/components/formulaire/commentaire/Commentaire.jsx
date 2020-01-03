@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import { checkBadwords } from '../../../services/stagiaireService';
-import Badwords from './Badwords';
-import './commentaire.scss';
+import React, { Component } from "react";
+import _ from "lodash";
+import PropTypes from "prop-types";
+import { checkBadwords } from "../../../services/stagiaireService";
+import Badwords from "./Badwords";
+import "./commentaire.scss";
 
 class Commentaire extends Component {
 
@@ -13,8 +13,8 @@ class Commentaire extends Component {
     };
 
     state = {
-        texte: '',
-        titre: ''
+        texte: "",
+        titre: ""
     };
 
     constructor(props) {
@@ -29,8 +29,8 @@ class Commentaire extends Component {
         };
 
         this.badwordValidators = {
-            texte: createBadwordsDebouncer('texte'),
-            titre: createBadwordsDebouncer('titre'),
+            texte: createBadwordsDebouncer("texte"),
+            titre: createBadwordsDebouncer("titre"),
         };
     }
 
@@ -64,12 +64,13 @@ class Commentaire extends Component {
                                     value={this.state.texte}
                                     maxLength={200}
                                     rows="5"
-                                    className={`${!commentaire.texte.isValid ? 'badwords' : ''}`}
+                                    className={`${!commentaire.texte.isValid ? "badwords" : ""}`}
                                     placeholder="Partagez votre expérience pour éclairer les futurs stagiaires."
                                     onBlur={this.onBlur}
                                     onChange={this.onChange} />
                                 {!commentaire.texte.isValid && <Badwords />}
-                                <div className="chars-count">Il vous reste {200 - this.state.texte.length} caractères.</div>
+                                <div className="chars-count">Il vous reste {200 - this.state.texte.length} caractères.
+                                </div>
                             </div>
                         </div>
                         <div className="row inner-row field">
@@ -80,12 +81,13 @@ class Commentaire extends Component {
                                     name="titre"
                                     value={this.state.titre}
                                     maxLength={50}
-                                    className={`${!commentaire.titre.isValid ? 'badwords' : ''}`}
+                                    className={`${!commentaire.titre.isValid ? "badwords" : ""}`}
                                     placeholder="Le titre permet d’avoir un résumé de votre expérience de la formation."
                                     onBlur={this.onBlur}
                                     onChange={this.onChange} />
                                 {!commentaire.titre.isValid && <Badwords />}
-                                <div className="chars-count">Il vous reste {50 - this.state.titre.length} caractères.</div>
+                                <div className="chars-count">Il vous reste {50 - this.state.titre.length} caractères.
+                                </div>
                             </div>
                         </div>
                         <div className="row inner-row field">

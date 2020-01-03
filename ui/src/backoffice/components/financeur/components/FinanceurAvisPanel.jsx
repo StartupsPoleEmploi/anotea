@@ -1,17 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Filters } from '../../common/page/panel/filters/Filters';
-import Filter from '../../common/page/panel/filters/Filter';
-import _ from 'lodash';
-import Summary from '../../common/page/panel/summary/Summary';
-import Button from '../../../../common/components/Button';
-import { getExportAvisUrl, searchAvis } from '../../../services/avisService';
-import AvisResults from '../../common/page/panel/results/AvisResults';
-import Avis from '../../common/avis/Avis';
-import Pagination from '../../common/page/panel/pagination/Pagination';
-import BadgeSummary from '../../common/page/panel/summary/BadgeSummary';
-import Panel from '../../common/page/panel/Panel';
-import Loader from '../../../../common/components/Loader';
+import React from "react";
+import PropTypes from "prop-types";
+import { Filters } from "../../common/page/panel/filters/Filters";
+import Filter from "../../common/page/panel/filters/Filter";
+import _ from "lodash";
+import Summary from "../../common/page/panel/summary/Summary";
+import Button from "../../../../common/components/Button";
+import { getExportAvisUrl, searchAvis } from "../../../services/avisService";
+import AvisResults from "../../common/page/panel/results/AvisResults";
+import Avis from "../../common/avis/Avis";
+import Pagination from "../../common/page/panel/pagination/Pagination";
+import BadgeSummary from "../../common/page/panel/summary/BadgeSummary";
+import Panel from "../../common/page/panel/Panel";
+import Loader from "../../../../common/components/Loader";
 
 export default class FinanceurAvisPanel extends React.Component {
 
@@ -72,45 +72,45 @@ export default class FinanceurAvisPanel extends React.Component {
                         <Filter
                             label="Tous"
                             isActive={() => !query.statuses && !query.qualification}
-                            onClick={() => onFilterClicked({ sortBy: 'date' })}
+                            onClick={() => onFilterClicked({ sortBy: "date" })}
                         />
 
                         <Filter
                             label="Commentaires"
-                            isActive={() => query.commentaires === 'true'}
-                            onClick={() => onFilterClicked({ commentaires: true, sortBy: 'lastStatusUpdate' })}
+                            isActive={() => query.commentaires === "true"}
+                            onClick={() => onFilterClicked({ commentaires: true, sortBy: "lastStatusUpdate" })}
                         />
 
                         <Filter
                             label="Négatifs"
-                            isActive={() => query.qualification === 'négatif'}
+                            isActive={() => query.qualification === "négatif"}
                             onClick={() => {
                                 return onFilterClicked({
-                                    statuses: 'validated', qualification: 'négatif', sortBy: 'lastStatusUpdate'
+                                    statuses: "validated", qualification: "négatif", sortBy: "lastStatusUpdate"
                                 });
                             }}
                         />
 
                         <Filter
                             label="Positifs ou neutres"
-                            isActive={() => query.qualification === 'positif'}
+                            isActive={() => query.qualification === "positif"}
                             onClick={() => {
                                 return onFilterClicked({
-                                    statuses: 'validated', qualification: 'positif', sortBy: 'lastStatusUpdate'
+                                    statuses: "validated", qualification: "positif", sortBy: "lastStatusUpdate"
                                 });
                             }}
                         />
 
                         <Filter
                             label="Signalés"
-                            isActive={() => query.statuses === 'reported'}
-                            onClick={() => onFilterClicked({ statuses: 'reported', sortBy: 'lastStatusUpdate' })}
+                            isActive={() => query.statuses === "reported"}
+                            onClick={() => onFilterClicked({ statuses: "reported", sortBy: "lastStatusUpdate" })}
                         />
 
                         <Filter
                             label="Rejetés"
-                            isActive={() => query.statuses === 'rejected'}
-                            onClick={() => onFilterClicked({ statuses: 'rejected', sortBy: 'lastStatusUpdate' })}
+                            isActive={() => query.statuses === "rejected"}
+                            onClick={() => onFilterClicked({ statuses: "rejected", sortBy: "lastStatusUpdate" })}
                         />
                     </Filters>
                 }
@@ -122,7 +122,7 @@ export default class FinanceurAvisPanel extends React.Component {
                         buttons={
                             <Button
                                 size="medium"
-                                onClick={() => window.open(getExportAvisUrl(_.omit(query, ['page'])))}>
+                                onClick={() => window.open(getExportAvisUrl(_.omit(query, ["page"])))}>
                                 <i className="fas fa-download pr-2"></i>Exporter
                             </Button>
                         }

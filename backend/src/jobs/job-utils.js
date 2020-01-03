@@ -1,9 +1,9 @@
-const moment = require('moment');
-const _ = require('lodash');
-const config = require('config');
-const createComponents = require('../core/components');
-const createLogger = require('../core/components/logger');
-const { IncomingWebhook } = require('@slack/webhook');
+const moment = require("moment");
+const _ = require("lodash");
+const config = require("config");
+const createComponents = require("../core/components");
+const createLogger = require("../core/components/logger");
+const { IncomingWebhook } = require("@slack/webhook");
 
 module.exports = {
     delay: milliseconds => {
@@ -13,10 +13,10 @@ module.exports = {
     flatten: array => [].concat.apply([], array),
     execute: async (job, options = {}) => {
 
-        process.on('unhandledRejection', e => console.log(e));
-        process.on('uncaughtException', e => console.log(e));
+        process.on("unhandledRejection", e => console.log(e));
+        process.on("uncaughtException", e => console.log(e));
 
-        let logger = createLogger('job', config);
+        let logger = createLogger("job", config);
         let components = await createComponents({ logger, configuration: config });
         const exit = async error => {
             if (error) {
@@ -44,7 +44,7 @@ module.exports = {
             let launchTime = new Date().getTime();
             let results = await job(jobComponents);
 
-            let duration = moment.utc(new Date().getTime() - launchTime).format('HH:mm:ss.SSS');
+            let duration = moment.utc(new Date().getTime() - launchTime).format("HH:mm:ss.SSS");
             let data = {};
             if (results) {
                 data = results.toJSON ? results.toJSON() : results;
@@ -52,7 +52,7 @@ module.exports = {
                     data = results.map(r => r.toJSON ? r.toJSON() : r);
                 }
             }
-            logger.info({ type: 'script', ...data }, `Completed in ${duration}`);
+            logger.info({ type: "script", ...data }, `Completed in ${duration}`);
             exit();
         } catch (e) {
             components.sentry.sendError(e);

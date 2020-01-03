@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require("lodash");
 
 const convertCommentaire = data => {
 
@@ -61,19 +61,19 @@ module.exports = data => {
         },
     };
 
-    if (training.infoCarif.numeroAction !== 'NULL') {
+    if (training.infoCarif.numeroAction !== "NULL") {
         avis.formation.action.numero = training.infoCarif.numeroAction;
     }
 
-    if (!data.pseudoMasked && data.status !== 'rejected' && !_.isEmpty(data.pseudo)) {
+    if (!data.pseudoMasked && data.status !== "rejected" && !_.isEmpty(data.pseudo)) {
         avis.pseudo = data.pseudo;
     }
 
-    if (data.comment && data.status === 'validated') {
+    if (data.comment && data.status === "validated") {
         avis.commentaire = convertCommentaire(data);
     }
 
-    if (data.reponse && data.status === 'validated' && data.reponse.status === 'validated') {
+    if (data.reponse && data.status === "validated" && data.reponse.status === "validated") {
         avis.reponse = {
             texte: data.reponse.text,
         };

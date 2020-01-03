@@ -1,8 +1,8 @@
-const _ = require('lodash');
-const { Transform, Writable } = require('stream');
-const pipeline = require('stream').pipeline;
-const parse = require('csv-parse');
-const { encodeStream } = require('iconv-lite');
+const _ = require("lodash");
+const { Transform, Writable } = require("stream");
+const pipeline = require("stream").pipeline;
+const parse = require("csv-parse");
+const { encodeStream } = require("iconv-lite");
 
 let transformObject = (transform, options = {}) => {
     let lines = 0;
@@ -50,7 +50,7 @@ let transformObject = (transform, options = {}) => {
 
 module.exports = {
     encodeStream: encodeStream,
-    encodeIntoUTF8: () => encodeStream('UTF-8'),
+    encodeIntoUTF8: () => encodeStream("UTF-8"),
     transformObject: transformObject,
     ignoreEmpty: () => transformObject(data => data, { ignoreEmpty: true }),
     ignoreFirstLine: () => transformObject(data => data, { ignoreFirstLine: true }),
@@ -107,11 +107,11 @@ module.exports = {
                         value += String(`,"${options.arrayPropertyName}":[`);
                         this.push(Buffer.from(value));
                     } else {
-                        this.push(Buffer.from('['));
+                        this.push(Buffer.from("["));
                     }
                 }
                 if (chunksSent++ > 0) {
-                    this.push(Buffer.from(','));
+                    this.push(Buffer.from(","));
                 }
 
                 this.push(JSON.stringify(data));
@@ -125,13 +125,13 @@ module.exports = {
                         value[options.arrayPropertyName] = [];
                         this.push(Buffer.from(JSON.stringify(value)));
                     } else {
-                        this.push(Buffer.from('[]'));
+                        this.push(Buffer.from("[]"));
                     }
                 } else {
                     //Close json properly
-                    this.push(Buffer.from(']'));
+                    this.push(Buffer.from("]"));
                     if (options.arrayWrapper) {
-                        this.push(Buffer.from('}'));
+                        this.push(Buffer.from("}"));
                     }
                 }
                 return callback();
@@ -146,10 +146,10 @@ module.exports = {
             transform: function(chunk, encoding, callback) {
                 try {
                     if (lines++ === 0) {
-                        this.push(`${Object.keys(columns).join(';')}\n`);
+                        this.push(`${Object.keys(columns).join(";")}\n`);
                     }
 
-                    let line = Object.keys(columns).map(key => columns[key](chunk)).join(';');
+                    let line = Object.keys(columns).map(key => columns[key](chunk)).join(";");
                     this.push(`${line}\n`);
                     callback();
                 } catch (e) {

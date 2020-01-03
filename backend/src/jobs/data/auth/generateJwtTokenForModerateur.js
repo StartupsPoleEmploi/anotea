@@ -1,29 +1,29 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const cli = require('commander');
-const { execute } = require('../../job-utils');
+const cli = require("commander");
+const { execute } = require("../../job-utils");
 
-cli.description('Generate jwt token')
-.option('-c, --courriel [courriel]')
+cli.description("Generate jwt token")
+.option("-c, --courriel [courriel]")
 .parse(process.argv);
 
 execute(async ({ db, auth, exit }) => {
 
     if (!cli.courriel) {
-        exit('Invalid arguments');
+        exit("Invalid arguments");
     }
 
     let courriel = cli.courriel;
-    let moderateur = await db.collection('accounts').findOne({ 'courriel': courriel });
+    let moderateur = await db.collection("accounts").findOne({ "courriel": courriel });
     let data = {
         sub: courriel,
-        profile: 'moderateur',
+        profile: "moderateur",
         id: moderateur._id,
         codeRegion: moderateur.codeRegion,
     };
 
-    let jwt = await auth.buildJWT('backoffice', data, { expiresIn: '1h' });
+    let jwt = await auth.buildJWT("backoffice", data, { expiresIn: "1h" });
 
     return {
         token: `Bearer ${jwt.access_token}`,

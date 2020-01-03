@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Stars from './Stars';
-import './Notes.scss';
-import Tooltip from './Tooltip';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Stars from "./Stars";
+import "./Notes.scss";
+import Tooltip from "./Tooltip";
 
 export default class Notes extends Component {
 
@@ -26,7 +26,8 @@ export default class Notes extends Component {
 
                 <div className="d-flex align-content-center">
                     <div className="name">Contenu</div>
-                    <Tooltip message="Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique." />
+                    <Tooltip
+                        message="Programme, supports pédagogiques, organisation de modules, alternance théorie/pratique." />
                     <div className="star ml-auto">
                         <Stars note={notes.contenu_formation} />
                     </div>
@@ -47,7 +48,8 @@ export default class Notes extends Component {
                 </div>
                 <div className="d-flex align-content-center with-tooltip">
                     <div className="name">Accompagnement</div>
-                    <Tooltip message="Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises." />
+                    <Tooltip
+                        message="Aide à la recherche de stage/emploi, mise en relation et rencontre avec les entreprises." />
                     <div className="star ml-auto">
                         <Stars note={notes.accompagnement} />
                     </div>

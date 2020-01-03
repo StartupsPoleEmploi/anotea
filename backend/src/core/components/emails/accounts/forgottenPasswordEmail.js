@@ -1,9 +1,9 @@
-const uuid = require('uuid');
-let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
+const uuid = require("uuid");
+let getOrganismeEmail = require("../../../utils/getOrganismeEmail");
 
 module.exports = (db, regions, mailer) => {
 
-    const templateName = 'forgottenPasswordEmail';
+    const templateName = "forgottenPasswordEmail";
 
     let render = (account, passwordToken, options = {}) => {
         return mailer.render(__dirname, templateName, {
@@ -20,12 +20,12 @@ module.exports = (db, regions, mailer) => {
             let generateForgottenPasswordToken = async () => {
                 let passwordToken = uuid.v4();
 
-                await db.collection('forgottenPasswordTokens').removeOne({
+                await db.collection("forgottenPasswordTokens").removeOne({
                     id: account._id,
                     profile: account.profile
                 });
 
-                await db.collection('forgottenPasswordTokens').insertOne({
+                await db.collection("forgottenPasswordTokens").insertOne({
                     id: account._id,
                     profile: account.profile,
                     creationDate: new Date(),
@@ -36,25 +36,25 @@ module.exports = (db, regions, mailer) => {
             };
 
             let onSuccess = async () => {
-                await db.collection('accounts').update({ _id: account._id }, {
+                await db.collection("accounts").update({ _id: account._id }, {
                     $set: { mailSentDate: new Date() },
                     $unset: {
-                        mailError: '',
-                        mailErrorDetail: ''
+                        mailError: "",
+                        mailErrorDetail: ""
                     }
                 });
-                await db.collection('events').insertOne({
+                await db.collection("events").insertOne({
                     id: account._id,
                     profile: account.profile,
                     date: new Date(),
-                    type: 'askNewPassword'
+                    type: "askNewPassword"
                 });
             };
 
             let onError = async err => {
-                await db.collection('accounts').update({ _id: account._id }, {
+                await db.collection("accounts").update({ _id: account._id }, {
                     $set: {
-                        mailError: 'smtpError',
+                        mailError: "smtpError",
                         mailErrorDetail: err
                     }
                 });
@@ -65,12 +65,12 @@ module.exports = (db, regions, mailer) => {
             .then(async passwordToken => {
 
                 let region = regions.findRegionByCodeRegion(account.codeRegion);
-                let email = account.profile === 'organisme' ? getOrganismeEmail(account) : account.courriel;
+                let email = account.profile === "organisme" ? getOrganismeEmail(account) : account.courriel;
 
                 return mailer.createRegionalMailer(region).sendEmail(
                     email,
                     {
-                        subject: 'Votre compte Anotéa : Demande de renouvellement de mot de passe',
+                        subject: "Votre compte Anotéa : Demande de renouvellement de mot de passe",
                         body: await render(account, passwordToken),
                     },
                 );

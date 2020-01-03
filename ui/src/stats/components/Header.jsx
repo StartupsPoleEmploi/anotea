@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
-import './Header.scss';
-import logo from '../../../src/stats/images/logo-anotea.png';
+import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
+import "./Header.scss";
+import logo from "../../../src/stats/images/logo-anotea.png";
 
 export default class Header extends Component {
 
@@ -17,9 +17,12 @@ export default class Header extends Component {
                         <div className="col-sm-10">
                             <div className="d-flex justify-content-around">
                                 <NavLink to="/stats/avis" className="nav-link" activeClassName="active">Avis</NavLink>
-                                <NavLink to="/stats/organismes" className="nav-link" activeClassName="active">Organismes</NavLink>
-                                <NavLink to="/stats/api" className="nav-link" activeClassName="active">Restitution</NavLink>
-                                <NavLink to="/stats/divers" className="nav-link" activeClassName="active">Divers</NavLink>
+                                <NavLink to="/stats/organismes" className="nav-link"
+                                         activeClassName="active">Organismes</NavLink>
+                                <NavLink to="/stats/api" className="nav-link"
+                                         activeClassName="active">Restitution</NavLink>
+                                <NavLink to="/stats/divers" className="nav-link"
+                                         activeClassName="active">Divers</NavLink>
                             </div>
                         </div>
                     </div>

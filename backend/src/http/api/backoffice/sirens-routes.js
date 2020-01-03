@@ -1,14 +1,14 @@
-const express = require('express');
-const { tryAndCatch, sendArrayAsJsonStream } = require('../../utils/routes-utils');
+const express = require("express");
+const { tryAndCatch, sendArrayAsJsonStream } = require("../../utils/routes-utils");
 
 module.exports = ({ db, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
-    let checkAuth = middlewares.createJWTAuthMiddleware('backoffice');
+    let checkAuth = middlewares.createJWTAuthMiddleware("backoffice");
 
-    router.get('/api/backoffice/sirens', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/backoffice/sirens", checkAuth, tryAndCatch(async (req, res) => {
 
-        const stream = await db.collection('comment')
+        const stream = await db.collection("comment")
         .aggregate([
             {
                 $match: {
@@ -17,9 +17,9 @@ module.exports = ({ db, middlewares }) => {
             },
             {
                 $group: {
-                    _id: { $substr: ['$training.organisation.siret', 0, 9] },
-                    siren: { $first: { $substr: ['$training.organisation.siret', 0, 9] } },
-                    name: { $first: '$training.organisation.name' },
+                    _id: { $substr: ["$training.organisation.siret", 0, 9] },
+                    siren: { $first: { $substr: ["$training.organisation.siret", 0, 9] } },
+                    name: { $first: "$training.organisation.name" },
                     nbAvis: { $sum: 1 }
                 }
             },

@@ -31,7 +31,7 @@ module.exports = (options = {}) => {
             }
 
             try {
-                return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+                return JSON.parse(Buffer.concat(chunks).toString("utf8"));
             } catch (e) {
                 return chunks;
             }

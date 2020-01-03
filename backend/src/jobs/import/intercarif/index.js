@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const cli = require('commander');
-const { execute } = require('../../job-utils');
-const importIntercarif = require('./tasks/importIntercarif');
+const cli = require("commander");
+const { execute } = require("../../job-utils");
+const importIntercarif = require("./tasks/importIntercarif");
 
-cli.description('Import intercarif and generate all related collections')
-.option('-f, --file [file]', 'The file to import')
-.option('-x, --unpack', 'Handle file as an archive')
+cli.description("Import intercarif and generate all related collections")
+.option("-f, --file [file]", "The file to import")
+.option("-x, --unpack", "Handle file as an archive")
 .parse(process.argv);
 
 execute(async ({ logger, db, exit, regions }) => {
@@ -15,7 +15,7 @@ execute(async ({ logger, db, exit, regions }) => {
     let { file, unpack } = cli;
 
     if (!file) {
-        return exit('file are required');
+        return exit("file are required");
     }
 
     logger.info(`Generating intercarif collection...`);

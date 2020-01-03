@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import './badwords.scss';
+import React, { Component } from "react";
+import "./badwords.scss";
 
 export default class Badwords extends Component {
 

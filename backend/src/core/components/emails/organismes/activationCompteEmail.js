@@ -1,8 +1,8 @@
-let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
+let getOrganismeEmail = require("../../../utils/getOrganismeEmail");
 
 module.exports = (db, regions, mailer) => {
 
-    const templateName = 'activationCompteEmail';
+    const templateName = "activationCompteEmail";
     let { utils } = mailer;
 
     let render = organisme => {
@@ -18,22 +18,22 @@ module.exports = (db, regions, mailer) => {
         send: async organisme => {
 
             let onSuccess = () => {
-                return db.collection('accounts').updateOne({ '_id': organisme._id }, {
+                return db.collection("accounts").updateOne({ "_id": organisme._id }, {
                     $set: {
                         mailSentDate: new Date(),
                         resend: !!organisme.mailSentDate,
                     },
                     $unset: {
-                        mailError: '',
-                        mailErrorDetail: ''
+                        mailError: "",
+                        mailErrorDetail: ""
                     },
                 });
             };
 
             let onError = async err => {
-                await db.collection('accounts').updateOne({ '_id': organisme._id }, {
+                await db.collection("accounts").updateOne({ "_id": organisme._id }, {
                     $set: {
-                        mailError: 'smtpError',
+                        mailError: "smtpError",
                         mailErrorDetail: err.message
                     }
                 });
@@ -44,7 +44,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 getOrganismeEmail(organisme),
                 {
-                    subject: 'Pôle Emploi vous donne accès aux avis de vos stagiaires',
+                    subject: "Pôle Emploi vous donne accès aux avis de vos stagiaires",
                     body: await render(organisme),
                 },
             )

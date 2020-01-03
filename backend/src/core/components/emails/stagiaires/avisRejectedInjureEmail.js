@@ -1,6 +1,6 @@
 module.exports = (db, regions, mailer) => {
 
-    const templateName = 'avisRejectedInjureEmail';
+    const templateName = "avisRejectedInjureEmail";
     let { utils } = mailer;
 
     let render = trainee => {

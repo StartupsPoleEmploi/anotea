@@ -3,16 +3,16 @@ module.exports = async db => {
 
     let results = await Promise.all(
         collections
-        .filter(collection => collection.idIndex && collection.idIndex.ns.startsWith('anotea'))
+        .filter(collection => collection.idIndex && collection.idIndex.ns.startsWith("anotea"))
         .map(async collection => {
 
             let name = collection.name;
             let results = await db.collection(name).aggregate([
                 { $indexStats: {} },
-                { $match: { 'accesses.ops': { $lt: 1 } } },
+                { $match: { "accesses.ops": { $lt: 1 } } },
             ]).toArray();
 
-            let unused = results.filter(r => r.name !== '_id_').map(r => r.name);
+            let unused = results.filter(r => r.name !== "_id_").map(r => r.name);
             return { collection: name, unusedIndexes: unused };
         })
     );

@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import loader from './Loader.svg';
+import React from "react";
+import PropTypes from "prop-types";
+import loader from "./Loader.svg";
 
 const Loader = props => {
     let image = <img src={loader} alt="loader" />;

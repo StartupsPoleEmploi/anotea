@@ -1,27 +1,27 @@
-const request = require('supertest');
-const _ = require('lodash');
-const assert = require('assert');
-const { withServer } = require('../../../../../helpers/with-server');
-const { newComment, newTrainee } = require('../../../../../helpers/data/dataset');
+const request = require("supertest");
+const _ = require("lodash");
+const assert = require("assert");
+const { withServer } = require("../../../../../helpers/with-server");
+const { newComment, newTrainee } = require("../../../../../helpers/data/dataset");
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur, logAsFinanceur, logAsOrganisme }) => {
 
     let buildComment = (custom = {}) => {
         return newComment(_.merge({
-            codeRegion: '11',
+            codeRegion: "11",
             training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+                organisation: { siret: "11111111111111" },
+                codeFinanceur: ["10"],
             },
         }, custom));
     };
 
     let buildTrainee = (custom = {}) => {
         return newTrainee(_.merge({
-            codeRegion: '11',
+            codeRegion: "11",
             training: {
-                organisation: { siret: '11111111111111' },
-                codeFinanceur: ['10'],
+                organisation: { siret: "11111111111111" },
+                codeFinanceur: ["10"],
             },
         }, custom));
     };
@@ -29,30 +29,30 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
     let profiles = (values, testCallback) => {
         let testParameters = [
             {
-                profileName: 'moderateur',
-                logUser: app => logAsModerateur(app, 'admin@pole-emploi.fr', { codeRegion: '11' }),
+                profileName: "moderateur",
+                logUser: app => logAsModerateur(app, "admin@pole-emploi.fr", { codeRegion: "11" }),
             },
             {
-                profileName: 'financeur',
-                logUser: app => logAsFinanceur(app, 'financeur@pole-emploi.fr', '10', { codeRegion: '11' }),
+                profileName: "financeur",
+                logUser: app => logAsFinanceur(app, "financeur@pole-emploi.fr", "10", { codeRegion: "11" }),
             },
             {
-                profileName: 'organisme',
-                logUser: app => logAsOrganisme(app, 'anotea.pe@gmail.com', '11111111111111', { codeRegion: '11' }),
+                profileName: "organisme",
+                logUser: app => logAsOrganisme(app, "anotea.pe@gmail.com", "11111111111111", { codeRegion: "11" }),
             }
         ];
 
         return testParameters.filter(p => values.includes(p.profileName)).forEach(testCallback);
     };
 
-    profiles(['moderateur', 'financeur', 'organisme'], ({ profileName, logUser }) => {
+    profiles(["moderateur", "financeur", "organisme"], ({ profileName, logUser }) => {
 
         it(`[${profileName}] can compute avis stats`, async () => {
 
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({
+                insertIntoDatabase("comment", buildComment({
                     rates: {
                         accueil: 3,
                         contenu_formation: 3,
@@ -62,7 +62,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                         global: 3,
                     },
                 })),
-                insertIntoDatabase('comment', buildComment({
+                insertIntoDatabase("comment", buildComment({
                     rates: {
                         accueil: 3,
                         contenu_formation: 3,
@@ -72,7 +72,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                         global: 3,
                     },
                 })),
-                insertIntoDatabase('comment', buildComment({
+                insertIntoDatabase("comment", buildComment({
                     rates: {
                         accueil: 2,
                         contenu_formation: 2,
@@ -85,8 +85,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/stats/avis')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/stats/avis")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.deepStrictEqual(response.body, {
@@ -164,13 +164,13 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', buildComment({ status: 'validated' })),
-                insertIntoDatabase('comment', buildComment({ status: 'reported' })),
+                insertIntoDatabase("comment", buildComment({ status: "validated" })),
+                insertIntoDatabase("comment", buildComment({ status: "reported" })),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/stats/avis')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/stats/avis")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.total, 2);
@@ -184,16 +184,16 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         it(`[${profileName}] can compute avis stats (notes)`, async () => {
 
             let app = await startServer();
-            let notes = buildComment({ status: 'validated' });
+            let notes = buildComment({ status: "validated" });
             delete notes.comment;
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('comment', notes),
+                insertIntoDatabase("comment", notes),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/stats/avis')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/stats/avis")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.strictEqual(response.body.total, 1);
@@ -209,23 +209,23 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let app = await startServer();
             let [token] = await Promise.all([
                 logUser(app),
-                insertIntoDatabase('trainee', buildTrainee({
+                insertIntoDatabase("trainee", buildTrainee({
                     mailSent: true,
                     mailSentDate: new Date()
                 })),
-                insertIntoDatabase('trainee', buildTrainee({
+                insertIntoDatabase("trainee", buildTrainee({
                     mailSent: null,
                     mailSentDate: new Date()
                 })),
-                insertIntoDatabase('trainee', buildTrainee({
+                insertIntoDatabase("trainee", buildTrainee({
                     mailSent: false,
                     mailSentDate: null
                 })),
             ]);
 
             let response = await request(app)
-            .get('/api/backoffice/stats/stagiaires')
-            .set('authorization', `Bearer ${token}`);
+            .get("/api/backoffice/stats/stagiaires")
+            .set("authorization", `Bearer ${token}`);
 
             assert.strictEqual(response.statusCode, 200);
             assert.deepStrictEqual(response.body, {

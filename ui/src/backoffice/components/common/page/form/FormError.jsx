@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './FormError.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import "./FormError.scss";
 
 export default class FormError extends React.Component {
 

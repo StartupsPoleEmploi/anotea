@@ -1,5 +1,5 @@
-const Joi = require('joi');
-const { arrayOf } = require('../../../utils/validators-utils');
+const Joi = require("joi");
+const { arrayOf } = require("../../../utils/validators-utils");
 
 module.exports = {
     arrayOf: arrayOf,
@@ -26,8 +26,8 @@ module.exports = {
     },
     tri: () => {
         return {
-            tri: Joi.string().valid(['date', 'notes', 'formation']).default('date'),
-            ordre: Joi.string().valid(['asc', 'desc']).default('desc'),
+            tri: Joi.string().valid(["date", "notes", "formation"]).default("date"),
+            ordre: Joi.string().valid(["asc", "desc"]).default("desc"),
         };
     },
 };

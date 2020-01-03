@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require("moment");
 
 class ResendAction {
 
@@ -15,8 +15,8 @@ class ResendAction {
             unsubscribe: false,
             avisCreated: false,
             $and: [
-                { mailSentDate: { $lte: moment().subtract(avisRelaunchDelay, 'days').toDate() } },
-                { mailSentDate: { $gte: moment().subtract(6, 'months').toDate() } },
+                { mailSentDate: { $lte: moment().subtract(avisRelaunchDelay, "days").toDate() } },
+                { mailSentDate: { $gte: moment().subtract(6, "months").toDate() } },
             ],
             ...(this.filters.codeRegions ? { codeRegion: { $in: this.filters.codeRegions } } : {}),
             ...(this.filters.campaign ? { campaign: this.filters.campaign } : {}),

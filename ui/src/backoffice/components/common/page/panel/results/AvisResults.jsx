@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import EmptyResults from './EmptyResults';
-import ResultDivider from './ResultDivider';
-import WithAnalytics from '../../../../../../common/components/analytics/WithAnalytics';
+import React from "react";
+import PropTypes from "prop-types";
+import EmptyResults from "./EmptyResults";
+import ResultDivider from "./ResultDivider";
+import WithAnalytics from "../../../../../../common/components/analytics/WithAnalytics";
 
 const AvisResults = ({ results, renderAvis }) => {
     return (

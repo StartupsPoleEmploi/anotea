@@ -1,94 +1,94 @@
-const _ = require('lodash');
-const uuid = require('uuid');
-const moment = require('moment');
-const ObjectID = require('mongodb').ObjectID;
+const _ = require("lodash");
+const uuid = require("uuid");
+const moment = require("moment");
+const ObjectID = require("mongodb").ObjectID;
 
 const randomize = value => `${value}-${uuid.v4()}`;
 const randomSIRET = () => `${Math.floor(Math.random() * 9000000000) + 1000000000}`;
-const getDateInThePast = () => moment().subtract('100', 'days').toDate();
+const getDateInThePast = () => moment().subtract("100", "days").toDate();
 
 module.exports = {
     randomize,
     randomSIRET,
     newTrainee: (custom, date = getDateInThePast()) => {
         return _.merge({
-            _id: `${randomize('test-campaign')}`,
-            campaign: 'test-campaign',
+            _id: `${randomize("test-campaign")}`,
+            campaign: "test-campaign",
             importDate: date,
             avisCreated: false,
             trainee: {
-                name: 'Dupont',
-                firstName: 'Henri',
-                mailDomain: 'free.fr',
-                email: 'henri@email.fr',
+                name: "Dupont",
+                firstName: "Henri",
+                mailDomain: "free.fr",
+                email: "henri@email.fr",
                 phoneNumbers: [
-                    '0123456789',
-                    'NULL'
+                    "0123456789",
+                    "NULL"
                 ],
                 emailValid: true,
-                dnIndividuNational: '1111111111'
+                dnIndividuNational: "1111111111"
             },
             training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
+                idFormation: "F_XX_XX",
+                title: "Développeur",
                 startDate: date,
                 scheduledEndDate: date,
                 organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+                    id: "14_OF_XXXXXXXXXX",
+                    siret: "11111111111111",
+                    label: "Pole Emploi Formation",
+                    name: "INSTITUT DE FORMATION"
                 },
                 place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                    postalCode: "75011",
+                    city: "Paris"
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
+                certifInfos: ["78997"],
+                idSession: "2422722",
+                formacodes: ["46242"],
                 infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
+                    numeroAction: "AC_XX_XXXXXX",
+                    numeroSession: "SE_XXXXXX"
                 },
-                codeFinanceur: '10'
+                codeFinanceur: "10"
             },
             unsubscribe: false,
             mailSent: true,
             avisCreated: false,
             mailSentDate: date,
-            token: randomize('token'),
+            token: randomize("token"),
             tracking: {
                 firstRead: date
             },
-            codeRegion: '11'
+            codeRegion: "11"
         }, custom);
     },
     newModerateurAccount: custom => {
         return _.merge({
-            courriel: 'admin@pole-emploi.fr',
-            passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
-            codeRegion: '11',
-            profile: 'moderateur'
+            courriel: "admin@pole-emploi.fr",
+            passwordHash: "5f4dcc3b5aa765d61d8327deb882cf99",
+            codeRegion: "11",
+            profile: "moderateur"
         }, custom);
     },
     newOrganismeAccount: custom => {
         return _.merge({
             _id: 6080274100045,
             SIRET: 6080274100045,
-            raisonSociale: 'Pole Emploi Formation',
-            courriel: 'contact@poleemploi-formation.fr',
-            passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
+            raisonSociale: "Pole Emploi Formation",
+            courriel: "contact@poleemploi-formation.fr",
+            passwordHash: "5f4dcc3b5aa765d61d8327deb882cf99",
             creationDate: getDateInThePast(),
-            token: randomize('token'),
+            token: randomize("token"),
             mailSentDate: getDateInThePast(),
-            codeRegion: '11',
-            numero: '14_OF_0000000123',
+            codeRegion: "11",
+            numero: "14_OF_0000000123",
             lieux_de_formation: [
                 {
                     adresse: {
-                        code_postal: '75019',
-                        ville: 'Paris 19e',
-                        region: '11'
+                        code_postal: "75019",
+                        ville: "Paris 19e",
+                        region: "11"
                     }
                 }
             ],
@@ -110,55 +110,55 @@ module.exports = {
                 },
             },
             meta: {
-                siretAsString: '6080274100045',
+                siretAsString: "6080274100045",
             },
-            profile: 'organisme'
+            profile: "organisme"
         }, custom);
     },
     newFinancerAccount: custom => {
         return _.merge({
-            courriel: 'contact@financer.fr',
-            passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
-            codeRegion: '11',
-            raisonSociale: 'Conseil Regional',
-            codeFinanceur: '2',
-            profile: 'financeur'
+            courriel: "contact@financer.fr",
+            passwordHash: "5f4dcc3b5aa765d61d8327deb882cf99",
+            codeRegion: "11",
+            raisonSociale: "Conseil Regional",
+            codeFinanceur: "2",
+            profile: "financeur"
         }, custom);
     },
     newForgottenPasswordToken: custom => {
         return _.merge({
-            token: randomize('token'),
+            token: randomize("token"),
             id: uuid.v4(),
         }, custom, { test: true });
     },
     newComment: (custom, date = getDateInThePast()) => {
         return _.merge({
             _id: new ObjectID(),
-            token: randomize('token'),
-            campaign: 'test',
+            token: randomize("token"),
+            campaign: "test",
             training: {
-                idFormation: 'F_XX_XX',
-                title: 'Développeur',
+                idFormation: "F_XX_XX",
+                title: "Développeur",
                 startDate: date,
                 scheduledEndDate: date,
                 organisation: {
-                    id: '14_OF_XXXXXXXXXX',
-                    siret: '11111111111111',
-                    label: 'Pole Emploi Formation',
-                    name: 'INSTITUT DE FORMATION'
+                    id: "14_OF_XXXXXXXXXX",
+                    siret: "11111111111111",
+                    label: "Pole Emploi Formation",
+                    name: "INSTITUT DE FORMATION"
                 },
                 place: {
-                    postalCode: '75011',
-                    city: 'Paris'
+                    postalCode: "75011",
+                    city: "Paris"
                 },
-                certifInfos: ['78997'],
-                idSession: '2422722',
-                formacodes: ['46242'],
+                certifInfos: ["78997"],
+                idSession: "2422722",
+                formacodes: ["46242"],
                 infoCarif: {
-                    numeroAction: 'AC_XX_XXXXXX',
-                    numeroSession: 'SE_XXXXXX'
+                    numeroAction: "AC_XX_XXXXXX",
+                    numeroSession: "SE_XXXXXX"
                 },
-                codeFinanceur: '10'
+                codeFinanceur: "10"
             },
             rates: {
                 accueil: 3,
@@ -168,187 +168,187 @@ module.exports = {
                 accompagnement: 1,
                 global: 2.4,
             },
-            pseudo: randomize('pseudo'),
+            pseudo: randomize("pseudo"),
             comment: {
-                title: 'Génial',
-                text: 'Super formation.'
+                title: "Génial",
+                text: "Super formation."
             },
             date: date,
-            status: 'validated',
-            qualification: 'positif',
+            status: "validated",
+            qualification: "positif",
             lastStatusUpdate: date,
             read: true,
-            codeRegion: '11',
+            codeRegion: "11",
         }, custom, { test: true });
     },
     newIntercarif: (options = {}) => {
         //same data as in test/helpers/data/intercarif-data-test.xml
-        let numeroFormation = options.numeroFormation || 'F_XX_XX';
-        let numeroAction = options.numeroAction || 'AC_XX_XXXXXX';
-        let numeroSession = options.numeroSession || 'SE_XXXXXX';
-        let formacode = options.formacode || '224032422722';
-        let certifInfo = options.certifInfo || '80735';
-        let codeRegion = options.codeRegion || '11';
-        let lieuDeFormation = options.lieuDeFormation || '93100';
-        let organismeFormateur = options.organismeFormateur || '22222222222222';
+        let numeroFormation = options.numeroFormation || "F_XX_XX";
+        let numeroAction = options.numeroAction || "AC_XX_XXXXXX";
+        let numeroSession = options.numeroSession || "SE_XXXXXX";
+        let formacode = options.formacode || "224032422722";
+        let certifInfo = options.certifInfo || "80735";
+        let codeRegion = options.codeRegion || "11";
+        let lieuDeFormation = options.lieuDeFormation || "93100";
+        let organismeFormateur = options.organismeFormateur || "22222222222222";
 
         return {
             _attributes: {
                 numero: numeroFormation,
-                datecrea: '20010503',
-                datemaj: '20171213',
-                file: 'https://anotea.pole-emploi.fr',
-                href: 'https://anotea.pole-emploi.fr'
+                datecrea: "20010503",
+                datemaj: "20171213",
+                file: "https://anotea.pole-emploi.fr",
+                href: "https://anotea.pole-emploi.fr"
             },
             domaine_formation: {
                 code_formacodes: [
                     {
                         _value: formacode,
                         _attributes: {
-                            ref: 'V12',
-                            tag: 'principal'
+                            ref: "V12",
+                            tag: "principal"
                         }
                     }
                 ],
                 code_nsfs: [
-                    '233'
+                    "233"
                 ],
                 code_romes: [
-                    'F1604'
+                    "F1604"
                 ]
             },
-            intitule_formation: 'Développeur web',
-            objectif_formation: 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
-            resultats_attendus: '-',
-            contenu_formation: 'Réaliser le développement d\'application web.',
-            certifiante: '1',
+            intitule_formation: "Développeur web",
+            objectif_formation: "L'objectif est d'obtenir la qualification de développeur web, pour un accès à l'emploi.",
+            resultats_attendus: "-",
+            contenu_formation: "Réaliser le développement d'application web.",
+            certifiante: "1",
             contact_formation: {
                 coordonnees: {
-                    civilite: 'Madame',
-                    nom: 'Martin',
-                    prenom: 'Henri',
+                    civilite: "Madame",
+                    nom: "Martin",
+                    prenom: "Henri",
                     adresse: {
                         codepostal: lieuDeFormation,
-                        ville: 'Montreuil',
-                        departement: '93',
+                        ville: "Montreuil",
+                        departement: "93",
                         code_insee_commune: lieuDeFormation,
                         region: codeRegion,
-                        pays: 'FR',
+                        pays: "FR",
                         geolocalisation: {
-                            latitude: '47',
-                            longitude: '0'
+                            latitude: "47",
+                            longitude: "0"
                         },
                         lignes: [
-                            '-'
+                            "-"
                         ],
                         code_region: codeRegion
                     },
                     telfixe: {
                         numtels: [
-                            '01 11 11 11 11'
+                            "01 11 11 11 11"
                         ]
                     },
                     portable: {
                         numtels: [
-                            '06 22 22 22 22'
+                            "06 22 22 22 22"
                         ]
                     },
-                    courriel: 'anotea.pe@gmail.com',
+                    courriel: "anotea.pe@gmail.com",
                     web: {
                         urlwebs: [
-                            'https://anotea.pole-emploi.fr'
+                            "https://anotea.pole-emploi.fr"
                         ]
                     }
                 }
             },
-            parcours_de_formation: '3',
-            code_niveau_entree: '1',
-            objectif_general_formation: '6',
-            code_niveau_sortie: '4',
+            parcours_de_formation: "3",
+            code_niveau_entree: "1",
+            objectif_general_formation: "6",
+            code_niveau_sortie: "4",
             url_formation: {
                 urlwebs: [
-                    'https://anotea.pole-emploi.fr'
+                    "https://anotea.pole-emploi.fr"
                 ]
             },
             organisme_formation_responsable: {
                 _attributes: {
-                    numero: 'OR_XX_XXX'
+                    numero: "OR_XX_XXX"
                 },
-                numero_activite: '24930181111',
+                numero_activite: "24930181111",
                 siret_organisme_formation: {
-                    siret: '11111111111111'
+                    siret: "11111111111111"
                 },
-                nom_organisme: 'Anotea Formation',
-                raison_sociale: 'Centre de formation Anotéa',
+                nom_organisme: "Anotea Formation",
+                raison_sociale: "Centre de formation Anotéa",
                 coordonnees_organisme: {
                     coordonnees: {
                         adresse: {
                             codepostal: lieuDeFormation,
-                            ville: 'Montreuil',
-                            departement: '93',
+                            ville: "Montreuil",
+                            departement: "93",
                             code_insee_commune: lieuDeFormation,
                             region: codeRegion,
-                            pays: 'FR',
+                            pays: "FR",
                             geolocalisation: {
-                                latitude: '47',
-                                longitude: '0'
+                                latitude: "47",
+                                longitude: "0"
                             },
                             lignes: [
-                                '-'
+                                "-"
                             ],
                             code_region: codeRegion
                         },
                         telfixe: {
                             numtels: [
-                                '11 11'
+                                "11 11"
                             ]
                         },
                         fax: {
                             numtels: [
-                                '01 11 22 33 44'
+                                "01 11 22 33 44"
                             ]
                         },
                         web: {
                             urlwebs: [
-                                'https://anotea.pole-emploi.fr'
+                                "https://anotea.pole-emploi.fr"
                             ]
                         }
                     }
                 },
                 contact_organisme: {
                     coordonnees: {
-                        nom: 'Martino',
-                        prenom: 'Jacko',
+                        nom: "Martino",
+                        prenom: "Jacko",
                         adresse: {
                             codepostal: lieuDeFormation,
-                            ville: 'Montreuil',
-                            departement: '93',
+                            ville: "Montreuil",
+                            departement: "93",
                             code_insee_commune: lieuDeFormation,
                             region: codeRegion,
-                            pays: 'FR',
+                            pays: "FR",
                             geolocalisation: {
-                                latitude: '47',
-                                longitude: '0'
+                                latitude: "47",
+                                longitude: "0"
                             },
                             lignes: [
-                                '-'
+                                "-"
                             ],
                             code_region: codeRegion
                         },
                         telfixe: {
                             numtels: [
-                                '1111'
+                                "1111"
                             ]
                         },
                         fax: {
                             numtels: [
-                                '01 11 22 33 44'
+                                "01 11 22 33 44"
                             ]
                         },
-                        courriel: 'anotea.pe+responsable@gmail.com',
+                        courriel: "anotea.pe+responsable@gmail.com",
                         web: {
                             urlwebs: [
-                                'https://anotea.pole-emploi.fr'
+                                "https://anotea.pole-emploi.fr"
                             ]
                         }
                     }
@@ -356,153 +356,153 @@ module.exports = {
                 potentiel: {
                     code_formacodes: [
                         {
-                            _value: '13307',
+                            _value: "13307",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '15061',
+                            _value: "15061",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '15062',
+                            _value: "15062",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '15070',
+                            _value: "15070",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '21046',
+                            _value: "21046",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '21047',
+                            _value: "21047",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '21050',
+                            _value: "21050",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '21546',
+                            _value: "21546",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '21572',
+                            _value: "21572",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22001',
+                            _value: "22001",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22002',
+                            _value: "22002",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22005',
+                            _value: "22005",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22010',
+                            _value: "22010",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22013',
+                            _value: "22013",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22016',
+                            _value: "22016",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22022',
+                            _value: "22022",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22024',
+                            _value: "22024",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22026',
+                            _value: "22026",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22042',
+                            _value: "22042",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22048',
+                            _value: "22048",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22050',
+                            _value: "22050",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22054',
+                            _value: "22054",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22062',
+                            _value: "22062",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22067',
+                            _value: "22067",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         },
                         {
-                            _value: '22069',
+                            _value: "22069",
                             _attributes: {
-                                ref: 'V12'
+                                ref: "V12"
                             }
                         }
                     ]
@@ -510,132 +510,132 @@ module.exports = {
             },
             certifications: [
                 {
-                    code_rncp: '320',
+                    code_rncp: "320",
                     code_certifinfo: certifInfo
                 }
             ],
             actions: [{
                 _attributes: {
                     numero: numeroAction,
-                    datecrea: '20010503',
-                    datemaj: '20171213'
+                    datecrea: "20010503",
+                    datemaj: "20171213"
                 },
-                rythme_formation: 'Continu temps plein, Modulaire',
-                niveau_entree_obligatoire: '0',
-                modalites_alternance: '-',
-                modalites_enseignement: '0',
-                conditions_specifiques: '-',
-                prise_en_charge_frais_possible: '0',
+                rythme_formation: "Continu temps plein, Modulaire",
+                niveau_entree_obligatoire: "0",
+                modalites_alternance: "-",
+                modalites_enseignement: "0",
+                conditions_specifiques: "-",
+                prise_en_charge_frais_possible: "0",
                 lieu_de_formation: {
                     coordonnees: {
-                        nom: 'Anotea Formation Paris',
+                        nom: "Anotea Formation Paris",
                         adresse: {
-                            codepostal: '75019',
-                            ville: 'Paris',
-                            departement: '75',
-                            code_insee_commune: '75019',
+                            codepostal: "75019",
+                            ville: "Paris",
+                            departement: "75",
+                            code_insee_commune: "75019",
                             region: codeRegion,
                             code_region: codeRegion,
-                            pays: 'FR',
+                            pays: "FR",
                             geolocalisation: {
-                                latitude: '48',
-                                longitude: '2'
+                                latitude: "48",
+                                longitude: "2"
                             },
                             lignes: [
-                                '-'
+                                "-"
                             ],
                         },
                         telfixe: {
                             numtels: [
-                                '11 11'
+                                "11 11"
                             ]
                         },
                         fax: {
                             numtels: [
-                                '01 11 22 33 44'
+                                "01 11 22 33 44"
                             ]
                         },
                         web: {
                             urlwebs: [
-                                'https://anotea.pole-emploi.fr'
+                                "https://anotea.pole-emploi.fr"
                             ]
                         }
                     }
                 },
-                modalites_entrees_sorties: '0',
+                modalites_entrees_sorties: "0",
                 url_action: {
                     urlwebs: [
-                        'https://anotea.pole-emploi.fr'
+                        "https://anotea.pole-emploi.fr"
                     ]
                 },
                 adresse_information: {
                     adresse: {
-                        codepostal: '75019',
-                        ville: 'Paris',
-                        departement: '75',
-                        code_insee_commune: '75019',
+                        codepostal: "75019",
+                        ville: "Paris",
+                        departement: "75",
+                        code_insee_commune: "75019",
                         region: codeRegion,
-                        pays: 'FR',
+                        pays: "FR",
                         geolocalisation: {
-                            latitude: '48',
-                            longitude: '2'
+                            latitude: "48",
+                            longitude: "2"
                         },
                         lignes: [
-                            '-'
+                            "-"
                         ],
                         code_region: codeRegion
                     }
                 },
-                acces_handicapes: 'Accès handicapé possible',
-                langue_formation: 'FR',
-                modalites_recrutement: 'Entretien, Tests',
-                code_perimetre_recrutement: '3',
-                nombre_heures_centre: '585',
-                nombre_heures_entreprise: '112',
-                nombre_heures_total: '697',
-                conventionnement: '1',
+                acces_handicapes: "Accès handicapé possible",
+                langue_formation: "FR",
+                modalites_recrutement: "Entretien, Tests",
+                code_perimetre_recrutement: "3",
+                nombre_heures_centre: "585",
+                nombre_heures_entreprise: "112",
+                nombre_heures_total: "697",
+                conventionnement: "1",
                 organisme_formateur: {
                     _attributes: {
-                        numero: 'OF_XXX'
+                        numero: "OF_XXX"
                     },
                     siret_formateur: {
                         siret: organismeFormateur
                     },
-                    raison_sociale_formateur: 'Anotea Formation Paris',
+                    raison_sociale_formateur: "Anotea Formation Paris",
                     contact_formateur: {
                         coordonnees: {
-                            nom: 'Martina',
-                            prenom: 'Jacko',
+                            nom: "Martina",
+                            prenom: "Jacko",
                             adresse: {
-                                codepostal: '75019',
-                                ville: 'Paris',
-                                departement: '75',
-                                code_insee_commune: '75019',
+                                codepostal: "75019",
+                                ville: "Paris",
+                                departement: "75",
+                                code_insee_commune: "75019",
                                 region: codeRegion,
-                                pays: 'FR',
+                                pays: "FR",
                                 geolocalisation: {
-                                    latitude: '48',
-                                    longitude: '2'
+                                    latitude: "48",
+                                    longitude: "2"
                                 },
                                 lignes: [
-                                    '-'
+                                    "-"
                                 ],
                                 code_region: codeRegion
                             },
                             telfixe: {
                                 numtels: [
-                                    '1111'
+                                    "1111"
                                 ]
                             },
                             fax: {
                                 numtels: [
-                                    '01 11 22 33 44'
+                                    "01 11 22 33 44"
                                 ]
                             },
-                            courriel: 'anotea.pe+paris@gmail.com',
+                            courriel: "anotea.pe+paris@gmail.com",
                             web: {
                                 urlwebs: [
-                                    'https://anotea.pole-emploi.fr'
+                                    "https://anotea.pole-emploi.fr"
                                 ]
                             }
                         }
@@ -643,153 +643,153 @@ module.exports = {
                     potentiel: {
                         code_formacodes: [
                             {
-                                _value: '13307',
+                                _value: "13307",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '15061',
+                                _value: "15061",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '15062',
+                                _value: "15062",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '15070',
+                                _value: "15070",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '21046',
+                                _value: "21046",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '21047',
+                                _value: "21047",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '21050',
+                                _value: "21050",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '21546',
+                                _value: "21546",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '21572',
+                                _value: "21572",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22001',
+                                _value: "22001",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22002',
+                                _value: "22002",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22005',
+                                _value: "22005",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22010',
+                                _value: "22010",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22013',
+                                _value: "22013",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22016',
+                                _value: "22016",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22022',
+                                _value: "22022",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22024',
+                                _value: "22024",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22026',
+                                _value: "22026",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22042',
+                                _value: "22042",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22048',
+                                _value: "22048",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22050',
+                                _value: "22050",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22054',
+                                _value: "22054",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22062',
+                                _value: "22062",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22067',
+                                _value: "22067",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             },
                             {
-                                _value: '22069',
+                                _value: "22069",
                                 _attributes: {
-                                    ref: 'V12'
+                                    ref: "V12"
                                 }
                             }
                         ]
@@ -797,57 +797,57 @@ module.exports = {
                 },
                 code_public_vises: [
                     {
-                        _value: '83056',
+                        _value: "83056",
                         _attributes: {
-                            ref: 'V12'
+                            ref: "V12"
                         }
                     }
                 ],
                 sessions: [{
                     _attributes: {
                         numero: numeroSession,
-                        datecrea: '20010503',
-                        datemaj: '20171213'
+                        datecrea: "20010503",
+                        datemaj: "20171213"
                     },
                     periode: {
-                        debut: '20171030',
-                        fin: '20180601'
+                        debut: "20171030",
+                        fin: "20180601"
                     },
                     adresse_inscription: {
                         adresse: {
-                            codepostal: '75019',
-                            ville: 'Paris',
-                            departement: '75',
-                            code_insee_commune: '75019',
+                            codepostal: "75019",
+                            ville: "Paris",
+                            departement: "75",
+                            code_insee_commune: "75019",
                             region: codeRegion,
-                            pays: 'FR',
+                            pays: "FR",
                             geolocalisation: {
-                                latitude: '48',
-                                longitude: '2'
+                                latitude: "48",
+                                longitude: "2"
                             },
                             lignes: [
-                                '-'
+                                "-"
                             ],
                             code_region: codeRegion
                         }
                     },
                     periode_inscription: {
                         periode: {
-                            debut: '00000000',
-                            fin: '20180522'
+                            debut: "00000000",
+                            fin: "20180522"
                         }
                     },
-                    etat_recrutement: '1'
+                    etat_recrutement: "1"
                 }],
                 date_informations: [
                     {
-                        date: '00000000'
+                        date: "00000000"
                     }
                 ],
                 organisme_financeurs: [
                     {
-                        code_financeur: '2',
-                        nb_places_financees: '5'
+                        code_financeur: "2",
+                        nb_places_financees: "5"
                     }
                 ]
             }],
@@ -855,7 +855,7 @@ module.exports = {
                 certifinfos: [certifInfo],
                 formacodes: [formacode]
             },
-            md5: '863aab7eacec39772b8f0f8336579bec'
+            md5: "863aab7eacec39772b8f0f8336579bec"
         };
     }
 };

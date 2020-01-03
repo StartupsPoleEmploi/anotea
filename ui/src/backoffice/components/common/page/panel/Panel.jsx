@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Loader from '../../../../../common/components/Loader';
-import './Panel.scss';
-import WithAnalytics from '../../../../../common/components/analytics/WithAnalytics';
+import React from "react";
+import PropTypes from "prop-types";
+import Loader from "../../../../../common/components/Loader";
+import "./Panel.scss";
+import WithAnalytics from "../../../../../common/components/analytics/WithAnalytics";
 
 const Panel = props => {
 
     return (
-        <div className={`Panel ${props.className || ''} ${props.backgroundColor || ''}`} style={props.style || {}}>
+        <div className={`Panel ${props.className || ""} ${props.backgroundColor || ""}`} style={props.style || {}}>
             {props.filters &&
             <WithAnalytics category="filters">
                 <div className="filters-holder">

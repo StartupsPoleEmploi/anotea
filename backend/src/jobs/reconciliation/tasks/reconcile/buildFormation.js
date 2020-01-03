@@ -1,5 +1,5 @@
-const computeScore = require('../../../../core/utils/computeScore');
-const convertCommentToAvis = require('../../../../core/utils/convertCommentToAvis');
+const computeScore = require("../../../../core/utils/computeScore");
+const convertCommentToAvis = require("../../../../core/utils/convertCommentToAvis");
 
 module.exports = (formation, comments) => {
 
@@ -33,7 +33,7 @@ module.exports = (formation, comments) => {
             import_date: new Date(),
             source: {//TODO remove source field in v2
                 numero_formation: formation._attributes.numero,
-                type: 'intercarif',
+                type: "intercarif",
             },
             reconciliation: {
                 //TODO must be converted into an array in v2

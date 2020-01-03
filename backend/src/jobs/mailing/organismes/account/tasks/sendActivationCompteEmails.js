@@ -1,5 +1,5 @@
-let { delay } = require('../../../../job-utils');
-let getOrganismeEmail = require('../../../../../core/utils/getOrganismeEmail');
+let { delay } = require("../../../../job-utils");
+let getOrganismeEmail = require("../../../../../core/utils/getOrganismeEmail");
 
 module.exports = async (db, logger, emails, action, options = {}) => {
 
@@ -9,9 +9,9 @@ module.exports = async (db, logger, emails, action, options = {}) => {
         error: 0,
     };
 
-    let cursor = await db.collection('accounts').find({
+    let cursor = await db.collection("accounts").find({
         ...action.getQuery(),
-        ...(options.siret ? { 'meta.siretAsString': options.siret } : {})
+        ...(options.siret ? { "meta.siretAsString": options.siret } : {})
     });
     if (options.limit) {
         cursor.limit(options.limit);
@@ -24,7 +24,7 @@ module.exports = async (db, logger, emails, action, options = {}) => {
 
         stats.total++;
         try {
-            let message = emails.getEmailMessageByTemplateName('activationCompteEmail');
+            let message = emails.getEmailMessageByTemplateName("activationCompteEmail");
             await message.send(organisme);
 
             if (options.delay) {

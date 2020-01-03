@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { maskTitle } from '../../../services/avisService';
-import './Titre.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import { maskTitle } from "../../../services/avisService";
+import "./Titre.scss";
 
 export default class Titre extends React.Component {
 
@@ -26,9 +26,10 @@ export default class Titre extends React.Component {
         }
         return (
             <div className="Titre">
-                <span className={`mr-1 title ${avis.comment.titleMasked ? 'masked' : ''}`}>{avis.comment.title}</span>
+                <span className={`mr-1 title ${avis.comment.titleMasked ? "masked" : ""}`}>{avis.comment.title}</span>
                 {showModerationButtons &&
-                <i className={`far ${avis.comment.titleMasked ? 'fa-eye' : 'fa-eye-slash'} toggable`} onClick={this.toggle} />
+                <i className={`far ${avis.comment.titleMasked ? "fa-eye" : "fa-eye-slash"} toggable`}
+                   onClick={this.toggle} />
                 }
             </div>
         );

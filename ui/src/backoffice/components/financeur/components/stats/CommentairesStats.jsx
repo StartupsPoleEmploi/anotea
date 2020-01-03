@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './CommentairesStats.scss';
-import Pie from '../../../common/page/panel/results/stats/Pie';
+import React from "react";
+import PropTypes from "prop-types";
+import "./CommentairesStats.scss";
+import Pie from "../../../common/page/panel/results/stats/Pie";
 
 const CommentairesStats = ({ stats }) => {
 
-    let colors = ['#007E54', '#E5F2ED', '#66B298'];
+    let colors = ["#007E54", "#E5F2ED", "#66B298"];
 
     return (
         <div className="CommentairesStats">
@@ -16,24 +16,24 @@ const CommentairesStats = ({ stats }) => {
                     <div className="description">{stats.nbCommentaires} commentaires au total</div>
                     <Pie colors={colors} data={[
                         {
-                            id: 'Validés',
+                            id: "Validés",
                             value: stats.nbCommentairesValidated,
-                            label: 'commentaires',
+                            label: "commentaires",
                         },
                         {
-                            id: 'Rejetés',
+                            id: "Rejetés",
                             value: stats.nbCommentairesRejected,
-                            label: 'commentaires',
+                            label: "commentaires",
                         },
                         {
-                            id: 'Signalés',
+                            id: "Signalés",
                             value: stats.nbCommentairesReported,
-                            label: 'commentaires',
+                            label: "commentaires",
                         },
                         {
-                            id: 'Archivés',
+                            id: "Archivés",
                             value: stats.nbCommentairesArchived,
-                            label: 'commentaires',
+                            label: "commentaires",
                         },
                     ]} />
                 </div>
@@ -42,14 +42,14 @@ const CommentairesStats = ({ stats }) => {
                     <div className="description">{stats.nbCommentairesValidated} commentaires au total</div>
                     <Pie colors={colors} data={[
                         {
-                            id: 'Positifs',
+                            id: "Positifs",
                             value: stats.nbCommentairesPositifs,
-                            label: 'commentaires',
+                            label: "commentaires",
                         },
                         {
-                            id: 'Négatifs',
+                            id: "Négatifs",
                             value: stats.nbCommentairesNegatifs,
-                            label: 'commentaires',
+                            label: "commentaires",
                         },
                     ]} />
                 </div>
@@ -58,19 +58,19 @@ const CommentairesStats = ({ stats }) => {
                     <div className="description">{stats.nbCommentairesRejected} commentaires au total</div>
                     <Pie colors={colors} data={[
                         {
-                            id: 'Non concernés',
+                            id: "Non concernés",
                             value: stats.nbCommentairesNonConcernes,
-                            label: 'commentaires',
+                            label: "commentaires",
                         },
                         {
-                            id: 'Alertes',
+                            id: "Alertes",
                             value: stats.nbCommentairesAlertes,
-                            label: 'commentaires',
+                            label: "commentaires",
                         },
                         {
-                            id: 'Injures',
+                            id: "Injures",
                             value: stats.nbCommentairesInjures,
-                            label: 'commentaires',
+                            label: "commentaires",
                         },
                     ]} />
                 </div>

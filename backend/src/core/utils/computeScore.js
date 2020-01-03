@@ -1,4 +1,4 @@
-const { round } = require('./number-utils');
+const { round } = require("./number-utils");
 
 module.exports = avis => {
 

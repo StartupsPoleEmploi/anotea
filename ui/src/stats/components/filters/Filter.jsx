@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Filter.scss';
-import DropDown from './DropDown';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Filter.scss";
+import DropDown from "./DropDown";
 
 export default class Filter extends React.PureComponent {
 

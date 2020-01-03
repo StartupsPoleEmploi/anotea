@@ -1,11 +1,11 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const arrayAsString = () => {
     return Joi.extend(joi => ({
         base: joi.array(),
-        name: 'arrayAsString',
+        name: "arrayAsString",
         coerce: (value, state, options) => {
-            return ((value && value.split) ? value.split(',') : value);
+            return ((value && value.split) ? value.split(",") : value);
         },
     })).arrayAsString();
 };
@@ -17,5 +17,5 @@ const arrayOf = (...items) => {
 module.exports = {
     arrayOf,
     arrayAsString,
-    objectId: () => Joi.string().regex(/^[0-9a-fA-F]{24}$/, 'Identifiant invalide'),
+    objectId: () => Joi.string().regex(/^[0-9a-fA-F]{24}$/, "Identifiant invalide"),
 };

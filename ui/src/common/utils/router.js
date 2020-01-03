@@ -1,10 +1,10 @@
-import queryString from 'query-string';
-import _ from 'lodash';
+import queryString from "query-string";
+import _ from "lodash";
 
 const stringifyQuery = data => {
     let parameters = _(data)
     .omitBy(_.isNil)
-    .omitBy(value => value === '')
+    .omitBy(value => value === "")
     .value();
 
     return queryString.stringify(parameters);
@@ -17,7 +17,7 @@ export const createRouter = ({ history, location }) => {
         },
         isActive: url => {
             //Ignore parameters when comparing the current location with the link url
-            let baseUrl = url.indexOf('?') === -1 ? url : url.split('?')[0];
+            let baseUrl = url.indexOf("?") === -1 ? url : url.split("?")[0];
             return location.pathname.indexOf(baseUrl) !== -1;
         },
         refreshCurrentPage: (query = {}) => {

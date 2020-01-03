@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import './DropDown.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import "./DropDown.scss";
 
 export default class DropDown extends Component {
 
@@ -19,9 +19,9 @@ export default class DropDown extends Component {
     showMenu = () => {
 
         if (!this.state.showMenu) {
-            document.addEventListener('click', this.handleOutsideClick, false);
+            document.addEventListener("click", this.handleOutsideClick, false);
         } else {
-            document.removeEventListener('click', this.handleOutsideClick, false);
+            document.removeEventListener("click", this.handleOutsideClick, false);
         }
 
         this.setState(prevState => ({
@@ -42,10 +42,10 @@ export default class DropDown extends Component {
         return (
             <div className="dropdown">
                 <button
-                    className={(this.state.showMenu ? 'dropdown-button-down' : 'dropdown-button-up') + ' d-flex justify-content-between'}
+                    className={(this.state.showMenu ? "dropdown-button-down" : "dropdown-button-up") + " d-flex justify-content-between"}
                     onClick={this.showMenu}>
                     <span>Cumul depuis le début</span>
-                    <i className={(this.state.showMenu ? 'fas fa-angle-up' : 'fas fa-angle-down') + ' caret'}></i>
+                    <i className={(this.state.showMenu ? "fas fa-angle-up" : "fas fa-angle-down") + " caret"}></i>
                 </button>
 
                 {

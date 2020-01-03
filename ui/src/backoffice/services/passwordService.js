@@ -1,4 +1,4 @@
-import { _get, _put } from '../../common/utils/http-client';
+import { _get, _put } from "../../common/utils/http-client";
 
 export const askNewPassword = identifiant => {
     return _put(`/backoffice/askNewPassword`, { identifiant });

@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './LibraryPage.scss';
-import Button from '../../../common/components/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from '../common/Dropdown';
-import Panel from '../common/page/panel/Panel';
-import Filter from '../common/page/panel/filters/Filter';
-import { Filters } from '../common/page/panel/filters/Filters';
-import Pagination from '../common/page/panel/pagination/Pagination';
-import { Form, Periode, Select } from '../common/page/form/Form';
-import { Tab, Tabs } from '../common/page/tabs/Tabs';
-import Page from '../common/page/Page';
-import Pie from '../common/page/panel/results/stats/Pie';
+import React from "react";
+import PropTypes from "prop-types";
+import "./LibraryPage.scss";
+import Button from "../../../common/components/Button";
+import { Dropdown, DropdownDivider, DropdownItem } from "../common/Dropdown";
+import Panel from "../common/page/panel/Panel";
+import Filter from "../common/page/panel/filters/Filter";
+import { Filters } from "../common/page/panel/filters/Filters";
+import Pagination from "../common/page/panel/pagination/Pagination";
+import { Form, Periode, Select } from "../common/page/form/Form";
+import { Tab, Tabs } from "../common/page/tabs/Tabs";
+import Page from "../common/page/Page";
+import Pie from "../common/page/panel/results/stats/Pie";
 
 const ButtonShowcase = ({ size, color }) => {
     return (
@@ -132,32 +132,32 @@ const LibraryPage = () => {
                     <div className="offset-2 col-4">
                         <Pie data={[
                             {
-                                'id': 'Données 1',
-                                'value': 80,
+                                "id": "Données 1",
+                                "value": 80,
                             },
                             {
-                                'id': 'Données 2',
-                                'value': 10,
+                                "id": "Données 2",
+                                "value": 10,
                             },
                             {
-                                'id': 'Données 3',
-                                'value': 10,
+                                "id": "Données 3",
+                                "value": 10,
                             },
                         ]} />
                     </div>
                     <div className="col-4">
                         <Pie data={[
                             {
-                                'id': 'Données 1',
-                                'value': 80,
+                                "id": "Données 1",
+                                "value": 80,
                             },
                             {
-                                'id': 'Données 2',
-                                'value': 5,
+                                "id": "Données 2",
+                                "value": 5,
                             },
                             {
-                                'id': 'Données 3',
-                                'value': 5,
+                                "id": "Données 3",
+                                "value": 5,
                             },
                         ]} />
                     </div>
@@ -183,11 +183,11 @@ const LibraryPage = () => {
                         <label>Select</label>
                         <Select
                             value={null}
-                            options={[{ code: 'code', label: 'label' }, { code: 'code2', label: 'label2' }]}
+                            options={[{ code: "code", label: "label" }, { code: "code2", label: "label2" }]}
                             loading={false}
                             optionKey="code"
                             optionLabel="label"
-                            placeholder={'Données'}
+                            placeholder={"Données"}
                             onChange={noop}
                         />
                     </div>

@@ -1,6 +1,6 @@
-const uuid = require('node-uuid');
-const _ = require('lodash');
-const { promiseAll } = require('../../job-utils');
+const uuid = require("node-uuid");
+const _ = require("lodash");
+const { promiseAll } = require("../../job-utils");
 
 module.exports = async (db, logger) => {
 
@@ -13,20 +13,20 @@ module.exports = async (db, logger) => {
     const getOrganismesFromIntercarif = async () => {
         let accumulator = {};
 
-        let cursor = db.collection('intercarif').find().project({
-            'actions.lieu_de_formation': 1,
-            'actions.organisme_formateur': 1
+        let cursor = db.collection("intercarif").find().project({
+            "actions.lieu_de_formation": 1,
+            "actions.organisme_formateur": 1
         });
         while (await cursor.hasNext()) {
             let intercarif = await cursor.next();
 
             intercarif.actions
             .filter(action => {
-                return action.lieu_de_formation.coordonnees.adresse && action.organisme_formateur.siret_formateur.siret !== '0';
+                return action.lieu_de_formation.coordonnees.adresse && action.organisme_formateur.siret_formateur.siret !== "0";
             })
             .forEach(action => {
                 let siret = action.organisme_formateur.siret_formateur.siret;
-                let hasCourriel = !!_.get(action, 'organisme_formateur.contact_formateur');
+                let hasCourriel = !!_.get(action, "organisme_formateur.contact_formateur");
                 let previous = accumulator[siret];
 
                 if (previous) {
@@ -57,7 +57,7 @@ module.exports = async (db, logger) => {
 
     const findCodeRegion = data => {
 
-        let lieu = data.lieux_de_formation.find(lieu => lieu.coordonnees.adresse.code_region !== 'XX');
+        let lieu = data.lieux_de_formation.find(lieu => lieu.coordonnees.adresse.code_region !== "XX");
 
         if (!lieu) {
             throw new Error(`Unable to find region for organisme ${data.organisme_formateur.siret_formateur.siret}`);
@@ -75,7 +75,7 @@ module.exports = async (db, logger) => {
             let siret = formateur.siret_formateur.siret;
             let id = parseInt(siret, 10);
 
-            let results = await db.collection('accounts').updateOne(
+            let results = await db.collection("accounts").updateOne(
                 { _id: id },
                 {
                     $setOnInsert: {
@@ -92,10 +92,10 @@ module.exports = async (db, logger) => {
                     },
                     $addToSet: {
                         courriels: { $each: data.courriels },
-                        sources: 'intercarif',
+                        sources: "intercarif",
                     },
                     $set: {
-                        profile: 'organisme',
+                        profile: "organisme",
                         //TODO remove underscores
                         lieux_de_formation: _.sortBy(data.lieux_de_formation.map(lieu => {
                             return {
@@ -106,7 +106,7 @@ module.exports = async (db, logger) => {
                                     region: lieu.coordonnees.adresse.region
                                 }
                             };
-                        }), ['adresse.code_postal']),
+                        }), ["adresse.code_postal"]),
                     },
                 },
                 { upsert: true }

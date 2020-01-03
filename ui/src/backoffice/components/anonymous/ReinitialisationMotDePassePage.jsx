@@ -1,14 +1,14 @@
-import React from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import Panel from '../common/page/panel/Panel';
-import InputText from '../common/page/form/InputText';
-import Button from '../../../common/components/Button';
-import Page from '../common/page/Page';
-import { CenteredForm } from '../common/page/form/CenteredForm';
-import { checkIfPasswordTokenExists, resetPassword } from '../../services/passwordService';
-import { isPasswordStrongEnough } from '../../utils/password-utils';
-import AppContext from '../../BackofficeContext';
+import React from "react";
+import _ from "lodash";
+import PropTypes from "prop-types";
+import Panel from "../common/page/panel/Panel";
+import InputText from "../common/page/form/InputText";
+import Button from "../../../common/components/Button";
+import Page from "../common/page/Page";
+import { CenteredForm } from "../common/page/form/CenteredForm";
+import { checkIfPasswordTokenExists, resetPassword } from "../../services/passwordService";
+import { isPasswordStrongEnough } from "../../utils/password-utils";
+import AppContext from "../../BackofficeContext";
 
 export default class ReinitialisationMotDePassePage extends React.Component {
 
@@ -22,8 +22,8 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            password: '',
-            confirmation: '',
+            password: "",
+            confirmation: "",
             errors: {
                 passwordNotStrongEnough: null,
                 isNotSamePassword: null,
@@ -43,8 +43,8 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         .catch(() => {
             showMessage({
                 timeout: 5000,
-                text: 'Le lien utilisé ne semble plus valide.',
-                color: 'red',
+                text: "Le lien utilisé ne semble plus valide.",
+                color: "red",
             });
         });
     }
@@ -56,9 +56,9 @@ export default class ReinitialisationMotDePassePage extends React.Component {
         this.setState({
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
-                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
+                    null : "Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.",
                 isNotSamePassword: password === confirmation ?
-                    null : 'Les mots de passes ne sont pas identiques.',
+                    null : "Les mots de passes ne sont pas identiques.",
             }
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
@@ -69,17 +69,17 @@ export default class ReinitialisationMotDePassePage extends React.Component {
                 resetPassword(password, forgottenPasswordToken)
                 .then(() => {
                     showMessage({
-                        text: 'Votre mot de passe a été modifié avec succès',
-                        color: 'green',
+                        text: "Votre mot de passe a été modifié avec succès",
+                        color: "green",
                     });
 
-                    return this.props.router.goToPage('/admin/login');
+                    return this.props.router.goToPage("/admin/login");
                 })
                 .catch(() => {
                     this.setState({ loading: false });
                     showMessage({
-                        text: 'Une erreur est survenue lors de la réinitialisation du mot de passe.',
-                        color: 'red',
+                        text: "Une erreur est survenue lors de la réinitialisation du mot de passe.",
+                        color: "red",
                     });
                 });
             }
@@ -91,7 +91,7 @@ export default class ReinitialisationMotDePassePage extends React.Component {
 
         return (
             <Page
-                title={'Votre espace Anotéa'}
+                title={"Votre espace Anotéa"}
                 panel={
                     <Panel
                         backgroundColor="blue"

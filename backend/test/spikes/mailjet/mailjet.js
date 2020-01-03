@@ -1,6 +1,6 @@
 module.exports = (logger, publicApiKey, privateApiKey) => {
 
-    let mailjet = require('node-mailjet').connect(publicApiKey, privateApiKey);
+    let mailjet = require("node-mailjet").connect(publicApiKey, privateApiKey);
 
     const waitJob = async jobId => {
         logger.debug(`Waiting for job ${jobId} to complete`);
@@ -10,16 +10,16 @@ module.exports = (logger, publicApiKey, privateApiKey) => {
 
             const retry = (delay, maxRetries) => {
                 mailjet
-                .get('contact')
-                .action('managemanycontacts')
+                .get("contact")
+                .action("managemanycontacts")
                 .id(jobId)
                 .request((error, response) => {
                     let body = response.body;
                     if (error || body.Data[0].Error || retries > maxRetries) {
-                        reject(error || body.Data[0].Error || new Error('maxRetries limit reached!'));
+                        reject(error || body.Data[0].Error || new Error("maxRetries limit reached!"));
                     } else {
                         let data = body.Data[0];
-                        if (data.Status === 'Completed') {
+                        if (data.Status === "Completed") {
                             logger.debug(`Job ${jobId} is completed`);
                             resolve();
                         } else {
@@ -37,9 +37,9 @@ module.exports = (logger, publicApiKey, privateApiKey) => {
 
     const getTemplateContent = async templateId => {
         let response = await mailjet
-        .get('template')
+        .get("template")
         .id(templateId)
-        .action('detailcontent')
+        .action("detailcontent")
         .request();
 
         return response.body.Data[0];
@@ -51,17 +51,17 @@ module.exports = (logger, publicApiKey, privateApiKey) => {
             logger.info(`Creating contacts metadata...`);
 
             let metadata = [
-                { Name: 'prenom', Datatype: 'str', NameSpace: 'static' },
-                { Name: 'nom', Datatype: 'str', NameSpace: 'static' },
-                { Name: 'formation_intitule', Datatype: 'str', NameSpace: 'static' },
-                { Name: 'organisme_formateur_raison_sociale', Datatype: 'str', NameSpace: 'static' },
-                { Name: 'session_periode_debut', Datatype: 'datetime', NameSpace: 'static' },
-                { Name: 'session_periode_fin', Datatype: 'datetime', NameSpace: 'static' },
+                { Name: "prenom", Datatype: "str", NameSpace: "static" },
+                { Name: "nom", Datatype: "str", NameSpace: "static" },
+                { Name: "formation_intitule", Datatype: "str", NameSpace: "static" },
+                { Name: "organisme_formateur_raison_sociale", Datatype: "str", NameSpace: "static" },
+                { Name: "session_periode_debut", Datatype: "datetime", NameSpace: "static" },
+                { Name: "session_periode_fin", Datatype: "datetime", NameSpace: "static" },
             ];
 
             return Promise.all(metadata.map(m => {
                 return mailjet
-                .post('contactmetadata')
+                .post("contactmetadata")
                 .request(m);
             }));
         },
@@ -70,27 +70,27 @@ module.exports = (logger, publicApiKey, privateApiKey) => {
             logger.info(`Creating contacts ${name}...`);
 
             let response = await mailjet
-            .post('contactslist')
+            .post("contactslist")
             .request({
-                'Name': name,
+                "Name": name,
             });
 
             let contactListId = response.body.Data[0].ID;
 
             response = await mailjet
-            .post('contact')
-            .action('managemanycontacts')
+            .post("contact")
+            .action("managemanycontacts")
             .request({
-                'ContactsLists': [{
-                    'ListID': contactListId,
-                    'Action': 'addforce',
+                "ContactsLists": [{
+                    "ListID": contactListId,
+                    "Action": "addforce",
                 }],
-                'Contacts': emails.map(({ trainee, training }) => {
+                "Contacts": emails.map(({ trainee, training }) => {
                     return {
-                        'Email': trainee.email,
-                        'Name': `${trainee.firstName} ${trainee.name}`,
-                        'IsExcludedFromCampaigns': false,
-                        'Properties': {
+                        "Email": trainee.email,
+                        "Name": `${trainee.firstName} ${trainee.name}`,
+                        "IsExcludedFromCampaigns": false,
+                        "Properties": {
                             prenom: trainee.firstName,
                             nom: trainee.name,
                         },
@@ -105,27 +105,27 @@ module.exports = (logger, publicApiKey, privateApiKey) => {
 
         createCampaign: async (name, contactListId, templateId) => {
             let response = await mailjet
-            .post('campaigndraft')
+            .post("campaigndraft")
             .request({
-                'Locale': 'fr_FR',
-                'Title': name,
-                'ContactsListID': contactListId,
-                'Subject': 'Donnez votre avis',
-                'Sender': 32595,
-                'SenderName': 'Anotea',
-                'SenderEmail': 'anotea.pe@gmail.com',
-                'ReplyEmail': 'anotea.pe@gmail.com',
-                'TemplateID': templateId,
-                'EditMode': 'tool2',
+                "Locale": "fr_FR",
+                "Title": name,
+                "ContactsListID": contactListId,
+                "Subject": "Donnez votre avis",
+                "Sender": 32595,
+                "SenderName": "Anotea",
+                "SenderEmail": "anotea.pe@gmail.com",
+                "ReplyEmail": "anotea.pe@gmail.com",
+                "TemplateID": templateId,
+                "EditMode": "tool2",
             });
 
             let campaignId = response.body.Data[0].ID;
             let templateContent = await getTemplateContent(templateId);
 
             await mailjet
-            .post('campaigndraft')
+            .post("campaigndraft")
             .id(campaignId)
-            .action('detailcontent')
+            .action("detailcontent")
             .request(templateContent);
 
             return campaignId;
@@ -133,14 +133,14 @@ module.exports = (logger, publicApiKey, privateApiKey) => {
 
         sendCampaign: (campaignId, options = {}) => {
             return mailjet
-            .post('campaigndraft')
+            .post("campaigndraft")
             .id(campaignId)
-            .action(options.dryRun ? 'test' : 'send')
+            .action(options.dryRun ? "test" : "send")
             .request(options.dryRun ? {
-                'Recipients': [
+                "Recipients": [
                     {
-                        'Email': 'bguerout@gmail.com',
-                        'Name': 'Mailjet'
+                        "Email": "bguerout@gmail.com",
+                        "Name": "Mailjet"
                     }
                 ]
             } : {});

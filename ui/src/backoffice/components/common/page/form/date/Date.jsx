@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import { clearDates, convertIntoDatepicker, setEndDate, setStartDate, updateDatepicker } from './datepicker';
-import './Date.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import moment from "moment";
+import { clearDates, convertIntoDatepicker, setEndDate, setStartDate, updateDatepicker } from "./datepicker";
+import "./Date.scss";
 
 export default class Date extends React.Component {
 
@@ -15,7 +15,7 @@ export default class Date extends React.Component {
     };
 
     static defaultProps = {
-        pattern: 'DD/MM/YYYY',
+        pattern: "DD/MM/YYYY",
     };
 
     constructor(props) {
@@ -34,9 +34,9 @@ export default class Date extends React.Component {
                 startView: 2,
                 maxViewMode: 2,
                 autoclose: true,
-                language: 'fr',
+                language: "fr",
                 format: pattern.toLowerCase(),
-                orientation: 'bottom auto',
+                orientation: "bottom auto",
                 startDate: min ? this.formatDate(min) : null,
                 endDate: max ? this.formatDate(max) : null,
                 onChange: () => {
@@ -68,7 +68,7 @@ export default class Date extends React.Component {
         let { pattern } = this.props;
 
         return (
-            <div className={'Date'}>
+            <div className={"Date"}>
                 <input ref={this.reference} placeholder={pattern.toLowerCase()} />
             </div>
         );

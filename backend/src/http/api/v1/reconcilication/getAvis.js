@@ -1,10 +1,10 @@
-const _ = require('lodash');
-const { IdNotFoundError } = require('../../../../core/errors');
-const { createPaginationDTO } = require('../utils/dto');
+const _ = require("lodash");
+const { IdNotFoundError } = require("../../../../core/errors");
+const { createPaginationDTO } = require("../utils/dto");
 
 module.exports = (db, type) => async parameters => {
 
-    let pagination = _.pick(parameters, ['page', 'items_par_page']);
+    let pagination = _.pick(parameters, ["page", "items_par_page"]);
     let limit = pagination.items_par_page;
     let skip = pagination.page * limit;
 
@@ -22,9 +22,9 @@ module.exports = (db, type) => async parameters => {
 
     let sorted = _.orderBy(avis, [a => {
         switch (parameters.tri) {
-            case 'notes':
+            case "notes":
                 return a.notes.global;
-            case 'formation':
+            case "formation":
                 return a.formation.intitule;
             default:
                 return a.formation.action.session.periode.fin;

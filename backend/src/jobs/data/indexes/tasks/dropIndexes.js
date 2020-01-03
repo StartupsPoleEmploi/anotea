@@ -3,7 +3,7 @@ module.exports = async db => {
 
     return Promise.all(
         collections
-        .filter(collection => collection.idIndex && collection.idIndex.ns.startsWith('anotea'))
+        .filter(collection => collection.idIndex && collection.idIndex.ns.startsWith("anotea"))
         .map(collection => db.collection(collection.name).dropIndexes())
     );
 };

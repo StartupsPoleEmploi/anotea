@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const cli = require('commander');
-const { execute } = require('../../job-utils');
-const refreshCertifInfos = require('./tasks/refreshCertifInfos');
+const cli = require("commander");
+const { execute } = require("../../job-utils");
+const refreshCertifInfos = require("./tasks/refreshCertifInfos");
 
 cli
-.option('--file [file]', 'The CSV file with new certifInfos')
+.option("--file [file]", "The CSV file with new certifInfos")
 .parse(process.argv);
 
 execute(async ({ logger, db, exit }) => {
@@ -15,7 +15,7 @@ execute(async ({ logger, db, exit }) => {
     let stats = {};
 
     if (!file) {
-        return exit('Invalid arguments');
+        return exit("Invalid arguments");
     }
 
     logger.info(`Refreshing certifInfos...`);

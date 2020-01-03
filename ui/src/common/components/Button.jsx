@@ -1,9 +1,9 @@
-import React from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import './Button.scss';
-import Tooltip from './Tooltip';
-import AnalyticsContext from './analytics/AnalyticsContext';
+import React from "react";
+import _ from "lodash";
+import PropTypes from "prop-types";
+import "./Button.scss";
+import Tooltip from "./Tooltip";
+import AnalyticsContext from "./analytics/AnalyticsContext";
 
 export default class Button extends React.Component {
 
@@ -33,27 +33,27 @@ export default class Button extends React.Component {
     render() {
         let { trackClick } = this.context;
         let sizeClass = `a-btn-${this.props.size}`;
-        let colorClass = this.props.color ? `a-btn-${this.props.color}` : '';
-        let disabledClass = this.props.disabled ? 'a-btn-disabled' : '';
-        let toggableClass = this.props.toggable ? 'dropdown-toggle' : '';
-        let tooltipClass = this.props.tooltip ? 'Tooltip--holder' : '';
-        let classes = `${sizeClass} ${colorClass} ${disabledClass} ${toggableClass} ${tooltipClass} ${this.props.className || ''}`;
+        let colorClass = this.props.color ? `a-btn-${this.props.color}` : "";
+        let disabledClass = this.props.disabled ? "a-btn-disabled" : "";
+        let toggableClass = this.props.toggable ? "dropdown-toggle" : "";
+        let tooltipClass = this.props.tooltip ? "Tooltip--holder" : "";
+        let classes = `${sizeClass} ${colorClass} ${disabledClass} ${toggableClass} ${tooltipClass} ${this.props.className || ""}`;
         let noop = () => ({});
 
         let ref = this.reference;
         return (
             <button
                 ref={ref}
-                type={this.props.type || 'button'}
+                type={this.props.type || "button"}
                 style={this.props.style || {}}
                 className={`Button ${classes}`}
                 disabled={this.props.disabled}
-                {...(this.props.toggable ? { 'data-toggle': 'dropdown' } : {})}
-                {..._.omit(this.props, ['size', 'color', 'toggable', 'className', 'onClick'])}
+                {...(this.props.toggable ? { "data-toggle": "dropdown" } : {})}
+                {..._.omit(this.props, ["size", "color", "toggable", "className", "onClick"])}
                 onClick={!this.props.onClick ? noop : e => {
                     trackClick(ref.current.textContent);
                     this.props.onClick(e);
-                    if (this.props.type === 'submit') {
+                    if (this.props.type === "submit") {
                         e.preventDefault();
                     }
                 }}

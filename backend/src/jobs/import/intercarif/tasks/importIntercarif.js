@@ -1,20 +1,20 @@
-const fs = require('fs');
-const moment = require('moment');
-const zlib = require('zlib');
-const { Transform } = require('stream');
-const { LineStream } = require('byline');
-const { pipeline, transformObject, writeObject } = require('../../../../core/utils/stream-utils');
-const xmlToJson = require('./utils/xmlToJson');
-const sanitizeJson = require('./utils/sanitizeJson');
+const fs = require("fs");
+const moment = require("moment");
+const zlib = require("zlib");
+const { Transform } = require("stream");
+const { LineStream } = require("byline");
+const { pipeline, transformObject, writeObject } = require("../../../../core/utils/stream-utils");
+const xmlToJson = require("./utils/xmlToJson");
+const sanitizeJson = require("./utils/sanitizeJson");
 
 module.exports = async (db, logger, file, regions, options = {}) => {
 
     let start = moment();
     let total = 0;
-    let xml = '';
+    let xml = "";
     let partial = true;
 
-    await db.collection('intercarif').deleteMany({});
+    await db.collection("intercarif").deleteMany({});
 
     return pipeline([
         fs.createReadStream(file),
@@ -25,20 +25,20 @@ module.exports = async (db, logger, file, regions, options = {}) => {
             transform: function(chunk, encoding, callback) {
                 try {
                     let line = chunk.toString();
-                    if (line.startsWith('<formation')) {
+                    if (line.startsWith("<formation")) {
                         xml = line;
                     } else {
                         xml += line;
                     }
 
-                    if (line.startsWith('</formation')) {
+                    if (line.startsWith("</formation")) {
                         partial = false;
                     }
 
                     if (!partial) {
                         this.push(xml);
                         partial = true;
-                        xml = '';
+                        xml = "";
                     }
                     callback();
                 } catch (e) {
@@ -49,9 +49,9 @@ module.exports = async (db, logger, file, regions, options = {}) => {
         transformObject(xmlElement => xmlToJson(xmlElement)),
         transformObject(json => sanitizeJson(json, regions)),
         writeObject(json => {
-            let timeElapsed = moment().diff(start, 'seconds');
+            let timeElapsed = moment().diff(start, "seconds");
             logger.debug(`New formation inserted (${++total} documents / time elapsed: ${timeElapsed}s)`);
-            return db.collection('intercarif').insertOne(json);
+            return db.collection("intercarif").insertOne(json);
         })
     ]);
 };

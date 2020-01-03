@@ -1,15 +1,15 @@
-const _ = require('lodash');
-const Joi = require('joi');
-const moment = require('moment');
-const { isPoleEmploi, getCodeFinanceurs } = require('../../../../core/utils/financeurs');
-const { arrayOf } = require('../../../utils/validators-utils');
+const _ = require("lodash");
+const Joi = require("joi");
+const moment = require("moment");
+const { isPoleEmploi, getCodeFinanceurs } = require("../../../../core/utils/financeurs");
+const { arrayOf } = require("../../../utils/validators-utils");
 
 module.exports = (db, regions, user) => {
 
     let region = regions.findRegionByCodeRegion(user.codeRegion);
 
     return {
-        type: 'financeur',
+        type: "financeur",
         getUser: () => user,
         getShield: () => ({}),
         validators: {
@@ -26,11 +26,11 @@ module.exports = (db, regions, user) => {
             },
             filters: () => {
                 return {
-                    statuses: arrayOf(Joi.string().valid(['validated', 'rejected', 'reported', 'archived'])),
-                    reponseStatuses: arrayOf(Joi.string().valid(['none', 'validated', 'rejected'])),
-                    qualification: Joi.string().valid(['all', 'négatif', 'positif']),
+                    statuses: arrayOf(Joi.string().valid(["validated", "rejected", "reported", "archived"])),
+                    reponseStatuses: arrayOf(Joi.string().valid(["none", "validated", "rejected"])),
+                    qualification: Joi.string().valid(["all", "négatif", "positif"]),
                     commentaires: Joi.bool(),
-                    sortBy: Joi.string().allow(['date', 'lastStatusUpdate']),
+                    sortBy: Joi.string().allow(["date", "lastStatusUpdate"]),
                 };
             },
             pagination: () => {
@@ -45,32 +45,32 @@ module.exports = (db, regions, user) => {
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
 
                 return {
-                    'codeRegion': user.codeRegion,
-                    'training.codeFinanceur': financeur,
-                    ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
-                    ...(codeFinanceur ? { 'training.codeFinanceur': codeFinanceur } : {}),
-                    ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
-                    ...(idFormation ? { 'training.idFormation': idFormation } : {}),
-                    ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
-                    ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+                    "codeRegion": user.codeRegion,
+                    "training.codeFinanceur": financeur,
+                    ...(siren ? { "training.organisation.siret": new RegExp(`^${siren}`) } : {}),
+                    ...(codeFinanceur ? { "training.codeFinanceur": codeFinanceur } : {}),
+                    ...(departement ? { "training.place.postalCode": new RegExp(`^${departement}`) } : {}),
+                    ...(idFormation ? { "training.idFormation": idFormation } : {}),
+                    ...(startDate ? { "training.startDate": { $gte: moment(startDate).toDate() } } : {}),
+                    ...(scheduledEndDate ? { "training.scheduledEndDate": { $lte: moment(scheduledEndDate).toDate() } } : {}),
                 };
             },
             buildAvisQuery: async parameters => {
                 let {
                     departement, codeFinanceur, siren, idFormation, startDate, scheduledEndDate,
-                    commentaires, qualification, statuses = ['validated', 'rejected', 'reported', 'archived']
+                    commentaires, qualification, statuses = ["validated", "rejected", "reported", "archived"]
                 } = parameters;
 
                 let financeur = isPoleEmploi(user.codeFinanceur) ? (codeFinanceur || { $exists: true }) : user.codeFinanceur;
 
                 return {
-                    'codeRegion': user.codeRegion,
-                    'training.codeFinanceur': financeur,
-                    ...(siren ? { 'training.organisation.siret': new RegExp(`^${siren}`) } : {}),
-                    ...(departement ? { 'training.place.postalCode': new RegExp(`^${departement}`) } : {}),
-                    ...(idFormation ? { 'training.idFormation': idFormation } : {}),
-                    ...(startDate ? { 'training.startDate': { $gte: moment(startDate).toDate() } } : {}),
-                    ...(scheduledEndDate ? { 'training.scheduledEndDate': { $lte: moment(scheduledEndDate).toDate() } } : {}),
+                    "codeRegion": user.codeRegion,
+                    "training.codeFinanceur": financeur,
+                    ...(siren ? { "training.organisation.siret": new RegExp(`^${siren}`) } : {}),
+                    ...(departement ? { "training.place.postalCode": new RegExp(`^${departement}`) } : {}),
+                    ...(idFormation ? { "training.idFormation": idFormation } : {}),
+                    ...(startDate ? { "training.startDate": { $gte: moment(startDate).toDate() } } : {}),
+                    ...(scheduledEndDate ? { "training.scheduledEndDate": { $lte: moment(scheduledEndDate).toDate() } } : {}),
                     ...(qualification ? { qualification } : {}),
                     ...(_.isBoolean(commentaires) ? { comment: { $exists: commentaires } } : {}),
                     ...(statuses ? { status: { $in: statuses } } : {}),

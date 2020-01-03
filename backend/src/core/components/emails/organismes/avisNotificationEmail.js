@@ -1,8 +1,8 @@
-let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
+let getOrganismeEmail = require("../../../utils/getOrganismeEmail");
 
 module.exports = (db, regions, mailer) => {
 
-    const templateName = 'avisNotificationEmail';
+    const templateName = "avisNotificationEmail";
 
     let render = (organisme, comment) => {
         return mailer.render(__dirname, templateName, {
@@ -17,7 +17,7 @@ module.exports = (db, regions, mailer) => {
         send: async (organisme, comment, nbUnreadComments) => {
 
             let onSuccess = () => {
-                return db.collection('accounts').updateOne({ _id: organisme._id }, {
+                return db.collection("accounts").updateOne({ _id: organisme._id }, {
                     $set: {
                         newCommentsNotificationEmailSentDate: new Date(),
                     }
@@ -29,7 +29,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 getOrganismeEmail(organisme),
                 {
-                    subject: `Pôle Emploi - Vous avez ${nbUnreadComments || 'des'} nouveaux avis stagiaires`,
+                    subject: `Pôle Emploi - Vous avez ${nbUnreadComments || "des"} nouveaux avis stagiaires`,
                     body: await render(organisme, comment),
                 },
             )

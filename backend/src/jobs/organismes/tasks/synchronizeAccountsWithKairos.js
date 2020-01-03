@@ -1,7 +1,7 @@
-const uuid = require('node-uuid');
-const _ = require('lodash');
-const { writeObject, pipeline } = require('../../../core/utils/stream-utils');
-const getOrganismesFromKairosCSV = require('./kairos/getOrganismesFromKairosCSV');
+const uuid = require("node-uuid");
+const _ = require("lodash");
+const { writeObject, pipeline } = require("../../../core/utils/stream-utils");
+const getOrganismesFromKairosCSV = require("./kairos/getOrganismesFromKairosCSV");
 
 module.exports = async (db, logger, file) => {
 
@@ -18,10 +18,10 @@ module.exports = async (db, logger, file) => {
 
             try {
                 let id = parseInt(kairos.siret, 10);
-                let account = await db.collection('accounts').findOne({ _id: id });
+                let account = await db.collection("accounts").findOne({ _id: id });
                 let kairosCourriel = kairos.emailRGC;
 
-                let results = await db.collection('accounts').updateOne(
+                let results = await db.collection("accounts").updateOne(
                     { _id: id },
                     {
                         $setOnInsert: {
@@ -36,13 +36,13 @@ module.exports = async (db, logger, file) => {
                         },
                         $addToSet: {
                             ...(kairosCourriel ? { courriels: kairosCourriel } : {}),
-                            sources: 'kairos',
+                            sources: "kairos",
                         },
                         $set: {
-                            profile: 'organisme',
-                            ...(_.get(account, 'kairosCourriel') && kairosCourriel ? {} : { 'kairosCourriel': kairosCourriel }),
-                            ...(_.get(account, 'meta.kairos') ? {} : { 'meta.kairos.eligible': false }),
-                            ...(_.get(account, 'meta.siretAsString') ? {} : { 'meta.siretAsString': kairos.siret }),
+                            profile: "organisme",
+                            ...(_.get(account, "kairosCourriel") && kairosCourriel ? {} : { "kairosCourriel": kairosCourriel }),
+                            ...(_.get(account, "meta.kairos") ? {} : { "meta.kairos.eligible": false }),
+                            ...(_.get(account, "meta.siretAsString") ? {} : { "meta.siretAsString": kairos.siret }),
                         },
                     }
                     , { upsert: true }

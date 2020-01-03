@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import star from './Star.png';
-import './Star.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import star from "./Star.png";
+import "./Star.scss";
 
 const Star = props => {
-    let className = `Star ${props.className || ''}`;
+    let className = `Star ${props.className || ""}`;
     if (!props.svg) {
         return (<img src={star} className={className} alt="star" />);
     }

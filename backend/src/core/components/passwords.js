@@ -1,19 +1,19 @@
-const crypto = require('crypto');
-const bcrypt = require('bcryptjs');
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 
 const ROUNDS = 10;
 
 module.exports = configuration => {
 
     const getSHA256PasswordHashSync = password => {
-        return crypto.createHmac('sha256', configuration.security.secret)
+        return crypto.createHmac("sha256", configuration.security.secret)
         .update(password)
-        .digest('hex');
+        .digest("hex");
     };
 
     return {
         isPasswordStrongEnough: password => {
-            if (password === null || password === undefined || password === '') {
+            if (password === null || password === undefined || password === "") {
                 return false;
             }
             // length greater or equal 6

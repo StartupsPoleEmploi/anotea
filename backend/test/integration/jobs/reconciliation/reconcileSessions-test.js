@@ -1,32 +1,32 @@
-const assert = require('assert');
-const logger = require('../../../helpers/components/fake-logger');
-const _ = require('lodash');
-const ObjectID = require('mongodb').ObjectID;
-const { withMongoDB } = require('../../../helpers/with-mongodb');
-const { newComment, randomize } = require('../../../helpers/data/dataset');
-const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
+const assert = require("assert");
+const logger = require("../../../helpers/components/fake-logger");
+const _ = require("lodash");
+const ObjectID = require("mongodb").ObjectID;
+const { withMongoDB } = require("../../../helpers/with-mongodb");
+const { newComment, randomize } = require("../../../helpers/data/dataset");
+const reconcile = require("../../../../src/jobs/reconciliation/tasks/reconcile");
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importIntercarif }) => {
 
-    it('should reconcile sessions with avis', async () => {
+    it("should reconcile sessions with avis", async () => {
 
         let db = await getTestDatabase();
         let date = new Date();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         let commentId = new ObjectID();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 _id: commentId,
                 pseudo,
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             }, date)),
@@ -34,16 +34,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection("sessionsReconciliees").findOne();
         delete session.meta.import_date;
         assert.deepStrictEqual(session, {
-            _id: 'F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX',
-            numero: 'SE_XXXXXX',
-            region: '11',
-            code_region: '11',
+            _id: "F_XX_XX|AC_XX_XXXXXX|SE_XXXXXX",
+            numero: "SE_XXXXXX",
+            region: "11",
+            code_region: "11",
             periode: {
-                debut: new Date('2017-10-30T00:00:00.000Z'),
-                fin: new Date('2018-06-01T00:00:00.000Z'),
+                debut: new Date("2017-10-30T00:00:00.000Z"),
+                fin: new Date("2018-06-01T00:00:00.000Z"),
             },
             avis: [
                 {
@@ -51,8 +51,8 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     pseudo: pseudo,
                     date: date,
                     commentaire: {
-                        titre: 'Génial',
-                        texte: 'Super formation.',
+                        titre: "Génial",
+                        texte: "Super formation.",
                     },
                     notes: {
                         accueil: 3,
@@ -63,32 +63,32 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         global: 2.4
                     },
                     formation: {
-                        numero: 'F_XX_XX',
-                        intitule: 'Développeur',
+                        numero: "F_XX_XX",
+                        intitule: "Développeur",
                         domaine_formation: {
                             formacodes: [
-                                '22403'
+                                "22403"
                             ]
                         },
                         certifications: [
                             {
-                                certif_info: '80735'
+                                certif_info: "80735"
                             }
                         ],
                         action: {
-                            numero: 'AC_XX_XXXXXX',
+                            numero: "AC_XX_XXXXXX",
                             lieu_de_formation: {
-                                code_postal: '75019',
-                                ville: 'Paris'
+                                code_postal: "75019",
+                                ville: "Paris"
                             },
                             organisme_financeurs: [],
                             organisme_formateur: {
-                                raison_sociale: 'INSTITUT DE FORMATION',
-                                siret: '22222222222222',
-                                numero: '14_OF_XXXXXXXXXX'
+                                raison_sociale: "INSTITUT DE FORMATION",
+                                siret: "22222222222222",
+                                numero: "14_OF_XXXXXXXXXX"
                             },
                             session: {
-                                numero: 'SE_XXXXXX',
+                                numero: "SE_XXXXXX",
                                 periode: {
                                     debut: date,
                                     fin: date
@@ -116,81 +116,81 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                 }
             },
             formation: {
-                numero: 'F_XX_XX',
-                intitule: 'Développeur web',
-                objectif_formation: 'L\'objectif est d\'obtenir la qualification de développeur web, pour un accès à l\'emploi.',
+                numero: "F_XX_XX",
+                intitule: "Développeur web",
+                objectif_formation: "L'objectif est d'obtenir la qualification de développeur web, pour un accès à l'emploi.",
                 domaine_formation: {
-                    formacodes: ['22403']
+                    formacodes: ["22403"]
                 },
                 certifications: {
-                    certifinfos: ['80735']
+                    certifinfos: ["80735"]
                 },
                 organisme_responsable: {
-                    numero: 'OR_XX_XXX',
-                    raison_sociale: 'Centre de formation Anotéa',
-                    siret: '11111111111111',
+                    numero: "OR_XX_XXX",
+                    raison_sociale: "Centre de formation Anotéa",
+                    siret: "11111111111111",
                 },
                 action: {
-                    numero: 'AC_XX_XXXXXX',
+                    numero: "AC_XX_XXXXXX",
                     lieu_de_formation: {
-                        code_postal: '75019',
-                        ville: 'Paris'
+                        code_postal: "75019",
+                        ville: "Paris"
                     },
                     organisme_financeurs: [
-                        '2'
+                        "2"
                     ],
                     organisme_formateur: {
-                        raison_sociale: 'Anotea Formation Paris',
-                        siret: '22222222222222',
-                        numero: 'OF_XXX'
+                        raison_sociale: "Anotea Formation Paris",
+                        siret: "22222222222222",
+                        numero: "OF_XXX"
                     }
                 }
             },
             meta: {
                 source: {
-                    numero_action: 'AC_XX_XXXXXX',
-                    numero_formation: 'F_XX_XX',
-                    numero_session: 'SE_XXXXXX',
-                    type: 'intercarif',
+                    numero_action: "AC_XX_XXXXXX",
+                    numero_formation: "F_XX_XX",
+                    numero_session: "SE_XXXXXX",
+                    type: "intercarif",
                 },
                 reconciliation: {
-                    organisme_formateur: '22222222222222',
-                    lieu_de_formation: '75019',
-                    certifinfos: ['80735'],
-                    formacodes: ['22403']
+                    organisme_formateur: "22222222222222",
+                    lieu_de_formation: "75019",
+                    certifinfos: ["80735"],
+                    formacodes: ["22403"]
                 },
             }
         });
     });
 
-    it('should reconcile sessions with avis (same certifInfos / ignore formacodes)', async () => {
+    it("should reconcile sessions with avis (same certifInfos / ignore formacodes)", async () => {
 
         let db = await getTestDatabase();
 
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                _id: 'ABCD',
+            insertIntoDatabase("comment", newComment({
+                _id: "ABCD",
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'], // match
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"], // match
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['11111'], //other certification than 80735
+                    formacodes: ["22403"],
+                    certifInfos: ["11111"], //other certification than 80735
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
@@ -198,23 +198,23 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection("sessionsReconciliees").findOne();
         assert.deepStrictEqual(session.avis.length, 1);
-        assert.deepStrictEqual(session.avis[0].id, 'ABCD');
+        assert.deepStrictEqual(session.avis[0].id, "ABCD");
     });
 
-    it('should reconcile sessions with avis (same formacodes)', async () => {
+    it("should reconcile sessions with avis (same formacodes)", async () => {
 
         let db = await getTestDatabase();
         let noCertification = newComment({
             training: {
-                formacodes: ['22403'],
+                formacodes: ["22403"],
                 certifInfos: [],
                 organisation: {
-                    siret: '22222222222222',
+                    siret: "22222222222222",
                 },
                 place: {
-                    postalCode: '75019',
+                    postalCode: "75019",
                 },
             }
         });
@@ -222,16 +222,16 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', noCertification),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", noCertification),
+            insertIntoDatabase("comment", newComment({
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['22222'], //other certification than 80735
+                    formacodes: ["22403"],
+                    certifInfos: ["22222"], //other certification than 80735
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
@@ -239,25 +239,25 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection("sessionsReconciliees").findOne();
         assert.deepStrictEqual(session.avis.length, 2);
     });
 
-    it('should reconcile actions with avis (siren)', async () => {
+    it("should reconcile actions with avis (siren)", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                _id: '1234',
+            insertIntoDatabase("comment", newComment({
+                _id: "1234",
                 training: {
-                    formacodes: ['22403'],
+                    formacodes: ["22403"],
                     certifInfos: [],
                     organisation: {
-                        siret: '22222222244444',
+                        siret: "22222222244444",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
@@ -265,27 +265,27 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let action = await db.collection('sessionsReconciliees').findOne();
+        let action = await db.collection("sessionsReconciliees").findOne();
         assert.deepStrictEqual(action.avis.length, 1);
-        assert.deepStrictEqual(action.avis[0].id, '1234');
+        assert.deepStrictEqual(action.avis[0].id, "1234");
     });
 
-    it('should reconcile actions with avis (ignore archived)', async () => {
+    it("should reconcile actions with avis (ignore archived)", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                _id: '1234',
-                status: 'archived',
+            insertIntoDatabase("comment", newComment({
+                _id: "1234",
+                status: "archived",
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
@@ -293,50 +293,50 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let action = await db.collection('sessionsReconciliees').findOne();
+        let action = await db.collection("sessionsReconciliees").findOne();
         assert.deepStrictEqual(action.avis.length, 0);
     });
 
-    it('should ignore no matching avis', async () => {
+    it("should ignore no matching avis", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: 'XXXXXXXXXXXXXX',
+                        siret: "XXXXXXXXXXXXXX",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
-                    formacodes: ['XXXXX'],
+                    formacodes: ["XXXXX"],
                     certifInfos: [{
-                        code: 'YYYYY',
+                        code: "YYYYY",
                     }],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75018',
+                        postalCode: "75018",
                     },
                 }
             })),
@@ -344,66 +344,66 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection("sessionsReconciliees").findOne();
         assert.strictEqual(session.avis.length, 0);
     });
 
-    it('should ignore avis from other session', async () => {
+    it("should ignore avis from other session", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: 'YYYYYYYYYYYYYY',
+                        siret: "YYYYYYYYYYYYYY",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
         ]);
 
-        let intercarif = await db.collection('intercarif').findOne();
+        let intercarif = await db.collection("intercarif").findOne();
         //Création d'une action dans la même formation mais dispensé par un autre organisme.
         let newAction = _.cloneDeep(intercarif.actions[0]);
-        newAction._attributes.numero = 'AC_YY_YYYYYY';
-        newAction.organisme_formateur.siret_formateur.siret = 'YYYYYYYYYYYYYY';
-        newAction.sessions[0]._attributes.numero = 'SE_YYYYYY';
-        await db.collection('intercarif').updateOne(
+        newAction._attributes.numero = "AC_YY_YYYYYY";
+        newAction.organisme_formateur.siret_formateur.siret = "YYYYYYYYYYYYYY";
+        newAction.sessions[0]._attributes.numero = "SE_YYYYYY";
+        await db.collection("intercarif").updateOne(
             {
-                '_attributes.numero': 'F_XX_XX'
+                "_attributes.numero": "F_XX_XX"
             },
             {
                 $push: {
-                    'actions': newAction
+                    "actions": newAction
                 }
             }
         );
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne({ numero: 'SE_XXXXXX' });
+        let session = await db.collection("sessionsReconciliees").findOne({ numero: "SE_XXXXXX" });
         assert.strictEqual(session.avis.length, 0);
     });
 
-    it('should round notes during reconcile', async () => {
+    it("should round notes during reconcile", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 },
                 rates: {
@@ -415,15 +415,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     global: 5,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 },
                 rates: {
@@ -435,15 +435,15 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     global: 5,
                 },
             })),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 },
                 rates: {
@@ -459,7 +459,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection("sessionsReconciliees").findOne();
         assert.deepStrictEqual(session.score, {
             nb_avis: 3,
             notes: {
@@ -479,7 +479,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         });
     });
 
-    it('should create session with empty avis list when no comment can be found', async () => {
+    it("should create session with empty avis list when no comment can be found", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
@@ -488,26 +488,26 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection("sessionsReconciliees").findOne();
         assert.deepStrictEqual(session.score, { nb_avis: 0 });
         assert.deepStrictEqual(session.avis, []);
     });
 
-    it('should reconcile comments with same formace/siret/code_postal than the session', async () => {
+    it("should reconcile comments with same formace/siret/code_postal than the session", async () => {
         let db = await getTestDatabase();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 pseudo,
                 training: {
-                    formacodes: ['22403'],
+                    formacodes: ["22403"],
                     certifInfos: [],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
@@ -515,27 +515,27 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let count = await db.collection('sessionsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
+        let count = await db.collection("sessionsReconciliees").countDocuments({ "avis.pseudo": pseudo });
         assert.strictEqual(count, 1);
 
     });
 
-    it('should reconcile comments with same certifinfo/siret/code_postal than the session', async () => {
+    it("should reconcile comments with same certifinfo/siret/code_postal than the session", async () => {
 
         let db = await getTestDatabase();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
+            insertIntoDatabase("comment", newComment({
                 pseudo,
                 training: {
                     formacodes: [],
-                    certifInfos: ['80735'],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 }
             })),
@@ -543,54 +543,54 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let count = await db.collection('sessionsReconciliees').countDocuments({ 'avis.pseudo': pseudo });
+        let count = await db.collection("sessionsReconciliees").countDocuments({ "avis.pseudo": pseudo });
         assert.strictEqual(count, 1);
     });
 
-    it('should reconcile avis (notes)', async () => {
+    it("should reconcile avis (notes)", async () => {
 
         let db = await getTestDatabase();
         let comment = newComment({
             training: {
-                certifInfos: ['80735'],
+                certifInfos: ["80735"],
                 organisation: {
-                    siret: '22222222222222',
+                    siret: "22222222222222",
                 },
                 place: {
-                    postalCode: '75019',
+                    postalCode: "75019",
                 },
             },
-            status: 'validated',
+            status: "validated",
         });
         delete comment.comment;
 
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', comment),
+            insertIntoDatabase("comment", comment),
         ]);
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection("sessionsReconciliees").findOne();
         assert.strictEqual(session.avis.length, 1);
         assert.strictEqual(session.avis[0].commentaire, undefined);
     });
 
-    it('should ignore not yet validated comment', async () => {
+    it("should ignore not yet validated comment", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                status: 'none',
+            insertIntoDatabase("comment", newComment({
+                status: "none",
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 },
             })),
@@ -598,29 +598,29 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection("sessionsReconciliees").findOne();
         assert.deepStrictEqual(session.avis, []);
     });
 
-    it('should reconcile rejected comment', async () => {
+    it("should reconcile rejected comment", async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
             importIntercarif(),
-            insertIntoDatabase('comment', newComment({
-                status: 'rejected',
+            insertIntoDatabase("comment", newComment({
+                status: "rejected",
                 comment: {
-                    title: 'WTF',
-                    text: 'WTF',
+                    title: "WTF",
+                    text: "WTF",
                 },
                 training: {
-                    formacodes: ['22403'],
-                    certifInfos: ['80735'],
+                    formacodes: ["22403"],
+                    certifInfos: ["80735"],
                     organisation: {
-                        siret: '22222222222222',
+                        siret: "22222222222222",
                     },
                     place: {
-                        postalCode: '75019',
+                        postalCode: "75019",
                     },
                 },
             })),
@@ -628,7 +628,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await reconcile(db, logger);
 
-        let session = await db.collection('sessionsReconciliees').findOne();
+        let session = await db.collection("sessionsReconciliees").findOne();
         assert.strictEqual(session.avis.length, 1);
         assert.strictEqual(session.avis[0].commentaires, undefined, true);
     });

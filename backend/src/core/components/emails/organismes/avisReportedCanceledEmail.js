@@ -1,8 +1,8 @@
-let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
+let getOrganismeEmail = require("../../../utils/getOrganismeEmail");
 
 module.exports = (db, regions, mailer) => {
 
-    const templateName = 'avisReportedCanceledEmail';
+    const templateName = "avisReportedCanceledEmail";
 
     let render = (organisme, comment) => {
         return mailer.render(__dirname, templateName, {
@@ -20,7 +20,7 @@ module.exports = (db, regions, mailer) => {
             return mailer.createRegionalMailer(region).sendEmail(
                 getOrganismeEmail(organisme),
                 {
-                    subject: 'Pôle Emploi - Avis signalé dans votre Espace Anotéa',
+                    subject: "Pôle Emploi - Avis signalé dans votre Espace Anotéa",
                     body: await render(organisme, comment),
                 },
             );

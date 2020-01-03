@@ -7,14 +7,14 @@ class SendAction {
 
     getQuery() {
         return {
-            'sourceIDF': null,
-            'mailSent': false,
-            'avisCreated': false,
-            'unsubscribe': false,
-            'training.organisation.siret': { $ne: '' },
-            'training.scheduledEndDate': { $lte: new Date() },
-            ...(this.filters.codeRegions ? { 'codeRegion': { $in: this.filters.codeRegions } } : {}),
-            ...(this.filters.campaign ? { 'campaign': this.filters.campaign } : {}),
+            "sourceIDF": null,
+            "mailSent": false,
+            "avisCreated": false,
+            "unsubscribe": false,
+            "training.organisation.siret": { $ne: "" },
+            "training.scheduledEndDate": { $lte: new Date() },
+            ...(this.filters.codeRegions ? { "codeRegion": { $in: this.filters.codeRegions } } : {}),
+            ...(this.filters.campaign ? { "campaign": this.filters.campaign } : {}),
         };
     }
 }

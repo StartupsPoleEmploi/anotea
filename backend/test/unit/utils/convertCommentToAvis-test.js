@@ -1,15 +1,15 @@
-const assert = require('assert');
-const ObjectID = require('mongodb').ObjectID;
-const convertCommentToAvis = require('../../../src/core/utils/convertCommentToAvis');
-const { newComment, randomize } = require('../../helpers/data/dataset');
+const assert = require("assert");
+const ObjectID = require("mongodb").ObjectID;
+const convertCommentToAvis = require("../../../src/core/utils/convertCommentToAvis");
+const { newComment, randomize } = require("../../helpers/data/dataset");
 
 describe(__filename, () => {
 
-    it('comment should be mapped into avis', async () => {
+    it("comment should be mapped into avis", async () => {
 
-        let numeroAction = '14_TE_1234567890';
+        let numeroAction = "14_TE_1234567890";
         let date = new Date();
-        let pseudo = randomize('pseudo');
+        let pseudo = randomize("pseudo");
         let comment = newComment({
             _id: 1234,
             pseudo,
@@ -27,8 +27,8 @@ describe(__filename, () => {
             id: 1234,
             pseudo,
             commentaire: {
-                titre: 'Génial',
-                texte: 'Super formation.',
+                titre: "Génial",
+                texte: "Super formation.",
             },
             date: date,
             notes: {
@@ -40,28 +40,28 @@ describe(__filename, () => {
                 global: 2.4
             },
             formation: {
-                numero: 'F_XX_XX',
+                numero: "F_XX_XX",
                 domaine_formation: {
-                    formacodes: ['46242'],
+                    formacodes: ["46242"],
                 },
-                intitule: 'Développeur',
+                intitule: "Développeur",
                 certifications: [{
-                    certif_info: '78997'
+                    certif_info: "78997"
                 }],
                 action: {
                     numero: numeroAction,
                     lieu_de_formation: {
-                        code_postal: '75011',
-                        ville: 'Paris'
+                        code_postal: "75011",
+                        ville: "Paris"
                     },
                     organisme_financeurs: [],
                     organisme_formateur: {
-                        raison_sociale: 'INSTITUT DE FORMATION',
-                        siret: '11111111111111',
-                        numero: '14_OF_XXXXXXXXXX',
+                        raison_sociale: "INSTITUT DE FORMATION",
+                        siret: "11111111111111",
+                        numero: "14_OF_XXXXXXXXXX",
                     },
                     session: {
-                        numero: 'SE_XXXXXX',
+                        numero: "SE_XXXXXX",
                         periode: {
                             debut: date,
                             fin: date
@@ -72,28 +72,28 @@ describe(__filename, () => {
         });
     });
 
-    it('should add réponse', async () => {
+    it("should add réponse", async () => {
 
         let comment = newComment({
             reponse: {
-                text: 'Voici notre réponse',
-                status: 'validated',
+                text: "Voici notre réponse",
+                status: "validated",
             },
         });
 
         let data = convertCommentToAvis(comment);
 
         assert.deepStrictEqual(data.reponse, {
-            texte: 'Voici notre réponse',
+            texte: "Voici notre réponse",
         });
     });
 
-    it('should ignore réponse (not moderated)', async () => {
+    it("should ignore réponse (not moderated)", async () => {
 
         let comment = newComment({
             reponse: {
-                text: 'Voici notre réponse',
-                status: 'none',
+                text: "Voici notre réponse",
+                status: "none",
             },
         });
 
@@ -102,12 +102,12 @@ describe(__filename, () => {
         assert.strictEqual(data.reponse, undefined);
     });
 
-    it('should ignore réponse (rejected)', async () => {
+    it("should ignore réponse (rejected)", async () => {
 
         let comment = newComment({
             reponse: {
-                text: 'Voici notre réponse',
-                status: 'rejected',
+                text: "Voici notre réponse",
+                status: "rejected",
             },
         });
 
@@ -116,13 +116,13 @@ describe(__filename, () => {
         assert.strictEqual(data.reponse, undefined);
     });
 
-    it('should ignore réponse (avis rejected)', async () => {
+    it("should ignore réponse (avis rejected)", async () => {
 
         let comment = newComment({
-            status: 'rejected',
+            status: "rejected",
             reponse: {
-                text: 'Voici notre réponse',
-                status: 'validated',
+                text: "Voici notre réponse",
+                status: "validated",
             },
         });
 
@@ -131,7 +131,7 @@ describe(__filename, () => {
         assert.strictEqual(data.reponse, undefined);
     });
 
-    it('should set undefined when commentaire is missing', async () => {
+    it("should set undefined when commentaire is missing", async () => {
 
         let comment = newComment({
             comment: null,
@@ -142,12 +142,12 @@ describe(__filename, () => {
         assert.strictEqual(data.commentaire, undefined);
     });
 
-    it('should handle numeroAction=NULL', async () => {
+    it("should handle numeroAction=NULL", async () => {
 
         let comment = newComment({
             training: {
                 infoCarif: {
-                    numeroAction: 'NULL'
+                    numeroAction: "NULL"
                 }
             }
         });
@@ -157,7 +157,7 @@ describe(__filename, () => {
         assert.strictEqual(data.formation.action.numero, undefined);
     });
 
-    it('should handle empty training.certifInfos', async () => {
+    it("should handle empty training.certifInfos", async () => {
 
         let comment = newComment();
         comment.training.certifInfos = [];
@@ -168,7 +168,7 @@ describe(__filename, () => {
     });
 
 
-    it('should use _id when date property is missing', async () => {
+    it("should use _id when date property is missing", async () => {
 
         let comment = newComment({
             _id: ObjectID.createFromTime(1),
@@ -177,17 +177,17 @@ describe(__filename, () => {
 
         let data = convertCommentToAvis(comment);
 
-        assert.deepStrictEqual(new Date(data.date).toISOString(), '1970-01-01T00:00:01.000Z');
+        assert.deepStrictEqual(new Date(data.date).toISOString(), "1970-01-01T00:00:01.000Z");
     });
 
 
-    it('should ignore title when titleMasked is true', async () => {
+    it("should ignore title when titleMasked is true", async () => {
 
         let comment = newComment({
             comment: {
                 titleMasked: true,
-                title: 'Génial',
-                text: 'Super formation.'
+                title: "Génial",
+                text: "Super formation."
             },
         });
 
@@ -196,11 +196,11 @@ describe(__filename, () => {
         assert.deepStrictEqual(data.commentaire.titre, undefined);
     });
 
-    it('should ignore pseudo when pseudoMasked is true', async () => {
+    it("should ignore pseudo when pseudoMasked is true", async () => {
 
         let comment = newComment({
             pseudoMasked: true,
-            pseudo: 'hacker',
+            pseudo: "hacker",
         });
 
         let data = convertCommentToAvis(comment);
@@ -208,18 +208,18 @@ describe(__filename, () => {
         assert.deepStrictEqual(data.pseudo, undefined);
     });
 
-    it('should return edited comment when comment has been edited', async () => {
+    it("should return edited comment when comment has been edited", async () => {
 
         let comment = newComment({
             comment: {
-                title: 'Génial',
-                text: 'Formation super géniale.',
+                title: "Génial",
+                text: "Formation super géniale.",
             },
             meta: {
                 history: [
                     {
                         comment: {
-                            text: 'Formation géniale.'
+                            text: "Formation géniale."
                         }
                     }
                 ]
@@ -228,16 +228,16 @@ describe(__filename, () => {
 
         let data = convertCommentToAvis(comment);
 
-        assert.deepStrictEqual(data.commentaire.texte, 'Formation super géniale.');
+        assert.deepStrictEqual(data.commentaire.texte, "Formation super géniale.");
     });
 
-    it('should not return commentaire when avis has been rejected', async () => {
+    it("should not return commentaire when avis has been rejected", async () => {
 
         let comment = newComment({
-            status: 'rejected',
+            status: "rejected",
             comment: {
-                title: 'Génial',
-                text: 'Formation géniale.'
+                title: "Génial",
+                text: "Formation géniale."
             },
         });
 
@@ -246,13 +246,13 @@ describe(__filename, () => {
         assert.deepStrictEqual(data.commentaire, undefined);
     });
 
-    it('should not return commentaire when avis has not been moderated yet', async () => {
+    it("should not return commentaire when avis has not been moderated yet", async () => {
 
         let comment = newComment({
-            status: 'none',
+            status: "none",
             comment: {
-                title: 'Génial',
-                text: 'Formation géniale.'
+                title: "Génial",
+                text: "Formation géniale."
             },
         });
 
@@ -261,14 +261,14 @@ describe(__filename, () => {
         assert.deepStrictEqual(data.commentaire, undefined);
     });
 
-    it('should not return pseudo when avis has been rejected', async () => {
+    it("should not return pseudo when avis has been rejected", async () => {
 
         let comment = newComment({
-            status: 'rejected',
-            pseudo: 'hacker',
+            status: "rejected",
+            pseudo: "hacker",
             comment: {
-                title: 'Génial',
-                text: 'Formation géniale.'
+                title: "Génial",
+                text: "Formation géniale."
             },
         });
 

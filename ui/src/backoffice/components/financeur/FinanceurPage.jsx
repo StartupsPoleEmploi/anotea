@@ -1,19 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import moment from 'moment';
-import { Route } from 'react-router-dom';
-import Page from '../common/page/Page';
-import { Tab, Tabs } from '../common/page/tabs/Tabs';
-import { Form, Periode, Select } from '../common/page/form/Form';
-import { getSirens } from '../../services/sirensService';
-import { getFormations } from '../../services/formationsService';
-import { getDepartements } from '../../services/departementsService';
-import FINANCEURS from '../../utils/financeurs';
-import AppContext from '../../BackofficeContext';
-import Button from '../../../common/components/Button';
-import FinanceurAvisPanel from './components/FinanceurAvisPanel';
-import FinanceurStatsPanel from './components/FinanceurStatsPanel';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import moment from "moment";
+import { Route } from "react-router-dom";
+import Page from "../common/page/Page";
+import { Tab, Tabs } from "../common/page/tabs/Tabs";
+import { Form, Periode, Select } from "../common/page/form/Form";
+import { getSirens } from "../../services/sirensService";
+import { getFormations } from "../../services/formationsService";
+import { getDepartements } from "../../services/departementsService";
+import FINANCEURS from "../../utils/financeurs";
+import AppContext from "../../BackofficeContext";
+import Button from "../../../common/components/Button";
+import FinanceurAvisPanel from "./components/FinanceurAvisPanel";
+import FinanceurStatsPanel from "./components/FinanceurStatsPanel";
 
 export default class FinanceurPage extends React.Component {
 
@@ -61,34 +61,34 @@ export default class FinanceurPage extends React.Component {
 
     isPoleEmploi() {
         let { account } = this.context;
-        return account.codeFinanceur === '4';
+        return account.codeFinanceur === "4";
     }
 
     async componentDidMount() {
 
         let query = this.props.router.getQuery();
 
-        this.loadSelectBox('departements', () => getDepartements())
+        this.loadSelectBox("departements", () => getDepartements())
         .then(results => {
-            return this.updateSelectBox('departements', results.find(f => f.code === query.departement));
+            return this.updateSelectBox("departements", results.find(f => f.code === query.departement));
         });
 
-        this.loadSelectBox('sirens', () => getSirens())
+        this.loadSelectBox("sirens", () => getSirens())
         .then(results => {
-            return this.updateSelectBox('sirens', results.find(o => o.siren === query.siren));
+            return this.updateSelectBox("sirens", results.find(o => o.siren === query.siren));
         });
 
         if (query.siren) {
-            this.loadSelectBox('formations', () => getFormations({ organisme: query.siren }))
+            this.loadSelectBox("formations", () => getFormations({ organisme: query.siren }))
             .then(results => {
-                return this.updateSelectBox('formations', results.find(f => f.idFormation === query.idFormation));
+                return this.updateSelectBox("formations", results.find(f => f.idFormation === query.idFormation));
             });
         }
 
         if (this.isPoleEmploi()) {
-            this.loadSelectBox('financeurs', () => FINANCEURS)
+            this.loadSelectBox("financeurs", () => FINANCEURS)
             .then(results => {
-                return this.updateSelectBox('financeurs', results.find(f => f.code === query.codeFinanceur));
+                return this.updateSelectBox("financeurs", results.find(f => f.code === query.codeFinanceur));
             });
         }
 
@@ -177,16 +177,16 @@ export default class FinanceurPage extends React.Component {
 
     getFormParametersFromQuery = () => {
         let query = this.props.router.getQuery();
-        return _.pick(query, ['codeFinanceur', 'departement', 'siren', 'idFormation', 'startDate', 'scheduledEndDate']);
+        return _.pick(query, ["codeFinanceur", "departement", "siren", "idFormation", "startDate", "scheduledEndDate"]);
     };
 
     getFormParameters = () => {
         let { form } = this.state;
         return {
-            codeFinanceur: _.get(form, 'financeurs.selected.code', null),
-            departement: _.get(form, 'departements.selected.code', null),
-            siren: _.get(form, 'sirens.selected.siren', null),
-            idFormation: _.get(form, 'formations.selected.idFormation', null),
+            codeFinanceur: _.get(form, "financeurs.selected.code", null),
+            departement: _.get(form, "departements.selected.code", null),
+            siren: _.get(form, "sirens.selected.siren", null),
+            idFormation: _.get(form, "formations.selected.idFormation", null),
             startDate: form.periode.startDate ? moment(form.periode.startDate).valueOf() : null,
             scheduledEndDate: form.periode.endDate ? moment(form.periode.endDate).valueOf() : null,
         };
@@ -237,7 +237,7 @@ export default class FinanceurPage extends React.Component {
                                 <label>Période</label>
                                 <Periode
                                     periode={periode}
-                                    min={moment('2016-01-01T00:00:00Z').toDate()}
+                                    min={moment("2016-01-01T00:00:00Z").toDate()}
                                     onChange={periode => this.updatePeriode(periode)}
                                 />
                             </div>
@@ -249,9 +249,9 @@ export default class FinanceurPage extends React.Component {
                                     loading={departements.loading}
                                     optionKey="code"
                                     label={option => option.label}
-                                    placeholder={'Tous les départements'}
+                                    placeholder={"Tous les départements"}
                                     trackingId="Départements"
-                                    onChange={option => this.updateSelectBox('departements', option)}
+                                    onChange={option => this.updateSelectBox("departements", option)}
                                 />
                             </div>
                             <div className="form-group col-lg-6">
@@ -262,14 +262,14 @@ export default class FinanceurPage extends React.Component {
                                     loading={sirens.loading}
                                     optionKey="siren"
                                     label={option => option.name}
-                                    placeholder={'Tous les organismes'}
+                                    placeholder={"Tous les organismes"}
                                     trackingId="Organisme de formation"
                                     onChange={async option => {
-                                        await this.updateSelectBox('sirens', option);
+                                        await this.updateSelectBox("sirens", option);
                                         if (option) {
-                                            this.loadSelectBox('formations', () => getFormations({ organisme: option.siren }));
+                                            this.loadSelectBox("formations", () => getFormations({ organisme: option.siren }));
                                         } else {
-                                            await this.updateSelectBox('formations', null);
+                                            await this.updateSelectBox("formations", null);
                                         }
                                     }}
                                 />
@@ -283,9 +283,9 @@ export default class FinanceurPage extends React.Component {
                                     loading={formations.loading}
                                     optionKey="idFormation"
                                     label={option => option.title}
-                                    placeholder={'Toutes les formations'}
+                                    placeholder={"Toutes les formations"}
                                     trackingId="Formation"
-                                    onChange={option => this.updateSelectBox('formations', option)}
+                                    onChange={option => this.updateSelectBox("formations", option)}
                                 />
                             </div>
                             }
@@ -299,9 +299,9 @@ export default class FinanceurPage extends React.Component {
                                         loading={financeurs.loading}
                                         optionKey="code"
                                         label={option => option.label}
-                                        placeholder={'Tous les financeurs'}
+                                        placeholder={"Tous les financeurs"}
                                         trackingId="Financeur"
-                                        onChange={option => this.updateSelectBox('financeurs', option)}
+                                        onChange={option => this.updateSelectBox("financeurs", option)}
                                     />
                                 </>
                                 }
@@ -320,7 +320,7 @@ export default class FinanceurPage extends React.Component {
                                 <Button
                                     size="large"
                                     color="green"
-                                    style={formSynchronizedWithQuery ? {} : { border: '2px solid' }}
+                                    style={formSynchronizedWithQuery ? {} : { border: "2px solid" }}
                                     onClick={() => this.onSubmit()}
                                 >
                                     {!formSynchronizedWithQuery && <i className="fas fa-sync a-icon"></i>}
@@ -334,23 +334,23 @@ export default class FinanceurPage extends React.Component {
                     <Tabs>
                         <Tab
                             label="Vue graphique"
-                            isActive={() => router.isActive('/admin/financeur/avis/stats')}
-                            onClick={() => this.onTabClicked('stats')} />
+                            isActive={() => router.isActive("/admin/financeur/avis/stats")}
+                            onClick={() => this.onTabClicked("stats")} />
 
                         <Tab
                             label="Liste des avis"
-                            isActive={() => router.isActive('/admin/financeur/avis/liste')}
-                            onClick={() => this.onTabClicked('liste', { sortBy: 'date' })} />
+                            isActive={() => router.isActive("/admin/financeur/avis/liste")}
+                            onClick={() => this.onTabClicked("liste", { sortBy: "date" })} />
                     </Tabs>
                 }
                 panel={
-                    router.isActive('/admin/financeur/avis/liste') ?
+                    router.isActive("/admin/financeur/avis/liste") ?
                         <FinanceurAvisPanel
                             query={query}
                             form={form}
                             onFilterClicked={this.onFilterClicked} /> :
                         <Route
-                            path={'/admin/financeur/avis/stats'}
+                            path={"/admin/financeur/avis/stats"}
                             render={() => {
                                 return (
                                     <FinanceurStatsPanel

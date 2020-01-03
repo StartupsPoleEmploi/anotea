@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import { getAvisStats, getStagiairesStats } from '../../../services/statsService';
-import Panel from '../../common/page/panel/Panel';
-import Loader from '../../../../common/components/Loader';
-import NoteDetails from '../../common/page/panel/results/stats/NoteDetails';
-import EmptyResults from '../../common/page/panel/results/EmptyResults';
-import StagiairesStats from './StagiairesStats';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import { getAvisStats, getStagiairesStats } from "../../../services/statsService";
+import Panel from "../../common/page/panel/Panel";
+import Loader from "../../../../common/components/Loader";
+import NoteDetails from "../../common/page/panel/results/stats/NoteDetails";
+import EmptyResults from "../../common/page/panel/results/EmptyResults";
+import StagiairesStats from "./StagiairesStats";
 
 export default class OrganismeStatsPanel extends React.Component {
 

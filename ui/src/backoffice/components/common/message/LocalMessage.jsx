@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Alert } from './Alert';
-import './LocalMessage.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import { Alert } from "./Alert";
+import "./LocalMessage.scss";
 
 export default class LocalMessage extends React.Component {
 

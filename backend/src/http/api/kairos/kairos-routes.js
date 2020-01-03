@@ -1,24 +1,24 @@
-const express = require('express');
-const Boom = require('boom');
-const uuid = require('node-uuid');
-const Joi = require('joi');
-const _ = require('lodash');
-const configuration = require('config');
-const YAML = require('yamljs');
-const path = require('path');
-const swaggerUi = require('swagger-ui-express');
-const { tryAndCatch } = require('../../utils/routes-utils');
-const { createOrganismeFomateurDTO } = require('../v1/utils/dto');
-const getCodeRegionFromKairosRegionName = require('../../../jobs/organismes/tasks/kairos/getCodeRegionFromKairosRegionName');
+const express = require("express");
+const Boom = require("boom");
+const uuid = require("node-uuid");
+const Joi = require("joi");
+const _ = require("lodash");
+const configuration = require("config");
+const YAML = require("yamljs");
+const path = require("path");
+const swaggerUi = require("swagger-ui-express");
+const { tryAndCatch } = require("../../utils/routes-utils");
+const { createOrganismeFomateurDTO } = require("../v1/utils/dto");
+const getCodeRegionFromKairosRegionName = require("../../../jobs/organismes/tasks/kairos/getCodeRegionFromKairosRegionName");
 
 module.exports = ({ db, auth, middlewares }) => {
 
     let router = express.Router(); // eslint-disable-line new-cap
     let { createJWTAuthMiddleware } = middlewares;
-    let checkAuth = createJWTAuthMiddleware('kairos', {
+    let checkAuth = createJWTAuthMiddleware("kairos", {
         externalToken: true,
         onInvalidToken: e => {
-            let message = e.name === 'TokenExpiredError' ? 'Token expiré' : 'Token invalide';
+            let message = e.name === "TokenExpiredError" ? "Token expiré" : "Token invalide";
             throw Boom.unauthorized(message, e);
         }
     });
@@ -33,7 +33,7 @@ module.exports = ({ db, auth, middlewares }) => {
         }, { abortEarly: false });
 
 
-        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': parameters.siret });
+        let organisme = await db.collection("accounts").findOne({ "meta.siretAsString": parameters.siret });
         let created = false;
 
         let buildAccount = async data => {
@@ -45,10 +45,10 @@ module.exports = ({ db, auth, middlewares }) => {
                 courriel: data.courriel,
                 courriels: [data.courriel],
                 kairosCourriel: data.courriel,
-                profile: 'organisme',
+                profile: "organisme",
                 token: uuid.v4(),
                 creationDate: new Date(),
-                sources: ['kairos', 'sso'],
+                sources: ["kairos", "sso"],
                 codeRegion: codeRegion,
                 numero: null,
                 lieux_de_formation: [],
@@ -59,9 +59,9 @@ module.exports = ({ db, auth, middlewares }) => {
         };
 
         let getAccessToken = async () => {
-            let token = await auth.buildJWT('backoffice', {
+            let token = await auth.buildJWT("backoffice", {
                 sub: organisme.meta.siretAsString,
-                profile: 'organisme',
+                profile: "organisme",
                 id: organisme._id,
                 raisonSociale: organisme.raisonSociale,
             });
@@ -70,7 +70,7 @@ module.exports = ({ db, auth, middlewares }) => {
 
         if (!organisme) {
             organisme = await buildAccount(parameters);
-            await db.collection('accounts').insertOne(organisme);
+            await db.collection("accounts").insertOne(organisme);
             created = true;
         }
 
@@ -85,25 +85,25 @@ module.exports = ({ db, auth, middlewares }) => {
         });
     });
 
-    let apiSpecifications = YAML.load(path.join(__dirname, './kairos-swagger.yml'));
-    router.use('/api/kairos/doc', swaggerUi.serve, swaggerUi.setup(Object.assign({}, apiSpecifications)));
+    let apiSpecifications = YAML.load(path.join(__dirname, "./kairos-swagger.yml"));
+    router.use("/api/kairos/doc", swaggerUi.serve, swaggerUi.setup(Object.assign({}, apiSpecifications)));
 
-    router.post('/api/kairos/generate-auth-url', checkAuth, generateAuthUrlRoute);
+    router.post("/api/kairos/generate-auth-url", checkAuth, generateAuthUrlRoute);
 
-    router.get('/api/kairos/check-if-organisme-is-eligible', checkAuth, tryAndCatch(async (req, res) => {
+    router.get("/api/kairos/check-if-organisme-is-eligible", checkAuth, tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.query, {
             siret: Joi.string().required(),
         }, { abortEarly: false });
 
-        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': parameters.siret });
+        let organisme = await db.collection("accounts").findOne({ "meta.siretAsString": parameters.siret });
 
         if (!organisme) {
-            throw Boom.badRequest('Numéro de siret invalide');
+            throw Boom.badRequest("Numéro de siret invalide");
         }
 
         return res.json({
-            eligible: !!_.get(organisme, 'meta.kairos.eligible') && _.get(organisme, 'score.nb_avis') > 0,
+            eligible: !!_.get(organisme, "meta.kairos.eligible") && _.get(organisme, "score.nb_avis") > 0,
             meta: {
                 organisme: createOrganismeFomateurDTO(organisme, { notes_decimales: true })
             }

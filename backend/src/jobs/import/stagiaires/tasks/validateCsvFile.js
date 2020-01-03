@@ -1,19 +1,19 @@
-const fs = require('fs');
-const md5 = require('md5');
-const parse = require('csv-parse');
-const readline = require('readline');
-const colors = require('colors/safe');
-const _ = require('lodash');
-const validateTrainee = require('./utils/validateTrainee');
-const { getCampaignDate, getCampaignName } = require('./utils/utils');
+const fs = require("fs");
+const md5 = require("md5");
+const parse = require("csv-parse");
+const readline = require("readline");
+const colors = require("colors/safe");
+const _ = require("lodash");
+const validateTrainee = require("./utils/validateTrainee");
+const { getCampaignDate, getCampaignName } = require("./utils/utils");
 
 const ValidationErrorTypes = Object.freeze({
-    BAD_HEADER: { name: 'BAD_HEADER', message: 'du format non conforme' },
-    BAD_DATA: { name: 'BAD_DATA', message: 'du format non conforme' },
-    DUPLICATED: { name: 'DUPLICATED', message: 'de la présence de doublons' },
+    BAD_HEADER: { name: "BAD_HEADER", message: "du format non conforme" },
+    BAD_DATA: { name: "BAD_DATA", message: "du format non conforme" },
+    DUPLICATED: { name: "DUPLICATED", message: "de la présence de doublons" },
 });
 
-const isEmptyLine = input => input === ';;;;;;;;;;;;;;;;';
+const isEmptyLine = input => input === ";;;;;;;;;;;;;;;;";
 
 const isHeaderValid = (rawLine, csvOptions) => {
     const headers = rawLine.split(csvOptions.delimiter);
@@ -64,7 +64,7 @@ module.exports = async (db, logger, file, handler) => {
         const handleValidationError = (error, csvOptions) => {
             let { line, type } = error;
 
-            if (error.type.name === 'BAD_HEADER') {
+            if (error.type.name === "BAD_HEADER") {
                 logger.error(`File is not valid due to '${error.type.name}'. Differences : ` +
                     `${colors.red(`${_.difference(csvOptions.columns, line.split(csvOptions.delimiter))}`)}`);
             } else {
@@ -75,7 +75,7 @@ module.exports = async (db, logger, file, handler) => {
         };
 
         let rl = readline.createInterface({ input: fs.createReadStream(file) });
-        rl.on('line', async line => {
+        rl.on("line", async line => {
             if (error || isEmptyLine(line)) {
                 return;
             }
@@ -113,7 +113,7 @@ module.exports = async (db, logger, file, handler) => {
             if (error) {
                 rl.close();
             }
-        }).on('close', async () => {
+        }).on("close", async () => {
             await Promise.all(promises);
 
             return error ? handleValidationError(error, handler.csvOptions) : resolve();

@@ -1,13 +1,13 @@
-const assert = require('assert');
-const moment = require('moment');
-const logger = require('../../../helpers/components/fake-logger');
-const { withMongoDB } = require('../../../helpers/with-mongodb');
-const reconcile = require('../../../../src/jobs/reconciliation/tasks/reconcile');
-const removePreviousImports = require('../../../../src/jobs/reconciliation/tasks/removePreviousImports');
+const assert = require("assert");
+const moment = require("moment");
+const logger = require("../../../helpers/components/fake-logger");
+const { withMongoDB } = require("../../../helpers/with-mongodb");
+const reconcile = require("../../../../src/jobs/reconciliation/tasks/reconcile");
+const removePreviousImports = require("../../../../src/jobs/reconciliation/tasks/removePreviousImports");
 
 describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
-    it('should remove previous import', async () => {
+    it("should remove previous import", async () => {
 
         let db = await getTestDatabase();
 
@@ -16,7 +16,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
 
         await removePreviousImports(db, moment().toDate());
 
-        let count = await db.collection('actionsReconciliees').countDocuments();
+        let count = await db.collection("actionsReconciliees").countDocuments();
         assert.deepStrictEqual(count, 0);
     });
 

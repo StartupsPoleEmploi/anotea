@@ -1,19 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import Summary from '../../common/page/panel/summary/Summary';
-import Pagination from '../../common/page/panel/pagination/Pagination';
-import Page from '../../common/page/Page';
-import Panel from '../../common/page/panel/Panel';
-import { Filter, Filters } from '../../common/page/panel/filters/Filters';
-import { Form } from '../../common/page/form/Form';
-import Button from '../../../../common/components/Button';
-import InputText from '../../common/page/form/InputText';
-import Avis from '../../common/avis/Avis';
-import AvisResults from '../../common/page/panel/results/AvisResults';
-import { searchAvis } from '../../../services/avisService';
-import { getAvisStats } from '../../../services/statsService';
-import { Workflow } from '../../common/avis/Workflow';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import Summary from "../../common/page/panel/summary/Summary";
+import Pagination from "../../common/page/panel/pagination/Pagination";
+import Page from "../../common/page/Page";
+import Panel from "../../common/page/panel/Panel";
+import { Filter, Filters } from "../../common/page/panel/filters/Filters";
+import { Form } from "../../common/page/form/Form";
+import Button from "../../../../common/components/Button";
+import InputText from "../../common/page/form/InputText";
+import Avis from "../../common/avis/Avis";
+import AvisResults from "../../common/page/panel/results/AvisResults";
+import { searchAvis } from "../../../services/avisService";
+import { getAvisStats } from "../../../services/statsService";
+import { Workflow } from "../../common/avis/Workflow";
 
 export default class ModerationAvisPage extends React.Component {
 
@@ -25,7 +25,7 @@ export default class ModerationAvisPage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            fulltext: '',
+            fulltext: "",
             stats: {},
             results: {
                 avis: [],
@@ -85,7 +85,7 @@ export default class ModerationAvisPage extends React.Component {
 
     getQueryFormParameters = () => {
         let query = this.props.router.getQuery();
-        return _.pick(query, ['fulltext']);
+        return _.pick(query, ["fulltext"]);
     };
 
     onSubmit = () => {
@@ -118,11 +118,12 @@ export default class ModerationAvisPage extends React.Component {
                                         value={this.state.fulltext}
                                         placeholder="Recherche un avis"
                                         icon={<i className="fas fa-search" />}
-                                        reset={() => this.setState({ fulltext: '' })}
+                                        reset={() => this.setState({ fulltext: "" })}
                                         onChange={event => this.setState({ fulltext: event.target.value })}
                                     />
                                 </div>
-                                <Button type="submit" size="large" color="blue" onClick={this.onSubmit}>Rechercher</Button>
+                                <Button type="submit" size="large" color="blue"
+                                        onClick={this.onSubmit}>Rechercher</Button>
                             </div>
                         </Form>
                     </div>
@@ -134,31 +135,34 @@ export default class ModerationAvisPage extends React.Component {
                             <Filters>
                                 <Filter
                                     label="À modérer"
-                                    isActive={() => query.statuses === 'none'}
+                                    isActive={() => query.statuses === "none"}
                                     getNbElements={() => stats.nbAModerer}
-                                    onClick={() => this.onFilterClicked({ statuses: 'none', sortBy: 'lastStatusUpdate' })}
+                                    onClick={() => this.onFilterClicked({
+                                        statuses: "none",
+                                        sortBy: "lastStatusUpdate"
+                                    })}
                                 />
 
                                 <Filter
                                     label="Validés"
-                                    isActive={() => query.statuses === 'validated'}
+                                    isActive={() => query.statuses === "validated"}
                                     onClick={() => {
                                         return this.onFilterClicked({
-                                            statuses: 'validated',
+                                            statuses: "validated",
                                             commentaires: true,
-                                            sortBy: 'lastStatusUpdate'
+                                            sortBy: "lastStatusUpdate"
                                         });
                                     }}
                                 />
 
                                 <Filter
                                     label="Rejetés"
-                                    isActive={() => query.statuses === 'rejected'}
+                                    isActive={() => query.statuses === "rejected"}
                                     onClick={() => {
                                         return this.onFilterClicked({
-                                            statuses: 'rejected',
+                                            statuses: "rejected",
                                             commentaires: true,
-                                            sortBy: 'lastStatusUpdate'
+                                            sortBy: "lastStatusUpdate"
                                         });
                                     }}
                                 />
@@ -166,7 +170,7 @@ export default class ModerationAvisPage extends React.Component {
                                 <Filter
                                     label="Tous"
                                     isActive={() => !query.statuses}
-                                    onClick={() => this.onFilterClicked({ sortBy: 'date' })}
+                                    onClick={() => this.onFilterClicked({ sortBy: "date" })}
                                 />
 
                             </Filters>
@@ -186,7 +190,7 @@ export default class ModerationAvisPage extends React.Component {
                                             avis={avis}
                                             showModerationButtons={true}
                                             renderWorkflow={avis => {
-                                                return <Workflow avis={avis} showStatus={query.statuses !== 'none'} />;
+                                                return <Workflow avis={avis} showStatus={query.statuses !== "none"} />;
                                             }}
                                             onChange={() => {
                                                 return Promise.all([

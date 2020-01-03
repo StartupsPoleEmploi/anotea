@@ -1,12 +1,12 @@
-const Joi = require('joi');
-const _ = require('lodash');
-const htmlToText = require('nodemailer-html-to-text').htmlToText;
-const nodemailer = require('nodemailer');
-const moment = require('moment');
-const path = require('path');
-const mjml = require('mjml');
-const ejs = require('ejs');
-const { promisify } = require('util');
+const Joi = require("joi");
+const _ = require("lodash");
+const htmlToText = require("nodemailer-html-to-text").htmlToText;
+const nodemailer = require("nodemailer");
+const moment = require("moment");
+const path = require("path");
+const mjml = require("mjml");
+const ejs = require("ejs");
+const { promisify } = require("util");
 const renderFile = promisify(ejs.renderFile);
 
 module.exports = (configuration, regions) => {
@@ -27,7 +27,7 @@ module.exports = (configuration, regions) => {
             }
         })
     });
-    transporter.use('compile', htmlToText({ ignoreImage: true }));
+    transporter.use("compile", htmlToText({ ignoreImage: true }));
 
     let getRegionEmail = region => region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from;
     let getPublicUrl = path => `${(configuration.app.public_hostname)}${path}`;
@@ -38,7 +38,7 @@ module.exports = (configuration, regions) => {
         getRegionEmail: region => region.contact ? `${region.contact}@pole-emploi.fr` : configuration.smtp.from,
         getUnsubscribeLink: token => getPublicUrl(`/emails/stagiaires/${token}/unsubscribe`),
         getConsultationLink: (type, templateName, token, commentToken) => {
-            const params = commentToken ? `?avis=${commentToken}` : '';
+            const params = commentToken ? `?avis=${commentToken}` : "";
             return getPublicUrl(`/emails/${type}/${token}/templates/${templateName}${params}`);
         },
     };
@@ -70,7 +70,7 @@ module.exports = (configuration, regions) => {
                         from: `Anotea <${configuration.smtp.from}>`,
                         replyTo: `Anotea <${getRegionEmail(region)}>`,
                         list: {
-                            help: getPublicUrl('/faq'),
+                            help: getPublicUrl("/faq"),
                         },
                         html: body,
                     }, {

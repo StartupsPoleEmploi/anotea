@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import AnalyticsContext, { createAnalytics } from './AnalyticsContext';
+import React from "react";
+import PropTypes from "prop-types";
+import AnalyticsContext, { createAnalytics } from "./AnalyticsContext";
 
 const WithAnalytics = ({ category, children }) => {
 

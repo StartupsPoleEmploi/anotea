@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { rejectAvis } from '../../../../services/avisService';
-import Modal from '../../../../../common/components/Modal';
-import Button from '../../../../../common/components/Button';
-import { Dropdown, DropdownDivider, DropdownItem } from '../../Dropdown';
+import React from "react";
+import PropTypes from "prop-types";
+import { rejectAvis } from "../../../../services/avisService";
+import Modal from "../../../../../common/components/Modal";
+import Button from "../../../../../common/components/Button";
+import { Dropdown, DropdownDivider, DropdownItem } from "../../Dropdown";
 
 export default class RejectButton extends React.Component {
 
@@ -22,12 +22,12 @@ export default class RejectButton extends React.Component {
         let updated = await rejectAvis(avis._id, qualification);
         this.props.onChange(updated, {
             message: {
-                type: 'local',
-                color: 'red',
+                type: "local",
+                color: "red",
                 text: (
                     <span>
                         L&apos;avis a été <b>rejeté</b> pour le motif <b>{updated.qualification}</b>.
-                        {qualification === 'injure' ? ' Un mail a été adressé au stagiaire.' : ''}
+                        {qualification === "injure" ? " Un mail a été adressé au stagiaire." : ""}
                     </span>),
             }
         });
@@ -68,15 +68,15 @@ export default class RejectButton extends React.Component {
                     }
                     items={
                         <div>
-                            <DropdownItem onClick={() => this.setState({ showModal: true, qualification: 'injure' })}>
+                            <DropdownItem onClick={() => this.setState({ showModal: true, qualification: "injure" })}>
                                 Injure
                             </DropdownItem>
                             <DropdownDivider />
-                            <DropdownItem onClick={() => this.setState({ showModal: true, qualification: 'alerte' })}>
+                            <DropdownItem onClick={() => this.setState({ showModal: true, qualification: "alerte" })}>
                                 Alerte
                             </DropdownItem>
                             <DropdownDivider />
-                            <DropdownItem onClick={() => this.reject(avis, 'non concerné')}>
+                            <DropdownItem onClick={() => this.reject(avis, "non concerné")}>
                                 Non concerné
                             </DropdownItem>
                         </div>

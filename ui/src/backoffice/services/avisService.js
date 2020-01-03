@@ -1,13 +1,13 @@
-import { _delete, _get, _put } from '../../common/utils/http-client';
-import queryString from 'query-string';
-import { getToken } from '../utils/session';
+import { _delete, _get, _put } from "../../common/utils/http-client";
+import queryString from "query-string";
+import { getToken } from "../utils/session";
 
 export const searchAvis = (params = {}) => {
     return _get(`/backoffice/avis?${queryString.stringify(params)}`);
 };
 
 export const getExportAvisUrl = (options = {}) => {
-    let publicUrl = process.env.PUBLIC_URL ? '' : 'http://localhost:8080';
+    let publicUrl = process.env.PUBLIC_URL ? "" : "http://localhost:8080";
     let token = getToken();
 
     return `${publicUrl}/api/backoffice/avis.csv?${queryString.stringify({ ...options, token })}`;

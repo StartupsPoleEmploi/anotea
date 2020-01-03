@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Score from './components/Score';
-import Notes from './components/Notes';
-import Verified from './components/Verified';
-import Propulsed from './components/Propulsed';
-import Header from './components/Header';
-import Avis from './components/Avis';
-import Button from '../common/components/Button';
-import './CarrouselWidget.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Score from "./components/Score";
+import Notes from "./components/Notes";
+import Verified from "./components/Verified";
+import Propulsed from "./components/Propulsed";
+import Header from "./components/Header";
+import Avis from "./components/Avis";
+import Button from "../common/components/Button";
+import "./CarrouselWidget.scss";
 
 const ITEMS_PAR_PAGE = 1;
 
@@ -57,14 +57,14 @@ export default class CarrouselWidget extends Component {
                     <div className="pagination d-flex justify-content-between">
                         <Button
                             size="medium"
-                            className={`nav ${pagination.page === 0 ? 'invisible' : 'visible'}`}
+                            className={`nav ${pagination.page === 0 ? "invisible" : "visible"}`}
                             onClick={() => this.previous()}>
                             Précédent
                         </Button>
 
                         <Button
                             size="medium"
-                            className={`nav ${pagination.page === pagination.total_pages - 1 ? 'invisible' : 'visible'}`}
+                            className={`nav ${pagination.page === pagination.total_pages - 1 ? "invisible" : "visible"}`}
                             onClick={() => this.next()}>
                             Suivant
                         </Button>

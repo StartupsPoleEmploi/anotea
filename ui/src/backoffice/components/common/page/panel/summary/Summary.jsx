@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Summary.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Summary.scss";
 
 export default class Summary extends React.Component {
 
@@ -22,7 +22,8 @@ export default class Summary extends React.Component {
 
                 {pagination && pagination.totalItems > 0 &&
                 <div className="pages col-sm-4 text-right">
-                    <span className="pr-3">{pagination.itemsOnThisPage} {paginationLabel} affiché(s) sur {pagination.totalItems}</span>
+                    <span
+                        className="pr-3">{pagination.itemsOnThisPage} {paginationLabel} affiché(s) sur {pagination.totalItems}</span>
                     {buttons}
                 </div>
                 }

@@ -1,5 +1,5 @@
 /* global ga */
-import React from 'react';
+import React from "react";
 
 let isEnabled;
 
@@ -9,10 +9,10 @@ const onRouteChanged = callback => {
     const { addEventListener, history, location } = window;
 
     // Observe native navigation
-    addEventListener('popstate', () => callback(location.pathname));
+    addEventListener("popstate", () => callback(location.pathname));
 
     // Observe manual navigation
-    ['push', 'replace'].forEach(type => {
+    ["push", "replace"].forEach(type => {
         const state = `${type}State`;
         const historyState = history[state];
         history[state] = function() {
@@ -33,24 +33,31 @@ export const initialize = (trackingId, options = {}) => {
 
     /* eslint-disable */
     // @formatter:off
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script',`https://www.google-analytics.com/analytics${options.debug ? '_debug':''}.js`,'ga');
+    (function(i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, "script", `https://www.google-analytics.com/analytics${options.debug ? "_debug" : ""}.js`, "ga");
     // @formatter:on
     /* eslint-enable */
 
-    ga('create', trackingId, 'auto');
+    ga("create", trackingId, "auto");
 
     if (options.debug) {
-        ga('set', 'sendHitTask', null);
+        ga("set", "sendHitTask", null);
         //window.ga_debug = { trace: true };
     }
 
     onRouteChanged(url => {
-        let baseUrl = url.indexOf('?') === -1 ? url : url.split('?')[0];
-        ga('set', 'page', baseUrl);
-        ga('send', 'pageview');
+        let baseUrl = url.indexOf("?") === -1 ? url : url.split("?")[0];
+        ga("set", "page", baseUrl);
+        ga("send", "pageview");
     });
 };
 
@@ -63,8 +70,8 @@ export const createAnalytics = category => {
                 return;
             }
 
-            ga('send', 'event', {
-                hitType: 'event',
+            ga("send", "event", {
+                hitType: "event",
                 eventCategory: category,
                 eventAction: action,
             });
@@ -72,5 +79,5 @@ export const createAnalytics = category => {
     };
 };
 
-const context = React.createContext(createAnalytics('anotea'));
+const context = React.createContext(createAnalytics("anotea"));
 export default context;

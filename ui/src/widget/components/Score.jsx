@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import './Score.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import "./Score.scss";
 
 export default class Score extends Component {
 
@@ -17,7 +17,7 @@ export default class Score extends Component {
             <div className={`Score d-flex justify-content-center ${className}`}>
                 <div className="d-flex flex-column p-2 mb-2">
                     <div>
-                        <span className="moyenne">{`${score.notes.global}`.replace('.', ',')}</span>
+                        <span className="moyenne">{`${score.notes.global}`.replace(".", ",")}</span>
                         <span className="total">/5</span>
                         <span className="star fas fa-star"></span>
                     </div>

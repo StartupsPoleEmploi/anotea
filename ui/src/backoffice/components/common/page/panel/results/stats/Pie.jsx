@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import { Pie as NoResponsivePie } from '@nivo/pie';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import './Pie.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import { Pie as NoResponsivePie } from "@nivo/pie";
+import AutoSizer from "react-virtualized-auto-sizer";
+import "./Pie.scss";
 
-let round = value => Number(Math.round(value + 'e1') + 'e-1');
+let round = value => Number(Math.round(value + "e1") + "e-1");
 
 const Pie = ({ data, colors }) => {
 
@@ -31,7 +31,7 @@ const Pie = ({ data, colors }) => {
                                 }}
                                 isInteractive={true}
                                 enableSlicesLabels={false}
-                                theme={{ fontSize: 12, fontFamily: 'Lato', textColor: '#24303A' }}
+                                theme={{ fontSize: 12, fontFamily: "Lato", textColor: "#24303A" }}
                                 colors={colors}
                                 radialLabelsTextXOffset={5}
                                 radialLabelsLinkDiagonalLength={10}
@@ -40,7 +40,7 @@ const Pie = ({ data, colors }) => {
                                 radialLabel={element => prettyLabel(element)}
                                 tooltip={element => {
                                     return (
-                                        <div style={{ fontSize: '10px' }}>
+                                        <div style={{ fontSize: "10px" }}>
                                             {element.value} {prettyLabel(element)}
                                         </div>
                                     );

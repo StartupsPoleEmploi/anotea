@@ -1,24 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Titre from './Titre';
-import Commentaire from './Commentaire';
-import Formation from './Formation';
-import CommentaireEditor from './CommentaireEditor';
-import Notes from './Notes';
-import Reponse from './Reponse';
-import ValidateReponseButton from './buttons/ValidateReponseButton';
-import RejectReponseButton from './buttons/RejectReponseButton';
-import ValidateButton from './buttons/ValidateButton';
-import RejectButton from './buttons/RejectButton';
-import EditButton from './buttons/EditButton';
-import LocalMessage from '../message/LocalMessage';
-import './Avis.scss';
-import MarkAsReadButton from './buttons/MarkAsReadButton';
-import ReportButton from './buttons/ReportButton';
-import EditReponseButton from './buttons/EditReponseButton';
-import ReponseEditor from './ReponseEditor';
-import { Workflow } from './Workflow';
-import Stars from './Stars';
+import React from "react";
+import PropTypes from "prop-types";
+import Titre from "./Titre";
+import Commentaire from "./Commentaire";
+import Formation from "./Formation";
+import CommentaireEditor from "./CommentaireEditor";
+import Notes from "./Notes";
+import Reponse from "./Reponse";
+import ValidateReponseButton from "./buttons/ValidateReponseButton";
+import RejectReponseButton from "./buttons/RejectReponseButton";
+import ValidateButton from "./buttons/ValidateButton";
+import RejectButton from "./buttons/RejectButton";
+import EditButton from "./buttons/EditButton";
+import LocalMessage from "../message/LocalMessage";
+import "./Avis.scss";
+import MarkAsReadButton from "./buttons/MarkAsReadButton";
+import ReportButton from "./buttons/ReportButton";
+import EditReponseButton from "./buttons/EditReponseButton";
+import ReponseEditor from "./ReponseEditor";
+import { Workflow } from "./Workflow";
+import Stars from "./Stars";
 
 export default class Avis extends React.Component {
 
@@ -82,7 +82,7 @@ export default class Avis extends React.Component {
             showModerationButtons, showModerationReponseButtons,
         } = this.props;
         let { message, showReponseEditor } = this.state;
-        let disabledClass = message ? 'disabled' : '';
+        let disabledClass = message ? "disabled" : "";
 
         return (
             <div className="Avis">
@@ -97,7 +97,7 @@ export default class Avis extends React.Component {
                     </div>
 
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
-                        <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
+                        <div className={`${showModerationReponseButtons || showReponseEditor ? "with-opacity" : ""}`}>
                             <div className="mb-3">
                                 <Stars note={avis.rates.global} />
                                 {renderWorkflow(avis)}

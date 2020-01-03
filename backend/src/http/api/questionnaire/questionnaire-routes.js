@@ -1,24 +1,24 @@
-const express = require('express');
-const moment = require('moment');
-const _ = require('lodash');
-const { getDeviceType } = require('./utils/analytics');
-const Boom = require('boom');
-const Joi = require('joi');
-const externalLinks = require('../../html/utils/externalLinks');
-const { sanitize } = require('./utils/userInput');
-const { tryAndCatch } = require('../../utils/routes-utils');
-const { AlreadySentError, BadDataError } = require('../../../core/errors');
+const express = require("express");
+const moment = require("moment");
+const _ = require("lodash");
+const { getDeviceType } = require("./utils/analytics");
+const Boom = require("boom");
+const Joi = require("joi");
+const externalLinks = require("../../html/utils/externalLinks");
+const { sanitize } = require("./utils/userInput");
+const { tryAndCatch } = require("../../utils/routes-utils");
+const { AlreadySentError, BadDataError } = require("../../../core/errors");
 
 module.exports = ({ db, logger, configuration, regions, communes }) => {
 
     const router = express.Router(); // eslint-disable-line new-cap
-    let badwords = require('./utils/badwords')(logger, configuration);
+    let badwords = require("./utils/badwords")(logger, configuration);
 
     const getTraineeFromToken = (req, res, next) => {
-        db.collection('trainee').findOne({ token: req.params.token })
+        db.collection("trainee").findOne({ token: req.params.token })
         .then(trainee => {
             if (!trainee) {
-                res.status(404).send({ error: 'not found' });
+                res.status(404).send({ error: "not found" });
                 return;
             }
 
@@ -32,12 +32,12 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
         let now = new Date();
         let lastSeenDate = trainee.lastSeenDate;
         let isNewSession = !lastSeenDate || Math.ceil(moment.duration(moment(now).diff(moment(lastSeenDate))).asMinutes()) > 30;
-        let devices = getDeviceType(req.headers['user-agent']);
+        let devices = getDeviceType(req.headers["user-agent"]);
 
-        db.collection('trainee').updateOne({ _id: trainee._id }, {
-            ...(isNewSession && devices.phone ? { $inc: { 'deviceTypes.phone': 1 } } : {}),
-            ...(isNewSession && devices.tablet ? { $inc: { 'deviceTypes.tablet': 1 } } : {}),
-            ...(isNewSession && devices.desktop ? { $inc: { 'deviceTypes.desktop': 1 } } : {}),
+        db.collection("trainee").updateOne({ _id: trainee._id }, {
+            ...(isNewSession && devices.phone ? { $inc: { "deviceTypes.phone": 1 } } : {}),
+            ...(isNewSession && devices.tablet ? { $inc: { "deviceTypes.tablet": 1 } } : {}),
+            ...(isNewSession && devices.desktop ? { $inc: { "deviceTypes.desktop": 1 } } : {}),
             $set: { lastSeenDate: now }
         }).catch(e => logger.error(e));
 
@@ -72,14 +72,14 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             avis.rates.moyen_materiel +
             avis.rates.accompagnement;
 
-        return Number(Math.round((sum / 5) + 'e1') + 'e-1');
+        return Number(Math.round((sum / 5) + "e1") + "e-1");
     };
 
 
     const buildAvis = (notes, token, body, trainee) => {
 
-        let text = _.get(body, 'commentaire.texte', null);
-        let title = _.get(body, 'commentaire.titre', null);
+        let text = _.get(body, "commentaire.texte", null);
+        let title = _.get(body, "commentaire.titre", null);
         let hasCommentaires = title || text;
 
         let avis = {
@@ -89,9 +89,9 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             training: trainee.training,
             codeRegion: trainee.codeRegion,
             rates: notes,
-            pseudo: sanitize(body.pseudo.replace(/ /g, '').replace(/\./g, '')),
+            pseudo: sanitize(body.pseudo.replace(/ /g, "").replace(/\./g, "")),
             read: false,
-            status: hasCommentaires ? 'none' : 'validated',
+            status: hasCommentaires ? "none" : "validated",
             lastStatusUpdate: new Date(),
         };
 
@@ -110,7 +110,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
         if (avis.pseudo.length > 50 ||
             (avis.comment !== undefined && (avis.comment.title.length > 50 || avis.comment.text.length > 200))) {
-            return { error: 'too long' };
+            return { error: "too long" };
         }
 
         let pseudoOK = avis.pseudo ? await badwords.isGood(avis.pseudo) : true;
@@ -125,44 +125,44 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
                 comment: !commentOK,
                 commentTitle: !commentTitleOK
             };
-            return { error: 'badwords', badwords };
+            return { error: "badwords", badwords };
         }
 
     };
 
     const getInfosRegion = async trainee => {
 
-        let trainingTooOld = trainee.training.scheduledEndDate < moment().subtract(90, 'days');
+        let trainingTooOld = trainee.training.scheduledEndDate < moment().subtract(90, "days");
         let region = regions.findRegionByCodeRegion(trainee.codeRegion);
 
         return {
             trainee: trainee,
             region: region,
-            showLinks: await externalLinks(db, communes).getLink(trainee, 'pe') !== null && !trainingTooOld
+            showLinks: await externalLinks(db, communes).getLink(trainee, "pe") !== null && !trainingTooOld
         };
     };
 
-    router.get('/api/questionnaire/checkBadwords', tryAndCatch(async (req, res) => {
+    router.get("/api/questionnaire/checkBadwords", tryAndCatch(async (req, res) => {
         if (await badwords.isGood(req.query.sentence)) {
             return res.json({ isGood: true });
         }
-        throw Boom.badRequest('Mot invalide');
+        throw Boom.badRequest("Mot invalide");
 
     }));
 
-    router.get('/api/questionnaire/:token', getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
+    router.get("/api/questionnaire/:token", getTraineeFromToken, saveDeviceData, tryAndCatch(async (req, res) => {
 
         let stagiaire = req.trainee;
 
         if (!stagiaire.avisCreated) {
-            db.collection('trainee').updateOne({ token: req.params.token }, { $set: { 'tracking.click': new Date() } });
+            db.collection("trainee").updateOne({ token: req.params.token }, { $set: { "tracking.click": new Date() } });
         }
 
         let infosRegion = await getInfosRegion(stagiaire);
         return res.send({ stagiaire, infosRegion, submitted: stagiaire.avisCreated });
     }));
 
-    router.post('/api/questionnaire/:token', getTraineeFromToken, tryAndCatch(async (req, res) => {
+    router.post("/api/questionnaire/:token", getTraineeFromToken, tryAndCatch(async (req, res) => {
 
         let stagiaire = req.trainee;
 
@@ -179,8 +179,8 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             if (validation.error === null) {
                 avis.rates.global = calculateAverageRate(avis);
                 await Promise.all([
-                    db.collection('comment').insertOne(avis),
-                    db.collection('trainee').updateOne({ _id: stagiaire._id }, { $set: { avisCreated: true } }),
+                    db.collection("comment").insertOne(avis),
+                    db.collection("trainee").updateOne({ _id: stagiaire._id }, { $set: { avisCreated: true } }),
                 ]);
             } else {
                 throw new BadDataError();

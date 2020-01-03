@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const cli = require('commander');
-const sendNotificationEmails = require('./tasks/sendNotificationEmails');
-const { execute } = require('../../../job-utils');
+const cli = require("commander");
+const sendNotificationEmails = require("./tasks/sendNotificationEmails");
+const { execute } = require("../../../job-utils");
 
-cli.description('send notifications to organismes')
-.option('--region [region]', 'Limit emailing to the region')
-.option('--limit [limit]', 'limit the number of emails sent (default: 1)', parseInt)
-.option('--delay [delay]', 'Time in milliseconds to wait before sending the next email (default: 100)', parseInt)
-.option('--slack', 'Send a slack notification when job is finished')
+cli.description("send notifications to organismes")
+.option("--region [region]", "Limit emailing to the region")
+.option("--limit [limit]", "limit the number of emails sent (default: 1)", parseInt)
+.option("--delay [delay]", "Time in milliseconds to wait before sending the next email (default: 100)", parseInt)
+.option("--slack", "Send a slack notification when job is finished")
 .parse(process.argv);
 
 execute(async ({ logger, db, configuration, regions, emails, sendSlackNotification }) => {
@@ -23,7 +23,7 @@ execute(async ({ logger, db, configuration, regions, emails, sendSlackNotificati
             limit,
             delay,
             codeRegions: region ? [region] :
-                regions.findActiveRegions('mailing.organismes.notifications').map(region => region.codeRegion),
+                regions.findActiveRegions("mailing.organismes.notifications").map(region => region.codeRegion),
         });
 
         if (stats.total > 0) {

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const path = require('path');
-const crypto = require('crypto');
-const { execute } = require('../../job-utils');
+const path = require("path");
+const crypto = require("crypto");
+const { execute } = require("../../job-utils");
 
 execute(async ({ logger, configuration, passwords }) => {
 
@@ -13,9 +13,9 @@ execute(async ({ logger, configuration, passwords }) => {
         process.exit(1);
     }
 
-    let sha256 = crypto.createHmac('sha256', configuration.security.secret)
+    let sha256 = crypto.createHmac("sha256", configuration.security.secret)
     .update(password)
-    .digest('hex');
+    .digest("hex");
 
     return {
         bcrypt: await passwords.hashPassword(password),

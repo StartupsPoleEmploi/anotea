@@ -1,13 +1,13 @@
-import React from 'react';
-import Page from './page/Page';
-import Panel from './page/panel/Panel';
-import { CenteredForm } from './page/form/CenteredForm';
-import InputText from './page/form/InputText';
-import Button from '../../../common/components/Button';
-import { isPasswordStrongEnough } from '../../utils/password-utils';
-import _ from 'lodash';
-import { updatePassword } from '../../services/meService';
-import AppContext from '../../BackofficeContext';
+import React from "react";
+import Page from "./page/Page";
+import Panel from "./page/panel/Panel";
+import { CenteredForm } from "./page/form/CenteredForm";
+import InputText from "./page/form/InputText";
+import Button from "../../../common/components/Button";
+import { isPasswordStrongEnough } from "../../utils/password-utils";
+import _ from "lodash";
+import { updatePassword } from "../../services/meService";
+import AppContext from "../../BackofficeContext";
 
 export default class MonComptePage extends React.Component {
 
@@ -17,9 +17,9 @@ export default class MonComptePage extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            current: '',
-            password: '',
-            confirmation: '',
+            current: "",
+            password: "",
+            confirmation: "",
             errors: {
                 passwordNotStrongEnough: null,
                 isNotSamePassword: null,
@@ -35,9 +35,9 @@ export default class MonComptePage extends React.Component {
         this.setState({
             errors: {
                 passwordNotStrongEnough: isPasswordStrongEnough(password) ?
-                    null : 'Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.',
+                    null : "Le mot de passe doit contenir au moins 6 caractères dont une majuscule et un caractère spécial.",
                 isNotSamePassword: password === confirmation ?
-                    null : 'Les mots de passes ne sont pas identiques.',
+                    null : "Les mots de passes ne sont pas identiques.",
             }
         }, async () => {
             let isFormValid = _.every(Object.values(this.state.errors), v => !v);
@@ -47,16 +47,16 @@ export default class MonComptePage extends React.Component {
                 updatePassword(current, password)
                 .then(() => {
                     showMessage({
-                        text: 'Votre mot de passe a été modifié',
-                        color: 'green',
+                        text: "Votre mot de passe a été modifié",
+                        color: "green",
                         timeout: 5000,
                     });
 
                     return this.setState({
                         loading: false,
-                        current: '',
-                        password: '',
-                        confirmation: '',
+                        current: "",
+                        password: "",
+                        confirmation: "",
                     });
                 })
                 .catch(async error => {
@@ -64,7 +64,7 @@ export default class MonComptePage extends React.Component {
 
                     showMessage({
                         text: json.message,
-                        color: 'red',
+                        color: "red",
                     });
 
                     this.setState({

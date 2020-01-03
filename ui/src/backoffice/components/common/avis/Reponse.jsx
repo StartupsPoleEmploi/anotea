@@ -1,24 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Reponse.scss';
-import PrettyDate from '../PrettyDate';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Reponse.scss";
+import PrettyDate from "../PrettyDate";
 
 const Status = ({ avis }) => {
 
     switch (avis.reponse.status) {
-        case 'none':
+        case "none":
             return (
                 <span className="status none">
                     (En cours de modération)
                 </span>
             );
-        case 'validated':
+        case "validated":
             return (
                 <span className="status validated">
                     (<span>Validé le </span> <PrettyDate date={new Date(avis.reponse.lastStatusUpdate)} />)
                 </span>
             );
-        case 'rejected':
+        case "rejected":
             return (
                 <span className="status rejected">
                     (<span>Rejeté le </span> <PrettyDate date={new Date(avis.reponse.lastStatusUpdate)} />)

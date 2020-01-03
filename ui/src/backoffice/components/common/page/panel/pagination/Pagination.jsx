@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Pagination.scss';
-import AnalyticsContext from '../../../../../../common/components/analytics/AnalyticsContext';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Pagination.scss";
+import AnalyticsContext from "../../../../../../common/components/analytics/AnalyticsContext";
 
 export default class Pagination extends React.Component {
 
@@ -16,7 +16,7 @@ export default class Pagination extends React.Component {
         let { trackClick } = this.context;
 
         e.preventDefault();
-        trackClick('pagination');
+        trackClick("pagination");
         this.props.onClick(page - 1);
     }
 
@@ -38,7 +38,7 @@ export default class Pagination extends React.Component {
             <div className="Pagination row">
                 <div className="offset-4 col-4 d-flex justify-content-center">
                     <ul className="pagination">
-                        <li className={`page-item ${isFirstPage ? 'active' : ''}`}>
+                        <li className={`page-item ${isFirstPage ? "active" : ""}`}>
                             <a href="/#" className="page-link" onClick={e => this.onClick(e, 1)}>1</a>
                         </li>
                         {
@@ -70,7 +70,8 @@ export default class Pagination extends React.Component {
                         {
                             (nextPage < lastPage) &&
                             <li className="page-item">
-                                <a href="/#" className="page-link" onClick={e => this.onClick(e, nextPage)}>{nextPage}</a>
+                                <a href="/#" className="page-link"
+                                   onClick={e => this.onClick(e, nextPage)}>{nextPage}</a>
                             </li>
                         }
                         {
@@ -79,7 +80,7 @@ export default class Pagination extends React.Component {
                                 <a href="/#" className="page-link">...</a>
                             </li>
                         }
-                        <li className={`page-item ${isLastPage && 'active'}`}>
+                        <li className={`page-item ${isLastPage && "active"}`}>
                             <a href="/#" className="page-link" onClick={e => this.onClick(e, lastPage)}>{lastPage}</a>
                         </li>
                     </ul>

@@ -1,14 +1,14 @@
-const avisNotificationEmail = require('./organismes/avisNotificationEmail');
-const forgottenPasswordEmail = require('./accounts/forgottenPasswordEmail');
-const activationCompteEmail = require('./organismes/activationCompteEmail');
-const avisStagiaireEmail = require('./stagiaires/avisStagiaireEmail');
-const reponseRejectedEmail = require('./organismes/reponseRejectedEmail');
-const avisReportedCanceledEmail = require('./organismes/avisReportedCanceledEmail');
-const avisReportedConfirmedEmail = require('./organismes/avisReportedConfirmedEmail');
-const avisRejectedInjureEmail = require('./stagiaires/avisRejectedInjureEmail');
-const avisRejectedAlerteEmail = require('./stagiaires/avisRejectedAlerteEmail');
-const questionnaire6MoisEmail = require('./stagiaires/questionnaire6MoisEmail');
-const questionnaireOrganismeEmail = require('./organismes/questionnaireOrganismeEmail');
+const avisNotificationEmail = require("./organismes/avisNotificationEmail");
+const forgottenPasswordEmail = require("./accounts/forgottenPasswordEmail");
+const activationCompteEmail = require("./organismes/activationCompteEmail");
+const avisStagiaireEmail = require("./stagiaires/avisStagiaireEmail");
+const reponseRejectedEmail = require("./organismes/reponseRejectedEmail");
+const avisReportedCanceledEmail = require("./organismes/avisReportedCanceledEmail");
+const avisReportedConfirmedEmail = require("./organismes/avisReportedConfirmedEmail");
+const avisRejectedInjureEmail = require("./stagiaires/avisRejectedInjureEmail");
+const avisRejectedAlerteEmail = require("./stagiaires/avisRejectedAlerteEmail");
+const questionnaire6MoisEmail = require("./stagiaires/questionnaire6MoisEmail");
+const questionnaireOrganismeEmail = require("./organismes/questionnaireOrganismeEmail");
 
 module.exports = (db, configuration, regions, mailer) => {
 

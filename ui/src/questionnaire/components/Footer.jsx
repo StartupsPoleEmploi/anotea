@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import logo from '../images/logo-pole-emploi.svg';
-import './footer.scss';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import logo from "../images/logo-pole-emploi.svg";
+import "./footer.scss";
 
 class Footer extends Component {
 

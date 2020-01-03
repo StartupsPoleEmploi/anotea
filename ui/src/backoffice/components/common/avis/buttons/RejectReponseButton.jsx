@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { rejectReponse } from '../../../../services/avisService';
-import Button from '../../../../../common/components/Button';
+import React from "react";
+import PropTypes from "prop-types";
+import { rejectReponse } from "../../../../services/avisService";
+import Button from "../../../../../common/components/Button";
 
 export default class RejectReponseButton extends React.Component {
 
@@ -16,9 +16,9 @@ export default class RejectReponseButton extends React.Component {
         let updated = await rejectReponse(avis._id);
         this.props.onChange(updated, {
             message: {
-                type: 'local',
-                text: 'La réponse a été rejetée.',
-                color: 'red',
+                type: "local",
+                text: "La réponse a été rejetée.",
+                color: "red",
                 timeout: 2500,
             },
         });
@@ -29,7 +29,7 @@ export default class RejectReponseButton extends React.Component {
             <div className="RejectReponseButton">
                 <Button
                     size="large" color="red" onClick={this.onClick} className="RejectReponseButton"
-                    disabled={this.props.avis.reponse.status === 'rejected'}>
+                    disabled={this.props.avis.reponse.status === "rejected"}>
                     <i className="far fa-times-circle" />
                 </Button>
             </div>

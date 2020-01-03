@@ -1,7 +1,7 @@
-import React from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import './Dropdown.scss';
+import React from "react";
+import _ from "lodash";
+import PropTypes from "prop-types";
+import "./Dropdown.scss";
 
 export const DropdownDivider = () => (<div className="dropdown-divider" />);
 
@@ -9,7 +9,7 @@ export const DropdownItem = props => {
     return (
         <a
             className={`dropdown-item ${props.className}`}
-            {..._.omit(props, ['className', 'children'])}
+            {..._.omit(props, ["className", "children"])}
         >
             {props.children}
         </a>
@@ -25,7 +25,7 @@ DropdownItem.propTypes = {
 export const Dropdown = ({ header, button, items, className }) => {
 
     return (
-        <div className={`Dropdown ${className || ''}`}>
+        <div className={`Dropdown ${className || ""}`}>
             {button}
             <div className="dropdown-menu dropdown-menu-right">
                 <h6 className="dropdown-header">{header}</h6>

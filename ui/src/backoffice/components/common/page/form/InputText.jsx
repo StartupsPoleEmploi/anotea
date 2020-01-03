@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import FormError from './FormError';
-import './InputText.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import _ from "lodash";
+import FormError from "./FormError";
+import "./InputText.scss";
 
 export default class InputText extends React.Component {
 
@@ -27,8 +27,8 @@ export default class InputText extends React.Component {
 
                     <input
                         type="text"
-                        className={`${icon ? 'with-icon' : ''} ${reset ? 'with-reset' : ''} ${error ? 'with-error' : ''}`}
-                        {..._.omit(this.props, ['icon', 'reset', 'error'])}
+                        className={`${icon ? "with-icon" : ""} ${reset ? "with-reset" : ""} ${error ? "with-error" : ""}`}
+                        {..._.omit(this.props, ["icon", "reset", "error"])}
                     />
 
                     {reset &&

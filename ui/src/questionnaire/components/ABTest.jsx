@@ -1,7 +1,7 @@
 /* global gtag */
 /* global dataLayer */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 export default class ABTest extends React.Component {
 
@@ -18,8 +18,8 @@ export default class ABTest extends React.Component {
     }
 
     componentDidMount() {
-        dataLayer.push({ 'event': 'optimize.activate' });//In case of test using activation events
-        gtag('event', 'optimize.callback', {
+        dataLayer.push({ "event": "optimize.activate" });//In case of test using activation events
+        gtag("event", "optimize.callback", {
             callback: (variante = 0, testName) => {
                 if (testName === this.props.experimentId) {
                     this.setState({ variante });
@@ -29,9 +29,9 @@ export default class ABTest extends React.Component {
     }
 
     sendEvent(action) {
-        gtag('event', action, {
-            'event_category': 'abtesting',
-            'event_label': this.state.variante,
+        gtag("event", action, {
+            "event_category": "abtesting",
+            "event_label": this.state.variante,
         });
         return true;
     }

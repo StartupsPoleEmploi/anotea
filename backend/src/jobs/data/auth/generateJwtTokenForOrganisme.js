@@ -1,33 +1,33 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const cli = require('commander');
-const { execute } = require('../../job-utils');
+const cli = require("commander");
+const { execute } = require("../../job-utils");
 
-cli.description('Generate jwt token')
-.option('-s, --siret [siret]')
+cli.description("Generate jwt token")
+.option("-s, --siret [siret]")
 .parse(process.argv);
 
 execute(async ({ db, auth, exit }) => {
 
     if (!cli.siret) {
-        exit('Invalid arguments');
+        exit("Invalid arguments");
     }
 
-    let organisme = await db.collection('accounts').findOne({
-        'meta.siretAsString': cli.siret,
-        'profile': 'organisme'
+    let organisme = await db.collection("accounts").findOne({
+        "meta.siretAsString": cli.siret,
+        "profile": "organisme"
     });
     let data = {
         sub: organisme.courriel,
-        profile: 'organisme',
+        profile: "organisme",
         id: organisme._id,
         codeRegion: organisme.codeRegion,
         raisonSociale: organisme.raisonSociale,
         siret: organisme.meta.siretAsString
     };
 
-    let jwt = await auth.buildJWT('backoffice', data, { expiresIn: '1h' });
+    let jwt = await auth.buildJWT("backoffice", data, { expiresIn: "1h" });
 
     return {
         token: `Bearer ${jwt.access_token}`,
