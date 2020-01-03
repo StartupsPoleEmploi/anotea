@@ -254,6 +254,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let app = await startServerWithRealAuth();
 
         let authUrl = await generateKairosToken(app);
+        console.log(authUrl);
 
         let response = await request(app)
         .get(`/api/backoffice/login?access_token=${authUrl.split('access_token=')[1]}`);

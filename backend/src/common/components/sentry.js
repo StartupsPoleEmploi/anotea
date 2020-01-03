@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const { init, captureException, configureScope } = require('@sentry/node');
-const { getRemoteAddress } = require('../../http/routes/routes-utils');
+const { getRemoteAddress } = require('../../http/utils/routes-utils');
 
 module.exports = (logger, configuration) => {
 
