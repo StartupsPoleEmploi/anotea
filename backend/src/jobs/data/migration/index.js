@@ -7,6 +7,7 @@ cli.parse(process.argv);
 
 execute(async ({ db }) => {
     let stats = {};
-    stats.deprecatedProperties = await require('./tasks/deprecatedProperties')(db);
+    stats.markPropertiesAsDeprecated = await require('./tasks/markPropertiesAsDeprecated')(db);
+    stats.removeInvalidOrganismes = await require('./tasks/removeInvalidOrganismes')(db);
     return stats;
 });
