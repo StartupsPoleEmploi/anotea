@@ -1,5 +1,4 @@
 const path = require('path');
-const compose = require('compose-middleware').compose;
 const express = require('express');
 const bodyParser = require('body-parser');
 const Boom = require('boom');
@@ -25,10 +24,6 @@ module.exports = components => {
     app.use(middlewares.logHttpRequests());
     app.use(middlewares.allowCORS());
     app.use(compression());
-    app.use(compose([
-        express.static(path.join(__dirname, 'public')),
-        express.static(path.join(path.dirname(require.main.filename), 'build/public'))
-    ]));
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json({
         verify: (req, res, buf, encoding) => {
@@ -39,8 +34,9 @@ module.exports = components => {
     }));
 
     //HTML routes
-    app.use('/', require('./html/site-routes')(httpComponents));
-    app.use('/', require('./html/emails-routes')(httpComponents));
+    app.use(require('./public/static-routes')(httpComponents));
+    app.use(require('./html/site-routes')(httpComponents));
+    app.use(require('./html/emails-routes')(httpComponents));
 
     //JSON routes
     app.use('/api', middlewares.addRateLimit(sentry));
