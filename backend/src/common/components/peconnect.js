@@ -40,7 +40,7 @@ module.exports = (db, configuration) => {
             });
 
             return client.authorizationUrl({
-                scope: `api_peconnect-individuv1 openid profile email application_${clientId}`,
+                scope: `api_peconnect-individuv1 openid email application_${clientId}`,
                 realm: '/individu',
                 state,
                 nonce,
@@ -55,6 +55,7 @@ module.exports = (db, configuration) => {
             }
 
             let tokenSet = await client.callback(callbackUrl, params, { state: auth.state, nonce: auth.nonce });
+            console.log(tokenSet);
 
             return await client.userinfo(tokenSet.access_token);
         },
