@@ -6,7 +6,7 @@ let mockLogger = {
     }
 };
 
-let badwords = require('../../src/http/routes/api/questionnaire/utils/badwords.js')(mockLogger);
+let badwords = require('../../src/http/api/questionnaire/utils/badwords.js')(mockLogger);
 
 describe('Badwords', () => {
     it('should find bad words in offensive content', async () => {

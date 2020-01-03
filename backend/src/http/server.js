@@ -1,10 +1,10 @@
 const path = require('path');
+const compose = require('compose-middleware').compose;
 const express = require('express');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const Boom = require('boom');
-const createMiddlewares = require('./middlewares/middlewares');
 const compression = require('compression');
+const createMiddlewares = require('./utils/middlewares/middlewares');
 
 module.exports = components => {
 
@@ -18,16 +18,17 @@ module.exports = components => {
     // inject Google Analytics and Hotjar tracking id into views
     app.locals.analytics = configuration.analytics;
     app.set('view engine', 'ejs');
-    app.set('views', path.join(__dirname, 'views'));
+    app.set('views', path.join(__dirname, 'html', 'views'));
 
     app.use(middlewares.rewriteDeprecatedUrl());
     app.use(middlewares.addRequestId());
     app.use(middlewares.logHttpRequests());
     app.use(middlewares.allowCORS());
     app.use(compression());
-    app.use(cookieParser(configuration.security.secret));
-    app.use(express.static(path.join(__dirname, 'public')));
-    app.use(express.static(path.join(path.dirname(require.main.filename), 'build/public')));
+    app.use(compose([
+        express.static(path.join(__dirname, 'public')),
+        express.static(path.join(path.dirname(require.main.filename), 'build/public'))
+    ]));
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json({
         verify: (req, res, buf, encoding) => {
@@ -37,38 +38,34 @@ module.exports = components => {
         }
     }));
 
-    //Public routes with HTML server-side rendering
-    app.use('/', require('./routes/front/html-routes')(httpComponents));
-    app.use('/', require('./routes/front/emails-routes')(httpComponents));
+    //HTML routes
+    app.use('/', require('./html/site-routes')(httpComponents));
+    app.use('/', require('./html/emails-routes')(httpComponents));
 
-    //PE Connect API callback
-    app.use('/', require('./routes/front/peconnect-routes')(httpComponents));
-
-    //API routes
+    //JSON routes
     app.use('/api', middlewares.addRateLimit(sentry));
-    app.use('/api', require('./routes/api/swagger-routes')(httpComponents));
-    app.use('/api', require('./routes/api/v1/ping-routes')(httpComponents));
-    app.use('/api', require('./routes/api/v1/avis-routes')(httpComponents));
-    app.use('/api', require('./routes/api/v1/formations-routes')(httpComponents));
-    app.use('/api', require('./routes/api/v1/actions-routes')(httpComponents));
-    app.use('/api', require('./routes/api/v1/sessions-routes')(httpComponents));
-    app.use('/api', require('./routes/api/v1/organismes-formateurs-routes')(httpComponents));
-    app.use('/api', require('./routes/api/exports-routes')(httpComponents));
-    app.use('/api', require('./routes/api/public-stats-routes')(httpComponents));
-    app.use('/api', require('./routes/api/regions-routes')(httpComponents));
-    app.use('/api', require('./routes/api/kairos/kairos-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/login-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/password-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/activation-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/me-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/avis-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/formations-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/sirens-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/departements-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/stats-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/gestion-organismes-routes')(httpComponents));
-    app.use('/api', require('./routes/api/backoffice/emails-preview-routes')(httpComponents));
-    app.use('/api', require('./routes/api/questionnaire/questionnaire-routes')(httpComponents));
+    app.use(require('./api/v1/ping-routes')(httpComponents));
+    app.use(require('./api/v1/avis-routes')(httpComponents));
+    app.use(require('./api/v1/formations-routes')(httpComponents));
+    app.use(require('./api/v1/actions-routes')(httpComponents));
+    app.use(require('./api/v1/sessions-routes')(httpComponents));
+    app.use(require('./api/v1/organismes-formateurs-routes')(httpComponents));
+    app.use(require('./api/v1/swagger-routes')(httpComponents));
+    app.use(require('./api/public-stats-routes')(httpComponents));
+    app.use(require('./api/regions-routes')(httpComponents));
+    app.use(require('./api/kairos/kairos-routes')(httpComponents));
+    app.use(require('./api/backoffice/login-routes')(httpComponents));
+    app.use(require('./api/backoffice/password-routes')(httpComponents));
+    app.use(require('./api/backoffice/activation-routes')(httpComponents));
+    app.use(require('./api/backoffice/me-routes')(httpComponents));
+    app.use(require('./api/backoffice/avis-routes')(httpComponents));
+    app.use(require('./api/backoffice/formations-routes')(httpComponents));
+    app.use(require('./api/backoffice/sirens-routes')(httpComponents));
+    app.use(require('./api/backoffice/departements-routes')(httpComponents));
+    app.use(require('./api/backoffice/stats-routes')(httpComponents));
+    app.use(require('./api/backoffice/gestion-organismes-routes')(httpComponents));
+    app.use(require('./api/backoffice/emails-preview-routes')(httpComponents));
+    app.use(require('./api/questionnaire/questionnaire-routes')(httpComponents));
 
     // catch 404
     app.use((req, res) => {
