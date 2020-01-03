@@ -1,9 +1,13 @@
-module.exports = db => {
-    return Promise.all([
+const moment = require('moment');
+const { getNbModifiedDocuments } = require('../../../job-utils');
+
+module.exports = async db => {
+    let [questionnaire, questionnaire6Mois, organisme] = await Promise.all([
         db.collection('trainee').updateMany(
             {
                 avisCreated: false,
-                mailSent: true
+                mailSent: true,
+                importDate: { $gte: moment().subtract(1, 'months').toDate() },
             },
             {
                 $set: {
@@ -18,6 +22,7 @@ module.exports = db => {
         db.collection('trainee').updateMany(
             {
                 'mailing.questionnaire6Mois': { $exists: true },
+                'importDate': { $gte: moment().subtract(1, 'months').toDate() },
             },
             {
                 $unset: {
@@ -38,4 +43,10 @@ module.exports = db => {
             }
         ),
     ]);
+
+    return {
+        questionnaire: getNbModifiedDocuments(questionnaire),
+        questionnaire6Mois: getNbModifiedDocuments(questionnaire6Mois),
+        organisme: getNbModifiedDocuments(organisme),
+    };
 };
