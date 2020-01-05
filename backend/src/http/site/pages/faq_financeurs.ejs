@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
         <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
-        <link rel="stylesheet" type="text/css" href="/static/css/front/faq.css" media="all">
+        <link rel="stylesheet" type="text/css" href="/static/css/faq.css" media="all">
         <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
                 integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
@@ -26,10 +26,10 @@
                             formations que vous avez financées.
                         </p>
                         <a class="button" href="<%= utils.getBackofficeUrl() %>">
-                            Accéder à mon espace <img src="/static/images/home/arrow.svg" />
+                            Accéder à mon espace <img src="/static/images/arrow.svg" />
                         </a>
                     </div>
-                    <img class="illustration" src="/static/images/home/faq/Illu_financeur.png" />
+                    <img class="illustration" src="/static/images/faq/Illu_financeur.png" />
                 </div>
             </div>
 
@@ -40,36 +40,36 @@
                     <div class="text">
                         <ul>
                             <li>
-                                <img class="icon" src="/static/images/home/faq/faq_1_fi.svg" />
+                                <img class="icon" src="/static/images/faq/faq_1_fi.svg" />
                                 <p>Consulter les avis laissés par les anciens stagiaires.</p>
                             </li>
                             <li>
-                                <img class="icon" src="/static/images/home/faq/faq_2_fi.svg" />
+                                <img class="icon" src="/static/images/faq/faq_2_fi.svg" />
                                 <p>Consulter sous forme de graphique, la satisfaction des stagiaires de chaque
                                     formation.
                                 </p>
                             </li>
                             <li>
-                                <img class="icon" src="/static/images/home/faq/faq_3_fi.svg" />
+                                <img class="icon" src="/static/images/faq/faq_3_fi.svg" />
                                 <p>Faire une recherche ciblée grâce aux filtres par organisme, formation, période ou
                                     encore
                                     lieu de formation.</p>
                             </li>
                             <li>
-                                <img class="icon" src="/static/images/home/faq/faq_4_fi.svg" />
+                                <img class="icon" src="/static/images/faq/faq_4_fi.svg" />
                                 <p>Exporter les avis ainsi que les graphiques présents dans votre espace pour les
                                     partager à
                                     vos collaborateurs.</p>
                             </li>
                         </ul>
-                        <img class="bo" src="/static/images/home/faq/bo_fi.png" />
+                        <img class="bo" src="/static/images/faq/bo_fi.png" />
                     </div>
                 </div>
             </div>
         </div>
-        <%- include('../contact.ejs'); %>
+        <%- include('./common/contact.ejs'); %>
         <%- include('./footer.ejs'); %>
-        <%- include('../analyticsTrackers.ejs'); %>
+        <%- include('./common/analyticsTrackers.ejs'); %>
     </body>
 
 </html>

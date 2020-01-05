@@ -14,11 +14,6 @@ module.exports = components => {
         middlewares: middlewares,
     });
 
-    // inject Google Analytics and Hotjar tracking id into views
-    app.locals.analytics = configuration.analytics;
-    app.set('view engine', 'ejs');
-    app.set('views', path.join(__dirname, 'html', 'views'));
-
     app.use(middlewares.rewriteDeprecatedUrl());
     app.use(middlewares.addRequestId());
     app.use(middlewares.logHttpRequests());
@@ -33,12 +28,14 @@ module.exports = components => {
         }
     }));
 
-    //HTML routes
-    app.use(require('./public/static-routes')(httpComponents));
-    app.use(require('./html/site-routes')(httpComponents));
-    app.use(require('./html/emails-routes')(httpComponents));
+    //Site
+    app.use(require('./site/pages-routes')(httpComponents));
+    app.use(require('./site/static-routes')(httpComponents));
+    app.use(require('./site/emails-routes')(httpComponents));
+    app.set('view engine', 'ejs');
+    app.set('views', path.join(__dirname, 'site', 'pages'));
 
-    //JSON routes
+    //Api
     app.use('/api', middlewares.addRateLimit(sentry));
     app.use(require('./api/v1/ping-routes')(httpComponents));
     app.use(require('./api/v1/avis-routes')(httpComponents));

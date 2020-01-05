@@ -1,6 +1,6 @@
 const moment = require('moment');
 const express = require('express');
-const externalLinks = require('./utils/externalLinks');
+const externalLinks = require('../utils/externalLinks');
 const { getFullUrl } = require('../utils/routes-utils');
 
 module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
@@ -18,7 +18,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
             db.collection('trainee').count({ mailSentDate: { $ne: null } })
         ]);
 
-        res.render('site/homepage', {
+        res.render('homepage', {
             avisCount: new Intl.NumberFormat('fr').format(avisCount),
             organismesCount: new Intl.NumberFormat('fr').format(organismesCount),
             stagiairesCount: new Intl.NumberFormat('fr').format(stagiairesCount),
@@ -29,24 +29,24 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
     });
 
     router.get('/cgu', (req, res) => {
-        res.render('site/cgu', { utils });
+        res.render('cgu', { utils });
     });
 
     router.get('/politique-confidentialite', (req, res) => {
-        res.render('site/politique-confidentialite', { utils });
+        res.render('politique-confidentialite', { utils });
     });
 
     router.get('/services/organismes', (req, res) => {
-        res.render('site/faq_organismes', { utils });
+        res.render('faq_organismes', { utils });
 
     });
 
     router.get('/services/stagiaires', (req, res) => {
-        res.render('site/faq_stagiaires', { utils });
+        res.render('faq_stagiaires', { utils });
     });
 
     router.get('/services/financeurs', (req, res) => {
-        res.render('site/faq_financeurs', { utils });
+        res.render('faq_financeurs', { utils });
     });
 
     router.get('/peconnect', async (req, res) => {
@@ -69,7 +69,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
             .toArray();
 
             if (results.length === 0) {
-                return res.render('site/peconnect/notFound');
+                return res.render('site/errors/formationNotFound');
             }
 
             let trainee = results[0];

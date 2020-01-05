@@ -37,9 +37,8 @@ header {
 
 .servicePro {
     font-size: 14px;
-    top: 35px;
-    margin-left: 500px;
-    position: absolute;
+    margin-top: 3rem;
+    text-align: center;
 }
 
 .servicePro img {
