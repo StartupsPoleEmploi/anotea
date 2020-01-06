@@ -9,8 +9,8 @@
         <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
         <link rel="stylesheet" type="text/css" href="/static/css/cgu.css" media="all">
         <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-                integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="/static/js/rgpd.js"></script>
     </head>
 
     <body class="cgu">
@@ -28,17 +28,19 @@
 
             <p>
                 Anotéa protège vos données<br />
-                Vos notes et Commentaires sont anonymes<br />
+                Vos notes et commentaires sont anonymes<br />
                 Votre identité n’est communiquée à personne<br />
             </p>
 
-            <p>Nous limitons l’usage de vos données au strict besoin de collecte de votre avis, et nous en avons fait la
-                déclaration auprès de la CNIL<br />
+            <p>
+                Nous limitons l’usage de vos données au strict besoin de collecte de votre avis, et nous en avons fait
+                la déclaration auprès de la CNIL<br />
                 Vous pouvez à tout moment demander à modifier votre commentaire ou à le supprimer ici (lien vers la page
-                qui oriente vers les boîtes régionales)</p>
+                qui oriente vers les boîtes régionales)
+            </p>
         </div>
-        <%- include('../../views/front/footer.ejs'); %>
-        <%- include('../../views/analyticsTrackers.ejs'); %>
+        <%- include('./footer.ejs'); %>
+        <%- include('./common/analyticsTrackers.ejs'); %>
     </body>
 
 </html>

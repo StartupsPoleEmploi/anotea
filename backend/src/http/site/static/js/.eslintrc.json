@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "../../../../../../.eslintrc.json"
+  ],
+  "env": {
+    "browser": true,
+    "jquery": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2015
+  },
+  "rules": {
+    "no-var": "off",
+    "no-implicit-coercion": "off"
+  }
+}

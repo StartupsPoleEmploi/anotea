@@ -1,33 +1,81 @@
-$(document).ready(() => {
-    $.rgpWhat('En naviguant sur le site, vous acceptez l\'utilisation de cookies pour améliorer la qualité du service et pour réaliser des statistiques de visite. Pour en savoir plus, consultez notre <a href="/politique-confidentialite" target="_blank">Politique de Confidentialité</a>.',
-        {
-            class: 'rgpwhat',
-            loadCss: '/static/js/rgpwhat/rgpwhat.css',
-            consent: [
-                {
-                    title: 'Google Analytics',
-                    description: 'Service google de statistiques de trafic',
-                    key: 'ga',
-                    callbackAccepted: () => {
-                        // enable Google Analytics
-                        window.dataLayer = window.dataLayer || [];
+/* global ga */
+(function() {
 
-                        function gtag() {
-                            dataLayer.push(arguments);
-                        }
+    var trackingId = 'UA-138038381-1';
 
-                        gtag('js', new Date());
-                        gtag('config', '<%= analytics.ga %>');
-                    }
-                }
-            ],
-            position: 'bottom',
-            fixed: true,
-            forceDisplay: false,
-            buttons: 'notOk|ok',
-            locale: {
-                ok: 'J\'accepte',
-                notOk: 'Je refuse'
-            }
+    var loadGoogleAnalytics = function() {
+        /* eslint-disable */
+        // @formatter:off
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        // @formatter:on
+        /* eslint-enable */
+
+        ga('set', 'anonymizeIp', true);
+        ga('create', trackingId);
+        ga('send', 'pageview');
+    };
+
+    var showCookiePopup = function() {
+        var message = 'Nous utilisons des cookies pour réaliser des statisques anonymes en vue d\'améliorer le site.';
+        var style = 'position: fixed; right: 10px; bottom:10px; background-color:#E8E8E8;border-radius:5px;text-align:center;padding:10px;padding-right: 25px;font-size:1rem;';
+        var links = '<a href="/cgu#donnees-personnelles">En savoir plus</a>';
+        $(document).ready(function() {
+            $('body').append('<div style="' + style + '">' + message + '<br/>' + links + '<div style="position:absolute;top:0;right:5px;">x</div>' + '.</div>');
         });
-});
+    };
+
+    var getCookie = function(name) {
+        var pairs = document.cookie.split(';');
+        var cookies = {};
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i].split('=');
+            cookies[(pair[0] + '').trim()] = unescape(pair.slice(1).join('='));
+        }
+        return cookies[name];
+    };
+
+    var deleteCookie = function(name) {
+        document.cookie = name + '=; Path=/; Domain=.' + document.location.host + '; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    };
+
+    var installAPI = function() {
+        window.rgpd = window.rgpd || {};
+        window.rgpd.optout = function() {
+            window['ga-disable-' + trackingId] = true;
+            deleteCookie('_ga');
+        };
+    };
+
+    var getRGPDMaxLifespan = function() {
+        var _13months = new Date();
+        _13months.setMonth(_13months.getMonth() + 13);
+        return _13months;
+    };
+
+    var getGoogleAnalyticsData = function() {
+        var cookie = getCookie('_ga');
+        if (!cookie) {
+            return null;
+        }
+
+        var values = cookie.split('.');
+        var creationDate = new Date(values[3] * 1000);
+        return {
+            values: values,
+            creationDate: creationDate,
+            expired: creationDate > getRGPDMaxLifespan()
+        };
+    };
+
+    var data = getGoogleAnalyticsData();
+    if (!data || data.expired) {
+        deleteCookie('_ga');
+        showCookiePopup();
+    }
+
+    loadGoogleAnalytics();
+    installAPI();
+})();
