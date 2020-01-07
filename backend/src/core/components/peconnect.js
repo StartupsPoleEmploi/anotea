@@ -55,7 +55,6 @@ module.exports = (db, configuration) => {
             }
 
             let tokenSet = await client.callback(callbackUrl, params, { state: auth.state, nonce: auth.nonce });
-            console.log(tokenSet);
 
             return await client.userinfo(tokenSet.access_token);
         },
