@@ -1,7 +1,7 @@
 /* global ga */
 (function() {
 
-    var googleAnalyticsId = document.querySelector('#rgpd').getAttribute('data-google');
+    var googleAnalyticsId = document.querySelector('#rgpd').getAttribute('data-analytics');
     if (!googleAnalyticsId) {
         return;
     }

@@ -71,7 +71,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
             .toArray();
 
             if (results.length === 0) {
-                return res.render('site/errors/formationNotFound');
+                return res.render('errors/formationNotFound');
             }
 
             let trainee = results[0];
