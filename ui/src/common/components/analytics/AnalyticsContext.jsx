@@ -40,7 +40,10 @@ export const initialize = (trackingId, options = {}) => {
     // @formatter:on
     /* eslint-enable */
 
-    ga('create', trackingId, 'auto');
+    ga('set', 'anonymizeIp', true);
+    ga('create', trackingId, {
+        'cookieExpires': 34190000, // 13 months
+    });
 
     if (options.debug) {
         ga('set', 'sendHitTask', null);

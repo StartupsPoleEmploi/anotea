@@ -1,4 +1,5 @@
 const Boom = require('boom');
+const ip = require('ip');
 const _ = require('lodash');
 const basicAuth = require('basic-auth');
 const uuid = require('node-uuid');
@@ -121,7 +122,7 @@ module.exports = (auth, logger, configuration) => {
         logHttpRequests: () => {
 
             let exporter = createDatalakeExporter(logger, configuration);
-
+            let maskIp = data => ip.mask(data, '255.255.255.0');
             return (req, res, next) => {
 
                 let relativeUrl = (req.baseUrl || '') + (req.url || '');
@@ -156,7 +157,11 @@ module.exports = (auth, logger, configuration) => {
                                     parameters: _.omit(req.query, ['access_token']),
                                 },
                                 method: req.method,
-                                headers: req.headers,
+                                headers: {
+                                    ..._.omit(req.headers, ['authorization', 'cookie']),
+                                    ...(req.headers['x-forwarded-for'] ? { 'x-forwarded-for': maskIp(req.headers['x-forwarded-for']) } : {}),
+                                    ...(req.headers['x-real-ip'] ? { 'x-real-ip': maskIp(req.headers['x-real-ip']) } : {}),
+                                },
                                 body: _.omit(req.body, ['password'])
                             },
                             response: {

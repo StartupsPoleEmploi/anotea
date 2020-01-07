@@ -1,6 +1,5 @@
 const rfs = require('rotating-file-stream');
 const moment = require('moment');
-const findApplication = require('./findApplication');
 
 module.exports = (logger, configuration) => {
 
@@ -30,7 +29,7 @@ module.exports = (logger, configuration) => {
                     requestId: data.request.requestId,
                     date: new Date(),
                     apiVersion: 'v1',
-                    application: findApplication(data.request),
+                    application: data.application,
                     widget: !!headers['x-anotea-widget'],
                     statusCode: data.response.statusCode
 

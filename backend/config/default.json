@@ -62,8 +62,8 @@
     }
   },
   "analytics": {
-    "ga": "1234",
-    "sessionDuration": 3600000
+    "googleAnalyticsId": "ga",
+    "googleSiteVerification": "ga-dev-id"
   },
   "smtp": {
     "host": "localhost",
@@ -83,9 +83,6 @@
   },
   "api": {
     "pagination": 20
-  },
-  "front": {
-    "googleSiteVerification": "12345"
   },
   "slack": {
     "webhookUrl": "1234"

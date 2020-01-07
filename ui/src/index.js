@@ -25,7 +25,7 @@ WebFont.load({
 
 Sentry.initialize(env.REACT_APP_ANOTEA_SENTRY_DSN);
 Hotjar.initialize(env.REACT_APP_ANOTEA_HOTJAR_ID);
-GoogleAnalytics.initialize(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });
+GoogleAnalytics.initialize('UA-138038381-1', { debug: false });
 
 let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
 let StatsChunksLoader = React.lazy(() => import('./stats/Stats'));

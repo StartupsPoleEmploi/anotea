@@ -35,7 +35,7 @@ describe('datalake-exporter', withServer(({ startServer, getComponents }) => {
         });
     };
 
-    it('should export log to datalake', async () => {
+    it.only('should export log to datalake', async () => {
 
         let app = await startServer();
         let { configuration } = await getComponents();
