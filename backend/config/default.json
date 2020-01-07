@@ -62,7 +62,7 @@
     }
   },
   "analytics": {
-    "googleAnalyticsId": "ga",
+    "googleAnalyticsId": null,
     "googleSiteVerification": "ga-dev-id"
   },
   "smtp": {

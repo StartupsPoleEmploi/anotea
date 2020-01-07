@@ -24,15 +24,14 @@
     };
 
     var showCookiePopup = function() {
-        var message = 'Nous utilisons des cookies pour réaliser des statisques anonymes en vue d\'améliorer le site.';
+        var message = 'En poursuivant votre navigation, vous acceptez que nous utilisions des cookies pour réaliser des statisques anonymes en vue d\'améliorer le site.';
         var style = 'position: fixed; right: 10px; bottom:10px; background-color:#E8E8E8;border-radius:5px;text-align:center;padding:10px;padding-right: 25px;font-size:1rem;';
         var links = '<a href="/cgu#donnees-personnelles">En savoir plus</a>';
-        let cross = '<div style="position:absolute;top:0;right:5px;">x</div>';
         document.addEventListener('DOMContentLoaded', function() {
 
             var div = document.createElement('div');
             div.style.cssText = style;
-            div.innerHTML = message + '<br/>' + links + cross;
+            div.innerHTML = message + '<br/>' + links;
             document.body.appendChild(div);
         });
     };
