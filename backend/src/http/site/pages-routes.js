@@ -56,7 +56,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
         return res.redirect(authenticationUrl);
     });
 
-    router.get('/callback_pe_connect', async (req, res) => {
+    router.get('/peconnect/callback', async (req, res) => {
 
         try {
             let userInfo = await peconnect.getUserInfo(getFullUrl(req));
