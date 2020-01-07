@@ -1,7 +1,10 @@
 /* global ga */
 (function() {
 
-    var trackingId = 'UA-138038381-1';
+    var googleAnalyticsId = document.querySelector('#rgpd').getAttribute('data-google');
+    if (!googleAnalyticsId) {
+        return;
+    }
 
     var loadGoogleAnalytics = function() {
         /* eslint-disable */
@@ -14,7 +17,9 @@
         /* eslint-enable */
 
         ga('set', 'anonymizeIp', true);
-        ga('create', trackingId);
+        ga('create', googleAnalyticsId, {
+            'cookieExpires': 34190000, // 13 months
+        });
         ga('send', 'pageview');
     };
 
@@ -22,8 +27,13 @@
         var message = 'Nous utilisons des cookies pour réaliser des statisques anonymes en vue d\'améliorer le site.';
         var style = 'position: fixed; right: 10px; bottom:10px; background-color:#E8E8E8;border-radius:5px;text-align:center;padding:10px;padding-right: 25px;font-size:1rem;';
         var links = '<a href="/cgu#donnees-personnelles">En savoir plus</a>';
-        $(document).ready(function() {
-            $('body').append('<div style="' + style + '">' + message + '<br/>' + links + '<div style="position:absolute;top:0;right:5px;">x</div>' + '.</div>');
+        let cross = '<div style="position:absolute;top:0;right:5px;">x</div>';
+        document.addEventListener('DOMContentLoaded', function() {
+
+            var div = document.createElement('div');
+            div.style.cssText = style;
+            div.innerHTML = message + '<br/>' + links + cross;
+            document.body.appendChild(div);
         });
     };
 
@@ -44,35 +54,12 @@
     var installAPI = function() {
         window.rgpd = window.rgpd || {};
         window.rgpd.optout = function() {
-            window['ga-disable-' + trackingId] = true;
+            window['ga-disable-' + googleAnalyticsId] = true;
             deleteCookie('_ga');
         };
     };
 
-    var getRGPDMaxLifespan = function() {
-        var _13months = new Date();
-        _13months.setMonth(_13months.getMonth() + 13);
-        return _13months;
-    };
-
-    var getGoogleAnalyticsData = function() {
-        var cookie = getCookie('_ga');
-        if (!cookie) {
-            return null;
-        }
-
-        var values = cookie.split('.');
-        var creationDate = new Date(values[3] * 1000);
-        return {
-            values: values,
-            creationDate: creationDate,
-            expired: creationDate > getRGPDMaxLifespan()
-        };
-    };
-
-    var data = getGoogleAnalyticsData();
-    if (!data || data.expired) {
-        deleteCookie('_ga');
+    if (!getCookie('_ga')) {
         showCookiePopup();
     }
 

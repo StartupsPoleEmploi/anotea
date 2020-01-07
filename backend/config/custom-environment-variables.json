@@ -48,16 +48,14 @@
     "dsn": "ANOTEA_SENTRY_DSN"
   },
   "analytics": {
-    "ga": "ANOTEA_GOOGLE_ANALYTICS_ID"
+    "googleAnalyticsId": "ANOTEA_GOOGLE_ANALYTICS_ID",
+    "googleSiteVerification": "ANOTEA_GOOGLE_ANALYTICS_SITE_VERIFICATION"
   },
   "smtp": {
     "host": "ANOTEA_SMTP_HOST",
     "port": "ANOTEA_SMTP_PORT",
     "user": "ANOTEA_SMTP_USER",
     "password": "ANOTEA_SMTP_PASSWORD"
-  },
-  "front": {
-    "googleSiteVerification": "ANOTEA_FRONT_GOOGLE_SITE_VERIFICATION"
   },
   "slack": {
     "webhookUrl": "ANOTEA_SLACK_WEBHOOK_URL"

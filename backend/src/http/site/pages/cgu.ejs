@@ -5,12 +5,13 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="google-site-verification" content="<%= utils.analytics.googleSiteVerification %>" />
         <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
         <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
         <link rel="stylesheet" type="text/css" href="/static/css/cgu.css" media="all">
         <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="/static/js/rgpd.js"></script>
+        <script id="rgpd" data-google="<% utils.analytics.googleAnalyticsId %>" src="/static/js/rgpd.js"></script>
     </head>
 
     <body class="cgu">
@@ -83,9 +84,8 @@
                 sans permettre l'identification d'un utilisateur. Ces cookies sont émis par la société Google.</p>
             <p>La durée de conservation des informations relatives à la navigation est de 26 mois.</p>
             <p>Les informations de session sont supprimées dès la déconnexion.</p>
-            <p>L’utilisateur peut s’opposer à l'enregistrement de cookies
-                <a href="#" onclick="(function(){window.rgpd.optout();})();return false;">en cliquant ici</a>
-                 ou sur son ordinateur en configurant son poste informatique de la manière suivante :</p>
+            <p>L’utilisateur peut s’opposer à l'enregistrement de cookies sur son ordinateur en configurant son poste
+                informatique de la manière suivante :</p>
 
             <div>
                 <strong>Pour Microsoft Internet Explorer 6.0 et + :</strong>
@@ -231,7 +231,6 @@
                 contrefaçon, sanctionné au titre des articles L.716-1 du même code.</p>
         </div>
         <%- include('./footer.ejs'); %>
-        <%- include('./common/analyticsTrackers.ejs'); %>
     </body>
 
 </html>
