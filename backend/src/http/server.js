@@ -16,7 +16,7 @@ module.exports = components => {
 
     app.use(middlewares.rewriteDeprecatedUrl());
     app.use(middlewares.addRequestId());
-    app.use(middlewares.logHttpRequests());
+    app.use(middlewares.logHttpRequests(sentry));
     app.use(middlewares.allowCORS());
     app.use(compression());
     app.use(bodyParser.urlencoded({ extended: true }));

@@ -119,10 +119,21 @@ module.exports = (auth, logger, configuration) => {
                 next();
             });
         },
-        logHttpRequests: () => {
+        logHttpRequests: sentry => {
 
             let exporter = createDatalakeExporter(logger, configuration);
-            let maskIp = data => ip.mask(data, '255.255.255.0');
+            let maskIp = data => ip.mask((data || '').trim(), '255.255.255.0');
+            let getHeaders = req => {
+                let xforwardedFor = (req.headers['x-forwarded-for'] || '').split(',');
+                let xRealIP = req.headers['x-real-ip'];
+
+                return {
+                    ..._.omit(req.headers, ['authorization', 'cookie', 'x-forwarded-for', 'x-real-ip']),
+                    ...(xforwardedFor.length > 0 ? { 'x-forwarded-for': xforwardedFor.map(ip => maskIp(ip)).join(',') } : {}),
+                    ...(xRealIP ? { 'x-real-ip': maskIp(xRealIP) } : {}),
+                };
+            };
+
             return (req, res, next) => {
 
                 let relativeUrl = (req.baseUrl || '') + (req.url || '');
@@ -133,16 +144,6 @@ module.exports = (auth, logger, configuration) => {
                 let recorder = createResponseRecorder({ mustRecordBody });
                 recorder.record(res);
 
-                let getHeaders = req => {
-                    let xforwardedFor = (req.headers['x-forwarded-for'] || '').split(',');
-                    let xRealIP = req.headers['x-real-ip'];
-
-                    return {
-                        ..._.omit(req.headers, ['authorization', 'cookie', 'x-forwarded-for', 'x-real-ip']),
-                        ...(xforwardedFor.length > 0 ? { 'x-forwarded-for': xforwardedFor.map(ip => maskIp(ip)).join(',') } : {}),
-                        ...(xRealIP ? { 'x-real-ip': maskIp(xRealIP) } : {}),
-                    };
-                };
 
                 let log = () => {
 
@@ -186,6 +187,8 @@ module.exports = (auth, logger, configuration) => {
 
                         logger[error ? 'error' : 'info'](data, `Http Request ${error ? 'KO' : 'OK'}`);
 
+                    } catch (e) {
+                        sentry.sendError(e);
                     } finally {
                         res.removeListener('finish', log);
                         res.removeListener('close', log);
