@@ -30,4 +30,3 @@ services:
     mem_limit: 1g
     depends_on:
       - mongodb
-      - smtp
