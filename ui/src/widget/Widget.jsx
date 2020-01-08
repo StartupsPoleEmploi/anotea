@@ -74,7 +74,7 @@ class Widget extends Component {
             let score = await getScore(type, identifiant);
             this.setState({ score });
         } catch (e) {
-            if (await e.json.statusCode > 400) {
+            if (!e.statusCode || e.statusCode > 404) {
                 sendError(e);
             }
         }
@@ -87,7 +87,7 @@ class Widget extends Component {
             let results = await getAvis(type, identifiant, options);
             this.setState({ results });
         } catch (e) {
-            if (await e.json.statusCode > 400) {
+            if (!e.statusCode || e.statusCode > 404) {
                 sendError(e);
             }
         }

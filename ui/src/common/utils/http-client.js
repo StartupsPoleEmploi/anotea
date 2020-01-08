@@ -2,9 +2,10 @@ import { getToken } from '../../backoffice/utils/session';
 import EventEmitter from 'events';
 
 class HTTPError extends Error {
-    constructor(message, json) {
+    constructor(message, json, statusCode) {
         super(message);
         this.json = json;
+        this.statusCode = statusCode;
     }
 }
 
@@ -13,7 +14,7 @@ const handleResponse = (path, response) => {
     let statusCode = response.status;
     if (statusCode >= 400 && statusCode < 600) {
         emitter.emit('http:error', response);
-        throw new HTTPError(`Server returned ${statusCode} when requesting resource ${path}`, response.json());
+        throw new HTTPError(`Server returned ${statusCode} when requesting resource ${path}`, response.json(), statusCode);
     }
     return response.json();
 };
