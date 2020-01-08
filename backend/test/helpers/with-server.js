@@ -70,7 +70,7 @@ module.exports = {
                     });
 
                     let response = await request(app)
-                    .post('/api/backoffice/generate-auth-url')
+                    .post('/api/kairos/generate-auth-url')
                     .set('authorization', `Bearer ${jwt.access_token}`)
                     .send({
                         siret: '22222222222222',

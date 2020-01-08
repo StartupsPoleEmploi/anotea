@@ -1,0 +1,30 @@
+@import 'src/common/styles/variables';
+
+.Backoffice .Pagination {
+  .page-item {
+    background: $color-white;
+    font-weight: $font-weight-normal;
+
+    &.active {
+      .page-link {
+        color: $color-black;
+        background: $color-grey-5;
+        border: 1px solid $color-grey-50;
+      }
+    }
+
+    .page-link {
+      color: $color-grey-50;
+      font-size: 1rem;
+
+      &:hover, &:focus {
+        cursor: pointer;
+        color: $color-black;
+        background: $color-grey-5;
+        border: 1px solid $color-grey-50;
+        font-weight: $font-weight-bold;
+        transition: background 0.20s linear;
+      }
+    }
+  }
+}

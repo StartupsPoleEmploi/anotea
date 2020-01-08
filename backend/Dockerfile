@@ -1,4 +1,4 @@
-FROM node:10.14.1-stretch
+FROM node:12.13.1-stretch
 
 RUN npm install -g forever
 
@@ -9,6 +9,5 @@ RUN cd /tmp && npm ci && mkdir -p /opt/anotea/backend && mv /tmp/node_modules /o
 COPY ./ /opt/anotea/backend
 
 WORKDIR /opt/anotea/backend
-RUN npm run build
 
 CMD ["forever", "index.js"]

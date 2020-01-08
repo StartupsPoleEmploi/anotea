@@ -1,0 +1,79 @@
+@import '../../common/styles/variables';
+
+.Stats .StatsTable {
+
+  .fa-question-circle {
+
+    .tooltip {
+      visibility: hidden;
+    }
+
+    &:hover {
+      color: rgb(253, 186, 60);
+
+      .tooltip {
+        visibility: visible;
+        opacity: 2;
+        background-color: rgb(253, 186, 60);
+        width: auto;
+        padding: 5px;
+        border: 1px solid $color-grey-5;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  font-size: 0.875rem;
+
+  thead {
+
+    th {
+      border: none;
+    }
+
+    .column-name {
+      th {
+        font-size: 1rem;
+        padding-top: 1.25rem;
+        padding-bottom: 1.25rem;
+      }
+    }
+
+    .column-subname {
+      font-size: 0.75rem;
+      color: $color-black-60;
+      line-height: 18px;
+    }
+  }
+
+  tbody {
+    background-color: $color-white;
+  }
+
+  .section {
+    border-left: 1px solid $color-grey-25;
+  }
+
+}
+
+.separator {
+  position: relative;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  height: 1px;
+}
+
+.div-transparent:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 5%;
+  right: 5%;
+  width: 90%;
+  height: 1px;
+  background-image: linear-gradient(to right, transparent, rgb(48, 49, 51), transparent);
+}
+
+

@@ -1,6 +1,6 @@
 const moment = require('moment');
 let { delay } = require('../../../../job-utils');
-const getOrganismeEmail = require('../../../../../common/utils/getOrganismeEmail');
+const getOrganismeEmail = require('../../../../../core/utils/getOrganismeEmail');
 
 module.exports = async (db, logger, configuration, emails, options = {}) => {
 

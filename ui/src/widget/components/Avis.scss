@@ -1,0 +1,61 @@
+@import 'src/common/styles/variables';
+
+.Widget .Avis {
+  border: 1px solid $color-grey-25;
+  border-radius: 5px;
+  font-size: 0.875rem;
+
+  .stagiaire {
+    padding: 0.5rem 1rem;
+    background-color: $color-grey-5;
+
+    .par {
+      opacity: 0.6;
+      padding-left: 0.5rem;
+    }
+
+    .pseudo {
+      padding-left: 0.5rem;
+    }
+  }
+
+  .titre {
+    padding: 0.25rem 1rem;
+    font-weight: $font-weight-bold;
+    background-color: $color-grey-5;
+  }
+
+  .texte {
+    padding: 0.25rem 1rem 0.5rem 1rem;
+    background-color: $color-grey-5;
+  }
+
+  .reponse {
+
+    padding: 0.5rem 1rem 0.5rem 1rem;
+
+    .reponse-titre {
+      color: $color-black;
+      font-size: 0.75rem;
+      letter-spacing: 0.38px;
+      line-height: 1rem;
+      font-weight: $font-weight-bold;
+    }
+
+    .reponse-texte {
+      border-left: 1px solid $color-black;
+      font-size: 0.875rem;
+      color: $color-black-60;
+      padding-left: 1rem;
+    }
+  }
+
+  .formation {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid $color-grey-25;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: $color-grey-50;
+  }
+
+}

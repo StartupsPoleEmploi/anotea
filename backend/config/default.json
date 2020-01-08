@@ -3,7 +3,8 @@
   "app": {
     "name": "Anotea",
     "public_hostname": "http://127.0.0.1:3000",
-    "port": 8080
+    "port": 8080,
+    "session_secret": "1234"
   },
   "log": {
     "level": "info",
@@ -17,9 +18,16 @@
       "fileNamePrefix": "anotea"
     }
   },
+  "peconnect": {
+    "client_id": "client_id",
+    "client_secret": "client_secret",
+    "callback_url": "http://127.0.0.1:8080/peconnect/callback",
+    "issuer_url": "https://authentification-candidat.pole-emploi.fr:443/connexion/oauth2",
+    "api_url": "https://api.emploi-store.fr/partenaire/peconnect-individu/v1/userinfo",
+    "timeout": 1000
+  },
   "sentry": {
-    "enabled": false,
-    "dsn": "https://token@sentry.io/projet"
+    "dsn": null
   },
   "mongodb": {
     "uri": "mongodb://127.0.0.1:27017/anotea?w=1&socketTimeoutMS=600000"
@@ -54,8 +62,8 @@
     }
   },
   "analytics": {
-    "ga": "1234",
-    "sessionDuration": 3600000
+    "googleAnalyticsId": null,
+    "googleSiteVerification": "ga-dev-id"
   },
   "smtp": {
     "host": "localhost",
@@ -75,9 +83,6 @@
   },
   "api": {
     "pagination": 20
-  },
-  "front": {
-    "googleSiteVerification": "12345"
   },
   "slack": {
     "webhookUrl": "1234"

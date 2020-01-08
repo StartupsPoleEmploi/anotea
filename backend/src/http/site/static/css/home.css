@@ -1,0 +1,389 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    font-family: Lato;
+    font-weight: normal;
+    margin: 0;
+    color: #24303A;
+    width: 100%;
+    position: absolute;
+}
+
+.button {
+    display: inline-block;
+    position: relative;
+    margin: 0px;
+    margin-left: 0px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    background-color: #29333C;
+    box-shadow: none;
+    border: none;
+    font-size: 0.9em;
+    padding: 12px 20px 0px 20px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.title {
+    color: #F0801A;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+    margin: auto;
+}
+
+.content-intro {
+    padding-top: 100px;
+    width: 85%;
+    margin: auto;
+    padding-left: 15%;
+    top: 100px;
+    position: relative;
+    max-width: 1280px;
+    height: 550px;
+}
+
+.content-intro p {
+    width: 50%;
+}
+
+.content-intro .stagiaire, .content-intro .organisme {
+    display: inline-block;
+    width: 30%;
+}
+
+.content-intro .stagiaire {
+    margin-left: 20px;
+    margin-right: 200px;
+}
+
+.content-intro .organisme {
+    text-align: right;
+}
+
+.content-intro .organisme p {
+    margin-left: 50%;
+}
+
+.content-intro h2 {
+    font-weight: normal;
+}
+
+.content-intro .stagiaire h2 {
+    color: #384EAA;
+}
+
+.content-intro .stagiaire .button {
+    background-color: #384EAA;
+}
+
+.content-intro .illustration {
+    position: relative;
+    top: -280px;
+    z-index: -1;
+    width: 80%;
+}
+
+.video {
+    float: none;
+    clear: both;
+    width: 700px;
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 25px;
+    height: 0;
+    margin: 0 auto;
+}
+.video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 700px;
+    max-height: 400px;
+}
+
+.stats {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.stats > div {
+    display: inline-block;
+    width: 30%;
+}
+
+.stats h2 {
+    text-align: center;
+    font-weight: 900;
+    font-size: 32px;
+    margin-bottom: 0;
+}
+
+.stats h3 {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.stats .avis h3 {
+    color: #F28017;
+}
+
+.stats .organismes h3 {
+    color: #007E54;
+}
+
+.stats .stagiaires h3 {
+    color: #384EAA;
+}
+
+.stats p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.services {
+    text-align: center;
+    padding-bottom: 40px;
+    width: 80%;
+    margin: auto;
+}
+
+.services h1 {
+    font-weight: 900;
+    text-align: center;
+    margin-top: 80px;
+    margin-bottom: 20px;
+    font-size: 32px;
+}
+
+.services .icon {
+    margin: auto;
+    position: relative;
+    top: -38px;
+}
+
+.services h2 {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 22px;
+    text-align: center;
+    margin-top: -30px;
+    margin-bottom: 0px;
+}
+
+.services ul {
+    margin: auto;
+    padding: 0px;
+}
+
+.services li {
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    vertical-align: top;
+    width: 20%;
+    margin: 5%;
+}
+
+.services li.last {
+    margin-right: 0;
+}
+
+.services p {
+    padding: 0px 10px 0px 10px;
+    opacity: 0.8;
+    font-size: 14px;
+}
+
+.services a {
+    color: #24303A;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.services a img {
+    margin-left: 5px;
+}
+
+.services a:hover {
+    text-decoration: underline;
+}
+
+.partenaires {
+    padding-top: 30px;
+    text-align: center;
+    padding-bottom: 10px;
+    background-color: #F4F4F5;
+}
+
+.partenaires h2 {
+    font-weight: 900;
+    font-size: 32px;
+    color: #24303A;
+    text-align: center;
+}
+
+.partenaires img {
+    margin: 30px;
+    vertical-align: middle;
+}
+
+#cookie-bar-prompt-content {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
+        font-size: 32px;
+    }
+
+    .content-how ul {
+        width: 1000px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
+        font-size: 12px;
+    }
+
+    .video {
+        background-color: inherit;
+        height: inherit;
+    }
+
+    .video video {
+        width: 100vw;
+    }
+
+    .content-how ul {
+        width: 700px;
+    }
+
+    .donnees ul {
+        width: 700px;
+    }
+
+    .donnees li {
+        width: 200px;
+        margin-right: 40px;
+    }
+}
+
+@media (max-width: 740px) {
+    .video {
+        background-color: inherit;
+        height: inherit;
+    }
+
+    .video video {
+        width: 100vw;
+    }
+
+    .title, .confiance h1, .services h1, .retrouver h1, .donnees h1 {
+        font-size: 30px;
+    }
+
+    .illustration {
+        display: none;
+    }
+
+    .content-intro .stagiaire, .content-intro .organisme {
+        display: block;
+        width: inherit;
+        margin: 0px;
+    }
+
+    .content-intro .organisme {
+        text-align: inherit;
+        margin-top: 20px;
+        background-color: #F8F8F8;
+    }
+
+    .content-intro .organisme p, .content-intro .stagiaire p {
+        margin-bottom: 10px;
+        width: inherit;
+    }
+
+    .content-intro .organisme p {
+        margin-left: inherit;
+    }
+
+    .content-intro {
+        width: inherit;
+        padding-left: inherit;
+        top: inherit;
+        height: inherit;
+        text-align: center;
+        padding-top: 50px;
+    }
+
+    .content-intro a.button {
+        height: 48px;
+        width: 255px;
+        line-height: 40px;
+        font-size: 0.9em;
+    }
+
+    .content-intro a.button img {
+        margin-left: 30px;
+    }
+
+    .stats > div {
+        display: inherit;
+        width: 100%;
+        margin: auto;
+    }
+
+    .partenaires img {
+        max-height: 62px;
+        max-width: 140px;
+    }
+
+    .content-how ul {
+        width: 320px;
+    }
+
+    .services {
+        padding-bottom: 0px;
+    }
+
+    .services ul {
+        width: 80%;
+        margin-top: 40px;
+    }
+
+    .services li {
+        width: 100%;
+        margin-right: 35px;
+        height: inherit;
+        margin-bottom: 60px;
+    }
+
+    .confiance p {
+        padding: 0px 15px 0px 15px;
+    }
+
+    .content-how li {
+        height: 180px;
+    }
+
+    .content-how li.hide {
+        display: none;
+    }
+
+    .content-how .nav {
+        display: inherit;
+    }
+}

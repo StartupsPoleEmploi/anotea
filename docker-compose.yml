@@ -5,50 +5,19 @@ services:
     image: anotea_nginx
     container_name: anotea_nginx
     build:
-      context: ./misc/nginx
+      context: misc/nginx
     ports:
       - 80:80
     mem_limit: 64m
     depends_on:
       - backend
-      - backoffice
-      - questionnaire
+      - ui
 
-  backoffice:
-    image: anotea_backoffice
-    container_name: anotea_backoffice
+  ui:
+    image: anotea_ui
+    container_name: anotea_ui
     build:
-      context: backoffice
-    mem_limit: 32m
-    depends_on:
-      - backend
-
-  questionnaire:
-    image: anotea_questionnaire
-    container_name: anotea_questionnaire
-    build:
-      context: questionnaire
-    mem_limit: 32m
-    depends_on:
-      - backend
-
-  widget:
-    image: anotea_widget
-    container_name: anotea_widget
-    build:
-      context: widget
-      args:
-        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
-        - ANOTEA_HOTJAR_ID=1234
-    mem_limit: 32m
-    depends_on:
-      - backend
-
-  stats:
-    image: anotea_stats
-    container_name: anotea_stats
-    build:
-      context: stats
+      context: ui
     mem_limit: 32m
     depends_on:
       - backend
@@ -59,3 +28,6 @@ services:
     build:
       context: backend
     mem_limit: 1g
+    depends_on:
+      - mongodb
+      - smtp

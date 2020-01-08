@@ -4,7 +4,7 @@ const request = require('supertest');
 const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
 const { newModerateurAccount, newOrganismeAccount, newFinancerAccount } = require('../../../../../helpers/data/dataset');
-let passwords = require('../../../../../../src/common/components/passwords');
+let passwords = require('../../../../../../src/core/components/passwords');
 
 describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoDatabase, getTestDatabase, getComponents }) => {
 
@@ -254,6 +254,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let app = await startServerWithRealAuth();
 
         let authUrl = await generateKairosToken(app);
+        console.log(authUrl);
 
         let response = await request(app)
         .get(`/api/backoffice/login?access_token=${authUrl.split('access_token=')[1]}`);

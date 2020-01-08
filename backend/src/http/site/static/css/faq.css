@@ -1,0 +1,780 @@
+body {
+    font-family: Lato;
+    margin: 0;
+    color: #24303A;
+    width: 100%;
+    position: absolute;
+}
+
+.clear {
+    clear: both;
+}
+
+.main {
+    width: 100vw;
+    top: 100px;
+    position: relative;
+}
+
+.main .content {
+    width: 60%;
+    margin: auto;
+}
+
+a {
+    color: #373B46;
+}
+
+.button {
+    display: inline-block;
+    position: relative;
+    margin: 0px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    background-color: #29333C;
+    box-shadow: none;
+    border: none;
+    font-size: 0.9em;
+    padding: 12px 20px 0px 20px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.intro {
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+.intro .text {
+    width: 30%;
+    display: inline-block;
+    margin-right: 20%;
+}
+
+.main .intro .button {
+    width: max-content;
+}
+
+.intro h2 {
+    padding-top: 30px;
+    font-size: 32px;
+    line-height: 35px;
+    font-weight: normal;
+}
+
+.stagiaire .intro h2 {
+    color: #384EAA;
+    font-weight: 900;
+}
+
+.stagiaire .intro .button {
+    background-color: #384EAA;
+}
+
+.financeur .intro h2 {
+    color: #0d7d57;
+}
+
+.financeur .intro .button {
+    background-color: #0d7d57;
+}
+
+.financeur .vous {
+    margin-bottom: 60px;
+}
+
+.intro h2 strong {
+    font-weight: 900;
+}
+
+.intro .illustration {
+    vertical-align: top;
+    margin-top: 5%;
+    width: 45%;
+}
+
+.description {
+    background-color: #24303A;
+    color: white;
+    padding: 40px;
+}
+
+.description h2, .description div {
+    width: 40%;
+}
+
+.description .text {
+    display: inline-block;
+}
+
+.description h2 {
+    color: #FF9533;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 5%;
+    font-weight: 900;
+}
+
+.description .button {
+    color: #FF9533;
+    background-color: white;
+}
+
+.affichez h2 {
+    font-size: 32px;
+}
+
+.affichez {
+    background-color: #24303A;
+    color: white;
+    padding: 40px;
+}
+
+.affichez .text {
+    display: inline-block;
+}
+
+.affichez .text {
+    width: 40%;
+    margin: 5%;
+}
+
+.affichez h3 {
+    color: #FF9533;
+}
+
+.affichez .button.esd {
+    height: 52px;
+    background-color: white;
+}
+
+.header-faq {
+    margin-bottom: 80px;
+}
+
+.header-faq h1 {
+    text-align: center;
+    color: #24303A;
+    font-size: 1.125em;
+    font-weight: 900;
+    margin-top: 0px;
+    float: left;
+    width: 50%;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(36, 48, 58, 0.1);;
+    font-weight: normal;
+}
+
+.header-faq h1.current {
+    border-bottom: 2px solid rgba(36, 48, 58, 0.6);;
+    font-weight: bold;
+}
+
+.header-faq h1 a {
+    text-decoration: none;
+}
+
+.conseils-avis-positifs {
+    display: none;
+}
+
+.faq {
+    margin-bottom: 300px;
+}
+
+.faq h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 900;
+}
+
+.faq .nav {
+    list-style: none;
+    padding: 0px;
+    text-align: center;
+}
+
+.faq .nav li {
+    display: inline;
+    margin: 20px;
+}
+
+.faq .nav li a {
+    text-decoration: none;
+    opacity: 0.6;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: bold;
+}
+
+.faq .nav li a.current {
+    font-weight: bolder;
+    opacity: 1;
+}
+
+.screenshot {
+    width: 48%;
+    vertical-align: baseline;
+    max-width: 520px;
+}
+
+.vous ul {
+    padding: 0;
+    width: 40%;
+}
+
+.vous li {
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    list-style: none;
+    padding: 15px 15px 5px 15px;
+}
+
+.vous li .icon, .vous li p {
+    display: inline-block;
+}
+
+.vous li .icon {
+    vertical-align: top;
+}
+
+.vous li p {
+    width: 80%;
+    margin: 2%;
+}
+
+.vous .bo, .vous ul {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.vous .main .content {
+    width: 80%;
+}
+
+.vous h2 {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 35px;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.vous h3 {
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.vous .bo {
+    width: 50%;
+    margin-left: 5%;
+}
+
+.question {
+    outline: none;
+    margin-bottom: 15px;
+}
+
+.question, .reponse {
+    max-width: 1000px;
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.icon-open, .icon-closed {
+    vertical-align: middle;
+    padding-bottom: 2px;
+    margin-left: 10px;
+}
+
+.open .icon-open {
+    display: none;
+}
+
+.closed .icon-closed {
+    display: none;
+}
+
+a.more {
+    color: #F7B374;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    line-height: 24px;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+a.more:hover {
+    text-decoration: underline;
+}
+
+.question a {
+    color: #24303A;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    background-color: #F4F4F5;
+    border-radius: 5px;
+    line-height: 22px;
+    padding: 5px 15px;
+    outline: none;
+    padding: 20px;
+    font-size: 18px;
+}
+
+.question img {
+    float: inline-end;
+    margin: 0px 5px;
+}
+
+.reponse {
+    opacity: 0.8;
+    color: #24303A;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 15px;
+}
+
+.reponse {
+    display: none;
+}
+
+div.more.closed {
+    display: none;
+}
+
+div.more {
+    margin: auto;
+    width: 60%;
+    padding-top: 40px;
+    border-radius: 5px 5px 0 0;
+    background-color: #F8F8F8;
+    color: #24303A;
+    position: relative;
+    top: -40px;
+    padding: 10px 90px;
+}
+
+.more h2 {
+    font-size: 24px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.more p.subtitle {
+    text-align: center;
+    font-weight: normal;
+    padding-bottom: 30px;
+}
+
+.more .conseil {
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    box-shadow: 0 3px 20px 0 rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 20px;
+}
+
+.more .conseil h3 {
+    color: #F7B374;
+    text-transform: uppercase;
+}
+
+.more .conseil .example {
+    font-size: 0.9em;
+}
+
+.more .checklist {
+    margin: auto;
+    width: 80%;
+}
+
+.more .checklist ul {
+    width: calc(50% - 60px);
+    display: inline-block;
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+}
+
+.more .checklist ul.border {
+    border-width: 0px 1px 0px 0px;
+    border-color: #CCCFD1;
+    border-style: solid;
+    padding-right: 30px;
+    margin-right: 30px;
+}
+
+.more .checklist li {
+    list-style: none;
+    margin-bottom: 30px;
+}
+
+.more .checklist li div, .more .checklist li p {
+    display: inline-block;
+}
+
+.more .checklist li div {
+    width: 50px;
+    vertical-align: top;
+}
+
+.more .checklist li p {
+    width: calc(100% - 55px);
+    padding: 0px;
+    margin: 0px;
+}
+
+.tests-utilisateurs .content {
+    width: 60%;
+    margin: auto;
+    padding: 40px;
+}
+
+.tests-utilisateurs .content h3 {
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 56px;
+    margin: 0;
+}
+
+.tests-utilisateurs .content .col {
+    float: left;
+    margin: 0px;
+    padding: 0px;
+    height: 300px;
+}
+
+.tests-utilisateurs .content .col.left {
+    width: 60%;
+    padding: 0px;
+}
+
+.tests-utilisateurs .content .col.right {
+    width: calc(30% - 5px);
+}
+
+.tests-utilisateurs .content .col.right img {
+    margin-top: 40px;
+}
+
+.tests-utilisateurs {
+    background-color: #FDF2E7;
+}
+
+.tests-utilisateurs h2 {
+    color: #FF9533;
+    margin: 10px 0px 10px 0px;
+}
+
+.tests-utilisateurs .subtitle {
+    color: #2B292D;
+    font-size: 24px;
+    line-height: 34px;
+    margin: 0;
+}
+
+.tests-utilisateurs ul.items {
+    padding: 0;
+}
+
+.tests-utilisateurs ul.items > li {
+    list-style: none;
+    display: inline-block;
+    width: 30%;
+    margin-right: 25px;
+    vertical-align: top;
+}
+
+.tests-utilisateurs ul.items > li.last {
+    margin-right: 0;
+}
+
+.tests-utilisateurs .bar {
+    height: 3px;
+    width: 30px;
+    border-radius: 2px;
+    background-color: #FF9533;
+    clear: both;
+}
+
+.tests-utilisateurs a.criteres {
+    margin-top: 10px;
+    display: block;
+    min-width: 215px;
+}
+
+.tests-utilisateurs div.criteres.closed {
+    display: none;
+}
+
+.tests-utilisateurs div.criteres ul {
+    padding: 20px;
+}
+
+.tests-utilisateurs div.criteres li {
+    list-style: disc;
+}
+
+.logo-esd, .logo-github {
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.logo-esd {
+    width: 200px;
+}
+
+.logo-github {
+    width: 100px;
+}
+
+.rgpd {
+    padding: 60px 0px 60px 0px;
+    width: 100%;
+    background-color: #F4F4F5;
+}
+
+.rgpd .content {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+.rgpd h1 {
+    margin: 0;
+    padding: 0px 0px 40px 0px;
+}
+
+.rgpd ul {
+    padding: 0;
+}
+
+.rgpd li {
+    float: left;
+    width: calc(25% - 10px);
+    list-style: none;
+}
+
+.rgpd li p {
+    width: 80%;
+    margin: auto;
+    font-size: 1.1em;
+    padding-top: 16px;
+}
+
+.rgpd .icon {
+    margin: auto;
+}
+
+.rgpd a {
+    color: #373B46;
+}
+
+.rgpd a:hover {
+    text-decoration: none;
+}
+
+@media (max-width: 740px) {
+
+    .main {
+        top: 50px;
+    }
+
+    .intro {
+        margin-top: 0;
+    }
+
+    .intro .text {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+
+    .intro .illustration {
+        position: absolute;
+        top: -45px;
+        left: 20%;
+        z-index: -1;
+        opacity: 0.25;
+        max-height: 330px;
+        height: 65%;
+    }
+
+    .financeur .intro .illustration {
+        top: 80px;
+        height: auto;
+        max-height: 185px;
+    }
+
+    .financeur .intro .button {
+        margin-top: 90px;
+    }
+
+    .intro h2, .vous h2 {
+        font-size: 1.5em;
+    }
+
+    .intro h2 {
+        font-weight: 900;
+    }
+
+    .vous .bo {
+        display: none;
+    }
+
+    .vous li {
+        border-radius: inherit;
+        box-shadow: inherit;
+    }
+
+    .vous ul {
+        width: 100%;
+    }
+
+    .vous li .icon {
+        display: block;
+        margin: auto;
+        margin-bottom: 10px;
+    }
+
+    .vous li p {
+        text-align: center;
+        margin: 0;
+        width: 100%;
+    }
+
+    .faq .nav li {
+        margin: 1%;
+    }
+
+    /* OF */
+    .description h2, .description div {
+        width: 100%;
+        margin: 0;
+        display: block;
+        font-size: 1em;
+    }
+
+    .description {
+        height: inherit;
+        text-align: center;
+    }
+
+    .main .content {
+        width: inherit;
+    }
+
+    div.more {
+        top: 0;
+        width: 100%;
+        border-radius: inherit;
+        padding: 0;
+    }
+
+    .more .checklist ul.border {
+        border: none;
+    }
+
+    .more .checklist ul {
+        display: block;
+        width: 100%;
+    }
+
+    .more .checklist {
+        width: 95%;
+    }
+
+    .more .conseil {
+        margin: 0px 0px 10px 0px;
+        border-radius: inherit;
+        box-shadow: inherit;
+    }
+
+    .tests-utilisateurs .content .col.left {
+        width: inherit;
+    }
+
+    .tests-utilisateurs ul.items > li {
+        width: 100%;
+        display: block;
+        margin: 0px 0px 10px 0px;
+        font-size: 1.125em;
+    }
+
+    .tests-utilisateurs h2 {
+        font-size: 1.4em;
+    }
+
+    .tests-utilisateurs .bar {
+        margin: 20px 0px 10px 0px;
+    }
+
+    .tests-utilisateurs .content h3 {
+        font-size: 1.5em;
+    }
+
+    .tests-utilisateurs .content .col {
+        float: inherit;
+        height: inherit;
+    }
+
+    .tests-utilisateurs .content .col.right {
+        width: 100%;
+        position: relative;
+        margin-top: inherit;
+        float: left;
+        height: 0;
+    }
+
+    .tests-utilisateurs .content .col.right img {
+        position: relative;
+        top: -180px;
+        width: 90%;
+        opacity: 0.3;
+    }
+
+    .screenshot {
+        display: none;
+    }
+
+    .affichez .text {
+        width: 100%;
+        margin: inherit;
+    }
+
+    .affichez .button.esd {
+        display: block;
+        margin: auto;
+        width: max-content;
+    }
+
+    .question a {
+        margin: 10px;
+    }
+
+    .question a span {
+        width: 92%;
+        display: inline-block;
+    }
+
+    .reponse {
+        margin: 0px 10px 0px 10px;
+    }
+
+    .rgpd li {
+        width: 100%;
+        margin-top: 20px;
+        float: inherit;
+    }
+}

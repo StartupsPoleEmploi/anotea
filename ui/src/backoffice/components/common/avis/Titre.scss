@@ -1,0 +1,28 @@
+@import 'src/common/styles/variables';
+
+.Backoffice .Avis .Titre {
+
+  font-size: 1rem;
+  font-weight: $font-weight-bold;
+
+  &.empty {
+    opacity: 0.5;
+    color: $color-grey-50;
+    font-style: italic;
+  }
+
+  .toggable {
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .masked {
+    color: $color-grey-50;
+    opacity: 0.5;
+
+    &.title {
+      text-decoration: line-through;
+    }
+  }
+}
+

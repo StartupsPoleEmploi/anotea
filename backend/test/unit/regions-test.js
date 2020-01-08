@@ -1,5 +1,5 @@
 const assert = require('assert');
-const regions = require('../../src/common/components/regions');
+const regions = require('../../src/core/components/regions');
 
 describe(__filename, () => {
 

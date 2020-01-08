@@ -1,0 +1,69 @@
+@import 'src/common/styles/variables';
+
+.Questionnaire .commentaire {
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+  }
+
+  .inner-row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .field {
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .description {
+    font-style: italic;
+    font-weight: normal;
+    color: $color-grey-5;
+  }
+
+  .title {
+    color: $color-black;
+    font-weight: $font-weight-bold;
+    font-size: 1rem;
+    line-height: 19px;
+    padding-bottom: 0.875rem;
+  }
+
+  textarea, input[type=text] {
+    border-radius: 5px;
+    border: none;
+    resize: none;
+    outline: none;
+    background-color: $color-grey-5;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    width: 100%;
+
+    &.badwords {
+      background-color: $color-red-10;
+      color: $color-red;
+    }
+
+    &::placeholder {
+      opacity: 0.8;
+      color: $color-black;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+  }
+
+  input[type=text] {
+    margin-bottom: 0.5em;
+  }
+
+  .facultatif, .chars-count {
+    font-size: 0.875rem;
+  }
+
+  .chars-count {
+    line-height: 16px;
+    text-align: right;
+  }
+}

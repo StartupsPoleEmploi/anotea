@@ -2,7 +2,6 @@ module.exports = {
     trainee: db => {
         return Promise.all([
             db.collection('trainee').createIndex({ 'token': 1 }, { unique: true }),
-            db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.idSession': 1 }),
             db.collection('trainee').createIndex({ 'codeRegion': 1 }),
             db.collection('trainee').createIndex({ 'mailSentDate': 1 }),
             db.collection('trainee').createIndex({ 'mailSent': 1 }),
@@ -22,6 +21,7 @@ module.exports = {
             db.collection('trainee').createIndex({ 'avisCreated': 1 }),
             db.collection('trainee').createIndex({ 'tracking.firstRead': 1 }),
             db.collection('trainee').createIndex({ 'tracking.click': 1 }),
+            db.collection('trainee').createIndex({ 'trainee.email': 1, 'training.idSession': 1 }),
             db.collection('trainee').createIndex({
                 'codeRegion': 1,
                 'training.place.postalCode': 1,
@@ -70,7 +70,7 @@ module.exports = {
                 'training.title': 'text',
                 'training.organisation.label': 'text',
             }, { name: 'bo-search-fulltext' }),
-            db.collection('trainee').createIndex({
+            db.collection('comment').createIndex({
                 'codeRegion': 1,
                 'training.place.postalCode': 1,
                 'training.codeFinanceur': 1,
@@ -146,6 +146,7 @@ module.exports = {
             db.collection('forgottenPasswordTokens').createIndex({ 'token': 1 }),
             db.collection('forgottenPasswordTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 172800 }),
             db.collection('invalidAuthTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 86400 }),
+            db.collection('peConnectTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 86400 }),
             db.collection('kairos').createIndex({ 'siret': 1 }),
             db.collection('intercarif').createIndex({ 'actions.lieu_de_formation.coordonnees.adresse.region': 1 }),
             db.collection('statistics').createIndex({ 'date': 1 }),

@@ -21,7 +21,9 @@ module.exports = async (db, logger) => {
             let intercarif = await cursor.next();
 
             intercarif.actions
-            .filter(action => action.lieu_de_formation.coordonnees.adresse)
+            .filter(action => {
+                return action.lieu_de_formation.coordonnees.adresse && action.organisme_formateur.siret_formateur.siret !== '0';
+            })
             .forEach(action => {
                 let siret = action.organisme_formateur.siret_formateur.siret;
                 let hasCourriel = !!_.get(action, 'organisme_formateur.contact_formateur');

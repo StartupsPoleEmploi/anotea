@@ -1,0 +1,9 @@
+@import 'src/common/styles/variables';
+
+.Widget .Header {
+  .title {
+    text-align: center;
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+  }
+}

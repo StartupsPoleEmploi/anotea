@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="google-site-verification" content="<%= utils.analytics.googleSiteVerification %>" />
+        <title>P&ocirc;le Emploi : Notez et commentez votre formation</title>
+        <link rel="icon" type="image/png" href="/static/images/favicon_noteo.ico" />
+        <link rel="stylesheet" type="text/css" href="/static/css/faq.css" media="all">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script id="rgpd" data-analytics="<%= utils.analytics.googleAnalyticsId %>" src="/static/js/rgpd.js"></script>
+        <script src="/static/js/faq.js"></script>
+    </head>
+
+    <body>
+        <%- include('header.ejs'); %>
+
+        <div class="main stagiaire">
+
+            <div class="intro">
+                <div class="content">
+                    <div class="text">
+                        <h2>Vous souhaitez déposer<br /> votre avis ?</h2>
+                        <p>
+                            Identifiez-vous, accédez à votre questionnaire personnalisé.<br>
+                            Donnez votre avis en moins d'une minute, il sera publié en ligne anonymement
+                        </p>
+                        <a class="button" href="/peconnect">&Eacute;valuer ma formation <img
+                                    src="/static/images/arrow.svg" /></a>
+                    </div>
+                    <img class="illustration" src="/static/images/faq/Illu_Stagiaire.svg" />
+                </div>
+            </div>
+
+            <div class="rgpd">
+                <div class="content">
+                    <h1>Les données personnelles</h1>
+
+                    <ul>
+                        <li>
+                            <div class="icon"><img src="/static/images/rgpd/LOCK.svg" /></div>
+                            <p>
+                                Anotéa <strong>protège</strong> vos données personnelles.
+                            </p>
+                        </li>
+                        <li>
+                            <div class="icon"><img src="/static/images/rgpd/MASK.svg" /></div>
+                            <p>
+                                Vos notes et commentaires sont <strong>anonymes</strong>. Votre identité <strong>n’est
+                                    communiquée à personne</strong>.
+                            </p>
+                        </li>
+                        <li>
+                            <div class="icon"><img src="/static/images/rgpd/COLLECT.svg" /></div>
+                            <p>
+                                Nous limitons l’usage de vos données <strong>au strict besoin</strong> de collecte de
+                                votre avis, et nous en avons fait la déclaration auprès de la <strong>CNIL</strong>.
+                            </p>
+                        </li>
+                        <li>
+                            <div class="icon"><img src="/static/images/rgpd/DELETE.svg" /></div>
+                            <p>
+                                Vous pouvez à <strong>tout moment</strong> demander à <strong>modifier votre commentaire
+                                    ou à le supprimer</strong> <a href="#" class="open-modal-contact">ici</a>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <a name="faq"></a>
+            <div id="faq" class="faq">
+                <div class="content">
+                    <h2>Foire aux questions</h2>
+
+                    <div class="faqContent">
+                        <div>
+                            <div class="question closed">
+                                <a href="#"><span>Où est publié mon avis ?</span>
+                                    <img class="icon-closed" src="/static/images/chevron-up.svg" />
+                                    <img class="icon-open" src="/static/images/chevron-down.svg" />
+                                </a>
+                            </div>
+                            <div class="reponse">
+                                Les avis sont publiés aujourd’hui sur plusieurs sites partenaires : <a
+                                        href="https://www.defi-metiers.fr/">Défi métiers</a>, <a
+                                        href="https://labonneformation.pole-emploi.fr/">La Bonne Formation</a>, <a
+                                        href="http://www.emfor-bfc.org/">Emfor</a>, <a
+                                        href="https://www.meformerenregion.fr/">Me former en région Occitanie</a> et sur
+                                l’appli
+                                Mobile Ma Formation.
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="question closed">
+                                <a href="#"><span>Le modérateur peut-il modifier mon avis / ma note ?</span>
+                                    <img class="icon-closed" src="/static/images/chevron-up.svg" />
+                                    <img class="icon-open" src="/static/images/chevron-down.svg" />
+                                </a>
+                            </div>
+                            <div class="reponse">
+                                <p>Les notes ne peuvent être modifiées par le modérateur. Pour les avis, seul l'ajout
+                                    d’espaces pour faciliter la lecture ou de caractères XXX pour anonymiser les
+                                    commentaires sont autorisés.</p>
+                                <p>Vous trouverez toutes les informations sur les conditions de publication des avis sur
+                                    ce
+                                    lien : <a href="/cgu">CGU</a></p>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="question closed">
+                                <a href="#"><span>Est-il possible de modifier mon avis / ma note après publication ?</span>
+                                    <img class="icon-closed" src="/static/images/chevron-up.svg" />
+                                    <img class="icon-open" src="/static/images/chevron-down.svg" />
+                                </a>
+                            </div>
+                            <div class="reponse">
+                                Oui vous pouvez nous écrire pour demander à recevoir un nouveau questionnaire. Le
+                                questionnaire précédemment rempli sera alors supprimé.
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="question closed">
+                                <a href="#"><span>Pourquoi certains avis sont publiés et pas d’autres ?</span>
+                                    <img class="icon-closed" src="/static/images/chevron-up.svg" />
+                                    <img class="icon-open" src="/static/images/chevron-down.svg" />
+                                </a>
+                            </div>
+                            <div class="reponse">
+                                <p>Les avis ne respectant pas notre charte de modération ne sont pas publiés. Vous
+                                    pouvez la
+                                    retrouver sur ce lien : <a href="/cgu">CGU</a>.</p>
+                                <p>Par ailleurs un avis n’est publié à l’échelle d’une formation que s’il existe en
+                                    ligne
+                                    une formation similaire : même Organisme de Formation, même Lieu de réalisation et
+                                    même
+                                    Certification.</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="question closed">
+                                <a href="#"><span>Je ne retrouve pas mon avis sur le site Anotéa, est-ce normal ?</span>
+                                    <img class="icon-closed" src="/static/images/chevron-up.svg" />
+                                    <img class="icon-open" src="/static/images/chevron-down.svg" />
+                                </a>
+                            </div>
+                            <div class="reponse">
+                                <p>Le site anotea.pole-emploi.fr présente la façon dont sont recueillis et traités les
+                                    notes
+                                    et avis des anciens stagiaires.</p>
+                                <p>Les Notes et avis sont quand à eux publiés aujourd’hui sur plusieurs sites
+                                    partenaires : <a
+                                            href="https://www.defi-metiers.fr/">Défi métiers</a>, <a
+                                            href="https://labonneformation.pole-emploi.fr/">La Bonne Formation</a>, <a
+                                            href="http://www.emfor-bfc.org/">Emfor</a>, <a
+                                            href="https://www.meformerenregion.fr/">Me former en région Occitanie</a> et
+                                    sur
+                                    l’appli mobile Ma Formation de Pôle Emploi.
+                            </div>
+                        </div>
+                        <div>
+                            <div class="question closed">
+                                <a href="#"><span>Anotéa est-il disponible pour toutes les formations en France ?</span>
+                                    <img class="icon-closed" src="/static/images/chevron-up.svg" />
+                                    <img class="icon-open" src="/static/images/chevron-down.svg" />
+                                </a>
+                            </div>
+                            <div class="reponse">
+                                Anotéa est déployé en France Métropolitaine, en Martinique et en Guadeloupe pour les
+                                Demandeurs
+                                d’Emploi ayant suivi une formation financée par Pole Emploi, l’Agefiph, un OPCO ou le
+                                Conseil
+                                régional lorsque ce dernier est partenaire.
+                            </div>
+                        </div>
+                        <div>
+                            <div class="question closed">
+                                <a href="#"><span>Comment sont modérés les avis publiés ?</span>
+                                    <img class="icon-closed" src="/static/images/chevron-up.svg" />
+                                    <img class="icon-open" src="/static/images/chevron-down.svg" />
+                                </a>
+                            </div>
+                            <div class="reponse">
+                                Vous trouverez toutes les informations sur les conditions de publication des avis sur ce
+                                lien :
+                                <a href="http://anotea.pole-emploi.fr/cgu">CGU</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('./common/modal-contact.ejs'); %>
+        <%- include('./common/contact.ejs'); %>
+        <%- include('./footer.ejs'); %>
+    </body>
+
+</html>

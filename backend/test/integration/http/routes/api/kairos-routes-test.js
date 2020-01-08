@@ -5,7 +5,7 @@ const assert = require('assert');
 const configuration = require('config');
 const { withServer } = require('../../../../helpers/with-server');
 const { newOrganismeAccount, randomSIRET } = require('../../../../helpers/data/dataset');
-const auth = require('../../../../../src/common/components/auth');
+const auth = require('../../../../../src/core/components/auth');
 
 describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase }) => {
 
@@ -40,7 +40,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         await insertOrganisme(siret);
 
         let response = await request(app)
-        .post('/api/backoffice/generate-auth-url')
+        .post('/api/kairos/generate-auth-url')
         .set('authorization', `Bearer ${jwt.access_token}`)
         .send(createPayload(siret));
 
@@ -92,7 +92,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let db = await getTestDatabase();
 
         let response = await request(app)
-        .post('/api/backoffice/generate-auth-url')
+        .post('/api/kairos/generate-auth-url')
         .set('authorization', `Bearer ${jwt.access_token}`)
         .send(createPayload(siret));
 
@@ -128,7 +128,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         await insertOrganisme(siret);
 
         let response = await request(app)
-        .post('/api/backoffice/generate-auth-url')
+        .post('/api/kairos/generate-auth-url')
         .set('authorization', `Bearer ${jwt.access_token}`)
         .send(createPayload(siret));
         assert.strictEqual(response.statusCode, 200);
@@ -163,7 +163,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         await insertOrganisme(siret);
 
         let response = await request(app)
-        .post('/api/backoffice/generate-auth-url')
+        .post('/api/kairos/generate-auth-url')
         .set('authorization', `Bearer ${jwt.access_token}`)
         .send(createPayload(siret));
         assert.strictEqual(response.statusCode, 200);
@@ -192,7 +192,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let jwt = await buildJWT('kairos', { sub: 'kairos', iat: sixMinutesAgo });
 
         let response = await request(app)
-        .post('/api/backoffice/generate-auth-url')
+        .post('/api/kairos/generate-auth-url')
         .set('authorization', `Bearer ${jwt.access_token}`)
         .send(createPayload(randomSIRET()));
 
@@ -211,7 +211,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let jwt = await buildJWT('kairos', { sub: 'kairos', iat: 999999999999999 });
 
         let response = await request(app)
-        .post('/api/backoffice/generate-auth-url')
+        .post('/api/kairos/generate-auth-url')
         .set('authorization', `Bearer ${jwt.access_token}`)
         .send(createPayload(randomSIRET()));
 
@@ -228,7 +228,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
 
         let response = await request(app)
-        .post('/api/backoffice/generate-auth-url')
+        .post('/api/kairos/generate-auth-url')
         .set('authorization', `Bearer INVALID`)
         .send(createPayload(randomSIRET()));
 
@@ -247,7 +247,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let jwt = await buildJWT('kairos', { sub: 'INVALID' });
 
         let response = await request(app)
-        .post('/api/backoffice/generate-auth-url')
+        .post('/api/kairos/generate-auth-url')
         .set('authorization', `Bearer ${jwt.access_token}`)
         .send(createPayload(randomSIRET()));
 
@@ -266,7 +266,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let jwt = await buildJWT('kairos', { sub: 'kairos', iat: Math.floor(Date.now() / 1000) });
 
         let response = await request(app)
-        .post('/api/backoffice/generate-auth-url')
+        .post('/api/kairos/generate-auth-url')
         .set('authorization', `Bearer ${jwt.access_token}`)
         .send({});
 

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const parse = require('csv-parse');
-const { writeObject, pipeline, ignoreFirstLine } = require('../../../../common/utils/stream-utils');
+const { writeObject, pipeline, ignoreFirstLine } = require('../../../../core/utils/stream-utils');
 
 let getCedexMapping = async file => {
     let accumulator = {};

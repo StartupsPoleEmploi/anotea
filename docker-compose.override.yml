@@ -8,29 +8,15 @@ services:
     volumes:
       - ./.data/nginx:/data:rw
 
-  backoffice:
+  ui:
     build:
       args:
         - ANOTEA_ENV=dev
-        - ANOTEA_SENTRY_ENABLED=false
-        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
-        - ANOTEA_HOTJAR_ID=1234
-
-  questionnaire:
-    build:
-      args:
-        - ANOTEA_GOOGLE_ANALYTICS_ID=1234
-        - ANOTEA_GOOGLE_OPTIMIZE_ID=1234
-        - ANOTEA_HOTJAR_ID=1234
-
-  widget:
-    build:
-      args:
         - ANOTEA_GOOGLE_ANALYTICS_ID=1234
         - ANOTEA_HOTJAR_ID=1234
 
   backend:
-    command: npm run start:watch
+    command: npm run start
     volumes:
       - ./backend:/opt/anotea/backend:ro
     environment:
@@ -47,7 +33,7 @@ services:
       - smtp
 
   mongodb:
-    image: mongo:4.0.4-xenial
+    image: mongo:4.2.2-bionic
     container_name: anotea_mongodb
     command: --wiredTigerCacheSizeGB 1
     mem_limit: 1g
@@ -79,7 +65,7 @@ services:
     build:
       context: misc/efk/fluentbit
     ports:
-      - "24224:24224"
+      - "127.0.0.1:24224:24224"
     environment:
       - ANOTEA_FLUENTBIT_ELASTICSEARCH_HOST=elasticsearch
       - ANOTEA_FLUENTBIT_ELASTICSEARCH_PORT=9200
@@ -95,7 +81,7 @@ services:
     build:
       context: misc/efk/elasticsearch
     ports:
-      - "9200:9200"
+      - "127.0.0.1:9200:9200"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
     volumes:
@@ -107,7 +93,7 @@ services:
     build:
       context: misc/efk/kibana
     ports:
-      - "5601:5601"
+      - "127.0.0.1:5601:5601"
     depends_on:
       - elasticsearch
 

@@ -5,26 +5,8 @@ apps:
     instances: 1
     watch: false
 
-  - name: questionnaire
+  - name: ui
     script: 'npm run start'
-    cwd: questionnaire
-    instances: 1
-    watch: false
-
-  - name: backoffice
-    script: 'npm run start'
-    cwd: backoffice
-    instances: 1
-    watch: false
-
-  - name: widget
-    script: 'npm run start'
-    cwd: widget
-    instances: 1
-    watch: false
-
-  - name: stats
-    script: 'npm run start'
-    cwd: stats
+    cwd: ui
     instances: 1
     watch: false

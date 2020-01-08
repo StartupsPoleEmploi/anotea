@@ -51,11 +51,9 @@ Travis Status ![Travis Status](https://travis-ci.org/StartupsPoleEmploi/anotea.s
 
 Anotéa nécessite que MongoDB 4+ soit démarré sur le port 27017 et que node.js 10 soit installé. 
 
-Anotea est composé de quatre projets : 
+Anotea est composé de deux projets : 
 - `backend` qui contient un serveur node.js et expose des serveurs via [une API](API.md)
-- `backoffice` qui contient une Single Page Application en React fournissant des outils de modération d'avis
-- `questionnaire` qui contient une Single Page Application en React permettant aux stagiaires de donner leur avis.
-- `widget` qui contient [un composant](WIDGET.md) permettant d'afficher facilement les avis des stagiaires sur un site web .
+- `ui` qui contient les interfaces graphiques
 
 ### Démarrer l'application
 
@@ -107,6 +105,7 @@ mongod --dbpath <path to data dir> --port 27018 --storageEngine=ephemeralForTest
 Vous pouvez ensuite lancer les tests avec la commande suivante :
 
 ```
+cd backend
 ANOTEA_MONGODB_URI=mongodb://localhost:27018/anotea?w=1 npm run test
 ```
 

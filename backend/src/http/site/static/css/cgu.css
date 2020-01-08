@@ -1,0 +1,124 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    font-family: Lato;
+    font-weight: normal;
+    width: 100%;
+    margin: 0;
+}
+
+.main {
+    width: 50%;
+    margin: auto;
+    background: white;
+    border-radius: 5px;
+    color: #24303A;
+}
+
+.main.cgu {
+    padding: 20px;
+    margin-top: 120px;
+}
+
+.main .header-cgu {
+    margin-bottom: 80px;
+}
+
+.main .header-cgu h1 {
+    text-align: center;
+    color: #24303A;
+    font-size: 1.125em;
+    font-weight: 900;
+    margin-top: 0px;
+    float: left;
+    width: 50%;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(36, 48, 58, 0.1);;
+    font-weight: normal;
+}
+
+.main .header-cgu h1.current {
+    border-bottom: 2px solid rgba(36, 48, 58, 0.6);;
+    font-weight: bold;
+}
+
+.main .header-cgu h1 a {
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-weight: 900;
+    font-size: 1.125em;
+    clear: both;
+}
+
+.main a {
+    color: #24303A;
+}
+
+.main h1, .main h2 {
+    margin-top: 0px;
+}
+
+.main .links a {
+    margin-right: 30px;
+}
+
+.main .head {
+    padding: 20px;
+}
+
+.main h3 {
+    margin: 30px 0px 0px 0px;
+}
+
+.main p {
+    margin-top: 5px;
+}
+
+.main p, .main ul, .main ol {
+    font-size: 1em;
+}
+
+.main .block {
+    padding: 20px;
+}
+
+.main .block.even {
+    background-color: #EDEFF0;
+}
+
+.main .last {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.main ul, ol {
+    padding: 0;
+    list-style: none;
+}
+
+.main li {
+    margin-top: 10px;
+}
+
+.main ul > li:before {
+    content: "- ";
+    text-indent: -5px;
+}
+
+@media (max-width: 740px) {
+    .main.cgu {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-top: 60px;
+    }
+
+    .main .header-cgu h1 {
+        font-size: 1.1em;
+    }
+}

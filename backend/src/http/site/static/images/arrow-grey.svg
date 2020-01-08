@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="12px" viewBox="0 0 18 12" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>keyboard_backspace-24px</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Maquettes" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="OF---LP_Organisme_1" transform="translate(-494.000000, -443.000000)">
+            <g id="Group-2" transform="translate(260.000000, 425.000000)">
+                <g id="keyboard_backspace-24px"
+                   transform="translate(243.000000, 24.000000) scale(-1, -1) translate(-243.000000, -24.000000) translate(231.000000, 12.000000)">
+                    <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+                    <polygon id="Path" fill="rgba(36,48,58,0.5)" fill-rule="nonzero"
+                             points="21 11 6.83 11 10.41 7.41 9 6 3 12 9 18 10.41 16.59 6.83 13 21 13"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

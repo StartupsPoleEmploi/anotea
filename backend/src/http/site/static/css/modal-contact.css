@@ -1,0 +1,58 @@
+.modal {
+    display: none;
+}
+
+.dark-background {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(36, 48, 58, 0.8);
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.modal-contact {
+    z-index: 1000;
+    width: 550px;
+    margin: 1.75rem auto;
+    position: fixed;
+    color: #24303A;
+    font-size: 0.8rem;
+    box-shadow: 0 0.115rem 0.625rem -2px rgba(0, 0, 0, 0.15) !important;
+    background-color: #fff;
+    border-radius: 0.3rem;
+    top: 10%;
+    left: calc(50% - 225px);
+    padding: 15px;
+}
+
+.modal-contact h5 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 2px solid #91979C;
+    width: 100%;
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.modal-contact h6 {
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.modal-contact .button.cancel {
+    background-color: #F4F4F5;
+    color: #24303A;
+    margin-right: 15px;
+}
+
+.modal-header {
+    margin: 10px 0px 10px 0px;
+}
+
+.modal-footer {
+    text-align: right;
+}
