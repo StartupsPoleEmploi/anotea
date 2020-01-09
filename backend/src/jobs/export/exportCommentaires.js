@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
 const { execute } = require('../job-utils');
-const { ignoreEmpty, pipeline, transformObjectIntoCSV, encodeIntoUTF8 } = require('../../core/utils/stream-utils');
+const { pipeline, transformObjectIntoCSV, encodeIntoUTF8 } = require('../../core/utils/stream-utils');
 
 let sanitizeNote = note => `${note}`.replace(/\./g, ',');
 let sanitizeString = note => `${note}`.replace(/;/g, '').replace(/"/g, '').replace(/\r/g, ' ').replace(/\n/g, ' ').trim();

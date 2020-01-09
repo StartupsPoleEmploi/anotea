@@ -3,7 +3,7 @@
 
 const cli = require('commander');
 const _ = require('lodash');
-const sendAccountActivationEmails = require('./tasks/sendActivationCompteEmails');
+const sendActivationCompteEmails = require('./tasks/sendActivationCompteEmails');
 const { capitalizeFirstLetter, execute } = require('../../../job-utils');
 
 cli.description('Send new account emails')
@@ -28,7 +28,7 @@ execute(async ({ logger, db, configuration, emails, regions, sendSlackNotificati
     });
 
     try {
-        let stats = await sendAccountActivationEmails(db, logger, emails, action, {
+        let stats = await sendActivationCompteEmails(db, logger, emails, action, {
             siret,
             limit,
             delay,
