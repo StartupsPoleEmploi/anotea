@@ -3,7 +3,7 @@ const Boom = require('boom');
 const Joi = require('joi');
 const _ = require('lodash');
 const { IdNotFoundError } = require('../../../core/errors');
-const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream } = require('../../utils/routes-utils');
+const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../utils/routes-utils');
 const getOrganismeEmail = require('../../../core/utils/getOrganismeEmail');
 const { transformObject, encodeStream } = require('../../../core/utils/stream-utils');
 
@@ -86,40 +86,27 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             codeRegion: codeRegion,
             ...(status === 'all' ? {} : { passwordHash: { $exists: status === 'active' } }),
         }, { token: 0 }).stream();
-        let lines = 'Siret;Nom;Email;Nombre d\'Avis;Kairos\n';
 
-        res.setHeader('Content-disposition', 'attachment; filename=organismes.csv');
-        res.setHeader('Content-Type', 'text/csv; charset=iso-8859-1');
-        res.write(lines);
-
-        let handleError = e => {
-            logger.error('An error occurred', e);
-            res.status(500);
-            stream.push(Boom.boomify(e).output.payload);
+        let isKairos = organisme => {
+            let kairos = organisme.sources.find(s => s === 'kairos');
+            return kairos === 'kairos' ? 'oui' : 'non';
         };
 
-        stream
-        .on('error', handleError)
-        .pipe(transformObject(async organisme => {
-
-            let isKairos = organisme => {
-                let kairos = organisme.sources.find(s => s === 'kairos');
-                return kairos === 'kairos' ? 'oui' : 'non';
-            };
-
-            let kairos = isKairos(organisme);
-            let email = getOrganismeEmail(organisme);
-
-            return organisme.meta.siretAsString + ';' +
-                organisme.raisonSociale + ';' +
-                email + ';' +
-                organisme.score.nb_avis + ';' +
-                kairos + '\n';
-
-        }))
-        .pipe(encodeStream('UTF-16BE'))
-        .pipe(res)
-        .on('end', () => res.end());
+        try {
+            await sendCSVStream(stream, res, {
+                'Siret': organisme => organisme.meta.siretAsString,
+                'Nom': organisme => organisme.raisonSociale,
+                'Email': organisme => getOrganismeEmail(organisme),
+                'Nombre d\'Avis': organisme => organisme.score.nb_avis,
+                'Kairos': organisme => isKairos(organisme),
+                'Lieux de formation': organisme => {
+                    return organisme.lieux_de_formation.map(l => `${l.adresse.code_postal}/${l.adresse.ville}`).join(',');
+                },
+            }, { encoding: 'UTF-16BE', filename: 'organismes.csv' });
+        } catch (e) {
+            //FIXME we must handle errors
+            logger.error('Unable to send CSV file', e);
+        }
 
     }));
 
