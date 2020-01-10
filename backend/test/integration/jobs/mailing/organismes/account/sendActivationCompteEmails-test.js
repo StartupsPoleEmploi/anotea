@@ -5,14 +5,11 @@ const { withMongoDB } = require('../../../../../helpers/with-mongodb');
 const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 const logger = require('../../../../../helpers/components/fake-logger');
 const sendAccountActivationEmails = require('../../../../../../src/jobs/mailing/organismes/account/tasks/sendActivationCompteEmails');
+const ForceAction = require('../../../../../../src/jobs/mailing/organismes/account/tasks/actions/ForceAction');
 const SendAction = require('../../../../../../src/jobs/mailing/organismes/account/tasks/actions/SendAction');
 const ResendAction = require('../../../../../../src/jobs/mailing/organismes/account/tasks/actions/ResendAction');
 
 describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createEmailMocks }) => {
-
-    let dummyAction = {
-        getQuery: () => ({}),
-    };
 
     it('should send email by siret', async () => {
 
@@ -32,7 +29,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
             })),
         ]);
 
-        let results = await sendAccountActivationEmails(db, logger, emails, dummyAction, {
+        let results = await sendAccountActivationEmails(db, logger, emails, new ForceAction(), {
             siret: '31705038300064'
         });
 
@@ -54,7 +51,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         let { emails, mailer } = await createEmailMocks();
         await insertIntoDatabase('accounts', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
 
-        let results = await sendAccountActivationEmails(db, logger, emails, dummyAction);
+        let results = await sendAccountActivationEmails(db, logger, emails, new ForceAction());
 
         assert.deepStrictEqual(results, {
             total: 1,
@@ -75,7 +72,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
             mailSentDate: null
         }));
 
-        await sendAccountActivationEmails(db, logger, emails, dummyAction);
+        await sendAccountActivationEmails(db, logger, emails, new ForceAction());
 
         let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
         assert.ok(organisme.mailSentDate);
@@ -93,7 +90,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
             mailSentDate: new Date()
         }));
 
-        await sendAccountActivationEmails(db, logger, emails, dummyAction);
+        await sendAccountActivationEmails(db, logger, emails, new ForceAction());
 
         let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
         assert.deepStrictEqual(organisme.resend, true);
@@ -107,7 +104,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await insertIntoDatabase('accounts', newOrganismeAccount({ courriel: 'new@organisme.fr' }));
 
         try {
-            await sendAccountActivationEmails(db, logger, emails, dummyAction);
+            await sendAccountActivationEmails(db, logger, emails, new ForceAction());
             assert.fail();
         } catch (e) {
             let organisme = await db.collection('accounts').findOne({ courriel: 'new@organisme.fr' });
