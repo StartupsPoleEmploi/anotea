@@ -34,17 +34,9 @@ export default class ListeWidget extends Component {
         this.props.fetchAvis({ page: 0, items_par_page: ITEMS_PAR_PAGE });
     }
 
-    previous = () => {
+    page = page => {
         this.props.fetchAvis({
-            page: this.props.results.meta.pagination.page - 1,
-            items_par_page: ITEMS_PAR_PAGE,
-            ...this.state,
-        });
-    };
-
-    next = () => {
-        this.props.fetchAvis({
-            page: this.props.results.meta.pagination.page + 1,
+            page: page,
             items_par_page: ITEMS_PAR_PAGE,
             ...this.state,
         });
@@ -99,8 +91,9 @@ export default class ListeWidget extends Component {
 
                 <div className="row my-3">
                     <div className="col-sm-6">
-                        <div className="line d-flex justify-content-center align-items-center">
+                        <div className="line d-flex flex-column justify-content-center align-items-center">
                             <Header />
+                            <Verified className="mb-2" />
                         </div>
                         <Score score={score} className="mb-3" />
                         <Notes notes={score.notes} />
@@ -111,31 +104,55 @@ export default class ListeWidget extends Component {
                         </div>
                     </div>
                     <div className="col-sm-6">
-                        <div className="line d-flex justify-content-between align-items-center">
+                        <div className="line d-flex justify-content-between align-items-between">
+                            <div className="pagination d-flex justify-content-between align-items-center">
+                                <div className="summary">
+                                    {pagination.total_items} commentaires
+                                </div>
+                            </div>
                             <div className="pagination d-flex justify-content-between align-items-center">
                                 {pagination.total_items > 1 &&
                                 <Button
                                     size="medium"
+                                    className="mr-1"
                                     disabled={pagination.page === 0}
-                                    onClick={() => this.previous()}>
+                                    onClick={() => this.page(0)}>
+                                    <i className="fas fa-chevron-left"></i>
+                                    <i className="fas fa-chevron-left"></i>
+                                </Button>
+                                }
+                                {pagination.total_items > 1 &&
+                                <Button
+                                    size="medium"
+                                    disabled={pagination.page === 0}
+                                    onClick={() => this.page(pagination.page - 1)}>
                                     <i className="fas fa-chevron-left"></i>
                                 </Button>
                                 }
 
                                 <div className="summary">
-                                    {pagination.total_items} commentaires
+                                    Page {pagination.page + 1}/{pagination.total_pages}
                                 </div>
 
                                 {pagination.total_items > 1 &&
                                 <Button
                                     size="medium"
                                     disabled={pagination.page === pagination.total_pages - 1}
-                                    onClick={() => this.next()}>
+                                    onClick={() => this.page(pagination.page + 1)}>
+                                    <i className="fas fa-chevron-right"></i>
+                                </Button>
+                                }
+                                {pagination.total_items > 1 &&
+                                <Button
+                                    size="medium"
+                                    className="ml-1"
+                                    disabled={pagination.page === pagination.total_pages - 1}
+                                    onClick={() => this.page(pagination.total_pages - 1)}>
+                                    <i className="fas fa-chevron-right"></i>
                                     <i className="fas fa-chevron-right"></i>
                                 </Button>
                                 }
                             </div>
-                            <Verified />
                         </div>
                         {context.type === 'organisme' &&
                         <div className="line sort d-flex justify-content-between align-items-center">
