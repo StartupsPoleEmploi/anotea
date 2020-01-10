@@ -37,7 +37,7 @@ module.exports = async (db, logger, stream) => {
 
                 let res = await db.collection('accounts').updateOne({ 'meta.siretAsString': siret }, {
                     $set: {
-                        kairosCourriel: record['Email Kairos']
+                        editedCourriel: record['Email Kairos']
                     },
                     $addToSet: {
                         courriels: { $each: [record['Email Anotea'], record['Email Kairos']] }
