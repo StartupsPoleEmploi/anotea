@@ -15,7 +15,7 @@ class Formation extends Component {
         return (
             <div className="formation">
                 <div className="row pb-5">
-                    <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                    <div className="col-sm-12 offset-md-1 col-md-10 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         {this.props.stagiaire &&
                         <div>
                             <h1>Évaluez votre formation</h1>

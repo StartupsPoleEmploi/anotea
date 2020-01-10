@@ -2,15 +2,15 @@
 
 .Questionnaire .note {
 
-  padding: 1rem;
   line-height: 19px;
+  min-height: 100px;
 
   @media (max-width: 575.98px) {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 
     .stars-container {
-      padding-left: 0;
+      position: relative;
     }
   }
 
@@ -30,8 +30,68 @@
   }
 
   .row {
-    .col-sm-7 {
-      padding-left: 0;
+    div[class^="col-"] {
+      padding: 0.875rem;
+    }
+  }
+
+  .stars {
+
+    text-align: center;
+
+    @media (max-width: 575.98px) {
+      text-align: center;
+
+      .star-tooltip {
+        float: right;
+      }
+    }
+
+    .buttons {
+
+      .star {
+        border: none;
+        background: transparent;
+        outline: none;
+        padding-left: 0;
+        font-size: 1.25rem;
+        margin: 0;
+        padding-right: 0.4rem;
+      }
+
+      .fas.fa-star.inactive {
+        color: $color-grey-50;
+      }
+
+      .fas.fa-star {
+        color: $color-orange;
+        cursor: pointer;
+      }
+
+      .star-tooltip {
+        position: absolute;
+        right: 0;
+        top: 0;
+        @media (max-width: 575.98px) {
+          top: unset;
+          right: 10px;
+        }
+
+        .label {
+          border-radius: 2px;
+          background-color: $color-black;
+          color: $color-white;
+          font-size: 0.687rem;
+          line-height: 13px;
+          text-transform: uppercase;
+          font-weight: $font-weight-normal;
+          padding: 0.25rem;
+        }
+
+        &.inactive {
+          visibility: hidden;
+        }
+      }
     }
   }
 }

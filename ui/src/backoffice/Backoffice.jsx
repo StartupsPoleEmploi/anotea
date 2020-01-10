@@ -5,7 +5,6 @@ import { Redirect, Switch } from 'react-router-dom';
 import { getSession, getToken, removeSession, setSession } from './utils/session';
 import { subscribeToHttpEvent } from '../common/utils/http-client';
 import ModerateurRoutes from './components/moderateur/ModerateurRoutes';
-import GridDisplayer from '../common/components/GridDisplayer';
 import FinanceurRoutes from './components/financeur/FinanceurRoutes';
 import ModerateurHeaderItems from './components/moderateur/ModerateurHeaderItems';
 import FinanceurHeaderItems from './components/financeur/FinanceurHeaderItems';
@@ -29,7 +28,6 @@ class Backoffice extends Component {
             profile: 'anonymous',
         },
         message: null,
-        debug: false,
     };
 
     constructor(props) {
@@ -76,7 +74,7 @@ class Backoffice extends Component {
 
     render() {
 
-        let { account, message, debug } = this.state;
+        let { account, message } = this.state;
         let { router } = this.props;
         let backoffices = {
             moderateur: () => ({
@@ -125,9 +123,6 @@ class Backoffice extends Component {
                         return this.setState({ message: null });
                     }}
                     />
-                    }
-                    {debug &&
-                    <GridDisplayer />
                     }
                 </AppContext.Provider>
             </WithAnalytics>
