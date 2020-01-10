@@ -54,10 +54,13 @@ class Notes extends Component {
                     <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                         <div className="items m-2">
                             {
-                                items.map((item, index) =>
-                                    <div
+                                items.map((item, index) => {
+                                    let even = index % 2 === 0 ? 'even' : '';
+                                    let missing = this.isMissing(index) ? 'missing' : '';
+
+                                    return <div
                                         key={index}
-                                        className={`note-container ${this.isMissing(index) ? 'missing' : ''}`}>
+                                        className={`note-container ${missing} ${even}`}>
                                         {this.isMissing(index) && <i className="fas fa-times" />}
                                         <Note
                                             index={index}
@@ -65,8 +68,8 @@ class Notes extends Component {
                                             description={item.description}
                                             value={this.props.notes[index] ? this.props.notes[index].value : 0}
                                             onSelect={this.updateNote} />
-                                    </div>
-                                )
+                                    </div>;
+                                })
                             }
                         </div>
                     </div>
