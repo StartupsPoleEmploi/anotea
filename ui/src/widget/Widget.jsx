@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import ListeWidget from './ListeWidget';
 import { getAvis, getScore } from './services/widgetService';
-import GridDisplayer from '../common/components/GridDisplayer';
 import WidgetContext from './WidgetContext';
 import ScoreWidget from './ScoreWidget';
 import CarrouselWidget from './CarrouselWidget';
@@ -113,9 +112,8 @@ class Widget extends Component {
         return (
             <WithAnalytics category="widget">
                 <div className="Widget">
-                    {false && <GridDisplayer />}
                     <div className="container-fluid">
-                        <WidgetContext.Provider value={this.props}>
+                        <WidgetContext.Provider value={this.getParameters()}>
                             {widget}
                         </WidgetContext.Provider>
                     </div>
