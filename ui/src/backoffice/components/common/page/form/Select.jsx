@@ -28,44 +28,47 @@ export default class Select extends React.Component {
     static contextType = AnalyticsContext;
 
     static propTypes = {
-        value: PropTypes.object,
+        value: PropTypes.node,
         options: PropTypes.array.isRequired,
-        optionKey: PropTypes.string.isRequired,
-        label: PropTypes.func.isRequired,
+        optionKey: PropTypes.string,
+        label: PropTypes.func,
         meta: PropTypes.func,
         onChange: PropTypes.func.isRequired,
         placeholder: PropTypes.string.isRequired,
         loading: PropTypes.bool,
+        isClearable: PropTypes.bool,
+        isSearchable: PropTypes.bool,
         trackingId: PropTypes.string,
     };
 
     static defaultProps = {
-        optionKey: 'value',
+        isSearchable: true,
+        isClearable: true,
     };
 
     toReactSelectOption = option => {
-        let keyPropertyName = this.props.optionKey;
+        let { optionKey } = this.props;
+        let value = optionKey ? option[optionKey] : option;
 
         return {
-            value: option[keyPropertyName],
-            ...(this.props.label ? { label: this.props.label(option) } : {}),
+            value,
+            ...(this.props.label ? { label: this.props.label(option) } : { label: value }),
             ...(this.props.meta ? { meta: this.props.meta(option) } : {}),
         };
     };
 
     render() {
         let { trackClick } = this.context;
-        let { value, placeholder, options, onChange, loading, optionKey, trackingId } = this.props;
-        let keyPropertyName = optionKey;
+        let { value, placeholder, options, onChange, loading, optionKey, trackingId, isClearable, isSearchable } = this.props;
 
         return (
             <ReactSelect
-                className={`Select`}
+                className="Select"
                 classNamePrefix="Select"
                 isLoading={loading}
                 components={{ Option }}
-                isClearable
-                isSearchable
+                isClearable={isClearable}
+                isSearchable={isSearchable}
                 value={_.isEmpty(value) ? null : this.toReactSelectOption(value)}
                 options={options.map(o => this.toReactSelectOption(o))}
                 placeholder={options.length === 0 ? '' : placeholder}
@@ -74,7 +77,11 @@ export default class Select extends React.Component {
                     if (!option) {
                         return onChange(null);
                     }
-                    return onChange(options.find(o => o[keyPropertyName] === option.value));
+
+                    return onChange(options.find(o => {
+                        let key = optionKey ? o[optionKey] : o;
+                        return key === option.value;
+                    }));
                 }}
             />
         );

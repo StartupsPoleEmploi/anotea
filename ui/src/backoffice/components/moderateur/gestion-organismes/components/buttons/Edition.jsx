@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { updateEditedCourriel } from '../../gestionOrganismesService';
 import Button from '../../../../../../common/components/Button';
+import { Select } from '../../../../common/page/form/Form';
+import './Edition.scss';
 
 export default class Edition extends React.Component {
 
@@ -13,32 +15,40 @@ export default class Edition extends React.Component {
 
     constructor(props) {
         super(props);
-        let organisme = this.props.organisme;
         this.state = {
-            inputValue: organisme.editedCourriel ? organisme.editedCourriel : '',
+            selected: null,
         };
     }
 
     update = async () => {
-        const inputValue = this.state.inputValue.replace(/\s/g, '');
-        let updated = await updateEditedCourriel(this.props.organisme._id, inputValue);
+        if (this.state.selected) {
+            let updated = await updateEditedCourriel(this.props.organisme._id, this.state.selected);
+            this.props.onChange(updated, {
+                message: {
+                    text: 'L\'adresse mail a été mise à jour',
+                }
+            });
+        }
         this.props.onClose();
-        this.props.onChange(updated, {
-            message: {
-                text: 'L\'adresse mail a été mise à jour',
-            }
-        });
+    };
+
+    getOrganismeEmail = () => {
+        let { organisme } = this.props;
+        return organisme.editedCourriel || organisme.kairosCourriel || organisme.courriel;
     };
 
     render() {
         return (
             <div className="Edition">
-                <input
-                    type="text"
-                    className="form-control"
-                    style={{ fontSize: '0.875rem' }}
-                    onChange={e => this.setState({ inputValue: e.target.value })}
-                    value={this.state.inputValue} />
+                <Select
+                    value={this.state.selected || this.getOrganismeEmail()}
+                    options={this.props.organisme.courriels}
+                    loading={false}
+                    placeholder={''}
+                    isClearable={false}
+                    isSearchable={false}
+                    onChange={selected => this.setState({ selected })}
+                />
 
                 <div className="py-2 d-flex justify-content-end">
                     <Button size="small" color="red" className="mr-2" onClick={this.props.onClose}>
