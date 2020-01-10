@@ -8,11 +8,12 @@ export default class Avis extends Component {
 
     static propTypes = {
         avis: PropTypes.object.isRequired,
+        highlight: PropTypes.string,
     };
 
     render() {
 
-        let { avis } = this.props;
+        let { avis, highlight } = this.props;
         let { fin } = avis.formation.action.session.periode;
 
         return (
@@ -41,7 +42,7 @@ export default class Avis extends Component {
                     <div className="reponse-texte">{avis.reponse.texte}</div>
                 </div>
                 }
-                <div className="formation">
+                <div className={`formation ${highlight === 'formation' ? 'highlight' : ''}`}>
                     {avis.formation.intitule} - {moment(fin).format('MM/YYYY')}
                 </div>
             </div>

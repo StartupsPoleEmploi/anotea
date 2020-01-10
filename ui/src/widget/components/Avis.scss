@@ -56,6 +56,12 @@
     font-size: 0.75rem;
     font-style: italic;
     color: $color-grey-50;
+
+    &.highlight {
+      color: $color-blue;
+      font-style: unset;
+      font-weight: $font-weight-bold;
+    }
   }
 
 }

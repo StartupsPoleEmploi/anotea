@@ -76,7 +76,7 @@ export default class ListeWidget extends Component {
                         avis.map(current => {
                             return (
                                 <div key={current.id} className="mb-3">
-                                    <Avis avis={current} />
+                                    <Avis avis={current} highlight={this.state.tri} />
                                 </div>
                             );
                         })
