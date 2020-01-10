@@ -4,8 +4,6 @@ const Joi = require('joi');
 const _ = require('lodash');
 const { IdNotFoundError } = require('../../../core/errors');
 const { tryAndCatch, getRemoteAddress, sendArrayAsJsonStream, sendCSVStream } = require('../../utils/routes-utils');
-const getOrganismeEmail = require('../../../core/utils/getOrganismeEmail');
-const { transformObject, encodeStream } = require('../../../core/utils/stream-utils');
 
 module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
@@ -96,7 +94,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             await sendCSVStream(stream, res, {
                 'Siret': organisme => organisme.meta.siretAsString,
                 'Nom': organisme => organisme.raisonSociale,
-                'Email': organisme => getOrganismeEmail(organisme),
+                'Email': organisme => organisme.courriel,
                 'Nombre d\'Avis': organisme => organisme.score.nb_avis,
                 'Kairos': organisme => isKairos(organisme),
                 'Lieux de formation': organisme => {
@@ -110,14 +108,14 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
     }));
 
-    router.put('/api/backoffice/moderateur/organismes/:id/updateEditedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
+    router.put('/api/backoffice/moderateur/organismes/:id/updateCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
 
         let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
         let { courriel } = await Joi.validate(req.body, { courriel: Joi.string().email().required() }, { abortEarly: false });
 
         let result = await db.collection('accounts').findOneAndUpdate(
             { _id: id },
-            { $set: { editedCourriel: courriel } },
+            { $set: { courriel } },
             { returnOriginal: false }
         );
 
@@ -132,24 +130,6 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             ip: getRemoteAddress(req)
         });
         return res.status(201).send(result.value);
-    }));
-
-    router.put('/api/backoffice/moderateur/organismes/:id/removeEditedCourriel', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {
-        let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
-
-        let organisme = await db.collection('accounts').findOne({ _id: id });
-        if (organisme) {
-            await db.collection('accounts').updateOne({ _id: id }, { $unset: { editedCourriel: '' } });
-            saveEvent(id, 'deleteEmail', {
-                app: 'moderation',
-                profile: 'moderateur',
-                user: 'admin',
-                ip: getRemoteAddress(req)
-            });
-            res.status(200).send({ 'status': 'OK' });
-        } else {
-            throw Boom.notFound('Not found');
-        }
     }));
 
     router.post('/api/backoffice/moderateur/organismes/:id/resendEmailAccount', checkAuth, checkProfile('moderateur'), tryAndCatch(async (req, res) => {

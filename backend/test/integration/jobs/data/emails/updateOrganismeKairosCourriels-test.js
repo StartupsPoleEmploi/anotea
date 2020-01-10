@@ -18,7 +18,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
         return readable;
     };
 
-    it('should upate emails', async () => {
+    it('should update emails', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
@@ -54,7 +54,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
             unknown: 0,
         });
         let updated = await db.collection('accounts').findOne({ _id: 11111111111111 });
-        assert.strictEqual(updated.editedCourriel, 'after@pole-emploi.fr');
+        assert.strictEqual(updated.courriel, 'after@pole-emploi.fr');
         assert.deepStrictEqual(updated.courriels, [
             'before@pole-emploi.fr',
             'after@pole-emploi.fr',

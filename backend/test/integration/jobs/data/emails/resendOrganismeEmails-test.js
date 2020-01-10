@@ -25,7 +25,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, createE
             await insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111111,
                 SIRET: 11111111111111,
-                kairosCourriel: 'kairos@pole-emploi.fr',
+                courriel: 'courriel@pole-emploi.fr',
                 meta: {
                     siretAsString: '11111111111111'
                 },
@@ -51,7 +51,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, createE
 
         let message = mailer.getEmailMessagesSent().pop();
         assert.ok(message);
-        assert.strictEqual(message.email, 'kairos@pole-emploi.fr');
+        assert.strictEqual(message.email, 'courriel@pole-emploi.fr');
         assert.strictEqual(message.parameters.subject, 'Pôle Emploi vous donne accès aux avis de vos stagiaires');
     });
 }));

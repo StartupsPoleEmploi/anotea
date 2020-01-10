@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { removeEditedCourriel, resendEmailAccount } from '../../gestionOrganismesService';
+import { resendEmailAccount } from '../../gestionOrganismesService';
 import Button from '../../../../../../common/components/Button';
 import { Dropdown, DropdownDivider, DropdownItem } from '../../../../common/Dropdown';
 
@@ -19,11 +19,6 @@ export default class EditButton extends React.Component {
                 text: 'Email envoyé avec succès.',
             }
         });
-    };
-
-    remove = async () => {
-        let updated = await removeEditedCourriel(this.props.organisme._id);
-        this.props.onChange(updated);
     };
 
     render() {
@@ -45,12 +40,6 @@ export default class EditButton extends React.Component {
                             <DropdownItem onClick={this.resend}>
                                 <i className="far fa-envelope a-icon" /> Renvoyer le lien
                             </DropdownItem>
-                            <DropdownDivider />
-                            {this.props.organisme.editedCourriel &&
-                            <DropdownItem onClick={this.remove} className="a-text-important">
-                                <i className="far fa-trash-alt a-icon" /> Supprimer l&apos;adresse
-                            </DropdownItem>
-                            }
                         </div>
                     }
                 />

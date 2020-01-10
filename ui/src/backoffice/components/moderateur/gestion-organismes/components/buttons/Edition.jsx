@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { updateEditedCourriel } from '../../gestionOrganismesService';
+import { updateCourriel } from '../../gestionOrganismesService';
 import Button from '../../../../../../common/components/Button';
 import { Select } from '../../../../common/page/form/Form';
 import './Edition.scss';
@@ -22,7 +22,7 @@ export default class Edition extends React.Component {
 
     update = async () => {
         if (this.state.selected) {
-            let updated = await updateEditedCourriel(this.props.organisme._id, this.state.selected);
+            let updated = await updateCourriel(this.props.organisme._id, this.state.selected);
             this.props.onChange(updated, {
                 message: {
                     text: 'L\'adresse mail a été mise à jour',
@@ -32,16 +32,11 @@ export default class Edition extends React.Component {
         this.props.onClose();
     };
 
-    getOrganismeEmail = () => {
-        let { organisme } = this.props;
-        return organisme.editedCourriel || organisme.kairosCourriel || organisme.courriel;
-    };
-
     render() {
         return (
             <div className="Edition">
                 <Select
-                    value={this.state.selected || this.getOrganismeEmail()}
+                    value={this.state.selected || this.props.organisme.courriel}
                     options={this.props.organisme.courriels}
                     loading={false}
                     placeholder={''}

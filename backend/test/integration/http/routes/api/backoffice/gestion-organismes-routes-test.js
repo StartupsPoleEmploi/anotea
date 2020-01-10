@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withServer } = require('../../../../../helpers/with-server');
 const { newOrganismeAccount } = require('../../../../../helpers/data/dataset');
 
-describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatabase, logAsModerateur }) => {
+describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerateur }) => {
 
     it('can search organismes', async () => {
 
@@ -21,7 +21,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'edited@pole-emploi.fr' });
+        .send({ email: 'me@pole-emploi.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body, {
@@ -110,7 +110,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?status=active`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'edited@pole-emploi.fr' });
+        .send({ email: 'me@pole-emploi.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
@@ -146,7 +146,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?status=inactive`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'edited@pole-emploi.fr' });
+        .send({ email: 'me@pole-emploi.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
@@ -177,7 +177,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?search=33333333333333`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'edited@pole-emploi.fr' });
+        .send({ email: 'me@pole-emploi.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
@@ -208,7 +208,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?search=Anotea`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'edited@pole-emploi.fr' });
+        .send({ email: 'me@pole-emploi.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 2);
@@ -235,7 +235,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let response = await request(app)
         .get(`/api/backoffice/moderateur/organismes?search=contact@anotea.fr`)
         .set('authorization', `Bearer ${token}`)
-        .send({ email: 'edited@pole-emploi.fr' });
+        .send({ email: 'me@pole-emploi.fr' });
 
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.organismes.length, 1);
@@ -257,38 +257,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         }));
 
         let response = await request(app)
-        .put(`/api/backoffice/moderateur/organismes/${id}/updateEditedCourriel`)
+        .put(`/api/backoffice/moderateur/organismes/${id}/updateCourriel`)
         .set('authorization', `Bearer ${token}`)
-        .send({ courriel: 'edited@pole-emploi.fr' });
+        .send({ courriel: 'me@pole-emploi.fr' });
 
         assert.strictEqual(response.statusCode, 201);
-        assert.deepStrictEqual(response.body.editedCourriel, 'edited@pole-emploi.fr');
-    });
-
-    it('can delete an edited email', async () => {
-
-        let app = await startServer();
-        let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
-        let id = 11111111111111;
-
-        await insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: id,
-            SIRET: id,
-            editedCourriel: 'edited@pole-emploi.fr',
-            meta: {
-                siretAsString: '11111111111111'
-            },
-        }));
-
-        let response = await request(app)
-        .put(`/api/backoffice/moderateur/organismes/${id}/removeEditedCourriel`)
-        .set('authorization', `Bearer ${token}`);
-
-        assert.strictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.body, { 'status': 'OK' });
-
-        let db = await getTestDatabase();
-        let res = await db.collection('accounts').findOne({ _id: id });
-        assert.ok(!res.editedCourriel);
+        assert.deepStrictEqual(response.body.courriel, 'me@pole-emploi.fr');
     });
 }));

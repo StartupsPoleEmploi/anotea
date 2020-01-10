@@ -1,5 +1,4 @@
 let { delay } = require('../../../../job-utils');
-let getOrganismeEmail = require('../../../../../core/utils/getOrganismeEmail');
 
 module.exports = async (db, logger, emails, action, options = {}) => {
 
@@ -20,7 +19,7 @@ module.exports = async (db, logger, emails, action, options = {}) => {
 
     while (await cursor.hasNext()) {
         let organisme = await cursor.next();
-        logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${getOrganismeEmail(organisme)}`);
+        logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${organisme.courriel}`);
 
         stats.total++;
         try {

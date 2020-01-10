@@ -1,5 +1,3 @@
-let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
-
 module.exports = (db, regions, mailer) => {
 
     let templateName = 'questionnaireOrganismeEmail';
@@ -45,7 +43,7 @@ module.exports = (db, regions, mailer) => {
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
 
             return mailer.createRegionalMailer(region).sendEmail(
-                getOrganismeEmail(organisme),
+                organisme.courriel,
                 {
                     subject: 'Pôle Emploi - Aidez-nous à améliorer Anotéa',
                     body: await render(organisme),
