@@ -36,13 +36,14 @@ export default class Edition extends React.Component {
         return (
             <div className="Edition">
                 <Select
-                    value={this.state.selected || this.props.organisme.courriel}
+                    type={'create'}
+                    value={this.state.selected}
                     options={this.props.organisme.courriels}
                     loading={false}
                     placeholder={''}
-                    isClearable={false}
-                    isSearchable={false}
-                    onChange={selected => this.setState({ selected })}
+                    onChange={selected => {
+                        this.setState({ selected });
+                    }}
                 />
 
                 <div className="py-2 d-flex justify-content-end">

@@ -137,7 +137,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
             creationDate: new Date('2016-11-10T17:41:03.308Z'),
             mailSentDate: new Date('2018-09-12T15:21:28.083Z'),
             courriel: 'OLD@formateur.com',
-            courriels: ['anotea.pe+paris@gmail.com'],
+            courriels: ['contact@poleemploi-formation.fr', 'anotea.pe+paris@gmail.com'],
             sources: ['intercarif'],
             codeRegion: '11',
             numero: '14_OF_0000000123',

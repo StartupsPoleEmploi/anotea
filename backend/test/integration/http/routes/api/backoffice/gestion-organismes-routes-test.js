@@ -31,6 +31,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                     SIRET: 11111111111111,
                     raisonSociale: 'Pole Emploi Formation',
                     courriel: 'contact@poleemploi-formation.fr',
+                    courriels: [
+                        'contact@poleemploi-formation.fr',
+                    ],
                     creationDate: organisme.creationDate.toJSON(),
                     mailSentDate: organisme.mailSentDate.toJSON(),
                     codeRegion: '11',
@@ -263,5 +266,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
 
         assert.strictEqual(response.statusCode, 201);
         assert.deepStrictEqual(response.body.courriel, 'me@pole-emploi.fr');
+        assert.deepStrictEqual(response.body.courriels, ['contact@poleemploi-formation.fr', 'me@pole-emploi.fr']);
     });
 }));

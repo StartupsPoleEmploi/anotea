@@ -5,9 +5,8 @@ const cli = require('commander');
 
 cli.parse(process.argv);
 
-execute(async ({ db }) => {
+execute(async ({ db, logger }) => {
     let stats = {};
-    stats.markPropertiesAsDeprecated = await require('./tasks/markPropertiesAsDeprecated')(db);
-    stats.removeInvalidOrganismes = await require('./tasks/removeInvalidOrganismes')(db);
+    stats.removedEditedCourriel = await require('./tasks/removedEditedCourriel')(db, logger);
     return stats;
 });

@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ReactSelect, { components } from 'react-windowed-select';
-import './Select.scss';
+import CreatableSelect from 'react-select/creatable';
 import AnalyticsContext from '../../../../../common/components/analytics/AnalyticsContext';
+import './Select.scss';
 
 const Option = props => {
     let meta = props.data.meta;
@@ -36,14 +37,12 @@ export default class Select extends React.Component {
         onChange: PropTypes.func.isRequired,
         placeholder: PropTypes.string.isRequired,
         loading: PropTypes.bool,
-        isClearable: PropTypes.bool,
-        isSearchable: PropTypes.bool,
+        type: PropTypes.string,
         trackingId: PropTypes.string,
     };
 
     static defaultProps = {
-        isSearchable: true,
-        isClearable: true,
+        type: 'search',
     };
 
     toReactSelectOption = option => {
@@ -59,30 +58,49 @@ export default class Select extends React.Component {
 
     render() {
         let { trackClick } = this.context;
-        let { value, placeholder, options, onChange, loading, optionKey, trackingId, isClearable, isSearchable } = this.props;
+
+        let creatable = this.props.type === 'create';
+        let SelectType = creatable ? CreatableSelect : ReactSelect;
 
         return (
-            <ReactSelect
+            <SelectType
                 className="Select"
                 classNamePrefix="Select"
-                isLoading={loading}
+                isLoading={this.props.loading}
                 components={{ Option }}
-                isClearable={isClearable}
-                isSearchable={isSearchable}
-                value={_.isEmpty(value) ? null : this.toReactSelectOption(value)}
-                options={options.map(o => this.toReactSelectOption(o))}
-                placeholder={options.length === 0 ? '' : placeholder}
+                value={_.isEmpty(this.props.value) ? null : this.toReactSelectOption(this.props.value)}
+                options={this.props.options.map(o => this.toReactSelectOption(o))}
+                placeholder={this.props.options.length === 0 ? '' : this.props.placeholder}
+                isClearable
                 onChange={option => {
-                    trackClick(trackingId || 'select');
+
+                    trackClick(this.props.trackingId || 'select');
+
                     if (!option) {
-                        return onChange(null);
+                        return this.props.onChange(null);
                     }
 
-                    return onChange(options.find(o => {
-                        let key = optionKey ? o[optionKey] : o;
+                    let data = this.props.options.find(o => {
+                        let key = this.props.optionKey ? o[this.props.optionKey] : o;
                         return key === option.value;
-                    }));
+                    });
+
+                    return this.props.onChange(data);
                 }}
+                {
+                    ...(creatable ? {
+                        autoFocus: true,
+                        openMenuOnFocus: true,
+                        formatCreateLabel: label => `Ajouter "${label}"`,
+                        createOptionPosition: 'first',
+                        onCreateOption: option => {
+                            let data = this.props.optionKey ? { [this.props.optionKey]: option } : option;
+                            return this.props.onChange(data);
+                        }
+                    } : {
+                        isSearchable: true
+                    })
+                }
             />
         );
     }

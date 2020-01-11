@@ -56,6 +56,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
         let updated = await db.collection('accounts').findOne({ _id: 11111111111111 });
         assert.strictEqual(updated.courriel, 'after@pole-emploi.fr');
         assert.deepStrictEqual(updated.courriels, [
+            'contact@poleemploi-formation.fr',
             'before@pole-emploi.fr',
             'after@pole-emploi.fr',
         ]);

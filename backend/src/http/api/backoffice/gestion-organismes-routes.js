@@ -115,7 +115,12 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
 
         let result = await db.collection('accounts').findOneAndUpdate(
             { _id: id },
-            { $set: { courriel } },
+            {
+                $set: { courriel },
+                $addToSet: {
+                    courriels: courriel
+                }
+            },
             { returnOriginal: false }
         );
 
@@ -129,6 +134,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             user: 'admin',
             ip: getRemoteAddress(req)
         });
+
         return res.status(201).send(result.value);
     }));
 
