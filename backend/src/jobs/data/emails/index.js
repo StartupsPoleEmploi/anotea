@@ -2,7 +2,7 @@
 'use strict';
 const cli = require('commander');
 const { execute } = require('../../job-utils');
-const updateOrganismeKairosCourriels = require('./tasks/updateOrganismeKairosCourriels');
+const updateOrganismeCourriels = require('./tasks/updateOrganismeCourriels');
 const resendOrganismeEmails = require('./tasks/resendOrganismeEmails');
 const fs = require('fs');
 
@@ -24,7 +24,7 @@ execute(async ({ db, logger, emails, exit }) => {
 
     if (update) {
         let stream = fs.createReadStream(file);
-        promises.push(updateOrganismeKairosCourriels(db, logger, stream));
+        promises.push(updateOrganismeCourriels(db, logger, stream));
     }
 
     if (resend) {
@@ -34,7 +34,7 @@ execute(async ({ db, logger, emails, exit }) => {
 
     let res = await Promise.all(promises);
     return {
-        updateOrganismeKairosCourriels: res[0],
+        updateOrganismeCourriels: res[0],
         resendOrganismeEmails: res[1],
     };
 });

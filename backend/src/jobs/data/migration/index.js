@@ -5,8 +5,8 @@ const cli = require('commander');
 
 cli.parse(process.argv);
 
-execute(async ({ db, logger }) => {
+execute(async ({ db }) => {
     let stats = {};
-    stats.removedEditedCourriel = await require('./tasks/removedEditedCourriel')(db, logger);
+    stats.removeCourriels = await require('./tasks/removeCourriels')(db);
     return stats;
 });

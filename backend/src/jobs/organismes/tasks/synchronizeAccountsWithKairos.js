@@ -19,7 +19,7 @@ module.exports = async (db, logger, file) => {
             try {
                 let id = parseInt(kairos.siret, 10);
                 let account = await db.collection('accounts').findOne({ _id: id });
-                let kairosCourriel = kairos.emailRGC;
+                let courriel = kairos.emailRGC;
 
                 let results = await db.collection('accounts').updateOne(
                     { _id: id },
@@ -29,18 +29,17 @@ module.exports = async (db, logger, file) => {
                             SIRET: id,
                             raisonSociale: kairos.libelle,
                             codeRegion: kairos.codeRegion,
-                            courriel: kairosCourriel,
+                            courriel: courriel,
                             token: uuid.v4(),
                             creationDate: new Date(),
                             lieux_de_formation: [],
                         },
                         $addToSet: {
-                            ...(kairosCourriel ? { courriels: kairosCourriel } : {}),
+                            ...(courriel ? { courriels: courriel } : {}),
                             sources: 'kairos',
                         },
                         $set: {
                             profile: 'organisme',
-                            ...(_.get(account, 'kairosCourriel') && kairosCourriel ? {} : { 'kairosCourriel': kairosCourriel }),
                             ...(_.get(account, 'meta.kairos') ? {} : { 'meta.kairos.eligible': false }),
                             ...(_.get(account, 'meta.siretAsString') ? {} : { 'meta.siretAsString': kairos.siret }),
                         },

@@ -3,7 +3,7 @@ const assert = require('assert');
 const { withMongoDB } = require('../../../../helpers/with-mongodb');
 const logger = require('../../../../helpers/components/fake-logger');
 const { newOrganismeAccount } = require('../../../../helpers/data/dataset');
-const updateOrganismeKairosCourriels = require('../../../../../src/jobs/data/emails/tasks/updateOrganismeKairosCourriels');
+const courriel = require('../../../../../src/jobs/data/emails/tasks/updateOrganismeCourriels');
 
 describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
 
@@ -25,7 +25,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
             await insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 11111111111111,
                 SIRET: 11111111111111,
-                kairosCourriel: 'kairos@pole-emploi.fr',
+                courriel: 'kairos@pole-emploi.fr',
                 meta: {
                     siretAsString: '11111111111111'
                 },
@@ -33,7 +33,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
-                kairosCourriel: 'other@pole-emploi.fr',
+                courriel: 'other@pole-emploi.fr',
                 meta: {
                     siretAsString: '22222222222222'
                 },
@@ -45,7 +45,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
             '11111111111111|Anotéa formation|before@pole-emploi.fr|744|after@pole-emploi.fr\n'
         ]);
 
-        let stats = await updateOrganismeKairosCourriels(db, logger, stream);
+        let stats = await courriel(db, logger, stream);
 
         assert.deepStrictEqual(stats, {
             total: 1,

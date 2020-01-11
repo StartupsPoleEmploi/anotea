@@ -33,7 +33,7 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase, createE
             insertIntoDatabase('accounts', newOrganismeAccount({
                 _id: 22222222222222,
                 SIRET: 22222222222222,
-                kairosCourriel: 'other@pole-emploi.fr',
+                courriel: 'other@pole-emploi.fr',
                 meta: {
                     siretAsString: '22222222222222'
                 },

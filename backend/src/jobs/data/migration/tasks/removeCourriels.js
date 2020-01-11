@@ -1,8 +1,14 @@
 const { batchCursor } = require('../../../job-utils');
 
-module.exports = async (db, logger) => {
+module.exports = async db => {
 
-    let cursor = db.collection('accounts').find({ 'profile': 'organisme', 'editedCourriel': { $exists: true } });
+    let cursor = db.collection('accounts').find({
+        profile: 'organisme',
+        $or: [
+            { editedCourriel: { $exists: true } },
+            { kairosCourriel: { $exists: true } },
+        ]
+    });
     let updated = 0;
 
     await batchCursor(cursor, async next => {
@@ -16,15 +22,18 @@ module.exports = async (db, logger) => {
         let results = await db.collection('accounts').updateOne({ _id: organisme._id }, {
             $set: {
                 courriel: organisme.editedCourriel || organisme.kairosCourriel || organisme.courriel,
-                courriels: [...courriels]
+                courriels: [...courriels].filter(c => c)
             },
+            $unset: {
+                editedCourriel: 1,
+                kairosCourriel: 1
+            }
         });
 
         if (results.result.nModified === 1) {
-            logger.info(`${organisme.SIRET} ${organisme.editedCourriel} ${organisme.courriel} ${organisme.kairosCourriel}`);
             updated++;
         }
     });
 
-    return updated;
+    return { updated };
 };

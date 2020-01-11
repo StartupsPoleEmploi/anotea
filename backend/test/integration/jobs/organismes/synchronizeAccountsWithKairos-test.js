@@ -27,7 +27,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             sources: ['kairos'],
             profile: 'organisme',
             codeRegion: '10',
-            kairosCourriel: 'contact+kairos@formation.fr',
             raisonSociale: 'Pole Emploi Formation Nord',
             lieux_de_formation: [],
             meta: {
@@ -68,7 +67,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             _id: 22222222222222,
             SIRET: 22222222222222,
             codeRegion: '11',
-            kairosCourriel: 'contact+kairos@formation.fr',
             courriel: 'anotea.pe+paris@gmail.com',
             courriels: ['anotea.pe+paris@gmail.com', 'contact+kairos@formation.fr'],
             lieux_de_formation: [

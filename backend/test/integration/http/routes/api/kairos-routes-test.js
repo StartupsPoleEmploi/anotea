@@ -106,7 +106,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             raisonSociale: 'Pole Emploi Formation',
             courriel: 'contact@organisme.fr',
             courriels: ['contact@organisme.fr'],
-            kairosCourriel: 'contact@organisme.fr',
             sources: ['kairos', 'sso'],
             profile: 'organisme',
             codeRegion: '11',
