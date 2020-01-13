@@ -29,13 +29,13 @@ module.exports = async (db, logger, file) => {
                             SIRET: id,
                             raisonSociale: kairos.libelle,
                             codeRegion: kairos.codeRegion,
-                            courriel: courriel,
                             token: uuid.v4(),
                             creationDate: new Date(),
                             lieux_de_formation: [],
+                            courriel,
                         },
                         $addToSet: {
-                            ...(courriel ? { courriels: courriel } : {}),
+                            courriels: { courriel, source: 'kairos' },
                             sources: 'kairos',
                         },
                         $set: {

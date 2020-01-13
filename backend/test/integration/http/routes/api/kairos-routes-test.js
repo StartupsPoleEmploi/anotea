@@ -105,7 +105,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             SIRET: parseInt(siret),
             raisonSociale: 'Pole Emploi Formation',
             courriel: 'contact@organisme.fr',
-            courriels: ['contact@organisme.fr'],
+            courriels: [{ courriel: 'contact@organisme.fr', source: 'kairos' }],
             sources: ['kairos', 'sso'],
             profile: 'organisme',
             codeRegion: '11',

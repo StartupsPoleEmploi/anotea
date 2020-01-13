@@ -118,7 +118,7 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
             {
                 $set: { courriel },
                 $addToSet: {
-                    courriels: courriel
+                    courriels: { courriel, source: 'anotea' },
                 }
             },
             { returnOriginal: false }

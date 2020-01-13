@@ -7,11 +7,11 @@ import AnalyticsContext from '../../../../../common/components/analytics/Analyti
 import './Select.scss';
 
 const Option = props => {
-    let meta = props.data.meta;
+    let { label, meta } = props.data;
     return (
         <components.Option {...props}>
             <div className="d-flex justify-content-between">
-                <div className={`Select__label ${meta ? 'Select__label--with-meta' : ''}`}>{props.data.label}</div>
+                <div className={`Select__label ${meta ? 'Select__label--with-meta' : ''}`}>{label}</div>
                 {meta &&
                 <div className="Select__meta">{meta}</div>
                 }
@@ -29,7 +29,7 @@ export default class Select extends React.Component {
     static contextType = AnalyticsContext;
 
     static propTypes = {
-        value: PropTypes.node,
+        value: PropTypes.any,
         options: PropTypes.array.isRequired,
         optionKey: PropTypes.string,
         label: PropTypes.func,

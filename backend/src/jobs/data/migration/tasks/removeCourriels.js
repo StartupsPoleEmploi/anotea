@@ -1,28 +1,28 @@
+const _ = require('lodash');
 const { batchCursor } = require('../../../job-utils');
 
 module.exports = async db => {
 
     let cursor = db.collection('accounts').find({
         profile: 'organisme',
-        $or: [
-            { editedCourriel: { $exists: true } },
-            { kairosCourriel: { $exists: true } },
-        ]
     });
     let updated = 0;
 
     await batchCursor(cursor, async next => {
         let organisme = await next();
+        let { courriel, editedCourriel, kairosCourriel } = organisme;
 
-        let courriels = new Set(organisme.courriels.filter(c => c));
-        courriels.add(organisme.editedCourriel);
-        courriels.add(organisme.kairosCourriel);
-        courriels.add(organisme.courriel);
+        let courriels = (organisme.courriels || [])
+        .filter(c => c && ![courriel, editedCourriel, kairosCourriel].includes(c))
+        .map(c => ({ courriel: c, source: 'intercarif' }));
+        courriels.push({ courriel: courriel, source: 'intercarif' });
+        courriels.push({ courriel: editedCourriel, source: 'anotea' });
+        courriels.push({ courriel: kairosCourriel, source: 'kairos' });
 
         let results = await db.collection('accounts').updateOne({ _id: organisme._id }, {
             $set: {
-                courriel: organisme.editedCourriel || organisme.kairosCourriel || organisme.courriel,
-                courriels: [...courriels].filter(c => c)
+                courriel: editedCourriel || kairosCourriel || courriel,
+                courriels: _.uniqWith(courriels.filter(c => c.courriel), (v1, v2) => v1.courriel === v2.courriel),
             },
             $unset: {
                 editedCourriel: 1,

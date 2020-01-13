@@ -43,7 +43,7 @@ module.exports = ({ db, auth, middlewares }) => {
                 SIRET: parseInt(data.siret),
                 raisonSociale: data.raison_sociale,
                 courriel: data.courriel,
-                courriels: [data.courriel],
+                courriels: [{ courriel: data.courriel, source: 'kairos' }],
                 profile: 'organisme',
                 token: uuid.v4(),
                 creationDate: new Date(),

@@ -23,7 +23,9 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             _id: 33333333333333,
             SIRET: 33333333333333,
             courriel: 'contact+kairos@formation.fr',
-            courriels: ['contact+kairos@formation.fr'],
+            courriels: [
+                { courriel: 'contact+kairos@formation.fr', source: 'kairos' },
+            ],
             sources: ['kairos'],
             profile: 'organisme',
             codeRegion: '10',
@@ -68,7 +70,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             SIRET: 22222222222222,
             codeRegion: '11',
             courriel: 'anotea.pe+paris@gmail.com',
-            courriels: ['anotea.pe+paris@gmail.com', 'contact+kairos@formation.fr'],
+            courriels: [
+                { courriel: 'anotea.pe+paris@gmail.com', source: 'intercarif' },
+                { courriel: 'contact+kairos@formation.fr', source: 'kairos' },
+            ],
             lieux_de_formation: [
                 {
                     nom: 'Anotea Formation Paris',
