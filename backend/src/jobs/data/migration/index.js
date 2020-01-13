@@ -8,5 +8,6 @@ cli.parse(process.argv);
 execute(async ({ db }) => {
     let stats = {};
     stats.removeCourriels = await require('./tasks/removeCourriels')(db);
+    stats.removeUnusedProperties = await require('./tasks/removeUnusedProperties')(db);
     return stats;
 });
