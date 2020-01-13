@@ -2,15 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ReactSelect, { components } from 'react-windowed-select';
-import './Select.scss';
+import CreatableSelect from 'react-select/creatable';
 import AnalyticsContext from '../../../../../common/components/analytics/AnalyticsContext';
+import './Select.scss';
 
 const Option = props => {
-    let meta = props.data.meta;
+    let { label, meta } = props.data;
     return (
         <components.Option {...props}>
             <div className="d-flex justify-content-between">
-                <div className={`Select__label ${meta ? 'Select__label--with-meta' : ''}`}>{props.data.label}</div>
+                <div className={`Select__label ${meta ? 'Select__label--with-meta' : ''}`}>{label}</div>
                 {meta &&
                 <div className="Select__meta">{meta}</div>
                 }
@@ -28,54 +29,78 @@ export default class Select extends React.Component {
     static contextType = AnalyticsContext;
 
     static propTypes = {
-        value: PropTypes.object,
+        value: PropTypes.any,
         options: PropTypes.array.isRequired,
-        optionKey: PropTypes.string.isRequired,
-        label: PropTypes.func.isRequired,
+        optionKey: PropTypes.string,
+        label: PropTypes.func,
         meta: PropTypes.func,
         onChange: PropTypes.func.isRequired,
         placeholder: PropTypes.string.isRequired,
         loading: PropTypes.bool,
+        type: PropTypes.string,
         trackingId: PropTypes.string,
     };
 
     static defaultProps = {
-        optionKey: 'value',
+        type: 'search',
     };
 
     toReactSelectOption = option => {
-        let keyPropertyName = this.props.optionKey;
+        let { optionKey } = this.props;
+        let value = optionKey ? option[optionKey] : option;
 
         return {
-            value: option[keyPropertyName],
-            ...(this.props.label ? { label: this.props.label(option) } : {}),
+            value,
+            ...(this.props.label ? { label: this.props.label(option) } : { label: value }),
             ...(this.props.meta ? { meta: this.props.meta(option) } : {}),
         };
     };
 
     render() {
         let { trackClick } = this.context;
-        let { value, placeholder, options, onChange, loading, optionKey, trackingId } = this.props;
-        let keyPropertyName = optionKey;
+
+        let creatable = this.props.type === 'create';
+        let SelectType = creatable ? CreatableSelect : ReactSelect;
 
         return (
-            <ReactSelect
-                className={`Select`}
+            <SelectType
+                className="Select"
                 classNamePrefix="Select"
-                isLoading={loading}
+                isLoading={this.props.loading}
                 components={{ Option }}
+                value={_.isEmpty(this.props.value) ? null : this.toReactSelectOption(this.props.value)}
+                options={this.props.options.map(o => this.toReactSelectOption(o))}
+                placeholder={this.props.options.length === 0 ? '' : this.props.placeholder}
                 isClearable
-                isSearchable
-                value={_.isEmpty(value) ? null : this.toReactSelectOption(value)}
-                options={options.map(o => this.toReactSelectOption(o))}
-                placeholder={options.length === 0 ? '' : placeholder}
                 onChange={option => {
-                    trackClick(trackingId || 'select');
+
+                    trackClick(this.props.trackingId || 'select');
+
                     if (!option) {
-                        return onChange(null);
+                        return this.props.onChange(null);
                     }
-                    return onChange(options.find(o => o[keyPropertyName] === option.value));
+
+                    let data = this.props.options.find(o => {
+                        let key = this.props.optionKey ? o[this.props.optionKey] : o;
+                        return key === option.value;
+                    });
+
+                    return this.props.onChange(data);
                 }}
+                {
+                    ...(creatable ? {
+                        autoFocus: true,
+                        openMenuOnFocus: true,
+                        formatCreateLabel: label => `Ajouter "${label}"`,
+                        createOptionPosition: 'first',
+                        onCreateOption: option => {
+                            let data = this.props.optionKey ? { [this.props.optionKey]: option } : option;
+                            return this.props.onChange(data);
+                        }
+                    } : {
+                        isSearchable: true
+                    })
+                }
             />
         );
     }

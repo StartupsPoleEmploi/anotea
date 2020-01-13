@@ -28,7 +28,7 @@ execute(async ({ logger, db, configuration, regions, emails, sendSlackNotificati
 
         if (stats.total > 0) {
             sendSlackNotification({
-                text: `[ORGANISME] Des emails de notifications de nouveaux avis ont été envoyés à des organismes` +
+                text: `[ORGANISME] Des emails de notifications de nouveaux avis ont été envoyés à des organismes ` +
                     `${stats.sent} envoyés / ${stats.error} erreurs`,
             });
         }

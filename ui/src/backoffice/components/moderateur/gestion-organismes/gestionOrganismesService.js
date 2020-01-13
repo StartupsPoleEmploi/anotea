@@ -6,12 +6,8 @@ export const searchOrganismes = (options = {}) => {
     return _get(`/backoffice/moderateur/organismes?${queryString.stringify(options)}`);
 };
 
-export const updateEditedCourriel = (id, courriel) => {
-    return _put(`/backoffice/moderateur/organismes/${id}/updateEditedCourriel`, { courriel });
-};
-
-export const removeEditedCourriel = id => {
-    return _put(`/backoffice/moderateur/organismes/${id}/removeEditedCourriel`);
+export const updateCourriel = (id, courriel) => {
+    return _put(`/backoffice/moderateur/organismes/${id}/updateCourriel`, { courriel });
 };
 
 export const resendEmailAccount = id => {

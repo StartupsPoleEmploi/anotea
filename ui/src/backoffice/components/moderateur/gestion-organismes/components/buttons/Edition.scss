@@ -1,0 +1,12 @@
+@import 'src/common/styles/variables';
+
+.Backoffice .Edition {
+
+  .Select__control {
+    padding: 0;
+  }
+
+  .Select__single-value {
+    font-size: 0.875rem;
+  }
+}

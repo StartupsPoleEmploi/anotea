@@ -117,13 +117,13 @@ class Backoffice extends Component {
                         <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} />
 
                         {layout.routes}
+                        {message &&
+                        <GlobalMessage message={message} onClose={() => {
+                            return this.setState({ message: null });
+                        }}
+                        />
+                        }
                     </div>
-                    {message &&
-                    <GlobalMessage message={message} onClose={() => {
-                        return this.setState({ message: null });
-                    }}
-                    />
-                    }
                 </AppContext.Provider>
             </WithAnalytics>
         );

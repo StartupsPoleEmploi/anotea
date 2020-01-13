@@ -30,7 +30,7 @@ export default class Organisme extends React.Component {
         let isInactive = organisme.status === 'inactive';
 
         return (
-            <div className="Organisme row align-items-center">
+            <div className="Organisme row">
                 <div className="col-sm-3 offset-md-1">
                     <p className="raison-sociale">{organisme.raisonSociale}</p>
                     <p className="siret">{organisme.meta.siretAsString}</p>
@@ -55,7 +55,7 @@ export default class Organisme extends React.Component {
                 {!this.state.showEdition &&
                 <div className="col-xs-8 col-sm-4 col-md-3">
                     <p className="email">
-                        {organisme.editedCourriel || organisme.kairosCourriel || organisme.courriel}
+                        {organisme.courriel}
                     </p>
                 </div>
                 }
