@@ -5,7 +5,6 @@ import ErrorMessage from './formulaire/ErrorMessage';
 import Formation from './Formation';
 import PropTypes from 'prop-types';
 import { submitAvis } from '../services/stagiaireService';
-import GridDisplayer from '../../common/components/GridDisplayer';
 import Modal from '../../common/components/Modal';
 import Button from '../../common/components/Button';
 import Summary from './formulaire/Summary';
@@ -147,7 +146,6 @@ export default class Formulaire extends Component {
     render() {
         return (
             <div className="formulaire">
-                {false && <GridDisplayer />}
                 {!this.state.error && this.props.stagiaire &&
                 <div className={`container ${this.state.page === 0 ? 'pageOne' : 'pageTwo'}`}>
 
@@ -168,7 +166,7 @@ export default class Formulaire extends Component {
                     }
 
                     <div className="row">
-                        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                        <div className="col-sm-12 offset-md-1 col-md-10 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
                             <div className="d-flex justify-content-center">
                                 {this.state.page === 0 &&
                                 <div>

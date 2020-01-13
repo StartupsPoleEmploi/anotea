@@ -13,6 +13,7 @@ import * as GoogleAnalytics from './common/components/analytics/AnalyticsContext
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { createRouter } from './common/utils/router';
 import Widget from './widget/Widget';
+import GridDisplayer from './common/components/GridDisplayer';
 import './common/styles/global.scss';
 
 let env = process.env;
@@ -49,7 +50,7 @@ let app = (
         <Route path="/questionnaire" render={() => getChunk(<QuestionnaireChunksLoader />)} />
         <Route path="/stats" render={() => getChunk(<StatsChunksLoader />)} />
         <Route path="/admin" render={props => getChunk(<BackofficeChunksLoader router={createRouter(props)} />)} />
-
+        {false && <GridDisplayer />}
     </Router>
 );
 ReactDOM.render(app, document.getElementById('root'));
