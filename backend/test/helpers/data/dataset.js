@@ -76,7 +76,7 @@ module.exports = {
             SIRET: 6080274100045,
             raisonSociale: 'Pole Emploi Formation',
             courriel: 'contact@poleemploi-formation.fr',
-            courriels: ['contact@poleemploi-formation.fr'],
+            courriels: [{ courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' }],
             passwordHash: '5f4dcc3b5aa765d61d8327deb882cf99',
             creationDate: getDateInThePast(),
             token: randomize('token'),

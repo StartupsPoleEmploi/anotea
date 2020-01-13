@@ -22,7 +22,7 @@ export default class Edition extends React.Component {
 
     update = async () => {
         if (this.state.selected) {
-            let updated = await updateCourriel(this.props.organisme._id, this.state.selected);
+            let updated = await updateCourriel(this.props.organisme._id, this.state.selected.courriel);
             this.props.onChange(updated, {
                 message: {
                     text: 'L\'adresse mail a été mise à jour',
@@ -41,9 +41,10 @@ export default class Edition extends React.Component {
                     options={this.props.organisme.courriels}
                     loading={false}
                     placeholder={''}
-                    onChange={selected => {
-                        this.setState({ selected });
-                    }}
+                    optionKey="courriel"
+                    label={option => option.courriel}
+                    meta={option => option.source}
+                    onChange={selected => this.setState({ selected })}
                 />
 
                 <div className="py-2 d-flex justify-content-end">

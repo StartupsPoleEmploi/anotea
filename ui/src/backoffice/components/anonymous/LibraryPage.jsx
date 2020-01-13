@@ -186,7 +186,6 @@ const LibraryPage = () => {
                             options={[{ code: 'code', label: 'label' }, { code: 'code2', label: 'label2' }]}
                             loading={false}
                             optionKey="code"
-                            optionLabel="label"
                             placeholder={'Données'}
                             onChange={noop}
                         />

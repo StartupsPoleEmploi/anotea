@@ -6,7 +6,7 @@ const removeCourriels = require('../../../../../src/jobs/data/migration/tasks/re
 
 describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
 
-    it('should remove courriels (kairos)', async () => {
+    it('should remove courriels (intercarif)', async () => {
 
         let db = await getTestDatabase();
         await Promise.all([
@@ -24,9 +24,12 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
 
         let stats = await removeCourriels(db);
 
-        assert.deepStrictEqual(stats, {
-            updated: 0,
-        });
+        assert.deepStrictEqual(stats, { updated: 1 });
+        let updated = await db.collection('accounts').findOne({ _id: 11111111111111 });
+        assert.strictEqual(updated.courriel, 'contact@poleemploi-formation.fr');
+        assert.deepStrictEqual(updated.courriels, [
+            { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
+        ]);
     });
 
     it('should remove courriels (kairos)', async () => {
@@ -54,8 +57,8 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
         let updated = await db.collection('accounts').findOne({ _id: 11111111111111 });
         assert.strictEqual(updated.courriel, 'kairos@pole-emploi.fr');
         assert.deepStrictEqual(updated.courriels, [
-            'contact@poleemploi-formation.fr',
-            'kairos@pole-emploi.fr',
+            { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
+            { courriel: 'kairos@pole-emploi.fr', source: 'kairos' },
         ]);
     });
 
@@ -85,9 +88,9 @@ describe(__filename, withMongoDB(({ insertIntoDatabase, getTestDatabase }) => {
         let updated = await db.collection('accounts').findOne({ _id: 11111111111111 });
         assert.strictEqual(updated.courriel, 'edited@pole-emploi.fr');
         assert.deepStrictEqual(updated.courriels, [
-            'contact@poleemploi-formation.fr',
-            'edited@pole-emploi.fr',
-            'kairos@pole-emploi.fr',
+            { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
+            { courriel: 'edited@pole-emploi.fr', source: 'anotea' },
+            { courriel: 'kairos@pole-emploi.fr', source: 'kairos' },
         ]);
     });
 }));

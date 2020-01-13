@@ -34,7 +34,12 @@ module.exports = async (db, logger) => {
                         organisme_formateur: _.merge({}, previous.organisme_formateur, action.organisme_formateur),
                         courriels: _.unionWith(
                             previous.courriels,
-                            hasCourriel ? [action.organisme_formateur.contact_formateur.coordonnees.courriel] : [],
+                            hasCourriel ? [
+                                {
+                                    courriel: action.organisme_formateur.contact_formateur.coordonnees.courriel,
+                                    source: 'intercarif',
+                                }
+                            ] : [],
                             _.isEqual
                         ),
                         lieux_de_formation: _.unionWith(
@@ -46,7 +51,10 @@ module.exports = async (db, logger) => {
                 } else {
                     accumulator[siret] = {
                         organisme_formateur: action.organisme_formateur,
-                        courriels: hasCourriel ? [action.organisme_formateur.contact_formateur.coordonnees.courriel] : [],
+                        courriels: hasCourriel ? [{
+                            courriel: action.organisme_formateur.contact_formateur.coordonnees.courriel,
+                            source: 'intercarif',
+                        }] : [],
                         lieux_de_formation: [action.lieu_de_formation],
                     };
                 }
@@ -83,7 +91,7 @@ module.exports = async (db, logger) => {
                         SIRET: id,
                         raisonSociale: formateur.raison_sociale_formateur,
                         codeRegion: findCodeRegion(data),
-                        courriel: data.courriels[0],
+                        courriel: data.courriels[0].courriel,
                         token: uuid.v4(),
                         creationDate: new Date(),
                         meta: {
