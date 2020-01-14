@@ -1,4 +1,4 @@
-FROM fluent/fluent-bit:1.0.3
+FROM fluent/fluent-bit:1.3
 
 COPY conf /conf
 
