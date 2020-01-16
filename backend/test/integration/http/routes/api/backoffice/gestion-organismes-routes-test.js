@@ -245,7 +245,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         assert.deepStrictEqual(response.body.organismes[0]._id, 11111111111111);
     });
 
-    it('can edit email', async () => {
+
+
+    it('can edit email (no duplicates)', async () => {
 
         let app = await startServer();
         let token = await logAsModerateur(app, 'admin@pole-emploi.fr');
@@ -262,13 +264,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
         let response = await request(app)
         .put(`/api/backoffice/moderateur/organismes/${id}/updateCourriel`)
         .set('authorization', `Bearer ${token}`)
-        .send({ courriel: 'me@pole-emploi.fr' });
+        .send({ courriel: 'contact@poleemploi-formation.fr' });
 
         assert.strictEqual(response.statusCode, 201);
-        assert.deepStrictEqual(response.body.courriel, 'me@pole-emploi.fr');
+        assert.deepStrictEqual(response.body.courriel, 'contact@poleemploi-formation.fr');
         assert.deepStrictEqual(response.body.courriels, [
             { courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' },
-            { courriel: 'me@pole-emploi.fr', source: 'anotea' }
         ]);
     });
 }));

@@ -113,13 +113,18 @@ module.exports = ({ db, configuration, emails, middlewares, logger }) => {
         let { id } = await Joi.validate(req.params, { id: Joi.number().integer().required() }, { abortEarly: false });
         let { courriel } = await Joi.validate(req.body, { courriel: Joi.string().email().required() }, { abortEarly: false });
 
+        let organisme = await db.collection('accounts').findOne({ _id: id });
+        let alreadyExists = !!organisme.courriels.find(v => v.courriel === courriel);
+
         let result = await db.collection('accounts').findOneAndUpdate(
             { _id: id },
             {
                 $set: { courriel },
-                $addToSet: {
-                    courriels: { courriel, source: 'anotea' },
-                }
+                ...(alreadyExists ? {} : {
+                    $addToSet: {
+                        courriels: { courriel, source: 'anotea' },
+                    }
+                }),
             },
             { returnOriginal: false }
         );
