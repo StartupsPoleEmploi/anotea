@@ -104,21 +104,23 @@ export default class ListeWidget extends Component {
                         </div>
                     </div>
                     <div className="col-sm-6">
-                        <div className="line d-flex justify-content-between align-items-between">
-                            <div className="pagination d-flex justify-content-between align-items-center">
+                        <div className="line d-flex align-items-between flex-wrap justify-content-around flex-sm-nowrap justify-content-sm-between">
+                            <div className="pagination d-flex justify-content-between align-items-center my-1 my-sm-0">
                                 <div className="summary">
                                     {pagination.total_items} commentaires
                                 </div>
                             </div>
-                            <div className="pagination d-flex justify-content-between align-items-center">
+                            <div className="pagination d-flex justify-content-between align-items-center my-1 my-sm-0">
                                 {pagination.total_items > 1 &&
                                 <Button
                                     size="medium"
                                     className="mr-1"
                                     disabled={pagination.page === 0}
                                     onClick={() => this.page(0)}>
-                                    <i className="fas fa-chevron-left"></i>
-                                    <i className="fas fa-chevron-left"></i>
+                                    <div className="first">
+                                        <i className="fas fa-chevron-left"></i>
+                                        <i className="fas fa-chevron-left"></i>
+                                    </div>
                                 </Button>
                                 }
                                 {pagination.total_items > 1 &&
@@ -131,7 +133,8 @@ export default class ListeWidget extends Component {
                                 }
 
                                 <div className="summary">
-                                    Page {pagination.page + 1}/{pagination.total_pages}
+                                    <span className="d-none d-sm-block">Page</span>
+                                    {pagination.page + 1}/{pagination.total_pages}
                                 </div>
 
                                 {pagination.total_items > 1 &&
@@ -148,8 +151,10 @@ export default class ListeWidget extends Component {
                                     className="ml-1"
                                     disabled={pagination.page === pagination.total_pages - 1}
                                     onClick={() => this.page(pagination.total_pages - 1)}>
-                                    <i className="fas fa-chevron-right"></i>
-                                    <i className="fas fa-chevron-right"></i>
+                                    <div className="last">
+                                        <i className="fas fa-chevron-right"></i>
+                                        <i className="fas fa-chevron-right"></i>
+                                    </div>
                                 </Button>
                                 }
                             </div>
@@ -177,7 +182,8 @@ export default class ListeWidget extends Component {
                                         });
                                     }}
                                 >
-                                    <i className="fas fa-arrow-up"></i> Croissant
+                                    <i className="fas fa-arrow-up"></i>
+                                    <span className="d-none d-md-block">Croissant</span>
                                 </button>
                                 <button
                                     className={this.state.ordre === 'desc' ? 'active' : ''}
@@ -187,7 +193,8 @@ export default class ListeWidget extends Component {
                                         });
                                     }}
                                 >
-                                    <i className="fas fa-arrow-down"></i> Décroissant
+                                    <i className="fas fa-arrow-down"></i>
+                                    <span className="d-none d-md-block">Décroissant</span>
                                 </button>
                             </div>
                         </div>

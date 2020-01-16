@@ -50,8 +50,12 @@
   .pagination {
     font-size: 0.75rem;
 
-    .nav {
+    .first, .last {
+      display: inline;
+      white-space: nowrap;
+    }
 
+    .nav {
       color: $color-black;
       padding: 0.25rem 0.5rem;
       text-transform: unset;
