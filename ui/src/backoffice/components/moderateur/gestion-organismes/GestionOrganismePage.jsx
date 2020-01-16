@@ -97,7 +97,7 @@ export default class GestionOrganismePage extends React.Component {
                     <div className="d-flex justify-content-center">
                         <Form className="a-width-50">
                             <div className="d-flex justify-content-between">
-                                <div className="a-flex-grow-1 mr-2">
+                                <div className="flex-grow-1 mr-2">
                                     <InputText
                                         value={this.state.form.search}
                                         placeholder="Recherche un organisme"
