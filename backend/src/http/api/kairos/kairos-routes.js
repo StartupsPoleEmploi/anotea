@@ -23,7 +23,38 @@ module.exports = ({ db, auth, middlewares }) => {
         }
     });
 
-    let generateAuthUrlRoute = tryAndCatch(async (req, res) => {
+    let buildAccount = async data => {
+        let codeRegion = getCodeRegionFromKairosRegionName(data.region);
+        return {
+            _id: parseInt(data.siret),
+            siret: data.siret,
+            raisonSociale: data.raison_sociale,
+            courriel: data.courriel,
+            courriels: [{ courriel: data.courriel, source: 'kairos' }],
+            profile: 'organisme',
+            token: uuid.v4(),
+            creationDate: new Date(),
+            sources: ['kairos', 'sso'],
+            codeRegion: codeRegion,
+            numero: null,
+            lieux_de_formation: [],
+        };
+    };
+
+    let getAccessToken = async organisme => {
+        let token = await auth.buildJWT('backoffice', {
+            id: organisme._id,
+            sub: organisme.siret,
+            profile: 'organisme',
+            raisonSociale: organisme.raisonSociale,
+        });
+        return token.access_token;
+    };
+
+    let apiSpecifications = YAML.load(path.join(__dirname, './kairos-swagger.yml'));
+    router.use('/api/kairos/doc', swaggerUi.serve, swaggerUi.setup(Object.assign({}, apiSpecifications)));
+
+    router.post('/api/kairos/generate-auth-url', checkAuth, tryAndCatch(async (req, res) => {
 
         let parameters = await Joi.validate(req.body, {
             siret: Joi.string().required(),
@@ -32,41 +63,8 @@ module.exports = ({ db, auth, middlewares }) => {
             region: Joi.string().required(),
         }, { abortEarly: false });
 
-
-        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': parameters.siret });
+        let organisme = await db.collection('accounts').findOne({ siret: parameters.siret });
         let created = false;
-
-        let buildAccount = async data => {
-            let codeRegion = getCodeRegionFromKairosRegionName(data.region);
-            return {
-                _id: parseInt(data.siret),
-                SIRET: parseInt(data.siret),
-                raisonSociale: data.raison_sociale,
-                courriel: data.courriel,
-                courriels: [{ courriel: data.courriel, source: 'kairos' }],
-                profile: 'organisme',
-                token: uuid.v4(),
-                creationDate: new Date(),
-                sources: ['kairos', 'sso'],
-                codeRegion: codeRegion,
-                numero: null,
-                lieux_de_formation: [],
-                meta: {
-                    siretAsString: data.siret,
-                },
-            };
-        };
-
-        let getAccessToken = async () => {
-            let token = await auth.buildJWT('backoffice', {
-                sub: organisme.meta.siretAsString,
-                profile: 'organisme',
-                id: organisme._id,
-                raisonSociale: organisme.raisonSociale,
-            });
-            return token.access_token;
-        };
-
         if (!organisme) {
             organisme = await buildAccount(parameters);
             await db.collection('accounts').insertOne(organisme);
@@ -82,12 +80,7 @@ module.exports = ({ db, auth, middlewares }) => {
                 organisme: createOrganismeFomateurDTO(organisme, { notes_decimales: true }),
             }
         });
-    });
-
-    let apiSpecifications = YAML.load(path.join(__dirname, './kairos-swagger.yml'));
-    router.use('/api/kairos/doc', swaggerUi.serve, swaggerUi.setup(Object.assign({}, apiSpecifications)));
-
-    router.post('/api/kairos/generate-auth-url', checkAuth, generateAuthUrlRoute);
+    }));
 
     router.get('/api/kairos/check-if-organisme-is-eligible', checkAuth, tryAndCatch(async (req, res) => {
 
@@ -95,7 +88,7 @@ module.exports = ({ db, auth, middlewares }) => {
             siret: Joi.string().required(),
         }, { abortEarly: false });
 
-        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': parameters.siret });
+        let organisme = await db.collection('accounts').findOne({ siret: parameters.siret });
 
         if (!organisme) {
             throw Boom.badRequest('Numéro de siret invalide');

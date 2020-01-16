@@ -11,14 +11,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
     const insertOrganisme = async siret => {
         return insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: parseInt(siret),
-            SIRET: parseInt(siret),
+            siret,
             raison_sociale: 'Pole Emploi Formation',
             courriel: 'contact@organisme.fr',
             code_region: '11',
-            meta: {
-                siretAsString: siret
-            },
         }));
     };
 
@@ -48,9 +44,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.deepStrictEqual(response.body.meta, {
             created: false,
             organisme: {
-                id: siret,
+                id: parseInt(siret),
+                siret,
                 raison_sociale: 'Pole Emploi Formation',
-                siret: siret,
                 numero: '14_OF_0000000123',
                 lieux_de_formation: [
                     {
@@ -99,10 +95,10 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         assert.strictEqual(response.statusCode, 200);
         assert.deepStrictEqual(response.body.meta.created, true);
 
-        let organisme = await db.collection('accounts').findOne({ 'meta.siretAsString': siret });
+        let organisme = await db.collection('accounts').findOne({ siret });
         assert.deepStrictEqual(_.omit(organisme, ['token', 'creationDate']), {
             _id: parseInt(siret),
-            SIRET: parseInt(siret),
+            siret,
             raisonSociale: 'Pole Emploi Formation',
             courriel: 'contact@organisme.fr',
             courriels: [{ courriel: 'contact@organisme.fr', source: 'kairos' }],
@@ -111,9 +107,6 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             codeRegion: '11',
             numero: null,
             lieux_de_formation: [],
-            meta: {
-                siretAsString: siret,
-            }
         });
 
     });
@@ -332,13 +325,12 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: parseInt(siret),
-                SIRET: parseInt(siret),
+                id: parseInt(siret),
+                siret,
                 raison_sociale: 'Pole Emploi Formation',
                 courriel: 'contact@organisme.fr',
                 code_region: '11',
                 meta: {
-                    siretAsString: siret,
                     kairos: {
                         eligible: true,
                     },
@@ -355,7 +347,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
             eligible: true,
             meta: {
                 organisme: {
-                    id: siret,
+                    id: parseInt(siret),
                     raison_sociale: 'Pole Emploi Formation',
                     siret: siret,
                     numero: '14_OF_0000000123',
@@ -399,13 +391,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: parseInt(siret),
-                SIRET: parseInt(siret),
+                siret,
                 score: {
                     nb_avis: 0,
                 },
                 meta: {
-                    siretAsString: siret,
                     kairos: {
                         eligible: true,
                     },

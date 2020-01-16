@@ -32,12 +32,8 @@ module.exports = {
                 logAsOrganisme: async (app, courriel, siret, custom) => {
 
                     await testContext.insertIntoDatabase('accounts', newOrganismeAccount({
-                        _id: parseInt(siret),
-                        SIRET: parseInt(siret),
+                        siret,
                         courriel,
-                        meta: {
-                            siretAsString: siret
-                        },
                     }, custom));
 
                     let response = await request(app)

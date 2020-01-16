@@ -16,7 +16,7 @@ module.exports = ({ db, emails, passwords }) => {
 
         let account = await db.collection('accounts').findOne({
             $or: [
-                { 'meta.siretAsString': identifiant },
+                { 'siret': identifiant },
                 { 'courriel': identifiant },
             ]
         });

@@ -15,7 +15,7 @@ execute(async ({ db, auth, exit }) => {
     }
 
     let organisme = await db.collection('accounts').findOne({
-        'meta.siretAsString': cli.siret,
+        'siret': cli.siret,
         'profile': 'organisme'
     });
     let data = {
@@ -24,7 +24,7 @@ execute(async ({ db, auth, exit }) => {
         id: organisme._id,
         codeRegion: organisme.codeRegion,
         raisonSociale: organisme.raisonSociale,
-        siret: organisme.meta.siretAsString
+        siret: organisme.siret,
     };
 
     let jwt = await auth.buildJWT('backoffice', data, { expiresIn: '1h' });

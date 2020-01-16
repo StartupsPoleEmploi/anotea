@@ -70,17 +70,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await Promise.all([
             prepareDatabase(),
             insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
-                _id: 22222222222222,
-                SIRET: 22222222222222,
-                meta: {
-                    siretAsString: '22222222222222'
-                },
+                siret: '22222222222222',
             }), ['score'])),
         ]);
 
         let stats = await computeOrganismesScore(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('accounts').findOne({ siret: '22222222222222' });
         assert.deepStrictEqual(stats, {
             total: 1,
             updated: 1,
@@ -128,11 +124,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await Promise.all([
             prepareDatabase(),
             insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
-                _id: 22222222222222,
-                SIRET: 22222222222222,
-                meta: {
-                    siretAsString: '22222222222222'
-                },
+                siret: '22222222222222',
             })), ['score']),
             insertIntoDatabase('comment', newComment({
                 status: 'rejected',
@@ -154,7 +146,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
 
         await computeOrganismesScore(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('accounts').findOne({ siret: '22222222222222' });
         assert.deepStrictEqual(doc.score, {
             nb_avis: 4,
             notes: {
@@ -180,17 +172,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
         await Promise.all([
             prepareDatabase(),
             insertIntoDatabase('accounts', _.omit(newOrganismeAccount({
-                _id: 44444444444444,
-                SIRET: 44444444444444,
-                meta: {
-                    siretAsString: '44444444444444'
-                },
+                siret: '44444444444444',
             })), ['score']),
         ]);
 
         await computeOrganismesScore(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 44444444444444 });
+        let doc = await db.collection('accounts').findOne({ siret: '44444444444444' });
         assert.deepStrictEqual(doc.score, {
             nb_avis: 0,
         });

@@ -81,22 +81,17 @@ module.exports = async (db, logger) => {
 
             let formateur = data.organisme_formateur;
             let siret = formateur.siret_formateur.siret;
-            let id = parseInt(siret, 10);
 
             let results = await db.collection('accounts').updateOne(
-                { _id: id },
+                { siret },
                 {
                     $setOnInsert: {
-                        _id: id,
-                        SIRET: id,
+                        siret,
                         raisonSociale: formateur.raison_sociale_formateur,
                         codeRegion: findCodeRegion(data),
                         courriel: data.courriels[0].courriel,
                         token: uuid.v4(),
                         creationDate: new Date(),
-                        meta: {
-                            siretAsString: siret,
-                        }
                     },
                     $addToSet: {
                         courriels: { $each: data.courriels },

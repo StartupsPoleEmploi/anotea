@@ -21,21 +21,17 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                         status: 'validated',
                         training: {
                             organisation: {
-                                siret: `${31705038300064}`,
+                                siret: '31705038300064',
                             },
                         }
                     }));
                 })
             ),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
+                siret: '31705038300064',
                 courriel: 'new@organisme.fr',
                 score: {
                     nb_avis: 5,
-                },
-                meta: {
-                    siretAsString: `${31705038300064}`,
                 },
             })),
         ]);
@@ -50,7 +46,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
             sent: 1,
             error: 0,
         });
-        let organisme = await db.collection('accounts').findOne({ _id: 31705038300064 });
+        let organisme = await db.collection('accounts').findOne({ siret: '31705038300064' });
         assert.ok(organisme.newCommentsNotificationEmailSentDate);
     });
 
@@ -67,22 +63,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                         status: 'validated',
                         training: {
                             organisation: {
-                                siret: `${31705038300064}`,
+                                siret: '31705038300064',
                             },
                         }
                     }));
                 })
             ),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
+                siret: '31705038300064',
                 courriel: 'new@organisme.fr',
-                newCommentsNotificationEmailSentDate: newCommentsNotificationEmailSentDate,
+                newCommentsNotificationEmailSentDate,
                 score: {
                     nb_avis: 5,
-                },
-                meta: {
-                    siretAsString: `${31705038300064}`,
                 },
             })),
         ]);
@@ -97,7 +89,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
             sent: 1,
             error: 0,
         });
-        let organisme = await db.collection('accounts').findOne({ _id: 31705038300064 });
+        let organisme = await db.collection('accounts').findOne({ siret: '31705038300064' });
         assert.ok(moment(organisme.newCommentsNotificationEmailSentDate).isAfter(newCommentsNotificationEmailSentDate));
     });
 
@@ -107,14 +99,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         let { mailer, emails } = await createEmailMocks();
         await Promise.all([
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
+                siret: '31705038300064',
                 courriel: 'new@organisme.fr',
                 score: {
                     nb_avis: 2,
-                },
-                meta: {
-                    siretAsString: `${31705038300064}`,
                 },
             })),
         ]);
@@ -141,21 +129,17 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                         status: 'validated',
                         training: {
                             organisation: {
-                                siret: `${31705038300064}`,
+                                siret: '31705038300064',
                             },
                         }
                     }));
                 })
             ),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
+                siret: '31705038300064',
                 courriel: 'new@organisme.fr',
                 score: {
                     nb_avis: 5,
-                },
-                meta: {
-                    siretAsString: `${31705038300064}`,
                 },
             })),
         ]);
@@ -182,22 +166,18 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                         status: 'validated',
                         training: {
                             organisation: {
-                                siret: `${31705038300064}`,
+                                siret: '31705038300064',
                             },
                         }
                     }));
                 })
             ),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 31705038300064,
-                SIRET: 31705038300064,
+                siret: '31705038300064',
                 newCommentsNotificationEmailSentDate: moment().subtract('3', 'days'),
                 courriel: 'new@organisme.fr',
                 score: {
                     nb_avis: 5,
-                },
-                meta: {
-                    siretAsString: `${31705038300064}`,
                 },
             })),
         ]);

@@ -70,10 +70,10 @@ module.exports = {
             profile: 'moderateur'
         }, custom);
     },
-    newOrganismeAccount: custom => {
+    newOrganismeAccount: (custom = {}) => {
         return _.merge({
-            _id: 6080274100045,
-            SIRET: 6080274100045,
+            _id: parseInt(custom.siret || '6080274100045'),
+            siret: '6080274100045',
             raisonSociale: 'Pole Emploi Formation',
             courriel: 'contact@poleemploi-formation.fr',
             courriels: [{ courriel: 'contact@poleemploi-formation.fr', source: 'intercarif' }],
@@ -108,9 +108,6 @@ module.exports = {
                         min: 1,
                     },
                 },
-            },
-            meta: {
-                siretAsString: '6080274100045',
             },
             profile: 'organisme'
         }, custom);

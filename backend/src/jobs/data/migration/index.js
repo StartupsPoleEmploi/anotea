@@ -7,7 +7,7 @@ cli.parse(process.argv);
 
 execute(async ({ db }) => {
     let stats = {};
-    stats.removeCourriels = await require('./tasks/removeCourriels')(db);
-    stats.removeUnusedProperties = await require('./tasks/removeUnusedProperties')(db);
+    stats.dropCollections = require('./tasks/dropCollections')(db);
+    stats.cleanSiretProperties = require('./tasks/cleanSiretProperties')(db);
     return stats;
 });

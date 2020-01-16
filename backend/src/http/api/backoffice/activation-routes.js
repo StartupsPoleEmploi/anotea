@@ -14,7 +14,7 @@ module.exports = ({ db, passwords }) => {
         if (account) {
             return res.json({
                 nom: account.raisonSociale,
-                identifiant: account.meta.siretAsString,
+                identifiant: account.siret,
                 status: account.passwordHash ? 'active' : 'inactive',
             });
         }

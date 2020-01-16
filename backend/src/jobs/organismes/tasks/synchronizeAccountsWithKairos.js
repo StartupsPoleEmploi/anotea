@@ -17,16 +17,15 @@ module.exports = async (db, logger, file) => {
             stats.total++;
 
             try {
-                let id = parseInt(kairos.siret, 10);
-                let account = await db.collection('accounts').findOne({ _id: id });
+                let siret = kairos.siret;
+                let account = await db.collection('accounts').findOne({ siret });
                 let courriel = kairos.emailRGC;
 
                 let results = await db.collection('accounts').updateOne(
-                    { _id: id },
+                    { siret },
                     {
                         $setOnInsert: {
-                            _id: id,
-                            SIRET: id,
+                            siret,
                             raisonSociale: kairos.libelle,
                             codeRegion: kairos.codeRegion,
                             token: uuid.v4(),
@@ -41,7 +40,6 @@ module.exports = async (db, logger, file) => {
                         $set: {
                             profile: 'organisme',
                             ...(_.get(account, 'meta.kairos') ? {} : { 'meta.kairos.eligible': false }),
-                            ...(_.get(account, 'meta.siretAsString') ? {} : { 'meta.siretAsString': kairos.siret }),
                         },
                     }
                     , { upsert: true }
