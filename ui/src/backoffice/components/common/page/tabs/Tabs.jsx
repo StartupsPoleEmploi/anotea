@@ -14,5 +14,5 @@ export const Tabs = ({ children }) => {
 };
 
 Tabs.propTypes = {
-    children: PropTypes.array.isRequired,
+    children: PropTypes.node.isRequired,
 };

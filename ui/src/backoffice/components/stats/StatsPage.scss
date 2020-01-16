@@ -1,0 +1,31 @@
+@import 'src/common/styles/variables';
+
+.Backoffice .StatsPage {
+
+  .region {
+    font-size: 2rem;
+    color: $color-black,
+  }
+
+  .stats {
+    width: 50%;
+
+    &:first-child {
+      border-right: 1px solid $color-grey-25;
+    }
+
+    .name {
+      font-size: 1rem;
+      font-weight: $font-weight-bold;
+    }
+
+    .value {
+      font-size: 2rem;
+      font-weight: $font-weight-boldest;
+
+      &.regional {
+        color: $color-orange
+      }
+    }
+  }
+}

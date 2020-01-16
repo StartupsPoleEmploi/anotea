@@ -6,6 +6,7 @@ import MotDePasseOubliePage from './MotDePasseOubliePage';
 import LoginPage from './LoginPage';
 import ActivationComptePage from './ActivationComptePage';
 import LibraryPage from './LibraryPage';
+import StatsPage from '../stats/StatsPage';
 
 export default class AnonymousRoutes extends React.Component {
 
@@ -35,7 +36,7 @@ export default class AnonymousRoutes extends React.Component {
                     path="/admin/activation-compte"
                     render={() => <ActivationComptePage router={router} onLogin={this.props.onLogin} />}
                 />
-                <Route exact path="/admin/library" render={() => <LibraryPage />} />
+                <Route path="/admin/library" render={() => <LibraryPage />} />
             </>
         );
     }

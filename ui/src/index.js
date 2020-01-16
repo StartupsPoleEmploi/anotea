@@ -28,7 +28,6 @@ Sentry.initialize(env.REACT_APP_ANOTEA_SENTRY_DSN);
 GoogleAnalytics.initialize(env.REACT_APP_ANOTEA_GOOGLE_ANALYTICS_ID, { debug: false });
 
 let BackofficeChunksLoader = React.lazy(() => import('./backoffice/Backoffice'));
-let StatsChunksLoader = React.lazy(() => import('./stats/Stats'));
 let QuestionnaireChunksLoader = React.lazy(() => import('./questionnaire/Questionnaire'));
 
 let getChunk = chunk => {
@@ -47,7 +46,6 @@ let app = (
 
         <Route path="/widget" render={() => <Widget />} />
         <Route path="/questionnaire" render={() => getChunk(<QuestionnaireChunksLoader />)} />
-        <Route path="/stats" render={() => getChunk(<StatsChunksLoader />)} />
         <Route path="/admin" render={props => getChunk(<BackofficeChunksLoader router={createRouter(props)} />)} />
         {false && <GridDisplayer />}
     </Router>

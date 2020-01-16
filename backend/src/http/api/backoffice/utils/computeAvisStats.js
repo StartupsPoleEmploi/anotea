@@ -1,6 +1,6 @@
 const { round } = require('../../../../core/utils/number-utils');
 
-let getStatsWithProjectedNotes = stats => {
+let projectStats = stats => {
     return Object.keys(stats).reduce((acc, key) => {
 
         //Wrap all notes under a parent property (can be done painfully with $project)
@@ -110,5 +110,5 @@ module.exports = async (db, query) => {
         return {};
     }
 
-    return getStatsWithProjectedNotes(stats);
+    return projectStats(stats);
 };

@@ -243,6 +243,4 @@ const LibraryPage = () => {
     );
 };
 
-LibraryPage.propTypes = {};
-
 export default LibraryPage;

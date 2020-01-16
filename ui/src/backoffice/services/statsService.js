@@ -8,3 +8,7 @@ export const getStagiairesStats = (options = {}) => {
 export const getAvisStats = (options = {}) => {
     return _get(`/backoffice/stats/avis?${queryString.stringify(options)}`);
 };
+
+export const getPublicStatistics = (options = {}) => {
+    return _get(`/stats?${queryString.stringify(options)}`);
+};

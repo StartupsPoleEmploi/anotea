@@ -16,6 +16,7 @@ import Header from './components/common/header/Header';
 import AppContext from './BackofficeContext';
 import GlobalMessage from './components/common/message/GlobalMessage';
 import WithAnalytics from '../common/components/analytics/WithAnalytics';
+import StatsRoutes from './components/stats/StatsRoutes';
 
 class Backoffice extends Component {
 
@@ -117,6 +118,9 @@ class Backoffice extends Component {
                         <Header items={layout.headerItems} defaultPath={layout.defaultPath} onLogout={this.onLogout} />
 
                         {layout.routes}
+
+                        <StatsRoutes router={router} />,
+
                         {message &&
                         <GlobalMessage message={message} onClose={() => {
                             return this.setState({ message: null });
