@@ -84,7 +84,6 @@ module.exports = {
     accounts: db => {
         return Promise.all([
             db.collection('accounts').createIndex({ 'numero': 1 }),
-            db.collection('accounts').createIndex({ 'siret': 1 }, { unique: true }),
             db.collection('accounts').createIndex({ 'score.nb_avis': 1 }),
             db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.code_postal': 1 }),
             db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.region': 1 }),
@@ -94,6 +93,10 @@ module.exports = {
             db.collection('accounts').createIndex({ 'mailSentDate': 1 }),
             db.collection('accounts').createIndex({ 'tracking.firstRead': 1 }),
             db.collection('accounts').createIndex({ 'tracking.firstRead': 1 }),
+            db.collection('accounts').createIndex({ 'siret': 1 }, {
+                unique: true,
+                partialFilterExpression: { profile: 'organisme' }
+            }),
         ]);
     },
     formationsReconciliees: db => {
