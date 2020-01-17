@@ -241,7 +241,7 @@ export default class OrganismePage extends React.Component {
                                     loading={sirens.loading}
                                     optionKey="organisme"
                                     label={option => option.name}
-                                    placeholder={user.raisonSociale || ''}
+                                    placeholder={user.raison_sociale || ''}
                                     trackingId="Centres"
                                     onChange={async option => {
                                         await this.updateSelectBox('sirens', option);

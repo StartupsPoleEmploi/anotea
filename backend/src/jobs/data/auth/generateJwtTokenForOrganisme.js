@@ -23,7 +23,7 @@ execute(async ({ db, auth, exit }) => {
         profile: 'organisme',
         id: organisme._id,
         codeRegion: organisme.codeRegion,
-        raisonSociale: organisme.raisonSociale,
+        raison_sociale: organisme.raison_sociale,
         siret: organisme.siret,
     };
 

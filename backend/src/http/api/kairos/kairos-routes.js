@@ -28,7 +28,7 @@ module.exports = ({ db, auth, middlewares }) => {
         return {
             _id: parseInt(data.siret),
             siret: data.siret,
-            raisonSociale: data.raison_sociale,
+            raison_sociale: data.raison_sociale,
             courriel: data.courriel,
             courriels: [{ courriel: data.courriel, source: 'kairos' }],
             profile: 'organisme',
@@ -46,7 +46,7 @@ module.exports = ({ db, auth, middlewares }) => {
             id: organisme._id,
             sub: organisme.siret,
             profile: 'organisme',
-            raisonSociale: organisme.raisonSociale,
+            raison_sociale: organisme.raison_sociale,
         });
         return token.access_token;
     };

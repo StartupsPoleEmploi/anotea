@@ -87,7 +87,7 @@ module.exports = async (db, logger) => {
                 {
                     $setOnInsert: {
                         siret,
-                        raisonSociale: formateur.raison_sociale_formateur,
+                        raison_sociale: formateur.raison_sociale_formateur,
                         codeRegion: findCodeRegion(data),
                         courriel: data.courriels[0].courriel,
                         token: uuid.v4(),

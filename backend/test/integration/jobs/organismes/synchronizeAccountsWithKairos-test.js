@@ -29,7 +29,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
             sources: ['kairos'],
             profile: 'organisme',
             codeRegion: '10',
-            raisonSociale: 'Pole Emploi Formation Nord',
+            raison_sociale: 'Pole Emploi Formation Nord',
             lieux_de_formation: [],
             meta: {
                 kairos: {
@@ -89,7 +89,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, importIntercarif }) => {
                 },
             },
             profile: 'organisme',
-            raisonSociale: 'Anotea Formation Paris',
+            raison_sociale: 'Anotea Formation Paris',
             sources: ['intercarif', 'kairos'],
         });
     });

@@ -40,7 +40,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
             region: region.nom,
             codeRegion: account.codeRegion,
             ...(profile === 'financeur' ? { codeFinanceur: account.codeFinanceur } : {}),
-            ...(profile === 'organisme' ? { siret: account.siret, raisonSociale: account.raisonSociale } : {}),
+            ...(profile === 'organisme' ? { siret: account.siret, raison_sociale: account.raison_sociale } : {}),
         });
     };
 
