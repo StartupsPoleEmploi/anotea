@@ -234,10 +234,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), handler);
 
         let hash = await md5File(getTestFile('stagiaires-pe.csv'));
-        let status = await db.collection('importTrainee').findOne();
+        let status = await db.collection('jobs').findOne();
         assert.ok(status.date);
         assert.ok(status.campaignDate);
         assert.deepStrictEqual(_.omit(status, ['_id', 'date', 'campaignDate']), {
+            type: 'import-stagiaires',
             campaign: 'stagiaires-pe',
             file: getTestFile('stagiaires-pe.csv'),
             hash,
@@ -260,9 +261,10 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         await importStagiaires(db, logger, getTestFile('stagiaires-pe_2018-11-20.csv'), handler);
 
         let hash = await md5File(getTestFile('stagiaires-pe_2018-11-20.csv'));
-        let status = await db.collection('importTrainee').findOne();
+        let status = await db.collection('jobs').findOne();
         assert.ok(status.date);
         assert.deepStrictEqual(_.omit(status, ['_id', 'date']), {
+            type: 'import-stagiaires',
             campaign: 'stagiaires-pe_2018-11-20',
             campaignDate: new Date('2018-11-20T00:00:00.000Z'),
             file: getTestFile('stagiaires-pe_2018-11-20.csv'),

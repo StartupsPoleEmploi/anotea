@@ -44,7 +44,7 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         invalid: 0,
     };
 
-    if (await db.collection('importTrainee').findOne({ campaign: campaign.name })) {
+    if (await db.collection('jobs').findOne({ campaign: campaign.name })) {
         logger.info(`CSV file ${file} already imported`);
         return stats;
     }
@@ -77,7 +77,8 @@ module.exports = async (db, logger, file, handler, filters = {}) => {
         }, { parallel: 25 })
     ]);
 
-    await db.collection('importTrainee').insertOne({
+    await db.collection('jobs').insertOne({
+        type: 'import-stagiaires',
         hash,
         campaign: campaign.name,
         campaignDate: campaign.date,
