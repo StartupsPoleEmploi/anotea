@@ -84,12 +84,11 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         await insertIntoDatabase('accounts', newOrganismeAccount({
             siret: '6080274100045',
             passwordHash: await hashPassword('password'),
-            courriel: 'contact@poleemploi-formation.fr',
         }));
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'contact@poleemploi-formation.fr', password: 'password' });
+        .send({ identifiant: '6080274100045', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
 
@@ -104,7 +103,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
             profile: 'organisme',
             raisonSociale: 'Pole Emploi Formation',
             siret: '6080274100045',
-            sub: 'contact@poleemploi-formation.fr',
+            sub: '6080274100045',
             codeRegion: '11',
             region: 'Île-de-France',
         });
@@ -114,13 +113,13 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newFinancerAccount({
+            identifiant: 'cr_financeur',
             passwordHash: await hashPassword('password'),
-            courriel: 'contact@financer.fr',
         }));
 
         let response = await request(app)
         .post('/api/backoffice/login')
-        .send({ identifiant: 'contact@financer.fr', password: 'password' });
+        .send({ identifiant: 'cr_financeur', password: 'password' });
 
         assert.strictEqual(response.statusCode, 200);
 
@@ -136,7 +135,7 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
             codeRegion: '11',
             region: 'Île-de-France',
             codeFinanceur: '2',
-            sub: 'contact@financer.fr'
+            sub: 'cr_financeur'
         });
     });
 

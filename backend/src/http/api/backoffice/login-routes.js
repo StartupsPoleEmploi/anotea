@@ -85,7 +85,7 @@ module.exports = ({ db, auth, passwords, regions }) => {
         let account = await db.collection('accounts').findOne({
             'passwordHash': { $exists: true },
             '$or': [
-                { 'courriel': identifiant },
+                { identifiant },
                 { 'siret': identifiant },
             ]
         });
