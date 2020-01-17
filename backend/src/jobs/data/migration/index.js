@@ -16,5 +16,6 @@ execute(async ({ db }) => {
     stats.renameRaisonSociale = await require('./tasks/renameRaisonSociale')(db);
     stats.renameCommentIntoCommentaires = await require('./tasks/renameCommentIntoCommentaires')(db);
     stats.renameRatesIntoNotes = await require('./tasks/renameRatesIntoNotes')(db);
+    stats.unsetStatutRattachement = await require('./tasks/unsetStatutRattachement')(db);
     return stats;
 });
