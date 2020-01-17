@@ -1,5 +1,3 @@
-let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
-
 module.exports = (db, regions, mailer) => {
 
     const templateName = 'activationCompteEmail';
@@ -42,7 +40,7 @@ module.exports = (db, regions, mailer) => {
 
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
             return mailer.createRegionalMailer(region).sendEmail(
-                getOrganismeEmail(organisme),
+                organisme.courriel,
                 {
                     subject: 'Pôle Emploi vous donne accès aux avis de vos stagiaires',
                     body: await render(organisme),

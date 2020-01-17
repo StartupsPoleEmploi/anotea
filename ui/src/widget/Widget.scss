@@ -6,6 +6,7 @@
   font-weight: $font-weight-normal;
   color: $color-black;
   background-color: $color-white;
+  min-width: 250px;
 
   .with-tooltip {
     position: relative;

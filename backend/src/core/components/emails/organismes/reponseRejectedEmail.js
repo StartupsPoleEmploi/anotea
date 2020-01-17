@@ -1,5 +1,3 @@
-let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
-
 module.exports = (db, regions, mailer) => {
 
     const templateName = 'reponseRejectedEmail';
@@ -19,7 +17,7 @@ module.exports = (db, regions, mailer) => {
             let region = regions.findRegionByCodeRegion(organisme.codeRegion);
 
             return mailer.createRegionalMailer(region).sendEmail(
-                getOrganismeEmail(organisme),
+                organisme.courriel,
                 {
                     subject: 'Pôle Emploi - Votre réponse n\'a pas été prise en compte',
                     body: await render(organisme, comment),

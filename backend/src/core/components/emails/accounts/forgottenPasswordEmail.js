@@ -1,5 +1,4 @@
 const uuid = require('uuid');
-let getOrganismeEmail = require('../../../utils/getOrganismeEmail');
 
 module.exports = (db, regions, mailer) => {
 
@@ -65,10 +64,9 @@ module.exports = (db, regions, mailer) => {
             .then(async passwordToken => {
 
                 let region = regions.findRegionByCodeRegion(account.codeRegion);
-                let email = account.profile === 'organisme' ? getOrganismeEmail(account) : account.courriel;
 
                 return mailer.createRegionalMailer(region).sendEmail(
-                    email,
+                    account.courriel,
                     {
                         subject: 'Votre compte Anotéa : Demande de renouvellement de mot de passe',
                         body: await render(account, passwordToken),

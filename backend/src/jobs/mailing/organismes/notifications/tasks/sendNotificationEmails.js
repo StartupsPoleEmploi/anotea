@@ -1,6 +1,5 @@
 const moment = require('moment');
 let { delay } = require('../../../../job-utils');
-const getOrganismeEmail = require('../../../../../core/utils/getOrganismeEmail');
 
 module.exports = async (db, logger, configuration, emails, options = {}) => {
 
@@ -86,7 +85,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
         let { organisme, notificationStatus } = await cursor.next();
         stats.total++;
         try {
-            logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${getOrganismeEmail(organisme)}`);
+            logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${organisme.courriel}`);
             let message = emails.getEmailMessageByTemplateName('avisNotificationEmail');
             await message.send(organisme, notificationStatus.comment, notificationStatus.nbUnreadComments);
 

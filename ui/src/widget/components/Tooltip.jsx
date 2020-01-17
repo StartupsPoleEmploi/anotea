@@ -6,7 +6,6 @@ export default class Tooltip extends Component {
 
     static propTypes = {
         message: PropTypes.node.isRequired,
-        direction: PropTypes.string,
     };
 
     state = {
@@ -23,20 +22,19 @@ export default class Tooltip extends Component {
 
     render() {
 
-        let { message, direction = 'left' } = this.props;
+        let { message } = this.props;
 
         return (
             <div className="Tooltip">
-                <div className="icon">
-                    <i
-                        className="far fa-question-circle"
-                        onMouseEnter={() => this.show()}
-                        onMouseLeave={() => this.hide()}
-                    ></i>
-                    {this.state.show && <div className="triangle"></div>}
+                <div
+                    className="icon"
+                    onMouseEnter={() => this.show()}
+                    onMouseLeave={() => this.hide()}
+                >
+                    <i className="far fa-question-circle"></i>
                 </div>
                 {this.state.show &&
-                <div className={`box ${direction}`}>
+                <div className="box">
                     <div className="message">{message}</div>
                 </div>
                 }
