@@ -62,7 +62,7 @@ module.exports = ({ db, configuration, communes, peconnect, sentry }) => {
             let userInfo = await peconnect.getUserInfo(getFullUrl(req));
 
             const results = await db.collection('stagiaires').find({
-                'trainee.email': userInfo.email.toLowerCase(),
+                'personal.email': userInfo.email.toLowerCase(),
                 'avisCreated': false,
                 'training.scheduledEndDate': { $gte: moment().subtract(1, 'years').toDate() }
             })

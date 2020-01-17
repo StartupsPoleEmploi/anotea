@@ -32,8 +32,8 @@ module.exports = (db, regions) => {
         getKey: stagiaire => {
             return {
                 sourceIDF: true,
-                trainee: {
-                    email: stagiaire.trainee.email,
+                personal: {
+                    email: stagiaire.personal.email,
                 },
                 training: {
                     infoRegion: {
@@ -45,7 +45,7 @@ module.exports = (db, regions) => {
         shouldBeImported: stagiaire => {
             let idf = regions.findRegionByCodeRegion('11');
             let isAfter = moment(stagiaire.training.scheduledEndDate).isAfter(moment(`${idf.since}-0000`, 'YYYYMMDD Z'));
-            return isAfter && stagiaire.trainee.emailValid && stagiaire.training.infoCarif.numeroSession === null;
+            return isAfter && stagiaire.personal.emailValid && stagiaire.training.infoCarif.numeroSession === null;
         },
         buildStagiaire: (record, campaign) => {
 
@@ -67,7 +67,7 @@ module.exports = (db, regions) => {
                     mailSent: false,
                     codeRegion: '11',
                     token: token, // used as public ID for URLs
-                    trainee: {
+                    personal: {
                         name: record['Individu.Nom'],
                         firstName: record['Prénom'],
                         mailDomain: mailDomain,

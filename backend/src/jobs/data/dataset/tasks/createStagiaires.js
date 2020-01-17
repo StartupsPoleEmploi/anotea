@@ -17,7 +17,7 @@ const createStagiaire = session => {
         campaign: 'dataset',
         importDate: getDateInThePast(),
         codeRegion: session.code_region,
-        trainee: {
+        personal: {
             name: faker.name.lastName(),
             firstName: faker.name.firstName(),
             mailDomain: email.split('@')[1],

@@ -15,13 +15,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
         await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), handler);
-        let previous = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_1@pe.com' });
+        let previous = await db.collection('stagiaires').findOne({ 'personal.email': 'email_1@pe.com' });
 
         let stats = await refreshStagiaires(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
-        let next = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_1@pe.com' });
+        let next = await db.collection('stagiaires').findOne({ 'personal.email': 'email_1@pe.com' });
         assert.deepStrictEqual(_.omit(next, ['meta']), _.merge(_.omit(previous, ['meta']), {
-            trainee: {
+            personal: {
                 dnIndividuNational: 'AAAAAAA',
                 idLocal: '0000000000Z',
             },
@@ -62,11 +62,11 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         await refreshStagiaires(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
-        let next = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_1@pe.com' });
+        let next = await db.collection('stagiaires').findOne({ 'personal.email': 'email_1@pe.com' });
         assert.deepStrictEqual(next.meta.history.length, 2);
         assert.ok(next.meta.history[0].date);
         assert.deepStrictEqual(_.omit(next.meta.history[0], ['date']), {
-            trainee: {
+            personal: {
                 dnIndividuNational: '1111111111',
                 idLocal: '0167942369Z',
             },
@@ -101,7 +101,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
 
         await refreshStagiaires(db, logger, getTestFile('stagiaires-pe-refreshed.csv'), handler);
 
-        let next = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_2@pe.com' });
+        let next = await db.collection('stagiaires').findOne({ 'personal.email': 'email_2@pe.com' });
         assert.strictEqual(next.training.place.inseeCode, '91521');
     });
 
@@ -111,7 +111,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, getComponents, getTestFile,
         let { regions } = await getComponents();
         let handler = poleEmploiCSVHandler(db, regions);
         await importStagiaires(db, logger, getTestFile('stagiaires-pe.csv'), handler);
-        let stagiaire = await db.collection('stagiaires').findOne({ 'trainee.email': 'email_1@pe.com' });
+        let stagiaire = await db.collection('stagiaires').findOne({ 'personal.email': 'email_1@pe.com' });
         let previous = newComment({
             token: stagiaire.token,
         });

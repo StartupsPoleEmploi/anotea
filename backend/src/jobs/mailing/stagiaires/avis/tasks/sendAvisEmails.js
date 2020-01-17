@@ -18,9 +18,9 @@ module.exports = async (db, logger, emails, action, options = {}) => {
     while (await cursor.hasNext()) {
         stats.total++;
         const stagiaire = await cursor.next();
-        let email = stagiaire.trainee.email;
-        stagiaire.trainee.firstName = titleize(stagiaire.trainee.firstName);
-        stagiaire.trainee.name = titleize(stagiaire.trainee.name);
+        let email = stagiaire.personal.email;
+        stagiaire.personal.firstName = titleize(stagiaire.personal.firstName);
+        stagiaire.personal.name = titleize(stagiaire.personal.name);
 
         try {
             logger.info(`Sending email to ${email} for campaign ${stagiaire.campaign}`);

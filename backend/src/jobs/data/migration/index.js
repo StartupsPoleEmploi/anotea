@@ -10,8 +10,9 @@ execute(async ({ db }) => {
     stats.dropCollections = await require('./tasks/dropCollections')(db);
     stats.renameCollections = await require('./tasks/renameCollections')(db);
     stats.addJobTypeFlag = await require('./tasks/addJobTypeFlag')(db);
+    stats.renameTraineeIntoPersonnal = await require('./tasks/renameTraineeIntoPersonnal')(db);
     stats.cleanSiretProperties = await require('./tasks/cleanSiretProperties')(db);
-    stats.renameIdentifiant = await require('./tasks/renameIdentifiant')(db);
+    stats.renameCourrielIntoIdentifiant = await require('./tasks/renameCourrielIntoIdentifiant')(db);
     stats.renameRaisonSociale = await require('./tasks/renameRaisonSociale')(db);
     return stats;
 });

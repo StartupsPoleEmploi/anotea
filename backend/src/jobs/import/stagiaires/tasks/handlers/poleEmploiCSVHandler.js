@@ -68,8 +68,8 @@ module.exports = (db, regions) => {
         },
         getKey: stagiaire => {
             return {
-                trainee: {
-                    email: stagiaire.trainee.email,
+                personal: {
+                    email: stagiaire.personal.email,
                 },
                 training: {
                     idSession: stagiaire.training.idSession,
@@ -80,7 +80,7 @@ module.exports = (db, regions) => {
             let region = regions.findActiveRegions().find(region => region.codeRegion === stagiaire.codeRegion);
             let conseilRegional = stagiaire.training.codeFinanceur.filter(c => isConseilRegional(c)).length > 0;
 
-            let isValid = () => region && stagiaire.trainee.emailValid;
+            let isValid = () => region && stagiaire.personal.emailValid;
 
             let isAfter = () => {
                 let since = conseilRegional && region.conseil_regional.since ? region.conseil_regional.since : region.since;
@@ -123,7 +123,7 @@ module.exports = (db, regions) => {
                 avisCreated: false,
                 token: token,
                 codeRegion: region.codeRegion,
-                trainee: {
+                personal: {
                     name: record['c_nomcorrespondance'],
                     firstName: record['c_prenomcorrespondance'],
                     mailDomain: mailDomain,

@@ -13,7 +13,7 @@ module.exports = stagiaire => {
         mailSent: Joi.boolean().required(),
         token: Joi.string().required(),
         codeRegion: Joi.string().required(),
-        trainee: {
+        personal: {
             name: Joi.string().required(),
             firstName: Joi.string().allow('').required(),
             mailDomain: Joi.string().required(),

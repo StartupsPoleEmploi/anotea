@@ -16,7 +16,7 @@ module.exports = {
             campaign: 'test-campaign',
             importDate: date,
             avisCreated: false,
-            trainee: {
+            personal: {
                 name: 'Dupont',
                 firstName: 'Henri',
                 mailDomain: 'free.fr',

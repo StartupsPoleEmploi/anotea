@@ -26,7 +26,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 _id: '1234',
-                trainee: {
+                personal: {
                     email: email,
                 },
             })),
@@ -54,7 +54,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 _id: id,
-                trainee: {
+                personal: {
                     email: `${randomize('name')}@email.fr`,
                 },
             })),
@@ -80,7 +80,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
             insertIntoDatabase('stagiaires', newStagiaire({
                 _id: id,
                 mailRetry: 0,
-                trainee: {
+                personal: {
                     email: `${randomize('name')}@email.fr`,
                 },
             })),
@@ -101,7 +101,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 _id: id,
-                trainee: {
+                personal: {
                     email: `${randomize('name')}@email.fr`,
                 },
             })),
@@ -136,7 +136,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                 sourceIDF: null,
                 mailSent: false,
                 unsubscribe: false,
-                trainee: {
+                personal: {
                     email: email,
                 },
             })),
@@ -145,7 +145,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                 sourceIDF: null,
                 mailSent: false,
                 unsubscribe: true,
-                trainee: {
+                personal: {
                     email: 'not-sent@stagiaire.org',
                 },
             })),
@@ -193,7 +193,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                 mailError: 'smtpError',
                 mailErrorDetail: 'An error occurred',
                 mailRetry: 0,
-                trainee: {
+                personal: {
                     email: email,
                 },
             })),
@@ -220,7 +220,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                 avisCreated: false,
                 mailRetry: 0,
                 mailSentDate: moment().subtract('10', 'days').toDate(),
-                trainee: {
+                personal: {
                     email: email,
                 },
             })),
@@ -246,7 +246,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                 avisCreated: true,
                 mailRetry: 0,
                 mailSentDate: moment().subtract('10', 'days').toDate(),
-                trainee: {
+                personal: {
                     email: email,
                 },
             })),

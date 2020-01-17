@@ -14,13 +14,13 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
-                trainee: {
+                personal: {
                     email,
                 },
             })),
             insertIntoDatabase('stagiaires', newStagiaire({
-                trainee: {
-                    email: 'not-sent@trainee.org',
+                personal: {
+                    email: 'not-sent@stagiaire.org',
                 },
             })),
         ]);
@@ -28,7 +28,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await sendQuestionnaire6MoisEmails(db, logger, emails);
 
         assert.strictEqual(mailer.getLastEmailMessageSent().email, email);
-        let stagiaire = await db.collection('stagiaires').findOne({ 'trainee.email': email });
+        let stagiaire = await db.collection('stagiaires').findOne({ 'personal.email': email });
         let status = stagiaire.mailing.questionnaire6Mois;
         assert.ok(status.mailSent);
         assert.ok(status.mailSentDate);
@@ -47,7 +47,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
                 campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
                 mailSent: false,
                 mailSentDate: null,
-                trainee: {
+                personal: {
                     email,
                 },
                 mailing: {
@@ -71,7 +71,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
         await Promise.all([
             insertIntoDatabase('stagiaires', newStagiaire({
                 campaign: 'STAGIAIRES_AES_TT_REGIONS_DELTA_2019-04-05',
-                trainee: {
+                personal: {
                     email,
                 },
             })),
@@ -81,7 +81,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, createE
             await sendQuestionnaire6MoisEmails(db, logger, emails);
             assert.fail();
         } catch (e) {
-            let stagiaire = await db.collection('stagiaires').findOne({ 'trainee.email': email });
+            let stagiaire = await db.collection('stagiaires').findOne({ 'personal.email': email });
             let status = stagiaire.mailing.questionnaire6Mois;
             assert.strictEqual(status.mailSent, true);
             assert.strictEqual(status.mailSentDate, undefined);

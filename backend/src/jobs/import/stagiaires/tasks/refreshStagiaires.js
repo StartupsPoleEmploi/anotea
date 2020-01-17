@@ -36,9 +36,9 @@ module.exports = async (db, logger, file, handler) => {
         let merged = _.merge({},
             previous,
             {
-                trainee: {
-                    dnIndividuNational: stagiaire.trainee.dnIndividuNational,
-                    idLocal: stagiaire.trainee.idLocal,
+                personal: {
+                    dnIndividuNational: stagiaire.personal.dnIndividuNational,
+                    idLocal: stagiaire.personal.idLocal,
                 },
                 training: {
                     formacodes: stagiaire.training.formacodes,
@@ -54,8 +54,8 @@ module.exports = async (db, logger, file, handler) => {
         let meta = getNewMeta(previous, merged);
         let res = await db.collection('stagiaires').updateOne({ token: previous.token }, {
             $set: {
-                'trainee.dnIndividuNational': merged.trainee.dnIndividuNational,
-                'trainee.idLocal': merged.trainee.idLocal,
+                'personal.dnIndividuNational': merged.personal.dnIndividuNational,
+                'personal.idLocal': merged.personal.idLocal,
                 'training.formacodes': merged.training.formacodes,
                 'training.certifInfos': merged.training.certifInfos,
                 'training.organisation': merged.training.organisation,

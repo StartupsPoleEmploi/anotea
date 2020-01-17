@@ -39,9 +39,9 @@ const isLineValid = (file, handler, rawLine) => {
             }
 
             try {
-                let trainee = await handler.buildStagiaire(data[0], campaign);
-                if (await handler.shouldBeImported(trainee)) {
-                    return validateStagiaire(trainee)
+                let stagiaire = await handler.buildStagiaire(data[0], campaign);
+                if (await handler.shouldBeImported(stagiaire)) {
+                    return validateStagiaire(stagiaire)
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
                 } else {

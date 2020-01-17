@@ -1,7 +1,9 @@
-module.exports = db => {
+module.exports = async db => {
 
-    return Promise.all([
+    await Promise.all([
         db.collection('trainee').rename('stagiaires').catch(() => ({})),
         db.collection('importTrainee').rename('jobs').catch(() => ({})),
     ]);
+
+    return { renamed: true };
 };

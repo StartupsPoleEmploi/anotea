@@ -35,7 +35,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
             campaign: 'test-campaign',
             importDate: date.toJSON(),
             avisCreated: false,
-            trainee: {
+            personal: {
                 name: 'Dupont',
                 firstName: 'Henri',
                 mailDomain: 'free.fr',

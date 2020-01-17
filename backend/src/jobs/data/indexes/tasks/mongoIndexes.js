@@ -1,5 +1,5 @@
 module.exports = {
-    trainee: db => {
+    stagiaires: db => {
         return Promise.all([
             db.collection('stagiaires').createIndex({ 'token': 1 }, { unique: true }),
             db.collection('stagiaires').createIndex({ 'codeRegion': 1 }),
@@ -9,8 +9,8 @@ module.exports = {
             db.collection('stagiaires').createIndex({ 'sourceIDF': 1 }),
             db.collection('stagiaires').createIndex({ 'campaign': 1 }),
             db.collection('stagiaires').createIndex({ 'unsubscribe': 1 }),
-            db.collection('stagiaires').createIndex({ 'trainee.email': 1 }),
-            db.collection('stagiaires').createIndex({ 'trainee.dnIndividuNational': 1 }),
+            db.collection('stagiaires').createIndex({ 'personal.email': 1 }),
+            db.collection('stagiaires').createIndex({ 'personal.dnIndividuNational': 1 }),
             db.collection('stagiaires').createIndex({ 'training.codeFinanceur': 1 }),
             db.collection('stagiaires').createIndex({ 'training.organisation.siret': 1 }),
             db.collection('stagiaires').createIndex({ 'training.scheduledEndDate': 1 }),
@@ -20,7 +20,7 @@ module.exports = {
             db.collection('stagiaires').createIndex({ 'avisCreated': 1 }),
             db.collection('stagiaires').createIndex({ 'tracking.firstRead': 1 }),
             db.collection('stagiaires').createIndex({ 'tracking.click': 1 }),
-            db.collection('stagiaires').createIndex({ 'trainee.email': 1, 'training.idSession': 1 }),
+            db.collection('stagiaires').createIndex({ 'personal.email': 1, 'training.idSession': 1 }),
             db.collection('stagiaires').createIndex({
                 'codeRegion': 1,
                 'training.place.postalCode': 1,
