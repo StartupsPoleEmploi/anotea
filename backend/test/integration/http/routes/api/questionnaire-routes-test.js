@@ -173,7 +173,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 codeFinanceur: '10'
             },
             codeRegion: '11',
-            rates: {
+            notes: {
                 accueil: 2,
                 contenu_formation: 2,
                 equipe_formateurs: 1,
@@ -242,7 +242,7 @@ describe(__filename, withServer(({ startServer, getTestDatabase, insertIntoDatab
                 codeFinanceur: '10'
             },
             codeRegion: '11',
-            rates: {
+            notes: {
                 accueil: 2,
                 contenu_formation: 2,
                 equipe_formateurs: 1,

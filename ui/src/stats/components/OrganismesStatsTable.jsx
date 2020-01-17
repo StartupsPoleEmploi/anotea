@@ -13,12 +13,12 @@ export default class OrganismesStatsTable extends Component {
         super(props);
 
         this.state = {
-            showRates: false,
+            showNotes: false,
         };
     }
 
     computeRate(dividend, divisor) {
-        return this.state.showRates ? calculateRate(dividend, divisor) : dividend;
+        return this.state.showNotes ? calculateRate(dividend, divisor) : dividend;
     }
 
     render() {
@@ -39,10 +39,10 @@ export default class OrganismesStatsTable extends Component {
                         <th scope="col">
                             <div>
                                 <input
-                                    name="showRates"
+                                    name="showNotes"
                                     type="checkbox"
-                                    checked={this.state.showRates}
-                                    onChange={() => this.setState({ showRates: !this.state.showRates })} />
+                                    checked={this.state.showNotes}
+                                    onChange={() => this.setState({ showNotes: !this.state.showNotes })} />
                                 <span> Taux</span>
                             </div>
                         </th>

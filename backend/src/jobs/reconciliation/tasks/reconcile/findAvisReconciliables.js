@@ -47,7 +47,7 @@ module.exports = async (db, intercarif, action) => {
         _id: 1,
         token: 1,
         training: 1,
-        rates: 1,
+        notes: 1,
         date: 1,
         codeFinanceur: 1,
         commentaire: 1,

@@ -2,7 +2,7 @@ module.exports = ({ tri, ordre }) => {
     let field;
     switch (tri) {
         case 'notes':
-            field = 'rates.global';
+            field = 'notes.global';
             break;
         case 'formation':
             field = 'training.title';

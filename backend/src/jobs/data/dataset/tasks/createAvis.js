@@ -15,7 +15,7 @@ const buildAvis = (stagiaire, custom = {}) => {
         read: false,
         codeRegion: stagiaire.codeRegion,
         training: stagiaire.training,
-        rates: {
+        notes: {
             accueil: 3,
             contenu_formation: 2,
             equipe_formateurs: 4,

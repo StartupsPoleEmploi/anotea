@@ -47,7 +47,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                    rates: {
+                    notes: {
                         accompagnement: 1,
                         accueil: 3,
                         contenu_formation: 2,
@@ -172,7 +172,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                    rates: {
+                    notes: {
                         accompagnement: 1,
                         accueil: 3,
                         contenu_formation: 2,
@@ -496,7 +496,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                    rates: {
+                    notes: {
                         accompagnement: 1,
                         accueil: 3,
                         contenu_formation: 2,
@@ -571,7 +571,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                    rates: {
+                    notes: {
                         accompagnement: 1,
                         accueil: 3,
                         contenu_formation: 2,
@@ -865,7 +865,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                    rates: {
+                    notes: {
                         global: 1
                     },
                 }),
@@ -881,7 +881,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                    rates: {
+                    notes: {
                         global: 2,
                     },
                 }),
@@ -937,7 +937,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, reconcile })
                             postalCode: '75019',
                         },
                     },
-                    rates: {
+                    notes: {
                         global: 2,
                     },
                 }),

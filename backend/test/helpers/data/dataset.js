@@ -157,7 +157,7 @@ module.exports = {
                 },
                 codeFinanceur: '10'
             },
-            rates: {
+            notes: {
                 accueil: 3,
                 contenu_formation: 2,
                 equipe_formateurs: 4,

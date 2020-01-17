@@ -404,7 +404,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         postalCode: '75019',
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 1,
                     contenu_formation: 1,
                     equipe_formateurs: 3,
@@ -424,7 +424,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         postalCode: '75019',
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 1,
                     contenu_formation: 1,
                     equipe_formateurs: 4,
@@ -444,7 +444,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         postalCode: '75019',
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 2,
                     contenu_formation: 1,
                     equipe_formateurs: 1,

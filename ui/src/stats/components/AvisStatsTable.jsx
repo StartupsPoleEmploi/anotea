@@ -15,12 +15,12 @@ export default class AvisStatsTable extends Component {
         super(props);
 
         this.state = {
-            showRates: false,
+            showNotes: false,
         };
     }
 
     computeRate(dividend, divisor) {
-        return this.state.showRates ? calculateRate(dividend, divisor) : dividend;
+        return this.state.showNotes ? calculateRate(dividend, divisor) : dividend;
     }
 
     getTotal = string => {
@@ -46,10 +46,10 @@ export default class AvisStatsTable extends Component {
                             <th scope="col">
                                 <div>
                                     <input
-                                        name="showRates"
+                                        name="showNotes"
                                         type="checkbox"
-                                        checked={this.state.showRates}
-                                        onChange={() => this.setState({ showRates: !this.state.showRates })} />
+                                        checked={this.state.showNotes}
+                                        onChange={() => this.setState({ showNotes: !this.state.showNotes })} />
                                     <span> Taux</span>
                                 </div>
                             </th>
@@ -178,10 +178,10 @@ export default class AvisStatsTable extends Component {
                             <th scope="col">
                                 <div>
                                     <input
-                                        name="showRates"
+                                        name="showNotes"
                                         type="checkbox"
-                                        checked={this.state.showRates}
-                                        onChange={() => this.setState({ showRates: !this.state.showRates })} />
+                                        checked={this.state.showNotes}
+                                        onChange={() => this.setState({ showNotes: !this.state.showNotes })} />
                                     <span> Taux</span>
                                 </div>
                             </th>

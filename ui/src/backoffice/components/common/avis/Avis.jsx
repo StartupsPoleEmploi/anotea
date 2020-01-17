@@ -99,7 +99,7 @@ export default class Avis extends React.Component {
                     <div className={`col-sm-7 col-md-6 ${disabledClass}`}>
                         <div className={`${showModerationReponseButtons || showReponseEditor ? 'with-opacity' : ''}`}>
                             <div className="mb-3">
-                                <Stars note={avis.rates.global} />
+                                <Stars note={avis.notes.global} />
                                 {renderWorkflow(avis)}
                             </div>
 

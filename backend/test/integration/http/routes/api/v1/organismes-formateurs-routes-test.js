@@ -331,7 +331,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                         siret: '11111111111111',
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 3,
                     contenu_formation: 2,
                     equipe_formateurs: 4,
@@ -666,7 +666,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 siret: '22222222222222',
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '1', rates: { global: 1 },
+                pseudo: '1', notes: { global: 1 },
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -674,7 +674,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '3', rates: { global: 3 },
+                pseudo: '3', notes: { global: 3 },
                 training: {
                     organisation: {
                         siret: '22222222222222',
@@ -682,7 +682,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
                 }
             })),
             insertIntoDatabase('avis', newAvis({
-                pseudo: '2', rates: { global: 2 },
+                pseudo: '2', notes: { global: 2 },
                 training: {
                     organisation: {
                         siret: '22222222222222',

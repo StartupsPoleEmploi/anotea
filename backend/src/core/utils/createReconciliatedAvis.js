@@ -1,34 +1,12 @@
 const _ = require('lodash');
 
-const convertCommentaire = data => {
-
-    let commentaire = {};
-    if (!_.isEmpty(data.commentaire.text)) {
-        commentaire.texte = data.commentaire.text;
-    }
-
-    if (!_.isEmpty(data.commentaire.title) && !data.commentaire.titleMasked) {
-        commentaire.titre = data.commentaire.title;
-    }
-
-    return commentaire;
-};
-
 module.exports = data => {
     let training = data.training;
-    let rates = data.rates;
 
     let avis = {
         id: data._id,
         date: data.date ? data.date : data._id.getTimestamp(),
-        notes: {
-            accueil: rates.accueil,
-            contenu_formation: rates.contenu_formation,
-            equipe_formateurs: rates.equipe_formateurs,
-            moyen_materiel: rates.moyen_materiel,
-            accompagnement: rates.accompagnement,
-            global: rates.global,
-        },
+        notes: data.notes,
         formation: {
             //TODO add organisme responsable data
             numero: training.idFormation,
@@ -70,7 +48,10 @@ module.exports = data => {
     }
 
     if (data.commentaire && data.status === 'validated') {
-        avis.commentaire = convertCommentaire(data);
+        avis.commentaire = {
+            ...(!_.isEmpty(data.commentaire.text) ? { texte: data.commentaire.text } : {}),
+            ...(!_.isEmpty(data.commentaire.title) && !data.commentaire.titleMasked ? { titre: data.commentaire.title } : {}),
+        };
     }
 
     if (data.reponse && data.status === 'validated' && data.reponse.status === 'validated') {

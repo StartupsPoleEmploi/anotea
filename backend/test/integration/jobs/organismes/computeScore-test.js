@@ -22,7 +22,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                         siret: '22222222222222',
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 1,
                     contenu_formation: 1,
                     equipe_formateurs: 1,
@@ -37,7 +37,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                         siret: '22222222222222',
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 3,
                     contenu_formation: 3,
                     equipe_formateurs: 3,
@@ -52,7 +52,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
                         siret: '22222222222222',
                     },
                 },
-                rates: {
+                notes: {
                     accueil: 3,
                     contenu_formation: 3,
                     equipe_formateurs: 3,
@@ -128,7 +128,7 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase }) => {
             })), ['score']),
             insertIntoDatabase('avis', newAvis({
                 status: 'rejected',
-                rates: {
+                notes: {
                     accueil: 0,
                     contenu_formation: 0,
                     equipe_formateurs: 0,

@@ -374,10 +374,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
+        let now = moment();
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '5minutesAgo' }, now.subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '6minutesAgo' }, now.subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '7minutesAgo' }, now.subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date');
@@ -391,10 +392,11 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
 
         let app = await startServer();
 
+        let now = moment();
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ pseudo: '5minutesAgo' }, moment().subtract(5, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ pseudo: '6minutesAgo' }, moment().subtract(6, 'minutes').toDate())),
-            insertIntoDatabase('avis', newAvis({ pseudo: '7minutesAgo' }, moment().subtract(7, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '5minutesAgo' }, now.subtract(5, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '6minutesAgo' }, now.subtract(6, 'minutes').toDate())),
+            insertIntoDatabase('avis', newAvis({ pseudo: '7minutesAgo' }, now.subtract(7, 'minutes').toDate())),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=date&ordre=asc');
@@ -409,9 +411,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase }) => {
         let app = await startServer();
 
         await Promise.all([
-            insertIntoDatabase('avis', newAvis({ pseudo: '1', rates: { global: 1 } })),
-            insertIntoDatabase('avis', newAvis({ pseudo: '3', rates: { global: 3 } })),
-            insertIntoDatabase('avis', newAvis({ pseudo: '2', rates: { global: 2 } })),
+            insertIntoDatabase('avis', newAvis({ pseudo: '1', notes: { global: 1 } })),
+            insertIntoDatabase('avis', newAvis({ pseudo: '3', notes: { global: 3 } })),
+            insertIntoDatabase('avis', newAvis({ pseudo: '2', notes: { global: 2 } })),
         ]);
 
         let response = await request(app).get('/api/v1/avis?tri=notes');

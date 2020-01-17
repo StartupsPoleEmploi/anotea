@@ -54,7 +54,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             moyen_materiel: rateRule,
             accompagnement: rateRule
         });
-        let rates = {
+        let notes = {
             accueil: body.avis_accueil,
             contenu_formation: body.avis_contenu_formation,
             equipe_formateurs: body.avis_equipe_formateurs,
@@ -62,15 +62,15 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             accompagnement: body.avis_accompagnement
         };
 
-        return Joi.validate(rates, schema);
+        return Joi.validate(notes, schema);
     };
 
     const calculateAverageRate = avis => {
-        let sum = avis.rates.accueil +
-            avis.rates.contenu_formation +
-            avis.rates.equipe_formateurs +
-            avis.rates.moyen_materiel +
-            avis.rates.accompagnement;
+        let sum = avis.notes.accueil +
+            avis.notes.contenu_formation +
+            avis.notes.equipe_formateurs +
+            avis.notes.moyen_materiel +
+            avis.notes.accompagnement;
 
         return Number(Math.round((sum / 5) + 'e1') + 'e-1');
     };
@@ -88,7 +88,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
             campaign: stagiaire.campaign,
             training: stagiaire.training,
             codeRegion: stagiaire.codeRegion,
-            rates: notes,
+            notes: notes,
             pseudo: sanitize(body.pseudo.replace(/ /g, '').replace(/\./g, '')),
             read: false,
             status: hasCommentaires ? 'none' : 'validated',
@@ -177,7 +177,7 @@ module.exports = ({ db, logger, configuration, regions, communes }) => {
 
             let validation = await validateAvis(avis);
             if (validation.error === null) {
-                avis.rates.global = calculateAverageRate(avis);
+                avis.notes.global = calculateAverageRate(avis);
                 await Promise.all([
                     db.collection('avis').insertOne(avis),
                     db.collection('stagiaires').updateOne({ _id: stagiaire._id }, { $set: { avisCreated: true } }),

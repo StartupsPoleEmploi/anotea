@@ -53,7 +53,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             let [token] = await Promise.all([
                 logUser(app),
                 insertIntoDatabase('avis', buildAvis({
-                    rates: {
+                    notes: {
                         accueil: 3,
                         contenu_formation: 3,
                         equipe_formateurs: 3,
@@ -63,7 +63,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                     },
                 })),
                 insertIntoDatabase('avis', buildAvis({
-                    rates: {
+                    notes: {
                         accueil: 3,
                         contenu_formation: 3,
                         equipe_formateurs: 3,
@@ -73,7 +73,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                     },
                 })),
                 insertIntoDatabase('avis', buildAvis({
-                    rates: {
+                    notes: {
                         accueil: 2,
                         contenu_formation: 2,
                         equipe_formateurs: 1,

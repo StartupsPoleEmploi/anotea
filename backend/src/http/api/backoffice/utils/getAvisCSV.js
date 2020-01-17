@@ -32,12 +32,12 @@ let getQualification = avis => {
 module.exports = profile => {
     return {
         'id': avis => avis._id,
-        'note accueil': avis => sanitizeNote(avis.rates.accueil),
-        'note contenu formation': avis => sanitizeNote(avis.rates.contenu_formation),
-        'note equipe formateurs': avis => sanitizeNote(avis.rates.equipe_formateurs),
-        'note matériel': avis => sanitizeNote(avis.rates.moyen_materiel),
-        'note accompagnement': avis => sanitizeNote(avis.rates.accompagnement),
-        'note global': avis => sanitizeNote(avis.rates.global),
+        'note accueil': avis => sanitizeNote(avis.notes.accueil),
+        'note contenu formation': avis => sanitizeNote(avis.notes.contenu_formation),
+        'note equipe formateurs': avis => sanitizeNote(avis.notes.equipe_formateurs),
+        'note matériel': avis => sanitizeNote(avis.notes.moyen_materiel),
+        'note accompagnement': avis => sanitizeNote(avis.notes.accompagnement),
+        'note global': avis => sanitizeNote(avis.notes.global),
         'titre': avis => sanitizeString(_.get(avis, 'commentaire.title', '')),
         'commentaire': avis => sanitizeString(_.get(avis, 'commentaire.text', '')),
         ...(profile === 'organisme' ? {} : { 'qualification': avis => getQualification(avis) }),
