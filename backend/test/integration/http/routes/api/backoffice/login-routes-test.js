@@ -51,10 +51,8 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newOrganismeAccount({
+            siret: '6080274100045',
             passwordHash: await hashPassword('password'),
-            meta: {
-                siretAsString: '6080274100045'
-            }
         }));
 
         let response = await request(app)
@@ -84,11 +82,9 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         await insertIntoDatabase('accounts', newOrganismeAccount({
+            siret: '6080274100045',
             passwordHash: await hashPassword('password'),
             courriel: 'contact@poleemploi-formation.fr',
-            meta: {
-                siretAsString: '6080274100045'
-            }
         }));
 
         let response = await request(app)
@@ -226,10 +222,8 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
 
         let app = await startServerWithRealAuth();
         let account = newOrganismeAccount({
+            siret: '6080274100045',
             passwordHash: await hashPassword('password'),
-            meta: {
-                siretAsString: '6080274100045'
-            },
         });
         delete account.passwordHash;
         await insertIntoDatabase('accounts', account);
@@ -254,7 +248,6 @@ describe(__filename, withServer(({ startServer, generateKairosToken, insertIntoD
         let app = await startServerWithRealAuth();
 
         let authUrl = await generateKairosToken(app);
-        console.log(authUrl);
 
         let response = await request(app)
         .get(`/api/backoffice/login?access_token=${authUrl.split('access_token=')[1]}`);

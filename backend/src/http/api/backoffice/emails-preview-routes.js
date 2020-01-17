@@ -11,11 +11,9 @@ module.exports = ({ emails, middlewares }) => {
     let getPreviewData = user => {
         return {
             organisme: {
+                siret: '123456789000000',
                 token: 'token-organisme',
                 codeRegion: user.codeRegion,
-                meta: {
-                    siretAsString: '123456789000000',
-                }
             },
             trainee: {
                 token: 'token-trainee',

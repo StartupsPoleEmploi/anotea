@@ -31,7 +31,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
                 $lookup: {
                     from: 'comment',
                     let: {
-                        siret: '$organisme.meta.siretAsString',
+                        siret: '$organisme.siret',
                     },
                     pipeline: [
                         {
@@ -85,7 +85,7 @@ module.exports = async (db, logger, configuration, emails, options = {}) => {
         let { organisme, notificationStatus } = await cursor.next();
         stats.total++;
         try {
-            logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${organisme.courriel}`);
+            logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.siret}/${organisme.courriel}`);
             let message = emails.getEmailMessageByTemplateName('avisNotificationEmail');
             await message.send(organisme, notificationStatus.comment, notificationStatus.nbUnreadComments);
 

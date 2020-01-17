@@ -42,9 +42,9 @@ module.exports = {
     },
     createOrganismeFomateurDTO: (organisme, options = {}) => {
         let dto = {
-            id: `${organisme._id}`,
+            id: organisme._id,
             raison_sociale: organisme.raisonSociale,
-            siret: organisme.meta ? organisme.meta.siretAsString : undefined,
+            siret: organisme.siret,
             numero: organisme.numero, //TODO deprecated
             lieux_de_formation: organisme.lieux_de_formation,
             score: organisme.score,

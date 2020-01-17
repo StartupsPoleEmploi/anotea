@@ -14,12 +14,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await synchronizeAccountsWithIntercarif(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('accounts').findOne({ siret: '22222222222222' });
+        assert.ok(doc._id);
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
-        assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
-            _id: 22222222222222,
-            SIRET: 22222222222222,
+        assert.deepStrictEqual(_.omit(doc, ['_id', 'creationDate', 'updateDate', 'token']), {
+            siret: '22222222222222',
             courriel: 'anotea.pe+paris@gmail.com',
             courriels: [{ courriel: 'anotea.pe+paris@gmail.com', source: 'intercarif' }],
             sources: ['intercarif'],
@@ -36,9 +36,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     }
                 }
             ],
-            meta: {
-                siretAsString: '22222222222222',
-            },
         });
     });
 
@@ -68,12 +65,12 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
 
         await synchronizeAccountsWithIntercarif(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
+        let doc = await db.collection('accounts').findOne({ siret: '22222222222222' });
+        assert.ok(doc._id);
         assert.ok(doc.creationDate);
         assert.ok(doc.token);
-        assert.deepStrictEqual(_.omit(doc, ['creationDate', 'updateDate', 'token']), {
-            _id: 22222222222222,
-            SIRET: 22222222222222,
+        assert.deepStrictEqual(_.omit(doc, ['_id', 'creationDate', 'updateDate', 'token']), {
+            siret: '22222222222222',
             courriel: 'anotea.pe+paris@gmail.com',
             courriels: [
                 { courriel: 'anotea.pe+paris@gmail.com', source: 'intercarif' },
@@ -101,9 +98,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                     }
                 },
             ],
-            meta: {
-                siretAsString: '22222222222222',
-            },
         });
     });
 
@@ -113,26 +107,21 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
         await Promise.all([
             importIntercarif(),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: 22222222222222,
-                SIRET: 22222222222222,
+                siret: '22222222222222',
                 raisonSociale: 'Formateur',
                 courriel: 'OLD@formateur.com',
                 passwordHash: 'hash',
                 token: 'token',
                 creationDate: new Date('2016-11-10T17:41:03.308Z'),
                 mailSentDate: new Date('2018-09-12T15:21:28.083Z'),
-                meta: {
-                    siretAsString: '22222222222222',
-                },
             })),
         ]);
 
         await synchronizeAccountsWithIntercarif(db, logger);
 
-        let doc = await db.collection('accounts').findOne({ SIRET: 22222222222222 });
-        assert.deepStrictEqual(_.omit(doc, ['updateDate']), {
-            _id: 22222222222222,
-            SIRET: 22222222222222,
+        let doc = await db.collection('accounts').findOne({ siret: '22222222222222' });
+        assert.deepStrictEqual(_.omit(doc, ['_id', 'updateDate']), {
+            siret: '22222222222222',
             raisonSociale: 'Formateur',
             passwordHash: 'hash',
             profile: 'organisme',
@@ -173,9 +162,6 @@ describe(__filename, withMongoDB(({ getTestDatabase, insertIntoDatabase, importI
                         min: 1,
                     },
                 },
-            },
-            meta: {
-                siretAsString: '22222222222222',
             },
         });
     });

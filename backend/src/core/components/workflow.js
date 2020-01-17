@@ -54,7 +54,7 @@ module.exports = (db, logger, emails) => {
             if (options.sendEmail && original.status === 'reported') {
                 sendEmail(async () => {
                     let organisme = await db.collection('accounts').findOne({
-                        SIRET: parseInt(original.training.organisation.siret)
+                        siret: original.training.organisation.siret,
                     });
 
                     let message = emails.getEmailMessageByTemplateName('avisReportedCanceledEmail');
@@ -100,7 +100,7 @@ module.exports = (db, logger, emails) => {
                 if (original.status === 'reported') {
                     sendEmail(async () => {
                         let organisme = await db.collection('accounts').findOne({
-                            SIRET: parseInt(original.training.organisation.siret)
+                            siret: original.training.organisation.siret,
                         });
 
                         let message = emails.getEmailMessageByTemplateName('avisReportedConfirmedEmail');
@@ -313,7 +313,7 @@ module.exports = (db, logger, emails) => {
             if (options.sendEmail) {
                 sendEmail(async () => {
                     let organisme = await db.collection('accounts').findOne({
-                        SIRET: parseInt(original.training.organisation.siret)
+                        siret: original.training.organisation.siret,
                     });
 
                     let message = emails.getEmailMessageByTemplateName('reponseRejectedEmail');

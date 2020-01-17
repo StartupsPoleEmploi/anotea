@@ -10,7 +10,7 @@ module.exports = async (db, logger, emails, action, options = {}) => {
 
     let cursor = await db.collection('accounts').find({
         ...action.getQuery(),
-        ...(options.siret ? { 'meta.siretAsString': options.siret } : {})
+        ...(options.siret ? { siret: options.siret } : {})
     });
     if (options.limit) {
         cursor.limit(options.limit);
@@ -19,7 +19,7 @@ module.exports = async (db, logger, emails, action, options = {}) => {
 
     while (await cursor.hasNext()) {
         let organisme = await cursor.next();
-        logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.meta.siretAsString}/${organisme.courriel}`);
+        logger.info(`Sending email to ${organisme.raisonSociale}/${organisme.siret}/${organisme.courriel}`);
 
         stats.total++;
         try {

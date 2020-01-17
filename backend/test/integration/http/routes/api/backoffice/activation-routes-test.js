@@ -10,13 +10,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
         let token = randomize('token');
         await insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: 11111111111111,
-            SIRET: 11111111111111,
+            siret: '11111111111111',
             token,
             passwordHash: null,
-            meta: {
-                siretAsString: '11111111111111'
-            },
         }));
 
         let response = await request(app)
@@ -35,13 +31,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
         let token = randomize('token');
         await insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: 11111111111111,
-            SIRET: 11111111111111,
+            siret: '11111111111111',
             token,
             passwordHash: 12345,
-            meta: {
-                siretAsString: '11111111111111'
-            },
         }));
 
         let response = await request(app)
@@ -71,13 +63,9 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
         let app = await startServer();
         let token = randomize('token');
         await insertIntoDatabase('accounts', newOrganismeAccount({
-            _id: 11111111111111,
-            SIRET: 11111111111111,
+            siret: '11111111111111',
             token,
             passwordHash: null,
-            meta: {
-                siretAsString: '11111111111111'
-            },
         }));
 
         let response = await request(app)
@@ -88,7 +76,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, getTestDatab
 
         //should flag account as rehashed
         let db = await getTestDatabase();
-        let res = await db.collection('accounts').findOne({ _id: 11111111111111 });
+        let res = await db.collection('accounts').findOne({ siret: '11111111111111' });
         assert.ok(res.meta);
         assert.ok(res.meta.rehashed);
     });

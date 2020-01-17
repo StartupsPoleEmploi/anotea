@@ -208,7 +208,7 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
                 status: 'none',
             },
         });
-        let organisme = newOrganismeAccount({ SIRET: parseInt(comment.training.organisation.siret) });
+        let organisme = newOrganismeAccount({ siret: comment.training.organisation.siret });
         let [token] = await Promise.all([
             logAsModerateur(app, 'admin@pole-emploi.fr'),
             insertIntoDatabase('comment', comment),
@@ -330,9 +330,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345', status: 'reported' })),
             insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: '11111111111111',
+                siret: '11111111111111',
                 courriel: 'validate@email.fr',
-                SIRET: 11111111111111,
             })),
         ]);
 
@@ -357,9 +356,8 @@ describe(__filename, withServer(({ startServer, insertIntoDatabase, logAsModerat
             insertIntoDatabase('comment', newComment({ _id: id, token: '12345', status: 'reported' })),
             insertIntoDatabase('trainee', newTrainee({ _id: new ObjectID(), token: '12345' })),
             insertIntoDatabase('accounts', newOrganismeAccount({
-                _id: '11111111111111',
+                siret: '11111111111111',
                 courriel: 'reject@email.fr',
-                SIRET: 11111111111111,
             })),
         ]);
 

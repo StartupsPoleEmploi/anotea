@@ -84,7 +84,7 @@ module.exports = {
     accounts: db => {
         return Promise.all([
             db.collection('accounts').createIndex({ 'numero': 1 }),
-            db.collection('accounts').createIndex({ 'SIRET': 1 }),
+            db.collection('accounts').createIndex({ 'siret': 1 }, { unique: true }),
             db.collection('accounts').createIndex({ 'score.nb_avis': 1 }),
             db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.code_postal': 1 }),
             db.collection('accounts').createIndex({ 'lieux_de_formation.adresse.region': 1 }),
@@ -147,7 +147,6 @@ module.exports = {
             db.collection('forgottenPasswordTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 172800 }),
             db.collection('invalidAuthTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 86400 }),
             db.collection('peConnectTokens').createIndex({ 'creationDate': 1 }, { expireAfterSeconds: 86400 }),
-            db.collection('kairos').createIndex({ 'siret': 1 }),
             db.collection('intercarif').createIndex({ 'actions.lieu_de_formation.coordonnees.adresse.region': 1 }),
             db.collection('statistics').createIndex({ 'date': 1 }),
         ]);
